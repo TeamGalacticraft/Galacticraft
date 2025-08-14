@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.api.documentation.model.elements;
 
 public record ImageElement(
-        String type, int x, int y, int w, int h,
+        String type, float nx, float ny, float nw, float nh,
         String texture, int u, int v, int texW, int texH,
         int order
 ) implements Element {}

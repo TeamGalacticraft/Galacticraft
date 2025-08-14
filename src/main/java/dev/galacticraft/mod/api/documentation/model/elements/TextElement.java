@@ -25,7 +25,7 @@ package dev.galacticraft.mod.api.documentation.model.elements;
 import org.jetbrains.annotations.Nullable;
 
 public record TextElement(
-        String type, int minX, int minY, int maxX, int maxY,
+        String type, float nminX, float nminY, float nmaxX, float nmaxY,
         String textKey, @Nullable String align,
         int order
 ) implements Element {}

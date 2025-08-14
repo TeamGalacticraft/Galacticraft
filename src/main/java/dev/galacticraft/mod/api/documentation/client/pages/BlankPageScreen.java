@@ -89,6 +89,7 @@ public final class BlankPageScreen extends Screen {
     private int dragStartScrollY = 0;
     private @Nullable EditBox inlineEditor = null;
     private @Nullable TextCommit pendingCommit = null;
+
     public BlankPageScreen(ResourceLocation pageId, String titleKey) {
         super(Component.translatable(titleKey));
         this.pageId = pageId;
@@ -163,15 +164,22 @@ public final class BlankPageScreen extends Screen {
                 addRenderableWidget(Button.builder(text, b -> {
                             if (!editing) DocsApi.open(target);
                         })
-                        .pos(btn.x(), btn.y())
-                        .size(btn.w(), btn.h())
+                        .pos(pxX(btn.nx()), pxY(btn.ny()))
+                        .size(pxW(btn.nw()), pxH(btn.nh()))
                         .build());
+
             } else if (el instanceof TextElement tb) {
-                textBoxes.add(new TextBox(tb.minX(), tb.minY(), tb.maxX(), tb.maxY(), tb.textKey(), tb.align()));
+                textBoxes.add(new TextBox(
+                        pxX(tb.nminX()), pxY(tb.nminY()),
+                        pxX(tb.nmaxX()), pxY(tb.nmaxY()),
+                        tb.textKey(), tb.align()
+                ));
+
             } else if (el instanceof ImageElement img) {
                 images.add(new ImageSpec(
                         ResourceLocation.parse(img.texture()),
-                        img.x(), img.y(), img.w(), img.h(),
+                        pxX(img.nx()), pxY(img.ny()),
+                        pxW(img.nw()), pxH(img.nh()),
                         img.u(), img.v(), img.texW(), img.texH()
                 ));
             }
@@ -181,21 +189,38 @@ public final class BlankPageScreen extends Screen {
     private void mirrorElementsToUi(@Nullable List<Element> elements) {
         if (elements == null) return;
         int fallback = 0;
+
         for (Element el : elements) {
             int ord;
-            if (el instanceof dev.galacticraft.mod.api.documentation.model.elements.ButtonElement bjson) {
+            if (el instanceof ButtonElement bjson) {
                 ord = bjson.order();
                 String plain = Component.translatable(bjson.textKey()).getString();
                 var target = ResourceLocation.parse(bjson.target());
-                ui.add(new BtnUi(bjson.x(), bjson.y(), bjson.w(), bjson.h(), plain, target, ord));
-            } else if (el instanceof dev.galacticraft.mod.api.documentation.model.elements.TextElement tjson) {
+                ui.add(new BtnUi(
+                        pxX(bjson.nx()), pxY(bjson.ny()),
+                        pxW(bjson.nw()), pxH(bjson.nh()),
+                        plain, target, ord
+                ));
+
+            } else if (el instanceof TextElement tjson) {
                 ord = tjson.order();
                 String plain = Component.translatable(tjson.textKey()).getString();
-                ui.add(new TxtUi(tjson.minX(), tjson.minY(), tjson.maxX(), tjson.maxY(), plain, tjson.align(), ord));
-            } else if (el instanceof dev.galacticraft.mod.api.documentation.model.elements.ImageElement ijson) {
+                ui.add(new TxtUi(
+                        pxX(tjson.nminX()), pxY(tjson.nminY()),
+                        pxX(tjson.nmaxX()), pxY(tjson.nmaxY()),
+                        plain, tjson.align(), ord
+                ));
+
+            } else if (el instanceof ImageElement ijson) {
                 ord = ijson.order();
-                ui.add(new ImgUi(ijson.x(), ijson.y(), ijson.w(), ijson.h(),
-                        ResourceLocation.parse(ijson.texture()), ijson.u(), ijson.v(), ijson.texW(), ijson.texH(), ord));
+                ui.add(new ImgUi(
+                        pxX(ijson.nx()), pxY(ijson.ny()),
+                        pxW(ijson.nw()), pxH(ijson.nh()),
+                        ResourceLocation.parse(ijson.texture()),
+                        ijson.u(), ijson.v(), ijson.texW(), ijson.texH(),
+                        ord
+                ));
+
             } else {
                 ord = fallback;
             }
@@ -220,7 +245,7 @@ public final class BlankPageScreen extends Screen {
             if (widget instanceof Button btn) {
                 for (var u : ui) {
                     if (u instanceof BtnUi b && b.runtime == null) {
-                        if (btn.getX() == b.x && btn.getY() == b.y && btn.getWidth() == b.w && btn.getHeight() == b.h) {
+                        if (approxMatch(b, btn)) {
                             b.runtime = btn;
                             b.relayoutRuntime();
                             break;
@@ -231,11 +256,19 @@ public final class BlankPageScreen extends Screen {
         }
     }
 
+    private boolean approxMatch(BtnUi b, Button btn) {
+        return Math.abs(btn.getX() - b.x()) <= 1 &&
+                Math.abs(btn.getY() - b.y()) <= 1 &&
+                Math.abs(btn.getWidth() - b.w()) <= 1 &&
+                Math.abs(btn.getHeight() - b.h()) <= 1;
+    }
+
     private void relinkRuntimeTextBoxes() {
         for (var u : ui) {
             if (u instanceof TxtUi t && t.link == null) {
                 for (var tb : textBoxes) {
-                    boolean sameBounds = (tb.minX == t.minX && tb.minY == t.minY && tb.maxX == t.maxX && tb.maxY == t.maxY);
+                    boolean sameBounds =
+                            (tb.minX == t.x() && tb.minY == t.y() && tb.maxX == t.x() + t.w() && tb.maxY == t.y() + t.h());
                     if (sameBounds) {
                         t.link = tb;
                         if (editing) tb.setDebugText(t.text);
@@ -261,10 +294,10 @@ public final class BlankPageScreen extends Screen {
             g.pose().translate(0.0f, 0.0f, z);
 
             if (el instanceof ImgUi i) {
-                g.blit(i.tex, i.x, i.y, i.u, i.v, i.w, i.h, i.tw, i.th);
+                g.blit(i.tex, i.x(), i.y(), i.u, i.v, i.w(), i.h(), i.tw, i.th);
             } else if (el instanceof TxtUi t) {
                 if (t.link != null) drawWrappedTextBox(g, this.font, t.link);
-                else g.drawString(this.font, Component.literal(t.text), t.minX, t.minY, 0xFFFFFF, false);
+                else g.drawString(this.font, Component.literal(t.text), t.x(), t.y(), 0xFFFFFF, false);
             } else if (el instanceof BtnUi b && b.runtime != null) {
                 b.runtime.render(g, mouseX, mouseY, dt);
             }
@@ -304,22 +337,45 @@ public final class BlankPageScreen extends Screen {
     }
 
     private void drawWrappedTextBox(GuiGraphics g, Font font, TextBox tb) {
+        int boxW = Math.max(1, tb.maxX - tb.minX);
+        int boxH = Math.max(1, tb.maxY - tb.minY);
+
         var lines = tb.getWrappedLines(font);
-        int y = tb.minY;
+        if (lines.isEmpty()) return;
+
+        int lineH = font.lineHeight + 2;
+        int neededH = Math.min(lines.size() * lineH, 1000000);
+
+        float scaleH = Math.min(1f, (boxH) / (float) Math.max(1, neededH));
+
+        int widest = 0;
+        for (var line : lines) widest = Math.max(widest, font.width(line));
+        float scaleW = Math.min(1f, (boxW) / (float) Math.max(1, widest));
+
+        float scale = Math.min(scaleH, scaleW);
+
+        g.pose().pushPose();
+        g.pose().translate(tb.minX, tb.minY, 0);
+        g.pose().scale(scale, scale, 1f);
+
+        int y = 0;
         for (var line : lines) {
-            int lineWidth = font.width(line);
+            int lw = font.width(line);
             int x;
+            int avail = (int) (boxW / scale);
             if ("center".equalsIgnoreCase(tb.align)) {
-                x = tb.minX + (Math.max(0, tb.maxX - tb.minX) - lineWidth) / 2;
+                x = (avail - lw) / 2;
             } else if ("right".equalsIgnoreCase(tb.align)) {
-                x = tb.maxX - lineWidth;
+                x = avail - lw;
             } else {
-                x = tb.minX;
+                x = 0;
             }
-            if (y + font.lineHeight > tb.maxY) break;
+            if ((y + font.lineHeight) > (int) (boxH / scale)) break;
             g.drawString(font, line, x, y, 0xFFFFFF, false);
-            y += font.lineHeight + 2;
+            y += lineH;
         }
+
+        g.pose().popPose();
     }
 
     private void drawSelectionFrame(GuiGraphics g, UiElement el) {
@@ -537,7 +593,7 @@ public final class BlankPageScreen extends Screen {
                 int v = Integer.parseInt(s.trim());
                 onChange.accept(v);
                 if (selected instanceof TxtUi t && t.link != null) {
-                    t.link.setBounds(t.minX, t.minY, t.maxX, t.maxY);
+                    t.link.setBounds(t.x(), t.y(), t.x() + t.w(), t.y() + t.h());
                 }
             } catch (NumberFormatException ignored) {
             }
@@ -807,7 +863,7 @@ public final class BlankPageScreen extends Screen {
                 var runtime = Button.builder(Component.literal(btn.text), b -> {
                             if (!editing) DocsApi.open(btn.target);
                         })
-                        .pos(btn.x, btn.y).size(btn.w, btn.h).build();
+                        .pos(btn.x(), btn.y()).size(btn.w(), btn.h()).build();
                 this.addRenderableWidget(runtime);
                 btn.runtime = runtime;
                 ui.add(btn);
@@ -832,6 +888,38 @@ public final class BlankPageScreen extends Screen {
                 this.ui.add(img);
                 select(img);
                 return true;
+            }
+            case GLFW.GLFW_KEY_LEFT -> {
+                if (selected != null) {
+                    int step = ((modifiers & GLFW.GLFW_MOD_SHIFT) != 0) ? 10 : 1;
+                    selected.setNormPos(selected.nx() - nxFromPx(step), selected.ny());
+                    clampRect(selected);
+                    return true;
+                }
+            }
+            case GLFW.GLFW_KEY_RIGHT -> {
+                if (selected != null) {
+                    int step = ((modifiers & GLFW.GLFW_MOD_SHIFT) != 0) ? 10 : 1;
+                    selected.setNormPos(selected.nx() + nxFromPx(step), selected.ny());
+                    clampRect(selected);
+                    return true;
+                }
+            }
+            case GLFW.GLFW_KEY_UP -> {
+                if (selected != null) {
+                    int step = ((modifiers & GLFW.GLFW_MOD_SHIFT) != 0) ? 10 : 1;
+                    selected.setNormPos(selected.nx(), selected.ny() - nyFromPx(step));
+                    clampRect(selected);
+                    return true;
+                }
+            }
+            case GLFW.GLFW_KEY_DOWN -> {
+                if (selected != null) {
+                    int step = ((modifiers & GLFW.GLFW_MOD_SHIFT) != 0) ? 10 : 1;
+                    selected.setNormPos(selected.nx(), selected.ny() + nyFromPx(step));
+                    clampRect(selected);
+                    return true;
+                }
             }
         }
         return super.keyPressed(keyCode, scanCode, modifiers);
@@ -901,8 +989,8 @@ public final class BlankPageScreen extends Screen {
         for (int idx = 0; idx < images.size(); idx++) {
             ImageSpec s = images.get(idx);
             if (s.texture.equals(i.tex)
-                    && s.x == i.x && s.y == i.y
-                    && s.w == i.w && s.h == i.h
+                    && s.x == i.x() && s.y == i.y()
+                    && s.w == i.w() && s.h == i.h()
                     && s.u == i.u && s.v == i.v
                     && s.texW == i.tw && s.texH == i.th) {
                 return idx;
@@ -920,7 +1008,46 @@ public final class BlankPageScreen extends Screen {
         }
     }
 
+    private int pxX(float nx) {
+        return Math.round(nx * this.width);
+    }
+
+    private int pxY(float ny) {
+        return Math.round(ny * this.height);
+    }
+
+    private int pxW(float nw) {
+        return Math.max(1, Math.round(nw * this.width));
+    }
+
+    private int pxH(float nh) {
+        return Math.max(1, Math.round(nh * this.height));
+    }
+
+    private float nxFromPx(int dx) {
+        return (this.width <= 0) ? 0f : (dx / (float) this.width);
+    }
+
+    private float nyFromPx(int dy) {
+        return (this.height <= 0) ? 0f : (dy / (float) this.height);
+    }
+
+    private void clampRect(UiElement e) {
+        float nx = e.nx(), ny = e.ny(), nw = e.nw(), nh = e.nh();
+        nx = Math.max(0f, Math.min(1f - Math.max(0.001f, nw), nx));
+        ny = Math.max(0f, Math.min(1f - Math.max(0.001f, nh), ny));
+        e.setNormPos(nx, ny);
+    }
+
     private sealed interface UiElement permits BtnUi, TxtUi, ImgUi {
+        float nx();
+
+        float ny();
+
+        float nw();
+
+        float nh();
+
         int x();
 
         int y();
@@ -929,13 +1056,13 @@ public final class BlankPageScreen extends Screen {
 
         int h();
 
-        int order();
+        void setNormPos(float nx, float ny);
 
-        void setOrder(int o);
+        void setNormSize(float nw, float nh);
 
-        void setPos(int x, int y);
+        void setPos(int px, int py);
 
-        void setSize(int w, int h);
+        void setSize(int pw, int ph);
 
         default boolean hit(int mx, int my) {
             return mx >= x() && mx <= x() + w() && my >= y() && my <= y() + h();
@@ -1039,87 +1166,111 @@ public final class BlankPageScreen extends Screen {
         }
     }
 
-    private static final class TxtUi implements UiElement {
-        int minX, minY, maxX, maxY;
+    private final class TxtUi implements UiElement {
+        float nminX, nminY, nmaxX, nmaxY;
         int order;
         String text;
         String align;
         @Nullable TextBox link;
 
         TxtUi(int minX, int minY, int maxX, int maxY, String text, String align, int order) {
-            this.minX = minX;
-            this.minY = minY;
-            this.maxX = maxX;
-            this.maxY = maxY;
+            this.nminX = (float) minX / Math.max(1, BlankPageScreen.this.width);
+            this.nminY = (float) minY / Math.max(1, BlankPageScreen.this.height);
+            this.nmaxX = (float) maxX / Math.max(1, BlankPageScreen.this.width);
+            this.nmaxY = (float) maxY / Math.max(1, BlankPageScreen.this.height);
             this.text = text;
             this.align = (align == null ? "left" : align);
             this.order = order;
         }
 
         @Override
+        public float nx() {
+            return nminX;
+        }
+
+        @Override
+        public float ny() {
+            return nminY;
+        }
+
+        @Override
+        public float nw() {
+            return Math.max(0.001f, nmaxX - nminX);
+        }
+
+        @Override
+        public float nh() {
+            return Math.max(0.001f, nmaxY - nminY);
+        }
+
+        @Override
         public int x() {
-            return minX;
+            return pxX(nminX);
         }
 
         @Override
         public int y() {
-            return minY;
+            return pxY(nminY);
         }
 
         @Override
         public int w() {
-            return maxX - minX;
+            return pxW(nw());
         }
 
         @Override
         public int h() {
-            return maxY - minY;
+            return pxH(nh());
         }
 
         @Override
-        public int order() {
-            return order;
+        public void setNormPos(float nx, float ny) {
+            float bw = nw(), bh = nh();
+            nminX = nx;
+            nminY = ny;
+            nmaxX = nx + bw;
+            nmaxY = ny + bh;
+            if (link != null) link.setBounds(x(), y(), x() + w(), y() + h());
         }
 
         @Override
-        public void setOrder(int o) {
-            this.order = o;
+        public void setNormSize(float nw, float nh) {
+            nmaxX = nminX + nw;
+            nmaxY = nminY + nh;
+            if (link != null) link.setBounds(x(), y(), x() + w(), y() + h());
         }
 
         @Override
-        public void setPos(int nx, int ny) {
-            int w = maxX - minX, h = maxY - minY;
-            minX = nx;
-            minY = ny;
-            maxX = minX + w;
-            maxY = minY + h;
-            if (link != null) link.setBounds(minX, minY, maxX, maxY);
+        public void setPos(int px, int py) {
+            setNormPos(px / (float) Math.max(1, BlankPageScreen.this.width),
+                    py / (float) Math.max(1, BlankPageScreen.this.height));
         }
 
         @Override
-        public void setSize(int nw, int nh) {
-            maxX = minX + Math.max(10, nw);
-            maxY = minY + Math.max(10, nh);
-            if (link != null) link.setBounds(minX, minY, maxX, maxY);
+        public void setSize(int pw, int ph) {
+            setNormSize(pw / (float) Math.max(1, BlankPageScreen.this.width),
+                    ph / (float) Math.max(1, BlankPageScreen.this.height));
         }
 
         @Override
         public String exportLine(int orderIndex) {
-            return "        .addTextBox(" + minX + ", " + minY + ", " + maxX + ", " + maxY + ", "
+            return "        .addTextBoxNormalized("
+                    + nminX + "f, " + nminY + "f, " + (nminX + nw()) + "f, " + (nminY + nh()) + "f, "
                     + escape(text) + ", " + (align == null ? "null" : escape(align)) + ", " + orderIndex + ")";
         }
     }
 
-    private static final class ImgUi implements UiElement {
-        int x, y, w, h, u, v, tw, th;
+    private final class ImgUi implements UiElement {
+        float nnx, nny, nnw, nnh;
         int order;
         ResourceLocation tex;
+        int u, v, tw, th;
 
         ImgUi(int x, int y, int w, int h, ResourceLocation tex, int u, int v, int tw, int th, int order) {
-            this.x = x;
-            this.y = y;
-            this.w = w;
-            this.h = h;
+            this.nnx = (float) x / Math.max(1, BlankPageScreen.this.width);
+            this.nny = (float) y / Math.max(1, BlankPageScreen.this.height);
+            this.nnw = (float) Math.max(10, w) / Math.max(1, BlankPageScreen.this.width);
+            this.nnh = (float) Math.max(10, h) / Math.max(1, BlankPageScreen.this.height);
             this.tex = tex;
             this.u = u;
             this.v = v;
@@ -1129,128 +1280,174 @@ public final class BlankPageScreen extends Screen {
         }
 
         @Override
+        public float nx() {
+            return nnx;
+        }
+
+        @Override
+        public float ny() {
+            return nny;
+        }
+
+        @Override
+        public float nw() {
+            return nnw;
+        }
+
+        @Override
+        public float nh() {
+            return nnh;
+        }
+
+        @Override
         public int x() {
-            return x;
+            return pxX(nnx);
         }
 
         @Override
         public int y() {
-            return y;
+            return pxY(nny);
         }
 
         @Override
         public int w() {
-            return w;
+            return pxW(nnw);
         }
 
         @Override
         public int h() {
-            return h;
+            return pxH(nnh);
         }
 
         @Override
-        public int order() {
-            return order;
+        public void setNormPos(float nx, float ny) {
+            this.nnx = nx;
+            this.nny = ny;
         }
 
         @Override
-        public void setOrder(int o) {
-            this.order = o;
+        public void setNormSize(float nw, float nh) {
+            this.nnw = Math.max(1f / Math.max(1, BlankPageScreen.this.width), nw);
+            this.nnh = Math.max(1f / Math.max(1, BlankPageScreen.this.height), nh);
         }
 
         @Override
-        public void setPos(int nx, int ny) {
-            x = nx;
-            y = ny;
+        public void setPos(int px, int py) {
+            setNormPos(px / (float) Math.max(1, BlankPageScreen.this.width),
+                    py / (float) Math.max(1, BlankPageScreen.this.height));
         }
 
         @Override
-        public void setSize(int nw, int nh) {
-            w = Math.max(10, nw);
-            h = Math.max(10, nh);
+        public void setSize(int pw, int ph) {
+            setNormSize(pw / (float) Math.max(1, BlankPageScreen.this.width),
+                    ph / (float) Math.max(1, BlankPageScreen.this.height));
         }
 
         @Override
         public String exportLine(int orderIndex) {
-            return "        .addImage(" + x + ", " + y + ", " + w + ", " + h + ", "
+            return "        .addImageNormalized("
+                    + nnx + "f, " + nny + "f, " + nnw + "f, " + nnh + "f, "
                     + "new ResourceLocation(\"" + tex + "\"), " + u + ", " + v + ", " + tw + ", " + th + ", " + orderIndex + ")";
         }
     }
 
     private final class BtnUi implements UiElement {
-        int x, y, w, h;
+        float nnx, nny, nnw, nnh;
         int order;
         String text;
         ResourceLocation target;
         Button runtime;
 
-        BtnUi(int x, int y, int w, int h, String text, ResourceLocation target, int order) {
-            this.x = x;
-            this.y = y;
-            this.w = w;
-            this.h = h;
+        BtnUi(int px, int py, int pw, int ph, String text, ResourceLocation target, int order) {
+            this.nnx = (float) px / Math.max(1, BlankPageScreen.this.width);
+            this.nny = (float) py / Math.max(1, BlankPageScreen.this.height);
+            this.nnw = (float) Math.max(10, pw) / Math.max(1, BlankPageScreen.this.width);
+            this.nnh = (float) Math.max(10, ph) / Math.max(1, BlankPageScreen.this.height);
             this.text = text;
             this.target = target;
             this.order = order;
         }
 
         @Override
+        public float nx() {
+            return nnx;
+        }
+
+        @Override
+        public float ny() {
+            return nny;
+        }
+
+        @Override
+        public float nw() {
+            return nnw;
+        }
+
+        @Override
+        public float nh() {
+            return nnh;
+        }
+
+        @Override
         public int x() {
-            return x;
+            return pxX(nnx);
         }
 
         @Override
         public int y() {
-            return y;
+            return pxY(nny);
         }
 
         @Override
         public int w() {
-            return w;
+            return pxW(nnw);
         }
 
         @Override
         public int h() {
-            return h;
+            return pxH(nnh);
         }
 
         @Override
-        public int order() {
-            return order;
-        }
-
-        @Override
-        public void setOrder(int o) {
-            this.order = o;
-        }
-
-        @Override
-        public void setPos(int nx, int ny) {
-            x = nx;
-            y = ny;
+        public void setNormPos(float nx, float ny) {
+            this.nnx = nx;
+            this.nny = ny;
             relayoutRuntime();
         }
 
         @Override
-        public void setSize(int nw, int nh) {
-            w = Math.max(10, nw);
-            h = Math.max(10, nh);
+        public void setNormSize(float nw, float nh) {
+            this.nnw = Math.max(1f / Math.max(1, BlankPageScreen.this.width), nw);
+            this.nnh = Math.max(1f / Math.max(1, BlankPageScreen.this.height), nh);
             relayoutRuntime();
+        }
+
+        @Override
+        public void setPos(int px, int py) {
+            setNormPos(px / (float) Math.max(1, BlankPageScreen.this.width),
+                    py / (float) Math.max(1, BlankPageScreen.this.height));
+        }
+
+        @Override
+        public void setSize(int pw, int ph) {
+            setNormSize(pw / (float) Math.max(1, BlankPageScreen.this.width),
+                    ph / (float) Math.max(1, BlankPageScreen.this.height));
         }
 
         void relayoutRuntime() {
             if (runtime != null) {
-                runtime.setX(x);
-                runtime.setY(y);
-                runtime.setWidth(w);
-                runtime.setHeight(h);
+                runtime.setX(x());
+                runtime.setY(y());
+                runtime.setWidth(w());
+                runtime.setHeight(h());
                 runtime.setMessage(Component.literal(text));
             }
         }
 
         @Override
         public String exportLine(int orderIndex) {
-            return "        .addRedirectButton(" + x + ", " + y + ", " + w + ", " + h + ", "
+            return "        .addRedirectButtonNormalized("
+                    + nnx + "f, " + nny + "f, " + nnw + "f, " + nnh + "f, "
                     + escape(text) + ", Constant.id(\"" + target + "\"), " + orderIndex + ")";
         }
     }

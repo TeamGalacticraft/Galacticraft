@@ -65,15 +65,16 @@ final class DocsJsonProvider implements DataProvider {
 
         JsonObject root = new HomePageBuilder(SCHEMA)
                 .setTitleText("doc.gc.home.title")
-                .addTextBox(5, 38, 319, 84, "doc.gc.home.intro", "left")
-                .addTextBox(12, 70, 460, 80, "doc.gc.home.category_label", "left")
-                .addRedirectButton(12, 120, 52, 44, "doc.gc.home.btn.airlock", AIRLOCK_PAGE)
-                .addTextBox(20, 60, 200, 120, "doc.gc.home.intro", "left")
+                .addTextBoxNormalized(0.04f, 0.18f, 0.62f, 0.42f, "doc.gc.home.intro", "left", 0)
+                .addTextBoxNormalized(0.04f, 0.46f, 0.76f, 0.52f, "doc.gc.home.category_label", "left", 1)
+                .addRedirectButtonNormalized(0.04f, 0.60f, 0.18f, 0.12f, "doc.gc.home.btn.airlock", AIRLOCK_PAGE, 2)
+                .addTextBoxNormalized(0.06f, 0.24f, 0.38f, 0.50f, "doc.gc.home.intro", "left", 3)
                 .build();
 
         Path p = out.getOutputFolder().resolve("assets/galacticraft/docs/home.json");
         return save(cache, root, p);
     }
+
 
     private CompletableFuture<?> writeAirlockPage(CachedOutput cache) {
         ResourceLocation PAGE_ID = Constant.id("air_lock_controller");
@@ -82,8 +83,8 @@ final class DocsJsonProvider implements DataProvider {
                 .setTitleText("doc.gc.airlock.title")
                 .bindItem(GCBlocks.AIR_LOCK_CONTROLLER.asItem())
                 .addOverviewSection("doc.common.overview", "doc.gc.airlock.overview")
-                .addTextBox(14, 52, 14 + 320, 52 + 70, "doc.gc.airlock.overview", "left")
-                .addRedirectButton(14, 130, 120, 20, "gc.docs.back", Constant.id("home"))
+                .addTextBoxNormalized(0.04f, 0.28f, 0.54f, 0.61f, "doc.gc.airlock.overview", "left", 0)
+                .addRedirectButtonNormalized(0.04f, 0.70f, 0.24f, 0.10f, "gc.docs.back", Constant.id("home"), 1)
                 .build();
 
         Path p = out.getOutputFolder().resolve("assets/galacticraft/docs/pages/air_lock_controller.json");

@@ -66,30 +66,31 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public T addRedirectButton(int x, int y, int width, int height, String textTranslationKey, ResourceLocation targetPage) {
-        return addRedirectButton(x, y, width, height, textTranslationKey, targetPage, elements.size());
+    public T addRedirectButtonNormalized(int nx, int ny, int nw, int nh, String textTranslationKey, ResourceLocation targetPage) {
+        return addRedirectButtonNormalized(nx, ny, nw, nh, textTranslationKey, targetPage, elements.size());
     }
 
     /**
      * Add a button that navigates to a docs page (by page id).
      *
-     * @param x                  X position of button in px
-     * @param y                  Y position of button in px
-     * @param width              Width of button in px
-     * @param height             Height of button in px
+     * @param nx                 X position of button normalized
+     * @param ny                 Y position of button normalized
+     * @param nw                 Width of button normalized
+     * @param nh                 Height of button normalized
      * @param textTranslationKey Translatable key for button text
      * @param targetPage         Page to redirect to
      * @param order              Layer order of button
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addRedirectButton(int x, int y, int width, int height, String textTranslationKey, ResourceLocation targetPage, int order) {
-        JsonObject btn = new JsonObject();
+    public T addRedirectButtonNormalized(float nx, float ny, float nw, float nh,
+                                         String textTranslationKey, ResourceLocation targetPage, int order) {
+        com.google.gson.JsonObject btn = new com.google.gson.JsonObject();
         btn.addProperty("type", "button");
-        btn.addProperty("x", x);
-        btn.addProperty("y", y);
-        btn.addProperty("w", width);
-        btn.addProperty("h", height);
+        btn.addProperty("nx", nx);
+        btn.addProperty("ny", ny);
+        btn.addProperty("nw", nw);
+        btn.addProperty("nh", nh);
         btn.addProperty("textKey", textTranslationKey);
         btn.addProperty("target", targetPage.toString());
         btn.addProperty("order", order);
@@ -98,65 +99,67 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     }
 
     @SuppressWarnings("unchecked")
-    public T addTextBox(int minX, int minY, int maxX, int maxY, String textTranslationKey, String align /* nullable */) {
-        return addTextBox(minX, minY, maxX, maxY, textTranslationKey, align, elements.size());
+    public T addTextBoxNormalized(int nminX, int nminY, int nmaxX, int nmaxY, String textTranslationKey, String align /* nullable */) {
+        return addTextBoxNormalized(nminX, nminY, nmaxX, nmaxY, textTranslationKey, align, elements.size());
     }
 
     /**
      * Add a text box with bounds; renderer can auto-wrap. Alignment is optional (left/center/right).
      *
-     * @param minX               minimum X position in px
-     * @param minY               minimum Y position in px
-     * @param maxX               maximum X position in px
-     * @param maxY               maximum Y position in px
+     * @param nminX              minimum X position normalized
+     * @param nminY              minimum Y position normalized
+     * @param nmaxX              maximum X position normalized
+     * @param nmaxY              maximum Y position normalized
      * @param textTranslationKey translatable key for text content
      * @param align              optional alignment ("left", "center", or "right"); may be {@code null}
      * @param order              Layer order of text box
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addTextBox(int minX, int minY, int maxX, int maxY, String textTranslationKey, String align /* nullable */, int order) {
-        JsonObject tb = new JsonObject();
+    public T addTextBoxNormalized(float nminX, float nminY, float nmaxX, float nmaxY,
+                                  String textTranslationKey, String align, int order) {
+        com.google.gson.JsonObject tb = new com.google.gson.JsonObject();
         tb.addProperty("type", "text");
-        tb.addProperty("minX", minX);
-        tb.addProperty("minY", minY);
-        tb.addProperty("maxX", maxX);
-        tb.addProperty("maxY", maxY);
+        tb.addProperty("nminX", nminX);
+        tb.addProperty("nminY", nminY);
+        tb.addProperty("nmaxX", nmaxX);
+        tb.addProperty("nmaxY", nmaxY);
         tb.addProperty("textKey", textTranslationKey);
-        if (align != null) tb.addProperty("align", align); // "left" | "center" | "right"
+        if (align != null) tb.addProperty("align", align);
         tb.addProperty("order", order);
         elements.add(tb);
         return (T) this;
     }
 
     @SuppressWarnings("unchecked")
-    public T addImage(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int texW, int texH) {
-        return addImage(x, y, width, height, texture, u, v, texW, texH, elements.size());
+    public T addImageNormalized(int nx, int ny, int nw, int nh, ResourceLocation texture, int u, int v, int texW, int texH) {
+        return addImageNormalized(nx, ny, nw, nh, texture, u, v, texW, texH, elements.size());
     }
 
     /**
      * Add a static image to the page.
      *
-     * @param x       X position of the image in px
-     * @param y       Y position of the image in px
-     * @param width   width of the image in px
-     * @param height  height of the image in px
+     * @param nx      X position of the image normalized
+     * @param ny      Y position of the image normalized
+     * @param nw      width of the image normalized
+     * @param nh      height of the image normalized
      * @param texture texture resource location
      * @param u       U-coordinate in the texture (px)
      * @param v       V-coordinate in the texture (px)
-     * @param texW    full texture width in px
-     * @param texH    full texture height in px
+     * @param texW    full texture width normalized
+     * @param texH    full texture height normalized
      * @param order   Label order of image
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addImage(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int texW, int texH, int order) {
-        JsonObject img = new JsonObject();
+    public T addImageNormalized(float nx, float ny, float nw, float nh,
+                                ResourceLocation texture, int u, int v, int texW, int texH, int order) {
+        com.google.gson.JsonObject img = new com.google.gson.JsonObject();
         img.addProperty("type", "image");
-        img.addProperty("x", x);
-        img.addProperty("y", y);
-        img.addProperty("w", width);
-        img.addProperty("h", height);
+        img.addProperty("nx", nx);
+        img.addProperty("ny", ny);
+        img.addProperty("nw", nw);
+        img.addProperty("nh", nh);
         img.addProperty("texture", texture.toString());
         img.addProperty("u", u);
         img.addProperty("v", v);

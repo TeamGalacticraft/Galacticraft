@@ -67,44 +67,44 @@ public final class DocsManager {
                     })
             .registerTypeAdapter(Element.class,
                     (com.google.gson.JsonDeserializer<Element>) (json, t, ctx) -> {
-                        JsonObject obj = json.getAsJsonObject();
+                        com.google.gson.JsonObject obj = json.getAsJsonObject();
                         String type = obj.get("type").getAsString();
 
                         switch (type) {
                             case "button" -> {
-                                int x = obj.get("x").getAsInt();
-                                int y = obj.get("y").getAsInt();
-                                int w = obj.get("w").getAsInt();
-                                int h = obj.get("h").getAsInt();
+                                float nx = obj.get("nx").getAsFloat();
+                                float ny = obj.get("ny").getAsFloat();
+                                float nw = obj.get("nw").getAsFloat();
+                                float nh = obj.get("nh").getAsFloat();
                                 String textKey = obj.get("textKey").getAsString();
                                 String target = obj.get("target").getAsString();
                                 int order = obj.get("order").getAsInt();
-                                return new ButtonElement(type, x, y, w, h, textKey, target, order);
+                                return new ButtonElement(type, nx, ny, nw, nh, textKey, target, order);
                             }
                             case "text" -> {
-                                int minX = obj.get("minX").getAsInt();
-                                int minY = obj.get("minY").getAsInt();
-                                int maxX = obj.get("maxX").getAsInt();
-                                int maxY = obj.get("maxY").getAsInt();
+                                float nminX = obj.get("nminX").getAsFloat();
+                                float nminY = obj.get("nminY").getAsFloat();
+                                float nmaxX = obj.get("nmaxX").getAsFloat();
+                                float nmaxY = obj.get("nmaxY").getAsFloat();
                                 String textKey = obj.get("textKey").getAsString();
                                 String align = obj.has("align") ? obj.get("align").getAsString() : null;
                                 int order = obj.get("order").getAsInt();
-                                return new TextElement(type, minX, minY, maxX, maxY, textKey, align, order);
+                                return new TextElement(type, nminX, nminY, nmaxX, nmaxY, textKey, align, order);
                             }
                             case "image" -> {
-                                int x = obj.get("x").getAsInt();
-                                int y = obj.get("y").getAsInt();
-                                int w = obj.get("w").getAsInt();
-                                int h = obj.get("h").getAsInt();
+                                float nx = obj.get("nx").getAsFloat();
+                                float ny = obj.get("ny").getAsFloat();
+                                float nw = obj.get("nw").getAsFloat();
+                                float nh = obj.get("nh").getAsFloat();
                                 String texture = obj.get("texture").getAsString();
                                 int u = obj.get("u").getAsInt();
                                 int v = obj.get("v").getAsInt();
                                 int texW = obj.get("texW").getAsInt();
                                 int texH = obj.get("texH").getAsInt();
                                 int order = obj.get("order").getAsInt();
-                                return new ImageElement(type, x, y, w, h, texture, u, v, texW, texH, order);
+                                return new ImageElement(type, nx, ny, nw, nh, texture, u, v, texW, texH, order);
                             }
-                            default -> throw new JsonParseException("Unknown docs element type: " + type);
+                            default -> throw new com.google.gson.JsonParseException("Unknown docs element type: " + type);
                         }
                     })
             .setPrettyPrinting()
