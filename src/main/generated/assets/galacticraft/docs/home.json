@@ -17,8 +17,8 @@
       "nx": 0.0043196543,
       "ny": 0.2992126,
       "order": 1,
-      "target": "galacticraft:air_lock_controller",
-      "textKey": "doc.gc.airlock.title"
+      "target": "galacticraft:home",
+      "textKey": "doc.gc.home.category_general"
     },
     {
       "type": "text",
@@ -38,7 +38,7 @@
       "ny": 0.38188976,
       "order": 3,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_machines"
     },
     {
       "type": "button",
@@ -48,7 +48,7 @@
       "ny": 0.46456692,
       "order": 4,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_rockets"
     },
     {
       "type": "button",
@@ -58,7 +58,7 @@
       "ny": 0.5472441,
       "order": 5,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_planets"
     },
     {
       "type": "button",
@@ -68,7 +68,7 @@
       "ny": 0.62992126,
       "order": 6,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_entities"
     },
     {
       "type": "button",
@@ -78,7 +78,7 @@
       "ny": 0.71259844,
       "order": 7,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_blocks"
     },
     {
       "type": "button",
@@ -88,7 +88,7 @@
       "ny": 0.79527557,
       "order": 8,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_items"
     },
     {
       "type": "button",
@@ -98,7 +98,7 @@
       "ny": 0.87795275,
       "order": 9,
       "target": "galacticraft:home",
-      "textKey": "doc.unimplemented"
+      "textKey": "doc.gc.home.category_fluids_and_gasses"
     }
   ],
   "schema": 2,

@@ -66,15 +66,15 @@ final class DocsJsonProvider implements DataProvider {
         JsonObject root = new HomePageBuilder(SCHEMA)
                 .setTitleText("doc.gc.home.title")
                 .addTextBoxNormalized(0.004319654f, 0.2519685f, 0.99568033f, 0.3031496f, "doc.gc.home.category_label", "left", 0)
-                .addRedirectButtonNormalized(0.0043196543f, 0.2992126f, 0.26349893f, 0.07874016f, "doc.gc.airlock.title", AIRLOCK_PAGE, 1)
+                .addRedirectButtonNormalized(0.0043196543f, 0.2992126f, 0.26349893f, 0.07874016f, "doc.gc.home.category_general", Constant.id("home"), 1)
                 .addTextBoxNormalized(0.0043196213f, 0.122047246f, 0.99568033f, 0.24015749f, "doc.gc.home.intro", "left", 2)
-                .addRedirectButtonNormalized(0.0043196543f, 0.38188976f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 3)
-                .addRedirectButtonNormalized(0.0043196543f, 0.46456692f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 4)
-                .addRedirectButtonNormalized(0.0043196543f, 0.5472441f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 5)
-                .addRedirectButtonNormalized(0.0043196543f, 0.62992126f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 6)
-                .addRedirectButtonNormalized(0.0043196543f, 0.71259844f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 7)
-                .addRedirectButtonNormalized(0.0043196543f, 0.79527557f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 8)
-                .addRedirectButtonNormalized(0.0043196543f, 0.87795275f, 0.26349893f, 0.07874016f, "doc.unimplemented", Constant.id("home"), 9)
+                .addRedirectButtonNormalized(0.0043196543f, 0.38188976f, 0.26349893f, 0.07874016f, "doc.gc.home.category_machines", Constant.id("home"), 3)
+                .addRedirectButtonNormalized(0.0043196543f, 0.46456692f, 0.26349893f, 0.07874016f, "doc.gc.home.category_rockets", Constant.id("home"), 4)
+                .addRedirectButtonNormalized(0.0043196543f, 0.5472441f, 0.26349893f, 0.07874016f, "doc.gc.home.category_planets", Constant.id("home"), 5)
+                .addRedirectButtonNormalized(0.0043196543f, 0.62992126f, 0.26349893f, 0.07874016f, "doc.gc.home.category_entities", Constant.id("home"), 6)
+                .addRedirectButtonNormalized(0.0043196543f, 0.71259844f, 0.26349893f, 0.07874016f, "doc.gc.home.category_blocks", Constant.id("home"), 7)
+                .addRedirectButtonNormalized(0.0043196543f, 0.79527557f, 0.26349893f, 0.07874016f, "doc.gc.home.category_items", Constant.id("home"), 8)
+                .addRedirectButtonNormalized(0.0043196543f, 0.87795275f, 0.26349893f, 0.07874016f, "doc.gc.home.category_fluids_and_gasses", Constant.id("home"), 9)
                 .build();
 
         Path p = out.getOutputFolder().resolve("assets/galacticraft/docs/home.json");

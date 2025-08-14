@@ -26,18 +26,30 @@ import dev.galacticraft.mod.data.GCTranslationProvider;
 
 public class DocsTranslations {
     public static void generateDocsTranslations(GCTranslationProvider t) {
+        // --- GENERAL ---
         t.add("key.gc.inspect", "Inspect");
         t.add("key.categories.galacticraft", "Galacticraft");
         t.add("tooltip.gc.inspect_hint", "Press %s to inspect");
         t.add("gc.docs.back", "Back");
+        t.add("doc.unimplemented", "Unimplemented");
 
+        // --- HOME PAGE ---
         t.add("doc.gc.home.title", "Galacticraft Documentation");
         t.add("doc.gc.home.intro", "Galacticraft 5 Rewoven. The number 1 space mod rewritten for the latest version of Minecraft.");
         t.add("doc.gc.home.category_label", "Categories");
+        t.add("doc.gc.home.category_general", "General");
+        t.add("doc.gc.home.category_machines", "Machines");
+        t.add("doc.gc.home.category_rockets", "Rockets");
+        t.add("doc.gc.home.category_planets", "Planets");
+        t.add("doc.gc.home.category_entities", "Entities");
+        t.add("doc.gc.home.category_blocks", "Blocks");
+        t.add("doc.gc.home.category_items", "Items");
+        t.add("doc.gc.home.category_fluids_and_gasses", "Fluids and Gasses");
+
+        // --- OTHER ---
         t.add("doc.common.overview", "Overview");
         t.add("doc.gc.airlock.title", "Airlock Controller");
         t.add("doc.gc.airlock.overview", "Place the Airlock Controller and connect frames. Power it with redstone to toggle the door.");
         t.add("doc.gc.home.btn.airlock", "Airlock Controller");
-        t.add("doc.unimplemented", "Unimplemented");
     }
 }
