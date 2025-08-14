@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.documentation.model;
 
+import dev.galacticraft.mod.api.documentation.model.elements.Element;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 

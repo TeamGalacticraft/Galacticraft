@@ -7,6 +7,7 @@
       "maxY": 84,
       "minX": 5,
       "minY": 38,
+      "order": 0,
       "textKey": "doc.gc.home.intro"
     },
     {
@@ -16,11 +17,13 @@
       "maxY": 80,
       "minX": 12,
       "minY": 70,
+      "order": 1,
       "textKey": "doc.gc.home.category_label"
     },
     {
       "type": "button",
       "h": 44,
+      "order": 2,
       "target": "galacticraft:air_lock_controller",
       "textKey": "doc.gc.home.btn.airlock",
       "w": 52,
@@ -34,6 +37,7 @@
       "maxY": 120,
       "minX": 20,
       "minY": 60,
+      "order": 3,
       "textKey": "doc.gc.home.intro"
     }
   ],

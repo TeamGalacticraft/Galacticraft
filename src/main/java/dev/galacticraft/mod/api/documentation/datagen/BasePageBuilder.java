@@ -30,9 +30,9 @@ import java.util.Objects;
 
 abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     protected final int schema;
+    protected final JsonArray elements = new JsonArray();
     protected String titleKey = "doc.gc.home.title";
     protected Integer titleX = null, titleY = null;
-    protected final JsonArray elements = new JsonArray();
 
     protected BasePageBuilder(int schema) {
         this.schema = schema;
@@ -40,6 +40,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
 
     /**
      * Set the page title translation key
+     *
      * @param titleKey TRANSLATABLE KEY
      * @return {@link T}
      */
@@ -52,6 +53,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
     /**
      * Set the position of the title in pixels.
      * If unset defaults to center
+     *
      * @param x X pos in px
      * @param y Y pos in px
      * @return {@link T}
@@ -63,18 +65,25 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
         return (T) this;
     }
 
+    @SuppressWarnings("unchecked")
+    public T addRedirectButton(int x, int y, int width, int height, String textTranslationKey, ResourceLocation targetPage) {
+        return addRedirectButton(x, y, width, height, textTranslationKey, targetPage, elements.size());
+    }
+
     /**
      * Add a button that navigates to a docs page (by page id).
-     * @param x X position of button in px
-     * @param y Y position of button in px
-     * @param width Width of button in px
-     * @param height Height of button in px
+     *
+     * @param x                  X position of button in px
+     * @param y                  Y position of button in px
+     * @param width              Width of button in px
+     * @param height             Height of button in px
      * @param textTranslationKey Translatable key for button text
-     * @param targetPage Page to redirect to
+     * @param targetPage         Page to redirect to
+     * @param order              Layer order of button
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addRedirectButton(int x, int y, int width, int height, String textTranslationKey, ResourceLocation targetPage) {
+    public T addRedirectButton(int x, int y, int width, int height, String textTranslationKey, ResourceLocation targetPage, int order) {
         JsonObject btn = new JsonObject();
         btn.addProperty("type", "button");
         btn.addProperty("x", x);
@@ -83,23 +92,30 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
         btn.addProperty("h", height);
         btn.addProperty("textKey", textTranslationKey);
         btn.addProperty("target", targetPage.toString());
+        btn.addProperty("order", order);
         elements.add(btn);
         return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T addTextBox(int minX, int minY, int maxX, int maxY, String textTranslationKey, String align /* nullable */) {
+        return addTextBox(minX, minY, maxX, maxY, textTranslationKey, align, elements.size());
     }
 
     /**
      * Add a text box with bounds; renderer can auto-wrap. Alignment is optional (left/center/right).
      *
-     * @param minX minimum X position in px
-     * @param minY minimum Y position in px
-     * @param maxX maximum X position in px
-     * @param maxY maximum Y position in px
+     * @param minX               minimum X position in px
+     * @param minY               minimum Y position in px
+     * @param maxX               maximum X position in px
+     * @param maxY               maximum Y position in px
      * @param textTranslationKey translatable key for text content
-     * @param align optional alignment ("left", "center", or "right"); may be {@code null}
+     * @param align              optional alignment ("left", "center", or "right"); may be {@code null}
+     * @param order              Layer order of text box
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addTextBox(int minX, int minY, int maxX, int maxY, String textTranslationKey, String align /* nullable */) {
+    public T addTextBox(int minX, int minY, int maxX, int maxY, String textTranslationKey, String align /* nullable */, int order) {
         JsonObject tb = new JsonObject();
         tb.addProperty("type", "text");
         tb.addProperty("minX", minX);
@@ -108,26 +124,33 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
         tb.addProperty("maxY", maxY);
         tb.addProperty("textKey", textTranslationKey);
         if (align != null) tb.addProperty("align", align); // "left" | "center" | "right"
+        tb.addProperty("order", order);
         elements.add(tb);
         return (T) this;
+    }
+
+    @SuppressWarnings("unchecked")
+    public T addImage(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int texW, int texH) {
+        return addImage(x, y, width, height, texture, u, v, texW, texH, elements.size());
     }
 
     /**
      * Add a static image to the page.
      *
-     * @param x X position of the image in px
-     * @param y Y position of the image in px
-     * @param width width of the image in px
-     * @param height height of the image in px
+     * @param x       X position of the image in px
+     * @param y       Y position of the image in px
+     * @param width   width of the image in px
+     * @param height  height of the image in px
      * @param texture texture resource location
-     * @param u U-coordinate in the texture (px)
-     * @param v V-coordinate in the texture (px)
-     * @param texW full texture width in px
-     * @param texH full texture height in px
+     * @param u       U-coordinate in the texture (px)
+     * @param v       V-coordinate in the texture (px)
+     * @param texW    full texture width in px
+     * @param texH    full texture height in px
+     * @param order   Label order of image
      * @return {@link T}
      */
     @SuppressWarnings("unchecked")
-    public T addImage(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int texW, int texH) {
+    public T addImage(int x, int y, int width, int height, ResourceLocation texture, int u, int v, int texW, int texH, int order) {
         JsonObject img = new JsonObject();
         img.addProperty("type", "image");
         img.addProperty("x", x);
@@ -139,6 +162,7 @@ abstract class BasePageBuilder<T extends BasePageBuilder<T>> {
         img.addProperty("v", v);
         img.addProperty("texW", texW);
         img.addProperty("texH", texH);
+        img.addProperty("order", order);
         elements.add(img);
         return (T) this;
     }

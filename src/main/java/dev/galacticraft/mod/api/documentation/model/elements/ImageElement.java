@@ -20,7 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.documentation.model;
+package dev.galacticraft.mod.api.documentation.model.elements;
 
-public sealed interface Element permits ButtonElement, TextElement, ImageElement {}
-
+public record ImageElement(
+        String type, int x, int y, int w, int h,
+        String texture, int u, int v, int texW, int texH,
+        int order
+) implements Element {}

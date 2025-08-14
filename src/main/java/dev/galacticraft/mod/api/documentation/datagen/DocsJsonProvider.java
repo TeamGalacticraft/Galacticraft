@@ -43,9 +43,14 @@ final class DocsJsonProvider implements DataProvider {
 
     private final FabricDataOutput out;
 
-    DocsJsonProvider(FabricDataOutput out) { this.out = out; }
+    DocsJsonProvider(FabricDataOutput out) {
+        this.out = out;
+    }
 
-    @Override public String getName() { return "GC Docs JSON"; }
+    @Override
+    public String getName() {
+        return "GC Docs JSON";
+    }
 
     @Override
     public CompletableFuture<?> run(CachedOutput cache) {
@@ -65,7 +70,6 @@ final class DocsJsonProvider implements DataProvider {
                 .addRedirectButton(12, 120, 52, 44, "doc.gc.home.btn.airlock", AIRLOCK_PAGE)
                 .addTextBox(20, 60, 200, 120, "doc.gc.home.intro", "left")
                 .build();
-
 
         Path p = out.getOutputFolder().resolve("assets/galacticraft/docs/home.json");
         return save(cache, root, p);
@@ -87,7 +91,11 @@ final class DocsJsonProvider implements DataProvider {
     }
 
     private CompletableFuture<?> save(CachedOutput cache, Object json, Path path) {
-        try { Files.createDirectories(path.getParent()); } catch (IOException e) { throw new RuntimeException(e); }
+        try {
+            Files.createDirectories(path.getParent());
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }
         return DataProvider.saveStable(cache, GSON.toJsonTree(json), path);
     }
 }

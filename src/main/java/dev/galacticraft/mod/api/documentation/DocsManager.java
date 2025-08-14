@@ -28,12 +28,21 @@ import com.google.gson.JsonObject;
 import com.google.gson.JsonParseException;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.documentation.client.pages.BlankPageScreen;
-import dev.galacticraft.mod.api.documentation.model.*;
+import dev.galacticraft.mod.api.documentation.model.HomeDoc;
+import dev.galacticraft.mod.api.documentation.model.SectionOverview;
+import dev.galacticraft.mod.api.documentation.model.SubDoc;
+import dev.galacticraft.mod.api.documentation.model.elements.ButtonElement;
+import dev.galacticraft.mod.api.documentation.model.elements.Element;
+import dev.galacticraft.mod.api.documentation.model.elements.ImageElement;
+import dev.galacticraft.mod.api.documentation.model.elements.TextElement;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 
-import java.util.*;
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 public final class DocsManager {
     public static final ResourceLocation HOME_ID = Constant.id("home");
@@ -51,7 +60,7 @@ public final class DocsManager {
                         String type = obj.get("type").getAsString();
                         if ("overview".equals(type)) {
                             String headingKey = obj.has("headingKey") ? obj.get("headingKey").getAsString() : null;
-                            String bodyKey    = obj.has("bodyKey")    ? obj.get("bodyKey").getAsString()    : null;
+                            String bodyKey = obj.has("bodyKey") ? obj.get("bodyKey").getAsString() : null;
                             return new SectionOverview(type, headingKey, bodyKey);
                         }
                         throw new JsonParseException("Unknown docs section type: " + type);
@@ -69,7 +78,8 @@ public final class DocsManager {
                                 int h = obj.get("h").getAsInt();
                                 String textKey = obj.get("textKey").getAsString();
                                 String target = obj.get("target").getAsString();
-                                return new ButtonElement(type, x, y, w, h, textKey, target);
+                                int order = obj.get("order").getAsInt();
+                                return new ButtonElement(type, x, y, w, h, textKey, target, order);
                             }
                             case "text" -> {
                                 int minX = obj.get("minX").getAsInt();
@@ -78,7 +88,8 @@ public final class DocsManager {
                                 int maxY = obj.get("maxY").getAsInt();
                                 String textKey = obj.get("textKey").getAsString();
                                 String align = obj.has("align") ? obj.get("align").getAsString() : null;
-                                return new TextElement(type, minX, minY, maxX, maxY, textKey, align);
+                                int order = obj.get("order").getAsInt();
+                                return new TextElement(type, minX, minY, maxX, maxY, textKey, align, order);
                             }
                             case "image" -> {
                                 int x = obj.get("x").getAsInt();
@@ -90,20 +101,21 @@ public final class DocsManager {
                                 int v = obj.get("v").getAsInt();
                                 int texW = obj.get("texW").getAsInt();
                                 int texH = obj.get("texH").getAsInt();
-                                return new ImageElement(type, x, y, w, h, texture, u, v, texW, texH);
+                                int order = obj.get("order").getAsInt();
+                                return new ImageElement(type, x, y, w, h, texture, u, v, texW, texH, order);
                             }
                             default -> throw new JsonParseException("Unknown docs element type: " + type);
                         }
                     })
             .setPrettyPrinting()
             .create();
-
-    private static HomeDoc HOME;
     private static final Map<ResourceLocation, SubDoc> DOCS = new LinkedHashMap<>();
     private static final Map<Item, ResourceLocation> ITEM_TO_PAGE = new HashMap<>();
     private static final Map<ResourceLocation, ResourceLocation> PARENTS = new HashMap<>();
+    private static HomeDoc HOME;
 
-    private DocsManager() {}
+    private DocsManager() {
+    }
 
     public static void clear() {
         HOME = null;

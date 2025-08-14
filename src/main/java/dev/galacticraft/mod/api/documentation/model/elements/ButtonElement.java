@@ -20,11 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.documentation.model;
+package dev.galacticraft.mod.api.documentation.model.elements;
 
-import org.jetbrains.annotations.Nullable;
-
-public record TextElement(
-        String type, int minX, int minY, int maxX, int maxY,
-        String textKey, @Nullable String align
+public record ButtonElement(
+        String type, int x, int y, int w, int h,
+        String textKey, String target,
+        int order
 ) implements Element {}

@@ -20,9 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.documentation.model;
+package dev.galacticraft.mod.api.documentation.model.elements;
 
-public record ButtonElement(
-        String type, int x, int y, int w, int h,
-        String textKey, String target
-) implements Element {}
+public sealed interface Element permits ButtonElement, TextElement, ImageElement {
+    int order();
+}
+
