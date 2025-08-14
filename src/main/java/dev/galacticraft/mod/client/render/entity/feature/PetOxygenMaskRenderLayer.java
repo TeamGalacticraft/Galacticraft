@@ -57,9 +57,8 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
 
     public PetOxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        ModelPart root;
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         ModelPart realHead = null;
         if (context.getModel() instanceof AnimalModelAgeableListModel model) {
             this.head = model.callGetHeadParts().iterator().next();
@@ -67,14 +66,14 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
 
             if (context.getModel() instanceof WolfModel) {
                 realHead = this.head.getChild("real_head");
-                PartDefinition maskPart = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create(), PartPose.offset(-1.0F, 13.5F, -7.0F));
+                PartDefinition maskPart = partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create(), PartPose.offset(-1.0F, 13.5F, -7.0F));
                 maskPart.addOrReplaceChild(Constant.ModelPartName.REAL_OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-3.0F, -5.0F, -6.0F, 8, 8, 8, new CubeDeformation(0.1F)), PartPose.ZERO);
-                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
-                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
+                partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
+                partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 0).addBox(0.0F, -11.0F, 2.0F, 0, 9, 8, CubeDeformation.NONE), PartPose.ZERO);
             } else if (context.getModel() instanceof CatModel) {
-                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 18).addBox(-3.5F, -4.0F, -4.9F, 7, 7, 7, CubeDeformation.NONE), PartPose.ZERO);
-                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
-                modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+                partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 18).addBox(-3.5F, -4.0F, -4.9F, 7, 7, 7, CubeDeformation.NONE), PartPose.ZERO);
+                partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(48, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+                partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING, CubeListBuilder.create().texOffs(32, 18).addBox(0.0F, 0.0F, -3.0F, 0, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
             }
         } else {
             this.head = null;
@@ -86,11 +85,11 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             return;
         }
 
-        root = modelPartData.bake(64, 32);
+        ModelPart modelRoot = partDefinition.bake(64, 32);
         this.realHead = realHead;
-        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
-        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
-        this.pipeSitting = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING) : null;
+        this.mask = this.head != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
+        this.pipeSitting = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE_SITTING) : null;
     }
 
     @Override
