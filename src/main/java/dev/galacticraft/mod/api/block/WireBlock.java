@@ -27,20 +27,25 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WireNetworkAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
+import dev.galacticraft.mod.util.DirectionUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-public class WireBlock extends PipeShapedBlock<WireBlockEntity> {
+public class WireBlock extends PipeShapedBlock implements EntityBlock {
     public static final long TIER_1_THROUGHPUT = 240;
     public static final long TIER_2_THROUGHPUT = 480;
 
@@ -52,7 +57,7 @@ public class WireBlock extends PipeShapedBlock<WireBlockEntity> {
     }
 
     @Override
-    protected InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
+    protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
         if (!level.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof Wire wire) {
@@ -63,20 +68,30 @@ public class WireBlock extends PipeShapedBlock<WireBlockEntity> {
     }
 
     @Override
-    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-        if (!level.isClientSide && level.getBlockEntity(thisPos) instanceof WireBlockEntity wire) {
-            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(thisPos, wire, direction);
-        }
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborChanged(state, level, pos, sourceBlock, sourcePos, notify);
     }
 
     @Override
-    public boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState) {
-        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null || neighborState.getBlock() instanceof WireBlock wb && wb.getThroughput() == ((WireBlock) thisState.getBlock()).getThroughput();
+    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        BlockState blockState = super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof WireBlockEntity wire && blockState != state) {
+            Direction dir = DirectionUtil.fromNormal(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
+            wire.setBlockState(blockState); //fixme
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(pos, wire, dir);
+        }
+
+        return blockState;
+    }
+
+    @Override
+    public boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+        return (level instanceof Level l && EnergyStorage.SIDED.find(l, neighborPos, direction.getOpposite()) != null) || neighborState.getBlock() instanceof WireBlock wb && wb.getThroughput() == ((WireBlock) state.getBlock()).getThroughput();
     }
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!level.isClientSide) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireRemoved(pos);
+        if (!level.isClientSide && !newState.is(state.getBlock())) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireRemoved(pos);
         super.onRemove(state, level, pos, newState, moved);
     }
 

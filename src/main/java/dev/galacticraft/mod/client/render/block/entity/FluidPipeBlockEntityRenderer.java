@@ -23,16 +23,16 @@
 package dev.galacticraft.mod.client.render.block.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.PipeBlockEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 
-public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<GlassFluidPipeBlockEntity> {
+public class FluidPipeBlockEntityRenderer implements BlockEntityRenderer<PipeBlockEntity> {
     public FluidPipeBlockEntityRenderer(BlockEntityRendererProvider.Context context) {
     }
 
     @Override
-    public void render(GlassFluidPipeBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+    public void render(PipeBlockEntity entity, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
     }
 }

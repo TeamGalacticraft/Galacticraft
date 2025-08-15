@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.Block;
@@ -31,7 +31,6 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
@@ -88,54 +87,6 @@ public class ConnectingBlockUtil {
         };
     }
 
-    public static VoxelShape getVoxelShape(BlockState blockState, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
-        VoxelShape shape = none;
-
-        if (blockState.getValue(BlockStateProperties.NORTH)) {
-            shape = Shapes.join(shape, north, BooleanOp.OR);
-        }
-        if (blockState.getValue(BlockStateProperties.SOUTH)) {
-            shape = Shapes.join(shape, south, BooleanOp.OR);
-        }
-        if (blockState.getValue(BlockStateProperties.EAST)) {
-            shape = Shapes.join(shape, east, BooleanOp.OR);
-        }
-        if (blockState.getValue(BlockStateProperties.WEST)) {
-            shape = Shapes.join(shape, west, BooleanOp.OR);
-        }
-        if (blockState.getValue(BlockStateProperties.UP)) {
-            shape = Shapes.join(shape, up, BooleanOp.OR);
-        }
-        if (blockState.getValue(BlockStateProperties.DOWN)) {
-            shape = Shapes.join(shape, down, BooleanOp.OR);
-        }
-        return shape;
-    }
-
-    public static VoxelShape getVoxelShape(Connected connected, VoxelShape north, VoxelShape south, VoxelShape east, VoxelShape west, VoxelShape up, VoxelShape down, VoxelShape none) {
-        VoxelShape shape = none;
-
-        if (connected.isConnected(Direction.NORTH)) {
-            shape = Shapes.join(shape, north, BooleanOp.OR);
-        }
-        if (connected.isConnected(Direction.SOUTH)) {
-            shape = Shapes.join(shape, south, BooleanOp.OR);
-        }
-        if (connected.isConnected(Direction.EAST)) {
-            shape = Shapes.join(shape, east, BooleanOp.OR);
-        }
-        if (connected.isConnected(Direction.WEST)) {
-            shape = Shapes.join(shape, west, BooleanOp.OR);
-        }
-        if (connected.isConnected(Direction.UP)) {
-            shape = Shapes.join(shape, up, BooleanOp.OR);
-        }
-        if (connected.isConnected(Direction.DOWN)) {
-            shape = Shapes.join(shape, down, BooleanOp.OR);
-        }
-        return shape;
-    }
-
     public static BlockState rotateConnections(BlockState state, Rotation rotation) {
         return switch (rotation) {
             case CLOCKWISE_180 ->
@@ -156,5 +107,33 @@ public class ConnectingBlockUtil {
                     state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST)).setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
             case NONE -> state;
         };
+    }
+
+    public static VoxelShape[] generateShapeCache(VoxelShape baseShape, VoxelShape[] outerShapes) {
+        VoxelShape[] shapes = new VoxelShape[64];
+
+        for (int j = 0; j < 64; j++) {
+            VoxelShape shape = baseShape;
+
+            for (int k = 0; k < Constant.Misc.DIRECTIONS.length; k++) {
+                if ((j & 1 << k) != 0) {
+                    shape = Shapes.or(shape, outerShapes[k]);
+                }
+            }
+            shapes[j] = shape;
+        }
+        return shapes;
+    }
+
+    public static int generateAABBIndex(BlockState state) {
+        int i = 0;
+
+        for (int j = 0; j < Constant.Misc.DIRECTIONS.length; j++) {
+            if (state.getValue(getBooleanProperty(Constant.Misc.DIRECTIONS[j]))) {
+                i |= 1 << j;
+            }
+        }
+
+        return i;
     }
 }

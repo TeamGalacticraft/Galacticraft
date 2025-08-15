@@ -23,60 +23,18 @@
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FluidState;
-import net.minecraft.world.phys.shapes.CollisionContext;
-import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable {
+public class GlassFluidPipeBlock extends FluidPipeBlock {
     public GlassFluidPipeBlock(Properties settings, PipeColor color) {
         super(settings, color);
-
-        BlockState state = this.getStateDefinition().any();
-        state = FluidLoggable.applyDefaultState(state);
-        this.registerDefaultState(state);
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
-        FluidLoggable.addStateDefinitions(compositeStateBuilder);
-    }
-
-    @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return super.getShape(state, world, pos, context);
-    }
-
-    @Override
-    public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockState state = super.getStateForPlacement(ctx);
-        state = FluidLoggable.applyFluidState(ctx.getLevel(), state, ctx.getClickedPos());
-        return state;
-    }
-
-    @Override
-    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
-        FluidLoggable.tryScheduleFluidTick(levelAccessor, state, pos);
-        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
-    }
-
-    @Override
-    protected @NotNull FluidState getFluidState(BlockState state) {
-        return FluidLoggable.createFluidState(state);
     }
 
     @Override
@@ -92,12 +50,6 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     @Override
     public float getShadeBrightness(BlockState blockState, BlockGetter level, BlockPos blockPos) {
         return 1.0F;
-    }
-
-    @Override
-    @Nullable
-    public PipeBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new GlassFluidPipeBlockEntity(blockPos, blockState);
     }
 
     @Override

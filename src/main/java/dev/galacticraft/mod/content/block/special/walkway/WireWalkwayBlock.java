@@ -22,40 +22,31 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
-public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock, FluidLoggable {
+public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock {
     public WireWalkwayBlock(Properties settings) {
         super(WireBlock.TIER_1_THROUGHPUT, 0.125f, settings);
         BlockState defaultState = this.getStateDefinition().any();
-        defaultState = FluidLoggable.applyDefaultState(defaultState);
         defaultState = AbstractWalkwayBlock.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
     }
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof Connected connected) {
-            return AbstractWalkwayBlock.getShape(connected, blockState);
-        }
         return AbstractWalkwayBlock.getShape(blockState);
     }
 
@@ -66,27 +57,13 @@ public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock,
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
-        state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
-        state = AbstractWalkwayBlock.applyStateForPlacement(state, context);
-        return state;
+        return AbstractWalkwayBlock.applyStateForPlacement(super.getStateForPlacement(context), context);
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
-        return super.updateShape(blockState, direction, neighborState, level, blockPos, neighborPos);
-    }
-
-    @Override
-    public @NotNull FluidState getFluidState(BlockState blockState) {
-        return FluidLoggable.createFluidState(blockState);
-    }
-
-    @Override
-    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        FluidLoggable.addStateDefinitions(stateBuilder);
-        AbstractWalkwayBlock.addStateDefinitions(stateBuilder);
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        AbstractWalkwayBlock.addStateDefinitions(builder);
     }
 
     @Override

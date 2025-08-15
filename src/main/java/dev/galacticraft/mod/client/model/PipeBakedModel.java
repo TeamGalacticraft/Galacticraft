@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -48,7 +48,10 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.Collections;
+import java.util.EnumMap;
+import java.util.List;
+import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
@@ -236,23 +239,23 @@ public class PipeBakedModel implements BakedModel {
     public void emitBlockQuads(BlockAndTintGetter getter, BlockState blockState, BlockPos blockPos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         var emitter = context.getEmitter();
 
-        if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
-            for (Direction direction : Direction.values()) {
-                if (pipe.isConnected(direction)) {
-                    this.meshes.get(direction).outputTo(emitter);
-                } else {
-                    emitter
-                        .square(direction, 0.5f-this.radius, 0.5f-this.radius, 0.5f+this.radius, 0.5f+this.radius, 0.5f-this.radius)
+        for (Direction direction : Direction.values()) {
+            if (blockState.getValue(ConnectingBlockUtil.getBooleanProperty(direction))) {
+                this.meshes.get(direction).outputTo(emitter);
+            } else {
+                emitter
+                        .square(direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius)
                         .uv(0, 0, 6)
                         .uv(1, 0, 10)
                         .uv(2, 4, 10)
                         .uv(3, 4, 6)
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
-                }
             }
         }
+
     }
+
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<RandomSource> randomSupplier, RenderContext context) {
     }

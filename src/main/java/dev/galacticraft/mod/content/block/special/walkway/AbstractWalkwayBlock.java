@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
-import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import net.minecraft.Util;
 import net.minecraft.core.Direction;
@@ -57,14 +56,8 @@ public interface AbstractWalkwayBlock {
         }
     });
 
-    static @NotNull VoxelShape getShape(Connected connected, BlockState blockState) {
-        return SHAPES.get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
-    }
-
-    // Returns a shape with all connections active
-    // Should be used when no block entity is available, like when the game is checking if the player is obstructing placement
     static @NotNull VoxelShape getShape(BlockState blockState) {
-        return SHAPES.get(Pair.of(63, blockState.getValue(BlockStateProperties.FACING)));
+        return SHAPES.get(Pair.of(ConnectingBlockUtil.generateAABBIndex(blockState), blockState.getValue(BlockStateProperties.FACING)));
     }
 
     static @NotNull BlockState applyStateForPlacement(BlockState state, BlockPlaceContext context) {

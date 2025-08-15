@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
@@ -33,7 +32,9 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.*;
 import net.minecraft.core.BlockPos;
@@ -294,13 +295,9 @@ public class WalkwayCenterModel implements UnbakedModel {
 
         @Override
         public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-            if (blockView.getBlockEntity(pos) instanceof Connected connected) {
-                Direction facing = state.getValue(BlockStateProperties.FACING);
-                if (!connected.isConnected(facing)) {
-                    this.meshes.get(facing).outputTo(context.getEmitter());
-                }
-            } else {
-                Constant.LOGGER.warn("Walkway center model loaded for block that's not a Connected entity");
+            Direction facing = state.getValue(BlockStateProperties.FACING);
+            if (!state.getValue(ConnectingBlockUtil.getBooleanProperty(facing))) {
+                this.meshes.get(facing).outputTo(context.getEmitter());
             }
         }
 

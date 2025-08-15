@@ -22,53 +22,71 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.api.block.entity.Pullable;
+import dev.galacticraft.mod.api.block.FluidPipeBlock;
+import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
+import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
+import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.HolderLookup;
-import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 
-public class GlassFluidPipeBlockEntity extends PipeBlockEntity implements Connected, Pullable {
+public class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant> {
     public static final List<Block> COMPATIBLE_BLOCKS = Util.make(new ArrayList<>(), list -> {
         list.addAll(GCBlocks.GLASS_FLUID_PIPES.values());
         list.add(GCBlocks.FLUID_PIPE_WALKWAY);
     });
 
-    private boolean pull;
+    protected PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state);
+    }
 
-    public GlassFluidPipeBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.GLASS_FLUID_PIPE, pos, state, FluidConstants.BUCKET / 50); //0.4B/s
+    public PipeBlockEntity(BlockPos pos, BlockState state) {
+        super(GCBlockEntityTypes.FLUID_PIPE, pos, state);
     }
 
     @Override
-    protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.loadAdditional(nbt, registryLookup);
-        this.readPullNbt(nbt);
+    public Storage<FluidVariant> getInsertable() {
+        return this;
     }
 
     @Override
-    protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
-        super.saveAdditional(nbt, registryLookup);
-        this.writePullNbt(nbt);
+    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        StoragePreconditions.notNegative(maxAmount);
+
+        return 0;
     }
 
     @Override
-    public boolean isPull() {
-        return this.pull;
+    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
+        return 0;
     }
 
     @Override
-    public void setPull(boolean pull) {
-        this.pull = pull;
+    public boolean supportsInsertion() {
+        return !this.getBlockState().getValue(FluidPipeBlock.PULL);
+    }
+
+    @Override
+    public boolean supportsExtraction() {
+        return false;
+    }
+
+    @Override
+    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
+        return Collections.emptyIterator();
     }
 }

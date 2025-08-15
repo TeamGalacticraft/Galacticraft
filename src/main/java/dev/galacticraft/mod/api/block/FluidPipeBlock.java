@@ -24,12 +24,10 @@ package dev.galacticraft.mod.api.block;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.loader.api.FabricLoader;
@@ -45,11 +43,14 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.Property;
 import net.minecraft.world.level.material.PushReaction;
 import net.minecraft.world.phys.BlockHitResult;
@@ -58,12 +59,20 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.BiFunction;
 
-public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> implements EntityBlock {
+public abstract class FluidPipeBlock extends PipeShapedBlock implements EntityBlock {
+    public static final BooleanProperty PULL = BooleanProperty.create("pull");
     public final PipeColor color;
 
     public FluidPipeBlock(Properties settings, PipeColor color) {
         super(0.125f, settings.pushReaction(PushReaction.BLOCK));
         this.color = color;
+        this.registerDefaultState(this.defaultBlockState().setValue(PULL, false));
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        builder.add(PULL);
     }
 
     @Override
@@ -71,7 +80,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
         if (!level.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof FluidPipe pipe) {
-                Constant.LOGGER.info("Network: {}", pipe.getNetwork());
+//                Constant.LOGGER.info("Network: {}", pipe.getNetwork());
             }
         }
         return super.useWithoutItem(state, level, pos, player, hit);
@@ -84,7 +93,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
             if (this.color == color) {
                 return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
             }
-            this.setColorAndBlock(level, pos, state, color);
+            level.setBlockAndUpdate(pos, this.setColor(state, color));
 
             ItemStack newStack = stack.copy();
             newStack.consume(1, player);
@@ -92,10 +101,10 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
             return ItemInteractionResult.SUCCESS;
         } else if (stack.is(Items.WET_SPONGE) && this.color != PipeColor.CLEAR) {
-            this.setColorAndBlock(level, pos, state, PipeColor.CLEAR);
+            level.setBlockAndUpdate(pos, this.setColor(state, PipeColor.CLEAR));
             return ItemInteractionResult.SUCCESS;
-        } else if (stack.getItem() instanceof StandardWrenchItem && level.getBlockEntity(pos) instanceof Pullable pullablePipe) {
-            pullablePipe.setPull(!pullablePipe.isPull());
+        } else if (stack.getItem() instanceof StandardWrenchItem) {
+            level.setBlockAndUpdate(pos, state.setValue(PULL, !state.getValue(PULL)));
             return ItemInteractionResult.SUCCESS;
         }
 
@@ -103,12 +112,8 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     }
 
     @Override
-    public boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState) {
-        if (level.getBlockState(neighborPos).getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
-            return false;
-        } else {
-            return FluidUtil.canAccessFluid(level, neighborPos, direction);
-        }
+    public boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+        return (level.getBlockState(neighborPos).getBlock() instanceof FluidPipeBlock pipe && this.color.canConnectTo(pipe.color)) || (level instanceof Level l && FluidUtil.canAccessFluid(l, neighborPos, direction));
     }
 
     @Override
@@ -133,18 +138,16 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
         return state;
     }
 
+    @Override
+    public BlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new PipeBlockEntity(pos, state);
+    }
+
     protected<T extends FluidPipeBlock> MapCodec<T> simpleCodec(BiFunction<BlockBehaviour.Properties, PipeColor, T> generator) {
         return RecordCodecBuilder.mapCodec(instance -> instance.group(
                 BlockBehaviour.Properties.CODEC.fieldOf("properties").forGetter(BlockBehaviour::properties),
                 PipeColor.CODEC.fieldOf("color").forGetter(FluidPipeBlock::color)
         ).apply(instance, generator));
-    }
-
-    @Override
-    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-//        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
-//            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
-//        } //fixme(W)
     }
 
     // Taken from AE2's Color Applicator implementation
@@ -163,14 +166,6 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     protected BlockState setColor(BlockState state, DyeColor dye) {
         return this.setColor(state, PipeColor.fromDye(dye));
-    }
-
-    protected void setColorAndBlock(Level level, BlockPos pos, BlockState state, PipeColor color) {
-        BlockState newState = this.setColor(state, color);
-        level.setBlockAndUpdate(pos, newState);
-        for (Direction direction : Direction.values()) {
-            ((FluidPipeBlock)newState.getBlock()).updateConnection(newState, pos, direction, pos.relative(direction), level, true);
-        }
     }
 
     protected PipeColor color() {

@@ -23,37 +23,28 @@
 package dev.galacticraft.mod.content.block.special.walkway;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
-import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements AbstractWalkwayBlock, FluidLoggable {
+public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements AbstractWalkwayBlock {
     public GlassFluidPipeWalkwayBlock(Properties settings, PipeColor color) {
         super(settings, color);
 
         BlockState state = this.getStateDefinition().any();
-        state = FluidLoggable.applyDefaultState(state);
         state = AbstractWalkwayBlock.applyDefaultState(state);
         this.registerDefaultState(state);
     }
@@ -65,9 +56,6 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements Abstra
 
     @Override
     public @NotNull VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof Connected connected) {
-            return AbstractWalkwayBlock.getShape(connected, blockState);
-        }
         return AbstractWalkwayBlock.getShape(blockState);
     }
 
@@ -78,43 +66,23 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements Abstra
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        BlockState state = super.getStateForPlacement(context);
-        state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
-        state = AbstractWalkwayBlock.applyStateForPlacement(state, context);
-        return state;
+        return AbstractWalkwayBlock.applyStateForPlacement(super.getStateForPlacement(context), context);
     }
 
     @Override
-    public @NotNull BlockState updateShape(BlockState blockState, Direction facing, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        FluidLoggable.tryScheduleFluidTick(level, blockState, blockPos);
-        return super.updateShape(blockState, facing, neighborState, level, blockPos, neighborPos);
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        super.createBlockStateDefinition(builder);
+        AbstractWalkwayBlock.addStateDefinitions(builder);
     }
 
     @Override
-    public @NotNull FluidState getFluidState(BlockState blockState) {
-        return FluidLoggable.createFluidState(blockState);
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(BlockStateProperties.FACING, rotation.rotate(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
-    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
-        FluidLoggable.addStateDefinitions(stateBuilder);
-        AbstractWalkwayBlock.addStateDefinitions(stateBuilder);
-    }
-
-    @Override
-    protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
-    }
-
-    @Override
-    protected BlockState mirror(BlockState blockState, Mirror mirror) {
-        return blockState.rotate(mirror.getRotation(blockState.getValue(BlockStateProperties.FACING)));
-    }
-
-    @Override
-    @Nullable
-    public PipeBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new GlassFluidPipeBlockEntity(blockPos, blockState);
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(BlockStateProperties.FACING)));
     }
 
     @Override

@@ -29,21 +29,14 @@ import dev.galacticraft.mod.api.wire.NetworkId;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
-import net.minecraft.network.protocol.Packet;
-import net.minecraft.network.protocol.game.ClientGamePacketListener;
-import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
-import org.jetbrains.annotations.NotNull;
 
 public class WireBlockEntity extends BlockEntity implements Wire {
     private NetworkId network = null;
-    private final boolean[] connections = new boolean[6];
 
     protected WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
@@ -66,19 +59,13 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
-        this.writeConnectionNbt(nbt);
         if (this.network != null) nbt.putUUID(Constant.Nbt.NETWORK, this.network.uuid());
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
-        this.readConnectionNbt(nbt);
         this.network = nbt.hasUUID(Constant.Nbt.NETWORK) ? new NetworkId(nbt.getUUID(Constant.Nbt.NETWORK), ((WireBlock) this.getBlockState().getBlock()).getThroughput()) : null;
-
-        if (this.level != null && this.level.isClientSide) {
-            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
-        }
     }
 
     @Override
@@ -87,27 +74,5 @@ public class WireBlockEntity extends BlockEntity implements Wire {
         if (this.level != null && !this.level.isClientSide) {
             ((WireNetworkAccessor) this.level).galacticraft$getWireNetworkManager().enqueueWireLoaded(this.worldPosition, this);
         }
-    }
-
-    @Override
-    public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        CompoundTag tag = this.saveWithoutMetadata(registryLookup);
-        tag.remove(Constant.Nbt.NETWORK);
-        return tag;
-    }
-
-    @Override
-    public Packet<ClientGamePacketListener> getUpdatePacket() {
-        return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public void setConnected(@NotNull Direction direction, boolean connected) {
-        this.connections[direction.get3DDataValue()] = connected;
-    }
-
-    @Override
-    public boolean isConnected(@NotNull Direction direction) {
-        return this.connections[direction.get3DDataValue()];
     }
 }

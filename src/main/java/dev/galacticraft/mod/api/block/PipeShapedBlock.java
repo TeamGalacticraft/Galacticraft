@@ -23,26 +23,19 @@
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extends Block implements EntityBlock {
+public abstract class PipeShapedBlock extends ConnectedBlock {
     public final VoxelShape[] shapes;
 
     protected PipeShapedBlock(float radius, BlockBehaviour.Properties properties) {
@@ -51,94 +44,21 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     }
 
     @Override
-    public abstract @Nullable BE newBlockEntity(BlockPos pos, BlockState state);
-
-    public abstract boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState);
-
-    // direction TOWARDS neighbor
-    protected abstract void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
-
-    protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level, boolean update) {
-        if (level.getBlockEntity(pos) instanceof Connected pipe) {
-            BlockState neighborState = level.getBlockState(neighborPos);
-            boolean canConnect = this.canConnectTo(level, pos, currentState, side, neighborPos, neighborState);
-
-            if (neighborState.getBlock() instanceof PipeShapedBlock<?> neighbor) {
-                canConnect &= neighbor.canConnectTo(level, neighborPos, neighborState, side.getOpposite(), pos, currentState);
-            }
-
-            boolean currentlyConnected = pipe.isConnected(side);
-            pipe.setConnected(side, canConnect);
-            ((BlockEntity) pipe).setChanged();
-            if (update) level.sendBlockUpdated(pos, currentState, currentState, Block.UPDATE_IMMEDIATE);
-            return canConnect != currentlyConnected;
-        } else {
-            return false;
-        }
-    }
-
-    @Override
-    public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
-        super.setPlacedBy(level, pos, state, placer, itemStack);
-
-        boolean updated = false;
-        for (Direction direction : Direction.values()) {
-            BlockPos neighborPos = pos.relative(direction);
-            if (this.updateConnection(state, pos, direction, neighborPos, level, false)) {
-                updated = true;
-                this.onConnectionChanged(level, pos, direction, neighborPos);
-            }
-        }
-        if (updated) {
-            level.sendBlockUpdated(pos, state, state, Block.UPDATE_IMMEDIATE);
-        }
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos neighborPos, boolean notify) {
-        super.neighborChanged(state, level, pos, block, neighborPos, notify);
-
-        Direction direction = Direction.fromDelta(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
-        if (direction == null)
-            return;
-
-        if (this.updateConnection(state, pos, direction, neighborPos, level, true)) {
-            this.onConnectionChanged(level, pos, direction, neighborPos);
-        }
-    }
-
-    @Override
-    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
-        if (levelAccessor instanceof Level level) {
-            if (this.updateConnection(state, pos, direction, neighborPos, level, true)) {
-                this.onConnectionChanged(level, pos, direction, neighborPos);
-            }
-        }
-
-        return state;
-    }
-
-    @Override
     protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (world.getBlockEntity(pos) instanceof Connected connected) {
-            return this.shapes[generateAABBIndex(connected)];
-        }
-        return this.shapes[0];
+        return this.shapes[ConnectingBlockUtil.generateAABBIndex(state)];
     }
 
     public static VoxelShape[] makeShapes(float radius) {
-        Direction[] directions = Direction.values();
-
         float f = 0.5F - radius;
         float g = 0.5F + radius;
-        VoxelShape voxelShape = Block.box(
+        VoxelShape baseShape = Block.box(
                 f * 16.0F, f * 16.0F, f * 16.0F, g * 16.0F, g * 16.0F, g * 16.0F
         );
-        VoxelShape[] voxelShapes = new VoxelShape[directions.length];
+        VoxelShape[] outerShapes = new VoxelShape[Constant.Misc.DIRECTIONS.length];
 
-        for (int i = 0; i < directions.length; i++) {
-            Direction direction = directions[i];
-            voxelShapes[i] = Shapes.box(
+        for (int i = 0; i < Constant.Misc.DIRECTIONS.length; i++) {
+            Direction direction = Constant.Misc.DIRECTIONS[i];
+            outerShapes[i] = Shapes.box(
                     0.5 + Math.min(-radius, (double)direction.getStepX() * 0.5),
                     0.5 + Math.min(-radius, (double)direction.getStepY() * 0.5),
                     0.5 + Math.min(-radius, (double)direction.getStepZ() * 0.5),
@@ -148,32 +68,6 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
             );
         }
 
-        VoxelShape[] voxelShapes2 = new VoxelShape[64];
-
-        for (int j = 0; j < 64; j++) {
-            VoxelShape voxelShape2 = voxelShape;
-
-            for (int k = 0; k < directions.length; k++) {
-                if ((j & 1 << k) != 0) {
-                    voxelShape2 = Shapes.or(voxelShape2, voxelShapes[k]);
-                }
-            }
-
-            voxelShapes2[j] = voxelShape2;
-        }
-
-        return voxelShapes2;
-    }
-
-    public static int generateAABBIndex(Connected connected) {
-        int i = 0;
-
-        for (int j = 0; j < Constant.Misc.DIRECTIONS.length; j++) {
-            if (connected.isConnected(Constant.Misc.DIRECTIONS[j])) {
-                i |= 1 << j;
-            }
-        }
-
-        return i;
+        return ConnectingBlockUtil.generateShapeCache(baseShape, outerShapes);
     }
 }

@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.*;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
-import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.PipeBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -43,8 +43,7 @@ public class GCBlockEntityTypes {
 
     // WIRES, PIPES, WALKWAYS
     public static final BlockEntityType<WireBlockEntity> WIRE = register(Constant.Block.ALUMINUM_WIRE, WireBlockEntity::new, GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY, /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
-    public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = register(Constant.Block.GLASS_FLUID_PIPE, GlassFluidPipeBlockEntity::new, GlassFluidPipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0]));
-    public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = register(Constant.Block.WALKWAY, WalkwayBlockEntity::new, GCBlocks.WALKWAY);
+    public static final BlockEntityType<PipeBlockEntity> FLUID_PIPE = register(Constant.Block.GLASS_FLUID_PIPE, PipeBlockEntity::new, PipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0]));
 
     // MACHINES
     public static final BlockEntityType<CircuitFabricatorBlockEntity> CIRCUIT_FABRICATOR = register(Constant.Block.CIRCUIT_FABRICATOR, CircuitFabricatorBlockEntity::new, GCBlocks.CIRCUIT_FABRICATOR);

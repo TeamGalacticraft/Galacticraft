@@ -22,13 +22,14 @@
 
 package dev.galacticraft.mod.api.wire;
 
-import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 
 
-public interface Wire extends Connected {
+public interface Wire {
     void setNetwork(NetworkId network);
 
     @Contract(pure = true)
@@ -37,4 +38,8 @@ public interface Wire extends Connected {
     BlockPos getBlockPos();
 
     BlockState getBlockState();
+
+    default boolean isConnected(Direction direction) {
+        return this.getBlockState().getValue(ConnectingBlockUtil.getBooleanProperty(direction));
+    }
 }

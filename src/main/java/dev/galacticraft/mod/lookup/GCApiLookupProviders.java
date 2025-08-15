@@ -57,14 +57,14 @@ public class GCApiLookupProviders {
     };
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
-            GCBlockEntityTypes.GLASS_FLUID_PIPE
+            GCBlockEntityTypes.FLUID_PIPE
     };
 
     public static void register() {
         MachineBlockEntity.registerProviders(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((FluidPipe) blockEntity).canConnect(direction)) return null;
+            if (direction == null) return null;
             return ((FluidPipe) blockEntity).getInsertable();
         }, PIPE_TYPES);
 
