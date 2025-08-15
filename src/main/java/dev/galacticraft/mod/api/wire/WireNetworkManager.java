@@ -28,6 +28,8 @@ import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectMap;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
@@ -45,18 +47,14 @@ import net.minecraft.world.level.chunk.LevelChunk;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
-import java.util.concurrent.atomic.AtomicLong;
 
 public class WireNetworkManager {
-    public static final long INVALID_NETWORK_ID = Long.MIN_VALUE; // FIXME: CHANGE ID TO OBJECT W/ POWER RATING
-    // Atomic as I think there are mods that try to thread the game logic (although it might just fall apart anyway)
-    private final AtomicLong counter = new AtomicLong(0); //TODO: save/load to server
     private final ServerLevel level;
     private final Long2ObjectMap<List<Wire>> pendingWires = new Long2ObjectOpenHashMap<>();
-    private final Long2ObjectMap< // network id to
-                    Long2ObjectMap< // chunk position (OF ADJACENT WIRE) to
-                            List< // list of blocks connected to wires (in the chunk) with associated direction data FACING WIRE (for direct use in search)
-                                    BlockData>>> chunkData = new Long2ObjectOpenHashMap<>();
+    private final Object2ObjectMap<NetworkId, // network id to
+                        Long2ObjectMap< // chunk position (OF ADJACENT WIRE) to
+                                List< // list of blocks connected to wires (in the chunk) with associated direction data FACING WIRE (for direct use in search)
+                                        BlockData>>> chunkData = new Object2ObjectOpenHashMap<>();
     private boolean loaded = false;
 
     public WireNetworkManager(ServerLevel level) {
@@ -100,10 +98,12 @@ public class WireNetworkManager {
         Object2LongMap<EnergyStorage> consumers = new Object2LongOpenHashMap<>();
         Object2LongMap<EnergyStorage> producers = new Object2LongOpenHashMap<>();
 
-        for (Long2ObjectMap<List<BlockData>> chunks : this.chunkData.values()) {
+        for (Map.Entry<NetworkId, Long2ObjectMap<List<BlockData>>> e : this.chunkData.entrySet()) {
+            final long maxTransfer = e.getKey().throughput();
+            final Long2ObjectMap<List<BlockData>> chunks = e.getValue();
+
             long totalRequested = 0;
             long totalAvailable = 0;
-            final long maxTransfer = 1000L; //fixme
             try (Transaction transaction = Transaction.openOuter()) {
                 // calculate total requested amount
                 try (Transaction test = Transaction.openNested(transaction)) {
@@ -126,9 +126,9 @@ public class WireNetworkManager {
                 // calculate total extractable amount
                 try (Transaction test = Transaction.openNested(transaction)) {
                     for (Long2ObjectMap.Entry<List<BlockData>> chunk : chunks.long2ObjectEntrySet()) {
-                        for (BlockData entry : chunk.getValue()) {
-                            for (Direction direction : entry.directions) {
-                                EnergyStorage energyStorage = entry.block.find(direction);
+                        for (BlockData block : chunk.getValue()) {
+                            for (Direction direction : block.directions) {
+                                EnergyStorage energyStorage = block.block.find(direction);
                                 if (energyStorage != null && energyStorage.supportsExtraction()) {
                                     long available = energyStorage.extract(maxTransfer, test);
                                     if (available > 0) {
@@ -147,24 +147,24 @@ public class WireNetworkManager {
                 if (totalAvailable < totalRequested) {
                     double brownoutFactor = (double) totalAvailable / totalRequested;
                     Constant.LOGGER.warn("brownout factor {}", brownoutFactor);
-                    for (Object2LongMap.Entry<EnergyStorage> entry : consumers.object2LongEntrySet()) {
-                        actual += entry.getKey().insert(Mth.floor(entry.getLongValue() * brownoutFactor), transaction);
+                    for (Object2LongMap.Entry<EnergyStorage> consumer : consumers.object2LongEntrySet()) {
+                        actual += consumer.getKey().insert(Mth.floor(consumer.getLongValue() * brownoutFactor), transaction);
                     }
                 } else {
-                    for (Object2LongMap.Entry<EnergyStorage> entry : consumers.object2LongEntrySet()) {
-                        actual += entry.getKey().insert(Mth.floor(entry.getLongValue()), transaction);
+                    for (Object2LongMap.Entry<EnergyStorage> consumer : consumers.object2LongEntrySet()) {
+                        actual += consumer.getKey().insert(Mth.floor(consumer.getLongValue()), transaction);
                     }
                 }
                 assert actual <= totalAvailable;
                 if (actual < totalAvailable) {
                     double factor = (double) actual / totalAvailable;
                     Constant.LOGGER.warn("factor {}", factor);
-                    for (Object2LongMap.Entry<EnergyStorage> entry : producers.object2LongEntrySet()) {
-                        actual -= entry.getKey().extract((int)(entry.getLongValue() * factor), transaction);
+                    for (Object2LongMap.Entry<EnergyStorage> producer : producers.object2LongEntrySet()) {
+                        actual -= producer.getKey().extract((int)(producer.getLongValue() * factor), transaction);
                     }
                 } else {
-                    for (Object2LongMap.Entry<EnergyStorage> entry : producers.object2LongEntrySet()) {
-                        actual -= entry.getKey().extract(entry.getLongValue(), transaction);
+                    for (Object2LongMap.Entry<EnergyStorage> producer : producers.object2LongEntrySet()) {
+                        actual -= producer.getKey().extract(producer.getLongValue(), transaction);
                     }
                 }
                 //fixme not necessarily equal due to rounding probably
@@ -189,13 +189,13 @@ public class WireNetworkManager {
 
     public void wireLoaded(BlockPos pos, Wire wire) {
         Constant.LOGGER.info("Loaded Wire {}", pos);
-        if (wire.getNetwork() == INVALID_NETWORK_ID) return; // never connected to anything, so don't care.
+        if (wire.getNetwork() == null) return; // never connected to anything, so don't care.
 
         this.wirePlaced(pos, wire);
     }
 
     public void enqueueWireLoaded(BlockPos pos, Wire wire) {
-        if (wire.getNetwork() == INVALID_NETWORK_ID) return; // never connected to anything, so don't care.
+        if (wire.getNetwork() == null) return; // never connected to anything, so don't care.
         if (!this.loaded) {
             int x = SectionPos.blockToSectionCoord(pos.getX());
             int z = SectionPos.blockToSectionCoord(pos.getZ());
@@ -220,38 +220,38 @@ public class WireNetworkManager {
         Constant.LOGGER.info("Updated Wire {} towards {} ({})", pos, direction, pos.relative(direction));
         if (wire.isConnected(direction)) { // new connection
             if (this.level.getBlockEntity(pos.relative(direction)) instanceof Wire adj) {
+                if (adj.getMaxTransferRate() != wire.getMaxTransferRate()) throw new AssertionError("Connected to wire with different transfer rate!?");
                 Constant.LOGGER.info("New wire");
-                if (adj.getNetwork() != wire.getNetwork()) {
-                    if (wire.getNetwork() == INVALID_NETWORK_ID) {
+                if (wire.getNetwork() == null) {
+                    if (adj.getNetwork() == null) {
+                        Constant.LOGGER.info("Both invalid - new network");
+                        // both invalid - group (no contents)
+                        wire.setNetwork(new NetworkId(UUID.randomUUID(), wire.getMaxTransferRate()));
+                        adj.setNetwork(wire.getNetwork());
+                    } else {
                         wire.setNetwork(adj.getNetwork()); // invalid networks have no contents
                         Constant.LOGGER.info("Joining network {}", wire.getNetwork());
-                    } else if (adj.getNetwork() == INVALID_NETWORK_ID) {
-                        adj.setNetwork(wire.getNetwork()); // invalid networks have no contents
-                        Constant.LOGGER.info("Joining network {}", adj.getNetwork());
-                    } else {
-                        // merge the networks
-                        this.merge(adj.getNetwork(), wire.getNetwork(), wire);
                     }
-                } else if (adj.getNetwork() == INVALID_NETWORK_ID) {
-                    Constant.LOGGER.info("Both invalid - new network");
-                    // both invalid - group (no contents)
-                    wire.setNetwork(this.counter.getAndIncrement());
-                    adj.setNetwork(wire.getNetwork());
-                } // otherwise we're already the same network - no change
+                } else if (adj.getNetwork() == null) {
+                    adj.setNetwork(wire.getNetwork()); // invalid networks have no contents
+                    Constant.LOGGER.info("Joining network {}", adj.getNetwork());
+                } else { // both networks have contents - merge
+                    this.merge(adj.getNetwork(), wire.getNetwork(), wire);
+                }
             } else { // not a wire, must be an endpoint
-                if (wire.getNetwork() == INVALID_NETWORK_ID) {
+                if (wire.getNetwork() == null) {
                     Constant.LOGGER.info("Creating new network for endpoint");
-                    wire.setNetwork(this.counter.getAndIncrement()); // create network if necessary
+                    wire.setNetwork(new NetworkId(UUID.randomUUID(), wire.getMaxTransferRate())); // create network if necessary
                 }
                 Constant.LOGGER.info("Connecting to endpoint");
                 this.tryConnectToEndpoint(pos, wire, direction, new BlockPos.MutableBlockPos());
             }
         } else { // destroyed connection
             Constant.LOGGER.info("Connection destroyed?");
-            if (wire.getNetwork() == INVALID_NETWORK_ID) return; // nothing to do.
+            if (wire.getNetwork() == null) return; // nothing to do.
             BlockPos adjPos = pos.relative(direction);
             if (this.level.getBlockEntity(adjPos) instanceof Wire adj) {
-                assert adj.getNetwork() == wire.getNetwork(); // if it was connected it must be the same network.
+                assert wire.getNetwork().equals(adj.getNetwork()); // if it was connected it must be the same network.
             } else { // not a wire, must be an endpoint
                 Constant.LOGGER.info("Endpoint destroyed");
                 Long2ObjectMap<List<BlockData>> chunks = this.chunkData.get(wire.getNetwork());
@@ -278,18 +278,19 @@ public class WireNetworkManager {
         }
     }
 
-    private void merge(long into, long from, Wire fromWire) {
+    private void merge(NetworkId into, NetworkId from, Wire fromWire) {
+        assert into.throughput() == from.throughput();
         Constant.LOGGER.info("Merging network {} into {}", from, into);
         Long2ObjectMap<List<BlockData>> target = this.chunkData.computeIfAbsent(into, l -> new Long2ObjectOpenHashMap<>(4));
         Long2ObjectMap<List<BlockData>> remove = this.chunkData.remove(from);
         if (remove != null) {
-            for (Long2ObjectMap.Entry<List<BlockData>> entry : remove.long2ObjectEntrySet()) {
-                List<BlockData> blocks = target.computeIfAbsent(entry.getLongKey(), l -> new ArrayList<>());
-                Set<BlockPos> contents = new HashSet<>(blocks.size() + entry.getValue().size());
+            for (Long2ObjectMap.Entry<List<BlockData>> chunk : remove.long2ObjectEntrySet()) {
+                List<BlockData> blocks = target.computeIfAbsent(chunk.getLongKey(), l -> new ArrayList<>());
+                Set<BlockPos> contents = new HashSet<>(blocks.size() + chunk.getValue().size());
                 for (BlockData block : blocks) {
                     contents.add(block.block.getPos());
                 }
-                for (BlockData blockData : entry.getValue()) {
+                for (BlockData blockData : chunk.getValue()) {
                     if (contents.add(blockData.block.getPos())) {
                         blocks.add(blockData);
                     } else {
@@ -302,7 +303,7 @@ public class WireNetworkManager {
                         }
                     }
                 }
-                blocks.addAll(entry.getValue());
+                blocks.addAll(chunk.getValue());
             }
         }
         this.updateNetwork(fromWire, into);
@@ -333,8 +334,9 @@ public class WireNetworkManager {
         Wire wire = (Wire) level.getBlockEntity(pos);
         assert wire != null; // should be called BEFORE actual removal
 
-        long network = wire.getNetwork();
-        wire.setNetwork(INVALID_NETWORK_ID); // invalidate block entity data, in case of swap
+        NetworkId network = wire.getNetwork();
+        if (network == null) return; // no need to do anything if there's no network
+        wire.setNetwork(null); // invalidate block entity data, in case of swap
 
         List<Wire> adjacent = new ArrayList<>(6);
         boolean[] adjacentEndpoints = new boolean[6];
@@ -343,7 +345,7 @@ public class WireNetworkManager {
             if (wire.isConnected(direction)) {
                 wire.setConnected(direction, false); // invalidate block entity data, in case of swap
                 mutable.setWithOffset(pos, direction);
-                if (level.getBlockEntity(mutable) instanceof Wire wire1 && wire1.getNetwork() == network) {
+                if (level.getBlockEntity(mutable) instanceof Wire wire1 && network.equals(wire1.getNetwork())) {
                     adjacent.add(wire1); // adjacent wire - will need to check if it's connected to other adjacent wires (to maintain the same network)
                     wire1.setConnected(direction.getOpposite(), false); // remove connection from other end to simplify search later
                     this.level.sendBlockUpdated(mutable, ((BlockEntity) wire).getBlockState(), ((BlockEntity) wire).getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -387,7 +389,7 @@ public class WireNetworkManager {
     }
 
     // remember to drop center connections on all targets before calling
-    private void repairNetwork(BlockPos.MutableBlockPos mutable, List<Wire> targets, long network) {
+    private void repairNetwork(BlockPos.MutableBlockPos mutable, List<Wire> targets, NetworkId network) {
         Set<Wire> visited = new HashSet<>(); // wires that have already been searched
         List<Wire> queue = new ArrayList<>(6); // wires that have yet to be searched (guaranteed to be a wire in the same network)
 
@@ -399,12 +401,12 @@ public class WireNetworkManager {
             // loop until we exhaust the queue or prove that the network is intact
             while (!queue.isEmpty() && !targets.isEmpty()) {
                 Wire current = queue.removeLast();
-                assert current.getNetwork() == network;
+                assert network.equals(current.getNetwork());
 
                 for (Direction direction : Constant.Misc.DIRECTIONS) {
                     if (current.isConnected(direction)) { // check if there is a WIRE connection
                         if (this.level.getBlockEntity(mutable.setWithOffset(((BlockEntity) current).getBlockPos(), direction)) instanceof Wire wire) {
-                            assert wire.getNetwork() == network; // it should not be connected if it's in a different network
+                            assert network.equals(wire.getNetwork()); // it should not be connected if it's in a different network
                             if (visited.add(wire)) { // prevent infinite recursion
                                 queue.add(wire);
                                 targets.remove(wire);
@@ -416,7 +418,7 @@ public class WireNetworkManager {
 
             // just exhausted the connected wire search - is everything still connected?
             if (!targets.isEmpty()) { // NO - make a new network
-                long newNetwork = this.counter.getAndIncrement();
+                NetworkId newNetwork = new NetworkId(UUID.randomUUID(), network.throughput());
                 for (Wire wire : visited) {
                     wire.setNetwork(newNetwork);
                 }
@@ -425,10 +427,10 @@ public class WireNetworkManager {
         }
     }
 
-    private void updateNetwork(Wire target, long newNetwork) {
+    private void updateNetwork(Wire target, NetworkId newNetwork) {
         Constant.LOGGER.info("Updating to network: {}", newNetwork);
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        long network = target.getNetwork();
+        NetworkId network = target.getNetwork();
         Set<Wire> visited = new HashSet<>(); // wires that have already been searched
         List<Wire> queue = new ArrayList<>(6); // wires that have yet to be searched (guaranteed to be a wire in the same network)
 
@@ -438,13 +440,13 @@ public class WireNetworkManager {
         // loop until we exhaust the queue
         while (!queue.isEmpty()) {
             Wire current = queue.removeLast();
-            assert current.getNetwork() == network;
+            assert current.getNetwork().equals(network);
             current.setNetwork(newNetwork); // update the wire's network
 
             for (Direction direction : Constant.Misc.DIRECTIONS) {
                 if (current.isConnected(direction)) { // check if there is a WIRE connection
                     if (this.level.getBlockEntity(mutable.setWithOffset(((BlockEntity) current).getBlockPos(), direction)) instanceof Wire wire) {
-                        assert wire.getNetwork() == network; // it should not be connected if it's in a different network
+                        assert wire.getNetwork().equals(network); // it should not be connected if it's in a different network
                         if (visited.add(wire)) { // prevent infinite recursion
                             queue.add(wire);
                         }

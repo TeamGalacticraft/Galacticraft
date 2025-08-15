@@ -24,8 +24,8 @@ package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WireNetworkAccessor;
+import dev.galacticraft.mod.api.wire.NetworkId;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.WireNetworkManager;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -40,7 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class WireBlockEntity extends BlockEntity implements Wire {
-    private long network = WireNetworkManager.INVALID_NETWORK_ID;
+    private NetworkId network = null;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
 
@@ -58,12 +58,12 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public long getNetwork() {
+    public NetworkId getNetwork() {
         return this.network;
     }
 
     @Override
-    public void setNetwork(long network) {
+    public void setNetwork(NetworkId network) {
         this.network = network;
     }
 
@@ -76,14 +76,14 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
-        nbt.putLong(Constant.Nbt.NETWORK, this.network);
+        nbt.putUUID(Constant.Nbt.NETWORK, this.network.uuid());
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
-        this.network = nbt.contains(Constant.Nbt.NETWORK, CompoundTag.TAG_LONG) ? nbt.getLong(Constant.Nbt.NETWORK) : WireNetworkManager.INVALID_NETWORK_ID;
+        this.network = nbt.hasUUID(Constant.Nbt.NETWORK) ? new NetworkId(nbt.getUUID(Constant.Nbt.NETWORK), this.maxTransferRate) : null;
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);

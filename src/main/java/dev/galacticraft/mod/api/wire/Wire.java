@@ -29,10 +29,10 @@ import org.jetbrains.annotations.Contract;
 
 
 public interface Wire extends Connected {
-    void setNetwork(long network);
+    void setNetwork(NetworkId network);
 
     @Contract(pure = true)
-    long getNetwork();
+    NetworkId getNetwork();
 
     /**
      * @param direction the direction offset to the block to check adjacency to
