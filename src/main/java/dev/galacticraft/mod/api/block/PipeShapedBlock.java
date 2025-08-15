@@ -53,22 +53,23 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
     @Override
     public abstract @Nullable BE newBlockEntity(BlockPos pos, BlockState state);
 
-    public abstract boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState);
+    public abstract boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState);
 
     // direction TOWARDS neighbor
     protected abstract void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos);
 
     protected boolean updateConnection(BlockState currentState, BlockPos pos, Direction side, BlockPos neighborPos, Level level, boolean update) {
         if (level.getBlockEntity(pos) instanceof Connected pipe) {
-            boolean canConnect = this.canConnectTo(level, pos, side, neighborPos, currentState);
-
             BlockState neighborState = level.getBlockState(neighborPos);
+            boolean canConnect = this.canConnectTo(level, pos, currentState, side, neighborPos, neighborState);
+
             if (neighborState.getBlock() instanceof PipeShapedBlock<?> neighbor) {
-                canConnect &= neighbor.canConnectTo(level, neighborPos, side.getOpposite(), pos, neighborState);
+                canConnect &= neighbor.canConnectTo(level, neighborPos, neighborState, side.getOpposite(), pos, currentState);
             }
 
             boolean currentlyConnected = pipe.isConnected(side);
             pipe.setConnected(side, canConnect);
+            ((BlockEntity) pipe).setChanged();
             if (update) level.sendBlockUpdated(pos, currentState, currentState, Block.UPDATE_IMMEDIATE);
             return canConnect != currentlyConnected;
         } else {

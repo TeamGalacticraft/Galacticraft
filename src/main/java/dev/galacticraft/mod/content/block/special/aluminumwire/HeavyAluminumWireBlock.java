@@ -20,12 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.special.aluminumwire.tier2;
+package dev.galacticraft.mod.content.block.special.aluminumwire;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
 import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
@@ -42,7 +40,6 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.ArrayList;
@@ -59,7 +56,7 @@ public class HeavyAluminumWireBlock extends WireBlock {
     private static final VoxelShape NONE = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);    // 6x6x6 box in the center.
 
     public HeavyAluminumWireBlock(Properties settings) {
-        super(0.1875f, settings);
+        super(TIER_2_THROUGHPUT, 0.1875f, settings);
         registerDefaultState(this.getStateDefinition().any()
                 .setValue(BlockStateProperties.NORTH, false).setValue(BlockStateProperties.EAST, false)
                 .setValue(BlockStateProperties.SOUTH, false).setValue(BlockStateProperties.WEST, false)
@@ -133,10 +130,5 @@ public class HeavyAluminumWireBlock extends WireBlock {
     @Override
     public float getShadeBrightness(BlockState state, BlockGetter view, BlockPos pos) {
         return 1.0F;
-    }
-
-    @Override
-    public @Nullable WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
-        return WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state);
     }
 }

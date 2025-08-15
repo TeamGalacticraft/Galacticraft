@@ -24,8 +24,10 @@ package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WireNetworkAccessor;
+import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.wire.NetworkId;
 import dev.galacticraft.mod.api.wire.Wire;
+import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -41,20 +43,14 @@ import org.jetbrains.annotations.NotNull;
 
 public class WireBlockEntity extends BlockEntity implements Wire {
     private NetworkId network = null;
-    private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
 
-    public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
+    protected WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
         super(type, pos, state);
-        this.maxTransferRate = maxTransferRate;
     }
 
-    public static WireBlockEntity createT1(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, 240);
-    }
-
-    public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, 480);
+    public WireBlockEntity(BlockPos pos, BlockState state) {
+        super(GCBlockEntityTypes.WIRE, pos, state);
     }
 
     @Override
@@ -68,22 +64,17 @@ public class WireBlockEntity extends BlockEntity implements Wire {
     }
 
     @Override
-    public int getMaxTransferRate() {
-        return this.maxTransferRate;
-    }
-
-    @Override
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
-        nbt.putUUID(Constant.Nbt.NETWORK, this.network.uuid());
+        if (this.network != null) nbt.putUUID(Constant.Nbt.NETWORK, this.network.uuid());
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
-        this.network = nbt.hasUUID(Constant.Nbt.NETWORK) ? new NetworkId(nbt.getUUID(Constant.Nbt.NETWORK), this.maxTransferRate) : null;
+        this.network = nbt.hasUUID(Constant.Nbt.NETWORK) ? new NetworkId(nbt.getUUID(Constant.Nbt.NETWORK), ((WireBlock) this.getBlockState().getBlock()).getThroughput()) : null;
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);

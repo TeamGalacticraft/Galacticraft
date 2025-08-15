@@ -25,8 +25,6 @@ package dev.galacticraft.mod.content.block.special.walkway;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -43,11 +41,10 @@ import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
 public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock, FluidLoggable {
     public WireWalkwayBlock(Properties settings) {
-        super(0.125f, settings);
+        super(WireBlock.TIER_1_THROUGHPUT, 0.125f, settings);
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
         defaultState = AbstractWalkwayBlock.applyDefaultState(defaultState);
@@ -94,17 +91,11 @@ public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock,
 
     @Override
     protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+        return blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
     protected BlockState mirror(BlockState blockState, Mirror mirror) {
         return blockState.rotate(mirror.getRotation(blockState.getValue(BlockStateProperties.FACING)));
-    }
-
-    @Override
-    @Nullable
-    public WireBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, blockPos, blockState);
     }
 }

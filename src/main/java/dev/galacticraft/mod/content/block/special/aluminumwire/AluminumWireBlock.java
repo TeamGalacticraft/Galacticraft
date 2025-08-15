@@ -20,12 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.special.aluminumwire.tier1;
+package dev.galacticraft.mod.content.block.special.aluminumwire;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.WireBlock;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -39,17 +37,11 @@ import org.jetbrains.annotations.Nullable;
 
 public class AluminumWireBlock extends WireBlock implements FluidLoggable {
     public AluminumWireBlock(Properties settings) {
-        super(0.125f, settings);
+        super(TIER_1_THROUGHPUT, 0.125f, settings);
 
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
         this.registerDefaultState(defaultState);
-    }
-
-    @Override
-    @Nullable
-    public WireBlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, blockPos, blockState);
     }
 
     @Override

@@ -40,11 +40,15 @@ import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-import java.util.Objects;
+public class WireBlock extends PipeShapedBlock<WireBlockEntity> {
+    public static final long TIER_1_THROUGHPUT = 240;
+    public static final long TIER_2_THROUGHPUT = 480;
 
-public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
-    public WireBlock(float radius, Properties settings) {
+    private final long throughput;
+
+    public WireBlock(long throughput, float radius, Properties settings) {
         super(radius, settings.pushReaction(PushReaction.BLOCK));
+        this.throughput = throughput;
     }
 
     @Override
@@ -66,8 +70,8 @@ public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
     }
 
     @Override
-    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
-        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null || level.getBlockEntity(neighborPos) instanceof WireBlockEntity wire && wire.getMaxTransferRate() == ((WireBlockEntity) Objects.requireNonNull(level.getBlockEntity(thisPos))).getMaxTransferRate();
+    public boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+        return EnergyStorage.SIDED.find(level, neighborPos, direction.getOpposite()) != null || neighborState.getBlock() instanceof WireBlock wb && wb.getThroughput() == ((WireBlock) thisState.getBlock()).getThroughput();
     }
 
     @Override
@@ -84,5 +88,11 @@ public abstract class WireBlock extends PipeShapedBlock<WireBlockEntity> {
 
     @Nullable
     @Override
-    public abstract WireBlockEntity newBlockEntity(BlockPos pos, BlockState state);
+    public WireBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new WireBlockEntity(pos, state);
+    }
+
+    public long getThroughput() {
+        return this.throughput;
+    }
 }

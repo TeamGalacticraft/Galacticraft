@@ -103,7 +103,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     }
 
     @Override
-    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
+    public boolean canConnectTo(Level level, BlockPos thisPos, BlockState thisState, Direction direction, BlockPos neighborPos, BlockState neighborState) {
         if (level.getBlockState(neighborPos).getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
             return false;
         } else {

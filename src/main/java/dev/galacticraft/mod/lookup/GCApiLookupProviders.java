@@ -56,12 +56,6 @@ public class GCApiLookupProviders {
             GCBlockEntityTypes.OXYGEN_STORAGE_MODULE
     };
     @SuppressWarnings("rawtypes")
-    private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
-            GCBlockEntityTypes.WIRE_T1,
-//            GCBlocksEntityType.WIRE_T2,
-    };
-
-    @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] PIPE_TYPES = new BlockEntityType[]{
             GCBlockEntityTypes.GLASS_FLUID_PIPE
     };

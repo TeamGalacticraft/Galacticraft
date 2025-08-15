@@ -22,15 +22,16 @@
 
 package dev.galacticraft.mod.gametest;
 
+import dev.galacticraft.mod.api.wire.NetworkId;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.WireNetworkManager;
 import dev.galacticraft.mod.content.GCBlocks;
-import it.unimi.dsi.fastutil.longs.LongArraySet;
-import it.unimi.dsi.fastutil.longs.LongSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+
+import java.util.HashSet;
+import java.util.Set;
 
 public class WireTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
@@ -65,14 +66,14 @@ public class WireTestSuite implements GalacticraftGameTest {
 
             if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork()
                     != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()
-                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == WireNetworkManager.INVALID_NETWORK_ID) {
+                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == null) {
                 context.fail("Expected network to be created!", center.relative(direction));
             }
         }
 
         context.setBlock(center, GCBlocks.ALUMINUM_WIRE);
-        long network = ((Wire) context.getBlockEntity(center)).getNetwork();
-        if (network == WireNetworkManager.INVALID_NETWORK_ID) context.fail("Expected network to be created!");
+        NetworkId network = ((Wire) context.getBlockEntity(center)).getNetwork();
+        if (network == null) context.fail("Expected network to be created!");
         for (Direction direction : Direction.values()) {
             if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() != network) {
                 context.fail("Expected network to be merged!", center.relative(direction));
@@ -96,15 +97,15 @@ public class WireTestSuite implements GalacticraftGameTest {
 
             if (((Wire) context.getBlockEntity(center.relative(direction))).getNetwork()
                     != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()
-                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == WireNetworkManager.INVALID_NETWORK_ID) {
+                    || ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork() == null) {
                 context.fail("Expected network to be created!", center.relative(direction));
             }
         }
 
         context.destroyBlock(center);
-        LongSet set = new LongArraySet();
+        Set<NetworkId> set = new HashSet<>();
         for (Direction direction : Direction.values()) {
-            long network = ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork();
+            NetworkId network = ((Wire) context.getBlockEntity(center.relative(direction))).getNetwork();
             if (!set.add(network)) context.fail("Expected network to break into separate subnetworks!", center.relative(direction));
             if (network
                     != ((Wire) context.getBlockEntity(center.relative(direction, 2))).getNetwork()) {

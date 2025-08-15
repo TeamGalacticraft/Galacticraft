@@ -24,7 +24,7 @@ package dev.galacticraft.mod.api.wire;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Contract;
 
 
@@ -34,18 +34,7 @@ public interface Wire extends Connected {
     @Contract(pure = true)
     NetworkId getNetwork();
 
-    /**
-     * @param direction the direction offset to the block to check adjacency to
-     * {@return Whether this wire is able to connect to another block on the specified face/direction}
-     */
-    default boolean canConnect(Direction direction) {
-        return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
-    }
-
-    /**
-     * {@return the maximum amount of energy (in gJ) allowed to be transferred through this wire}
-     */
-    int getMaxTransferRate();
-
     BlockPos getBlockPos();
+
+    BlockState getBlockState();
 }
