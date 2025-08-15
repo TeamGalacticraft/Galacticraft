@@ -28,10 +28,7 @@ import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
-import dev.galacticraft.mod.content.AirlockState;
-import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.machine.airlock.AirlockFrameScanner;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
@@ -57,18 +54,28 @@ import java.util.*;
 
 
 public class AirlockControllerBlockEntity extends MachineBlockEntity {
-    // --- NBT keys
     private static final String NBT_PROX = "ProximityOpen";
     private static final String NBT_SEALED = "SealedFrames";
+    private static final String NBT_PROX_ACCESS = "ProximityAccess";
 
-    // --- UI-config (persisted) ---
     private byte proximityOpen = 0;
+    private ProximityAccess proximityAccess = ProximityAccess.PUBLIC;
+
+
+
+    public ProximityAccess getProximityAccess() { return this.proximityAccess; }
+    public void setProximityAccess(ProximityAccess access) {
+        if (access == null) access = ProximityAccess.PUBLIC;
+        if (this.proximityAccess != access) {
+            this.proximityAccess = access;
+            setChanged();
+        }
+    }
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineEnergyStorage.spec(0, 0)
     );
 
-    // --- Runtime ---
     private List<AirlockFrameScanner.Result> lastFrames = Collections.emptyList();
     private Map<Long, AirlockFrameScanner.Result> lastFrameMap = Collections.emptyMap();
     private final Set<Long> sealedFrames = new HashSet<>();
@@ -80,8 +87,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, pos, state, SPEC);
     }
 
-    // --- Persisted config ---
-
     public byte getProximityOpen() { return this.proximityOpen; }
     public void setProximityOpen(byte v) {
         this.proximityOpen = (byte) Math.max(0, Math.min(5, v));
@@ -92,8 +97,8 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
         tag.putByte(NBT_PROX, this.proximityOpen);
+        tag.putInt(NBT_PROX_ACCESS, this.proximityAccess.ordinal());
 
-        // persist sealed frame IDs (longs)
         long[] arr = this.sealedFrames.stream().mapToLong(Long::longValue).toArray();
         tag.putLongArray(NBT_SEALED, arr);
     }
@@ -101,10 +106,12 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     @Override
     public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.loadAdditional(tag, lookup);
-        if (tag.contains(NBT_PROX)) {
-            this.proximityOpen = tag.getByte(NBT_PROX);
+        if (tag.contains(NBT_PROX)) this.proximityOpen = tag.getByte(NBT_PROX);
+        if (tag.contains(NBT_PROX_ACCESS)) {
+            int ord = tag.getInt(NBT_PROX_ACCESS);
+            this.proximityAccess = (ord >= 0 && ord < ProximityAccess.values().length)
+                    ? ProximityAccess.values()[ord] : ProximityAccess.PUBLIC;
         }
-        // read sealed IDs; don't try to reseal yet (level may not be ready)
         if (tag.contains(NBT_SEALED)) {
             this.sealedFrames.clear();
             for (long id : tag.getLongArray(NBT_SEALED)) this.sealedFrames.add(id);
@@ -112,32 +119,24 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         onLoad();
     }
 
-    // --- Core logic ---
-
-    /** Re-apply seals after the chunk loads. */
     public void onLoad() {
         if (!(this.level instanceof ServerLevel server)) return;
 
-        // Re-scan the frames for current geometry
         List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
         Map<Long, AirlockFrameScanner.Result> frameMap = indexFrames(frames);
 
-        // Place seals for frames that were persisted as sealed
         boolean changed = false;
         for (long id : this.sealedFrames) {
             AirlockFrameScanner.Result f = frameMap.get(id);
             if (f != null) {
-                // Ensure they're sealed (idempotent: only places over air)
                 seal(f);
                 changed = true;
             }
         }
 
-        // restore runtime caches/state
         this.lastFrames = frames;
         this.lastFrameMap = frameMap;
 
-        // recompute state enum
         if (this.sealedFrames.isEmpty() || frames.isEmpty()) this.state = AirlockState.NONE;
         else if (this.sealedFrames.size() == frames.size()) this.state = AirlockState.ALL;
         else this.state = AirlockState.PARTIAL;
@@ -152,7 +151,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     private void serverTick() {
         ServerLevel server = (ServerLevel) this.level;
         assert server != null;
-        if ((++this.ticks % 5) != 0) return; // tick every 5
+        if ((++this.ticks % 5) != 0) return;
 
         List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
         Map<Long, AirlockFrameScanner.Result> frameMap = indexFrames(frames);
@@ -170,10 +169,21 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                 if (r > 0) {
                     AABB expanded = expandedInterior(f, r);
                     for (Player p : server.getEntitiesOfClass(Player.class, expanded)) {
-                        if (this.getSecurity().hasAccess(p)) {
-                            anyAuthorizedNear = true;
-                            break;
+                        switch (this.proximityAccess) {
+                            case PUBLIC -> {
+                                anyAuthorizedNear = true;
+                            }
+                            case TEAM -> {
+                                if (this.getSecurity().hasAccess(p)) {
+                                    anyAuthorizedNear = true;
+                                }
+                            }
+                            case PRIVATE -> {
+                                boolean isOwner = this.getSecurity().isOwner(p);
+                                if (isOwner) anyAuthorizedNear = true;
+                            }
                         }
+                        if (anyAuthorizedNear) break;
                     }
                 }
                 if (!anyAuthorizedNear) {
@@ -223,8 +233,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             setChanged();
         }
     }
-
-    // --- Helpers ---
 
     private static Map<Long, AirlockFrameScanner.Result> indexFrames(List<AirlockFrameScanner.Result> list) {
         Map<Long, AirlockFrameScanner.Result> out = new HashMap<>(list.size());
@@ -371,8 +379,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             server.playSound(null, center, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
-
-    // --- UI / Status ---
 
     public AirlockState getAirlockState() { return this.state; }
     public List<AirlockFrameScanner.Result> getLastFrames() { return this.lastFrames; }

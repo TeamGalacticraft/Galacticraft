@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.content.AirlockState;
+import dev.galacticraft.mod.content.ProximityAccess;
+import dev.galacticraft.mod.network.c2s.AirlockSetProximityAccessPayload;
 import dev.galacticraft.mod.network.c2s.AirlockSetProximityPayload;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
@@ -35,13 +37,100 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractButton;
 import net.minecraft.client.gui.components.EditBox;
+import net.minecraft.client.gui.components.Tooltip;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 import org.jetbrains.annotations.NotNull;
 
 public class AirlockControllerScreen extends MachineScreen<AirlockControllerBlockEntity, AirlockControllerMenu> {
     private final EditBox textField;
+
+    private IconButton publicBtn;
+    private IconButton teamBtn;
+    private IconButton privateBtn;
+
+    private static final ResourceLocation MACHINELIB_PANELS =
+            ResourceLocation.fromNamespaceAndPath("machinelib", "textures/gui/machine_panels.png");
+
+    private static final int TEX_W = 256, TEX_H = 256;
+
+    private static final int BTN_U = 0;
+    private static final int BTN_V_NORMAL   = 196;
+    private static final int BTN_V_HOVER    = 216;
+    private static final int BTN_V_SELECTED = 236;
+    private static final int BTN_W = 20, BTN_H = 20;
+
+    private static final int PUB_U = 208, PUB_V = 49,  PUB_W = 15, PUB_H = 15;
+    private static final int TEAM_U = 210, TEAM_V = 71, TEAM_W = 12, TEAM_H = 14;
+    private static final int PRIV_U = 231, PRIV_V = 49,  PRIV_W = 10, PRIV_H = 14;
+
+    private static final int ACCESS_BTN_SIZE = 20;
+    private static final int ACCESS_BTN_GAP = 6;
+
+    private enum AccessMode { PUBLIC, TEAM, PRIVATE }
+    private AccessMode selected = AccessMode.PUBLIC;
+    private ProximityAccess cachedAccess = null;
+
+    private ProximityAccess currentAccess() {
+        return this.menu.proximityAccess != null ? this.menu.proximityAccess : ProximityAccess.PUBLIC;
+    }
+
+    private static class IconButton extends AbstractButton {
+        @FunctionalInterface interface PressHandler { void onPress(IconButton b); }
+
+        private final ResourceLocation texture;
+        private final int iconU, iconV, iconW, iconH;
+        private final PressHandler handler;
+
+        private boolean selected;
+
+        IconButton(int x, int y, int size,
+                   ResourceLocation texture,
+                   int iconU, int iconV, int iconW, int iconH,
+                   PressHandler handler,
+                   Component tooltipText) {
+            super(x, y, size, size, Component.empty());
+            this.texture = texture;
+            this.iconU = iconU; this.iconV = iconV; this.iconW = iconW; this.iconH = iconH;
+            this.handler = handler;
+            if (!tooltipText.getString().isEmpty()) this.setTooltip(Tooltip.create(tooltipText));
+        }
+
+        void setSelected(boolean sel) { this.selected = sel; }
+
+        @Override public void onPress() { handler.onPress(this); }
+
+        @Override
+        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float delta) {
+            final int v = this.selected ? BTN_V_SELECTED : (this.isHovered() ? BTN_V_HOVER : BTN_V_NORMAL);
+            g.blit(texture, getX(), getY(), BTN_U, v, BTN_W, BTN_H, TEX_W, TEX_H);
+
+            int ix = getX() + (this.width  - iconW) / 2 + 1;
+            int iy = getY() + (this.height - iconH) / 2;
+            g.blit(texture, ix, iy, iconU, iconV, iconW, iconH, TEX_W, TEX_H);
+        }
+
+        @Override protected void updateWidgetNarration(NarrationElementOutput out) {}
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+
+        ProximityAccess now = currentAccess();
+        if (now != this.cachedAccess) {
+            if (publicBtn != null && teamBtn != null && privateBtn != null) {
+                publicBtn.setSelected(now == ProximityAccess.PUBLIC);
+                teamBtn.setSelected(now == ProximityAccess.TEAM);
+                privateBtn.setSelected(now == ProximityAccess.PRIVATE);
+            }
+            this.cachedAccess = now;
+        }
+    }
 
     public AirlockControllerScreen(AirlockControllerMenu menu, Inventory inv, Component title) {
         super(menu, title, Constant.ScreenTexture.AIRLOCK_CONTROLLER_SCREEN);
@@ -97,6 +186,71 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         this.textField.setX(this.leftPos + 132);
         this.textField.setY(this.topPos + 65);
         this.addRenderableWidget(this.textField);
+
+        ProximityAccess initial = currentAccess();
+        switch (initial) {
+            case PUBLIC  -> selected = AccessMode.PUBLIC;
+            case TEAM    -> selected = AccessMode.TEAM;
+            case PRIVATE -> selected = AccessMode.PRIVATE;
+        }
+
+        this.publicBtn = new IconButton(0, 0, ACCESS_BTN_SIZE, MACHINELIB_PANELS, PUB_U,  PUB_V,  PUB_W,  PUB_H, b -> {
+            selected = AccessMode.PUBLIC;
+            publicBtn.setSelected(true); teamBtn.setSelected(false); privateBtn.setSelected(false);
+            this.menu.proximityAccess = ProximityAccess.PUBLIC;
+            ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.PUBLIC));
+        }, Component.literal("Public"));
+
+        this.teamBtn = new IconButton(0, 0, ACCESS_BTN_SIZE, MACHINELIB_PANELS, TEAM_U, TEAM_V, TEAM_W, TEAM_H, b -> {
+            selected = AccessMode.TEAM;
+            publicBtn.setSelected(false); teamBtn.setSelected(true); privateBtn.setSelected(false);
+            this.menu.proximityAccess = ProximityAccess.TEAM;
+            ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.TEAM));
+        }, Component.literal("Team"));
+
+        this.privateBtn = new IconButton(0, 0, ACCESS_BTN_SIZE, MACHINELIB_PANELS, PRIV_U, PRIV_V, PRIV_W, PRIV_H, b -> {
+            selected = AccessMode.PRIVATE;
+            publicBtn.setSelected(false); teamBtn.setSelected(false); privateBtn.setSelected(true);
+            this.menu.proximityAccess = ProximityAccess.PRIVATE;
+            ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.PRIVATE));
+        }, Component.literal("Private"));
+
+        this.addRenderableWidget(this.publicBtn);
+        this.addRenderableWidget(this.teamBtn);
+        this.addRenderableWidget(this.privateBtn);
+
+        publicBtn.setSelected(initial == ProximityAccess.PUBLIC);
+        teamBtn.setSelected(initial == ProximityAccess.TEAM);
+        privateBtn.setSelected(initial == ProximityAccess.PRIVATE);
+
+        this.cachedAccess = initial;
+
+        layoutAccessButtons();
+    }
+
+    @Override
+    protected void repositionElements() {
+        super.repositionElements();
+        layoutAccessButtons();
+    }
+
+    private void layoutAccessButtons() {
+        if (publicBtn == null || teamBtn == null || privateBtn == null) return;
+
+        int centerX = this.leftPos + (this.imageWidth / 2);
+        int centerY = this.topPos + (this.imageHeight / 4);
+
+        int total = ACCESS_BTN_SIZE * 3 + ACCESS_BTN_GAP * 2;
+        int startX = centerX - total / 2;
+        int y = centerY - ACCESS_BTN_SIZE / 2;
+
+        this.publicBtn.setPosition(startX, y);
+        this.teamBtn.setPosition(startX + ACCESS_BTN_SIZE + ACCESS_BTN_GAP, y);
+        this.privateBtn.setPosition(startX + (ACCESS_BTN_SIZE + ACCESS_BTN_GAP) * 2, y);
+
+        this.publicBtn.active = this.publicBtn.visible = true;
+        this.teamBtn.active = this.teamBtn.visible = true;
+        this.privateBtn.active = this.privateBtn.visible = true;
     }
 
     @Override

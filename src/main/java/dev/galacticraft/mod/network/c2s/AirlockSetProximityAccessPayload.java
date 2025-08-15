@@ -24,6 +24,7 @@ package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.ProximityAccess;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import io.netty.buffer.ByteBuf;
@@ -34,11 +35,19 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AirlockSetProximityPayload(byte proximity) implements C2SPayload {
-    public static final StreamCodec<ByteBuf, AirlockSetProximityPayload> STREAM_CODEC =
-            ByteBufCodecs.BYTE.map(AirlockSetProximityPayload::new, AirlockSetProximityPayload::proximity);
-    public static final ResourceLocation ID = Constant.id("airlock_set_proximity");
-    public static final CustomPacketPayload.Type<AirlockSetProximityPayload> TYPE = new CustomPacketPayload.Type<>(ID);
+public record AirlockSetProximityAccessPayload(ProximityAccess access) implements C2SPayload {
+    public static final StreamCodec<ByteBuf, AirlockSetProximityAccessPayload> STREAM_CODEC =
+            ByteBufCodecs.VAR_INT.map(
+                    i -> {
+                        ProximityAccess[] vals = ProximityAccess.values();
+                        ProximityAccess a = (i >= 0 && i < vals.length) ? vals[i] : ProximityAccess.PUBLIC;
+                        return new AirlockSetProximityAccessPayload(a);
+                    },
+                    p -> p.access.ordinal()
+            );
+
+    public static final ResourceLocation ID = Constant.id("airlock_set_proximity_access");
+    public static final CustomPacketPayload.Type<AirlockSetProximityAccessPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
@@ -47,8 +56,7 @@ public record AirlockSetProximityPayload(byte proximity) implements C2SPayload {
             if (be != null && be.getLevel() != null && be.getLevel().isLoaded(be.getBlockPos())) {
                 if (!(be instanceof dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity mb)
                         || mb.getSecurity().hasAccess(context.player())) {
-                    byte clamped = (byte) Math.max(0, Math.min(5, this.proximity));
-                    be.setProximityOpen(clamped);
+                    be.setProximityAccess(this.access);
                     be.setChanged();
                 }
             }
