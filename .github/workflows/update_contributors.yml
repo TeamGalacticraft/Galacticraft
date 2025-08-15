@@ -1,12 +1,9 @@
-name: ContributorsCheck
+name: Update Contributor List
 
 on:
-  push:
-    branches:
-      - main
   schedule:
     - cron: '0 3 * * 1'  # every Monday 03:00 UTC
-  workflow_dispatch: {}
+  workflow_dispatch:
 
 permissions:
   contents: write
@@ -17,8 +14,8 @@ concurrency:
 
 jobs:
   update-contributors:
+    if: github.repository == 'TeamGalacticraft/Galacticraft'
     runs-on: ubuntu-latest
-    if: github.actor != 'github-actions[bot]'
 
     steps:
       - uses: actions/checkout@v4
@@ -27,7 +24,7 @@ jobs:
           fetch-depth: 0
           persist-credentials: true
 
-      - name: Run contributor updater
+      - name: Run contributor update script
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: python3 .github/scripts/update_contributors.py
@@ -35,7 +32,7 @@ jobs:
       - name: Detect changes
         id: diff
         run: |
-          if git diff --quiet --exit-code -- src/main/resources/fabric.mod.json build/contributors.etag; then
+          if git diff --quiet --exit-code -- src/main/resources/fabric.mod.json; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -50,6 +47,6 @@ jobs:
       - name: Commit & push update to main
         if: steps.diff.outputs.changed == 'true'
         run: |
-          git add src/main/resources/fabric.mod.json build/contributors.etag || true
+          git add src/main/resources/fabric.mod.json
           git commit -m "chore: update contributors in fabric.mod.json"
           git push origin HEAD:main
