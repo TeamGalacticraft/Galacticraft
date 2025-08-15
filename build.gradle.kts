@@ -248,6 +248,7 @@ dependencies {
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
 
     modCompileOnly("mezz.jei:jei-$minecraftVersion-fabric-api:$jeiVersion")
+    // modRuntimeOnly("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }
