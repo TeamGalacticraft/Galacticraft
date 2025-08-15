@@ -3,26 +3,30 @@ name: ContributorsCheck
 on:
   push:
     branches:
-      - '**'
-      - '!chore/update-contributors'   # avoid loops from bot updates
+      - main
+  schedule:
+    - cron: '0 3 * * 1'  # every Monday 03:00 UTC
   workflow_dispatch: {}
 
 permissions:
   contents: write
-  pull-requests: write
+
+concurrency:
+  group: contributors
+  cancel-in-progress: false
 
 jobs:
   update-contributors:
     runs-on: ubuntu-latest
-    if: startsWith(github.ref, 'refs/heads/') && github.actor != 'github-actions[bot]'
+    if: github.actor != 'github-actions[bot]'
 
     steps:
       - uses: actions/checkout@v4
         with:
+          ref: main
           fetch-depth: 0
           persist-credentials: true
 
-      # Python is preinstalled; no setup needed
       - name: Run contributor updater
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -31,7 +35,7 @@ jobs:
       - name: Detect changes
         id: diff
         run: |
-          if git diff --quiet --exit-code -- src/main/resources/fabric.mod.json; then
+          if git diff --quiet --exit-code -- src/main/resources/fabric.mod.json build/contributors.etag; then
             echo "changed=false" >> "$GITHUB_OUTPUT"
           else
             echo "changed=true" >> "$GITHUB_OUTPUT"
@@ -43,9 +47,9 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Commit & push update to same branch
+      - name: Commit & push update to main
         if: steps.diff.outputs.changed == 'true'
         run: |
-          git add src/main/resources/fabric.mod.json
+          git add src/main/resources/fabric.mod.json build/contributors.etag || true
           git commit -m "chore: update contributors in fabric.mod.json"
-          git push origin HEAD:${{ github.ref_name }}
+          git push origin HEAD:main

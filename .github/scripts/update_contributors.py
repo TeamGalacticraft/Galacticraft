@@ -5,6 +5,7 @@ OWNER_REPO = "TeamGalacticraft/Galacticraft"
 MOD_JSON_PATH = "src/main/resources/fabric.mod.json"
 ETAG_PATH = "build/contributors.etag"
 
+
 def http_get_contributors(use_etag=True):
     results = []
     token = os.environ.get("GITHUB_TOKEN", "").strip() or None
@@ -34,7 +35,7 @@ def http_get_contributors(use_etag=True):
                 for part in link.split(","):
                     part = part.strip()
                     if part.endswith('rel="next"'):
-                        next_url = part[part.find("<")+1:part.find(">")]
+                        next_url = part[part.find("<") + 1 : part.find(">")]
                         break
                 url = next_url
         except urllib.error.HTTPError as e:
@@ -46,22 +47,27 @@ def http_get_contributors(use_etag=True):
 
     return results, latest_etag
 
+
 def build_payload(raw):
     # filter bots & sort by contributions desc
     filtered = [
-        c for c in raw
-        if not ((c.get("type") or "").lower().__contains__("bot")
-                or (c.get("login") or "").lower().__contains__("bot"))
+        c
+        for c in raw
+        if not (
+                "bot" in c.get("type", "").lower()
+                or "bot" in c.get("login", "").lower()
+        )
     ]
     filtered.sort(key=lambda c: c.get("contributions") or 0, reverse=True)
 
     return [
         {
-            "name": c.get("login") or "",
-            "contact": {"homepage": c.get("html_url") or ""},
+            "name": c.get("login", ""),
+            "contact": {"homepage": c.get("html_url", "")},
         }
         for c in filtered
     ]
+
 
 def read_existing(root):
     arr = root.get("contributors")
@@ -70,11 +76,19 @@ def read_existing(root):
     out = []
     for el in arr:
         if isinstance(el, dict):
-            name = el.get("name") or ""
-            contact = el.get("contact") or {}
-            homepage = contact.get("homepage") or ""
+            name = el.get("name", "")
+            homepage = el.get("contact", {}).get("homepage", "")
             out.append({"name": name, "contact": {"homepage": homepage}})
     return out
+
+
+def write_etag(new_etag: str | None):
+    if not new_etag:
+        return
+    os.makedirs(os.path.dirname(ETAG_PATH), exist_ok=True)
+    with open(ETAG_PATH, "w", encoding="utf-8") as f:
+        f.write(new_etag)
+
 
 def main():
     # load fmj
@@ -99,12 +113,11 @@ def main():
 
     new_contrib = build_payload(raw)
 
+    # Persist the new ETag (if any) regardless of whether the list changed
+    write_etag(new_etag)
+
     if existing == new_contrib:
         print("Contributors already up-to-date. No changes written.")
-        if new_etag:
-            os.makedirs(os.path.dirname(ETAG_PATH), exist_ok=True)
-            with open(ETAG_PATH, "w", encoding="utf-8") as f:
-                f.write(new_etag)
         return
 
     root["contributors"] = new_contrib
@@ -112,12 +125,8 @@ def main():
         json.dump(root, f, indent=2, ensure_ascii=False)
         f.write("\n")
 
-    if new_etag:
-        os.makedirs(os.path.dirname(ETAG_PATH), exist_ok=True)
-        with open(ETAG_PATH, "w", encoding="utf-8") as f:
-            f.write(new_etag)
-
     print(f"Updated contributors in fabric.mod.json ({len(new_contrib)})")
+
 
 if __name__ == "__main__":
     main()
