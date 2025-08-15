@@ -38,7 +38,6 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import team.reborn.energy.api.EnergyStorage;
@@ -140,11 +139,11 @@ public class WireNetworkManager {
                     double brownoutFactor = (double) totalAvailable / totalRequested;
                     Constant.LOGGER.warn("brownout factor {}", brownoutFactor);
                     for (Object2LongMap.Entry<EnergyStorage> consumer : consumers.object2LongEntrySet()) {
-                        actual += consumer.getKey().insert(Mth.floor(consumer.getLongValue() * brownoutFactor), transaction);
+                        actual += consumer.getKey().insert((long)(consumer.getLongValue() * brownoutFactor), transaction);
                     }
                 } else {
                     for (Object2LongMap.Entry<EnergyStorage> consumer : consumers.object2LongEntrySet()) {
-                        actual += consumer.getKey().insert(Mth.floor(consumer.getLongValue()), transaction);
+                        actual += consumer.getKey().insert(consumer.getLongValue(), transaction);
                     }
                 }
                 assert actual <= totalAvailable;
@@ -152,7 +151,7 @@ public class WireNetworkManager {
                     double factor = (double) actual / totalAvailable;
                     Constant.LOGGER.warn("factor {}", factor);
                     for (Object2LongMap.Entry<EnergyStorage> producer : producers.object2LongEntrySet()) {
-                        actual -= producer.getKey().extract((int)(producer.getLongValue() * factor), transaction);
+                        actual -= producer.getKey().extract((long)(producer.getLongValue() * factor), transaction);
                     }
                 } else {
                     for (Object2LongMap.Entry<EnergyStorage> producer : producers.object2LongEntrySet()) {
@@ -285,20 +284,7 @@ public class WireNetworkManager {
             }
             List<BlockData> blocks = this.chunkData.computeIfAbsent(wire.getNetwork(), l -> new Long2ObjectOpenHashMap<>(4))
                     .computeIfAbsent(ChunkPos.asLong(pos), l -> new ArrayList<>());
-            BlockData target = null;
-            for (BlockData blockData : blocks) {
-                if (mutable.equals(blockData.block.getPos())) {
-                    Constant.LOGGER.info("Found existing block data for endpoint");
-                    target = blockData;
-                    break;
-                }
-            }
-            if (target == null) {
-                Constant.LOGGER.info("Creating new block data for endpoint");
-                target = new BlockData(BlockApiCache.create(EnergyStorage.SIDED, this.level, mutable.immutable()), new ArrayList<>());
-                blocks.add(target);
-            }
-            target.add(direction.getOpposite());
+            connectToEndpoint(mutable, direction, blocks);
         }
     }
 
@@ -360,7 +346,7 @@ public class WireNetworkManager {
             repairNetwork(mutable, adjacent, network);
         } else if (adjacent.size() == 1) {
             Constant.LOGGER.info("Wire on end. Nothing to repair.");
-        } else {
+        } else if (this.chunkData.containsKey(network)) {
             if (this.chunkData.get(network).isEmpty()) {
                 Constant.LOGGER.info("Last wire broken - destroying all references to network");
                 this.chunkData.remove(network);
@@ -375,6 +361,10 @@ public class WireNetworkManager {
         Constant.LOGGER.info("Attempting to repair network {}", network);
         Set<Wire> visited = new HashSet<>(); // wires that have already been searched
         ObjectArrayFIFOQueue<Wire> queue = new ObjectArrayFIFOQueue<>(6); // wires that have yet to be searched (guaranteed to be a wire in the same network)
+        Long2ObjectMap< // chunk position (OF ADJACENT WIRE) to
+                List< // list of blocks connected to wires (in the chunk) with associated direction data FACING WIRE (for direct use in search)
+                        BlockData>> pendingChunkData = new Long2ObjectOpenHashMap<>();
+        Long2ObjectMap<List<BlockData>> chunks = this.chunkData.get(network);
 
         while (!targets.isEmpty()) {
             Wire e = targets.removeLast();
@@ -394,6 +384,29 @@ public class WireNetworkManager {
                                 queue.enqueue(wire);
                                 targets.remove(wire);
                             }
+                        } else if (chunks != null) {
+                            List<BlockData> blocks = chunks.get(ChunkPos.asLong(current.getBlockPos()));
+                            if (blocks != null) {
+                                for (Iterator<BlockData> iterator = blocks.iterator(); iterator.hasNext(); ) {
+                                    BlockData block = iterator.next();
+                                    if (mutable.equals(block.block.getPos())) {
+                                        if (block.directions.remove(direction.getOpposite())) {
+                                            connectToEndpoint(mutable, direction, pendingChunkData.computeIfAbsent(ChunkPos.asLong(current.getBlockPos()), l -> new ArrayList<>()));
+                                            if (block.directions.isEmpty()) {
+                                                iterator.remove();
+                                                if (blocks.isEmpty()) {
+                                                    chunks.remove(ChunkPos.asLong(current.getBlockPos()));
+                                                    if (chunks.isEmpty()) {
+                                                        this.chunkData.remove(network);
+                                                        chunks = null;
+                                                        break;
+                                                    }
+                                                }
+                                            }
+                                        }
+                                    }
+                                }
+                            }
                         }
                     }
                 }
@@ -407,7 +420,25 @@ public class WireNetworkManager {
                     wire.setNetwork(newNetwork);
                 }
                 visited.clear();
-            } // otherwise we can reuse the network id - last iteration of a breakup is ok too as everyone else has migrated
+                if (!pendingChunkData.isEmpty()) {
+                    this.chunkData.put(newNetwork, new Long2ObjectOpenHashMap<>(pendingChunkData));
+                    pendingChunkData.clear();
+                }
+            } else { // otherwise we can reuse the network id - last iteration of a breakup is ok too as everyone else has migrated
+                if (!pendingChunkData.isEmpty()) {
+                    // revert removal of endpoints
+                    chunks = this.chunkData.computeIfAbsent(network, p -> new Long2ObjectOpenHashMap<>());
+                    for (Long2ObjectMap.Entry<List<BlockData>> entry : pendingChunkData.long2ObjectEntrySet()) {
+                        List<BlockData> blocks = chunks.computeIfAbsent(entry.getLongKey(), l -> new ArrayList<>());
+                        for (BlockData block : entry.getValue()) {
+                            for (Direction direction : block.directions) {
+                                connectToEndpoint(block.block.getPos(), direction.getOpposite(), blocks);
+                            }
+                        }
+                    }
+                    pendingChunkData.clear();
+                }
+            }
         }
         if (!visited.isEmpty()) {
             Constant.LOGGER.info("Repair: Old network reused.");
@@ -439,13 +470,28 @@ public class WireNetworkManager {
                         if (visited.add(wire)) { // prevent infinite recursion
                             queue.add(wire);
                         }
-                    } else {
-                        //fixme
                     }
                 }
             }
         }
         Constant.LOGGER.info("Updated {} wires to network: {}", updated, newNetwork);
+    }
+
+    private void connectToEndpoint(BlockPos endpointPos, Direction direction, List<BlockData> blockDatas) {
+        BlockData newData = null;
+        for (BlockData blockData : blockDatas) {
+            if (endpointPos.equals(blockData.block.getPos())) {
+                Constant.LOGGER.info("Found existing block data for endpoint");
+                newData = blockData;
+                break;
+            }
+        }
+        if (newData == null) {
+            Constant.LOGGER.info("Creating new block data for endpoint");
+            newData = new BlockData(BlockApiCache.create(EnergyStorage.SIDED, this.level, endpointPos.immutable()), new ArrayList<>());
+            blockDatas.add(newData);
+        }
+        newData.add(direction.getOpposite());
     }
 
     private record BlockData(BlockApiCache<EnergyStorage, Direction> block, List<Direction> directions) {
