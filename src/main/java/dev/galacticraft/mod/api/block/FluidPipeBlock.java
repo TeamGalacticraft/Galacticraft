@@ -144,7 +144,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
 //        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
 //            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
-//        } //fixme
+//        } //fixme(W)
     }
 
     // Taken from AE2's Color Applicator implementation

@@ -24,16 +24,14 @@ package dev.galacticraft.mod.api.wire;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.WireNetworkAccessor;
-import it.unimi.dsi.fastutil.Hash;
-import it.unimi.dsi.fastutil.HashCommon;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import it.unimi.dsi.fastutil.longs.Long2ObjectOpenHashMap;
-import it.unimi.dsi.fastutil.objects.*;
+import it.unimi.dsi.fastutil.objects.Object2LongMap;
+import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.lookup.v1.block.BlockApiCache;
-import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -43,33 +41,13 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
 import java.util.concurrent.atomic.AtomicLong;
 
 public class WireNetworkManager {
-    // ASSERTIONS: map will only contain caches for: ONE level, ONE type of storage
-    private static final Hash.Strategy<BlockApiCache<EnergyStorage, Direction>> HASH_STRATEGY = new Hash.Strategy<>() {
-        @Override
-        public boolean equals(BlockApiCache<EnergyStorage, Direction> a, BlockApiCache<EnergyStorage, Direction> b) {
-            if (a == b) return true;
-            if (a == null || b == null) return false;
-            return a.getPos().equals(b.getPos());
-        }
-
-        @Override
-        public int hashCode(BlockApiCache<EnergyStorage, Direction> o) {
-            return o.getPos().hashCode();
-        }
-    };
-
-    // DO NOT PUT (OR COMPUTE) THIS EVER. ONLY FOR SEARCHING.
-    private final ApiCacheSearch apiCacheSearch = new ApiCacheSearch();
-
     public static final long INVALID_NETWORK_ID = Long.MIN_VALUE; // FIXME: CHANGE ID TO OBJECT W/ POWER RATING
     // Atomic as I think there are mods that try to thread the game logic (although it might just fall apart anyway)
     private final AtomicLong counter = new AtomicLong(0); //TODO: save/load to server
@@ -77,8 +55,8 @@ public class WireNetworkManager {
     private final Long2ObjectMap<List<Wire>> pendingWires = new Long2ObjectOpenHashMap<>();
     private final Long2ObjectMap< // network id to
                     Long2ObjectMap< // chunk position (OF ADJACENT WIRE) to
-                            Object2ObjectOpenCustomHashMap< // map of caches + directions FACING BLOCK (for direct use in search)
-                                    BlockApiCache<EnergyStorage, Direction>, List<Direction>>>> chunkData = new Long2ObjectOpenHashMap<>();
+                            List< // list of blocks connected to wires (in the chunk) with associated direction data FACING WIRE (for direct use in search)
+                                    BlockData>>> chunkData = new Long2ObjectOpenHashMap<>();
     private boolean loaded = false;
 
     public WireNetworkManager(ServerLevel level) {
@@ -89,13 +67,7 @@ public class WireNetworkManager {
         // BEFORE block entities unloaded, AFTER chunk is marked as unloaded
         ServerChunkEvents.CHUNK_UNLOAD.register((level, chunk) -> {
             long pos = chunk.getPos().toLong();
-            for (ObjectIterator<Long2ObjectMap.Entry<Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>>>> iterator = ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().chunkData.long2ObjectEntrySet().iterator(); iterator.hasNext(); ) {
-                Long2ObjectMap.Entry<Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>>> entry = iterator.next();
-                Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> m = entry.getValue();
-                if (m.remove(pos) != null && m.isEmpty()) {
-                    iterator.remove();
-                }
-            }
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().chunkData.values().removeIf(m -> m.remove(pos) != null && m.isEmpty());
         });
 
         ServerLifecycleEvents.SERVER_STARTED.register((server) -> {
@@ -128,18 +100,17 @@ public class WireNetworkManager {
         Object2LongMap<EnergyStorage> consumers = new Object2LongOpenHashMap<>();
         Object2LongMap<EnergyStorage> producers = new Object2LongOpenHashMap<>();
 
-        for (Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> chunks : this.chunkData.values()) {
+        for (Long2ObjectMap<List<BlockData>> chunks : this.chunkData.values()) {
             long totalRequested = 0;
             long totalAvailable = 0;
             final long maxTransfer = 1000L; //fixme
             try (Transaction transaction = Transaction.openOuter()) {
                 // calculate total requested amount
                 try (Transaction test = Transaction.openNested(transaction)) {
-                    for (Long2ObjectMap.Entry<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> chunk : chunks.long2ObjectEntrySet()) {
-                        for (ObjectIterator<Object2ObjectMap.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> iterator = chunk.getValue().object2ObjectEntrySet().fastIterator(); iterator.hasNext(); ) {
-                            Map.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>> entry = iterator.next();
-                            for (Direction direction : entry.getValue()) {
-                                EnergyStorage energyStorage = entry.getKey().find(direction);
+                    for (List<BlockData> chunk : chunks.values()) {
+                        for (BlockData block : chunk) {
+                            for (Direction direction : block.directions) {
+                                EnergyStorage energyStorage = block.block.find(direction);
                                 if (energyStorage != null && energyStorage.supportsInsertion()) {
                                     long requested = energyStorage.insert(maxTransfer, test);
                                     if (requested > 0) {
@@ -154,11 +125,10 @@ public class WireNetworkManager {
 
                 // calculate total extractable amount
                 try (Transaction test = Transaction.openNested(transaction)) {
-                    for (Long2ObjectMap.Entry<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> chunk : chunks.long2ObjectEntrySet()) {
-                        for (ObjectIterator<Object2ObjectMap.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> iterator = chunk.getValue().object2ObjectEntrySet().fastIterator(); iterator.hasNext(); ) {
-                            Map.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>> entry = iterator.next();
-                            for (Direction direction : entry.getValue()) {
-                                EnergyStorage energyStorage = entry.getKey().find(direction);
+                    for (Long2ObjectMap.Entry<List<BlockData>> chunk : chunks.long2ObjectEntrySet()) {
+                        for (BlockData entry : chunk.getValue()) {
+                            for (Direction direction : entry.directions) {
+                                EnergyStorage energyStorage = entry.block.find(direction);
                                 if (energyStorage != null && energyStorage.supportsExtraction()) {
                                     long available = energyStorage.extract(maxTransfer, test);
                                     if (available > 0) {
@@ -226,13 +196,13 @@ public class WireNetworkManager {
 
     public void enqueueWireLoaded(BlockPos pos, Wire wire) {
         if (wire.getNetwork() == INVALID_NETWORK_ID) return; // never connected to anything, so don't care.
-//        if (!this.loaded) {
+        if (!this.loaded) {
             int x = SectionPos.blockToSectionCoord(pos.getX());
             int z = SectionPos.blockToSectionCoord(pos.getZ());
             this.pendingWires.computeIfAbsent(ChunkPos.asLong(x, z), k -> new ArrayList<>()).add(wire);
-//        } else {
-//            this.wireLoaded(pos, wire);
-//        }
+        } else {
+            this.wireLoaded(pos, wire);
+        }
     }
 
     private void chunkLoaded(LevelChunk chunk) {
@@ -279,25 +249,30 @@ public class WireNetworkManager {
         } else { // destroyed connection
             Constant.LOGGER.info("Connection destroyed?");
             if (wire.getNetwork() == INVALID_NETWORK_ID) return; // nothing to do.
-            if (this.level.getBlockEntity(pos.relative(direction)) instanceof Wire adj) {
+            BlockPos adjPos = pos.relative(direction);
+            if (this.level.getBlockEntity(adjPos) instanceof Wire adj) {
                 assert adj.getNetwork() == wire.getNetwork(); // if it was connected it must be the same network.
             } else { // not a wire, must be an endpoint
                 Constant.LOGGER.info("Endpoint destroyed");
-                Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> chunks = this.chunkData.get(wire.getNetwork());
+                Long2ObjectMap<List<BlockData>> chunks = this.chunkData.get(wire.getNetwork());
                 if (chunks == null) {
                     Constant.LOGGER.warn("Chunks not found");
                     return;
                 }
-                Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>> blocks = chunks.get(ChunkPos.asLong(pos));
+                List<BlockData> blocks = chunks.get(ChunkPos.asLong(pos));
                 if (blocks == null) {
                     Constant.LOGGER.warn("Blocks not found");
                     return;
                 }
-                List<Direction> directions = blocks.get(apiCacheSearch.with(pos, direction));
-                boolean remove = directions.remove(direction.getOpposite());
-                assert remove;
-                if (directions.isEmpty()) {
-                    blocks.remove(apiCacheSearch.with(pos, direction));
+                int size = blocks.size();
+                for (int i = 0; i < size; i++) {
+                    BlockData block = blocks.get(i);
+                    if (adjPos.equals(block.block.getPos())) {
+                        if (block.remove(direction.getOpposite())) {
+                            blocks.remove(i);
+                        }
+                        break;
+                    }
                 }
             }
         }
@@ -305,11 +280,29 @@ public class WireNetworkManager {
 
     private void merge(long into, long from, Wire fromWire) {
         Constant.LOGGER.info("Merging network {} into {}", from, into);
-        Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> target = this.chunkData.computeIfAbsent(into, l -> new Long2ObjectOpenHashMap<>(4));
-        Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> remove = this.chunkData.remove(from);
+        Long2ObjectMap<List<BlockData>> target = this.chunkData.computeIfAbsent(into, l -> new Long2ObjectOpenHashMap<>(4));
+        Long2ObjectMap<List<BlockData>> remove = this.chunkData.remove(from);
         if (remove != null) {
-            for (Long2ObjectMap.Entry<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> entry : remove.long2ObjectEntrySet()) {
-                target.computeIfAbsent(entry.getLongKey(), l -> new Object2ObjectOpenCustomHashMap<>(HashCommon.arraySize(entry.getValue().size(), Hash.FAST_LOAD_FACTOR), Hash.FAST_LOAD_FACTOR, HASH_STRATEGY)).putAll(entry.getValue());
+            for (Long2ObjectMap.Entry<List<BlockData>> entry : remove.long2ObjectEntrySet()) {
+                List<BlockData> blocks = target.computeIfAbsent(entry.getLongKey(), l -> new ArrayList<>());
+                Set<BlockPos> contents = new HashSet<>(blocks.size() + entry.getValue().size());
+                for (BlockData block : blocks) {
+                    contents.add(block.block.getPos());
+                }
+                for (BlockData blockData : entry.getValue()) {
+                    if (contents.add(blockData.block.getPos())) {
+                        blocks.add(blockData);
+                    } else {
+                        for (BlockData blockData2 : blocks) {
+                            if (blockData2.block.getPos().equals(blockData.block.getPos())) {
+                                for (Direction direction : blockData.directions) {
+                                    blockData2.add(direction);
+                                }
+                            }
+                        }
+                    }
+                }
+                blocks.addAll(entry.getValue());
             }
         }
         this.updateNetwork(fromWire, into);
@@ -318,28 +311,22 @@ public class WireNetworkManager {
     private void tryConnectToEndpoint(BlockPos pos, Wire wire, Direction direction, BlockPos.MutableBlockPos mutable) {
         EnergyStorage energyStorage = EnergyStorage.SIDED.find(this.level, mutable.setWithOffset(pos, direction), direction.getOpposite());
         if (energyStorage != null && (energyStorage.supportsExtraction() || energyStorage.supportsInsertion())) {
-            this.chunkData.computeIfAbsent(wire.getNetwork(), l -> new Long2ObjectOpenHashMap<>(4))
-                    .computeIfAbsent(ChunkPos.asLong(pos), l -> new Object2ObjectOpenCustomHashMap<>(4, Hash.FAST_LOAD_FACTOR, HASH_STRATEGY))
-                    .computeIfAbsent(BlockApiCache.create(EnergyStorage.SIDED, this.level, mutable.immutable()), l -> new ArrayList<>())
-                    .add(direction.getOpposite());
+            List<BlockData> blocks = this.chunkData.computeIfAbsent(wire.getNetwork(), l -> new Long2ObjectOpenHashMap<>(4))
+                    .computeIfAbsent(ChunkPos.asLong(pos), l -> new ArrayList<>());
+            BlockData target = null;
+            for (BlockData blockData : blocks) {
+                if (mutable.equals(blockData.block.getPos())) {
+                    target = blockData;
+                    break;
+                }
+            }
+            if (target == null) {
+                target = new BlockData(BlockApiCache.create(EnergyStorage.SIDED, this.level, mutable.immutable()), new ArrayList<>());
+                blocks.add(target);
+            }
+            target.add(direction.getOpposite());
         }
     }
-
-//    public void wirePlaced(BlockPos pos) {
-//        BlockEntity blockEntity = this.level.getBlockEntity(pos);
-//        assert blockEntity != null;
-//
-//        if (((Wire) blockEntity).getNetwork() != INVALID_NETWORK_ID) {
-//            Constant.LOGGER.info("New wire already networked. Skipping.");
-//            return;
-//        }
-//
-//        for (Direction direction : Constant.Misc.DIRECTIONS) {
-//            if (((Wire) blockEntity).isConnected(direction)) {
-//            }
-//        }
-//
-//    }
 
     public void wireRemoved(BlockPos pos) {
         Constant.LOGGER.info("Wire removed! {}", pos);
@@ -367,19 +354,20 @@ public class WireNetworkManager {
             }
         }
 
-        Long2ObjectMap<Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> chunks = this.chunkData.get(network);
+        Long2ObjectMap<List<BlockData>> chunks = this.chunkData.get(network);
         if (chunks != null) {
-            Object2ObjectOpenCustomHashMap<BlockApiCache<EnergyStorage, Direction>, List<Direction>> data = chunks.get(ChunkPos.asLong(pos));
+            List<BlockData> data = chunks.get(ChunkPos.asLong(pos));
             if (data != null) {
                 int r = 0;
                 for (int i = 0; i < adjacentEndpoints.length; i++) {
                     if (adjacentEndpoints[i]) {
                         Direction direction = Constant.Misc.DIRECTIONS[i];
                         mutable.setWithOffset(pos, direction);
-                        for (ObjectIterator<Object2ObjectMap.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>>> iterator = data.object2ObjectEntrySet().fastIterator(); iterator.hasNext(); ) {
-                            Object2ObjectMap.Entry<BlockApiCache<EnergyStorage, Direction>, List<Direction>> e = iterator.next();
-                            if (mutable.equals(e.getKey().getPos())) {
-                                if (e.getValue().remove(direction.getOpposite()) && e.getValue().isEmpty()) {
+                        direction = direction.getOpposite();
+                        for (Iterator<BlockData> iterator = data.iterator(); iterator.hasNext(); ) {
+                            BlockData e = iterator.next();
+                            if (mutable.equals(e.block.getPos())) {
+                                if (e.directions.remove(direction) && e.directions.isEmpty()) {
                                     iterator.remove();
                                     r++;
                                     break;
@@ -466,44 +454,15 @@ public class WireNetworkManager {
         }
     }
 
-    // ok. this is evil.
-    @SuppressWarnings("NonExtendableApiUsage")
-    private static class ApiCacheSearch implements BlockApiCache<EnergyStorage, Direction> {
-        private final BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-
-        private BlockApiCache<EnergyStorage, Direction> with(BlockPos pos, Direction offset) {
-            this.pos.setWithOffset(pos, offset);
-            return this;
+    private record BlockData(BlockApiCache<EnergyStorage, Direction> block, List<Direction> directions) {
+        private void add(Direction direction) {
+            if (!this.directions.contains(direction)) this.directions.add(direction);
         }
 
-        private BlockApiCache<EnergyStorage, Direction> with(BlockPos pos) {
-            this.pos.set(pos);
-            return this;
-        }
-
-        @Override
-        public @Nullable EnergyStorage find(@Nullable BlockState state, Direction context) {
-            return null;
-        }
-
-        @Override
-        public @Nullable BlockEntity getBlockEntity() {
-            return null;
-        }
-
-        @Override
-        public BlockApiLookup<EnergyStorage, Direction> getLookup() {
-            return null;
-        }
-
-        @Override
-        public ServerLevel getWorld() {
-            return null;
-        }
-
-        @Override
-        public BlockPos getPos() {
-            return this.pos;
+        private boolean remove(Direction direction) {
+            boolean removed = this.directions.remove(direction);
+            assert removed;
+            return this.directions.isEmpty();
         }
     }
 }

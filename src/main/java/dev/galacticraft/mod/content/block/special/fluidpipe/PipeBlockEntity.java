@@ -114,7 +114,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 //        if (this.network != null) {
 //            this.network.updateConnection(pos, neighborPos, direction);
 //        }
-//    } //fixme
+//    } //fixme(W)
 
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
