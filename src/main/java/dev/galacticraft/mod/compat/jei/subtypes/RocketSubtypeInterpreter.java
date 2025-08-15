@@ -27,7 +27,6 @@ import dev.galacticraft.api.rocket.RocketPrefabs;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.core.component.DataComponentType;
 import net.minecraft.world.item.ItemStack;
 
 public class RocketSubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
