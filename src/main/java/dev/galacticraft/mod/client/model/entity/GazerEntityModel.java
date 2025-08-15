@@ -56,8 +56,8 @@ public class GazerEntityModel<T extends Entity> extends EntityModel<T> {
         PartDefinition partDefinition = meshDefinition.getRoot();
 
         partDefinition.addOrReplaceChild(PartNames.BODY, CubeListBuilder.create().texOffs(0, 59).addBox(-4.0F, -13.0F, -3.0F, 8.0F, 7.0F, 8.0F, CubeDeformation.NONE)
-                .texOffs(82, 32).mirror().addBox(-4.0F, -6.0F, -3.0F, 4.0F, 4.0F, 8.0F, CubeDeformation.NONE).mirror(false)
-                .texOffs(87, 71).addBox(0.0F, -6.0F, -3.0F, 4.0F, 4.0F, 8.0F, CubeDeformation.NONE), PartPose.offset(0.0F, 24.0F, 0.0F));
+                .texOffs(82, 32).mirror().addBox(-4.0F, -6.0F, -3.0F, 4.0F, 4.0F, 8.0F, new CubeDeformation(-0.01F)).mirror(false)
+                .texOffs(87, 71).addBox(0.0F, -6.0F, -3.0F, 4.0F, 4.0F, 8.0F, new CubeDeformation(0.01F)), PartPose.offset(0.0F, 24.0F, 0.0F));
 
         partDefinition.addOrReplaceChild(PartNames.LEFT_ARM, CubeListBuilder.create().texOffs(54, 59).mirror().addBox(-2.0F, 0.0F, -2.0F, 4.0F, 11.0F, 4.0F, CubeDeformation.NONE).mirror(false)
                 .texOffs(58, 39).mirror().addBox(-2.0F, 8.0F, 2.0F, 4.0F, 3.0F, 4.0F, CubeDeformation.NONE).mirror(false), PartPose.offset(-6.0F, 13.0F, 3.0F));
