@@ -25,8 +25,8 @@ import java.time.format.DateTimeFormatter
 
 // Build Info
 val isCi = (System.getenv("CI") ?: "false") == "true"
-val runRei = project.getProperties().getOrDefault("rei", "true").toString().toBoolean()
 val runJei = project.getProperties().getOrDefault("jei", "false").toString().toBoolean()
+val runRei = project.getProperties().getOrDefault("rei", !runJei).toString().toBoolean()
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
