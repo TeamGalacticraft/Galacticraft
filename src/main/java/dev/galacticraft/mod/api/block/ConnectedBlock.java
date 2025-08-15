@@ -2,11 +2,15 @@ package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.ConnectingBlockUtil;
+import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
@@ -46,10 +50,34 @@ public abstract class ConnectedBlock extends Block {
 
     @Override
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        return this.updateConnection(level, pos, state, direction, neighborPos);
+        BlockState blockState = this.updateConnection(level, pos, state, direction, neighborPos);
+        if (state != blockState && level instanceof ServerLevel l) {
+            BlockEntity be = level.getBlockEntity(pos);
+            if (be != null) {
+                be.setBlockState(blockState);
+                this.onConnectionUpdate(l, pos, blockState, direction, neighborPos, neighborState);
+            }
+        }
+        return blockState;
     }
 
-    public abstract boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState);
+    @Override
+    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        super.neighborChanged(state, level, pos, sourceBlock, sourcePos, notify);
+        if (!level.isClientSide) {
+            Direction dir = DirectionUtil.fromNormal(sourcePos.getX() - pos.getX(), sourcePos.getY() - pos.getY(), sourcePos.getZ() - pos.getZ());
+            BlockState sourceState = level.getBlockState(sourcePos);
+            BlockState blockState = this.updateShape(state, dir, sourceState, level, pos, sourcePos);
+            if (blockState != state) {
+                level.setBlock(pos, blockState, Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
+                this.onConnectionUpdate((ServerLevel) level, pos, blockState, dir, sourcePos, sourceState);
+            }
+        }
+    }
+
+    protected abstract boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState);
+    protected void onConnectionUpdate(ServerLevel level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+    }
 
     protected BlockState updateConnection(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos) {
         return state.setValue(ConnectingBlockUtil.getBooleanProperty(direction), this.connectsTo(level, pos, state, direction, neighborPos));

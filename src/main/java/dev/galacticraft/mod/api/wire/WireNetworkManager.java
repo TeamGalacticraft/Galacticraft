@@ -211,10 +211,6 @@ public class WireNetworkManager {
                     this.merge(adj.getNetwork(), wire.getNetwork(), wire);
                 } // they're the same - do nothing
             } else { // not a wire, must be an endpoint
-                if (wire.getNetwork() == null) {
-                    Constant.LOGGER.info("Creating new network for endpoint");
-                    wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) wire.getBlockState().getBlock()).getThroughput())); // create network if necessary
-                }
                 Constant.LOGGER.info("Connecting to endpoint");
                 this.tryConnectToEndpoint(pos, wire, direction, new BlockPos.MutableBlockPos());
             }
@@ -236,6 +232,12 @@ public class WireNetworkManager {
                     if (adjPos.equals(block.block.getPos())) {
                         if (block.remove(direction.getOpposite())) {
                             blocks.remove(i);
+                            if (blocks.isEmpty()) {
+                                chunks.remove(ChunkPos.asLong(pos));
+                                if (chunks.isEmpty()) {
+                                    this.chunkData.remove(wire.getNetwork());
+                                }
+                            }
                         }
                         break;
                     }
@@ -269,7 +271,6 @@ public class WireNetworkManager {
                         }
                     }
                 }
-                blocks.addAll(chunk.getValue());
             }
         }
         this.updateNetwork(fromWire, into);
@@ -277,17 +278,23 @@ public class WireNetworkManager {
 
     private void tryConnectToEndpoint(BlockPos pos, Wire wire, Direction direction, BlockPos.MutableBlockPos mutable) {
         EnergyStorage energyStorage = EnergyStorage.SIDED.find(this.level, mutable.setWithOffset(pos, direction), direction.getOpposite());
-        if (energyStorage != null && (energyStorage.supportsExtraction() || energyStorage.supportsInsertion())) {
+        if (energyStorage != null) {
+            if (wire.getNetwork() == null) {
+                Constant.LOGGER.info("Creating new network for endpoint");
+                wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) wire.getBlockState().getBlock()).getThroughput()));
+            }
             List<BlockData> blocks = this.chunkData.computeIfAbsent(wire.getNetwork(), l -> new Long2ObjectOpenHashMap<>(4))
                     .computeIfAbsent(ChunkPos.asLong(pos), l -> new ArrayList<>());
             BlockData target = null;
             for (BlockData blockData : blocks) {
                 if (mutable.equals(blockData.block.getPos())) {
+                    Constant.LOGGER.info("Found existing block data for endpoint");
                     target = blockData;
                     break;
                 }
             }
             if (target == null) {
+                Constant.LOGGER.info("Creating new block data for endpoint");
                 target = new BlockData(BlockApiCache.create(EnergyStorage.SIDED, this.level, mutable.immutable()), new ArrayList<>());
                 blocks.add(target);
             }
@@ -432,6 +439,8 @@ public class WireNetworkManager {
                         if (visited.add(wire)) { // prevent infinite recursion
                             queue.add(wire);
                         }
+                    } else {
+                        //fixme
                     }
                 }
             }

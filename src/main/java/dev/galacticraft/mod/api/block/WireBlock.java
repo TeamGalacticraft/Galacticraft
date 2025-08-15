@@ -27,15 +27,14 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.WireNetworkAccessor;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
-import dev.galacticraft.mod.util.DirectionUtil;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -68,24 +67,15 @@ public class WireBlock extends PipeShapedBlock implements EntityBlock {
     }
 
     @Override
-    protected void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
-        super.neighborChanged(state, level, pos, sourceBlock, sourcePos, notify);
-    }
-
-    @Override
-    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        BlockState blockState = super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-        if (!level.isClientSide() && level.getBlockEntity(pos) instanceof WireBlockEntity wire && blockState != state) {
-            Direction dir = DirectionUtil.fromNormal(neighborPos.getX() - pos.getX(), neighborPos.getY() - pos.getY(), neighborPos.getZ() - pos.getZ());
-            wire.setBlockState(blockState); //fixme
-            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(pos, wire, dir);
+    protected void onConnectionUpdate(ServerLevel level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+        super.onConnectionUpdate(level, pos, state, direction, neighborPos, neighborState);
+        if (level.getBlockEntity(pos) instanceof Wire wire) {
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(pos, wire, direction);
         }
-
-        return blockState;
     }
 
     @Override
-    public boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+    protected boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
         return (level instanceof Level l && EnergyStorage.SIDED.find(l, neighborPos, direction.getOpposite()) != null) || neighborState.getBlock() instanceof WireBlock wb && wb.getThroughput() == ((WireBlock) state.getBlock()).getThroughput();
     }
 
@@ -98,7 +88,9 @@ public class WireBlock extends PipeShapedBlock implements EntityBlock {
     @Override
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean notify) {
         super.onPlace(state, level, pos, oldState, notify);
-        if (!level.isClientSide) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wirePlaced(pos, (Wire) level.getBlockEntity(pos));
+        if (!level.isClientSide && !state.is(oldState.getBlock()) && level.getBlockEntity(pos) instanceof Wire wire) {
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wirePlaced(pos, wire);
+        }
     }
 
     @Nullable

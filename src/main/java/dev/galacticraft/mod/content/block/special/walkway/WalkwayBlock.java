@@ -82,7 +82,7 @@ public class WalkwayBlock extends PipeShapedBlock implements AbstractWalkwayBloc
     }
 
     @Override
-    public boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
+    protected boolean canConnectTo(LevelAccessor level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
         return neighborState.is(GCBlocks.WALKWAY) || neighborState.isFaceSturdy(level, neighborPos, direction.getOpposite(), SupportType.CENTER);
     }
 }
