@@ -20,17 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital.lander;
+package dev.galacticraft.mod.content.entity.vehicle;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.entity.ControllableEntity;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
@@ -238,6 +239,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 for (Entity entity : this.getPassengers()) {
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.CRASH_LANDING);
                         ServerPlayNetworking.send(player, new ResetPerspectivePacket());
                     }
                     entity.setDeltaMovement(Vec3.ZERO);
@@ -259,6 +261,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             } else {
                 for (Entity entity : this.getPassengers()) {
                     if (entity instanceof ServerPlayer player) {
+                        player.awardStat(GCStats.SAFE_LANDING);
                         GCTriggers.SAFE_LANDING.trigger(player);
                     }
                 }
@@ -276,7 +279,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             this.addDeltaMovement(new Vec3(0, (holder != null ? holder.value().gravity() : 1.0d) * -0.008D, 0));
         }
 
-        double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
+        double motY = -Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
         double motX = Math.cos(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
         double motZ = Math.sin(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
 
@@ -444,9 +447,9 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
         if (!onGround()) {
             if (up)
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             if (down)
-                setXRot(Math.min(Math.max(getXRot() + 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
             if (left)
                 setYRot(getYRot() - 0.5F * turnFactor);
             if (right)

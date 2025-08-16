@@ -26,7 +26,7 @@ import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.util.Translations;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;

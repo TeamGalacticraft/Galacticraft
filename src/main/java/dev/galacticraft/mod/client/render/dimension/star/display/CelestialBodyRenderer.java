@@ -20,17 +20,36 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.dimension;
+package dev.galacticraft.mod.client.render.dimension.star.display;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.resources.ResourceLocation;
+import dev.galacticraft.mod.client.render.dimension.star.data.CelestialBody;
+import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 
-public final class CelestialBodyTextures {
-    public static final ResourceLocation SUN_VENUS = Constant.id("textures/environment/sun_venus.png");
-    public static final ResourceLocation SUN_MOON = Constant.id("textures/environment/sun_moon.png");
-    public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
-    public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
+import java.util.List;
 
-    private CelestialBodyTextures() {
+/**
+ * Interface for celestial body renderers.
+ * Implements the Strategy pattern.
+ */
+public interface CelestialBodyRenderer {
+
+    void setupBufferPositions(List<CelestialBody> bodies);
+
+    /**
+     * Renders a single celestial body.
+     */
+    void render(CelestialBody body, WorldRenderContext worldRenderContext);
+
+    /**
+     * Renders a list of celestial bodies.
+     */
+    default void renderAll(List<CelestialBody> bodies, WorldRenderContext worldRenderContext) {
+        // Setup buffer positions once for all bodies
+        this.setupBufferPositions(bodies);
+
+        // Render each body
+        for (CelestialBody body : bodies) {
+            this.render(body, worldRenderContext);
+        }
     }
 }

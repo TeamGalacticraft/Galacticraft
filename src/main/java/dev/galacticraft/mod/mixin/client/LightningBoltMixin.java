@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;

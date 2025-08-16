@@ -32,7 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GazerEntityRenderer extends MobRenderer<GazerEntity, GazerEntityModel<GazerEntity>> {
     public GazerEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new GazerEntityModel<>(context.bakeLayer(GCEntityModelLayer.GAZER)), 0);
+        super(context, new GazerEntityModel<>(context.bakeLayer(GCEntityModelLayer.GAZER)), 0.75F);
     }
 
     @Override

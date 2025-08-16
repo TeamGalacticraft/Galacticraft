@@ -26,7 +26,7 @@ import com.mojang.blaze3d.platform.Window;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;

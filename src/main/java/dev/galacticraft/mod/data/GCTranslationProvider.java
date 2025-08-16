@@ -112,10 +112,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GLOWSTONE_WALL_TORCH, "Glowstone Torch");
         this.block(GCBlocks.UNLIT_TORCH, "Unlit Torch");
         this.block(GCBlocks.UNLIT_WALL_TORCH, "Unlit Torch");
+        this.block(GCBlocks.UNLIT_SOUL_TORCH, "Unlit Soul Torch");
+        this.block(GCBlocks.UNLIT_SOUL_WALL_TORCH, "Unlit Soul Torch");
 
         // LANTERNS
         this.block(GCBlocks.GLOWSTONE_LANTERN, "Glowstone Lantern");
         this.block(GCBlocks.UNLIT_LANTERN, "Unlit Lantern");
+        this.block(GCBlocks.UNLIT_SOUL_LANTERN, "Unlit Soul Lantern");
 
         // FLUIDS
         this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
@@ -453,8 +456,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
-
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+
+        this.item(GCItems.CRACKER, "Cracker");
+        this.item(GCItems.CHEESE_CRACKER, "Cracker with Moon Cheese");
+
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
@@ -621,6 +627,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
@@ -1003,7 +1010,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.DIFFICULTY, "Difficulty");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
-        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "");
+        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1168,41 +1175,47 @@ public class GCTranslationProvider extends TranslationProvider {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+        this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
+        this.stat(GCStats.CRASH_LANDING, "Crash Landings");
+        this.stat(GCStats.SAFE_LANDING, "Safe Landings");
+        this.stat(GCStats.EAT_CHEESE_WHEEL_SLICE, "Cheese Wheel Slices Eaten");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Wheels Sliced");
     }
 
     protected void generateAdvancementsTranslations() {
         this.advancement(Advancements.ROOT, "Galacticraft", "Explore the Moon... and beyond!");
-        this.advancement(Advancements.COAL_GENERATOR, "Coal Power", "Craft a coal generator");
-        this.advancement(Advancements.CIRCUIT_FABRICATOR, "Fabricated", "Craft a circuit fabricator to make wafers");
-        this.advancement(Advancements.BASIC_WAFER, "Tasty Wafers", "Craft a basic wafer. (It's silicon so please don't eat it!)");
-        this.advancement(Advancements.ADVANCED_WAFER, "Golden Wafers", "Craft an advanced wafer. (You still can't eat it!)");
-        this.advancement(Advancements.BASIC_SOLAR_PANEL, "Free Energy", "Craft a basic solar panel");
-        this.advancement(Advancements.ADVANCED_SOLAR_PANEL, "Fast + Efficient", "Craft an advanced solar panel");
-        this.advancement(Advancements.COMPRESSOR, "Compressed", "Craft a compressor");
-        this.advancement(Advancements.ELECTRIC_COMPRESSOR, "Electrical Upgrade", "Craft an electric compressor");
-        this.advancement(Advancements.OIL, "Sticky Stuff", "Fall into some oil");
-        this.advancement(Advancements.REFINERY, "Time to Refine", "Craft a refinery");
-        this.advancement(Advancements.FUEL, "Rocket Fuel", "Refine oil in the refinery");
-        this.advancement(Advancements.OXYGEN_COLLECTOR, "Oxygen Not Included", "Craft an oxygen collector");
-        this.advancement(Advancements.OXYGEN_COMPRESSOR, "Compress the Air", "Craft an oxygen compressor");
-        this.advancement(Advancements.FILL_TANK, "Air 2 Go", "Fill up an oxygen tank");
-        this.advancement(Advancements.FILL_ALL_TANKS, "Oxygen Stockpile", "Fill up every kind of oxygen tank");
+        this.advancement(Advancements.COAL_GENERATOR, "Coal Power", "Craft a Coal Generator");
+        this.advancement(Advancements.CIRCUIT_FABRICATOR, "Fabricated", "Craft a Circuit Fabricator to make Wafers");
+        this.advancement(Advancements.BASIC_WAFER, "Tasty Wafers", "Craft a Basic Wafer (it's Silicon so please don't eat it!)");
+        this.advancement(Advancements.ADVANCED_WAFER, "Golden Wafers", "Craft an Advanced Wafer (you still can't eat it!)");
+        this.advancement(Advancements.BASIC_SOLAR_PANEL, "Free Energy", "Craft a Basic Solar Panel");
+        this.advancement(Advancements.ADVANCED_SOLAR_PANEL, "Fast + Efficient", "Craft an Advanced Solar Panel");
+        this.advancement(Advancements.COMPRESSOR, "Compressed", "Craft a Compressor");
+        this.advancement(Advancements.ELECTRIC_COMPRESSOR, "Electrical Upgrade", "Craft an Electric Compressor");
+        this.advancement(Advancements.OIL, "Sticky Stuff", "Fall into some Oil");
+        this.advancement(Advancements.REFINERY, "Time to Refine", "Craft a Refinery");
+        this.advancement(Advancements.FUEL, "Rocket Fuel", "Refine Oil in the Refinery");
+        this.advancement(Advancements.OXYGEN_COLLECTOR, "Oxygen Not Included", "Craft an Oxygen Collector");
+        this.advancement(Advancements.OXYGEN_COMPRESSOR, "Compress the Air", "Craft an Oxygen Compressor");
+        this.advancement(Advancements.FILL_TANK, "Air 2 Go", "Fill up an Oxygen Tank");
+        this.advancement(Advancements.FILL_ALL_TANKS, "Oxygen Stockpile", "Fill up every kind of Oxygen Tank");
         this.advancement(Advancements.OXYGEN_GEAR, "All Set", "Create everything you need to breathe in space");
-        this.advancement(Advancements.ROCKET_WORKBENCH, "Space Engineer", "Craft a rocket workbench");
-        this.advancement(Advancements.ROCKET, "We Have a Rocket!", "Weld a rocket together");
-        this.advancement(Advancements.FUEL_LOADER, "Fill Her Up!", "Craft a fuel loader");
-        this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a rocket during the countdown");
-        this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first rocket");
+        this.advancement(Advancements.ROCKET_WORKBENCH, "Space Engineer", "Craft a Rocket Workbench");
+        this.advancement(Advancements.ROCKET, "We Have a Rocket!", "Weld a Rocket together");
+        this.advancement(Advancements.FUEL_LOADER, "Fill Her Up!", "Craft a Fuel Loader");
+        this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a Rocket during the countdown");
+        this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first Rocket");
         this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
-        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the moon with a parrot on your shoulder");
-        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "It's Like No Cheese I've Ever Tasted...", "Eat moon cheese curd");
-        this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give cheese to a pet wolf");
-        this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a throwable meteor chunk");
-        this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own space station!");
-        this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an evolved skeleton boss in a moon dungeon");
-        this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the moon dungeon, and steal its key");
-        this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a moon buggy schematic");
-        this.advancement(Advancements.BUGGY, "Buggy", "Weld a moon buggy together");
+        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the Moon with a Parrot on your shoulder");
+        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "Wensleydale? Stilton?", "Eat Moon Cheese Curd");
+        this.advancement(Advancements.CHEESE_AND_CRACKERS, "It's Like No Cheese I've Ever Tasted...", "Eat cheese and crackers");
+        this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give Cheese to a pet Wolf");
+        this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a Throwable Meteor Chunk");
+        this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own Space Station!");
+        this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an Evolved Skeleton Boss in a Moon Dungeon");
+        this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the Moon Dungeon, and steal its key");
+        this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a Moon Buggy Schematic");
+        this.advancement(Advancements.BUGGY, "Buggy", "Weld a Moon Buggy together");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {

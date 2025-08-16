@@ -25,7 +25,7 @@ package dev.galacticraft.mod.compat.waila.provider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.waila.config.Options;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import mcp.mobius.waila.api.IEntityAccessor;
 import mcp.mobius.waila.api.IEntityComponentProvider;
 import mcp.mobius.waila.api.IPluginConfig;

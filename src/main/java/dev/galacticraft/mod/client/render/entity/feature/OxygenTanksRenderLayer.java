@@ -59,19 +59,16 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
 
     public OxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root;
         float x = 0.0F;
         float y = context.getModel() instanceof EndermanModel ? 2.0F : 1.0F;
         float z = context.getModel() instanceof IllagerModel || context.getModel() instanceof WitchModel ? 3.01F : 2.01F;
         if (context.getModel() instanceof SpiderModel model) {
-            root = model.root();
-            this.body = root.getChild("body1");
+            this.body = model.root().getChild("body1");
             this.xRot = Mth.HALF_PI;
             y = -5.0F;
             z = 4.01F;
         } else if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            this.body = root.getChild(PartNames.BODY);
+            this.body = model.root().getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
             this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
@@ -83,16 +80,16 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        this.tanks = modelPartData.bake(32, 32);
+        this.tanks = partDefinition.bake(32, 32);
     }
 
     @Override

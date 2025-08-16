@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import dev.galacticraft.api.item.OxygenTank;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;

@@ -49,10 +49,12 @@ public class GCItems {
     // TORCHES
     public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
     public static final Item UNLIT_TORCH = ITEMS.register(Constant.Block.UNLIT_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN));
+    public static final Item UNLIT_SOUL_TORCH = ITEMS.register(Constant.Block.UNLIT_SOUL_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH, new Item.Properties(), Direction.DOWN));
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = ITEMS.register(Constant.Block.GLOWSTONE_LANTERN, new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties()));
     public static final Item UNLIT_LANTERN = ITEMS.register(Constant.Block.UNLIT_LANTERN, new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties()));
+    public static final Item UNLIT_SOUL_LANTERN = ITEMS.register(Constant.Block.UNLIT_SOUL_LANTERN, new BlockItem(GCBlocks.UNLIT_SOUL_LANTERN, new Item.Properties()));
 
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
@@ -134,6 +136,8 @@ public class GCItems {
     public static final Item MOON_CHEESE_CURD = ITEMS.register(Constant.Item.MOON_CHEESE_CURD, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_CURD)));
     public static final Item MOON_CHEESE_WHEEL = ITEMS.register(Constant.Item.MOON_CHEESE_WHEEL, new BlockItem(GCBlocks.MOON_CHEESE_WHEEL, new Item.Properties())); // Special case
     public static final Item MOON_CHEESE_SLICE = ITEMS.register(Constant.Item.MOON_CHEESE_SLICE, new Item(new Item.Properties().food(GCFoodComponent.MOON_CHEESE_SLICE)));
+    public static final Item CRACKER = ITEMS.register(Constant.Item.CRACKER, new Item(new Item.Properties().food(GCFoodComponent.CRACKER)));
+    public static final Item CHEESE_CRACKER = ITEMS.register(Constant.Item.CHEESE_CRACKER, new Item(new Item.Properties().food(GCFoodComponent.CHEESE_CRACKER)));
     public static final Item GROUND_BEEF = ITEMS.register(Constant.Item.GROUND_BEEF, new Item(new Item.Properties().food(GCFoodComponent.GROUND_BEEF)));
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));

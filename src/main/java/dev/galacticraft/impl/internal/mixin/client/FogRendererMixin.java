@@ -24,11 +24,14 @@ package dev.galacticraft.impl.internal.mixin.client;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.FogRenderer;
 import net.minecraft.util.CubicSampler;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -37,8 +40,11 @@ import org.spongepowered.asm.mixin.injection.At;
 public class FogRendererMixin {
     @WrapOperation(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/CubicSampler;gaussianSampleVec3(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/util/CubicSampler$Vec3Fetcher;)Lnet/minecraft/world/phys/Vec3;"))
     private static Vec3 setDimensionColor(Vec3 cameraPos, CubicSampler.Vec3Fetcher fetcher, Operation<Vec3> original, Camera activeRenderInfo, float partialTicks, ClientLevel level) {
-        if (level.effects() instanceof GalacticDimensionEffects gcEffects)
+        if (level.effects() instanceof GalacticDimensionEffects gcEffects) {
             return gcEffects.getFogColor(level, partialTicks, cameraPos, fetcher);
+        } else if (4.0F * cameraPos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && level.dimension() == Level.OVERWORLD) {
+            return OverworldRenderer.getFogColor(level, partialTicks, cameraPos.scale(4.9).subtract(2.0, 45.0, 2.0));
+        }
         return original.call(cameraPos, fetcher);
     }
 }

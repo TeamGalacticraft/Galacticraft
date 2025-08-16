@@ -40,11 +40,11 @@ public class MoonVillagerModel extends VillagerModel<MoonVillagerEntity> {
     private final ModelPart hatRim;
     private final ModelPart jacket;
 
-    public MoonVillagerModel(ModelPart modelPart) {
-        super(modelPart);
-        this.hat = modelPart.getChild("head").getChild("hat");
-        this.hatRim = this.hat.getChild("hat_rim");
-        this.jacket = modelPart.getChild("body").getChild("jacket");
+    public MoonVillagerModel(ModelPart root) {
+        super(root);
+        this.hat = root.getChild(PartNames.HEAD).getChild(PartNames.HAT);
+        this.hatRim = this.hat.getChild(PartNames.HAT_RIM);
+        this.jacket = root.getChild(PartNames.BODY).getChild(PartNames.JACKET);
     }
 
     public static LayerDefinition createBodyLayer() {

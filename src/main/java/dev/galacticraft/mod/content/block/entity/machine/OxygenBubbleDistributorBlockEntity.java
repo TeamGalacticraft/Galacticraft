@@ -126,7 +126,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
         MachineStatus status;
-        this.distributeOxygenToArea(this.prevSize, this.oxygenWorld);
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
                 profiler.push("bubble");
@@ -146,7 +145,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
                     if (this.size < this.targetSize) {
-                        setSize(this.size + 0.05D);
+                        this.setSize(this.size + 0.05D);
                     }
                     profiler.pop();
                     this.distributeOxygenToArea(this.size, true);
@@ -178,7 +177,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        this.distributeOxygenToArea(this.prevSize, this.oxygenWorld); // REVIEW: Inefficient?
+        if (this.size > 0) {
+            this.distributeOxygenToArea(this.size, this.oxygenWorld);
+            this.setSize(0);
+        }
         this.trySyncSize(level, pos, profiler);
 
         super.tickDisabled(level, pos, state, profiler);
@@ -207,7 +209,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public int getDistanceFromServer(int par1, int par3, int par5) {
+    public int getDistanceFromDistributor(int par1, int par3, int par5) {
         final int d3 = this.getBlockPos().getX() - par1;
         final int d4 = this.getBlockPos().getY() - par3;
         final int d5 = this.getBlockPos().getZ() - par5;
@@ -215,14 +217,16 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     public void distributeOxygenToArea(double size, boolean oxygenated) {
-        int radius = Mth.floor(size) + 4;
+        int radius = Mth.floor(Math.max(size, this.prevSize)) + 4;
         int bubbleR2 = (int) (size * size);
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         for (int x = this.getBlockPos().getX() - radius; x <= this.getBlockPos().getX() + radius; x++) {
             for (int y = this.getBlockPos().getY() - radius; y <= this.getBlockPos().getY() + radius; y++) {
                 for (int z = this.getBlockPos().getZ() - radius; z <= this.getBlockPos().getZ() + radius; z++) {
-                    if (this.getDistanceFromServer(x, y, z) <= bubbleR2) {
+                    if (this.getDistanceFromDistributor(x, y, z) <= bubbleR2) {
                         this.level.setBreathable(pos.set(x, y, z), oxygenated);
+                    } else {
+                        this.level.setBreathable(pos.set(x, y, z), this.oxygenWorld);
                     }
                 }
             }

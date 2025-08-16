@@ -20,18 +20,36 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital.lander;
+package dev.galacticraft.mod.client.render.dimension.star.data;
 
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.resources.ResourceLocation;
 
-public abstract class AbstractLanderEntity extends AdvancedVehicle {
-    public AbstractLanderEntity(EntityType<?> entityType, Level level) {
-        super(entityType, level);
+/**
+ * Planet implementation of CelestialBody.
+ */
+public class PlanetData extends CelestialBody {
+
+    private ResourceLocation texture;
+
+    // TODO: we should retrieve some information about the planet (ex: orbit path)
+    //  we could feed the apoapsis, periapsis, orbit degree, world tick, etc, and render from there
+
+    public PlanetData(int x, int y, int z, double size, double rotation) {
+        super(x, y, z, size, rotation, CelestialBodyType.PLANET2D);
+        this.texture = Constant.CelestialBody.EARTH; // Default texture
     }
 
-    public abstract boolean shouldMove();
+    public PlanetData(int x, int y, int z, double size, double rotation, ResourceLocation texture) {
+        super(x, y, z, size, rotation, CelestialBodyType.PLANET2D);
+        this.texture = texture;
+    }
 
-    public abstract boolean shouldSpawnParticles();
+    public ResourceLocation getTexture() {
+        return texture;
+    }
+
+    public void setTexture(ResourceLocation texture) {
+        this.texture = texture;
+    }
 }

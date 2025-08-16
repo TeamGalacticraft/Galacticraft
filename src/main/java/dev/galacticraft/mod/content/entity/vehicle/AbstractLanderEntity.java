@@ -20,8 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.vehicle;
 
-public interface ControllableEntity {
-    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown);
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.level.Level;
+
+public abstract class AbstractLanderEntity extends AdvancedVehicle {
+    public AbstractLanderEntity(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
+
+    public abstract boolean shouldMove();
+
+    public abstract boolean shouldSpawnParticles();
 }

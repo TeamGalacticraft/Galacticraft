@@ -20,25 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital;
+package dev.galacticraft.mod.compat.jei.subtypes;
 
-import dev.galacticraft.mod.content.entity.GCVehicle;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
-import org.joml.Quaternionf;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.world.item.ItemStack;
 
-/**
- * A entity that's rotation is represented via a quaternion.
- */
-public abstract class AdvancedVehicle extends GCVehicle {
+import static dev.galacticraft.mod.content.item.GCItems.BATTERY;
 
-    protected Quaternionf rotation;
+public class BatterySubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+    public static final BatterySubtypeInterpreter INSTANCE = new BatterySubtypeInterpreter();
 
-    public AdvancedVehicle(EntityType<?> entityType, Level level) {
-        super(entityType, level);
+    @Override
+    public String getSubtypeData(ItemStack itemStack, UidContext context) {
+        if (context == UidContext.Recipe) return "";
+        return String.valueOf(BATTERY.getStoredEnergy(itemStack)) + "/" + String.valueOf(BATTERY.getEnergyCapacity(itemStack));
     }
 
-    public Quaternionf getRotation() {
-        return rotation;
+    @Override
+    public String getLegacyStringSubtypeInfo(ItemStack itemStack, UidContext context) {
+        return "";
     }
 }

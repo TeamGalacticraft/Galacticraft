@@ -73,7 +73,6 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
 
     public EvolvedSkeletonBossModel(ModelPart root) {
         this.root = root;
-        float halfPI = Mth.HALF_PI;
 
         this.upperHead = root.getChild("upper_head");
         this.setRotation(this.upperHead, 0.122173F, 0F, 0F);
@@ -85,13 +84,13 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
         this.leftArm = root.getChild("left_arm");
         this.leftLeg = root.getChild("left_leg");
         this.leftFrontBotRib = root.getChild("left_front_bot_rib");
-        this.setRotation(this.leftFrontBotRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftFrontBotRib, 0F, -Mth.HALF_PI, 0F);
         this.leftFrontTopRib = root.getChild("left_front_top_rib");
-        this.setRotation(this.leftFrontTopRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftFrontTopRib, 0F, -Mth.HALF_PI, 0F);
         this.leftFront2ndRib = root.getChild("left_front_second_rib");
-        this.setRotation(this.leftFront2ndRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftFront2ndRib, 0F, -Mth.HALF_PI, 0F);
         this.leftFront3rdRib = root.getChild("left_front_third_rib");
-        this.setRotation(this.leftFront3rdRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftFront3rdRib, 0F, -Mth.HALF_PI, 0F);
         this.leftSideBotRib = root.getChild("left_side_bot_rib");
         this.leftSide3rdRib = root.getChild("left_side_third_rib");
         this.leftSide2ndRib = root.getChild("left_side_second_rib");
@@ -103,35 +102,34 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
         this.rightSideBotRib = root.getChild("right_side_bot_rib");
         this.setRotation(this.rightSideBotRib, 0F, 0F, 0F);
         this.rightFrontBotRib = root.getChild("right_front_bot_rib");
-        this.setRotation(this.rightFrontBotRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightFrontBotRib, 0F, Mth.HALF_PI, 0F);
         this.rightFront3rdRib = root.getChild("right_front_third_rib");
-        this.setRotation(this.rightFront3rdRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightFront3rdRib, 0F, Mth.HALF_PI, 0F);
         this.rightFront2ndRib = root.getChild("right_front_second_rib");
-        this.setRotation(this.rightFront2ndRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightFront2ndRib, 0F, Mth.HALF_PI, 0F);
         this.rightFrontTopRib = root.getChild("right_front_top_rib");
-        this.setRotation(this.rightFrontTopRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightFrontTopRib, 0F, Mth.HALF_PI, 0F);
         this.leftBackTopRib = root.getChild("left_back_top_rib");
-        this.setRotation(this.leftBackTopRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftBackTopRib, 0F, -Mth.HALF_PI, 0F);
         this.leftBack2ndRib = root.getChild("left_back_second_rib");
-        this.setRotation(this.leftBack2ndRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftBack2ndRib, 0F, -Mth.HALF_PI, 0F);
         this.leftBack3rdRib = root.getChild("left_back_third_rib");
-        this.setRotation(this.leftBack3rdRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftBack3rdRib, 0F, -Mth.HALF_PI, 0F);
         this.leftBackBotRib = root.getChild("left_back_bot_rib");
-        this.setRotation(this.leftBackBotRib, 0F, -halfPI, 0F);
+        this.setRotation(this.leftBackBotRib, 0F, -Mth.HALF_PI, 0F);
         this.rightBackBotRib = root.getChild("right_back_bot_rib");
-        this.setRotation(this.rightBackBotRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightBackBotRib, 0F, Mth.HALF_PI, 0F);
         this.rightBack3rdRib = root.getChild("right_back_third_rib");
-        this.setRotation(this.rightBack3rdRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightBack3rdRib, 0F, Mth.HALF_PI, 0F);
         this.rightBack2ndRib = root.getChild("right_back_second_rib");
-        this.setRotation(this.rightBack2ndRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightBack2ndRib, 0F, Mth.HALF_PI, 0F);
         this.rightBackTopRib = root.getChild("right_back_top_rib");
-        this.setRotation(this.rightBackTopRib, 0F, halfPI, 0F);
+        this.setRotation(this.rightBackTopRib, 0F, Mth.HALF_PI, 0F);
     }
 
     public static LayerDefinition createBodyLayer() {
         MeshDefinition mesh = new MeshDefinition();
         PartDefinition root = mesh.getRoot();
-        float halfPI = Mth.HALF_PI;
 
         root.addOrReplaceChild("upper_head", CubeListBuilder.create()
                         .texOffs(0, 16)
@@ -308,29 +306,30 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
 
     @Override
     public void setupAnim(SkeletonBoss boss, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        final float floatPI = 3.1415927F;
-        this.upperHead.yRot = headYaw / Mth.RAD_TO_DEG;
-        this.upperHead.xRot = headPitch / Mth.RAD_TO_DEG;
-        this.rightArm.xRot = Mth.cos(limbAngle * 0.6662F + floatPI) * 2.0F * limbDistance * 0.5F;
-        this.leftArm.xRot = Mth.cos(limbAngle * 0.6662F) * 2.0F * limbDistance * 0.5F;
+        float headYawRad = headYaw * Mth.DEG_TO_RAD;
+        float headPitchRad = headPitch * Mth.DEG_TO_RAD;
+        this.upperHead.yRot = headYawRad;
+        this.upperHead.xRot = headPitchRad;
+        this.rightArm.xRot = -Mth.cos(limbAngle * 0.6662F) * limbDistance;
+        this.leftArm.xRot = -this.rightArm.xRot;
         this.rightArm.zRot = 0.0F;
         this.leftArm.zRot = 0.0F;
         this.rightLeg.xRot = Mth.cos(limbAngle * 0.6662F) * 1.4F * limbDistance;
-        this.leftLeg.xRot = Mth.cos(limbAngle * 0.6662F + floatPI) * 1.4F * limbDistance;
+        this.leftLeg.xRot = -this.rightLeg.xRot;
         this.rightLeg.yRot = 0.0F;
         this.leftLeg.yRot = 0.0F;
 
         if (this.riding) {
-            this.rightArm.xRot += -(floatPI / 5F);
-            this.leftArm.xRot += -(floatPI / 5F);
-            this.rightLeg.xRot = -(floatPI * 2F / 5F);
-            this.leftLeg.xRot = -(floatPI * 2F / 5F);
-            this.rightLeg.yRot = floatPI / 10F;
-            this.leftLeg.yRot = -(floatPI / 10F);
+            this.rightArm.xRot -= Mth.PI / 5F;
+            this.leftArm.xRot -= Mth.PI / 5F;
+            this.rightLeg.xRot = -Mth.TWO_PI / 5F;
+            this.leftLeg.xRot = -Mth.TWO_PI / 5F;
+            this.rightLeg.yRot = Mth.PI / 10F;
+            this.leftLeg.yRot = -Mth.PI / 10F;
         }
 
-        this.rightArm.yRot = headYaw / Mth.RAD_TO_DEG;
-        this.leftArm.yRot = headYaw / Mth.RAD_TO_DEG;
+        this.rightArm.yRot = headYawRad;
+        this.leftArm.yRot = headYawRad;
         float var7;
         float var8;
 
@@ -349,21 +348,21 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
             var7 *= var7;
             var7 *= var7;
             var7 = 1.0F - var7;
-            var8 = Mth.sin(var7 * floatPI);
-            final float var9 = Mth.sin(this.attackTime * floatPI) * -(this.upperHead.xRot - 0.7F) * 0.75F;
+            var8 = Mth.sin(var7 * Mth.PI);
+            final float var9 = -Mth.sin(this.attackTime * Mth.PI) * (this.upperHead.xRot - 0.7F) * 0.75F;
             this.rightArm.xRot = (float) (this.rightArm.xRot - (var8 * 1.2D + var9));
             this.rightArm.yRot += this.spine.yRot * 2.0F;
-            this.rightArm.zRot = Mth.sin(this.attackTime * floatPI) * -0.4F;
+            this.rightArm.zRot = -Mth.sin(this.attackTime * Mth.PI) * 0.4F;
         }
 
-        final float f6 = Mth.sin(this.attackTime * floatPI);
-        final float f7 = Mth.sin((1.0F - (1.0F - this.attackTime) * (1.0F - this.attackTime)) * floatPI);
+        final float f6 = Mth.sin(this.attackTime * Mth.PI);
+        final float f7 = -Mth.sin((1.0F - this.attackTime) * (1.0F - this.attackTime) * Mth.PI);
         this.rightArm.zRot = 0.0F;
         this.leftArm.zRot = 0.0F;
-        this.rightArm.yRot = 0.5F * (headYaw / Mth.RAD_TO_DEG) + -(0.1F - f6 * 0.6F);
-        this.leftArm.yRot = 0.5F * (headYaw / Mth.RAD_TO_DEG) + 0.1F - f6 * 0.6F;
-        this.rightArm.xRot = -(floatPI / 2F);
-        this.leftArm.xRot = -(floatPI / 2F);
+        this.rightArm.yRot = 0.5F * headYawRad - 0.1F + f6 * 0.6F;
+        this.leftArm.yRot = 0.5F * headYawRad + 0.1F - f6 * 0.6F;
+        this.rightArm.xRot = -Mth.HALF_PI;
+        this.leftArm.xRot = -Mth.HALF_PI;
         this.rightArm.xRot -= f6 * 1.2F - f7 * 0.4F;
         this.leftArm.xRot -= f6 * 1.2F - f7 * 0.4F;
         this.rightArm.zRot += Mth.cos(animationProgress * 0.09F) * 0.05F + 0.05F;
@@ -372,8 +371,8 @@ public class EvolvedSkeletonBossModel extends EntityModel<SkeletonBoss> implemen
         this.leftArm.xRot -= Mth.sin(animationProgress * 0.067F) * 0.05F;
 
         if (boss.deathTime > 0) {
-            this.leftArm.xRot = -(floatPI / 2F) + (float) (Math.pow(boss.deathTime, 2) / 5.0F) / 3.0F / Mth.RAD_TO_DEG;
-            this.rightArm.xRot = -(floatPI / 2F) + (float) (Math.pow(boss.deathTime, 2) / 5.0F) / 2.0F / Mth.RAD_TO_DEG;
+            this.leftArm.xRot = -Mth.HALF_PI + (float) Math.pow(boss.deathTime, 2) * Mth.DEG_TO_RAD / 15.0F;
+            this.rightArm.xRot = -Mth.HALF_PI + (float) Math.pow(boss.deathTime, 2) * Mth.DEG_TO_RAD / 10.0F;
         }
 
         if (boss.throwTimer + boss.postThrowDelay > 0) {

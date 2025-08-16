@@ -59,12 +59,11 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
 
     public ParrotOxygenGearRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (context.getModel() instanceof ParrotModel model) {
-            ModelPart modelRoot = model.root();
-            this.head = modelRoot.getChild(PartNames.HEAD);
-            this.body = modelRoot.getChild(PartNames.BODY);
+            this.head = model.root().getChild(PartNames.HEAD);
+            this.body = model.root().getChild(PartNames.BODY);
             this.feather = this.head.getChild("feather");
         } else if (context.getModel() instanceof PlayerModel) {
             this.head = null;
@@ -80,14 +79,14 @@ public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends Entit
             return;
         }
 
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -3.75F, -3.5F, 5, 5, 5, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(21, -1).addBox(0.0F, -4.0F, 1.5F, 0, 6, 5, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(12, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
-        modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(12, 21).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-2.5F, -3.75F, -3.5F, 5, 5, 5, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(21, -1).addBox(0.0F, -4.0F, 1.5F, 0, 6, 5, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(12, 10).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 21).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(12, 21).addBox(-1.5F, 0.0F, 1.5F, 3, 6, 3, CubeDeformation.NONE), PartPose.ZERO);
 
-        this.root = modelPartData.bake(32, 32);
+        this.root = partDefinition.bake(32, 32);
         this.mask = this.root.getChild(Constant.ModelPartName.OXYGEN_MASK);
         this.pipe = this.root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
     }
