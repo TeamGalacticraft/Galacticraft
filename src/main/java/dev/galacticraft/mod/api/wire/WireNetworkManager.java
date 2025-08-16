@@ -39,7 +39,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.state.BlockState;
 import team.reborn.energy.api.EnergyStorage;
 
 import java.util.*;
@@ -80,7 +80,7 @@ public class WireNetworkManager {
         ImmutableList<Wire> wires = ImmutableList.copyOf(this.pendingWires);
         this.pendingWires.clear();
         for (Wire wire : wires) {
-            this.wirePlaced(wire.getBlockPos(), wire);
+            this.wirePlaced(wire.getBlockState(), wire);  //fixme state
         }
     }
 
@@ -169,17 +169,13 @@ public class WireNetworkManager {
         }
     }
 
-    public void wirePlaced(BlockPos pos, Wire wire) {
+    public void wirePlaced(BlockState state, Wire wire) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            if (wire.isConnected(direction)) {
-                this.tryConnectToEndpoint(pos, wire, direction, mutable);
+            if (state.getValue(ConnectingBlockUtil.getBooleanProperty(direction))) {
+                this.tryConnectToEndpoint(state, wire, direction, mutable);
             }
         }
-    }
-
-    public void wireLoaded(BlockPos pos, Wire wire) {
-        Constant.LOGGER.info("Loaded Wire {}", pos);
     }
 
     public void enqueueWireLoaded(BlockPos pos, Wire wire) {
@@ -187,16 +183,16 @@ public class WireNetworkManager {
         this.pendingWires.add(wire);
     }
 
-    public void wireUpdated(BlockPos pos, Wire wire, Direction direction) {
-        Constant.LOGGER.info("Updating wire [{}] towards {} [{}] ({})", pos.toShortString(), direction, pos.relative(direction).toShortString(), wire.isConnected(direction) ? "create" : "destroy");
-        if (wire.isConnected(direction)) { // new connection
-            if (this.level.getBlockEntity(pos.relative(direction)) instanceof Wire adj) {
-                if (((WireBlock) adj.getBlockState().getBlock()).getThroughput() != ((WireBlock) wire.getBlockState().getBlock()).getThroughput()) throw new AssertionError("Connected to wire with different transfer rate!?");
+    public void wireUpdated(BlockState state, Wire wire, Direction direction) {
+        Constant.LOGGER.info("Updating wire [{}] towards {} [{}] ({})", wire.getBlockPos().toShortString(), direction, wire.getBlockPos().relative(direction).toShortString(), state.getValue(ConnectingBlockUtil.getBooleanProperty(direction)) ? "create" : "destroy");
+        if (state.getValue(ConnectingBlockUtil.getBooleanProperty(direction))) { // new connection
+            if (this.level.getBlockEntity(wire.getBlockPos().relative(direction)) instanceof Wire adj) {
+                if (((WireBlock) adj.getBlockState().getBlock()).getThroughput() != ((WireBlock) state.getBlock()).getThroughput()) throw new AssertionError("Connected to wire with different transfer rate!?");
                 if (wire.getNetwork() == null) {
                     if (adj.getNetwork() == null) {
                         Constant.LOGGER.info("Both invalid - new network");
                         // both invalid - make a new network (no contents)
-                        wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) wire.getBlockState().getBlock()).getThroughput()));
+                        wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) state.getBlock()).getThroughput()));
                         adj.setNetwork(wire.getNetwork());
                     } else {
                         Constant.LOGGER.info("New wire has network - joining {}", adj.getNetwork());
@@ -211,11 +207,11 @@ public class WireNetworkManager {
                 } // they're the same - do nothing
             } else { // not a wire, must be an endpoint
                 Constant.LOGGER.info("Connecting to endpoint");
-                this.tryConnectToEndpoint(pos, wire, direction, new BlockPos.MutableBlockPos());
+                this.tryConnectToEndpoint(state, wire, direction, new BlockPos.MutableBlockPos());
             }
         } else { // destroyed connection
             if (wire.getNetwork() == null) return; // nothing to do.
-            BlockPos adjPos = pos.relative(direction);
+            BlockPos adjPos = wire.getBlockPos().relative(direction);
             if (this.level.getBlockEntity(adjPos) instanceof Wire adj) {
                 Constant.LOGGER.info("Adjacent wire destroyed.");
                 assert wire.getNetwork().equals(adj.getNetwork()); // if it was connected it must be the same network.
@@ -223,7 +219,7 @@ public class WireNetworkManager {
                 Constant.LOGGER.info("Adjacent endpoint destroyed");
                 Long2ObjectMap<List<BlockData>> chunks = this.chunkData.get(wire.getNetwork());
                 if (chunks == null) return;
-                List<BlockData> blocks = chunks.get(ChunkPos.asLong(pos));
+                List<BlockData> blocks = chunks.get(ChunkPos.asLong(wire.getBlockPos()));
                 if (blocks == null) return;
                 int size = blocks.size();
                 for (int i = 0; i < size; i++) {
@@ -232,7 +228,7 @@ public class WireNetworkManager {
                         if (block.remove(direction.getOpposite())) {
                             blocks.remove(i);
                             if (blocks.isEmpty()) {
-                                chunks.remove(ChunkPos.asLong(pos));
+                                chunks.remove(ChunkPos.asLong(wire.getBlockPos()));
                                 if (chunks.isEmpty()) {
                                     this.chunkData.remove(wire.getNetwork());
                                 }
@@ -275,20 +271,20 @@ public class WireNetworkManager {
         this.updateNetwork(fromWire, into);
     }
 
-    private void tryConnectToEndpoint(BlockPos pos, Wire wire, Direction direction, BlockPos.MutableBlockPos mutable) {
-        EnergyStorage energyStorage = EnergyStorage.SIDED.find(this.level, mutable.setWithOffset(pos, direction), direction.getOpposite());
+    private void tryConnectToEndpoint(BlockState state, Wire wire, Direction direction, BlockPos.MutableBlockPos mutable) {
+        EnergyStorage energyStorage = EnergyStorage.SIDED.find(this.level, mutable.setWithOffset(wire.getBlockPos(), direction), direction.getOpposite());
         if (energyStorage != null) {
             if (wire.getNetwork() == null) {
                 Constant.LOGGER.info("Creating new network for endpoint");
-                wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) wire.getBlockState().getBlock()).getThroughput()));
+                wire.setNetwork(new NetworkId(UUID.randomUUID(), ((WireBlock) state.getBlock()).getThroughput()));
             }
             List<BlockData> blocks = this.chunkData.computeIfAbsent(wire.getNetwork(), l -> new Long2ObjectOpenHashMap<>(4))
-                    .computeIfAbsent(ChunkPos.asLong(pos), l -> new ArrayList<>());
+                    .computeIfAbsent(ChunkPos.asLong(wire.getBlockPos()), l -> new ArrayList<>());
             connectToEndpoint(mutable, direction, blocks);
         }
     }
 
-    public void wireRemoved(BlockPos pos) {
+    public void wireRemoved(BlockPos pos, BlockState oldState) {
         Constant.LOGGER.info("Wire broken at [{}]", pos.toShortString());
         Wire wire = (Wire) level.getBlockEntity(pos);
         assert wire != null; // should be called BEFORE actual removal
@@ -301,11 +297,10 @@ public class WireNetworkManager {
         boolean[] adjacentEndpoints = new boolean[6];
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
         for (Direction direction : Constant.Misc.DIRECTIONS) {
-            if (wire.isConnected(direction)) {
+            if (oldState.getValue(ConnectingBlockUtil.getBooleanProperty(direction))) {
                 mutable.setWithOffset(pos, direction);
                 if (level.getBlockEntity(mutable) instanceof Wire wire1 && network.equals(wire1.getNetwork())) {
                     adjacent.add(wire1); // adjacent wire - will need to check if it's connected to other adjacent wires (to maintain the same network)
-                    this.level.setBlock(wire1.getBlockPos(), wire1.getBlockState().setValue(ConnectingBlockUtil.getBooleanProperty(direction.getOpposite()), false), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
                 } else {
                     // non-wire connection - should be a producer or consumer.
                     adjacentEndpoints[direction.get3DDataValue()] = true;
@@ -343,7 +338,7 @@ public class WireNetworkManager {
         }
 
         if (adjacent.size() > 1) {
-            repairNetwork(mutable, adjacent, network);
+            repairNetwork(mutable, adjacent, network, pos);
         } else if (adjacent.size() == 1) {
             Constant.LOGGER.info("Wire on end. Nothing to repair.");
         } else if (this.chunkData.containsKey(network)) {
@@ -357,7 +352,7 @@ public class WireNetworkManager {
     }
 
     // remember to drop center connections on all targets before calling
-    private void repairNetwork(BlockPos.MutableBlockPos mutable, List<Wire> targets, NetworkId network) {
+    private void repairNetwork(BlockPos.MutableBlockPos mutable, List<Wire> targets, NetworkId network, BlockPos exclude) {
         Constant.LOGGER.info("Attempting to repair network {}", network);
         Set<Wire> visited = new HashSet<>(); // wires that have already been searched
         ObjectArrayFIFOQueue<Wire> queue = new ObjectArrayFIFOQueue<>(6); // wires that have yet to be searched (guaranteed to be a wire in the same network)
@@ -376,9 +371,11 @@ public class WireNetworkManager {
                 Wire current = queue.dequeue();
                 assert network.equals(current.getNetwork());
 
-                for (Direction direction : Constant.Misc.DIRECTIONS) {
-                    if (current.isConnected(direction)) { // check if there is a WIRE connection
-                        if (this.level.getBlockEntity(mutable.setWithOffset(current.getBlockPos(), direction)) instanceof Wire wire) {
+                for (Direction direction : Constant.Misc.DIRECTIONS) { //todo cache state?
+                    if (this.level.getBlockState(current.getBlockPos()).getValue(ConnectingBlockUtil.getBooleanProperty(direction))) { // check if there is a WIRE connection
+                        mutable.setWithOffset(current.getBlockPos(), direction);
+                        if (exclude.equals(mutable)) continue;
+                        if (this.level.getBlockEntity(mutable) instanceof Wire wire) {
                             assert network.equals(wire.getNetwork()); // it should not be connected if it's in a different network
                             if (visited.add(wire)) { // prevent infinite recursion
                                 queue.enqueue(wire);
@@ -463,8 +460,8 @@ public class WireNetworkManager {
             current.setNetwork(newNetwork); // update the wire's network
             updated++;
 
-            for (Direction direction : Constant.Misc.DIRECTIONS) {
-                if (current.isConnected(direction)) { // check if there is a WIRE connection
+            for (Direction direction : Constant.Misc.DIRECTIONS) { //todo cache state?
+                if (this.level.getBlockState(current.getBlockPos()).getValue(ConnectingBlockUtil.getBooleanProperty(direction))) { // check if there is a WIRE connection
                     if (this.level.getBlockEntity(mutable.setWithOffset(current.getBlockPos(), direction)) instanceof Wire wire) {
                         assert wire.getNetwork().equals(network); // it should not be connected if it's in a different network
                         if (visited.add(wire)) { // prevent infinite recursion

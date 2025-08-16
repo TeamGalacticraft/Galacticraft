@@ -70,7 +70,7 @@ public class WireBlock extends PipeShapedBlock implements EntityBlock {
     protected void onConnectionUpdate(ServerLevel level, BlockPos pos, BlockState state, Direction direction, BlockPos neighborPos, BlockState neighborState) {
         super.onConnectionUpdate(level, pos, state, direction, neighborPos, neighborState);
         if (level.getBlockEntity(pos) instanceof Wire wire) {
-            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(pos, wire, direction);
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireUpdated(state, wire, direction);
         }
     }
 
@@ -81,7 +81,7 @@ public class WireBlock extends PipeShapedBlock implements EntityBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        if (!level.isClientSide && !newState.is(state.getBlock())) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireRemoved(pos);
+        if (!level.isClientSide && !newState.is(state.getBlock())) ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wireRemoved(pos, state);
         super.onRemove(state, level, pos, newState, moved);
     }
 
@@ -89,7 +89,7 @@ public class WireBlock extends PipeShapedBlock implements EntityBlock {
     protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean notify) {
         super.onPlace(state, level, pos, oldState, notify);
         if (!level.isClientSide && !state.is(oldState.getBlock()) && level.getBlockEntity(pos) instanceof Wire wire) {
-            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wirePlaced(pos, wire);
+            ((WireNetworkAccessor) level).galacticraft$getWireNetworkManager().wirePlaced(state, wire);
         }
     }
 

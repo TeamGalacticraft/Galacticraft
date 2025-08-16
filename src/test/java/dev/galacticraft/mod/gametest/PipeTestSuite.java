@@ -22,60 +22,6 @@
 
 package dev.galacticraft.mod.gametest;
 
-import net.minecraft.gametest.framework.GameTest;
-import net.minecraft.gametest.framework.GameTestHelper;
 
 public class PipeTestSuite implements GalacticraftGameTest {
-    @GameTest(template = EMPTY_STRUCTURE)
-    public void pipeConnectionTest(GameTestHelper context) {
-//        final var pos0 = new BlockPos(0, 1, 0);
-//        final var pos1 = new BlockPos(0, 2, 0);
-//        final var pos2 = new BlockPos(0, 3, 0);
-//        context.setBlock(pos0, GCBlocks.GLASS_FLUID_PIPE);
-//        context.setBlock(pos1, GCBlocks.GLASS_FLUID_PIPE);
-//        context.setBlock(pos2, GCBlocks.GLASS_FLUID_PIPE);
-//        final var be0 = context.getBlockEntity(pos0);
-//        final var be1 = context.getBlockEntity(pos1);
-//        final var be2 = context.getBlockEntity(pos2);
-//        if (!(be0 instanceof FluidPipe pipe0)) {
-//            context.fail(String.format("Expected a pipe but found %s!", be0), pos0);
-//        } else if (!(be1 instanceof FluidPipe pipe1)) {
-//            context.fail(String.format("Expected a pipe but found %s!", be1), pos1);
-//        } else if (!(be2 instanceof FluidPipe pipe2)) {
-//            context.fail(String.format("Expected a pipe but found %s!", be2), pos2);
-//        } else {
-//            if (pipe0.getNetwork() == null) {
-//                context.fail("Expected a pipe network but got null!", pos0);
-//            } else if (pipe1.getNetwork() == null) {
-//                context.fail("Expected a pipe network but got null!", pos1);
-//            } else if (pipe2.getNetwork() == null) {
-//                context.fail("Expected a pipe network but got null!", pos2);
-//            } else {
-//                if (pipe0.getNetwork() != pipe1.getNetwork()) {
-//                    context.fail(String.format("Expected pipe networks at %s and %s to be the same!", pos0, pos1));
-//                } else if (pipe1.getNetwork() != pipe2.getNetwork()) {
-//                    context.fail(String.format("Expected pipe networks at %s and %s to be the same!", pos1, pos2));
-//                } else {
-//                    if (((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size() != 3) {
-//                        context.fail("Not all pipes are registered in the network!");
-//                    } else {
-//                        context.succeedWhen(() -> {
-//                            context.destroyBlock(pos1);
-//                            if (((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size() != 1) {
-//                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", ((PipeNetworkImpl) pipe0.getNetwork()).getPipes().size()), pos0);
-//                            } else if (((PipeNetworkImpl) pipe2.getNetwork()).getPipes().size() != 1) {
-//                                context.fail(String.format("Expected pipe network with 1 pipe but found %s pipes!", ((PipeNetworkImpl) pipe2.getNetwork()).getPipes().size()), pos2);
-//                            } else if (!pipe1.getNetwork().markedForRemoval()) {
-//                                if (!be1.isRemoved()) {
-//                                    context.fail("Expected pipe to be removed!", pos1);
-//                                } else {
-//                                    context.fail("Expected removed pipe network to be marked for removal!", pos1);
-//                                }
-//                            }
-//                        });
-//                    }
-//                }
-//            }
-//        }
-    }
 }

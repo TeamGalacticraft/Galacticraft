@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.Constant;
@@ -39,6 +61,28 @@ public abstract class ConnectedBlock extends Block {
     }
 
     @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean notify) {
+        super.onPlace(state, level, pos, oldState, notify);
+        if (!oldState.is(state.getBlock())) {
+            BlockState blockState = state;
+            for (Direction direction : Constant.Misc.DIRECTIONS) {
+                blockState = blockState.setValue(ConnectingBlockUtil.getBooleanProperty(direction), this.connectsTo(level, pos, state, direction, pos.relative(direction)));
+            }
+            if (blockState != oldState) {
+                level.setBlockAndUpdate(pos, blockState);
+                if (!level.isClientSide) {
+                    for (Direction direction : Constant.Misc.DIRECTIONS) {
+                        if (blockState.getValue(ConnectingBlockUtil.getBooleanProperty(direction)) != state.getValue(ConnectingBlockUtil.getBooleanProperty(direction))) {
+                            BlockPos neighborPos = pos.relative(direction);
+                            this.onConnectionUpdate(((ServerLevel) level), pos, blockState, direction, neighborPos, level.getBlockState(neighborPos));
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockState state = super.getStateForPlacement(ctx);
         assert state != null;
@@ -54,7 +98,6 @@ public abstract class ConnectedBlock extends Block {
         if (state != blockState && level instanceof ServerLevel l) {
             BlockEntity be = level.getBlockEntity(pos);
             if (be != null) {
-                be.setBlockState(blockState);
                 this.onConnectionUpdate(l, pos, blockState, direction, neighborPos, neighborState);
             }
         }

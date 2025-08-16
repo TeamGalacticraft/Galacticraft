@@ -48,7 +48,7 @@ public abstract class ResourceStorageBlockEntity extends MachineBlockEntity {
         int newAmount = this.calculateAmount();
         if (this.amount != newAmount && this.level != null && !this.level.isClientSide) {
             this.amount = newAmount;
-            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(ResourceStorageBlock.AMOUNT, this.amount), Block.UPDATE_CLIENTS);
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(ResourceStorageBlock.AMOUNT, this.amount), Block.UPDATE_CLIENTS | Block.UPDATE_KNOWN_SHAPE);
         }
     }
 }
