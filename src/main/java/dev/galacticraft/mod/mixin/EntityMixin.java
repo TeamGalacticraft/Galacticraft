@@ -30,6 +30,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
@@ -41,19 +42,11 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
-import net.minecraft.world.item.ArmorItem;
-import net.minecraft.world.item.ArmorMaterial;
-import net.minecraft.world.item.ArmorMaterials;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
-import net.minecraft.world.item.Tiers;
-import net.minecraft.world.item.TieredItem;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
@@ -197,53 +190,7 @@ public abstract class EntityMixin implements EntityAccessor {
                         damage = false;
                         playSound = false;
                     } else if (damage) {
-                        if (itemStack.is(ItemTags.DIAMOND_ORES)) {
-                            damage = false;
-                            itemEntity.setItem(new ItemStack(Items.DIAMOND, itemEntity.getItem().getCount()));
-                        } else {
-                            Item item = null;
-                            if (itemStack.getItem() instanceof ArmorItem armor) {
-                                Holder<ArmorMaterial> material = armor.getMaterial();
-                                if (material != null && material.is(ArmorMaterials.NETHERITE)) {
-                                    switch (armor.getType()) {
-                                        case HELMET:
-                                            item = Items.DIAMOND_HELMET;
-                                            break;
-                                        case CHESTPLATE:
-                                            item = Items.DIAMOND_CHESTPLATE;
-                                            break;
-                                        case LEGGINGS:
-                                            item = Items.DIAMOND_LEGGINGS;
-                                            break;
-                                        case BOOTS:
-                                            item = Items.DIAMOND_BOOTS;
-                                            break;
-                                    }
-                                }
-                            } else if (itemStack.getItem() instanceof TieredItem tool && tool.getTier() == Tiers.NETHERITE) {
-                                if (itemStack.is(Items.NETHERITE_SWORD)) {
-                                    item = Items.DIAMOND_SWORD;
-                                } else if (itemStack.is(Items.NETHERITE_PICKAXE)) {
-                                    item = Items.DIAMOND_PICKAXE;
-                                } else if (itemStack.is(Items.NETHERITE_AXE)) {
-                                    item = Items.DIAMOND_AXE;
-                                } else if (itemStack.is(Items.NETHERITE_SHOVEL)) {
-                                    item = Items.DIAMOND_SHOVEL;
-                                } else if (itemStack.is(Items.NETHERITE_HOE)) {
-                                    item = Items.DIAMOND_HOE;
-                                }
-                            }
-
-                            if (item != null) {
-                                ItemStack itemStack2 = itemStack.transmuteCopy(item);
-                                float durability = itemStack.getDamageValue();
-                                durability *= itemStack2.getMaxDamage();
-                                durability /= itemStack.getMaxDamage();
-                                itemStack2.setDamageValue((int) durability);
-                                itemEntity.setItem(itemStack2);
-                                damage = false;
-                            }
-                        }
+                        damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
                     }
                 } else {
                     damage = true;
