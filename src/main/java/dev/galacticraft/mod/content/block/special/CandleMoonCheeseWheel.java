@@ -83,7 +83,7 @@ public class CandleMoonCheeseWheel extends AbstractCandleBlock {
     }
 
     @Override
-    protected Iterable<Vec3> getParticleOffsets(BlockState blockState) {
+    public Iterable<Vec3> getParticleOffsets(BlockState blockState) {
         return PARTICLE_OFFSETS;
     }
 

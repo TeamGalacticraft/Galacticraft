@@ -47,7 +47,7 @@ public interface Constant {
 
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
     int CLOUD_HEIGHT = 200;
-    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 50;
     int SPACE_HEIGHT = 1000;
     int REENTRY_HEIGHT = 1100;
     int ESCAPE_HEIGHT = 1200;
@@ -228,6 +228,9 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
+        String UNLIT_SOUL_TORCH = "unlit_soul_torch";
+        String UNLIT_SOUL_WALL_TORCH = "unlit_soul_wall_torch";
+        String UNLIT_SOUL_LANTERN = "unlit_soul_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String WEB_TORCH = "web_torch";
@@ -449,6 +452,8 @@ public interface Constant {
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String MOON_CHEESE_CURD = "moon_cheese_curd";
         String MOON_CHEESE_SLICE = "moon_cheese_slice";
+        String CRACKER = "cracker";
+        String CHEESE_CRACKER = "cheese_cracker";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -633,7 +638,7 @@ public interface Constant {
         int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
         int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
         int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
-        int BORDER_Z = 9900;
+        int BORDER_Z = 799; // Just below text in toasts to prevent clipping
 
         int MAX_SPACE_STATION_NAME_LENGTH = 32;
 
@@ -743,6 +748,16 @@ public interface Constant {
         ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
         ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
         ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
+    interface Skybox {
+        ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
+        ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+        ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
+        ResourceLocation EARTH = id("textures/environment/earth.png");
+        ResourceLocation CLOUDS = id("textures/environment/clouds.png");
+        ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
     }
 
     interface RecipeViewer {

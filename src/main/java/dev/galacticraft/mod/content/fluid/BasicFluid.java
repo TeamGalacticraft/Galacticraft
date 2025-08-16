@@ -61,7 +61,7 @@ public abstract class BasicFluid extends FlowingFluid {
 
     @Override
     protected boolean canBeReplacedWith(FluidState state, BlockGetter world, BlockPos pos, Fluid fluid, Direction direction) {
-        return direction == Direction.DOWN && this.isSame(fluid);
+        return direction == Direction.DOWN && !this.isSame(fluid);
     }
 
     @Override

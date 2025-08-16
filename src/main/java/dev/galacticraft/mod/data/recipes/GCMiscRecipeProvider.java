@@ -32,7 +32,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.ItemLike;
@@ -109,7 +108,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItemTags.TIN_CANISTERS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.PARACHUTE.get(DyeColor.WHITE))
+        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.PARACHUTE)
                 .define('S', ConventionalItemTags.STRINGS)
                 .define('C', GCItems.CANVAS)
                 .pattern("CCC")
@@ -117,7 +116,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.CANVAS), has(GCItems.CANVAS))
                 .save(output);
-        GCRecipeHelper.dyeColoring(output, RecipeCategory.MISC, GCItems.PARACHUTE);
+        GCRecipeHelper.dyeColoring(output, RecipeCategory.MISC, GCItems.PARACHUTE, GCItems.DYED_PARACHUTES);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.FREQUENCY_MODULE)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
@@ -380,11 +379,18 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         // Food
         cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F);
 
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.CHEESE_CRACKER)
+                .requires(GCItems.CRACKER)
+                .requires(GCItems.MOON_CHEESE_SLICE)
+                .unlockedBy(getHasName(GCItems.CRACKER), has(GCItems.CRACKER))
+                .save(output);
+
         ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.BURGER_BUN, 2)
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.WHEAT_CROPS)
                 .requires(ConventionalItemTags.EGGS)
                 .requires(ConventionalItemTags.MILK_BUCKETS)
+                .requires(GCItemTags.BURGER_BUN_SEEDS)
                 .unlockedBy(getHasName(Items.EGG), has(ConventionalItemTags.EGGS))
                 .save(output);
 
@@ -400,7 +406,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.GROUND_BEEF), has(GCItems.GROUND_BEEF))
                 .save(output);
 
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 7)
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.FOOD, GCItems.MOON_CHEESE_SLICE, 6)
                 .requires(GCBlocks.MOON_CHEESE_WHEEL)
                 .unlockedBy(getHasName(GCBlocks.MOON_CHEESE_WHEEL), has(GCBlocks.MOON_CHEESE_WHEEL))
                 .save(output);

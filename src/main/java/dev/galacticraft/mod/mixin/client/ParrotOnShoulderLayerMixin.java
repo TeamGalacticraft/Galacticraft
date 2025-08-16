@@ -25,6 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.model.ParrotModel;
+import net.minecraft.client.model.geom.PartNames;
 import net.minecraft.client.renderer.entity.layers.ParrotOnShoulderLayer;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.player.Player;
@@ -43,6 +44,6 @@ public abstract class ParrotOnShoulderLayerMixin<T extends Player> {
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"))
     private void galacticraft$hideFeather(CallbackInfo ci, @Local CompoundTag compoundTag) {
-        this.model.root().getChild("head").getChild("feather").visible = !compoundTag.getBoolean(Constant.Nbt.HAS_MASK);
+        this.model.root().getChild(PartNames.HEAD).getChild("feather").visible = !compoundTag.getBoolean(Constant.Nbt.HAS_MASK);
     }
 }

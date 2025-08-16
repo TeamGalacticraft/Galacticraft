@@ -27,4 +27,5 @@ import net.minecraft.resources.ResourceLocation;
 
 public final class Options {
     public static final ResourceLocation OXYGEN_LEVEL = Constant.id("oxygen_level.enabled");
+    public static final ResourceLocation FUEL_LEVEL = Constant.id("fuel_level.enabled");
 }

@@ -386,6 +386,12 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.FLUID_PIPE_WALKWAY.asItem()).withSuffix("_shapeless"));
 
         // Compressor
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.CRACKER, 3)
+                .unlockedBy(getHasName(Items.BREAD), has(Items.BREAD))
+                .requires(Items.BREAD)
+                .requires(Items.BREAD)
+                .time(100)
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .requires(GCItemTags.ALUMINUM_INGOTS)

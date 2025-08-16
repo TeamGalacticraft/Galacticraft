@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
 import net.minecraft.client.Minecraft;
@@ -147,7 +148,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
     @Override
     public void render(WorldRenderContext context) {
         ClientLevel level = context.world();
-        float partialTicks = context.tickCounter().getRealtimeDeltaTicks();
+        float partialTicks = context.tickCounter().getGameTimeDeltaPartialTick(true);
         PoseStack poseStack = new PoseStack();
         poseStack.mulPose(context.positionMatrix());
         Vec3 vec3 = level.getSkyColor(context.camera().getPosition(), partialTicks);
@@ -273,7 +274,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         BufferUploader.drawWithShader(buffer.buildOrThrow());
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 0.1F);
         f10 = this.sunSize;
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.SUN_VENUS);
+        RenderSystem.setShaderTexture(0, Constant.Skybox.SUN_VENUS);
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(last2, -f10, 100.0F, -f10).setUv(0.0F, 0.0F)
@@ -288,7 +289,7 @@ public class VenusSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
         poseStack.mulPose(Axis.ZP.rotationDegrees(40.0F));
         poseStack.mulPose(Axis.XP.rotationDegrees(200F));
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1F);
-        RenderSystem.setShaderTexture(0, CelestialBodyTextures.EARTH);
+        RenderSystem.setShaderTexture(0, Constant.CelestialBody.EARTH);
         buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
         buffer.addVertex(last2, -f10, -100.0F, f10).setUv(0, 1.0F)
                 .addVertex(last2, f10, -100.0F, f10).setUv(1.0F, 1.0F)

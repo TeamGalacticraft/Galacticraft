@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.gui.overlay;
 
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

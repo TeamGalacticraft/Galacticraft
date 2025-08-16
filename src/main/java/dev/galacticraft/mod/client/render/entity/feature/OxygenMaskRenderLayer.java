@@ -56,12 +56,10 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
 
     public OxygenMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root;
         float y = context.getModel() instanceof EndermanModel ? -2.0F : -3.0F;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            this.head = root.getChild(PartNames.HEAD);
-            this.body = root.getChild(PartNames.BODY);
+            this.head = model.root().getChild(PartNames.HEAD);
+            this.body = model.root().getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
             this.head = model.head;
             this.body = model.body;
@@ -76,18 +74,18 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (this.head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
         }
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, y, 1.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        root = modelPartData.bake(64, 32);
-        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
-        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
+        ModelPart modelRoot = partDefinition.bake(64, 32);
+        this.mask = this.head != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override

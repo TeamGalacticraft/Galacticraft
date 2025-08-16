@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
@@ -65,7 +65,7 @@ public class CapeLayerMixin {
         return angle;
     }
 
-    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0), remap = false)
+    @ModifyArg(method = "render", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0))
     private float galacticraft$limitBillowing(float angle, @Local AbstractClientPlayer player) {
         if (player.getVehicle() instanceof AdvancedVehicle) {
             return 0.0F;

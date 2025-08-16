@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionHand;
@@ -33,6 +35,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionContents;
 import net.minecraft.world.item.alchemy.Potions;
 import net.minecraft.world.level.Level;
@@ -52,7 +55,11 @@ public class EmergencyKitItem extends Item {
         emergencyItems.add(GCItems.OXYGEN_MASK.getDefaultInstance());
         emergencyItems.add(GCItems.OXYGEN_GEAR.getDefaultInstance());
         emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
-        emergencyItems.add(GCItems.PARACHUTE.get(color).getDefaultInstance());
+        if (color != null) {
+            emergencyItems.add(GCItems.DYED_PARACHUTES.get(color).getDefaultInstance());
+        } else {
+            emergencyItems.add(GCItems.PARACHUTE.getDefaultInstance());
+        }
         emergencyItems.add(OxygenTankItem.getFullTank(GCItems.SMALL_OXYGEN_TANK));
         emergencyItems.add(cannedFoodItem);
         emergencyItems.add(PotionContents.createItemStack(Items.POTION, Potions.HEALING));
@@ -65,12 +72,21 @@ public class EmergencyKitItem extends Item {
         super(settings);
     }
 
+    @Override
+    public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
+        if (stack.has(DataComponents.BASE_COLOR)) {
+            Component text = GCItems.DYED_PARACHUTES.get(stack.get(DataComponents.BASE_COLOR)).getDescription();
+            tooltip.add(text.copy().withStyle(Constant.Text.GRAY_STYLE));
+        }
+        super.appendHoverText(stack, context, tooltip, type);
+    }
+
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
         int n = inv.getContainerSize();
         ItemStack emergencyKit = player.getItemInHand(hand);
-        DyeColor color = emergencyKit.getOrDefault(DataComponents.BASE_COLOR, DyeColor.RED);
+        DyeColor color = emergencyKit.get(DataComponents.BASE_COLOR);
         for (ItemStack itemStack : getContents(color)) {
             for (int slot = 0; slot < n; ++slot) {
                 if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {

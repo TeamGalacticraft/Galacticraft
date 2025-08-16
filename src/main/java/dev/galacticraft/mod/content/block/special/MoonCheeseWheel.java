@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.block.special;
 
+import dev.galacticraft.mod.content.GCStats;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
@@ -30,6 +32,8 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.EquipmentSlot;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -42,6 +46,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+
+import static dev.galacticraft.mod.content.item.GCItems.MOON_CHEESE_SLICE;
 
 public class MoonCheeseWheel extends CakeBlock {
     public MoonCheeseWheel(BlockBehaviour.Properties properties) {
@@ -73,12 +79,42 @@ public class MoonCheeseWheel extends CakeBlock {
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
             player.awardStat(Stats.ITEM_USED.get(item));
             return ItemInteractionResult.SUCCESS;
+        } else if (stack.is(GCItemTags.CUTS_CHEESE)) {
+            if (stack.isDamageableItem()) {
+                stack.hurtAndBreak(1, player, EquipmentSlot.MAINHAND);
+            }
+            level.playSound(null, pos, SoundEvents.PLAYER_ATTACK_WEAK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            int n = state.getValue(BITES);
+            if (n < 6) {
+                level.setBlock(pos, state.setValue(BITES, n + 1), Block.UPDATE_ALL);
+                level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
+            } else {
+                level.removeBlock(pos, false);
+                level.gameEvent(player, GameEvent.BLOCK_DESTROY, pos);
+            }
+            level.addFreshEntity(new ItemEntity(level, pos.getX() + 0.125D * n, pos.getY() + 0.25D, pos.getZ() + 0.5D, MOON_CHEESE_SLICE.getDefaultInstance()));
+            player.awardStat(GCStats.CHEESE_SLICED);
+            player.awardStat(Stats.ITEM_USED.get(item));
+            return ItemInteractionResult.SUCCESS;
         } else {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
     }
 
     public static InteractionResult eat(LevelAccessor levelAccessor, BlockPos blockPos, BlockState blockState, Player player) {
-        return CakeBlock.eat(levelAccessor, blockPos, blockState, player);
+        if (!player.canEat(false)) {
+            return InteractionResult.PASS;
+        }
+        player.awardStat(GCStats.EAT_CHEESE_WHEEL_SLICE);
+        player.getFoodData().eat(2, 0.1F);
+        int n = blockState.getValue(BITES);
+        levelAccessor.gameEvent(player, GameEvent.EAT, blockPos);
+        if (n < 6) {
+            levelAccessor.setBlock(blockPos, blockState.setValue(BITES, n + 1), Block.UPDATE_ALL);
+        } else {
+            levelAccessor.removeBlock(blockPos, false);
+            levelAccessor.gameEvent(player, GameEvent.BLOCK_DESTROY, blockPos);
+        }
+        return InteractionResult.SUCCESS;
     }
 }
