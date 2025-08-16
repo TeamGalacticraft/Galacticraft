@@ -641,6 +641,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
 
+        this.tag(GCItemTags.ACID_RESISTANT, "Sulfuric Acid Resistant Items");
+
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
