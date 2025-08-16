@@ -398,6 +398,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
         }
 
+        this.tag(GCBlockTags.AIRLOCK_BLOCKS).add(GCBlocks.AIR_LOCK_FRAME, GCBlocks.AIR_LOCK_CONTROLLER);
+
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
