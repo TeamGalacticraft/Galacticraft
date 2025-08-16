@@ -34,7 +34,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.content.item.InfiniteOxygenTankItem;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.tag.GCItemTags;

@@ -32,10 +32,14 @@ import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
 import dev.galacticraft.mod.content.item.ParachuteItem;
+import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.Container;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.phys.Vec3;
 
 public class OverworldCelestialTeleporterType<Config extends CelestialTeleporterConfig> extends CelestialTeleporterType<Config> {
     public static final OverworldCelestialTeleporterType<DefaultCelestialTeleporterConfig> INSTANCE = new OverworldCelestialTeleporterType<>(DefaultCelestialTeleporterConfig.CODEC);
@@ -45,29 +49,39 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
     }
 
     @Override
-    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
-        if (body.config() instanceof PlanetConfig planetConfig) {
-            var chestSpawn = planetConfig.celestialHandler().getParachestSpawnLocation(player.serverLevel(), player, player.getRandom());
+    public void onEnterAtmosphere(ServerLevel level, Entity entity, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, Config config) {
+        if (entity instanceof ServerPlayer player && body.config() instanceof PlanetConfig planetConfig) {
+            Vec3 chestSpawn = planetConfig.celestialHandler().getParachestSpawnLocation(player.serverLevel(), player, player.getRandom());
             if (chestSpawn != null) {
-                Container gearInv = player.galacticraft$getGearInv();
-                DyeColor color = DyeColor.WHITE;
-                for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
-                    if (gearInv.getItem(slot).getItem() instanceof ParachuteItem parachute) {
-                        color = parachute.getColor();
+                GCServerPlayer gcPlayer = GCServerPlayer.get(player);
+                NonNullList<ItemStack> rocketInv = gcPlayer.getRocketStacks();
+
+                boolean rocketInvEmpty = true;
+                for (ItemStack stack : rocketInv) {
+                    if (!stack.isEmpty()) {
+                        rocketInvEmpty = false;
                         break;
                     }
                 }
 
-                var gcPlayer = GCServerPlayer.get(player);
-                var rocketInv = gcPlayer.getRocketStacks();
-                ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, color, gcPlayer.getFuel());
-                rocketInv.clear();
+                if (!rocketInvEmpty) {
+                    Container gearInv = player.galacticraft$getGearInv();
+                    DyeColor color = DyeColor.WHITE;
+                    for (int slot = 0; slot < gearInv.getContainerSize(); slot++) {
+                        if (gearInv.getItem(slot).getItem() instanceof ParachuteItem parachute && parachute.getColor() != null) {
+                            color = parachute.getColor();
+                            break;
+                        }
+                    }
 
-                chest.setPos(chestSpawn);
+                    ParachestEntity chest = new ParachestEntity(GCEntityTypes.PARACHEST, level, rocketInv, color, gcPlayer.getFuel());
+                    rocketInv.clear();
 
-                level.addFreshEntity(chest);
+                    chest.setPos(chestSpawn);
+                    level.addFreshEntity(chest);
+                }
             }
         }
-        player.teleportTo(level, player.getX(), level.getMaxBuildHeight() + 20.0, player.getZ(), player.getYRot(), player.getXRot());
+        entity.teleportTo(level, entity.getX(), level.getMaxBuildHeight() + 20.0, entity.getZ(), NO_RELATIVE_MOVEMENT, entity.getYRot(), entity.getXRot());
     }
 }

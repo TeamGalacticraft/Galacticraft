@@ -32,7 +32,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class RumblerEntityRenderer extends MobRenderer<RumblerEntity, RumblerEntityModel<RumblerEntity>> {
     public RumblerEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new RumblerEntityModel<>(context.bakeLayer(GCEntityModelLayer.RUMBLER)), 2f);
+        super(context, new RumblerEntityModel<>(context.bakeLayer(GCEntityModelLayer.RUMBLER)), 1.0F);
     }
 
     @Override

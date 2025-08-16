@@ -386,20 +386,16 @@ public class Graphics implements AutoCloseable {
     public class Text implements AutoCloseable {
         private boolean textDirty = false;
 
-        public int getSplitStringLines(String text, int width) {
-            return this.getSplitStringLines(Component.literal(text), width);
-        }
-
         public int getSplitStringLines(FormattedText text, int width) {
             return Graphics.this.font.split(text, width).size();
         }
 
-        public int drawSplitText(String string, int x, int y, int width, int color) {
+        public int drawSplitText(Component string, int x, int y, int width, int color) {
             return this.renderSplitString(string, x, y, width, color);
         }
 
-        protected int renderSplitString(String str, int x, int y, int width, int color) {
-            List<FormattedCharSequence> list = Graphics.this.font.split(Component.translatable(str), width);
+        protected int renderSplitString(Component text, int x, int y, int width, int color) {
+            List<FormattedCharSequence> list = Graphics.this.font.split(text, width);
 
             for (FormattedCharSequence line : list) {
                 this.drawCenteredText(line, x, y, color);
@@ -407,14 +403,6 @@ public class Graphics implements AutoCloseable {
             }
 
             return list.size();
-        }
-
-        public int drawCenteredText(String text, int centerX, int y, int color) {
-            return this.drawCenteredText(text, centerX, y, color, false);
-        }
-
-        public int drawCenteredText(String text, int centerX, int y, int color, boolean shadow) {
-            return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float) y, color, shadow);
         }
 
         public int drawCenteredText(Component text, int centerX, int y, int color) {
@@ -431,22 +419,6 @@ public class Graphics implements AutoCloseable {
 
         public int drawCenteredText(FormattedCharSequence text, int centerX, int y, int color, boolean shadow) {
             return this.drawText(text, centerX - Graphics.this.font.width(text) / 2.0f, (float) y, color, shadow);
-        }
-
-        public int drawText(String text, int x, int y, int color) {
-            return this.drawText(text, x, y, color, false);
-        }
-
-        public int drawText(String text, float x, float y, int color) {
-            return this.drawText(text, x, y, color, false);
-        }
-
-        public int drawText(String text, float x, float y, int color, boolean shadow) {
-            if (text == null) return 0;
-            this.textDirty = true;
-            return Graphics.this.font.drawInBatch(
-                    text, x, y, color, shadow, Graphics.this.pose.last().pose(), Graphics.this.bufferSource, Font.DisplayMode.NORMAL, 0, 0xF000F0, Graphics.this.font.isBidirectional()
-            );
         }
 
         public int drawText(Component text, int x, int y, int color) {

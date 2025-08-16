@@ -39,6 +39,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseRailBlock;
 import net.minecraft.world.level.block.BedBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.ChestBlock;
@@ -47,6 +48,7 @@ import net.minecraft.world.level.block.state.properties.ChestType;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.block.state.properties.Property;
+import net.minecraft.world.level.block.state.properties.RailShape;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
@@ -127,6 +129,17 @@ public class StandardWrenchItem extends Item {
                 BlockState newState = cycle(state, property, player.isShiftKeyDown());
                 world.setBlock(pos, newState, Block.UPDATE_ALL);
                 handled = true;
+            } else if (block instanceof BaseRailBlock && block.getStateDefinition().getProperty("shape") instanceof EnumProperty property) {
+                Collection<?> possibleValues = property.getPossibleValues();
+                if (possibleValues.stream().allMatch(RailShape.class::isInstance)) {
+                    Collection<RailShape> sortedValues = ((Collection<RailShape>) possibleValues).stream()
+                            .filter(shape -> !BaseRailBlock.shouldBeRemoved(pos, world, shape))
+                            .collect(Collectors.toList());
+
+                    BlockState newState = cycle(state, property, sortedValues, player.isShiftKeyDown());
+                    world.setBlock(pos, newState, Block.UPDATE_ALL);
+                    handled = true;
+                }
             }
 
             if (handled) {
