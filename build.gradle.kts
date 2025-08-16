@@ -204,6 +204,15 @@ repositories {
             includeGroup("squeek.appleskin")
         }
     }
+    maven("https://maven.teamgalacticraft.org") {
+        content {
+            includeGroup("dev.maximus")
+        }
+        metadataSources {
+            mavenPom()
+            artifact()
+        }
+    }
 }
 
 configurations {
@@ -255,6 +264,8 @@ dependencies {
     if (runJei) {
         modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
     }
+
+    modCompileOnly("dev.maximus:omnishape:1.2.4")
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }
