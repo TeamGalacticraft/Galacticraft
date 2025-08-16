@@ -38,7 +38,9 @@
       "dev.galacticraft.mod.gametest.machine.FuelLoaderTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
-      "dev.galacticraft.mod.gametest.WireTestSuite"
+      "dev.galacticraft.mod.gametest.wire.WireConnectionTests",
+      "dev.galacticraft.mod.gametest.wire.WireDestructionTests",
+      "dev.galacticraft.mod.gametest.wire.WireTransferTests"
     ]
   },
   "mixins": [],
