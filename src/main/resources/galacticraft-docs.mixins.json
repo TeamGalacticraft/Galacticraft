@@ -1,0 +1,15 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.mod.api.documentation.client.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "mixins": [
+  ],
+  "client": [
+    "AbstractContainerScreenAccessor",
+    "ScreenAccessor"
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

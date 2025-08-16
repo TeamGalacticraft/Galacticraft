@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:compressor"
+  ],
+  "id": "galacticraft:compressor",
+  "schema": 2,
+  "titleKey": "doc.gc.compressor"
+}

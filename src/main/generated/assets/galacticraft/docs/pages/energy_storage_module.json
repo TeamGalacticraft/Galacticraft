@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:energy_storage_module"
+  ],
+  "id": "galacticraft:energy_storage_module",
+  "schema": 2,
+  "titleKey": "doc.gc.energy_storage_module"
+}

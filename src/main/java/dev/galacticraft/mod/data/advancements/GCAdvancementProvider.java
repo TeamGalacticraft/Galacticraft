@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.data;
+package dev.galacticraft.mod.data.advancements;
 
 import dev.galacticraft.api.component.GCItemSubPredicates;
 import dev.galacticraft.mod.Constant;

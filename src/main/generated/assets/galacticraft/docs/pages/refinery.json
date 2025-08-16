@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:refinery"
+  ],
+  "id": "galacticraft:refinery",
+  "schema": 2,
+  "titleKey": "doc.gc.refinery"
+}

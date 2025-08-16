@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:fuel_loader"
+  ],
+  "id": "galacticraft:fuel_loader",
+  "schema": 2,
+  "titleKey": "doc.gc.fuel_loader"
+}

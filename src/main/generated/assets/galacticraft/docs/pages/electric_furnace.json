@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:electric_furnace"
+  ],
+  "id": "galacticraft:electric_furnace",
+  "schema": 2,
+  "titleKey": "doc.gc.electric_furnace"
+}

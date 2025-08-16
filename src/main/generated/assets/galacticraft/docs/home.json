@@ -1,0 +1,106 @@
+{
+  "elements": [
+    {
+      "type": "text",
+      "align": "left",
+      "nmaxX": 0.99568033,
+      "nmaxY": 0.3031496,
+      "nminX": 0.004319654,
+      "nminY": 0.2519685,
+      "order": 0,
+      "textKey": "doc.gc.home.category_label"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.2992126,
+      "order": 1,
+      "target": "galacticraft:general_category",
+      "textKey": "doc.gc.home.category_general"
+    },
+    {
+      "type": "text",
+      "align": "left",
+      "nmaxX": 0.99568033,
+      "nmaxY": 0.24015749,
+      "nminX": 0.0043196213,
+      "nminY": 0.122047246,
+      "order": 2,
+      "textKey": "doc.gc.home.intro"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.38188976,
+      "order": 3,
+      "target": "galacticraft:machines_category",
+      "textKey": "doc.gc.home.category_machines"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.46456692,
+      "order": 4,
+      "target": "galacticraft:rockets_category",
+      "textKey": "doc.gc.home.category_rockets"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.5472441,
+      "order": 5,
+      "target": "galacticraft:planets_category",
+      "textKey": "doc.gc.home.category_planets"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.62992126,
+      "order": 6,
+      "target": "galacticraft:entities_category",
+      "textKey": "doc.gc.home.category_entities"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.71259844,
+      "order": 7,
+      "target": "galacticraft:blocks_category",
+      "textKey": "doc.gc.home.category_blocks"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.79527557,
+      "order": 8,
+      "target": "galacticraft:items_category",
+      "textKey": "doc.gc.home.category_items"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.0043196543,
+      "ny": 0.87795275,
+      "order": 9,
+      "target": "galacticraft:fluids_and_gases_category",
+      "textKey": "doc.gc.home.category_fluids_and_gases"
+    }
+  ],
+  "schema": 2,
+  "titleKey": "doc.gc.home.title"
+}

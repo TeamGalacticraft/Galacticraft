@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:basic_solar_panel"
+  ],
+  "id": "galacticraft:basic_solar_panel",
+  "schema": 2,
+  "titleKey": "doc.gc.basic_solar_panel"
+}

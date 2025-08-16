@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:electric_compressor"
+  ],
+  "id": "galacticraft:electric_compressor",
+  "schema": 2,
+  "titleKey": "doc.gc.electric_compressor"
+}

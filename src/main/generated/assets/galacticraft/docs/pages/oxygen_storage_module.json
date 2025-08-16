@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:oxygen_storage_module"
+  ],
+  "id": "galacticraft:oxygen_storage_module",
+  "schema": 2,
+  "titleKey": "doc.gc.oxygen_storage_module"
+}

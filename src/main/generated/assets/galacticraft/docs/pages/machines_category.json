@@ -1,0 +1,257 @@
+{
+  "elements": [
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.20472442,
+      "order": 0,
+      "target": "galacticraft:coal_generator",
+      "textKey": "doc.gc.coal_generator"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.6692913,
+      "order": 1,
+      "target": "galacticraft:oxygen_decompressor",
+      "textKey": "doc.gc.oxygen_decompressor"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.8346457,
+      "order": 2,
+      "target": "galacticraft:oxygen_sealer",
+      "textKey": "doc.gc.oxygen_sealer"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.503937,
+      "order": 3,
+      "target": "galacticraft:oxygen_collector",
+      "textKey": "doc.gc.oxygen_collector"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.2937365,
+      "ny": 0.2874016,
+      "order": 4,
+      "target": "galacticraft:fuel_loader",
+      "textKey": "doc.gc.fuel_loader"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.2937365,
+      "ny": 0.42125985,
+      "order": 5,
+      "target": "galacticraft:energy_storage_module",
+      "textKey": "doc.gc.energy_storage_module"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.56587476,
+      "ny": 0.20472442,
+      "order": 6,
+      "target": "galacticraft:circuit_fabricator",
+      "textKey": "doc.gc.circuit_fabricator"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.56587476,
+      "ny": 0.2874015,
+      "order": 7,
+      "target": "galacticraft:compressor",
+      "textKey": "doc.gc.compressor"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.2937365,
+      "ny": 0.20472442,
+      "order": 8,
+      "target": "galacticraft:refinery",
+      "textKey": "doc.gc.refinery"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.9173228,
+      "order": 9,
+      "target": "galacticraft:bubble_distributor",
+      "textKey": "doc.gc.bubble_distributor"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.5866142,
+      "order": 10,
+      "target": "galacticraft:compressor",
+      "textKey": "doc.gc.compressor"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.56587476,
+      "ny": 0.37007874,
+      "order": 11,
+      "target": "galacticraft:electric_compressor",
+      "textKey": "doc.gc.electric_compressor"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.37007874,
+      "order": 12,
+      "target": "galacticraft:advanced_solar_panel",
+      "textKey": "doc.gc.advanced_solar_panel"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.2874016,
+      "order": 13,
+      "target": "galacticraft:basic_solar_panel",
+      "textKey": "doc.gc.basic_solar_panel"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.021598272,
+      "ny": 0.7519685,
+      "order": 14,
+      "target": "galacticraft:energy_storage_module",
+      "textKey": "doc.gc.oxygen_storage_module"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.56587476,
+      "ny": 0.4527559,
+      "order": 15,
+      "target": "galacticraft:electric_furnace",
+      "textKey": "doc.gc.electric_furnace"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.56587476,
+      "ny": 0.53543305,
+      "order": 16,
+      "target": "galacticraft:electric_arc_furnace",
+      "textKey": "doc.gc.electric_arc_furnace"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.5658747,
+      "ny": 0.61811024,
+      "order": 17,
+      "target": "galacticraft:food_canner",
+      "textKey": "doc.gc.food_cannner"
+    },
+    {
+      "type": "button",
+      "nh": 0.07874016,
+      "nw": 0.26349893,
+      "nx": 0.2937365,
+      "ny": 0.5590551,
+      "order": 18,
+      "target": "galacticraft:airlock",
+      "textKey": "doc.gc.airlock"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.28509718,
+      "nmaxY": 0.20472442,
+      "nminX": 0.021598272,
+      "nminY": 0.15748031,
+      "order": 19,
+      "textKey": "doc.gc.machines.generators"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.5572354,
+      "nmaxY": 0.5669291,
+      "nminX": 0.2937365,
+      "nminY": 0.51968503,
+      "order": 20,
+      "textKey": "doc.gc.machines.multiblocks"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.5572354,
+      "nmaxY": 0.20472442,
+      "nminX": 0.2937365,
+      "nminY": 0.15748031,
+      "order": 21,
+      "textKey": "doc.gc.machines.fuel_machines"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.8293737,
+      "nmaxY": 0.2047244,
+      "nminX": 0.56587476,
+      "nminY": 0.15748031,
+      "order": 22,
+      "textKey": "doc.gc.machines.functional_machines"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.5572354,
+      "nmaxY": 0.42125985,
+      "nminX": 0.2937365,
+      "nminY": 0.37401575,
+      "order": 23,
+      "textKey": "doc.gc.machines.energy_machines"
+    },
+    {
+      "type": "text",
+      "align": "center",
+      "nmaxX": 0.28509718,
+      "nmaxY": 0.503937,
+      "nminX": 0.021598272,
+      "nminY": 0.4566929,
+      "order": 24,
+      "textKey": "doc.gc.machines.oxygen_machines"
+    }
+  ],
+  "id": "galacticraft:machines_category",
+  "schema": 2,
+  "titleKey": "doc.gc.home.category_machines"
+}

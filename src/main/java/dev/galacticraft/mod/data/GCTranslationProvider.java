@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data;
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
+import dev.galacticraft.mod.api.documentation.datagen.DocsTranslations;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -77,6 +78,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateWailaTranslations();
         this.generateStatsTranslations();
         this.generateAdvancementsTranslations();
+        DocsTranslations.generateDocsTranslations(this);
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
