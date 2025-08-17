@@ -23,58 +23,58 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
+import dev.galacticraft.machinelib.api.gametest.annotation.timing.Oneshot;
+import dev.galacticraft.machinelib.api.gametest.annotation.type.Machine;
+import dev.galacticraft.machinelib.api.gametest.context.MachineTestContext;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-@TestSuite("refinery")
+import static dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity.FUEL_TANK;
+import static dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity.OIL_TANK;
+
+@TestInfo(group = "refinery")
 public final class RefineryTestSuite extends MachineGameTest<RefineryBlockEntity> {
     public RefineryTestSuite() {
         super(GCBlocks.REFINERY);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         tests.add(this.createTakeFromFluidItemTest(RefineryBlockEntity.OIL_INPUT_SLOT, GCItems.CRUDE_OIL_BUCKET, RefineryBlockEntity.OIL_TANK));
-        tests.add(this.createDrainFluidIntoItemTest(RefineryBlockEntity.FUEL_OUTPUT_SLOT, GCFluids.FUEL, RefineryBlockEntity.FUEL_TANK));
+        tests.add(this.createDrainFluidIntoItemTest(RefineryBlockEntity.FUEL_OUTPUT_SLOT, GCFluids.FUEL, FUEL_TANK));
         return tests;
     }
 
-    @MachineTest
-    public Runnable crafting(RefineryBlockEntity machine) {
-        FluidResourceSlot fuel = machine.fluidStorage().slot(RefineryBlockEntity.FUEL_TANK);
-        FluidResourceSlot oil = machine.fluidStorage().slot(RefineryBlockEntity.OIL_TANK);
+    @Machine
+    @Oneshot
+    public Runnable crafting(MachineTestContext<RefineryBlockEntity> ctx) {
+        ctx.fillFluid(OIL_TANK, GCFluids.CRUDE_OIL);
+        ctx.fillCapacitor();
 
-        oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         return () -> {
-            Assertions.assertNotEquals(FluidConstants.BUCKET, oil.getAmount(), "Expected refinery to consume oil!");
-            Assertions.assertFalse(fuel.isEmpty(), "Expected refinery to refine oil into fuel!");
+            ctx.assertTankNotFull(OIL_TANK);
+            ctx.assertTankNotEmpty(FUEL_TANK);
         };
     }
 
-    @MachineTest
-    public Runnable craftingFailFull(RefineryBlockEntity machine) {
-        FluidResourceSlot fuel = machine.fluidStorage().slot(RefineryBlockEntity.FUEL_TANK);
-        FluidResourceSlot oil = machine.fluidStorage().slot(RefineryBlockEntity.OIL_TANK);
+    @Machine
+    @Oneshot
+    public Runnable craftingFailFull(MachineTestContext<RefineryBlockEntity> ctx) {
+        ctx.fillFluid(FUEL_TANK, GCFluids.FUEL);
+        ctx.fillCapacitor();
+        ctx.fillFluid(OIL_TANK, GCFluids.CRUDE_OIL);
 
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
-        fuel.set(GCFluids.FUEL, fuel.getCapacity());
-        oil.set(GCFluids.CRUDE_OIL, FluidConstants.BUCKET);
-        return () -> Assertions.assertEquals(FluidConstants.BUCKET, oil.getAmount(), "Expected refinery to not consume oil!");
+        return () -> ctx.assertTankFull(OIL_TANK);
     }
 }

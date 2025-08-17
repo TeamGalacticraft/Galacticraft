@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.FuelLoaderBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
@@ -34,16 +35,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("fuel_loader")
+@TestInfo(group = "fuel_loader")
 public final class FuelLoaderTestSuite extends MachineGameTest<FuelLoaderBlockEntity> {
     public FuelLoaderTestSuite() {
         super(GCBlocks.FUEL_LOADER);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(RefineryBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         tests.add(this.createTakeFromFluidItemTest(FuelLoaderBlockEntity.FUEL_INPUT_SLOT, GCItems.FUEL_BUCKET, FuelLoaderBlockEntity.FUEL_TANK));
         return tests;

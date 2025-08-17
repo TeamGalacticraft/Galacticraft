@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("electric_compressor")
+@TestInfo(group = "electric_compressor")
 public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity> {
     public ElectricCompressorTestSuite() {
         super(GCBlocks.ELECTRIC_COMPRESSOR, List.of(
@@ -46,10 +47,9 @@ public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingIn
         ), ElectricCompressorBlockEntity.OUTPUT_SLOTS, ElectricCompressorBlockEntity.OUTPUT_LENGTH, 200);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(ElectricCompressorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
     }

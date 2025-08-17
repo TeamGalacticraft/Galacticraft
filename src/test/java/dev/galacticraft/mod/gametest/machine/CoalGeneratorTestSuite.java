@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
+import dev.galacticraft.machinelib.api.gametest.annotation.timing.Oneshot;
+import dev.galacticraft.machinelib.api.gametest.annotation.type.Machine;
+import dev.galacticraft.machinelib.api.gametest.context.MachineTestContext;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -33,55 +35,55 @@ import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-@TestSuite("coal_generator")
+import static dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity.INPUT_SLOT;
+
+@TestInfo(group = "coal_generator")
 public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorBlockEntity> {
     public CoalGeneratorTestSuite() {
         super(GCBlocks.COAL_GENERATOR);
     }
 
-    @MachineTest
-    public Runnable fuelBurning(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
-        slot.set(Items.COAL, 1);
-        return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume fuel");
+    @Machine
+    @Oneshot
+    public Runnable fuelBurning(MachineTestContext<CoalGeneratorBlockEntity> ctx) {
+        ctx.setItem(INPUT_SLOT, Items.COAL, 1);
+        return () -> ctx.assertSlotEmpty(INPUT_SLOT);
     }
 
-    @MachineTest
-    public Runnable fuelConsumption(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
-
-        slot.set(Items.COAL, 1);
-        return () -> Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
+    @Machine
+    @Oneshot
+    public Runnable fuelConsumption(MachineTestContext<CoalGeneratorBlockEntity> ctx) {
+        ctx.setItem(INPUT_SLOT, Items.COAL, 1);
+        return () -> ctx.assertNotEquals(0, ctx.be.getFuelLength(), "Expected fuel length >0 from burned fuel");
     }
 
-    @MachineTest(workTime = 320)
-    public Runnable multipleFuelBurning(CoalGeneratorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
-
-        slot.set(Items.COAL, 2);
-        return () -> Assertions.assertTrue(slot.isEmpty(), "Failed to consume two coals!");
+    @Machine
+    @Oneshot(time = 320)
+    public Runnable multipleFuelBurning(MachineTestContext<CoalGeneratorBlockEntity> ctx) {
+        ctx.setItem(INPUT_SLOT, Items.COAL, 2);
+        return () -> ctx.assertSlotEmpty(INPUT_SLOT);
     }
 
-    @MachineTest(workTime = 250)
-    public Runnable heat(CoalGeneratorBlockEntity machine) {
-        machine.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
-        return () -> Assertions.assertEquals(1, machine.getHeat(), "Coal generator did not heat up!");
+    @Machine
+    @Oneshot(time = 250)
+    public Runnable heat(MachineTestContext<CoalGeneratorBlockEntity> ctx) {
+        ctx.be.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
+        return () -> ctx.assertEquals(1.0, ctx.be.getHeat(), "Coal generator did not heat up!");
     }
 
-    @MachineTest(workTime = 50)
-    public Runnable cool(CoalGeneratorBlockEntity machine) {
-        machine.setHeat(1.0);
-        return () -> Assertions.assertEquals(0.0, machine.getHeat(), "Coal generator did not cool down!");
+    @Machine
+    @Oneshot(time = 50)
+    public Runnable cool(MachineTestContext<CoalGeneratorBlockEntity> ctx) {
+        ctx.be.setHeat(1.0);
+        return () -> ctx.assertEquals(0.0, ctx.be.getHeat(), "Coal generator did not cool down!");
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createDrainToEnergyItemTest(CoalGeneratorBlockEntity.CHARGE_SLOT, GCItems.BATTERY));
         return tests;
     }

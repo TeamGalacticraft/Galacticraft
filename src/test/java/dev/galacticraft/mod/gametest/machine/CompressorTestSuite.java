@@ -23,9 +23,11 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
+import dev.galacticraft.machinelib.api.gametest.annotation.timing.Oneshot;
+import dev.galacticraft.machinelib.api.gametest.annotation.type.Machine;
+import dev.galacticraft.machinelib.api.gametest.context.MachineTestContext;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -34,11 +36,13 @@ import net.minecraft.gametest.framework.TestFunction;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
 import org.jetbrains.annotations.NotNull;
-import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
-@TestSuite("compressor")
+import static dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity.FUEL_SLOT;
+import static dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity.INPUT_SLOTS;
+
+@TestInfo(group = "compressor")
 public final class CompressorTestSuite extends RecipeGameTest<CraftingInput, CompressingRecipe, CompressorBlockEntity> {
     public CompressorTestSuite() {
         super(GCBlocks.COMPRESSOR, List.of(
@@ -48,21 +52,20 @@ public final class CompressorTestSuite extends RecipeGameTest<CraftingInput, Com
         ), CompressorBlockEntity.OUTPUT_SLOT, 200);
     }
 
-    @MachineTest
-    public Runnable fuelConsumption(CompressorBlockEntity machine) {
-        ItemResourceSlot slot = machine.itemStorage().slot(CompressorBlockEntity.FUEL_SLOT);
-        slot.set(Items.COAL, 1);
-        machine.itemStorage().slot(CompressorBlockEntity.INPUT_SLOTS).set(Items.IRON_INGOT, 1);
-        machine.itemStorage().slot(CompressorBlockEntity.INPUT_SLOTS + 1).set(Items.IRON_INGOT, 1);
+    @Machine
+    @Oneshot
+    public Runnable fuelConsumption(MachineTestContext<CompressorBlockEntity> ctx) {
+        ctx.setItem(FUEL_SLOT, Items.COAL, 1);
+        ctx.setItem(INPUT_SLOTS, Items.IRON_INGOT, 1);
+        ctx.setItem(INPUT_SLOTS + 1, Items.IRON_INGOT, 1);
         return () -> {
-            Assertions.assertTrue(slot.isEmpty(), "Failed to consume fuel");
-            Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
+            ctx.assertSlotEmpty(FUEL_SLOT);
+            ctx.assertNotEquals(0, ctx.be.fuelLength, "Expected fuel length >0 for burning");
         };
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        return super.registerTests();
+        return TestUtils.generateTests(this);
     }
 }

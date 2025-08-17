@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.EnergyStorageModuleBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -33,16 +34,15 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("energy_storage_module")
+@TestInfo(group = "energy_storage_module")
 public final class EnergyStorageModuleTestSuite extends MachineGameTest<EnergyStorageModuleBlockEntity> {
     public EnergyStorageModuleTestSuite() {
         super(GCBlocks.ENERGY_STORAGE_MODULE);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_SELF_SLOT, GCItems.INFINITE_BATTERY));
         tests.add(this.createDrainToEnergyItemTest(EnergyStorageModuleBlockEntity.CHARGE_ITEM_SLOT, GCItems.BATTERY));
         return tests;

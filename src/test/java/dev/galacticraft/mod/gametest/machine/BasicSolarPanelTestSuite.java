@@ -23,7 +23,10 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.MachineGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.Structure;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
+import dev.galacticraft.machinelib.api.gametest.util.GameTestStructures;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -33,16 +36,16 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("basic_solar_panel")
+@Structure(GameTestStructures.EMPTY_3x3)
+@TestInfo(group = "basic_solar_panel")
 public final class BasicSolarPanelTestSuite extends MachineGameTest<BasicSolarPanelBlockEntity> {
     public BasicSolarPanelTestSuite() {
         super(GCBlocks.BASIC_SOLAR_PANEL);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createDrainToEnergyItemTest(BasicSolarPanelBlockEntity.CHARGE_SLOT, GCItems.BATTERY));
         return tests;
     }

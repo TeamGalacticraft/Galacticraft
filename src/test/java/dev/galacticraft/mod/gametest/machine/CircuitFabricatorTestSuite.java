@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("circuit_fabricator")
+@TestInfo(group = "circuit_fabricator")
 public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> {
     public CircuitFabricatorTestSuite() {
         super(GCBlocks.CIRCUIT_FABRICATOR, List.of(
@@ -49,10 +50,9 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
         ), CircuitFabricatorBlockEntity.OUTPUT_SLOT, 300);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
     }

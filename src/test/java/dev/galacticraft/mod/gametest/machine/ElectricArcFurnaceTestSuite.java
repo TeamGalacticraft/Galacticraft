@@ -23,7 +23,8 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
-import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.gametest.TestUtils;
+import dev.galacticraft.machinelib.api.gametest.annotation.TestInfo;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -36,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-@TestSuite("electric_arc_furnace")
+@TestInfo(group = "electric_arc_furnace")
 public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity> {
     public ElectricArcFurnaceTestSuite() {
         super(GCBlocks.ELECTRIC_ARC_FURNACE, List.of(
@@ -45,10 +46,9 @@ public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<SingleReci
         ), ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 100);
     }
 
-    @Override
     @GameTestGenerator
     public @NotNull List<TestFunction> registerTests() {
-        List<TestFunction> tests = super.registerTests();
+        List<TestFunction> tests = TestUtils.generateTests(this);
         tests.add(this.createChargeFromEnergyItemTest(ElectricArcFurnaceBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
     }
