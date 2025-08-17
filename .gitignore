@@ -219,4 +219,3 @@ gradle-app.setting
 run/
 remappedSrc/
 src/main/generated/.cache/
-/src/main/generated/
