@@ -112,7 +112,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         if (tank1 != null) {
             tank1.copyFrom(this.body);
             if (this.xRot != 0.0F) {
-                tank1.xRot = this.xRot;
+                tank1.xRot += this.xRot;
             }
             tank1.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
@@ -120,7 +120,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
             matrices.translate(-0.25F, 0.0F, 0.0F);
             tank2.copyFrom(this.body);
             if (this.xRot != 0.0F) {
-                tank1.xRot = this.xRot;
+                tank2.xRot += this.xRot;
             }
             tank2.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
