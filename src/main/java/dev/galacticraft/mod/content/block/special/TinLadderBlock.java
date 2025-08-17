@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import java.util.Arrays;
 
 public class TinLadderBlock extends LadderBlock {
     public TinLadderBlock(BlockBehaviour.Properties properties) {
@@ -49,6 +50,7 @@ public class TinLadderBlock extends LadderBlock {
     @Nullable
     private ItemInteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
         BlockState checkState = level.getBlockState(checkPos);
+
         // Added check to ensure ladders are all facing the same way.
         if (checkState.is(GCBlocks.TIN_LADDER) && blockState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) != blockState.getValue(FACING)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
@@ -93,8 +95,9 @@ public class TinLadderBlock extends LadderBlock {
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 
-    // Need to override this method because Ladder Block is only interested in the block behind the ladder, which is useful functionality
-    // Be we want to pay attention to blocks above and below the ladders as well.
+    /// Need to override this method because Ladder Block is only interested in the block behind the ladder, which is useful
+    /// functionality, however, we want to pay attention to blocks above and below the ladders as well. This is handled
+    /// in the isSupported method.
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         if (!isSupported(state, level, pos, direction.getOpposite(), state.getValue(FACING))) {
@@ -103,20 +106,41 @@ public class TinLadderBlock extends LadderBlock {
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
-    // Only called from the super updateShape class if the supporting block behind a ladder is broken.
+    /// Checks to see if a ladder could survive in the suggested location. Called when a nearby block is broken or
+    /// and sometimes when a new ladder is being placed.
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos) {
-        return isSupported(blockState, level, blockPos, blockState.getValue(FACING), blockState.getValue(FACING));
+        Direction facingDirection = blockState.getValue(FACING);
+
+        // Look at the block behind, above and below and check the appropriate face is sturdy or a ladder
+        for(Direction direction : Arrays.asList(facingDirection.getOpposite(), Direction.UP, Direction.DOWN) ) {
+            BlockPos checkPos = blockPos.relative(direction);
+            BlockState checkState = level.getBlockState(checkPos);
+
+            // If we are looking at the blocks above or below
+            if (direction == Direction.UP || direction == Direction.DOWN) {
+                // If the face is sturdy
+                if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite())) return true;
+                // If it's a tin ladder in facing the same way
+                if (checkState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) == facingDirection) return true;
+            } else { // It's on the same level - not above or below.
+                // If the face is sturdy and it isn't a tin ladder. This prevents the situdation where a tin ladder can be placed
+                // back to back with another tin ladder and they can end up supporting themselves floating in the air.
+                if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite()) && !checkState.is(GCBlocks.TIN_LADDER)) return true;
+            }
+        }
+        return false;
     }
 
-    // This method looks to see if the ladder is supported by a solid block, of if it is attached to a ladder that is supported.
-    // Using can occlude to determine if a block is solid as isSolid is deprecated.
-    // It is recursive, so we have various termination scenarios before any recursion.
+    /// This method looks to see if the ladder is supported by a solid block, of if it is attached to a ladder that is supported.
+    /// Using isFaceSturdy to determine if a block is solid as isSolid is deprecated and canOcclude doesn't give the desired result.
+    /// It is recursive, so we have various termination scenarios before any recursion.
     public boolean isSupported(BlockState blockState, LevelReader level, BlockPos blockPos, Direction direction, Direction facingDirection) {
         // If the current block we are looking at is solid, then the ladder is either supported underneath or above -> true
-        if (blockState.canOcclude()) return true;
+        if (blockState.isFaceSturdy(level, blockPos, Direction.UP)
+                || blockState.isFaceSturdy(level, blockPos, Direction.DOWN)) return true;
 
-        // If this isn't a tin ladder block and we know it isn't solid, then not supported.
+        // If this isn't a tin ladder block, and we know it isn't solid, then not supported.
         // Change this to instanceof LadderBlock if you want wooden (and other ladders) to be considered support.
         if (!blockState.is(GCBlocks.TIN_LADDER)) return false;
 
@@ -125,13 +149,14 @@ public class TinLadderBlock extends LadderBlock {
 
         // Get the block behind the ladder - if it can occlude (is solid) then return true;
         BlockState supportingState = level.getBlockState(blockPos.relative(blockState.getValue(FACING).getOpposite()));
-        if (supportingState.canOcclude()) return true;
+        if (supportingState.isFaceSturdy(level, blockPos, facingDirection)) return true;
 
         // If we are moving in a particular vertical direction, then continue looking in that direction.
-        if (direction.getAxis() == Direction.Axis.Y)
+        if (direction.getAxis() == Direction.Axis.Y) {
             return isSupported(level.getBlockState(blockPos.relative(direction)), level, blockPos.relative(direction), direction, facingDirection);
+        }
 
-        // If was horizontal direction, then need to look up and down to ensure find supported ladders there
+        // If was horizontal direction, then need to look up and down to find supported ladders there.
         return isSupported(level.getBlockState(blockPos.relative(Direction.UP)), level, blockPos.above(), Direction.UP, facingDirection)
                 || isSupported(level.getBlockState(blockPos.relative(Direction.DOWN)), level, blockPos.below(), Direction.DOWN, facingDirection);
     }
