@@ -57,7 +57,9 @@ public class TinLadderBlock extends LadderBlock {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
         if (checkState.canBeReplaced()) {
-            var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING));
+            var newState = this.defaultBlockState()
+                    .setValue(FACING, blockState.getValue(FACING))
+                    .setValue(WATERLOGGED, checkState.is(Blocks.WATER) || checkState.getValue(WATERLOGGED));
             level.setBlockAndUpdate(checkPos, newState);
             level.playSound(null, checkPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (blockState.getSoundType().getVolume() + 1.0F) / 2.0F, blockState.getSoundType().getPitch() * 0.8F);
             level.gameEvent(GameEvent.BLOCK_PLACE, checkPos, GameEvent.Context.of(player, newState));
@@ -139,7 +141,6 @@ public class TinLadderBlock extends LadderBlock {
     /// All ladders are not considered sturdy.
     /// It is recursive, so we have various termination scenarios before any recursion.
     public boolean isSupported(BlockState blockState, LevelReader level, BlockPos blockPos, Direction direction, Direction facingDirection) {
-
         // If the current block we are looking has the appropriate sturdy face, then the ladder is either supported underneath or above -> true
         if ((blockState.isFaceSturdy(level, blockPos, Direction.UP) && (direction == Direction.DOWN))
                 || (blockState.isFaceSturdy(level, blockPos, Direction.DOWN) && (direction == Direction.UP))) return true;
