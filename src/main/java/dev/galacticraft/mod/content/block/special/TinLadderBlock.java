@@ -40,6 +40,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+
 import java.util.Arrays;
 
 public class TinLadderBlock extends LadderBlock {
@@ -114,7 +115,7 @@ public class TinLadderBlock extends LadderBlock {
         Direction facingDirection = blockState.getValue(FACING);
 
         // Look at the block behind, above and below and check the appropriate face is sturdy or a ladder
-        for(Direction direction : Arrays.asList(facingDirection.getOpposite(), Direction.UP, Direction.DOWN) ) {
+        for (Direction direction : Arrays.asList(facingDirection.getOpposite(), Direction.UP, Direction.DOWN)) {
             BlockPos checkPos = blockPos.relative(direction);
             BlockState checkState = level.getBlockState(checkPos);
 
@@ -125,7 +126,7 @@ public class TinLadderBlock extends LadderBlock {
                 // If it's a tin ladder in facing the same way
                 if (checkState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) == facingDirection) return true;
             } else { // It's on the same level - not above or below.
-                // If the face is sturdy and it isn't a tin ladder. This prevents the situdation where a tin ladder can be placed
+                // If the face is sturdy and it isn't a tin ladder. This prevents the situation where a tin ladder can be placed
                 // back to back with another tin ladder and they can end up supporting themselves floating in the air.
                 if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite()) && !checkState.is(GCBlocks.TIN_LADDER)) return true;
             }
@@ -133,8 +134,9 @@ public class TinLadderBlock extends LadderBlock {
         return false;
     }
 
-    /// This method looks to see if the ladder is supported by a solid block, of if it is attached to a ladder that is supported.
+    /// This method looks to see if the ladder is supported by a solid block, or if it's attached to a ladder that is supported.
     /// Using isFaceSturdy to determine if a block is solid as isSolid is deprecated and canOcclude doesn't give the desired result.
+    /// All ladders are not considered sturdy.
     /// It is recursive, so we have various termination scenarios before any recursion.
     public boolean isSupported(BlockState blockState, LevelReader level, BlockPos blockPos, Direction direction, Direction facingDirection) {
 
@@ -146,12 +148,12 @@ public class TinLadderBlock extends LadderBlock {
         // Change this to instanceof LadderBlock if you want wooden (and other ladders) to be considered support.
         if (!blockState.is(GCBlocks.TIN_LADDER)) return false;
 
-        // Check to ensure that ladder is facing in the same direction.
+        // Check to ensure that the ladder is facing in the same direction.
         if (blockState.getValue(FACING) != facingDirection) return false;
 
-        // Get the block behind the ladder - if the appropriate face is sturdy and its not a tin ladder then return true;
+        // Get the block behind the ladder - if the appropriate face is sturdy and it's not a ladder then return true;
         BlockState supportingState = level.getBlockState(blockPos.relative(blockState.getValue(FACING).getOpposite()));
-        if (supportingState.isFaceSturdy(level, blockPos, facingDirection) && !supportingState.is(GCBlocks.TIN_LADDER)) return true;
+        if (supportingState.isFaceSturdy(level, blockPos, facingDirection) && !(supportingState.getBlock() instanceof LadderBlock)) return true;
 
         // If we are moving in a particular vertical direction, then continue looking in that direction.
         if (direction.getAxis() == Direction.Axis.Y) {
