@@ -246,7 +246,8 @@
     ],
     "client": [
       "dev.galacticraft.impl.internal.client.fabric.GalacticraftAPIClient",
-      "dev.galacticraft.mod.GalacticraftClient"
+      "dev.galacticraft.mod.GalacticraftClient",
+      "dev.galacticraft.mod.api.documentation.client.DocsClient"
     ],
     "fabric-datagen": [
       "dev.galacticraft.mod.data.GCDataGenerator"
@@ -269,7 +270,8 @@
   },
   "mixins": [
     "galacticraft.mixins.json",
-    "galacticraft-api.mixins.json"
+    "galacticraft-api.mixins.json",
+    "galacticraft-docs.mixins.json"
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {

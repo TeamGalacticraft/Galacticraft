@@ -1,0 +1,9 @@
+{
+  "parent": "galacticraft:machines_category",
+  "bind": [
+    "galacticraft:oxygen_compressor"
+  ],
+  "id": "galacticraft:oxygen_compressor",
+  "schema": 2,
+  "titleKey": "doc.gc.oxygen_compressor"
+}

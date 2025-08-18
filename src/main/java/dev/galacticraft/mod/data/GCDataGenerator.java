@@ -27,11 +27,13 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.documentation.datagen.DocsDatagenHooks;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCJukeboxSongs;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.data.advancements.GCAdvancementProvider;
 import dev.galacticraft.mod.data.content.BootstrapDataProvider;
 import dev.galacticraft.mod.data.model.GCModelProvider;
 import dev.galacticraft.mod.data.recipes.*;
@@ -130,6 +132,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
 
         // models
         pack.addProvider(GCModelProvider::new);
+
+        DocsDatagenHooks.register(pack);
     }
 
     @Override

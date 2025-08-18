@@ -68,7 +68,7 @@ public abstract class TranslationProvider implements DataProvider {
 
     protected abstract void generateTranslations(@NotNull HolderLookup.Provider registries);
 
-    protected void add(String key, String translation) {
+    public void add(String key, String translation) {
         this.translations.put(key, translation);
     }
 
