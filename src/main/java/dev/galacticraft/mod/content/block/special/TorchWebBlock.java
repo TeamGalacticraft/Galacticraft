@@ -1,20 +1,20 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.LadderBlock;
-import net.minecraft.world.level.block.VineBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
-import org.jetbrains.annotations.Nullable;
-
-import static net.minecraft.world.level.block.state.BlockBehaviour.simpleCodec;
 
 public class TorchWebBlock extends Block {
 
@@ -47,40 +47,32 @@ public class TorchWebBlock extends Block {
         return defaultBlockState().setValue(BOTTOM, true);
     }
 
+    //  Manages the updates to the torch web to determine if this block is the bottom and therefore shows the torch.
     @Override
-    public void onStateReplaced(WorldAccess world, BlockPos pos, BlockState state) {
-        BlockState aboveState = world.getBlockState(pos.up()); // get blockstate of the block underneath
-        if(aboveState.isOf(WWBlocks.HANGING_VINES)) { // if it's a hanging vines block
-            world.setBlockState(pos.up(), aboveState.with(END, true), Block.NOTIFY_ALL);
+    protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
+        // If above changed and it isn't a torch web block (and in theory not a solid block) then it breaks.
+        if (direction == Direction.UP && !neighborState.is(GCBlocks.TORCH_WEB)) {
+            return Blocks.AIR.defaultBlockState();
+        // If below changed and it isn't a torch web then this is the bottom.
+        } else if (direction == Direction.DOWN && !neighborState.is(GCBlocks.TORCH_WEB)){
+            return defaultBlockState().setValue(BOTTOM, true);
         }
+        // No change
+        return state;
     }
 
     @Override
-    protected BlockState getStateForNeighborUpdate(
-            BlockState state,
-            WorldView world,
-            ScheduledTickView tickView,
-            BlockPos pos,
-            Direction direction,
-            BlockPos neighborPos,
-            BlockState neighborState,
-            Random random
-    ) {
-        if (!state.canPlaceAt(world, pos)) {
-            tickView.scheduleBlockTick(pos, this, 1);
-        }
+    protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
+        return this.canAttachTo(level, pos.above(), Direction.DOWN);
+    }
 
-        return super.getStateForNeighborUpdate(state, world, tickView, pos, direction, neighborPos, neighborState, random);
+    private boolean canAttachTo(BlockGetter world, BlockPos pos, Direction side) {
+        BlockState blockState = world.getBlockState(pos);
+        return blockState.isFaceSturdy(world, pos, side) || blockState.is(GCBlocks.TORCH_WEB);
     }
 
     @Override
-    protected boolean canPlaceAt(BlockState state, WorldView world, BlockPos pos) {
-        BlockState aboveState = world.getBlockState(pos.up());
-        return aboveState.isFullCube(world,pos.up()) || aboveState.isOf(WWBlocks.HANGING_VINES);
-    }
-
-    @Override
-    protected void appendProperties(StateManager.Builder<Block, BlockState> builder) {
-        builder.add(END);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
+        compositeStateBuilder.add(BOTTOM);
     }
 }

@@ -40,6 +40,7 @@ import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
+import net.minecraft.client.resources.model.BlockStateModelLoader;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -90,6 +91,8 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
+        createTorchWeb(generator, GCBlocks.TORCH_WEB, ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB),
+                ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_end"));
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
@@ -405,6 +408,13 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MachineBlock.ACTIVE)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive)
                 )));
+    }
+
+    private static void createTorchWeb(BlockModelGenerators generator, Block torch, ResourceLocation normalModel, ResourceLocation endModel) {
+        MultiPartGenerator blockState = MultiPartGenerator.multiPart(torch)
+                .with(Condition.condition().term(BlockStateProperties.BOTTOM, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
+                .with(Condition.condition().term(BlockStateProperties.BOTTOM, true), Variant.variant().with(VariantProperties.MODEL, endModel));
+        generator.blockStateOutput.accept(blockState);
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {

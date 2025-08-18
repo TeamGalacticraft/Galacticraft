@@ -220,6 +220,7 @@ public interface Constant {
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
+        String TORCH_WEB = "torch_web";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
