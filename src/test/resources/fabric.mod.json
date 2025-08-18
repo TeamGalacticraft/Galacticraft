@@ -4,6 +4,7 @@
   "id": "galacticraft-test",
   "version": "0.1.0",
   "name": "Galacticraft Test Mod",
+  "icon": "assets/galacticraft-test/icon.png",
   "description": "The test mod for Galacticraft 5.",
   "license": "MIT",
 
