@@ -358,7 +358,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        this.createAirLockController(generator);
+        generator.createTrivialCube(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+        this.createAirLockControllers(generator);
 
         this.createParachests(generator);
     }
@@ -470,15 +471,25 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
     }
 
-    private void createAirLockController(BlockModelGenerators generator) {
-        var block = GCBlocks.AIR_LOCK_CONTROLLER;
-        ResourceLocation controller = TextureMapping.getBlockTexture(block);
-        ResourceLocation frame = TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME);
-        MachineModelGenerator.createTrivialMachine(generator, block, TextureProvider.builder(Constant.MOD_ID)
-                .sides(controller)
-                .top(frame)
-                .bottom(frame)
-                .particle(controller)
+    private void createAirLockControllers(BlockModelGenerators generator) {
+        var basic = GCBlocks.AIR_LOCK_CONTROLLER;
+        var reinforced = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
+        ResourceLocation basicController = TextureMapping.getBlockTexture(basic);
+        ResourceLocation reinforcedController = TextureMapping.getBlockTexture(reinforced);
+        ResourceLocation basicFrame = TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME);
+        ResourceLocation reinforcedFrame = TextureMapping.getBlockTexture(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+        MachineModelGenerator.createTrivialMachine(generator, basic, TextureProvider.builder(Constant.MOD_ID)
+                .sides(basicController)
+                .top(basicFrame)
+                .bottom(basicFrame)
+                .particle(basicController)
+                .build()
+        );
+        MachineModelGenerator.createTrivialMachine(generator, reinforced, TextureProvider.builder(Constant.MOD_ID)
+                .sides(reinforcedController)
+                .top(reinforcedFrame)
+                .bottom(reinforcedFrame)
+                .particle(reinforcedController)
                 .build()
         );
     }

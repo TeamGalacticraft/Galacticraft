@@ -1,0 +1,24 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:oxygen_concentrator"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    }
+  },
+  "pattern": [
+    "OOO",
+    "SCS",
+    "OOO"
+  ],
+  "result": {
+    "count": 4,
+    "id": "galacticraft:reinforced_air_lock_frame"
+  }
+}

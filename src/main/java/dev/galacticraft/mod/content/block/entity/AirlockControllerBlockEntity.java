@@ -45,6 +45,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
@@ -83,8 +84,8 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     private AirlockState state = AirlockState.NONE;
     private int ticks = 0;
 
-    public AirlockControllerBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.AIRLOCK_CONTROLLER, pos, state, SPEC);
+    public AirlockControllerBlockEntity(BlockEntityType<?> type, BlockPos pos, BlockState state) {
+        super((BlockEntityType<? extends MachineBlockEntity>) type, pos, state, SPEC);
     }
 
     public byte getProximityOpen() { return this.proximityOpen; }

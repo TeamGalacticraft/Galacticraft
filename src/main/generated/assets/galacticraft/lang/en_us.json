@@ -344,6 +344,8 @@
   "block.galacticraft.red_glass_fluid_pipe": "Red Stained Glass Fluid Pipe",
   "block.galacticraft.refinery": "Refinery",
   "block.galacticraft.refinery.description": "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.",
+  "block.galacticraft.reinforced_air_lock_controller": "Reinforced Airlock Controller",
+  "block.galacticraft.reinforced_air_lock_frame": "Reinforced Airlock Frame",
   "block.galacticraft.rich_olivine_basalt": "Rich Olivine Basalt",
   "block.galacticraft.rocket_launch_pad": "Rocket Launch Pad",
   "block.galacticraft.rocket_workbench": "Rocket Workbench",

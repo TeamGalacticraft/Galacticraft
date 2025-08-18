@@ -374,8 +374,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module");
         this.block(GCBlocks.FUEL_LOADER, "Fuel Loader");
 
-        this.block(GCBlocks.AIR_LOCK_CONTROLLER, "Airlock Controller");
         this.block(GCBlocks.AIR_LOCK_FRAME, "Airlock Frame");
+        this.block(GCBlocks.AIR_LOCK_CONTROLLER, "Airlock Controller");
+        this.block(GCBlocks.REINFORCED_AIR_LOCK_FRAME, "Reinforced Airlock Frame");
+        this.block(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER, "Reinforced Airlock Controller");
         this.block(GCBlocks.AIR_LOCK_SEAL, "Airlock Seal");
     }
 

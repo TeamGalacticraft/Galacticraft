@@ -326,7 +326,9 @@ public interface Constant {
         String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
         String ROCKET_WORKBENCH = "rocket_workbench";
         String AIR_LOCK_FRAME = "air_lock_frame";
+        String REINFORCED_AIR_LOCK_FRAME = "reinforced_air_lock_frame";
         String AIR_LOCK_CONTROLLER = "air_lock_controller";
+        String REINFORCED_AIR_LOCK_CONTROLLER = "reinforced_air_lock_controller";
         String AIR_LOCK_SEAL = "air_lock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";

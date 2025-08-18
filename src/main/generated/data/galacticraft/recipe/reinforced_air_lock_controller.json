@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "M": {
+      "item": "galacticraft:compressed_meteoric_iron"
+    },
+    "O": {
+      "item": "minecraft:obsidian"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "W": {
+      "item": "galacticraft:basic_wafer"
+    }
+  },
+  "pattern": [
+    "OSO",
+    "MWM",
+    "OSO"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:reinforced_air_lock_controller"
+  }
+}
