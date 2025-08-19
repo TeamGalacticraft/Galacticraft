@@ -91,8 +91,8 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
-        createTorchWeb(generator, GCBlocks.TORCH_WEB, ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB),
-                ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_end"));
+        createTorchWeb(generator, GCBlocks.TORCH_WEB, ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_web"),
+                ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB));
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
