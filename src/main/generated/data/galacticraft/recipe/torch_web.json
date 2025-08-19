@@ -1,0 +1,20 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "galacticraft:glowstone_torch"
+    },
+    "W": {
+      "item": "minecraft:cobweb"
+    }
+  },
+  "pattern": [
+    "W",
+    "T"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:torch_web"
+  }
+}
