@@ -51,8 +51,8 @@ public class TorchWebBlock extends Block {
         this.registerDefaultState(this.stateDefinition.any().setValue(BOTTOM, false));
     }
 
-    protected static final VoxelShape WEB_VOXEL = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
-    protected static final VoxelShape TORCH_VOXEL = Block.box(4.0, 3.0, 4.0, 12.0, 16.0, 12.0);
+    protected static final VoxelShape WEB_VOXEL = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
+    protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 3.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
