@@ -49,7 +49,7 @@ public abstract class ChunkHolderMixin {
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
     private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
-        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
+        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$getPendingOxygenChanges();
         if (data != null) {
             this.broadcast(this.playerProvider.getPlayers(chunk.getPos(), false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload(chunk.getPos().toLong(), data)));
         }

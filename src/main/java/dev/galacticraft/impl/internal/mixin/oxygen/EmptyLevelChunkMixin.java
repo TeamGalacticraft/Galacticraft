@@ -28,7 +28,6 @@ import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
@@ -37,11 +36,7 @@ import java.util.Iterator;
 @Mixin(EmptyLevelChunk.class)
 public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
     @Override
-    public void galacticraft$readOxygenUpdate(OxygenUpdatePayload.@NotNull OxygenData[] data) {
-    }
-
-    @Override
-    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
         return null;
     }
 
@@ -49,10 +44,8 @@ public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOx
     public void galacticraft$markSectionDirty(int y) {
     }
 
-
     @Override
     public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
         return ObjectIterators.emptyIterator();
     }
-
 }

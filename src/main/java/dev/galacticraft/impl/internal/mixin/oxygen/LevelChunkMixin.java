@@ -61,15 +61,17 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
     private void notifyAPsOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
-        Iterator<BlockPos> iterator = this.galacticraft$getHandlers(pos.getX(), pos.getY(), pos.getZ());
+        if (this.level.isClientSide) return;
+        Iterator<BlockPos> iterator = this.galacticraft$getHandlers(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
         while (iterator.hasNext()) {
             BlockPos atPos = iterator.next();
             BlockEntity blockEntity = this.level.getBlockEntity(atPos);
             if (blockEntity instanceof AtmosphereProvider provider) {
-                provider.notifyStateChange(pos);
+                provider.notifyStateChange(pos, blockState);
             } else {
-                for (LevelChunkSection section : this.sections) {
-                    ((ChunkSectionOxygenAccessor) section).galacticraft$deallocate(atPos); //todo dirty
+                for (int i = 0; i < this.sections.length; i++) {
+                    ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$deallocate(pos);
+                    this.galacticraft$markSectionDirty(i);
                 }
             }
         }

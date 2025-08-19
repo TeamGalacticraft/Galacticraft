@@ -85,7 +85,6 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
-        level.galacticraft$getSealerManager().tick();
     }
 
     public static void onServerTick(MinecraftServer server) {

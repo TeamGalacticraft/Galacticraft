@@ -23,11 +23,8 @@
 package dev.galacticraft.impl.internal.accessor;
 
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public interface ChunkOxygenSyncer {
-    OxygenUpdatePayload.OxygenData @Nullable [] galacticraft$syncOxygenPacketsToClient();
-
-    void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] data);
+    OxygenUpdatePayload.OxygenData @Nullable [] galacticraft$getPendingOxygenChanges();
 }

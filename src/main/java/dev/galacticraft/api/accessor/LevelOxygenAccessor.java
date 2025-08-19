@@ -44,6 +44,19 @@ public interface LevelOxygenAccessor {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
+    // must allocate on section first!!!
+    default void addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default void removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
     default Iterator<BlockPos> getAtmosphericProviderLocations(BlockPos pos) {
         return this.getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
     }
@@ -54,5 +67,17 @@ public interface LevelOxygenAccessor {
 
     default boolean isBreathable(BlockPos pos) {
         return this.isBreathable(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    default void addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        this.addAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
+    }
+
+    default boolean hasAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        return this.hasAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
+    }
+
+    default void removeAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        this.removeAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
     }
 }

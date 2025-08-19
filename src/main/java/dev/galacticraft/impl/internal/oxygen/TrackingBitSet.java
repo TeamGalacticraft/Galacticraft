@@ -67,16 +67,14 @@ public final class TrackingBitSet {
 
     public boolean get(int index) {
         int block = index >> BLOCK_SHIFT;
-        if (block > this.bits.length) {
-            return false;
-        }
-        return (this.bits[block] & (1L << this.bits[block])) != 0;
+        if (block >= this.bits.length) return false;
+        return (this.bits[block] & (1L << index)) != 0;
     }
 
     public void set(int index, boolean value) {
         int block = index >> BLOCK_SHIFT;
 
-        if (block > this.bits.length) {
+        if (block >= this.bits.length) {
             if (!value) return; // out of range, so it's already not set
             long[] newBits = new long[block + 1];
             System.arraycopy(this.bits, 0, newBits, 0, this.bits.length);
@@ -102,7 +100,7 @@ public final class TrackingBitSet {
     public void set(int index) {
         int block = index >> BLOCK_SHIFT;
 
-        if (block > this.bits.length) {
+        if (block >= this.bits.length) {
             long[] newBits = new long[block + 1];
             System.arraycopy(this.bits, 0, newBits, 0, this.bits.length);
             this.bits = newBits;

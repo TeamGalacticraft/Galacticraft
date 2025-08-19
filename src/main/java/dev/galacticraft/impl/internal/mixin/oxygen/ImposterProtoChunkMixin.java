@@ -28,7 +28,6 @@ import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
-import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -57,14 +56,7 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, Ch
     }
 
     @Override
-    public OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
-        return ((ChunkOxygenSyncer) this.wrapped).galacticraft$syncOxygenPacketsToClient();
-    }
-
-    @Override
-    public void galacticraft$readOxygenUpdate(OxygenUpdatePayload.@NotNull OxygenData[] data) {
-        if (this.allowWrites) {
-            ((ChunkOxygenSyncer) this.wrapped).galacticraft$readOxygenUpdate(data);
-        }
+    public OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        return ((ChunkOxygenSyncer) this.wrapped).galacticraft$getPendingOxygenChanges();
     }
 }

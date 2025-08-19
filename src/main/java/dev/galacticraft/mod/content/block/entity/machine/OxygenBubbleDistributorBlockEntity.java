@@ -23,7 +23,10 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -47,6 +50,7 @@ import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.SectionPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
@@ -56,13 +60,17 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
+public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity implements AtmosphereProvider {
+    public static final int MAX_SIZE = 32;
+
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 1; // REVIEW: should this be 0 or 1?
     public static final int OXYGEN_TANK = 0;
@@ -96,26 +104,17 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     private boolean bubbleVisible = true;
     private double size = 0;
-    private byte targetSize = 1;
+    private int targetSize = 0;
     private int players = 0;
     private double prevSize;
-    private boolean oxygenUnloaded = true;
-    private boolean oxygenWorld = true;
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
     }
 
     @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        this.oxygenWorld = level.isBreathable();
-    }
-
-    @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(level, pos, state, profiler);
-        this.oxygenUnloaded = false;
         profiler.push("extract_resources");
         this.chargeFromSlot(CHARGE_SLOT);
         this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
@@ -130,7 +129,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
                 profiler.push("bubble");
                 if (this.size > this.targetSize) {
-                    this.setSize(Math.max(this.size - 0.1F, this.targetSize));
+                    this.setSize(Math.max(this.size - 0.1F, this.targetSize)); //todo: change rate based on SA or volume
                 }
 
                 profiler.pop();
@@ -138,17 +137,16 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
                 this.trySyncSize(level, pos, profiler);
 
                 profiler.push("bubbler_distributor_transfer");
-                long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1);
+                long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1); //todo: balance values
                 FluidResourceSlot slot = this.fluidStorage().slot(OXYGEN_TANK);
 
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
                     if (this.size < this.targetSize) {
-                        this.setSize(this.size + 0.05D);
+                        this.setSize(this.size + 0.05D); //todo: change rate based on SA or volume
                     }
                     profiler.pop();
-                    this.distributeOxygenToArea(this.size, true);
                     return GCMachineStatuses.DISTRIBUTING;
                 } else {
                     status = GCMachineStatuses.NOT_ENOUGH_OXYGEN;
@@ -163,9 +161,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         profiler.push("size");
 
         if (this.size > 0) {
-            this.setSize(this.size - 0.2D);
+            this.setSize(0.0);
             this.trySyncSize(level, pos, profiler);
-            this.distributeOxygenToArea(this.size, true); // technically this oxygen is being created from thin air
         }
 
         if (this.size < 0) {
@@ -177,22 +174,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     @Override
     protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.size > 0) {
-            this.distributeOxygenToArea(this.size, this.oxygenWorld);
-            this.setSize(0);
-        }
+        if (this.size > 0) this.setSize(0);
         this.trySyncSize(level, pos, profiler);
 
         super.tickDisabled(level, pos, state, profiler);
-    }
-
-    @Override
-    public void setRemoved() {
-        if (!this.oxygenUnloaded) {
-            this.oxygenUnloaded = true;
-            this.distributeOxygenToArea(this.size, this.oxygenWorld);
-        }
-        super.setRemoved();
     }
 
     private void trySyncSize(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
@@ -209,42 +194,54 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public int getDistanceFromDistributor(int par1, int par3, int par5) {
-        final int d3 = this.getBlockPos().getX() - par1;
-        final int d4 = this.getBlockPos().getY() - par3;
-        final int d5 = this.getBlockPos().getZ() - par5;
-        return d3 * d3 + d4 * d4 + d5 * d5;
-    }
-
-    public void distributeOxygenToArea(double size, boolean oxygenated) {
-        int radius = Mth.floor(Math.max(size, this.prevSize)) + 4;
-        int bubbleR2 = (int) (size * size);
-        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
-        for (int x = this.getBlockPos().getX() - radius; x <= this.getBlockPos().getX() + radius; x++) {
-            for (int y = this.getBlockPos().getY() - radius; y <= this.getBlockPos().getY() + radius; y++) {
-                for (int z = this.getBlockPos().getZ() - radius; z <= this.getBlockPos().getZ() + radius; z++) {
-                    if (this.getDistanceFromDistributor(x, y, z) <= bubbleR2) {
-                        this.level.setBreathable(pos.set(x, y, z), oxygenated);
-                    } else {
-                        this.level.setBreathable(pos.set(x, y, z), this.oxygenWorld);
-                    }
-                }
-            }
+    public void distributeOxygenToArea(double targetSize, double prevSize) {
+        if (targetSize <= prevSize) {
+            this.handleAllocation(targetSize, false);
+        }
+        this.handleAllocation(targetSize, true);
+        assert this.level != null;
+        for (BlockPos pos : BlockPos.betweenClosed(this.worldPosition.getX() - Mth.ceil(targetSize), this.worldPosition.getY() - Mth.ceil(targetSize), this.worldPosition.getZ() - Mth.ceil(targetSize),
+                this.worldPosition.getX() + Mth.ceil(targetSize), this.worldPosition.getY() + Mth.ceil(targetSize), this.worldPosition.getZ() + Mth.ceil(targetSize))) {
+            this.level.addAtmosphericProvider(pos, this.worldPosition);
         }
     }
 
-    public byte getTargetSize() {
+    private void handleAllocation(double size, boolean allocate) {
+        int minX = SectionPos.blockToSectionCoord(this.worldPosition.getX() - Mth.ceil(size)) - 1;
+        int minZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() - Mth.ceil(size)) - 1;
+        int maxX = SectionPos.blockToSectionCoord(this.worldPosition.getX() + Mth.ceil(size)) + 1;
+        int maxZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() + Mth.ceil(size)) + 1;
+        int minSection = Math.max(0, this.level.getSectionIndex(this.worldPosition.getY() - Mth.ceil(size)) - 1);
+        int maxSection = Math.min(this.level.getMaxSection(), this.level.getSectionIndex(this.worldPosition.getY() + Mth.ceil(size)) + 1);
+
+        ChunkPos.rangeClosed(new ChunkPos(minX, minZ), new ChunkPos(maxX, maxZ)).forEach(chunkPos -> {
+            LevelChunk chunk = this.level.getChunk(chunkPos.x, chunkPos.z);
+            LevelChunkSection[] sections = chunk.getSections();
+            for (int i = minSection; i < maxSection; i++) {
+                ((ChunkOxygenAccessor)chunk).galacticraft$markSectionDirty(i);
+                if (allocate) {
+                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$ensureSpaceFor(this.worldPosition);
+                } else {
+                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$deallocate(this.worldPosition);
+                }
+            }
+        });
+    }
+
+    public int getTargetSize() {
         return this.targetSize;
     }
 
-    public void setTargetSize(byte targetSize) {
+    public void setTargetSize(int targetSize) {
+        this.distributeOxygenToArea(targetSize, this.targetSize);
         this.targetSize = targetSize;
+        this.setChanged();
     }
 
     @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
-        tag.putByte(Constant.Nbt.MAX_SIZE, this.targetSize);
+        tag.putInt(Constant.Nbt.MAX_SIZE, this.targetSize);
         tag.putDouble(Constant.Nbt.SIZE, this.size);
         tag.putBoolean(Constant.Nbt.VISIBLE, this.bubbleVisible);
     }
@@ -254,8 +251,8 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.loadAdditional(tag, lookup);
         this.size = tag.getDouble(Constant.Nbt.SIZE);
         if (this.size < 0) this.size = 0;
-        this.targetSize = tag.getByte(Constant.Nbt.MAX_SIZE);
-        if (this.targetSize < 1) this.targetSize = 1;
+        this.targetSize = tag.getInt(Constant.Nbt.MAX_SIZE);
+        if (this.targetSize < 0 || this.targetSize > MAX_SIZE) this.targetSize = 0;
         this.bubbleVisible = tag.getBoolean(Constant.Nbt.VISIBLE);
     }
 
@@ -265,6 +262,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     public void setSize(double size) {
         this.size = size;
+        this.setChanged();
     }
 
     public boolean isBubbleVisible() {
@@ -292,5 +290,24 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         this.saveAdditional(tag, registryLookup);
         this.populateUpdateTag(tag);
         return tag;
+    }
+
+    @Override
+    public boolean canBreathe(double x, double y, double z) { // -0.5 as bubble is on top of block
+        return this.worldPosition.distToCenterSqr(x, y - 0.5, z) <= this.size * this.size;
+    }
+
+    @Override
+    public boolean canBreathe(BlockPos pos) {
+        return this.worldPosition.distToCenterSqr(pos.getX() + 0.5, pos.getY() + 0.5 - 0.5, pos.getZ() + 0.5) <= this.size * this.size;
+    }
+
+    @Override
+    public void notifyStateChange(BlockPos pos, BlockState newState) {
+
+    }
+
+    public void onBroken() {
+        this.distributeOxygenToArea(0.0, this.targetSize);
     }
 }

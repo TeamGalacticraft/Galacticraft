@@ -30,14 +30,12 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
-import java.util.BitSet;
 import java.util.Iterator;
 
 @Mixin(ChunkAccess.class)
@@ -58,7 +56,7 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
     }
 
     @Override
-    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
         if (this.dirtySections != 0b0) {
             int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
@@ -72,8 +70,7 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
             int idx = 0;
             for (byte i = 0; i < this.sections.length; i++) {
                 if ((this.dirtySections & (0b1 << i)) != 0) {
-                    BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
-                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
+                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$updatePayload());
                 }
             }
             this.dirtySections = 0;
@@ -82,10 +79,4 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
         return null;
     }
 
-    @Override
-    public void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] buf) {
-        for (OxygenUpdatePayload.@NotNull OxygenData oxygenData : buf) {
-            ((ChunkSectionOxygenAccessor) this.sections[oxygenData.section()]).galacticraft$setBits(oxygenData.data());
-        }
-    }
 }

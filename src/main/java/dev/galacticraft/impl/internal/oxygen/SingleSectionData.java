@@ -90,7 +90,7 @@ public class SingleSectionData implements OxygenSectionData {
 
     @Override
     public int serializedSize() {
-        return this.pos == null ? VarInt.getByteSize(0) : (VarInt.getByteSize(1) + this.data.serializedSize());
+        return this.pos == null ? VarInt.getByteSize(0) : (VarInt.getByteSize(1) + Long.BYTES + this.data.serializedSize());
     }
 
     @Override

@@ -27,6 +27,7 @@ import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
@@ -92,5 +93,25 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     @Override
     public boolean isBreathable() {
         return this.breathable;
+    }
+
+    @Override
+    public void addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
+        ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$add(x & 15, y & 15, z & 15, providerPos);
+    }
+
+    @Override
+    public boolean hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        return ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$has(x & 15, y & 15, z & 15, providerPos);
+    }
+
+    @Override
+    public void removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
+        ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$remove(x & 15, y & 15, z & 15, providerPos);
     }
 }

@@ -33,7 +33,6 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
@@ -43,34 +42,37 @@ import java.text.DecimalFormat;
 
 public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
     private static final DecimalFormat FORMAT = new DecimalFormat();
-    private final EditBox textField;
+    private EditBox textField;
 
     public OxygenBubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
-        this.textField = new EditBox(Minecraft.getInstance().font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
-        this.textField.setResponder((s -> {
-            try {
-                if (Byte.parseByte(s) < 1) {
-                    textField.setValue(String.valueOf(this.menu.targetSize));
-                }
-            } catch (NumberFormatException ignore) {
-                textField.setValue(String.valueOf(this.menu.targetSize));
-            }
-        }));
-
-        this.textField.setFilter((s -> {
-            try {
-                return Byte.parseByte(s) >= 1;
-            } catch (NumberFormatException ignore) {
-                return false;
-            }
-        }));
     }
 
     @Override
     protected void init() {
         super.init();
         this.titleLabelX += 20;
+
+        this.textField = new EditBox(this.font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
+//        this.textField.setResponder((s -> {
+//            int value = NumberUtils.toInt(s, -1);
+//            if (value < 0 || value > OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+//                this.textField.setValue(String.valueOf(this.menu.targetSize));
+//            }
+//        }));
+//
+//        this.textField.setFilter((s -> {
+//            int value = NumberUtils.toInt(s, -1);
+//            return value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE;
+//        }));
+        this.textField.setEditable(false);
+        this.addRenderableWidget(this.textField);
+    }
+
+    @Override
+    protected void containerTick() {
+        super.containerTick();
+        this.textField.setValue(String.valueOf(this.menu.targetSize));
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -109,15 +111,9 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     @Override
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
-        textField.setValue(String.valueOf(this.menu.targetSize));
 
         MachineStatus status = this.menu.state.getStatus();
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 60, this.topPos + 30, ChatFormatting.DARK_GRAY.getColor(), false);
-
-        this.textField.render(graphics, mouseX, mouseY, delta);
-
-        this.textField.setX(this.leftPos + 132);
-        this.textField.setY(this.topPos + 59);
 
         if (this.menu.state.isActive()) {
             graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_CURRENT_SIZE, FORMAT.format(this.menu.size)).setStyle(Constant.Text.DARK_GRAY_STYLE), this.leftPos + 60, this.topPos + 42, ChatFormatting.DARK_GRAY.getColor(), false);
@@ -126,17 +122,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button) | checkClick(mouseX, mouseY, button) | textField.mouseClicked(mouseX, mouseY, button);
-    }
-
-    @Override
-    public boolean keyPressed(int keyCode, int scanCode, int modifiers) {
-        return super.keyPressed(keyCode, scanCode, modifiers) | textField.keyPressed(keyCode, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean keyReleased(int keyCode, int scanCode, int modifiers) {
-        return super.keyReleased(keyCode, scanCode, modifiers) | textField.keyReleased(keyCode, scanCode, modifiers);
+        return super.mouseClicked(mouseX, mouseY, button) | checkClick(mouseX, mouseY, button);
     }
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
@@ -151,7 +137,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize != Byte.MAX_VALUE) {
                     this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
-                    textField.setValue(String.valueOf(this.menu.targetSize));
+                    this.textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
                     return true;
@@ -161,7 +147,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize > 1) {
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
-                    textField.setValue(String.valueOf(this.menu.targetSize));
+                    this.textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
                     return true;

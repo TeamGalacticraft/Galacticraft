@@ -34,11 +34,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class BubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubbleDistributorBlockEntity> {
+public class OxygenBubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubbleDistributorBlockEntity> {
     public static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
     public final GCModel bubbleModel;
 
-    public BubbleDistributorRenderer(BlockEntityRendererProvider.Context context) {
+    public OxygenBubbleDistributorRenderer(BlockEntityRendererProvider.Context context) {
         this.bubbleModel = GCModelLoader.INSTANCE.getModel(MODEL);
 
         if (bubbleModel == null) {

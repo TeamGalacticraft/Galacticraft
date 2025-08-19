@@ -20,37 +20,42 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.screen;
+package dev.galacticraft.mod.content.block.machine;
 
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.MenuData;
+import com.mojang.serialization.MapCodec;
+import dev.galacticraft.machinelib.api.block.MachineBlock;
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
-public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
-    public boolean bubbleVisible;
-    public int targetSize;
-    public double size;
+public class OxygenBubbleDistributorBlock extends MachineBlock {
+    private static final MapCodec<OxygenBubbleDistributorBlock> CODEC = simpleCodec(OxygenBubbleDistributorBlock::new);
 
-    public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
-        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, player, machine);
-        this.bubbleVisible = machine.isBubbleVisible();
-        this.size = machine.getSize();
-        this.targetSize = machine.getTargetSize();
-    }
-
-    public OxygenBubbleDistributorMenu(int syncId, Inventory inv, BlockPos pos) {
-        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, pos, 8, 84);
+    public OxygenBubbleDistributorBlock(Properties settings) {
+        super(settings);
     }
 
     @Override
-    public void registerData(@NotNull MenuData data) {
-        super.registerData(data);
-        data.registerInt(this.be::getTargetSize, b -> this.targetSize = b);
-        data.registerDouble(this.be::getSize, d -> this.size = d);
-        data.registerBoolean(this.be::isBubbleVisible, b -> this.bubbleVisible = b);
+    protected @NotNull MapCodec<? extends BaseEntityBlock> codec() {
+        return CODEC;
+    }
+
+    @Override
+    public @NotNull MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new OxygenBubbleDistributorBlockEntity(pos, state);
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
+        super.onRemove(state, level, pos, newState, moved);
+        if (newState.getBlock() != this) {
+            if (level.getBlockEntity(pos) instanceof OxygenBubbleDistributorBlockEntity be) {
+                be.onBroken();
+            }
+        }
     }
 }

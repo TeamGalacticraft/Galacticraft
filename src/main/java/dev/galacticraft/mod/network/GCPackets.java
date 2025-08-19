@@ -33,6 +33,7 @@ public class GCPackets {
         PayloadTypeRegistry.playS2C().register(FootprintPacket.TYPE, FootprintPacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(FootprintRemovedPacket.TYPE, FootprintRemovedPacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(OpenCelestialScreenPayload.TYPE, OpenCelestialScreenPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(OxygenSealerUpdatePayload.TYPE, OxygenSealerUpdatePayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ResetPerspectivePacket.TYPE, ResetPerspectivePacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(CapeAssignmentsPacket.TYPE, CapeAssignmentsPacket.STREAM_CODEC);
 

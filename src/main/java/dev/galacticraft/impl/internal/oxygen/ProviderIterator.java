@@ -23,6 +23,7 @@
 package dev.galacticraft.impl.internal.oxygen;
 
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -62,8 +63,10 @@ public class ProviderIterator implements Iterator<AtmosphereProvider> {
             if (this.chunk.getLevel().getBlockEntity(pos) instanceof AtmosphereProvider provider) {
                 this.next = provider;
             } else {
-                for (LevelChunkSection section : this.chunk.getSections()) {
-                    ((ChunkSectionOxygenAccessor) section).galacticraft$deallocate(pos); //todo dirty
+                LevelChunkSection[] sections = this.chunk.getSections();
+                for (int i = 0; i < sections.length; i++) {
+                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$deallocate(pos);
+                    ((ChunkOxygenAccessor) this.chunk).galacticraft$markSectionDirty(i);
                 }
             }
         }
