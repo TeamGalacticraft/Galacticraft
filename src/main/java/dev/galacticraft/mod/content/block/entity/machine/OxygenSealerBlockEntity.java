@@ -390,6 +390,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);
 
         visited.put(from, false);
+        visited.put(from.relative(fromDir), false); // newly uncovered AIR.
         queue.enqueue(new SourcedPos(from.relative(fromDir), fromDir.getOpposite()));
 
         while (!queue.isEmpty() && (this.sealedPositions.size() + queue.size() + visited.size() <= MAX_SEALER_VOLUME)) {
