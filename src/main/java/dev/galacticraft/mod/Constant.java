@@ -1040,7 +1040,7 @@ public interface Constant {
     }
 
     interface Nbt {
-        String GC_API = "GCApi";
+        String GC_API = "GCAPI";
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";
         String GEAR_INV = "GearInv";

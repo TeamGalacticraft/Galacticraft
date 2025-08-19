@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.internal.command;
 
 import com.mojang.brigadier.arguments.ArgumentType;
-import com.mojang.brigadier.arguments.BoolArgumentType;
 import com.mojang.brigadier.arguments.IntegerArgumentType;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import com.mojang.brigadier.context.CommandContext;
@@ -90,36 +89,8 @@ public class GCApiCommands {
             commandDispatcher.register(builder);
             builder = Commands.literal(Constant.MOD_ID + ":oxygen").requires(source -> source.hasPermission(3));
             builder.then(Commands.literal("get").then(Commands.argument("start_pos", BlockPosArgument.blockPos()).executes(GCApiCommands::getOxygen).then(Commands.argument("end_pos", BlockPosArgument.blockPos()).executes(GCApiCommands::getOxygenArea))));
-            builder.then(Commands.literal("set").requires(source -> source.hasPermission(4)).then(Commands.argument("start_pos", BlockPosArgument.blockPos()).then(Commands.argument("oxygen", BoolArgumentType.bool()).executes(GCApiCommands::setOxygen)).then(Commands.argument("end_pos", BlockPosArgument.blockPos()).then(Commands.argument("oxygen", BoolArgumentType.bool()).executes(GCApiCommands::setOxygenArea)))));
             commandDispatcher.register(builder);
         });
-    }
-
-    private static int setOxygen(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "start_pos");
-        boolean b = BoolArgumentType.getBool(context, "oxygen");
-        context.getSource().getLevel().setBreathable(pos, b);
-        context.getSource().sendSuccess(() -> Component.translatable(Translations.SetOxygen.SUCCESS_SINGLE), true);
-        return 1;
-    }
-
-    private static int setOxygenArea(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
-        BlockPos startPos = BlockPosArgument.getLoadedBlockPos(context, "start_pos");
-        BlockPos endPos = BlockPosArgument.getLoadedBlockPos(context, "end_pos");
-        LevelOxygenAccessor accessor = context.getSource().getLevel();
-        BoundingBox box = BoundingBox.fromCorners(startPos, endPos);
-        boolean b = BoolArgumentType.getBool(context, "oxygen");
-        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        for (int x = box.minX(); x <= box.maxX(); x++) {
-            for (int y = box.minX(); y <= box.maxX(); y++) {
-                for (int z = box.minX(); z <= box.maxX(); z++) {
-                    accessor.setBreathable(mutable.set(x, y, z), b);
-                }
-            }
-        }
-
-        context.getSource().sendSuccess(() -> Component.translatable(Translations.SetOxygen.SUCCESS_MULTIPLE), true);
-        return 1;
     }
 
     private static int getOxygen(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {

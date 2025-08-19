@@ -20,13 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import org.jetbrains.annotations.ApiStatus;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
 
-@ApiStatus.Internal
-public interface InternalLevelOxygenAccessor {
-    boolean getDefaultBreathable();
-
-    void setDefaultBreathable(boolean breathable);
+@Mixin(FireBlock.class)
+public class FireBlockMixin {
+    @WrapMethod(method = "canSurvive")
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
+        return original.call(state, level, pos) && ((LevelOxygenAccessor) level).isBreathable(pos);
+    }
 }

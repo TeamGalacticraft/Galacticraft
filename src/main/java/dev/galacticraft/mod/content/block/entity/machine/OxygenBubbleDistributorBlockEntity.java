@@ -109,7 +109,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        this.oxygenWorld = level.getDefaultBreathable();
+        this.oxygenWorld = level.isBreathable();
     }
 
     @Override

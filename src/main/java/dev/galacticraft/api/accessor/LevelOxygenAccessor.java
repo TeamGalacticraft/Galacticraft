@@ -22,45 +22,37 @@
 
 package dev.galacticraft.api.accessor;
 
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.chunk.LevelChunk;
+
+import java.util.Iterator;
 
 public interface LevelOxygenAccessor {
-    /**
-     * Returns whether the supplied position in this world is breathable for entities
-     *
-     * @param pos the position to test
-     * @return whether the supplied position in the chunk is breathable for entities
-     */
+    default Iterator<AtmosphereProvider> getAtmosphericProviders(int x, int y, int z) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default Iterator<BlockPos> getAtmosphericProviderLocations(int x, int y, int z) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean isBreathable(double x, double y, double z) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean isBreathable() {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default Iterator<BlockPos> getAtmosphericProviderLocations(BlockPos pos) {
+        return this.getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
+    }
+
+    default Iterator<AtmosphereProvider> getAtmosphericProviders(BlockPos pos) {
+        return this.getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+    }
+
     default boolean isBreathable(BlockPos pos) {
         return this.isBreathable(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    default boolean isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default boolean isBreathable(int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setBreathable(BlockPos pos, boolean value) {
-        this.setBreathable(pos.getX(), pos.getY(), pos.getZ(), value);
-    }
-
-    default void setBreathable(int x, int y, int z, boolean value) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default boolean getDefaultBreathable() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setDefaultBreathable(boolean breathable) {
-        throw new RuntimeException("This should be overridden by mixin!");
     }
 }

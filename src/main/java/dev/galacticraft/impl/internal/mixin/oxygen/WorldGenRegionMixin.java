@@ -20,14 +20,13 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.server.level.WorldGenRegion;
+import org.spongepowered.asm.mixin.Mixin;
 
-public interface ChunkOxygenSyncer {
-    OxygenUpdatePayload.OxygenData @Nullable [] galacticraft$syncOxygenPacketsToClient();
-
-    void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] data);
+@Mixin(WorldGenRegion.class)
+public class WorldGenRegionMixin implements LevelOxygenAccessor {
+    //todo
 }

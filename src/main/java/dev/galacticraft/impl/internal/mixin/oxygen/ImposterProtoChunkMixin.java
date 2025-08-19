@@ -23,14 +23,20 @@
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Iterator;
+
 @Mixin(ImposterProtoChunk.class)
-public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
+public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     @Shadow
     @Final
     private boolean allowWrites;
@@ -39,14 +45,26 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
     private LevelChunk wrapped;
 
     @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$isInverted(x, y, z);
+    public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
+        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$getHandlers(x, y, z);
     }
 
     @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
+    public void galacticraft$markSectionDirty(int y) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$setInverted(x, y, z, inverted);
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$markSectionDirty(y);
+        }
+    }
+
+    @Override
+    public OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
+        return ((ChunkOxygenSyncer) this.wrapped).galacticraft$syncOxygenPacketsToClient();
+    }
+
+    @Override
+    public void galacticraft$readOxygenUpdate(OxygenUpdatePayload.@NotNull OxygenData[] data) {
+        if (this.allowWrites) {
+            ((ChunkOxygenSyncer) this.wrapped).galacticraft$readOxygenUpdate(data);
         }
     }
 }

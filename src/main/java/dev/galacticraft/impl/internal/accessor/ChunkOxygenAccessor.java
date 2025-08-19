@@ -22,24 +22,12 @@
 
 package dev.galacticraft.impl.internal.accessor;
 
-public interface ChunkOxygenAccessor {
-    /**
-     * Returns whether the supplied position in the chunk is breathable for entities
-     *
-     * @param x the position to test on the X-axis, normalized from 0 to 15
-     * @param y the position to test on the Y-axis, must be within world height
-     * @param z the position to test on the Z-axis, normalized from 0 to 15
-     * @return whether the supplied position in the chunk is breathable for entities
-     */
-    boolean galacticraft$isInverted(int x, int y, int z);
+import net.minecraft.core.BlockPos;
 
-    /**
-     * Sets the breathable state for entities for the supplied position
-     *
-     * @param x        the position to test on the X-axis, normalized from 0 to 15
-     * @param y        the position to test on the Y-axis, must be within world height
-     * @param z        the position to test on the Z-axis, normalized from 0 to 15
-     * @param inverted whether the supplied position is breathable
-     */
-    void galacticraft$setInverted(int x, int y, int z, boolean inverted);
+import java.util.Iterator;
+
+public interface ChunkOxygenAccessor {
+    Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z);
+
+    void galacticraft$markSectionDirty(int y);
 }

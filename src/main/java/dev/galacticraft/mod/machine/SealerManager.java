@@ -75,7 +75,7 @@ public class SealerManager {
         if (level.isClientSide) return;
 
         // If the level is breathable oxygen sealers don't change anything
-        if (level.getDefaultBreathable()) return;
+        if (level.isBreathable()) return;
 
         if (level.getServer() != null && !level.getServer().isReady()) {
             Constant.LOGGER.info("World is not fully loaded, skipping sealing calculation");

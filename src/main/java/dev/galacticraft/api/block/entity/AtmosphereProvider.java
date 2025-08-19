@@ -20,14 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.api.block.entity;
 
-import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.core.BlockPos;
 
-public interface ChunkOxygenSyncer {
-    OxygenUpdatePayload.OxygenData @Nullable [] galacticraft$syncOxygenPacketsToClient();
+public interface AtmosphereProvider {
+    boolean canBreathe(double x, double y, double z);
 
-    void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] data);
+    boolean canBreathe(BlockPos pos);
+
+    void notifyStateChange(BlockPos pos);
 }

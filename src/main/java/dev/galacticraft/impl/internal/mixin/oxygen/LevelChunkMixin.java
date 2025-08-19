@@ -22,110 +22,56 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
-import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import net.minecraft.world.level.chunk.UpgradeData;
 import net.minecraft.world.level.levelgen.blending.BlendingData;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.BitSet;
+import java.util.Iterator;
 
 @Mixin(LevelChunk.class)
 public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     @Shadow
     @Final
     Level level;
-    private @Unique short dirtySections = 0b0;
 
-    private LevelChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {
-        super(pos, upgradeData, heightLimitView, biome, inhabitedTime, sectionArrayInitializer, blendingData);
-    }
-
-    @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return ((ChunkSectionOxygenAccessor) this.sections[this.getSectionIndex(y)]).galacticraft$isInverted(x, y & 15, z);
-    }
-
-    @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
-        var accessor = ((ChunkSectionOxygenAccessor) this.sections[this.getSectionIndex(y)]);
-        if (inverted != accessor.galacticraft$isInverted(x, y & 15, z)) {
-            if (!this.level.isClientSide) {
-                this.unsaved = true;
-                this.dirtySections |= (short) (0b1 << this.getSectionIndex(y));
-            }
-            accessor.galacticraft$setInverted(x, y & 15, z, inverted);
-        }
-    }
-
-    @Override
-    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
-        assert !this.level.isClientSide;
-        if (this.dirtySections != 0b0) {
-            int count = 0;
-            for (int i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
-                    count++;
-                }
-            }
-
-            OxygenUpdatePayload.OxygenData[] data = new OxygenUpdatePayload.OxygenData[count];
-
-            int idx = 0;
-            for (byte i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
-                    BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
-                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
-                }
-            }
-            this.dirtySections = 0;
-            return data;
-        }
-        return null;
-    }
-
-    @Override
-    public void galacticraft$readOxygenUpdate(@NotNull OxygenUpdatePayload.OxygenData[] buf) {
-        for (OxygenUpdatePayload.@NotNull OxygenData oxygenData : buf) {
-            ((ChunkSectionOxygenAccessor) this.sections[oxygenData.section()]).galacticraft$setBits(oxygenData.data());
-        }
+    public LevelChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biomeRegistry, long inhabitedTime, @Nullable LevelChunkSection[] sectionArray, @Nullable BlendingData blendingData) {
+        super(pos, upgradeData, heightLimitView, biomeRegistry, inhabitedTime, sectionArray, blendingData);
     }
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
-    private void resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
-        // TODO: Better system for checking whether the oxygen should be reset
-        if (blockState.isSolidRender(this.level, pos)) {
-            this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
-        }
-    }
-
-    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
-    private void extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
-        if (level.isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
-            original.call(newState, level, pos, oldState, bl);
+    private void notifyAPsOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
+        Iterator<BlockPos> iterator = this.galacticraft$getHandlers(pos.getX(), pos.getY(), pos.getZ());
+        while (iterator.hasNext()) {
+            BlockPos atPos = iterator.next();
+            BlockEntity blockEntity = this.level.getBlockEntity(atPos);
+            if (blockEntity instanceof AtmosphereProvider provider) {
+                provider.notifyStateChange(pos);
+            } else {
+                for (LevelChunkSection section : this.sections) {
+                    ((ChunkSectionOxygenAccessor) section).galacticraft$deallocate(atPos); //todo dirty
+                }
+            }
         }
     }
 }

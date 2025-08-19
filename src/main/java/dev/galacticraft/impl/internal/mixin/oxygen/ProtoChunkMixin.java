@@ -24,7 +24,6 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
-import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -37,19 +36,12 @@ import net.minecraft.world.level.levelgen.blending.BlendingData;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
+
 @Mixin(ProtoChunk.class)
 public abstract class ProtoChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     private ProtoChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {
         super(pos, upgradeData, heightLimitView, biome, inhabitedTime, sectionArrayInitializer, blendingData);
     }
 
-    @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return ((ChunkSectionOxygenAccessor) this.sections[this.getSectionIndex(y)]).galacticraft$isInverted(x, y & 15, z);
-    }
-
-    @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
-        ((ChunkSectionOxygenAccessor) this.sections[this.getSectionIndex(y)]).galacticraft$setInverted(x, y & 15, z, inverted);
-    }
+    //todo: setblock hook needed? (see levelchunk)
 }

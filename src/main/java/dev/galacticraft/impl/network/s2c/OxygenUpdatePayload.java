@@ -23,24 +23,26 @@
 package dev.galacticraft.impl.network.s2c;
 
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.TrackingBitSet;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
-import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.core.BlockPos;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.status.ChunkStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.BitSet;
 
 public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("oxygen_update");
     public static final Type<OxygenUpdatePayload> TYPE = new Type<>(ID);
-    public static final StreamCodec<ByteBuf, OxygenUpdatePayload> CODEC = StreamCodec.composite(
+    public static final StreamCodec<FriendlyByteBuf, OxygenUpdatePayload> CODEC = StreamCodec.composite(
             StreamCodecs.LONG,
             d -> d.chunk,
             StreamCodecs.array(OxygenData.CODEC, OxygenData[]::new),
@@ -56,22 +58,49 @@ public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CP
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
         return () -> {
-            LevelChunk chunk = context.client().level.getChunk(ChunkPos.getX(this.chunk), ChunkPos.getZ(this.chunk));
-            for (OxygenData datum : this.data) {
-                ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor) chunk.getSection(datum.section);
-                accessor.galacticraft$setBits(datum.data);
+            ChunkAccess chunk = context.client().level.getChunk(ChunkPos.getX(this.chunk), ChunkPos.getZ(this.chunk), ChunkStatus.FULL, false);
+            if (chunk != null) {
+                for (OxygenData datum : this.data) {
+                    ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor) chunk.getSection(datum.section);
+                    accessor.galacticraft$loadData(datum.data);
+                }
             }
         };
     }
 
-    public record OxygenData(byte section, @NotNull BitSet data) {
-        private static final StreamCodec<ByteBuf, BitSet> BIT_SET_CODEC = ByteBufCodecs.BYTE_ARRAY.map(BitSet::valueOf, BitSet::toByteArray);
-        public static final StreamCodec<ByteBuf, OxygenData> CODEC = StreamCodec.composite(
+    public record OxygenData(byte section, OxygenSectionData data) {
+        public static final StreamCodec<FriendlyByteBuf, OxygenData> CODEC = StreamCodec.composite(
                 ByteBufCodecs.BYTE,
                 d -> d.section,
-                BIT_SET_CODEC,
+                OxygenSectionData.CODEC,
                 d -> d.data,
                 OxygenData::new
         );
+    }
+
+    public record OxygenSectionData(BlockPos[] positions, TrackingBitSet[] data) {
+        public static final StreamCodec<FriendlyByteBuf, OxygenSectionData> CODEC = new StreamCodec<>() {
+            @Override
+            public OxygenSectionData decode(FriendlyByteBuf buf) {
+                int count = buf.readVarInt();
+
+                BlockPos[] positions = new BlockPos[count];
+                TrackingBitSet[] bits = new TrackingBitSet[count];
+                for (int i = 0; i < count; i++) {
+                    positions[i] = buf.readBlockPos();
+                    bits[i] = TrackingBitSet.read(buf);
+                }
+                return new OxygenSectionData(positions, bits);
+            }
+
+            @Override
+            public void encode(FriendlyByteBuf buf, OxygenSectionData section) {
+                buf.writeVarInt(section.positions.length);
+                for (int i = 0; i < section.positions.length; i++) {
+                    buf.writeBlockPos(section.positions[i]);
+                    section.data[i].write(buf);
+                }
+            }
+        };
     }
 }
