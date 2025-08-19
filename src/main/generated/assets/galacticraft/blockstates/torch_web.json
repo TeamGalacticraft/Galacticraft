@@ -2,7 +2,7 @@
   "multipart": [
     {
       "apply": {
-        "model": "galacticraft:block/torch_web"
+        "model": "galacticraft:block/torch_web_web"
       },
       "when": {
         "bottom": "false"
@@ -10,7 +10,7 @@
     },
     {
       "apply": {
-        "model": "galacticraft:block/torch_web_end"
+        "model": "galacticraft:block/torch_web"
       },
       "when": {
         "bottom": "true"

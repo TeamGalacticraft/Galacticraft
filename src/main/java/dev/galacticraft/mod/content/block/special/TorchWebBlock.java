@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
@@ -15,6 +37,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.phys.shapes.CollisionContext;
+import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class TorchWebBlock extends Block {
 
@@ -26,6 +50,17 @@ public class TorchWebBlock extends Block {
     {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(BOTTOM, false));
+    }
+    protected static final VoxelShape WEB_VOXEL = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
+    protected static final VoxelShape TORCH_VOXEL = Block.box(4.0, 3.0, 4.0, 12.0, 16.0, 12.0);
+
+    @Override
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (state.getValue(BOTTOM)) {
+            return TORCH_VOXEL;
+        } else {
+            return WEB_VOXEL;
+        }
     }
 
     @Override
