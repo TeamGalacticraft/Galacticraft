@@ -46,11 +46,11 @@ public class TorchWebBlock extends Block {
 
     public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
 
-    public TorchWebBlock(BlockBehaviour.Properties properties)
-    {
+    public TorchWebBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(BOTTOM, false));
     }
+
     protected static final VoxelShape WEB_VOXEL = Block.box(4.0, 0.0, 4.0, 12.0, 16.0, 12.0);
     protected static final VoxelShape TORCH_VOXEL = Block.box(4.0, 3.0, 4.0, 12.0, 16.0, 12.0);
 
@@ -89,7 +89,7 @@ public class TorchWebBlock extends Block {
         if (direction == Direction.UP && !neighborState.is(GCBlocks.TORCH_WEB)) {
             return Blocks.AIR.defaultBlockState();
         // If below changed and it isn't a torch web then this is the bottom.
-        } else if (direction == Direction.DOWN && !neighborState.is(GCBlocks.TORCH_WEB)){
+        } else if (direction == Direction.DOWN && !neighborState.is(GCBlocks.TORCH_WEB)) {
             return defaultBlockState().setValue(BOTTOM, true);
         }
         // No change
