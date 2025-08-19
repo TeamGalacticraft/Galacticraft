@@ -90,8 +90,7 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
-        createTorchWeb(generator, GCBlocks.TORCH_WEB, ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_web"),
-                ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB));
+        createTorchWeb(generator, GCBlocks.TORCH_WEB, "_end");
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
@@ -409,7 +408,10 @@ public class GCModelProvider extends FabricModelProvider {
                 )));
     }
 
-    private static void createTorchWeb(BlockModelGenerators generator, Block torch, ResourceLocation normalModel, ResourceLocation endModel) {
+    private static void createTorchWeb(BlockModelGenerators generator, Block torch, String endSuffix) {
+        ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB);
+        ResourceLocation endModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, endSuffix);
+        generator.createSimpleFlatItemModel(torch, endSuffix);
         MultiPartGenerator blockState = MultiPartGenerator.multiPart(torch)
                 .with(Condition.condition().term(BlockStateProperties.BOTTOM, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
                 .with(Condition.condition().term(BlockStateProperties.BOTTOM, true), Variant.variant().with(VariantProperties.MODEL, endModel));
