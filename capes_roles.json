@@ -1,0 +1,7 @@
+[
+  { "uuid": "4e0dd4b7-c04f-4b72-8bbc-d8f1510d9cc7", "role": "developer", "name": "micdoodle8" },
+  { "uuid": "bba235f5-7858-48a1-98bc-7ccba53a309e", "role": "patron",    "name": "radfast"    },
+  { "uuid": "35282c16-cf0a-4d8e-b5d6-e2c2b2af8d25", "role": "patron",    "name": "JTE"        },
+  { "uuid": "f782663c-84ee-4761-88b5-28c672400477", "role": "patron",    "name": "Mitchski"   },
+  { "uuid": "f782663c-84ee-4761-88b5-28c672400477", "role": "developer",    "name": "Maximus_Meridiuz"   }
+]

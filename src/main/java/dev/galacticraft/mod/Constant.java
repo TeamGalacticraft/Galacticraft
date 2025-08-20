@@ -62,6 +62,8 @@ public interface Constant {
         return ResourceKey.create(registry, Constant.id(id));
     }
 
+    String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/feature/capes-overhaul/capes_roles.json";
+
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
         String ITEM_GROUP_MACHINES = "machines";

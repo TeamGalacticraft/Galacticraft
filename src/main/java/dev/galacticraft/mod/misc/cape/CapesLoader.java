@@ -55,7 +55,7 @@ public final class CapesLoader {
             Constant.LOGGER.info("Loading cape roles...");
             try {
                 String json = IOUtils.toString(
-                        new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes_roles.json"),
+                        new URL(Constant.CAPES),
                         StandardCharsets.UTF_8
                 );
                 List<PlayerRoleData> players = new Gson().fromJson(json, TYPE);
