@@ -373,7 +373,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        this.createAirLockController(generator);
+        generator.createTrivialCube(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+        this.createAirLockControllers(generator);
 
         this.createParachests(generator);
     }
@@ -512,10 +513,36 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
     }
 
-    private void createAirLockController(BlockModelGenerators generator) {
-        var block = GCBlocks.AIR_LOCK_CONTROLLER;
-        var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
-        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    private void createAirLockControllers(BlockModelGenerators generator) {
+        var basic = GCBlocks.AIR_LOCK_CONTROLLER;
+        var reinforced = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
+        var bubble = GCBlocks.BUBBLE_AIR_LOCK_CONTROLLER;
+        ResourceLocation basicController = TextureMapping.getBlockTexture(basic);
+        ResourceLocation reinforcedController = TextureMapping.getBlockTexture(reinforced);
+        ResourceLocation bubbleController = TextureMapping.getBlockTexture(bubble);
+        ResourceLocation basicFrame = TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME);
+        ResourceLocation reinforcedFrame = TextureMapping.getBlockTexture(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+        MachineModelGenerator.createTrivialMachine(generator, basic, TextureProvider.builder(Constant.MOD_ID)
+                .sides(basicController)
+                .top(basicFrame)
+                .bottom(basicFrame)
+                .particle(basicController)
+                .build()
+        );
+        MachineModelGenerator.createTrivialMachine(generator, reinforced, TextureProvider.builder(Constant.MOD_ID)
+                .sides(reinforcedController)
+                .top(reinforcedFrame)
+                .bottom(reinforcedFrame)
+                .particle(reinforcedController)
+                .build()
+        );
+        MachineModelGenerator.createTrivialMachine(generator, bubble, TextureProvider.builder(Constant.MOD_ID)
+                .sides(bubbleController)
+                .top(basicFrame)
+                .bottom(basicFrame)
+                .particle(bubbleController)
+                .build()
+        );
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {

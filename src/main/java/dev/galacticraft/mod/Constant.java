@@ -329,7 +329,10 @@ public interface Constant {
         String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
         String ROCKET_WORKBENCH = "rocket_workbench";
         String AIR_LOCK_FRAME = "air_lock_frame";
+        String REINFORCED_AIR_LOCK_FRAME = "reinforced_air_lock_frame";
         String AIR_LOCK_CONTROLLER = "air_lock_controller";
+        String REINFORCED_AIR_LOCK_CONTROLLER = "reinforced_air_lock_controller";
+        String BUBBLE_AIR_LOCK_CONTROLLER = "bubble_air_lock_controller";
         String AIR_LOCK_SEAL = "air_lock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";
@@ -596,6 +599,8 @@ public interface Constant {
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
         ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
+
+        ResourceLocation AIRLOCK_CONTROLLER_SCREEN = id("textures/gui/air_lock_controller.png");
 
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
@@ -964,6 +969,7 @@ public interface Constant {
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String BUBBLE_AIR_LOCK_CONTROLLER_MENU = "bubble_air_lock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";

@@ -387,7 +387,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.OXYGEN_COMPRESSOR,
                 GCBlocks.OXYGEN_STORAGE_MODULE,
                 GCBlocks.FOOD_CANNER,
-                GCBlocks.ROCKET_WORKBENCH
+                GCBlocks.ROCKET_WORKBENCH,
+                GCBlocks.BUBBLE_AIR_LOCK_CONTROLLER
         );
 
         this.tag(GCBlockTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE).addTag(GCBlockTags.STAINED_GLASS_FLUID_PIPES);
@@ -397,6 +398,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             this.tag(entry.getValue()).add(pipe);
             this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
         }
+
+        this.tag(GCBlockTags.AIRLOCK_BLOCKS)
+                .add(GCBlocks.AIR_LOCK_FRAME)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.BUBBLE_AIR_LOCK_CONTROLLER);
 
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
@@ -583,7 +591,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
                         GCBlocks.AIR_LOCK_FRAME,
+                        GCBlocks.REINFORCED_AIR_LOCK_FRAME,
                         GCBlocks.AIR_LOCK_CONTROLLER,
+                        GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,
 

@@ -68,7 +68,8 @@ public class GCMenuTypes {
     public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new, FeatureFlags.VANILLA_SET);
     public static final MenuType<GCPetInventoryMenu> PET_INV_GC = new ExtendedScreenHandlerType<>(GCPetInventoryMenu::new, ByteBufCodecs.INT);
 
-    public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new, FeatureFlags.VANILLA_SET);
+    public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = SynchronizedMenuType.create(AirlockControllerMenu::new);
+    public static final MenuType<BubbleAirlockControllerMenu> BUBBLE_AIR_LOCK_CONTROLLER_MENU = SynchronizedMenuType.create(BubbleAirlockControllerMenu::new);
     public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH = new ExtendedScreenHandlerType<>(RocketWorkbenchMenu::new, RocketWorkbenchMenu.OpeningData.CODEC);
     public static final MenuType<RocketMenu> ROCKET = new ExtendedScreenHandlerType<>(RocketMenu::new, ByteBufCodecs.INT);
     public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new, ParachestMenu.OpeningData.STREAM_CODEC);
@@ -102,6 +103,7 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FOOD_CANNER_MENU), FOOD_CANNER);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BUBBLE_AIR_LOCK_CONTROLLER_MENU), BUBBLE_AIR_LOCK_CONTROLLER_MENU);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ROCKET), ROCKET);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.PARACHEST), PARACHEST);

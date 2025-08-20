@@ -77,11 +77,13 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = register(Constant.Block.CRYOGENIC_CHAMBER, CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER);
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = register(Constant.Block.CRYOGENIC_CHAMBER_PART, CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART);
     public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = register(Constant.Block.BOSS_SPAWNER, DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER);
+    public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, (pos, state) -> new AirlockControllerBlockEntity(GCBlockEntityTypes.AIRLOCK_CONTROLLER, pos, state), GCBlocks.AIR_LOCK_CONTROLLER);
+    public static final BlockEntityType<AirlockControllerBlockEntity> REINFORCED_AIRLOCK_CONTROLLER = register(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER, (pos, state) -> new AirlockControllerBlockEntity(GCBlockEntityTypes.REINFORCED_AIRLOCK_CONTROLLER, pos, state), GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER);
+    public static final BlockEntityType<BubbleAirlockControllerBlockEntity> BUBBLE_AIRLOCK_CONTROLLER = register(Constant.Block.BUBBLE_AIR_LOCK_CONTROLLER, BubbleAirlockControllerBlockEntity::new, GCBlocks.BUBBLE_AIR_LOCK_CONTROLLER);
 
     // DECORATION
     public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = register(Constant.Block.CANNED_FOOD, CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD);
 
-    public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER);
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = register(Constant.Block.ROCKET_WORKBENCH, RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH);
 
     private static<T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.BlockEntitySupplier<T> supplier, Block... compatibleBlocks) {
