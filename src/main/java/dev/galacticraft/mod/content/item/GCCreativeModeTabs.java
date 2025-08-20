@@ -279,6 +279,7 @@ public class GCCreativeModeTabs {
                 output.accept(AIR_LOCK_CONTROLLER);
                 output.accept(REINFORCED_AIR_LOCK_FRAME);
                 output.accept(REINFORCED_AIR_LOCK_CONTROLLER);
+                output.accept(BUBBLE_AIR_LOCK_CONTROLLER);
             }).build();
 
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup

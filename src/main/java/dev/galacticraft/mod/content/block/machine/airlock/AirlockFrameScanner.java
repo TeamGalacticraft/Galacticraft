@@ -23,11 +23,13 @@
 package dev.galacticraft.mod.content.block.machine.airlock;
 
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
+import dev.galacticraft.mod.content.block.entity.BubbleAirlockControllerBlockEntity;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.*;
 
@@ -44,9 +46,9 @@ public final class AirlockFrameScanner {
             .thenComparingInt(r -> r.maxX).thenComparingInt(r -> r.maxY).thenComparingInt(r -> r.maxZ);
 
     public enum Plane {
-        XY(Axis.Z), // z is constant
-        XZ(Axis.Y), // y is constant
-        YZ(Axis.X); // x is constant
+        XY(Axis.Z),
+        XZ(Axis.Y),
+        YZ(Axis.X);
         final Axis normal;
         Plane(Axis normal) { this.normal = normal; }
     }
@@ -54,7 +56,7 @@ public final class AirlockFrameScanner {
     public static final class Result {
         public final Plane plane;
         public final int minX, minY, minZ, maxX, maxY, maxZ;
-        public final Direction sealFacing; // FACING for AIR_LOCK_SEAL
+        public final Direction sealFacing;
 
         Result(Plane plane,
                int minX, int minY, int minZ,
@@ -72,7 +74,8 @@ public final class AirlockFrameScanner {
     }
 
     private static boolean isController(Level level, BlockPos pos) {
-        return level.getBlockEntity(pos) instanceof AirlockControllerBlockEntity;
+        BlockEntity be = level.getBlockEntity(pos);
+        return be instanceof AirlockControllerBlockEntity || be instanceof BubbleAirlockControllerBlockEntity;
     }
 
     /** Scan all planes; return up to two smallest rectangles per plane. */
@@ -82,7 +85,7 @@ public final class AirlockFrameScanner {
         for (Plane plane : Plane.values()) {
             out.addAll(scanPlane(level, controller, plane));
         }
-        out.sort(ORDER); // stable order across ticks
+        out.sort(ORDER);
         return out;
     }
 
@@ -94,28 +97,22 @@ public final class AirlockFrameScanner {
                 : all.get(0);
     }
 
-    // ---------- Plane scanning ----------
-
     private record Axes(Axis u, Axis v, Axis wConst) {}
 
     private static List<Result> scanPlane(Level level, BlockPos controller, Plane plane) {
         final int fixed = controller.get(plane.normal);
-        final Axes axes = axesFor(plane); // u,v are the in-plane axes
+        final Axes axes = axesFor(plane);
 
-        // 1) Gather all frame blocks connected to controller within this plane
         Set<BlockPos> frames = floodInPlane(level, controller, plane, fixed);
         if (frames.isEmpty()) return List.of();
 
-        // Require exactly one controller in this connected set
         int controllers = 0;
         for (BlockPos p : frames) if (isController(level, p)) controllers++;
         if (controllers != 1) return List.of();
 
-        // 2) in-plane coords of controller
         int u0 = proj(controller, axes.u);
         int v0 = proj(controller, axes.v);
 
-        // Search bounds (tight box around connected set)
         int minU = Integer.MAX_VALUE, maxU = Integer.MIN_VALUE, minV = Integer.MAX_VALUE, maxV = Integer.MIN_VALUE;
         for (BlockPos p : frames) {
             int u = proj(p, axes.u), v = proj(p, axes.v);
@@ -123,7 +120,6 @@ public final class AirlockFrameScanner {
             if (v < minV) minV = v; if (v > maxV) maxV = v;
         }
 
-        // 3) Find up to two rectangles with controller on an edge
         Result bestVMin = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.VMIN, minU, maxU, minV, maxV);
         Result bestVMax = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.VMAX, minU, maxU, minV, maxV);
         Result bestUMin = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.UMIN, minU, maxU, minV, maxV);
@@ -135,11 +131,10 @@ public final class AirlockFrameScanner {
         if (planeOut.size() < 2) addIfNotNullDistinct(planeOut, bestUMin);
         if (planeOut.size() < 2) addIfNotNullDistinct(planeOut, bestUMax);
 
-        planeOut.sort(ORDER); // stable per plane
+        planeOut.sort(ORDER);
         return planeOut;
     }
 
-    // ---------- Plane scanning ----------
     private enum EdgeKind { VMIN, VMAX, UMIN, UMAX }
 
     private static void addIfNotNullDistinct(List<Result> list, Result r) {
@@ -159,11 +154,10 @@ public final class AirlockFrameScanner {
             int u0, int v0, EdgeKind kind,
             int minU, int maxU, int minV, int maxV
     ) {
-        // Fix one edge to pass through the controller (so controller sits on that edge).
-        final boolean edgeIsAlongU; // true if the fixed edge is a U-span (constant v), false if a V-span (constant u)
+        final boolean edgeIsAlongU;
         switch (kind) {
-            case VMIN, VMAX -> edgeIsAlongU = true;   // edge is v == v0, spans in U
-            case UMIN, UMAX -> edgeIsAlongU = false;  // edge is u == u0, spans in V
+            case VMIN, VMAX -> edgeIsAlongU = true;
+            case UMIN, UMAX -> edgeIsAlongU = false;
             default -> throw new IllegalStateException();
         }
 
@@ -171,11 +165,8 @@ public final class AirlockFrameScanner {
         int bestMinU = 0, bestMaxU = 0, bestMinV = 0, bestMaxV = 0;
 
         if (edgeIsAlongU) {
-            // Controller sits on v == v0 edge; search vOpp on the other side.
             if (kind == EdgeKind.VMIN) {
-                // expand toward +V (vOpp > v0)
                 for (int vOpp = v0 + 1; vOpp <= maxV; vOpp++) {
-                    // sweep U around the controller, ensuring the fixed edge is continuous
                     for (int uMin = u0; uMin >= minU; uMin--) {
                         if (!isFrame(level, unproj(uMin, v0, fixed, axes))) break;
                         for (int uMax = u0; uMax <= maxU; uMax++) {
@@ -197,7 +188,7 @@ public final class AirlockFrameScanner {
                         }
                     }
                 }
-            } else { // VMAX: expand toward -V (vOpp < v0)  --- FIXED LOOPS ---
+            } else {
                 for (int vOpp = v0 - 1; vOpp >= minV; vOpp--) {
                     for (int uMin = u0; uMin >= minU; uMin--) {
                         if (!isFrame(level, unproj(uMin, v0, fixed, axes))) break;
@@ -222,9 +213,7 @@ public final class AirlockFrameScanner {
                 }
             }
         } else {
-            // Controller sits on u == u0 edge; search uOpp on the other side.
             if (kind == EdgeKind.UMIN) {
-                // expand toward +U (uOpp > u0)
                 for (int uOpp = u0 + 1; uOpp <= maxU; uOpp++) {
                     for (int vMin2 = v0; vMin2 >= minV; vMin2--) {
                         if (!isFrame(level, unproj(u0, vMin2, fixed, axes))) break;
@@ -247,7 +236,7 @@ public final class AirlockFrameScanner {
                         }
                     }
                 }
-            } else { // UMAX: expand toward -U (uOpp < u0)  --- FIXED LOOPS ---
+            } else {
                 for (int uOpp = u0 - 1; uOpp >= minU; uOpp--) {
                     for (int vMin2 = v0; vMin2 >= minV; vMin2--) {
                         if (!isFrame(level, unproj(u0, vMin2, fixed, axes))) break;
@@ -275,7 +264,6 @@ public final class AirlockFrameScanner {
 
         if (bestArea == Long.MAX_VALUE) return null;
 
-        // Map u/v bounds back to xyz bounds
         int minX, minY, minZ, maxX, maxY, maxZ;
         switch (plane) {
             case XY -> {
@@ -296,17 +284,14 @@ public final class AirlockFrameScanner {
             default -> throw new IllegalStateException();
         }
 
-        // Seal facing = plane normal direction
         Direction facing = switch (plane) {
-            case XY -> Direction.NORTH; // ⟂ Z
-            case XZ -> Direction.UP;    // ⟂ Y
-            case YZ -> Direction.EAST;  // ⟂ X
+            case XY -> Direction.NORTH;
+            case XZ -> Direction.UP;
+            case YZ -> Direction.EAST;
         };
 
         return new Result(plane, minX, minY, minZ, maxX, maxY, maxZ, facing);
     }
-
-    // ---------- Geometry helpers ----------
 
     private static Axes axesFor(Plane plane) {
         return switch (plane) {
@@ -348,7 +333,6 @@ public final class AirlockFrameScanner {
     }
 
     private static BlockPos unproj(int u, int v, int wConst, Axes axes) {
-        // inverse mapping from (u,v) back to (x,y,z)
         int x=0,y=0,z=0;
         for (Axis a : new Axis[]{axes.u, axes.v, axes.wConst}) {
             int val = (a == axes.u) ? u : (a == axes.v) ? v : wConst;
@@ -363,7 +347,6 @@ public final class AirlockFrameScanner {
 
     private static boolean perimeterIsFrames(Set<BlockPos> frames, Axes axes, int wConst,
                                              int uMin, int vMin, int uMax, int vMax) {
-        // edges: u in [uMin..uMax] at v=vMin and v=vMax; v in [vMin..vMax] at u=uMin and u=uMax
         for (int u = uMin; u <= uMax; u++) {
             if (!frames.contains(unproj(u, vMin, wConst, axes))) return false;
             if (!frames.contains(unproj(u, vMax, wConst, axes))) return false;

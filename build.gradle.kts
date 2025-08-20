@@ -202,6 +202,11 @@ repositories {
             includeGroup("squeek.appleskin")
         }
     }
+    maven("https://maven.teamgalacticraft.org/") {
+        content {
+            includeGroup("dev.maximus")
+        }
+    }
 }
 
 configurations {
@@ -234,6 +239,7 @@ dependencies {
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
     "core"("dev.galacticraft:MachineLib:$machineLibVersion")
+    "core"("dev.maximus:glasswork:1.3")
     "core"("lol.bai:badpackets:fabric-$badpacketsVersion")
 
     // Optional Dependencies

@@ -378,6 +378,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.AIR_LOCK_CONTROLLER, "Airlock Controller");
         this.block(GCBlocks.REINFORCED_AIR_LOCK_FRAME, "Reinforced Airlock Frame");
         this.block(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER, "Reinforced Airlock Controller");
+        this.block(GCBlocks.BUBBLE_AIR_LOCK_CONTROLLER, "Bubble Airlock Controller");
         this.block(GCBlocks.AIR_LOCK_SEAL, "Airlock Seal");
     }
 

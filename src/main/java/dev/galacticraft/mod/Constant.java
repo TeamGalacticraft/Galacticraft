@@ -329,6 +329,7 @@ public interface Constant {
         String REINFORCED_AIR_LOCK_FRAME = "reinforced_air_lock_frame";
         String AIR_LOCK_CONTROLLER = "air_lock_controller";
         String REINFORCED_AIR_LOCK_CONTROLLER = "reinforced_air_lock_controller";
+        String BUBBLE_AIR_LOCK_CONTROLLER = "bubble_air_lock_controller";
         String AIR_LOCK_SEAL = "air_lock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";
@@ -965,6 +966,7 @@ public interface Constant {
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String BUBBLE_AIR_LOCK_CONTROLLER_MENU = "bubble_air_lock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";

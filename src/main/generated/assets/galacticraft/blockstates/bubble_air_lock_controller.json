@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:machine/bubble_air_lock_controller"
+    }
+  }
+}

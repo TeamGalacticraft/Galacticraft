@@ -18,6 +18,7 @@
     "galacticraft:oxygen_compressor",
     "galacticraft:oxygen_storage_module",
     "galacticraft:food_canner",
-    "galacticraft:rocket_workbench"
+    "galacticraft:rocket_workbench",
+    "galacticraft:bubble_air_lock_controller"
   ]
 }

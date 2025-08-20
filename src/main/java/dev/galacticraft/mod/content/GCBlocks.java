@@ -368,6 +368,8 @@ public class GCBlocks {
     public static final Block REINFORCED_AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(50.0F, 1200.0F)));
     public static final Block REINFORCED_AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER, new SimpleMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(50.0F, 1200.0F), Constant.id(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER)));
 
+    public static final Block BUBBLE_AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.BUBBLE_AIR_LOCK_CONTROLLER, new SimpleMachineBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), Constant.id(Constant.Block.BUBBLE_AIR_LOCK_CONTROLLER)));
+
     // TORCHES
     public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
     public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
