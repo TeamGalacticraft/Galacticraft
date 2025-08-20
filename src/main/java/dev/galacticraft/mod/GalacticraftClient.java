@@ -24,6 +24,7 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.api.component.*;
+import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
@@ -98,6 +99,8 @@ public class GalacticraftClient implements ClientModInitializer {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting client initialization.");
         ClientEventHandler.init();
+        ClientCapeLoginSync.init();
+        CapesClientRole.ensureLoadedAsync();
         CapeRegistry.bootstrap();
         CapesLoader.loadAsync();
 

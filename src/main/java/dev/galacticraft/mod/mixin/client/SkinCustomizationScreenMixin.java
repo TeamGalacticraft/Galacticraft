@@ -2,6 +2,8 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.misc.cape.CapesClientRole;
+import dev.galacticraft.mod.screen.CapeRootScreen;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -31,25 +33,20 @@ public abstract class SkinCustomizationScreenMixin extends Screen {
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", shift = At.Shift.AFTER)
     )
     private void gc$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
-        // Make sure the roles start loading in background; gate UI on eligibility
         CapesClientRole.ensureLoadedAsync();
         if (!CapesClientRole.isEligibleClient()) return;
         if (list.isEmpty()) return;
 
-        // The widget just added by the loop is the last one
         AbstractWidget last = list.get(list.size() - 1);
         if (!(last instanceof CycleButton<?> cb)) return;
 
-        // Heuristic: the label for the CAPE row contains "cape" in most locales
         String label = cb.getMessage().getString().toLowerCase(Locale.ROOT);
         if (!label.contains("cape")) return;
 
-        // Replace the vanilla "Capes: On/Off" with a single "Cape" button
         list.remove(list.size() - 1);
         list.add(
-                Button.builder(Component.translatable("galacticraft.options.cape"), b ->
-                        {})
-                        // Size is ignored by OptionsList.addSmall; it will place two per row automatically
+                Button.builder(Component.translatable(Translations.Ui.CAPE_BUTTON),b ->
+                                Minecraft.getInstance().setScreen(new CapeRootScreen((SkinCustomizationScreen)(Object)this)))
                         .width(150)
                         .build()
         );

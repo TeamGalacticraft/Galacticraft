@@ -1,0 +1,151 @@
+package dev.galacticraft.mod.screen;
+
+import dev.galacticraft.mod.client.network.CapeClientNet;
+import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.misc.cape.CapeRegistry;
+import dev.galacticraft.mod.misc.cape.ClientCapePrefs;
+import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
+import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.gui.components.AbstractWidget;
+import net.minecraft.client.gui.components.CycleButton;
+import net.minecraft.client.gui.narration.NarrationElementOutput;
+import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.options.OptionsSubScreen;
+import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Locale;
+import java.util.function.Consumer;
+import java.util.function.Supplier;
+
+@Environment(EnvType.CLIENT)
+public class CapeRootScreen extends OptionsSubScreen {
+    private ClientCapePrefs prefs;
+    private String selectedCapeId;
+    private final List<CapeThumb> capeThumbs = new ArrayList<>();
+
+    private static final int CAPE_SRC_W = 11;
+    private static final int CAPE_SRC_H = 17;
+    private static final int TEX_W = 64;
+    private static final int TEX_H = 32;
+
+    public CapeRootScreen(Screen parent) {
+        super(parent, Minecraft.getInstance().options, Component.translatable(Translations.Ui.CAPES_TITLE));
+    }
+
+    @Override
+    protected void addOptions() {
+        this.prefs = ClientCapePrefs.load();
+        if (this.selectedCapeId == null) this.selectedCapeId = this.prefs.gcCapeId;
+
+        List<AbstractWidget> widgets = new ArrayList<>();
+
+        CycleButton<CapeMode> modeBtn = CycleButton.<CapeMode>builder(v ->
+                        Component.translatable(Translations.Ui.CAPES_STATE + v.name().toLowerCase(Locale.ROOT)))
+                .withValues(CapeMode.OFF, CapeMode.VANILLA, CapeMode.GC)
+                .withInitialValue(prefs.mode)
+                .create(Component.translatable("galacticraft.capes.mode"), (btn, value) -> {
+                    prefs.mode = value;
+                    prefs.save();
+                    CapeClientNet.sendSelectionIfOnline(value, value == CapeMode.GC ? prefs.gcCapeId : null);
+                    Minecraft.getInstance().setScreen(new CapeRootScreen(this.lastScreen));
+                });
+        widgets.add(modeBtn);
+        this.list.addSmall(widgets);
+
+        if (prefs.mode == CapeMode.GC) {
+            widgets.clear();
+            capeThumbs.clear();
+
+            for (CapeRegistry.CapeDef def : CapeRegistry.all()) {
+                CapeThumb thumb = new CapeThumb(def.texture, def.id, def.id.equals(this.selectedCapeId), () -> {
+                    this.selectedCapeId = def.id;
+                    this.prefs.gcCapeId = def.id;
+                    this.prefs.mode = CapeMode.GC;
+                    this.prefs.save();
+                    CapeClientNet.sendSelectionIfOnline(CapeMode.GC, def.id);
+                    for (CapeThumb t : capeThumbs) t.setSelected(t.id.equals(def.id));
+                });
+                capeThumbs.add(thumb);
+                widgets.add(thumb);
+
+                if (widgets.size() == 2) {
+                    this.list.addSmall(new ArrayList<>(widgets));
+                    widgets.clear();
+                }
+            }
+            if (!widgets.isEmpty()) {
+                this.list.addSmall(new ArrayList<>(widgets));
+                widgets.clear();
+            }
+        }
+    }
+
+    private static class CapeThumb extends AbstractWidget {
+        private final ResourceLocation texture;
+        final String id;
+        private boolean selected;
+        private final Runnable onClick;
+
+        public CapeThumb(ResourceLocation texture, String id, boolean selected, Runnable onClick) {
+            super(0, 0, 150, 24, Component.literal(id));
+            this.texture = texture;
+            this.id = id;
+            this.selected = selected;
+            this.onClick = onClick;
+        }
+
+        @Override
+        protected void renderWidget(GuiGraphics g, int mouseX, int mouseY, float delta) {
+            int x0 = this.getX();
+            int y0 = this.getY();
+            int w = this.getWidth();
+            int h = this.getHeight();
+
+            int bg = this.isHovered() ? 0x50FFFFFF : 0x25FFFFFF;
+            g.fill(x0, y0, x0 + w, y0 + h, bg);
+
+            int pad = 3;
+            int maxH = Math.max(12, h - pad * 2 - 8);
+            int destH = Math.min(18, maxH);
+            int destW = Math.max(1, destH * CAPE_SRC_W / CAPE_SRC_H);
+            int imgX = x0 + pad + 1;
+            int imgY = y0 + (h - destH) / 2 - 2;
+
+            g.blit(this.texture, imgX, imgY,
+                    destW, destH,
+                    0, 0,
+                    CAPE_SRC_W, CAPE_SRC_H,
+                    TEX_W, TEX_H);
+
+            var font = Minecraft.getInstance().font;
+            int textX = imgX + destW + 6;
+            int textY = y0 + (h - 8) / 2;
+            g.drawString(font, this.id, textX, textY, 0xFFEEEEEE, false);
+
+            if (selected) {
+                int c = 0xFF00FF00;
+                g.fill(x0, y0, x0 + w, y0 + 1, c);
+                g.fill(x0, y0 + h - 1, x0 + w, y0 + h, c);
+                g.fill(x0, y0, x0 + 1, y0 + h, c);
+                g.fill(x0 + w - 1, y0, x0 + w, y0 + h, c);
+            }
+        }
+
+        @Override
+        public void onClick(double mouseX, double mouseY) {
+            this.onClick.run();
+        }
+
+        @Override
+        protected void updateWidgetNarration(NarrationElementOutput output) {}
+        public void setSelected(boolean sel) { this.selected = sel; }
+    }
+}
