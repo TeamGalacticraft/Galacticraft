@@ -3,5 +3,6 @@
   { "uuid": "bba235f5-7858-48a1-98bc-7ccba53a309e", "role": "patron",    "name": "radfast"    },
   { "uuid": "35282c16-cf0a-4d8e-b5d6-e2c2b2af8d25", "role": "patron",    "name": "JTE"        },
   { "uuid": "f782663c-84ee-4761-88b5-28c672400477", "role": "patron",    "name": "Mitchski"   },
-  { "uuid": "f782663c-84ee-4761-88b5-28c672400477", "role": "developer",    "name": "Maximus_Meridiuz"   }
+  { "uuid": "91704464-59e6-4adb-836f-fdff9d7e3748", "role": "developer",    "name": "Maximus_Meridiuz"   },
+  { "uuid": "8c90d8f1-02c8-4576-bc71-5d9f06a62bbb", "role": "patron",    "name": "AfterHoursWknd"   }
 ]
