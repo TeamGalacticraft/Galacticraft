@@ -126,9 +126,7 @@ public class WebStringBlock extends WebBlock {
         // Find a pos directly below the existing block (this) but above world bottom where the new block can be placed.
         for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > level.getMinBuildHeight(); checkPos = checkPos.offset(0, -1, 0)) {
             ItemInteractionResult result = checkCanBlockBePlaced(level, checkPos, player, stack, newState);
-            if (result != null) {
-                return result;
-            }
+            if (result != null) return result;
         }
         return null;
     }
@@ -139,13 +137,13 @@ public class WebStringBlock extends WebBlock {
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemInteractionResult result = null;
-        // If using a glowstone torch on a web string, then it gets hung in the web string becoming a torch web block.
+        // If using a glowstone torch on a web string, then it gets hung in the web string becoming a web torch block.
         if (stack.is(GCItems.GLOWSTONE_TORCH)) {
             result = convertToWebTorch(stack, state, level, pos, player);
         // If using a Web string on the web string, then extend the whole column of web strings down if we can.
         } else if (stack.is(GCBlocks.WEB_STRING.asItem())) {
             result = extendBlockDown(stack, level, pos, player, defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM));
-        // If using a torch web on the web string, then extend the whole column of web strings down if we can.
+        // If using a web torch on the web string, then extend the whole column of web strings down if we can.
         } else if (stack.is(GCBlocks.WEB_TORCH.asItem())) {
             result = extendBlockDown(stack, level, pos, player, GCBlocks.WEB_TORCH.defaultBlockState());
         }
@@ -162,22 +160,22 @@ public class WebStringBlock extends WebBlock {
     /// if the block above is broken.
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
-        // If above changed and it isn't a web wtring block (and in theory not a solid block) then it breaks.
+        // If above changed and it isn't a web string block (and in theory not a solid block) then it breaks.
         if (direction == Direction.UP && !neighborState.is(GCBlocks.WEB_STRING)) {
             return Blocks.AIR.defaultBlockState();
             // If below changed
         } else if (direction == Direction.DOWN) {
             WebStringPart webStringState = state.getValue(WEB_STRING_PART);
-            // if below is a web string or a torch web
+            // If below is a web string or a web torch
             if (neighborState.is(GCBlocks.WEB_STRING) || neighborState.is(GCBlocks.WEB_TORCH)) {
-                // If it was the top item
+                // If it was at the top
                 if (webStringState == WebStringPart.TOP_BOTTOM || webStringState == WebStringPart.TOP) {
                     return state.setValue(WEB_STRING_PART, WebStringPart.TOP); // Then still top
                 } else {
                     return state.setValue(WEB_STRING_PART, WebStringPart.MIDDLE); // Otherwise middle
                 }
             } else {
-                // If it was top item
+                // If it was at the top
                 if (webStringState == WebStringPart.TOP) {
                     return state.setValue(WEB_STRING_PART, WebStringPart.TOP_BOTTOM); // Then top and bottom
                 } else {
