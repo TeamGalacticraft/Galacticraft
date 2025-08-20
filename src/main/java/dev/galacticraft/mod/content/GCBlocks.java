@@ -370,7 +370,7 @@ public class GCBlocks {
     public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
     public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
     public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
-    public static final Block TORCH_WEB = BLOCKS.registerWithItem(Constant.Block.TORCH_WEB, new TorchWebBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).lightLevel(torchWebEmission(10))));
+    public static final Block TORCH_WEB = BLOCKS.registerWithItem(Constant.Block.TORCH_WEB, new TorchWebBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB).lightLevel(torchWebEmission(10)).pushReaction(PushReaction.DESTROY)));
 
     // LANTERNS - Don't use registerWithItem in order for the torches to be before the lanterns
     public static final Block GLOWSTONE_LANTERN = BLOCKS.register(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
