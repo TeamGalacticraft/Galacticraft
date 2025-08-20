@@ -1,0 +1,43 @@
+package dev.galacticraft.mod.misc.cape;
+
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import dev.galacticraft.mod.Constant;
+import net.minecraft.client.Minecraft;
+
+import java.io.*;
+import java.nio.charset.StandardCharsets;
+
+public final class ClientCapePrefs {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().create();
+    private static final String FILE_NAME = "galacticraft_capes.json";
+
+    public CapeMode mode = CapeMode.VANILLA;
+    public String gcCapeId = "earth";
+
+    private static File file() {
+        return new File(Minecraft.getInstance().gameDirectory, "config/" + FILE_NAME);
+    }
+
+    public static ClientCapePrefs load() {
+        File f = file();
+        if (f.exists()) {
+            try (Reader r = new InputStreamReader(new FileInputStream(f), StandardCharsets.UTF_8)) {
+                return GSON.fromJson(r, ClientCapePrefs.class);
+            } catch (Exception e) {
+                Constant.LOGGER.warn("Failed reading {}", FILE_NAME, e);
+            }
+        }
+        return new ClientCapePrefs();
+    }
+
+    public void save() {
+        File f = file();
+        f.getParentFile().mkdirs();
+        try (Writer w = new OutputStreamWriter(new FileOutputStream(f), StandardCharsets.UTF_8)) {
+            GSON.toJson(this, w);
+        } catch (Exception e) {
+            Constant.LOGGER.warn("Failed writing {}", FILE_NAME, e);
+        }
+    }
+}
