@@ -203,7 +203,7 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
-                output.accept(TORCH_WEB);
+                output.accept(WEB_TORCH);
                 output.accept(WEB_STRING);
 
                 // LANTERNS

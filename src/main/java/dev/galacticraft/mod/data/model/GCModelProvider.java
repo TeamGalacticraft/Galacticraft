@@ -36,7 +36,7 @@ import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
-import dev.galacticraft.mod.content.block.special.TorchWebBlock;
+import dev.galacticraft.mod.content.block.special.WebTorchBlock;
 import dev.galacticraft.mod.content.block.special.WebStringBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -92,7 +92,7 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
-        createTorchWeb(generator, GCBlocks.TORCH_WEB);
+        createWebTorch(generator, GCBlocks.WEB_TORCH);
         createWebString(generator, GCBlocks.WEB_STRING);
 
         // LANTERNS
@@ -425,13 +425,13 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(blockState);
     }
 
-    private static void createTorchWeb(BlockModelGenerators generator, Block torch) {
-        ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB);
-        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_top");
-        generator.createSimpleFlatItemModel(torch);
-        MultiPartGenerator blockState = MultiPartGenerator.multiPart(torch)
-                .with(Condition.condition().term(TorchWebBlock.TOP, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
-                .with(Condition.condition().term(TorchWebBlock.TOP, true), Variant.variant().with(VariantProperties.MODEL, topModel));
+    private static void createWebTorch(BlockModelGenerators generator, Block webTorch) {
+        ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH);
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH, "_top");
+        generator.createSimpleFlatItemModel(webTorch);
+        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webTorch)
+                .with(Condition.condition().term(WebTorchBlock.TOP, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
+                .with(Condition.condition().term(WebTorchBlock.TOP, true), Variant.variant().with(VariantProperties.MODEL, topModel));
         generator.blockStateOutput.accept(blockState);
     }
 

@@ -41,18 +41,18 @@ import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TorchWebBlock extends WebBlock {
+public class WebTorchBlock extends WebBlock {
 
-    public static final MapCodec<WebBlock> CODEC = simpleCodec(TorchWebBlock::new);
+    public static final MapCodec<WebBlock> CODEC = simpleCodec(WebTorchBlock::new);
 
     public static final BooleanProperty TOP = BooleanProperty.create("top");
 
-    public TorchWebBlock(BlockBehaviour.Properties properties) {
+    public WebTorchBlock(BlockBehaviour.Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any().setValue(TOP, false));
     }
 
-    protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 4.0, 5.0, 11.0, 16.0, 11.0);
+    protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 3.5, 5.0, 11.0, 16.0, 11.0);
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
