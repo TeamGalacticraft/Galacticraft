@@ -23,18 +23,13 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.cape.CapeMode;
 import dev.galacticraft.mod.misc.cape.CapesClientState;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AbstractClientPlayer.class)

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.misc.cape;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.Util;
