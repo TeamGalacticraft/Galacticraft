@@ -61,4 +61,17 @@ public final class CapesClientRole {
         CapeRole role = UUID_ROLE.getOrDefault(id.toString().toLowerCase(Locale.ROOT), CapeRole.NONE);
         return role.ordinal() >= CapeRole.PATRON.ordinal();
     }
+
+    public static CapeRole getClientRole() {
+        var mc = Minecraft.getInstance();
+        UUID id = null;
+        if (mc.player != null && mc.player.getGameProfile() != null) {
+            id = mc.player.getGameProfile().getId();
+        }
+        if (id == null && mc.getUser() != null) {
+            id = mc.getUser().getProfileId();
+        }
+        if (id == null) return CapeRole.NONE;
+        return UUID_ROLE.getOrDefault(id.toString().toLowerCase(Locale.ROOT), CapeRole.NONE);
+    }
 }

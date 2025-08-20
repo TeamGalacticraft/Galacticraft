@@ -1,9 +1,7 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.mod.client.network.CapeClientNet;
-import dev.galacticraft.mod.misc.cape.CapeMode;
-import dev.galacticraft.mod.misc.cape.CapeRegistry;
-import dev.galacticraft.mod.misc.cape.ClientCapePrefs;
+import dev.galacticraft.mod.misc.cape.*;
 import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
@@ -64,7 +62,20 @@ public class CapeRootScreen extends OptionsSubScreen {
             widgets.clear();
             capeThumbs.clear();
 
+            CapeRole role = CapesClientRole.getClientRole();
+
+            if (!isCapeAllowedForRole(this.selectedCapeId, role)) {
+                String fallback = firstAllowedCapeId(role);
+                if (fallback != null) {
+                    this.selectedCapeId = fallback;
+                    this.prefs.gcCapeId = fallback;
+                    this.prefs.save();
+                }
+            }
+
             for (CapeRegistry.CapeDef def : CapeRegistry.all()) {
+                if (!role.atLeast(def.minRole)) continue;
+
                 CapeThumb thumb = new CapeThumb(def.texture, def.id, def.id.equals(this.selectedCapeId), () -> {
                     this.selectedCapeId = def.id;
                     this.prefs.gcCapeId = def.id;
@@ -147,5 +158,16 @@ public class CapeRootScreen extends OptionsSubScreen {
         @Override
         protected void updateWidgetNarration(NarrationElementOutput output) {}
         public void setSelected(boolean sel) { this.selected = sel; }
+    }
+
+    private static boolean isCapeAllowedForRole(String id, CapeRole role) {
+        if (id == null) return false;
+        var def = CapeRegistry.get(id);
+        return def != null && role.atLeast(def.minRole);
+    }
+
+    private static String firstAllowedCapeId(CapeRole role) {
+        for (CapeRegistry.CapeDef def : CapeRegistry.allowedFor(role)) return def.id;
+        return null;
     }
 }
