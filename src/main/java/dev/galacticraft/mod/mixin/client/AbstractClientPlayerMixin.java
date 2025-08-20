@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.At;
 public abstract class AbstractClientPlayerMixin {
     @ModifyReturnValue(method = "getSkin", at = @At("RETURN"))
     private PlayerSkin gc$injectCape(PlayerSkin original) {
-        var entry = CapesClientState.forPlayer((AbstractClientPlayer)(Object)this);
+        CapesClientState.Entry entry = CapesClientState.forPlayer((AbstractClientPlayer)(Object)this);
         if (entry == null) return original;
 
         if (entry.mode == CapeMode.OFF) {

@@ -64,7 +64,7 @@ public abstract class SkinCustomizationScreenMixin extends Screen {
         String label = cb.getMessage().getString().toLowerCase(Locale.ROOT);
         if (!label.contains("cape")) return;
 
-        list.remove(list.size() - 1);
+        list.removeLast();
         list.add(
                 Button.builder(Component.translatable(Translations.Ui.CAPE_BUTTON),b ->
                                 Minecraft.getInstance().setScreen(new CapeRootScreen((SkinCustomizationScreen)(Object)this)))
