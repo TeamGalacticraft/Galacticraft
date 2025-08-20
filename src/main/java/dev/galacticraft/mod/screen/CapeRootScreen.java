@@ -51,7 +51,7 @@ public class CapeRootScreen extends OptionsSubScreen {
                         Component.translatable(Translations.Ui.CAPES_STATE + v.name().toLowerCase(Locale.ROOT)))
                 .withValues(CapeMode.OFF, CapeMode.VANILLA, CapeMode.GC)
                 .withInitialValue(prefs.mode)
-                .create(Component.translatable("galacticraft.capes.mode"), (btn, value) -> {
+                .create(Component.translatable(Translations.Ui.CAPES_MODE), (btn, value) -> {
                     prefs.mode = value;
                     prefs.save();
                     CapeClientNet.sendSelectionIfOnline(value, value == CapeMode.GC ? prefs.gcCapeId : null);

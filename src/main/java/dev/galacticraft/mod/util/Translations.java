@@ -423,6 +423,7 @@ public interface Translations {
         String CAPE_BUTTON = "ui.options.cape";
         String CAPES_TITLE = "ui.capes.title";
         String CAPES_STATE = "galacticraft.capes.state.";
+        String CAPES_MODE = "galacticraft.capes.mode";
     }
 
     interface Boss {
