@@ -64,6 +64,31 @@ public class FallingMeteorEntity extends Entity {
         this.fallTo(hitResult.getLocation());
     }
 
+    private void spawnParticles() {
+        if (this.level().isClientSide && this.isAlive()) {
+            this.level().addParticle(
+                    ParticleTypes.SMOKE,
+                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
+                    0.0, 0.0, 0.0);
+            this.level().addParticle(
+                    ParticleTypes.SMOKE,
+                    this.getX() + this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble() * 0.5, this.getZ(),
+                    0.0, 0.0, 0.0);
+            this.level().addParticle(
+                    ParticleTypes.SMOKE,
+                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() + this.random.nextDouble(),
+                    0.0, 0.0, 0.0);
+            this.level().addParticle(
+                    ParticleTypes.SMOKE,
+                    this.getX() - this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
+                    0.0, 0.0, 0.0);
+            this.level().addParticle(
+                    ParticleTypes.SMOKE,
+                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() - this.random.nextDouble(),
+                    0.0, 0.0, 0.0);
+        }
+    }
+
     @Override
     protected double getDefaultGravity() {
         return 0.04;
@@ -89,31 +114,6 @@ public class FallingMeteorEntity extends Entity {
         this.handlePortal();
 
         this.spawnParticles();
-    }
-
-    private void spawnParticles() {
-        if (this.level().isClientSide && this.isAlive()) {
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX() + this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble() * 0.5, this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() + this.random.nextDouble(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX() - this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() - this.random.nextDouble(),
-                    0.0, 0.0, 0.0);
-        }
     }
 
     @Override
