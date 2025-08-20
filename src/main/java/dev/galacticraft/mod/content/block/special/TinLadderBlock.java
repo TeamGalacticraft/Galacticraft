@@ -38,6 +38,7 @@ import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
 
@@ -56,10 +57,12 @@ public class TinLadderBlock extends LadderBlock {
         if (checkState.is(GCBlocks.TIN_LADDER) && blockState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) != blockState.getValue(FACING)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
+        // Can only place into a fluid if its water.
         if (checkState.canBeReplaced()) {
-            var newState = this.defaultBlockState()
-                    .setValue(FACING, blockState.getValue(FACING))
-                    .setValue(WATERLOGGED, checkState.is(Blocks.WATER) || checkState.getValue(WATERLOGGED));
+            boolean waterLogged = checkState.is(Blocks.WATER)
+                    && (checkState.getFluidState().getAmount() >= 8 || checkState.getFluidState().isSource())
+                    || (checkState.hasProperty(WATERLOGGED) && checkState.getValue(WATERLOGGED));
+            var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(WATERLOGGED, waterLogged);
             level.setBlockAndUpdate(checkPos, newState);
             level.playSound(null, checkPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (blockState.getSoundType().getVolume() + 1.0F) / 2.0F, blockState.getSoundType().getPitch() * 0.8F);
             level.gameEvent(GameEvent.BLOCK_PLACE, checkPos, GameEvent.Context.of(player, newState));
