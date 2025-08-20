@@ -50,7 +50,7 @@ public class GCEntityTypes {
             .ridingOffset(-0.7F)
             .clientTrackingRange(8)
             .build());
-    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
+    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
             .sized(0.6F, 1.7F)
             .clientTrackingRange(8)
             .build());
@@ -124,6 +124,13 @@ public class GCEntityTypes {
             .sized(0.6F, 1.55F)
             .eyeHeight(1.25F)
             .clientTrackingRange(8)
+            .build());
+
+    public static final EntityType<FallingMeteorEntity> FALLING_METEOR = ENTITIES.register(Entity.FALLING_METEOR, EntityType.Builder.of(FallingMeteorEntity::new, MobCategory.AMBIENT)
+            .clientTrackingRange(150)
+            .updateInterval(5)
+            .sized(1.0f, 1.0f)
+            .eyeHeight(0.5f)
             .build());
 
     public static final EntityType<BubbleEntity> BUBBLE = ENTITIES.register(Entity.BUBBLE, EntityType.Builder.of(BubbleEntity::new, MobCategory.MISC)
