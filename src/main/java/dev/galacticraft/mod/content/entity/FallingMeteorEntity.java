@@ -92,7 +92,7 @@ public class FallingMeteorEntity extends Entity {
     }
 
     private void spawnParticles() {
-        if (this.isAlive()) {
+        if (this.level().isClientSide && this.isAlive()) {
             this.level().addParticle(
                     ParticleTypes.SMOKE,
                     this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
