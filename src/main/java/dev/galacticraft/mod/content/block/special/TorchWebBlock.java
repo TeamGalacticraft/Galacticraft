@@ -32,17 +32,19 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TorchWebBlock extends Block {
+public class TorchWebBlock extends WebBlock {
 
-    public static final MapCodec<TorchWebBlock> CODEC = simpleCodec(TorchWebBlock::new);
+    public static final MapCodec<WebBlock> CODEC = simpleCodec(TorchWebBlock::new);
 
     public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
 
@@ -52,7 +54,7 @@ public class TorchWebBlock extends Block {
     }
 
     protected static final VoxelShape WEB_VOXEL = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
-    protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 3.0, 5.0, 11.0, 16.0, 11.0);
+    protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 4.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
@@ -64,7 +66,7 @@ public class TorchWebBlock extends Block {
     }
 
     @Override
-    public MapCodec<TorchWebBlock> codec() {
+    public MapCodec<WebBlock> codec() {
         return CODEC;
     }
 
@@ -93,12 +95,12 @@ public class TorchWebBlock extends Block {
             return defaultBlockState().setValue(BOTTOM, true);
         }
         // No change
-        return state;
+        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
     }
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return this.canAttachTo(level, pos.above(), Direction.DOWN);
+        return this.canAttachTo(level, pos.above(), Direction.DOWN) && state.getFluidState().is(Fluids.EMPTY);
     }
 
     private boolean canAttachTo(BlockGetter world, BlockPos pos, Direction side) {
