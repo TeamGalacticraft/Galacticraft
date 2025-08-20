@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:block/tinted_cross",
   "textures": {
-    "cross": "galacticraft:block/torch_web"
+    "cross": "galacticraft:block/web_torch"
   }
 }

@@ -220,7 +220,7 @@ public interface Constant {
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
-        String TORCH_WEB = "torch_web";
+        String WEB_TORCH = "web_torch";
         String WEB_STRING = "web_string";
 
         //  Environment
@@ -232,7 +232,6 @@ public interface Constant {
         String UNLIT_LANTERN = "unlit_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
-        String WEB_TORCH = "web_torch";
         String FALLEN_METEOR = "fallen_meteor";
         String SLIMELING_EGG = "slimeling_egg";
         String CREEPER_EGG = "creeper_egg";

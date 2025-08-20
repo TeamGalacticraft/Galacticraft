@@ -1,6 +1,6 @@
 {
   "parent": "minecraft:item/generated",
   "textures": {
-    "layer0": "galacticraft:block/torch_web"
+    "layer0": "galacticraft:block/web_torch"
   }
 }

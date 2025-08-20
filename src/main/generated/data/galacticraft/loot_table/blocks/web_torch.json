@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:torch_web"
+          "name": "galacticraft:web_torch"
         }
       ],
       "rolls": 1.0

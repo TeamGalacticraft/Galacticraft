@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:torch_web"
+        "recipe": "galacticraft:web_torch"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:torch_web"
+      "galacticraft:web_torch"
     ]
   }
 }

@@ -372,7 +372,7 @@ public class GCBlocks {
     public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
 
     // TORCH WEB
-    public static final Block TORCH_WEB = BLOCKS.registerWithItem(Constant.Block.TORCH_WEB, new TorchWebBlock(BlockBehaviour.Properties.of()
+    public static final Block WEB_TORCH = BLOCKS.registerWithItem(Constant.Block.WEB_TORCH, new WebTorchBlock(BlockBehaviour.Properties.of()
             .mapColor(MapColor.WOOL)
             .sound(SoundType.COBWEB)
             .noCollission()

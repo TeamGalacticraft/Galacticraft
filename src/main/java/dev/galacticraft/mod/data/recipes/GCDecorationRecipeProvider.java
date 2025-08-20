@@ -57,7 +57,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TORCH_WEB, 1)
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.WEB_TORCH, 1)
                 .define('W', GCBlocks.WEB_STRING)
                 .define('T', GCItems.GLOWSTONE_TORCH)
                 .pattern("W")
