@@ -36,6 +36,8 @@ import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
+import dev.galacticraft.mod.content.block.special.TorchWebBlock;
+import dev.galacticraft.mod.content.block.special.WebStringBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -90,7 +92,8 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
-        createTorchWeb(generator, GCBlocks.TORCH_WEB, "_end");
+        createTorchWeb(generator, GCBlocks.TORCH_WEB);
+        createWebString(generator, GCBlocks.WEB_STRING);
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
@@ -408,13 +411,27 @@ public class GCModelProvider extends FabricModelProvider {
                 )));
     }
 
-    private static void createTorchWeb(BlockModelGenerators generator, Block torch, String endSuffix) {
+    private static void createWebString(BlockModelGenerators generator, Block webString) {
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top");
+        ResourceLocation middleModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_middle");
+        ResourceLocation bottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_bottom");
+        ResourceLocation topBottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top_bottom");
+        generator.createSimpleFlatItemModel(webString, "_middle");
+        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webString)
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP), Variant.variant().with(VariantProperties.MODEL, topModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.MIDDLE), Variant.variant().with(VariantProperties.MODEL, middleModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.BOTTOM), Variant.variant().with(VariantProperties.MODEL, bottomModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP_BOTTOM), Variant.variant().with(VariantProperties.MODEL, topBottomModel));
+        generator.blockStateOutput.accept(blockState);
+    }
+
+    private static void createTorchWeb(BlockModelGenerators generator, Block torch) {
         ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB);
-        ResourceLocation endModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, endSuffix);
-        generator.createSimpleFlatItemModel(torch, endSuffix);
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.TORCH_WEB, "_top");
+        generator.createSimpleFlatItemModel(torch);
         MultiPartGenerator blockState = MultiPartGenerator.multiPart(torch)
-                .with(Condition.condition().term(BlockStateProperties.BOTTOM, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
-                .with(Condition.condition().term(BlockStateProperties.BOTTOM, true), Variant.variant().with(VariantProperties.MODEL, endModel));
+                .with(Condition.condition().term(TorchWebBlock.TOP, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
+                .with(Condition.condition().term(TorchWebBlock.TOP, true), Variant.variant().with(VariantProperties.MODEL, topModel));
         generator.blockStateOutput.accept(blockState);
     }
 

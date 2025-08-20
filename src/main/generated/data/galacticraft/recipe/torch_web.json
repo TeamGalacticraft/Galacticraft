@@ -6,7 +6,7 @@
       "item": "galacticraft:glowstone_torch"
     },
     "W": {
-      "item": "minecraft:cobweb"
+      "item": "galacticraft:web_string"
     }
   },
   "pattern": [

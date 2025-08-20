@@ -205,6 +205,7 @@ public class GCCreativeModeTabs {
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
                 output.accept(TORCH_WEB);
+                output.accept(WEB_STRING);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
