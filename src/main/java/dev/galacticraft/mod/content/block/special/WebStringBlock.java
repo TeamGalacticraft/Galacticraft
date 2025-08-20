@@ -18,6 +18,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -28,9 +29,12 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class WebStringBlock extends Block {
+// TODO Check walking through web strings and torch webs (maybe should rename to web torches) it slows the player down.
+// TODO Extend web string down when clicked on with web string.
 
-    public static final MapCodec<WebStringBlock> CODEC = simpleCodec(WebStringBlock::new);
+public class WebStringBlock extends WebBlock {
+
+    public static final MapCodec<WebBlock> CODEC = simpleCodec(WebStringBlock::new);
 
     public static final EnumProperty<WebStringPart> WEB_STRING_PART = WebStringPart.WEB_STRING_PART;
 
@@ -52,7 +56,7 @@ public class WebStringBlock extends Block {
     }
 
     @Override
-    public MapCodec<WebStringBlock> codec() {
+    public MapCodec<WebBlock> codec() {
         return CODEC;
     }
 
@@ -60,10 +64,10 @@ public class WebStringBlock extends Block {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos pos = ctx.getClickedPos();
         BlockState state = ctx.getLevel().getBlockState(pos);
-        if (!state.is(GCBlocks.WEB_STRING)) {
-            return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.TOP_BOTTOM);
+        if (state.is(GCBlocks.WEB_STRING)) {
+            return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM);
         }
-        return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM);
+        return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.TOP_BOTTOM);
     }
 
     /// This method is called whe the player tries to use something on a Web String block.
