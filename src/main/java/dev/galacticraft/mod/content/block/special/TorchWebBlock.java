@@ -32,84 +32,71 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.WebBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
-public class TorchWebBlock extends WebBlock {
+public class TorchWebBlock extends Block {
 
-    public static final MapCodec<WebBlock> CODEC = simpleCodec(TorchWebBlock::new);
+    public static final MapCodec<TorchWebBlock> CODEC = simpleCodec(TorchWebBlock::new);
 
-    public static final BooleanProperty BOTTOM = BlockStateProperties.BOTTOM;
+    public static final BooleanProperty TOP = BooleanProperty.create("top");
 
     public TorchWebBlock(BlockBehaviour.Properties properties) {
         super(properties);
-        this.registerDefaultState(this.stateDefinition.any().setValue(BOTTOM, false));
+        this.registerDefaultState(this.stateDefinition.any().setValue(TOP, false));
     }
 
-    protected static final VoxelShape WEB_VOXEL = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
     protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 4.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (state.getValue(BOTTOM)) {
-            return TORCH_VOXEL;
-        } else {
-            return WEB_VOXEL;
-        }
+        return TORCH_VOXEL;
     }
 
     @Override
-    public MapCodec<WebBlock> codec() {
+    public MapCodec<TorchWebBlock> codec() {
         return CODEC;
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        BlockPos above = ctx.getClickedPos().above();
-        BlockState aboveState = ctx.getLevel().getBlockState(above);
-
-        if (aboveState.getBlock() instanceof TorchWebBlock) {
-            if (!ctx.getLevel().isClientSide()) {
-                ctx.getLevel().setBlock(above, aboveState.setValue(BOTTOM, false), Block.UPDATE_ALL);
-            }
+        BlockPos pos = ctx.getClickedPos();
+        BlockState state = ctx.getLevel().getBlockState(pos);
+        if (!state.is(GCBlocks.WEB_STRING)) {
+            return defaultBlockState().setValue(TOP, true);
         }
-
-        return defaultBlockState().setValue(BOTTOM, true);
+        return defaultBlockState().setValue(TOP, false);
     }
 
-    //  Manages the updates to the torch web to determine if this block is the bottom and therefore shows the torch.
+    //  Manages the updates to the torch web to determine if this block is attached to a solid face or a web string.
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         // If above changed and it isn't a torch web block (and in theory not a solid block) then it breaks.
-        if (direction == Direction.UP && !neighborState.is(GCBlocks.TORCH_WEB)) {
+        if (direction == Direction.UP && !neighborState.is(GCBlocks.WEB_STRING)) {
             return Blocks.AIR.defaultBlockState();
-        // If below changed and it isn't a torch web then this is the bottom.
-        } else if (direction == Direction.DOWN && !neighborState.is(GCBlocks.TORCH_WEB)) {
-            return defaultBlockState().setValue(BOTTOM, true);
         }
         // No change
-        return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
+        return state;
     }
 
     @Override
     protected boolean canSurvive(BlockState state, LevelReader level, BlockPos pos) {
-        return this.canAttachTo(level, pos.above(), Direction.DOWN) && state.getFluidState().is(Fluids.EMPTY);
+        BlockState checkState = level.getBlockState(pos);
+        return this.canAttachTo(level, pos.above(), Direction.DOWN) && (checkState.getFluidState().is(Fluids.EMPTY) || !checkState.is(Blocks.WATER));
     }
 
     private boolean canAttachTo(BlockGetter world, BlockPos pos, Direction side) {
         BlockState blockState = world.getBlockState(pos);
-        return blockState.isFaceSturdy(world, pos, side) || blockState.is(GCBlocks.TORCH_WEB);
+        return blockState.isFaceSturdy(world, pos, side) || blockState.is(GCBlocks.WEB_STRING);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
-        compositeStateBuilder.add(BOTTOM);
+        compositeStateBuilder.add(TOP);
     }
 }

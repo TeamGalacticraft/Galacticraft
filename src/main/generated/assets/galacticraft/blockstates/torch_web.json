@@ -5,15 +5,15 @@
         "model": "galacticraft:block/torch_web"
       },
       "when": {
-        "bottom": "false"
+        "top": "false"
       }
     },
     {
       "apply": {
-        "model": "galacticraft:block/torch_web_end"
+        "model": "galacticraft:block/torch_web_top"
       },
       "when": {
-        "bottom": "true"
+        "top": "true"
       }
     }
   ]

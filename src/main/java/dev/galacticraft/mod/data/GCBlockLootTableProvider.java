@@ -67,7 +67,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.GLOWSTONE_TORCH);
         this.dropSelf(GCBlocks.UNLIT_TORCH);
-        this.add(GCBlocks.TORCH_WEB, noDrop());
+        this.dropSelf(GCBlocks.TORCH_WEB);
+        this.dropSelf(GCBlocks.WEB_STRING);
 
         this.dropSelf(GCBlocks.GLOWSTONE_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_LANTERN);

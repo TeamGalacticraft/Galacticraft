@@ -58,11 +58,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TORCH_WEB, 1)
-                .define('W', Items.COBWEB)
+                .define('W', GCBlocks.WEB_STRING)
                 .define('T', GCItems.GLOWSTONE_TORCH)
                 .pattern("W")
                 .pattern("T")
-                .unlockedBy(getHasName(GCItems.GLOWSTONE_TORCH), has(GCItems.GLOWSTONE_TORCH))
+                .unlockedBy(getHasName(GCBlocks.WEB_STRING), has(GCBlocks.WEB_STRING))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
