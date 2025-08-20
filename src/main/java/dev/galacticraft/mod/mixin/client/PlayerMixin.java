@@ -22,13 +22,20 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
+import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.misc.cape.CapesClientState;
 import dev.galacticraft.mod.network.c2s.OpenPetInventoryPayload;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.client.resources.PlayerSkin;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.player.PlayerModelPart;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
 @Environment(EnvType.CLIENT)
@@ -36,5 +43,31 @@ public abstract class PlayerMixin implements PetInventoryOpener {
     @Override
     public void galacticraft$sendOpenPetInventory(int petId) {
         ClientPlayNetworking.send(new OpenPetInventoryPayload(petId));
+    }
+
+    @ModifyReturnValue(method = "isModelPartShown", at = @At("RETURN"))
+    private boolean gc$forceCapeWhenActive(boolean original, PlayerModelPart part) {
+        if (part != PlayerModelPart.CAPE) return original;
+
+        if (!(((Object) this) instanceof AbstractClientPlayer clientPlayer)) return original;
+
+        CapesClientState.Entry entry = CapesClientState.forPlayer(clientPlayer);
+        if (entry == null) return original;
+
+        if (entry.mode == CapeMode.OFF) return original;
+
+        if (entry.mode == CapeMode.GC) {
+            if (entry.gcCapeId != null && CapesClientState.gcCapeTexture(entry.gcCapeId) != null) {
+                return true;
+            }
+            return original;
+        }
+
+        PlayerSkin skin = clientPlayer.getSkin();
+        if (skin.capeTexture() != null) {
+            return true;
+        }
+
+        return original;
     }
 }

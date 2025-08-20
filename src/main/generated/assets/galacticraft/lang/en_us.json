@@ -503,6 +503,10 @@
   "entity.galacticraft.rocket": "Rocket",
   "entity.galacticraft.rumbler": "Rumbler",
   "entity.galacticraft.throwable_meteor_chunk": "Meteor Chunk",
+  "galacticraft.capes.mode": "Cape: ",
+  "galacticraft.capes.state.gc": "Galacticraft",
+  "galacticraft.capes.state.off": "Off",
+  "galacticraft.capes.state.vanilla": "Vanilla",
   "galaxy.galacticraft.milky_way.description": "",
   "galaxy.galacticraft.milky_way.name": "Milky Way",
   "gas.galacticraft.argon": "Argon",
@@ -884,6 +888,7 @@
   "tooltip.galacticraft.standard_wrench": "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.",
   "tooltip.galacticraft.time_until_cool": "Time Until Cool: %s",
   "tooltip.galacticraft.waila_oxygen_tank": "O₂ Tank %s",
+  "ui.capes.title": "Capes",
   "ui.galacticraft.airlock.owner": "%s's Airlock Controller",
   "ui.galacticraft.airlock.redstone_signal": "Opens on Redstone Signal",
   "ui.galacticraft.alpha_warning.content1": "Galacticraft is currently in ALPHA.",
@@ -1017,5 +1022,6 @@
   "ui.galacticraft.status.warming_up": "Warming Up",
   "ui.galacticraft.total_nutrition": "Total Nutrition: %s",
   "ui.galacticraft.traveling_to": "Traveling to: %s",
-  "ui.galacticraft.upgrade": "Upgrade"
+  "ui.galacticraft.upgrade": "Upgrade",
+  "ui.options.cape": "Cape"
 }

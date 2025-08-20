@@ -20,31 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network;
+package dev.galacticraft.mod.client.network;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.mod.network.c2s.*;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.Minecraft;
+import org.jetbrains.annotations.Nullable;
 
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCServerPacketReceivers {
-    public static void register() {
-        registerPacket(BubbleMaxPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(EjectCanPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(OpenPetInventoryPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
-        registerPacket(CapeSelectionPayload.TYPE);
+public final class CapeClientNet {
+    public static void sendSelectionIfOnline(CapeMode mode, @Nullable String gcCapeId) {
+        var mc = Minecraft.getInstance();
+        if (mc != null && mc.getConnection() != null && mc.player != null) {
+            ClientPlayNetworking.send(new CapeSelectionPayload(
+                    mode,
+                    mode == CapeMode.GC ? gcCapeId : null
+            ));
+        }
     }
 
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
-    }
+    private CapeClientNet() {}
 }

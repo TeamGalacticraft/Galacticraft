@@ -1163,6 +1163,13 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
+
+        this.add(Ui.CAPE_BUTTON, "Cape");
+        this.add(Ui.CAPES_TITLE, "Capes");
+        this.add(Ui.CAPES_STATE + "vanilla", "Vanilla");
+        this.add(Ui.CAPES_STATE + "gc", "Galacticraft");
+        this.add(Ui.CAPES_STATE + "off", "Off");
+        this.add(Ui.CAPES_MODE, "Cape: ");
     }
 
     protected void generateWailaTranslations() {

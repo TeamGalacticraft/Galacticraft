@@ -20,52 +20,40 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.dimension.star;
+package dev.galacticraft.mod.misc.cape;
 
-import net.minecraft.world.phys.Vec3;
+import net.minecraft.client.player.AbstractClientPlayer;
+import net.minecraft.resources.ResourceLocation;
 
-/**
- * Represents the three-dimensional position of a celestial body in space.
- * Used for rendering other astronomical objects in the space environment.
- */
-public class GeographicalSolarPosition {
-    private double x;
-    private double y;
-    private double z;
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-    public GeographicalSolarPosition(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
+public final class CapesClientState {
+    public static final class Entry {
+        public final CapeMode mode;
+        public final String gcCapeId;
+        public Entry(CapeMode mode, String gcCapeId) {
+            this.mode = mode;
+            this.gcCapeId = gcCapeId;
+        }
     }
 
-    public double getX() {
-        return x;
+    private static final Map<String, Entry> ASSIGN = new HashMap<>();
+
+    public static synchronized void apply(Map<String, Entry> snapshot) {
+        ASSIGN.clear();
+        ASSIGN.putAll(snapshot);
     }
 
-    public double getY() {
-        return y;
+    public static synchronized Entry forPlayer(AbstractClientPlayer player) {
+        if (player == null || player.getGameProfile() == null) return null;
+        String id = player.getGameProfile().getId().toString().toLowerCase(Locale.ROOT);
+        return ASSIGN.get(id);
     }
 
-    public double getZ() {
-        return z;
+    public static ResourceLocation gcCapeTexture(String gcCapeId) {
+        var def = CapeRegistry.get(gcCapeId);
+        return def != null ? def.texture : null;
     }
-
-    public void setCameraPositions(double x, double y, double z) {
-        this.x = x;
-        this.y = y;
-        this.z = z;
-    }
-
-    public Vec3 getVec3() {
-        return new Vec3(x, y, z);
-    }
-
-    private static final GeographicalSolarPosition instance = new GeographicalSolarPosition(0, 0, 0);
-
-    public static GeographicalSolarPosition getInstance() {
-        return instance;
-    }
-
 }
-
