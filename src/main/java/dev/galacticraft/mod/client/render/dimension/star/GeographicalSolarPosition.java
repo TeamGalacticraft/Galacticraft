@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.dimension.star;
 
 import net.minecraft.world.phys.Vec3;
-import org.joml.Vector3d;
 
 /**
  * Represents the three-dimensional position of a celestial body in space.
