@@ -28,7 +28,7 @@ import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;

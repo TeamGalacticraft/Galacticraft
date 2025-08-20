@@ -20,8 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.mixin;
 
-public interface ControllableEntity {
-    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown);
+import net.minecraft.world.level.block.AbstractCandleBlock;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Invoker;
+
+@Mixin(AbstractCandleBlock.class)
+public interface AbstractCandleBlockInvoker {
+    @Invoker("getParticleOffsets")
+    Iterable<Vec3> callGetParticleOffsets(BlockState state);
 }

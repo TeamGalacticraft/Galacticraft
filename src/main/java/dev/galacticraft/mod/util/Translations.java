@@ -419,6 +419,11 @@ public interface Translations {
         String TRAVELING_TO = "ui.galacticraft.traveling_to";
         String TOTAL_NUTRITION = "ui.galacticraft.total_nutrition";
         String SPACE_STATION_NAME = "ui.galacticraft.space_station_name";
+
+        String CAPE_BUTTON = "ui.options.cape";
+        String CAPES_TITLE = "ui.capes.title";
+        String CAPES_STATE = "galacticraft.capes.state.";
+        String CAPES_MODE = "galacticraft.capes.mode";
     }
 
     interface Boss {

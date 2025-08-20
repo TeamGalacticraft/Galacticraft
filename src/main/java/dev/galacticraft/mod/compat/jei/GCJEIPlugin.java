@@ -24,11 +24,11 @@ package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.compat.jei.category.JEICompressingCategory;
-import dev.galacticraft.mod.compat.jei.category.JEIFabricationCategory;
-import dev.galacticraft.mod.compat.jei.category.JEIRocketCategory;
-import dev.galacticraft.mod.compat.jei.replacers.EmergencyKitRecipeMaker;
+import dev.galacticraft.mod.compat.jei.category.*;
+import dev.galacticraft.mod.compat.jei.replacers.*;
+import dev.galacticraft.mod.compat.jei.subtypes.*;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import mezz.jei.api.IModPlugin;
@@ -40,6 +40,7 @@ import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
+import mezz.jei.api.registration.ISubtypeRegistration;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -59,6 +60,17 @@ public class GCJEIPlugin implements IModPlugin {
     @Override
     public ResourceLocation getPluginUid() {
         return Constant.id("jei_plugin");
+    }
+
+    @Override
+    public void registerItemSubtypes(ISubtypeRegistration registration) {
+        registration.registerSubtypeInterpreter(GCItems.BATTERY, BatterySubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCItems.SMALL_OXYGEN_TANK, OxygenTankSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCItems.MEDIUM_OXYGEN_TANK, OxygenTankSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCItems.LARGE_OXYGEN_TANK, OxygenTankSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCItems.ROCKET, RocketSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCItems.CANNED_FOOD, CannedFoodSubtypeInterpreter.INSTANCE);
+        registration.registerSubtypeInterpreter(GCBlocks.PARACHEST.asItem(), ParachestSubtypeInterpreter.INSTANCE);
     }
 
     @Override

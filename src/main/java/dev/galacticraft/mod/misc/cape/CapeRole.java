@@ -20,25 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital;
+package dev.galacticraft.mod.misc.cape;
 
-import dev.galacticraft.mod.content.entity.GCVehicle;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
-import org.joml.Quaternionf;
 
-/**
- * A entity that's rotation is represented via a quaternion.
- */
-public abstract class AdvancedVehicle extends GCVehicle {
+public enum CapeRole {
+    NONE,
+    PATRON,
+    DEVELOPER;
 
-    protected Quaternionf rotation;
-
-    public AdvancedVehicle(EntityType<?> entityType, Level level) {
-        super(entityType, level);
-    }
-
-    public Quaternionf getRotation() {
-        return rotation;
+    public boolean atLeast(CapeRole other) {
+        return this.ordinal() >= other.ordinal();
     }
 }

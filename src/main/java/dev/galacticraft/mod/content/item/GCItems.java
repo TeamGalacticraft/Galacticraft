@@ -49,10 +49,12 @@ public class GCItems {
     // TORCHES
     public static final Item GLOWSTONE_TORCH = ITEMS.register(Constant.Block.GLOWSTONE_TORCH, new StandingAndWallBlockItem(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH, new Item.Properties(), Direction.DOWN));
     public static final Item UNLIT_TORCH = ITEMS.register(Constant.Block.UNLIT_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH, new Item.Properties(), Direction.DOWN));
+    public static final Item UNLIT_SOUL_TORCH = ITEMS.register(Constant.Block.UNLIT_SOUL_TORCH, new StandingAndWallBlockItem(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH, new Item.Properties(), Direction.DOWN));
 
     // LANTERNS
     public static final Item GLOWSTONE_LANTERN = ITEMS.register(Constant.Block.GLOWSTONE_LANTERN, new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties()));
     public static final Item UNLIT_LANTERN = ITEMS.register(Constant.Block.UNLIT_LANTERN, new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties()));
+    public static final Item UNLIT_SOUL_LANTERN = ITEMS.register(Constant.Block.UNLIT_SOUL_LANTERN, new BlockItem(GCBlocks.UNLIT_SOUL_LANTERN, new Item.Properties()));
 
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);

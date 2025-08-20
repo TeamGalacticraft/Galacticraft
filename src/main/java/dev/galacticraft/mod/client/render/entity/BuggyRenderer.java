@@ -30,7 +30,7 @@ import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCModelState;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.content.entity.Buggy;
+import dev.galacticraft.mod.content.entity.vehicle.Buggy;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
@@ -112,8 +112,8 @@ public class BuggyRenderer extends EntityRenderer<Buggy> {
         matrices.pushPose();
         matrices.translate(-1.178F, 4.1F, -2.397F);
         int ticks = buggy.tickCount + buggy.getId() * 10000;
-        matrices.mulPose(Axis.XP.rotationDegrees((float) Math.sin(ticks * 0.05) * 50.0F));
-        matrices.mulPose(Axis.ZP.rotationDegrees((float) Math.cos(ticks * 0.1) * 50.0F));
+        matrices.mulPose(Axis.XP.rotationDegrees(Mth.sin(ticks * 0.05F) * 50.0F));
+        matrices.mulPose(Axis.ZP.rotationDegrees(Mth.cos(ticks * 0.1F) * 50.0F));
         this.buggyModel.render(matrices, RADAR_DISH, consumer, light, OverlayTexture.NO_OVERLAY);
         matrices.popPose();
 

@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,15 +36,23 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class UnlitLanternBlock extends LanternBlock {
-    public UnlitLanternBlock(Properties properties) {
+    public static final MapCodec<UnlitLanternBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            Block.CODEC.fieldOf("lit_block").forGetter(unlitLantern -> unlitLantern.litBlock),
+            propertiesCodec()
+    ).apply(instance, UnlitLanternBlock::new));
+
+    private final Block litBlock;
+
+    public UnlitLanternBlock(Block litBlock, Properties properties) {
         super(properties);
+        this.litBlock = litBlock;
     }
 
     @Override
@@ -51,7 +61,7 @@ public class UnlitLanternBlock extends LanternBlock {
 
         if (itemStack.is(ItemTags.CREEPER_IGNITERS)) {
             level.playSound(null, pos, SoundEvents.FLINTANDSTEEL_USE, SoundSource.BLOCKS, 1.0F, level.getRandom().nextFloat() * 0.4F + 0.8F);
-            level.setBlockAndUpdate(pos, Blocks.LANTERN.defaultBlockState().setValue(HANGING, state.getValue(HANGING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)));
+            level.setBlockAndUpdate(pos, this.litBlock.defaultBlockState().setValue(HANGING, state.getValue(HANGING)).setValue(WATERLOGGED, state.getValue(WATERLOGGED)));
             level.gameEvent(player, GameEvent.BLOCK_CHANGE, pos);
 
             if (player instanceof ServerPlayer serverPlayer) {

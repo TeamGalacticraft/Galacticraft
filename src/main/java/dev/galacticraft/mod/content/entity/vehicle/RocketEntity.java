@@ -20,10 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital;
+package dev.galacticraft.mod.content.entity.vehicle;
 
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
+import dev.galacticraft.api.entity.ControllableEntity;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
@@ -39,7 +40,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;

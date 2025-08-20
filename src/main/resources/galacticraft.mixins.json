@@ -4,7 +4,9 @@
   "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
   "compatibilityLevel": "JAVA_21",
   "mixins": [
+    "AbstractCandleBlockInvoker",
     "AbstractContainerMenuAccessor",
+    "AbstractFurnaceBlockEntityMixin",
     "AbstractHorseMixin",
     "AbstractSkeletonEntityAccessor",
     "AnimalMixin",
@@ -19,7 +21,6 @@
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
-    "LanternBlockMixin",
     "LevelMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
@@ -27,8 +28,7 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin",
-    "TorchBlockMixin"
+    "SpiderMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -42,6 +42,7 @@
     "client.ClientPacketListenerMixin",
     "client.FabricItemMixin",
     "client.FogRendererMixin",
+    "client.GameRendererMixin",
     "client.HumanoidModelMixin",
     "client.ItemInHandRendererMixin",
     "client.LevelRendererMixin",
@@ -53,6 +54,7 @@
     "client.PauseMenuScreenMixin",
     "client.PlayerMixin",
     "client.ScreenEffectRendererMixin",
+    "client.SkinCustomizationScreenMixin",
     "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",

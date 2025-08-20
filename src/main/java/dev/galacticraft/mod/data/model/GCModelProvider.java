@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
@@ -94,10 +95,12 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
         createWebTorch(generator, GCBlocks.WEB_TORCH);
         createWebString(generator, GCBlocks.WEB_STRING);
+        generator.createNormalTorch(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH);
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
+        generator.createLantern(GCBlocks.UNLIT_SOUL_LANTERN);
 
         // MOON NATURAL
         this.createMoonTurf(generator);
@@ -310,7 +313,7 @@ public class GCModelProvider extends FabricModelProvider {
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.COAL_GENERATOR,
+        createCoalGenerator(generator, GCBlocks.COAL_GENERATOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/coal_generator_active")
@@ -318,10 +321,18 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/coal_generator")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_cooling")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_warming")
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.COMPRESSOR,
+        createCompressor(generator, GCBlocks.COMPRESSOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor_active")
@@ -329,6 +340,10 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor_lit")
                         .build()
         );
 
@@ -372,6 +387,33 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.all(TextureMapping.getBlockTexture(block, "_active")),
                 TextureProvider.all(TextureMapping.getBlockTexture(block))
         );
+    }
+
+    private static void createCoalGenerator(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider coolingTex, TextureProvider warmingTex) {
+        ResourceLocation inactive = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), inactiveTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation cooling = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_cooling"), coolingTex);
+        ResourceLocation warming = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_warming"), warmingTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(CoalGeneratorBlock.LIT, CoalGeneratorBlock.HOT)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, warming))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, cooling))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
+    }
+
+    private static void createCompressor(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider litTex) {
+        ResourceLocation inactive = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), inactiveTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation lit = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_lit"), litTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(MachineBlock.ACTIVE, CoalGeneratorBlock.LIT)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, lit))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
     }
 
     private static void createFuelLoader(BlockModelGenerators generator, Block block) {

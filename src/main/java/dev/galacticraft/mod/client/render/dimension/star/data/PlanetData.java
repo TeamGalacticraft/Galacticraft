@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.render.dimension.star.data;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.resources.ResourceLocation;
-import dev.galacticraft.mod.client.render.dimension.CelestialBodyTextures;
 
 /**
  * Planet implementation of CelestialBody.
@@ -37,7 +37,7 @@ public class PlanetData extends CelestialBody {
 
     public PlanetData(int x, int y, int z, double size, double rotation) {
         super(x, y, z, size, rotation, CelestialBodyType.PLANET2D);
-        this.texture = CelestialBodyTextures.EARTH; // Default texture
+        this.texture = Constant.CelestialBody.EARTH; // Default texture
     }
 
     public PlanetData(int x, int y, int z, double size, double rotation, ResourceLocation texture) {

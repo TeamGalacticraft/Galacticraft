@@ -20,9 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity.orbital.lander;
+package dev.galacticraft.mod.content.entity.vehicle;
 
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.level.Level;
 

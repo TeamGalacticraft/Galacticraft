@@ -55,10 +55,10 @@ public class SolarPanelBlockEntityRenderer implements BlockEntityRenderer<Abstra
     }
 
     public static LayerDefinition getTexturedModelData() {
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_POLE, CubeListBuilder.create().texOffs(94, 50).addBox(-1.5F, 0.0F, -1.5F, 3, 24, 3, CubeDeformation.NONE), PartPose.ZERO);
-        PartDefinition panel = modelPartData.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL, CubeListBuilder.create().texOffs(0, 0).addBox(-23F, -1F, -23F, 46, 1, 46, CubeDeformation.NONE), PartPose.ZERO);
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_POLE, CubeListBuilder.create().texOffs(94, 50).addBox(-1.5F, 0.0F, -1.5F, 3, 24, 3, CubeDeformation.NONE), PartPose.ZERO);
+        PartDefinition panel = partDefinition.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL, CubeListBuilder.create().texOffs(0, 0).addBox(-23F, -1F, -23F, 46, 1, 46, CubeDeformation.NONE), PartPose.ZERO);
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_HORIZONTAL_1, CubeListBuilder.create().texOffs(0, 48).addBox(-24F, -2F, -23F, 1, 1, 46, CubeDeformation.NONE), PartPose.ZERO);
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_HORIZONTAL_2, CubeListBuilder.create().texOffs(0, 48).addBox(-9F, -2F, -23F, 1, 1, 46, CubeDeformation.NONE), PartPose.ZERO);
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_HORIZONTAL_3, CubeListBuilder.create().texOffs(0, 48).addBox(8F, -2F, -23F, 1, 1, 46, CubeDeformation.NONE), PartPose.ZERO);
@@ -66,7 +66,7 @@ public class SolarPanelBlockEntityRenderer implements BlockEntityRenderer<Abstra
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_VERTICAL_1, CubeListBuilder.create().texOffs(94, 48).addBox(-24F, -2F, 23F, 48, 1, 1, CubeDeformation.NONE), PartPose.ZERO);
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_VERTICAL_2, CubeListBuilder.create().texOffs(94, 48).addBox(-24F, -2F, -24F, 48, 1, 1, CubeDeformation.NONE), PartPose.ZERO);
         panel.addOrReplaceChild(Constant.ModelPartName.SOLAR_PANEL_PANEL_VERTICAL_3, CubeListBuilder.create().texOffs(94, 48).addBox(-24F, -2F, -0.5F, 48, 1, 1, CubeDeformation.NONE), PartPose.ZERO);
-        return LayerDefinition.create(modelData, 256, 128);
+        return LayerDefinition.create(meshDefinition, 256, 128);
     }
 
     @Override

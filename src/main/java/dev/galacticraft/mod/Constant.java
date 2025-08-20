@@ -47,7 +47,7 @@ public interface Constant {
 
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
     int CLOUD_HEIGHT = 200;
-    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 50;
     int SPACE_HEIGHT = 1000;
     int REENTRY_HEIGHT = 1100;
     int ESCAPE_HEIGHT = 1200;
@@ -61,6 +61,8 @@ public interface Constant {
     static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
         return ResourceKey.create(registry, Constant.id(id));
     }
+
+    String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/feature/capes-overhaul/capes_roles.json";
 
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
@@ -230,6 +232,9 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
+        String UNLIT_SOUL_TORCH = "unlit_soul_torch";
+        String UNLIT_SOUL_WALL_TORCH = "unlit_soul_wall_torch";
+        String UNLIT_SOUL_LANTERN = "unlit_soul_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String FALLEN_METEOR = "fallen_meteor";
@@ -746,6 +751,16 @@ public interface Constant {
         ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
         ResourceLocation MARS = Constant.id("textures/gui/rocket/mars_rocket_gui.png");
         ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
+    }
+
+    interface Skybox {
+        ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
+        ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+        ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
+        ResourceLocation EARTH = id("textures/environment/earth.png");
+        ResourceLocation CLOUDS = id("textures/environment/clouds.png");
+        ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
     }
 
     interface RecipeViewer {

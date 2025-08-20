@@ -205,10 +205,12 @@ public class GCCreativeModeTabs {
                 output.accept(GCItems.UNLIT_TORCH);
                 output.accept(WEB_TORCH);
                 output.accept(WEB_STRING);
+                output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
+                output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
                 // MISC DECOR
                 output.accept(WALKWAY);

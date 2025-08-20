@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "hanging=false": {
+      "model": "galacticraft:block/unlit_soul_lantern"
+    },
+    "hanging=true": {
+      "model": "galacticraft:block/unlit_soul_lantern_hanging"
+    }
+  }
+}

@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.authlib.GameProfile;
-import dev.galacticraft.mod.content.entity.ControllableEntity;
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
-import dev.galacticraft.mod.content.entity.orbital.lander.AbstractLanderEntity;
+import dev.galacticraft.api.entity.ControllableEntity;
+import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.AbstractLanderEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import dev.galacticraft.mod.network.c2s.ControlEntityPayload;
 import net.fabricmc.api.EnvType;

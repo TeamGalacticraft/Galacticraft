@@ -37,11 +37,10 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
 
     @Override
     public void render(WorldRenderContext context) {
-
         PoseStack matrices = new PoseStack();
         matrices.mulPose(context.positionMatrix());
         // render whole skybox black for when first loading into the dimension
-        RenderSystem.setShaderColor(0.0f, 0.0F, 0.0F, 1.0F);
+        RenderSystem.setShaderColor(0.0F, 0.0F, 0.0F, 1.0F);
 
         RenderSystem.disableBlend();
         RenderSystem.blendFuncSeparate(
@@ -53,9 +52,9 @@ public class SpaceSkyRenderer implements DimensionRenderingRegistry.SkyRenderer 
 
         // Update camera position for star rendering
         this.celestialBodyRendererManager.updateSolarPosition(
-            context.camera().getPosition().x,
-            context.camera().getPosition().y,
-            context.camera().getPosition().z
+            context.camera().getPosition().x / 128.0,
+            context.camera().getPosition().y / 128.0,
+            context.camera().getPosition().z / 128.0
         );
 
         this.celestialBodyRendererManager.render(context);

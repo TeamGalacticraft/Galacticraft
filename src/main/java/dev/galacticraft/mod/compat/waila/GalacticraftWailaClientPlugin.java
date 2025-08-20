@@ -24,7 +24,7 @@ package dev.galacticraft.mod.compat.waila;
 
 import dev.galacticraft.mod.compat.waila.provider.FuelLevelProvider;
 import dev.galacticraft.mod.compat.waila.provider.OxygenLevelProvider;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import mcp.mobius.waila.api.IClientRegistrar;
 import mcp.mobius.waila.api.IWailaClientPlugin;
 import net.minecraft.world.entity.LivingEntity;

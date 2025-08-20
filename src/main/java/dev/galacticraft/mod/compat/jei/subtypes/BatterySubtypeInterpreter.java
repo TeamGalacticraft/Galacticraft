@@ -20,17 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.dimension;
+package dev.galacticraft.mod.compat.jei.subtypes;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.resources.ResourceLocation;
+import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
+import mezz.jei.api.ingredients.subtypes.UidContext;
+import net.minecraft.world.item.ItemStack;
 
-public final class CelestialBodyTextures {
-    public static final ResourceLocation SUN_VENUS = Constant.id("textures/environment/sun_venus.png");
-    public static final ResourceLocation SUN_MOON = Constant.id("textures/environment/sun_moon.png");
-    public static final ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
-    public static final ResourceLocation EARTH = Constant.id("textures/environment/earth.png");
+import static dev.galacticraft.mod.content.item.GCItems.BATTERY;
 
-    private CelestialBodyTextures() {
+public class BatterySubtypeInterpreter implements ISubtypeInterpreter<ItemStack> {
+    public static final BatterySubtypeInterpreter INSTANCE = new BatterySubtypeInterpreter();
+
+    @Override
+    public String getSubtypeData(ItemStack itemStack, UidContext context) {
+        if (context == UidContext.Recipe) return "";
+        return String.valueOf(BATTERY.getStoredEnergy(itemStack)) + "/" + String.valueOf(BATTERY.getEnergyCapacity(itemStack));
+    }
+
+    @Override
+    public String getLegacyStringSubtypeInfo(ItemStack itemStack, UidContext context) {
+        return "";
     }
 }

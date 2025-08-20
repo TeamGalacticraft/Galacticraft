@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.mod.content.entity.orbital.AdvancedVehicle;
+import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.renderer.ItemInHandRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
