@@ -95,7 +95,7 @@ public class GCEventHandlers {
             // calculate frequency of meteors on current celestial body
             float atmospherePressure = celestialBody.value().atmosphere().pressure();
             float frequency = (atmospherePressure <= Mth.EPSILON) ? 5.0f : (atmospherePressure * 100.0f);
-            frequency *= 1.0f / Galacticraft.CONFIG.meteorSpawnMultiplier();
+            frequency /= Galacticraft.CONFIG.meteorSpawnMultiplier();
 
             // throw meteor
             int chance = Math.max(1, (int) (frequency * 750.0f));
