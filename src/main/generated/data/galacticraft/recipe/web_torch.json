@@ -1,17 +1,13 @@
 {
-  "type": "minecraft:crafting_shaped",
+  "type": "minecraft:crafting_shapeless",
   "category": "misc",
-  "key": {
-    "T": {
-      "item": "galacticraft:glowstone_torch"
-    },
-    "W": {
+  "ingredients": [
+    {
       "item": "galacticraft:web_string"
+    },
+    {
+      "item": "galacticraft:glowstone_torch"
     }
-  },
-  "pattern": [
-    "W",
-    "T"
   ],
   "result": {
     "count": 1,
