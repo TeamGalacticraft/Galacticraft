@@ -131,47 +131,4 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     private boolean gc$freeAt(BlockPos blockPos) {
         return !this.level().getBlockState(blockPos).isSuffocating(this.level(), blockPos);
     }
-
-    @Inject(method = "tick", at = @At("HEAD"))
-    private void throwMeteors(CallbackInfo ci) {
-        Holder<CelestialBody<?, ?>> celestialBody = this.level().galacticraft$getCelestialBody();
-        if (celestialBody == null) return;
-
-        // calculate frequency of meteors on current celestial body
-        float atmospherePressure = celestialBody.value().atmosphere().pressure();
-        float frequency = (atmospherePressure <= Mth.EPSILON) ? 5.0f : (atmospherePressure * 100.0f);
-
-        // throw meteor
-        int chance = (int) (frequency * 750.0f);
-        if (this.level().random.nextInt(chance) == 0) {
-            this.throwMeteor(1);
-        }
-
-        // throw bigger meteor if you're lucky enough
-        if (this.level().random.nextInt(chance * 3) == 0) {
-            this.throwMeteor(6);
-        }
-    }
-
-    @Unique
-    private void throwMeteor(int size) {
-        // TODO: maybe move this into ServerLevel instead?
-        //       right now, i'm trying to loosely match GC4 behaviour
-        Player nearestPlayer = this.level().getNearestPlayer((ServerPlayer) (Object) this, 100.0);
-        if (nearestPlayer == null || nearestPlayer.getId() <= this.getId()) return;
-
-        int maxOffset = this.getServer().getPlayerList().getViewDistance() * Constant.Chunk.WIDTH - 1;
-
-        int offsetX = Math.min(maxOffset, this.level().random.nextInt(20) + 160);
-        int offsetZ = this.level().random.nextInt(20) - 10;
-        double deltaX = this.level().random.nextDouble() * 2.0 - 2.5;
-        double deltaZ = this.level().random.nextDouble() * 5.0 - 2.5;
-
-        FallingMeteorEntity meteor = new FallingMeteorEntity(GCEntityTypes.FALLING_METEOR, this.level());
-        meteor.setPos(this.getX() + offsetX, this.level().getMaxBuildHeight() + 99.0, this.getZ() + offsetZ);
-        meteor.setDeltaMovement(deltaX, 0.0, deltaZ);
-        meteor.setSize(size);
-
-        this.level().addFreshEntity(meteor);
-    }
 }
