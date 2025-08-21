@@ -27,6 +27,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
@@ -94,9 +95,10 @@ public class GCEventHandlers {
             // calculate frequency of meteors on current celestial body
             float atmospherePressure = celestialBody.value().atmosphere().pressure();
             float frequency = (atmospherePressure <= Mth.EPSILON) ? 5.0f : (atmospherePressure * 100.0f);
+            frequency *= 1.0f / Galacticraft.CONFIG.meteorSpawnMultiplier();
 
             // throw meteor
-            int chance = (int) (frequency * 750.0f);
+            int chance = Math.max(1, (int) (frequency * 750.0f));
             if (level.random.nextInt(chance) == 0) {
                 throwMeteor(server, level, player, 1);
             }

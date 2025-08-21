@@ -86,6 +86,7 @@ public class ConfigImpl implements Config {
     private long parrotOxygenConsumptionRate = 1 * FluidConstants.DROPLET;
     private boolean cannotEatInNoAtmosphere = true;
     private boolean cannotEatWithMask = true;
+    private float meteorSpawnMultiplier = 1.0f;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
@@ -378,6 +379,15 @@ public class ConfigImpl implements Config {
 
     public void setCannotEatWithMask(boolean cannotEatWithMask) {
         this.cannotEatWithMask = cannotEatWithMask;
+    }
+
+    @Override
+    public float meteorSpawnMultiplier() {
+        return this.meteorSpawnMultiplier;
+    }
+
+    public void setMeteorSpawnMultiplier(float meteorSpawnMultiplier) {
+        this.meteorSpawnMultiplier = meteorSpawnMultiplier;
     }
 
     @Override
@@ -857,6 +867,16 @@ public class ConfigImpl implements Config {
             // --- DIFFICULTY CONFIG ---
 
             ConfigCategory difficulty = b.getOrCreateCategory(Component.translatable(Translations.Config.DIFFICULTY));
+
+            difficulty.addEntry(new FloatFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.METEOR_SPAWN_MULTIPLIER),
+                    config.meteorSpawnMultiplier())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.METEOR_SPAWN_MULTIPLIER))
+                    .setSaveConsumer(config::setMeteorSpawnMultiplier)
+                    .setDefaultValue(1.0f)
+                    .build()
+            );
 
             difficulty.addEntry(new DoubleFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
