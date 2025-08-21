@@ -43,6 +43,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -875,6 +876,7 @@ public class ConfigImpl implements Config {
                     .setTooltip(tooltipSingular.apply(Translations.Config.METEOR_SPAWN_MULTIPLIER))
                     .setSaveConsumer(config::setMeteorSpawnMultiplier)
                     .setDefaultValue(1.0f)
+                    .setMin(Mth.EPSILON)
                     .build()
             );
 
