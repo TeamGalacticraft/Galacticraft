@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonPrimitive;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
@@ -93,14 +94,16 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
-        createWebTorch(generator, GCBlocks.WEB_TORCH);
-        createWebString(generator, GCBlocks.WEB_STRING);
         generator.createNormalTorch(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH);
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_SOUL_LANTERN);
+
+        // WEB TORCH/STRING
+        createWebTorch(generator, GCBlocks.WEB_TORCH);
+        createWebString(generator, GCBlocks.WEB_STRING);
 
         // MOON NATURAL
         this.createMoonTurf(generator);
@@ -454,27 +457,26 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private static void createWebString(BlockModelGenerators generator, Block webString) {
-        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top");
-        ResourceLocation middleModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_middle");
-        ResourceLocation bottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_bottom");
-        ResourceLocation topBottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top_bottom");
         generator.createSimpleFlatItemModel(webString, "_middle");
-        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webString)
-                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP), Variant.variant().with(VariantProperties.MODEL, topModel))
-                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.MIDDLE), Variant.variant().with(VariantProperties.MODEL, middleModel))
-                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.BOTTOM), Variant.variant().with(VariantProperties.MODEL, bottomModel))
-                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP_BOTTOM), Variant.variant().with(VariantProperties.MODEL, topBottomModel));
-        generator.blockStateOutput.accept(blockState);
+        ResourceLocation topModel = generator.createSuffixedVariant(webString, "_top", ModelTemplates.CROSS, TextureMapping::cross);
+        ResourceLocation middleModel = generator.createSuffixedVariant(webString, "_middle", ModelTemplates.CROSS, TextureMapping::cross);
+        ResourceLocation bottomModel = generator.createSuffixedVariant(webString, "_bottom", ModelTemplates.CROSS, TextureMapping::cross);
+        ResourceLocation topBottomModel = generator.createSuffixedVariant(webString, "_top_bottom", ModelTemplates.CROSS, TextureMapping::cross);
+        PropertyDispatch variants = PropertyDispatch.property(WebStringBlock.WEB_STRING_PART)
+                .select(WebStringBlock.WebStringPart.TOP, Variant.variant().with(VariantProperties.MODEL, topModel))
+                .select(WebStringBlock.WebStringPart.MIDDLE, Variant.variant().with(VariantProperties.MODEL, middleModel))
+                .select(WebStringBlock.WebStringPart.BOTTOM, Variant.variant().with(VariantProperties.MODEL, bottomModel))
+                .select(WebStringBlock.WebStringPart.TOP_BOTTOM, Variant.variant().with(VariantProperties.MODEL, topBottomModel));
+        MultiVariantGenerator variantGenerator = MultiVariantGenerator.multiVariant(webString).with(variants);
+        generator.blockStateOutput.accept(variantGenerator);
     }
 
     private static void createWebTorch(BlockModelGenerators generator, Block webTorch) {
-        ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH);
-        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH, "_top");
         generator.createSimpleFlatItemModel(webTorch);
-        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webTorch)
-                .with(Condition.condition().term(WebTorchBlock.TOP, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
-                .with(Condition.condition().term(WebTorchBlock.TOP, true), Variant.variant().with(VariantProperties.MODEL, topModel));
-        generator.blockStateOutput.accept(blockState);
+        ResourceLocation normalModel = generator.createSuffixedVariant(webTorch, "", ModelTemplates.CROSS, TextureMapping::cross);
+        ResourceLocation topModel = generator.createSuffixedVariant(webTorch, "_top", ModelTemplates.CROSS, TextureMapping::cross);
+        MultiVariantGenerator variants = MultiVariantGenerator.multiVariant(webTorch).with(BlockModelGenerators.createBooleanModelDispatch(WebTorchBlock.TOP, topModel, normalModel));
+        generator.blockStateOutput.accept(variants);
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {
