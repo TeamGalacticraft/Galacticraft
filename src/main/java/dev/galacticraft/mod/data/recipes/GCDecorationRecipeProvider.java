@@ -29,10 +29,7 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.RecipeCategory;
-import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
+import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -57,11 +54,9 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.WEB_TORCH, 1)
-                .define('W', GCBlocks.WEB_STRING)
-                .define('T', GCItems.GLOWSTONE_TORCH)
-                .pattern("W")
-                .pattern("T")
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, GCBlocks.WEB_TORCH, 1)
+                .requires(GCBlocks.WEB_STRING)
+                .requires(GCItems.GLOWSTONE_TORCH)
                 .unlockedBy(getHasName(GCBlocks.WEB_STRING), has(GCBlocks.WEB_STRING))
                 .save(output);
 
