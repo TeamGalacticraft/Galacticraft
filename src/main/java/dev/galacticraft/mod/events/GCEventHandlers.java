@@ -48,6 +48,8 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
+import static dev.galacticraft.mod.Constant.CelestialBody.EARTH;
+
 public class GCEventHandlers {
     public static void init() {
         GCSleepEventHandlers.init();
@@ -87,7 +89,7 @@ public class GCEventHandlers {
         PlayerLookup.all(server).forEach(player -> {
             ServerLevel level = player.serverLevel();
             Holder<CelestialBody<?, ?>> celestialBody = level.galacticraft$getCelestialBody();
-            if (celestialBody == null) return;
+            if (celestialBody == null || celestialBody.is(EARTH)) return;
 
             // calculate frequency of meteors on current celestial body
             float atmospherePressure = celestialBody.value().atmosphere().pressure();
@@ -105,6 +107,7 @@ public class GCEventHandlers {
             }
         });
     }
+
     private static void throwMeteor(MinecraftServer server, ServerLevel level, Player targetPlayer, int meteorSize) {
         Player nearestPlayer = level.getNearestPlayer(targetPlayer, 100.0);
         if (nearestPlayer == null || nearestPlayer.getId() > targetPlayer.getId()) return;
@@ -113,8 +116,8 @@ public class GCEventHandlers {
 
         int offsetX = Math.min(maxOffset, level.random.nextInt(20) + 160);
         int offsetZ = level.random.nextInt(20) - 10;
-        double deltaX = level.random.nextDouble() * 2.0 - 2.5;
-        double deltaZ = level.random.nextDouble() * 5.0 - 2.5;
+        double deltaX = (level.random.nextDouble() - 0.5) * 2.0;
+        double deltaZ = (level.random.nextDouble() - 0.5) * 5.0;
 
         FallingMeteorEntity meteor = new FallingMeteorEntity(GCEntityTypes.FALLING_METEOR, level);
         meteor.setPos(targetPlayer.getX() + offsetX, level.getMaxBuildHeight() + 99.0, targetPlayer.getZ() + offsetZ);

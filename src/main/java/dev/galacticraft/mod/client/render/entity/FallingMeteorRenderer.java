@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.render.entity;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -37,10 +36,12 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.block.state.BlockState;
 
+import static dev.galacticraft.mod.content.GCBlocks.FALLEN_METEOR;
+
 @Environment(EnvType.CLIENT)
 public class FallingMeteorRenderer extends EntityRenderer<FallingMeteorEntity> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/block/fallen_meteor.png");
-    private static final BlockState METEOR_BLOCK_STATE = GCBlocks.FALLEN_METEOR.defaultBlockState();
+    private static final BlockState METEOR_BLOCK_STATE = FALLEN_METEOR.defaultBlockState();
 
     private final BlockRenderDispatcher dispatcher;
 

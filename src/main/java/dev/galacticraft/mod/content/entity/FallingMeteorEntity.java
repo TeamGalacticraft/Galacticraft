@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.content.entity;
 
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Position;
 import net.minecraft.core.particles.ParticleTypes;
@@ -41,6 +39,9 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+
+import static dev.galacticraft.mod.content.GCBlocks.FALLEN_METEOR;
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.METEOR_STRIKE;
 
 public class FallingMeteorEntity extends Entity {
     private static final EntityDataAccessor<Integer> DATA_SIZE = SynchedEntityData.defineId(FallingMeteorEntity.class, EntityDataSerializers.INT);
@@ -69,7 +70,7 @@ public class FallingMeteorEntity extends Entity {
         if (this.level().isEmptyBlock(meteorPos)) {
             this.level().setBlock(
                     meteorPos,
-                    GCBlocks.FALLEN_METEOR.defaultBlockState().setValue(FallenMeteorBlock.HEAT, 5),
+                    FALLEN_METEOR.defaultBlockState().setValue(FallenMeteorBlock.HEAT, 5),
                     Block.UPDATE_ALL);
         }
 
@@ -78,7 +79,7 @@ public class FallingMeteorEntity extends Entity {
 
     private void onImpact(HitResult hitResult) {
         if (hitResult instanceof EntityHitResult entityHitResult) {
-            entityHitResult.getEntity().hurt(this.damageSources().source(GCDamageTypes.METEOR_STRIKE), 20.0f);
+            entityHitResult.getEntity().hurt(this.damageSources().source(METEOR_STRIKE), 20.0f);
         }
 
         this.fallTo(hitResult.getLocation());
