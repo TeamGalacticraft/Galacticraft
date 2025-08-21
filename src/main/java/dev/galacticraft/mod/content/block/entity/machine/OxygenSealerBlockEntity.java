@@ -362,8 +362,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
     }
 
     private boolean tryNavigateTo(BlockPos.MutableBlockPos mutable, BlockPos target, ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
+        BlockPos start = mutable.immutable();
         ObjectArrayFIFOQueue<BlockPos> queue = new ObjectArrayFIFOQueue<>(32);
-        queue.enqueue(mutable.immutable());
+        queue.enqueue(start);
+        visited.add(start);
 
         while (!queue.isEmpty()) {
             BlockPos current = queue.dequeue();
