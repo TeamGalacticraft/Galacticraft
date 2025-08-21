@@ -74,7 +74,7 @@ public class WebTorchBlock extends WebBlock {
         return defaultBlockState().setValue(TOP, false);
     }
 
-    //  Manages the updates to the web torch to determine if this block is attached to a solid face or a web string.
+    // Manages the updates to the web torch to determine if this block is attached to a solid face or a web string.
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         // If above changed and it isn't a web torch block (and in theory not a solid block) then it breaks.
