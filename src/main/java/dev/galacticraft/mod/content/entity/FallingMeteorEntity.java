@@ -40,7 +40,7 @@ public class FallingMeteorEntity extends Entity {
         this.level().explode(
                 this,
                 position.x(), position.y(), position.z(),
-                this.getSize() / 3 * 2,
+                this.getSize() * 2 / 3,
                 true,
                 Level.ExplosionInteraction.BLOCK);
 
@@ -56,36 +56,27 @@ public class FallingMeteorEntity extends Entity {
     }
 
     private void onImpact(HitResult hitResult) {
-        if (hitResult.getType() == HitResult.Type.ENTITY) {
-            Entity entity = ((EntityHitResult) hitResult).getEntity();
-            entity.hurt(this.damageSources().source(GCDamageTypes.METEOR_STRIKE), 20.0f);
+        if (hitResult instanceof EntityHitResult entityHitResult) {
+            entityHitResult.getEntity().hurt(this.damageSources().source(GCDamageTypes.METEOR_STRIKE), 20.0f);
         }
 
         this.fallTo(hitResult.getLocation());
     }
 
+    private void spawnSmokeParticle(double offsetX, double offsetY, double offsetZ) {
+        this.level().addParticle(
+                ParticleTypes.SMOKE,
+                this.getX() + offsetX, this.getY() + offsetY, this.getZ() + offsetZ,
+                0.0, 0.0, 0.0);
+    }
+
     private void spawnParticles() {
         if (this.level().isClientSide && this.isAlive()) {
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX() + this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble() * 0.5, this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() + this.random.nextDouble(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX() - this.random.nextDouble() * 0.5, this.getY() + 1.0 + this.random.nextDouble(), this.getZ(),
-                    0.0, 0.0, 0.0);
-            this.level().addParticle(
-                    ParticleTypes.SMOKE,
-                    this.getX(), this.getY() + 1.0 + this.random.nextDouble(), this.getZ() - this.random.nextDouble(),
-                    0.0, 0.0, 0.0);
+            this.spawnSmokeParticle(0.0, 1.0 + this.random.nextDouble(), 0.0);
+            this.spawnSmokeParticle(this.random.nextDouble() * 0.5, 1.0 + this.random.nextDouble() * 0.5, 0.0);
+            this.spawnSmokeParticle(0.0, 1.0 + this.random.nextDouble(), this.random.nextDouble());
+            this.spawnSmokeParticle(-this.random.nextDouble() * 0.5, 1.0 + this.random.nextDouble(), 0.0);
+            this.spawnSmokeParticle(0.0, 1.0 + this.random.nextDouble(), -this.random.nextDouble());
         }
     }
 

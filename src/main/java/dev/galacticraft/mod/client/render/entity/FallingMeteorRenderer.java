@@ -35,12 +35,12 @@ public class FallingMeteorRenderer extends EntityRenderer<FallingMeteorEntity> {
 
     @Override
     public void render(FallingMeteorEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
-        float size = entity.getSize();
+        float scale = entity.getSize() * 0.5f;
 
         matrices.pushPose();
         matrices.mulPose(Axis.YP.rotationDegrees(entity.getYRot()));
         matrices.mulPose(Axis.XP.rotationDegrees(entity.getXRot()));
-        matrices.scale(size * 0.5f, size * 0.5f, size * 0.5f);
+        matrices.scale(scale, scale, scale);
         matrices.translate(-0.5, -0.25, -0.5);
 
         this.dispatcher.renderBatched(
@@ -50,14 +50,14 @@ public class FallingMeteorRenderer extends EntityRenderer<FallingMeteorEntity> {
                 matrices,
                 vertexConsumers.getBuffer(ItemBlockRenderTypes.getMovingBlockRenderType(METEOR_BLOCK_STATE)),
                 false,
-                RandomSource.create() // this is probably going to blow up hard
+                entity.getRandom()
         );
 
         matrices.popPose();
     }
 
     @Override
-    public ResourceLocation getTextureLocation(FallingMeteorEntity entityGoalInfo) {
+    public ResourceLocation getTextureLocation(FallingMeteorEntity entity) {
         return TEXTURE;
     }
 }
