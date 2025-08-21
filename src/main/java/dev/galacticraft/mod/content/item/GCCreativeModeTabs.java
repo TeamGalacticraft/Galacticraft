@@ -203,14 +203,16 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
-                output.accept(WEB_TORCH);
-                output.accept(WEB_STRING);
                 output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
                 output.accept(GCItems.UNLIT_SOUL_LANTERN);
+
+                // WEB TORCH/STRING
+                output.accept(WEB_TORCH);
+                output.accept(WEB_STRING);
 
                 // MISC DECOR
                 output.accept(WALKWAY);
