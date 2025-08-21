@@ -94,7 +94,7 @@ public class GCEventHandlers {
             float frequency = (atmospherePressure <= Mth.EPSILON) ? 5.0f : (atmospherePressure * 100.0f);
 
             // throw meteor
-            int chance = (int) (frequency);
+            int chance = (int) (frequency * 750.0f);
             if (level.random.nextInt(chance) == 0) {
                 throwMeteor(server, level, player, 1);
             }
