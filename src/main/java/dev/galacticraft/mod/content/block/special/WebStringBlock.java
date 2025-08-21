@@ -131,8 +131,8 @@ public class WebStringBlock extends WebBlock {
         return null;
     }
 
-    /// This method is called whe the player tries to use something on a Web String block.
-    /// The default behaviour is extended by checking if that item is a glow stone torch, which
+    /// This method is called when the player tries to use something on a Web String block.
+    /// The default behaviour is extended by checking if that item is a glowstone torch, which
     /// automatically hands the torch in the web. Web strings below the torch are broken.
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
@@ -154,7 +154,7 @@ public class WebStringBlock extends WebBlock {
         return result;
     }
 
-    ///  Manages the appearance of the web strings via the web string part property. Effectivel top means its attached
+    /// Manages the appearance of the web strings via the web string part property. Effectively top means it's attached
     /// to something, bottom means it is the end dangling down, and middle means it is neither the top nor the bottom.
     /// Top_Bottom means it is both the top and the only bit. The method also handles breaking of the web string
     /// if the block above is broken.
@@ -226,5 +226,4 @@ public class WebStringBlock extends WebBlock {
 
         public static final EnumProperty<WebStringPart> WEB_STRING_PART = EnumProperty.create("web_string_part", WebStringPart.class);
     }
-
 }
