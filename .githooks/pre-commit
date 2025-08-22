@@ -7,9 +7,9 @@ status=$?
 
 if test "$status" = 0
 then
-	echo -e "...spotlessCheck succeeded, proceeding with git push.\n"
+	echo -e "...spotlessCheck succeeded, proceeding with git commit.\n"
 else
-	echo -e "...spotlessCheck failed, aborting git push.\n"
+	echo -e "...spotlessCheck failed, aborting git commit.\n"
 	echo -e "Run './gradlew spotlessApply' to fix these violations.\n"
 fi
 
