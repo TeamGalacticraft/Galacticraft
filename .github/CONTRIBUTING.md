@@ -90,7 +90,7 @@ In order to enable the Git Hooks in this repository, use the following command:
 git config --local core.hooksPath .githooks/
 ```
 
-The pre-push Git Hook runs the spotlessCheck Gradle task before each Git Push and aborts pushing if the check fails. This is useful to avoid a lot of commits to fix spotless violations.
+The pre-commit Git Hook runs the spotlessCheck Gradle task before each git commit and aborts committing if the check fails. The pre-push Git Hook runs the spotlessCheck Gradle task before each git push and aborts pushing if the check fails. These are useful to avoid a lot of commits to fix spotless violations.
 
 #### Commit Message
 We use [conventional commits][conventional commits] specification to write commit messages.
