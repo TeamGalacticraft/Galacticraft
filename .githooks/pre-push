@@ -1,15 +1,29 @@
 #!/bin/sh
 
-echo -e "Started running './gradlew test' Gradle task..."
+remote="$1"
+url="$2"
 
-./gradlew :test
-status=$?
+echo "$remote"
+echo "$url"
 
-if test "$status" = 0
-then
-	echo -e "\n...test succeeded, proceeding with git push.\n"
-else
-	echo -e "\n...test failed, aborting git push.\n"
-fi
+while read local_ref local_oid remote_ref remote_oid
+do
+	echo "$local_ref"
+	echo "$local_oid"
+	echo "$remote_ref"
+	echo "$remote_oid"
+
+	echo -e "Started running './gradlew test' Gradle task..."
+
+	./gradlew :test
+	status=$?
+
+	if test "$status" = 0
+	then
+		echo -e "\n...test succeeded, proceeding with git push.\n"
+	else
+		echo -e "\n...test failed, aborting git push.\n"
+	fi
+done
 
 exit $status
