@@ -1,16 +1,15 @@
 #!/bin/sh
 
-echo "Started running './gradlew spotlessCheck' Gradle task..."
+echo -e "Started running './gradlew test' Gradle task...\n"
 
-./gradlew spotlessCheck &>/dev/null
+./gradlew test &>/dev/null
 status=$?
 
 if test "$status" = 0
 then
-	echo -e "...spotlessCheck succeeded, proceeding with git push.\n"
+	echo -e "...test succeeded, proceeding with git push.\n"
 else
-	echo -e "...spotlessCheck failed, aborting git push.\n"
-	echo -e "Run './gradlew spotlessApply' to fix these violations.\n"
+	echo -e "...test failed, aborting git push.\n"
 fi
 
 exit $status

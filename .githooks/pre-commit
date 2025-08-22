@@ -10,7 +10,17 @@ then
 	echo -e "...spotlessCheck succeeded, proceeding with git commit.\n"
 else
 	echo -e "...spotlessCheck failed, aborting git commit.\n"
-	echo -e "Run './gradlew spotlessApply' to fix these violations.\n"
+	echo -e "Started running './gradlew spotlessApply' to fix these violations..."
+
+	./gradlew spotlessApply &>/dev/null
+	applied=$?
+
+	if test "$applied" = 0
+	then
+		echo "...spotlessApply succeeded, stage these changes and re-commit."
+	else
+		echo "...spotlessApply failed."
+	fi
 fi
 
 exit $status
