@@ -58,21 +58,21 @@ public final class CapeRegistry {
 
     public static void bootstrap() {
         // Patron capes
-        register("earth", CapeRole.PATRON);
-        register("jupiter", CapeRole.PATRON);
-        register("mars", CapeRole.PATRON);
-        register("mercury", CapeRole.PATRON);
-        register("moon", CapeRole.PATRON);
-        register("neptune", CapeRole.PATRON);
-        register("plain", CapeRole.PATRON);
-        register("space_station", CapeRole.PATRON);
-        register("sun", CapeRole.PATRON);
-        register("uranus", CapeRole.PATRON);
-        register("venus", CapeRole.PATRON);
+        register(Constant.Cape.EARTH, CapeRole.PATRON);
+        register(Constant.Cape.JUPITER, CapeRole.PATRON);
+        register(Constant.Cape.MARS, CapeRole.PATRON);
+        register(Constant.Cape.MERCURY, CapeRole.PATRON);
+        register(Constant.Cape.MOON, CapeRole.PATRON);
+        register(Constant.Cape.NEPTUNE, CapeRole.PATRON);
+        register(Constant.Cape.PLAIN, CapeRole.PATRON);
+        register(Constant.Cape.SPACE_STATION, CapeRole.PATRON);
+        register(Constant.Cape.SUN, CapeRole.PATRON);
+        register(Constant.Cape.URANUS, CapeRole.PATRON);
+        register(Constant.Cape.VENUS, CapeRole.PATRON);
 
         // Developer capes
-        register("developer", CapeRole.DEVELOPER);
-        register("rewoven", CapeRole.DEVELOPER);
-        register("developer_red", CapeRole.DEVELOPER);
+        register(Constant.Cape.DEVELOPER, CapeRole.DEVELOPER);
+        register(Constant.Cape.REWOVEN, CapeRole.DEVELOPER);
+        register(Constant.Cape.DEVELOPER_RED, CapeRole.DEVELOPER);
     }
 }
