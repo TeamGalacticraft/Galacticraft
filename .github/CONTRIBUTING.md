@@ -79,18 +79,20 @@ If any files are missing the header, you can add it by executing the following G
 ./gradlew updateLicenses
 ```
 
-The following Gradle task adds missing license headers, as well as removing unused imports and replacing tabs with spaces:
+Alternatively, as well as adding missing license headers, the following Gradle task also removes unused imports and replaces tabs with spaces:
 ```shell
 ./gradlew spotlessApply
 ```
 
 #### Git Hooks
-In order to enable the Git Hooks in this repository, use the following command:
+In order to enable the Git Hooks in this repository, which are useful to avoid lots commits to fix spotless violations, use the following command:
 ```shell
 git config --local core.hooksPath .githooks/
 ```
 
-The pre-commit Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task. The pre-push Git Hook runs the `test` Gradle task before each git push and aborts pushing if the test fails. These are useful to avoid a lot of commits to fix spotless violations.
+The pre-commit Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task.
+
+The pre-push Git Hook runs the `test` Gradle task before each git push and aborts pushing if the test fails.
 
 #### Commit Message
 We use [conventional commits][conventional commits] specification to write commit messages.
