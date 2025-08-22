@@ -2,7 +2,8 @@
 
 echo -e "Started running './gradlew test' Gradle task...\n"
 
-./gradlew test &>/dev/null
+./gradlew test
+
 status=$?
 
 if test "$status" = 0
