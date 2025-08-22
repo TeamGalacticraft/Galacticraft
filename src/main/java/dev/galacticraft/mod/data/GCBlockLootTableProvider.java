@@ -171,8 +171,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.WALKWAY);
         this.dropSelf(GCBlocks.FLUID_PIPE_WALKWAY);
         this.dropSelf(GCBlocks.WIRE_WALKWAY);
-        this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.IRON_GRATING);
+
+        this.dropSelf(GCBlocks.TIN_LADDER);
+        this.dropSelf(GCBlocks.ALUMINUM_LADDER);
+        this.dropSelf(GCBlocks.TITANIUM_LADDER);
+        this.dropSelf(GCBlocks.BRONZE_LADDER);
+        this.dropSelf(GCBlocks.STEEL_LADDER);
 
         this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
 

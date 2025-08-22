@@ -1,0 +1,18 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "tag": "c:ingots/titanium"
+    }
+  },
+  "pattern": [
+    "T T",
+    "TTT",
+    "T T"
+  ],
+  "result": {
+    "count": 6,
+    "id": "galacticraft:titanium_ladder"
+  }
+}

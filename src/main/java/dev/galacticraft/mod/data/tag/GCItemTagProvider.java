@@ -513,6 +513,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.tag(ConventionalItemTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
+
+        this.tag(GCItemTags.METAL_LADDER_BLOCKS)
+                .add(GCBlocks.TIN_LADDER.asItem())
+                .add(GCBlocks.ALUMINUM_LADDER.asItem())
+                .add(GCBlocks.TITANIUM_LADDER.asItem())
+                .add(GCBlocks.BRONZE_LADDER.asItem())
+                .add(GCBlocks.STEEL_LADDER.asItem());
     }
 
     protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {

@@ -126,9 +126,14 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.PUMICE);
         this.createVaporSpout(generator);
 
+        // METAL LADDERS
+        createLadderModels(generator, GCBlocks.TIN_LADDER);
+        createLadderModels(generator, GCBlocks.ALUMINUM_LADDER);
+        createLadderModels(generator, GCBlocks.TITANIUM_LADDER);
+        createLadderModels(generator, GCBlocks.BRONZE_LADDER);
+        createLadderModels(generator, GCBlocks.STEEL_LADDER);
+
         // MISC DECOR
-        generator.createNonTemplateHorizontalBlock(GCBlocks.TIN_LADDER);
-        generator.createSimpleFlatItemModel(GCBlocks.TIN_LADDER);
         this.createIronGrating(generator);
 
         // SPECIAL
@@ -376,6 +381,11 @@ public class GCModelProvider extends FabricModelProvider {
         this.createAirLockController(generator);
 
         this.createParachests(generator);
+    }
+
+    private static void createLadderModels(BlockModelGenerators generator, Block ladderBlock) {
+        generator.createNonTemplateHorizontalBlock(ladderBlock);
+        generator.createSimpleFlatItemModel(ladderBlock);
     }
 
     private static void createFullCubeActiveMachine(BlockModelGenerators generator, Block block) {

@@ -152,6 +152,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
                 .save(output);
 
+        // Metal Ladder Blocks
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
                 .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("T T")
@@ -159,6 +160,38 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("T T")
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.ALUMINUM_LADDER, 6)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
+                .pattern("A A")
+                .pattern("AAA")
+                .pattern("A A")
+                .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TITANIUM_LADDER, 6)
+                .define('T', GCItemTags.TITANIUM_INGOTS)
+                .pattern("T T")
+                .pattern("TTT")
+                .pattern("T T")
+                .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItemTags.TITANIUM_INGOTS))
+                .save(output);
+
+//        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.BRONZE_LADDER, 6)
+//                .define('B', GCItemTags.BRONZE_INGOTS)
+//                .pattern("B B")
+//                .pattern("BBB")
+//                .pattern("B B")
+//                .unlockedBy(getHasName(GCItems.BRONZE_INGOT), has(GCItemTags.BRONZE_INGOTS))
+//                .save(output);
+//
+//        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.STEEL_LADDER, 6)
+//                .define('S', GCItemTags.STEEL_INGOTS)
+//                .pattern("S S")
+//                .pattern("SSS")
+//                .pattern("S S")
+//                .unlockedBy(getHasName(GCItems.STEEL_INGOT), has(GCItemTags.STEEL_INGOTS))
+//                .save(output);
 
         // Metal decoration blocks
         decorationBlock(output, GCItems.COMPRESSED_TIN,
