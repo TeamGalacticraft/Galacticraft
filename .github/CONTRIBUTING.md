@@ -74,21 +74,13 @@ This can be found as the `Data Generation` configuration in your IDE, or run fro
 #### License Headers
 If you've added any new classes, be sure to check that they have the standard [license header][license header] applied.
 
-If any files are missing the header, you can add it by executing the following Gradle task:
-```shell
-./gradlew updateLicenses
-```
-
-Alternatively, as well as adding missing license headers, the following Gradle task also removes unused imports and replaces tabs with spaces:
+If any files are missing the header, you can add it by executing the following Gradle task, which also removes unused imports and replaces tabs with spaces:
 ```shell
 ./gradlew spotlessApply
 ```
 
 #### Git Hooks
-In order to enable the Git Hooks in this repository, which are useful to avoid lots commits to fix spotless violations, use the following command:
-```shell
-git config --local core.hooksPath .githooks/
-```
+In order to enable the Git Hooks in this repository, which are useful to avoid lots commits to fix spotless violations, copy the desired files from [`.githooks/`](/.githooks) to [`.git/hooks/`](/.git/hooks) (which may be hidden).
 
 The pre-commit Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task.
 
@@ -105,6 +97,6 @@ However, we tend to squash-merge pull requests, so you are not required to do th
 [datagen]: /src/main/java/dev/galacticraft/mod/data
 [discord]: https://discord.gg/n3QqhMYyFK
 [generated]: /src/main/generated
-[license header]: /LICENSE_HEADER.txt
+[license header]: /LICENSE
 [main]: https://github.com/TeamGalacticraft/Galacticraft/tree/main
 [resources]: /src/main/resources
