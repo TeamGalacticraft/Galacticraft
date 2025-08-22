@@ -92,7 +92,7 @@ git config --local core.hooksPath .githooks/
 
 The pre-commit Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task.
 
-The pre-push Git Hook runs the `test` Gradle task before each git push and aborts pushing if the test fails.
+The pre-push Git Hook runs the `test` Gradle task before each git push to [TeamGalacticraft:main][main] and aborts pushing if the test fails.
 
 #### Commit Messages
 We use [conventional commits][conventional commits] specification to write commit messages.
@@ -106,4 +106,5 @@ However, we tend to squash-merge pull requests, so you are not required to do th
 [discord]: https://discord.gg/n3QqhMYyFK
 [generated]: /src/main/generated
 [license header]: /LICENSE_HEADER.txt
+[main]: https://github.com/TeamGalacticraft/Galacticraft/tree/main
 [resources]: /src/main/resources
