@@ -61,7 +61,7 @@ public class MetalLadderBlock extends LadderBlock {
         }
         // Can only place into a fluid if its water.
         if (checkState.canBeReplaced()) {
-e            boolean waterLogged = checkState.is(Blocks.WATER)
+            boolean waterLogged = checkState.is(Blocks.WATER)
                     && (checkState.getFluidState().getAmount() >= 8 || checkState.getFluidState().isSource())
                     || (checkState.hasProperty(WATERLOGGED) && checkState.getValue(WATERLOGGED));
             var newState = ladderBlock.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(WATERLOGGED, waterLogged);
