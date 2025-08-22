@@ -64,6 +64,23 @@ public interface Constant {
 
     String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes_roles.json";
 
+    interface Cape {
+        String EARTH = "earth";
+        String JUPITER = "jupiter";
+        String MARS = "mars";
+        String MERCURY = "mercury";
+        String MOON = "moon";
+        String NEPTUNE = "neptune";
+        String PLAIN = "plain";
+        String SPACE_STATION = "space_station";
+        String SUN = "sun";
+        String URANUS = "uranus";
+        String VENUS = "venus";
+        String DEVELOPER = "developer";
+        String REWOVEN = "rewoven";
+        String DEVELOPER_RED = "developer_red";
+    }
+
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
         String ITEM_GROUP_MACHINES = "machines";
