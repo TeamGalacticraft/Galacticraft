@@ -82,9 +82,9 @@ If any files are missing the header, you can add it by executing the following G
 #### Git Hooks
 In order to enable the Git Hooks in this repository, which are useful to avoid lots commits to fix spotless violations, copy the desired files from [`.githooks/`](/.githooks) to [`.git/hooks/`](/.git/hooks) (which may be hidden).
 
-The pre-commit Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task.
+The [pre-commit](/.githooks/pre-commit) Git Hook runs the `spotlessCheck` Gradle task before each git commit and aborts committing if the check fails, after running the `spotlessApply` Gradle task.
 
-The pre-push Git Hook runs the `test` Gradle task before each git push to [TeamGalacticraft:main][main] and aborts pushing if the test fails.
+The [pre-push](/.githooks/pre-push) Git Hook runs the `test` Gradle task before each git push to [TeamGalacticraft:main][main] and aborts pushing if the test fails.
 
 #### Commit Messages
 We use [conventional commits][conventional commits] specification to write commit messages.
