@@ -1,16 +1,36 @@
 {
-  "variants": {
-    "web_string_part=bottom": {
-      "model": "galacticraft:block/web_string_bottom"
+  "multipart": [
+    {
+      "apply": {
+        "model": "galacticraft:block/web_string_top"
+      },
+      "when": {
+        "web_string_part": "top"
+      }
     },
-    "web_string_part=middle": {
-      "model": "galacticraft:block/web_string_middle"
+    {
+      "apply": {
+        "model": "galacticraft:block/web_string_middle"
+      },
+      "when": {
+        "web_string_part": "middle"
+      }
     },
-    "web_string_part=top": {
-      "model": "galacticraft:block/web_string_top"
+    {
+      "apply": {
+        "model": "galacticraft:block/web_string_bottom"
+      },
+      "when": {
+        "web_string_part": "bottom"
+      }
     },
-    "web_string_part=top_bottom": {
-      "model": "galacticraft:block/web_string_top_bottom"
+    {
+      "apply": {
+        "model": "galacticraft:block/web_string_top_bottom"
+      },
+      "when": {
+        "web_string_part": "top_bottom"
+      }
     }
-  }
+  ]
 }

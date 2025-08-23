@@ -1,10 +1,20 @@
 {
-  "variants": {
-    "top=false": {
-      "model": "galacticraft:block/web_torch"
+  "multipart": [
+    {
+      "apply": {
+        "model": "galacticraft:block/web_torch"
+      },
+      "when": {
+        "top": "false"
+      }
     },
-    "top=true": {
-      "model": "galacticraft:block/web_torch_top"
+    {
+      "apply": {
+        "model": "galacticraft:block/web_torch_top"
+      },
+      "when": {
+        "top": "true"
+      }
     }
-  }
+  ]
 }

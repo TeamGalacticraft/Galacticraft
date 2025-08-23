@@ -66,7 +66,7 @@ public class WebStringBlock extends WebBlock {
     }
 
     protected static final VoxelShape FULL_VOXEL = Block.box(5.0, 0.0, 5.0, 11.0, 16.0, 11.0);
-    protected static final VoxelShape BOTTOM_VOXEL = Block.box(5.0, 4.0, 5.0, 11.0, 16.0, 11.0);
+    protected static final VoxelShape BOTTOM_VOXEL = Block.box(5.0, 3.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
     protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
