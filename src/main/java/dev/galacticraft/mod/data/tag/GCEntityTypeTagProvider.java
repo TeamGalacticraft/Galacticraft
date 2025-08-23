@@ -25,26 +25,25 @@ package dev.galacticraft.mod.data.tag;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.tag.GCEntityTypeTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
+import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.data.tags.IntrinsicHolderTagsProvider;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 
 import java.util.concurrent.CompletableFuture;
 
-public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityType<?>> {
+public class GCEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProvider {
 
-    public GCEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> provider) {
-        super(output, Registries.ENTITY_TYPE, provider, entityType -> entityType.builtInRegistryHolder().key());
+    public GCEntityTypeTagProvider(FabricDataOutput output, CompletableFuture<HolderLookup.Provider> completableFuture) {
+        super(output, completableFuture);
     }
 
     @Override
     protected void addTags(HolderLookup.Provider arg) {
-        this.tag(GCEntityTypeTags.HAS_FOOTPRINTS)
+        this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_FOOTPRINTS)
                 .add(EntityType.PLAYER);
 
-        tag(GCEntityTypeTags.HAS_OXYGEN_SETUP)
+        this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_OXYGEN_SETUP)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE)
                 .add(GCEntityTypes.EVOLVED_CREEPER)
                 .add(GCEntityTypes.EVOLVED_SKELETON)
@@ -54,30 +53,36 @@ public class GCEntityTypeTagProvider extends IntrinsicHolderTagsProvider<EntityT
                 .add(GCEntityTypes.EVOLVED_PILLAGER)
                 .add(GCEntityTypes.EVOLVED_EVOKER)
                 .add(GCEntityTypes.EVOLVED_VINDICATOR);
-        tag(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
+        this.getOrCreateTagBuilder(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
                 .addTag(GCEntityTypeTags.HAS_OXYGEN_SETUP);
 
-        tag(EntityTypeTags.IMPACT_PROJECTILES)
+        this.getOrCreateTagBuilder(GCEntityTypeTags.IMMUNE_TO_ACID)
+                .add(EntityType.TRIDENT)
                 .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
-        tag(EntityTypeTags.FALL_DAMAGE_IMMUNE)
+        this.getOrCreateTagBuilder(GCEntityTypeTags.SENSITIVE_TO_ACID)
+                .add(EntityType.TNT);
+
+        this.getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
+                .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
+        this.getOrCreateTagBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE)
                 .add(GCEntityTypes.ROCKET)
                 .add(GCEntityTypes.LANDER);
 
-        tag(EntityTypeTags.SKELETONS)
+        this.getOrCreateTagBuilder(EntityTypeTags.SKELETONS)
                 .add(GCEntityTypes.EVOLVED_SKELETON)
                 .add(GCEntityTypes.SKELETON_BOSS);
-        tag(EntityTypeTags.ZOMBIES)
+        this.getOrCreateTagBuilder(EntityTypeTags.ZOMBIES)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE);
-        tag(EntityTypeTags.RAIDERS)
+        this.getOrCreateTagBuilder(EntityTypeTags.RAIDERS)
                 .add(GCEntityTypes.EVOLVED_WITCH)
                 .add(GCEntityTypes.EVOLVED_PILLAGER)
                 .add(GCEntityTypes.EVOLVED_EVOKER)
                 .add(GCEntityTypes.EVOLVED_VINDICATOR);
-        tag(EntityTypeTags.ILLAGER)
+        this.getOrCreateTagBuilder(EntityTypeTags.ILLAGER)
                 .add(GCEntityTypes.EVOLVED_PILLAGER)
                 .add(GCEntityTypes.EVOLVED_EVOKER)
                 .add(GCEntityTypes.EVOLVED_VINDICATOR);
-        tag(EntityTypeTags.ARTHROPOD)
+        this.getOrCreateTagBuilder(EntityTypeTags.ARTHROPOD)
                 .add(GCEntityTypes.EVOLVED_SPIDER);
     }
 }
