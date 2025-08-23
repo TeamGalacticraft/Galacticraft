@@ -3,19 +3,25 @@
 remote="$1"
 url="$2"
 
-if test "$remote" = "main" && test "$url" = "https://github.com/TeamGalacticraft/Galacticraft"
+if test "$url" = "https://github.com/TeamGalacticraft/Galacticraft"
 then
-	echo -e "Started running './gradlew test' Gradle task..."
+	while read local_ref local_oid remote_ref remote_oid
+	do
+		if test "$remote_ref" = "refs/heads/main"
+		then
+			echo -e "Started running './gradlew test' Gradle task..."
 
-	./gradlew :test
-	status=$?
+			./gradlew :test
+			status=$?
 
-	if test "$status" = 0
-	then
-		echo -e "\n...test succeeded, proceeding with git push.\n"
-	else
-		echo -e "\n...test failed, aborting git push.\n"
-	fi
+			if test "$status" = 0
+			then
+				echo -e "\n...test succeeded, proceeding with git push.\n"
+			else
+				echo -e "\n...test failed, aborting git push.\n"
+			fi
+		fi
+	done
 fi
 
 exit $status
