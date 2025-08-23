@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
+import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
+import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
@@ -54,20 +56,32 @@ public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultC
     public Optional<List<DefaultCanningDisplay>> getUsageFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack itemStack) {
             if (itemStack.getItem() == EMPTY_CAN || itemStack.getItem() == FOOD_CANNER.asItem()) {
-                List<DefaultCanningDisplay> displays = new ArrayList<>();
-                for (Item item : BuiltInRegistries.ITEM) {
-                    if (CannedFoodItem.canAddToCan(item)) {
-                        // Create new canned food item with empty components
-                        ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
-                        // Add the default itemstack of the edible item into the canned foods components
-                        CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
-                        List<EntryIngredient> entries = CannedFoodItem.getContents(cannedFoodItem).stream().map(stack -> EntryIngredients.of(stack)).collect(Collectors.toList());
-                        displays.add(new DefaultCanningDisplay(entries, List.of(EntryIngredients.of(cannedFoodItem)), Optional.empty()));
-                    }
-                }
-                return Optional.of(displays);
+                return this.defaultCanningDisplays();
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<List<DefaultCanningDisplay>> generate(ViewSearchBuilder builder) {
+        if (builder.getCategories().contains(GalacticraftREIServerPlugin.CANNING)) {
+            return this.defaultCanningDisplays();
+        }
+        return Optional.empty();
+    }
+
+    private Optional<List<DefaultCanningDisplay>> defaultCanningDisplays() {
+        List<DefaultCanningDisplay> displays = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (CannedFoodItem.canAddToCan(item)) {
+                // Create new canned food item with empty components
+                ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
+                // Add the default itemstack of the edible item into the canned foods components
+                CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                List<EntryIngredient> entries = CannedFoodItem.getContents(cannedFoodItem).stream().map(stack -> EntryIngredients.of(stack)).collect(Collectors.toList());
+                displays.add(new DefaultCanningDisplay(entries, List.of(EntryIngredients.of(cannedFoodItem)), Optional.empty()));
+            }
+        }
+        return Optional.of(displays);
     }
 }
