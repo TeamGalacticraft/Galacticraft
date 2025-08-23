@@ -901,6 +901,9 @@ public interface Constant {
     }
 
     interface EntityTexture {
+        String EVOLVED_SPIDER = "textures/entity/evolved/spider.png";
+        String EVOLVED_SPIDER_EYES = "textures/entity/evolved/spider_eyes.png";
+        String MOON_VILLAGER = "textures/entity/villager/moon_villager.png";
         String GREY = "textures/entity/grey.png";
         String ARCH_GREY = "textures/entity/arch_grey.png";
         String RUMBLER = "textures/entity/rumbler.png";
@@ -909,6 +912,16 @@ public interface Constant {
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
         String SKELETON_BOSS = "textures/entity/skeletonboss.png";
+    }
+
+    interface GearTexture {
+        String OXYGEN_TANKS = "textures/entity/gear/oxygen_tanks.png";
+        String OXYGEN_GEAR = "textures/entity/gear/oxygen_gear.png";
+        String PET_GEAR = "textures/entity/gear/pet_gear.png";
+        String PARROT_GEAR = "textures/entity/gear/parrot_gear.png";
+        String SPIDER_GEAR = "textures/entity/gear/spider_gear.png";
+        String WITCH_GEAR = "textures/entity/gear/witch_gear.png";
+        String ILLAGER_GEAR = "textures/entity/gear/illager_gear.png";
     }
 
     interface TextureCoordinate {

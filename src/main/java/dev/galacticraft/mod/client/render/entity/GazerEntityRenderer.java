@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class GazerEntityRenderer extends MobRenderer<GazerEntity, GazerEntityModel<GazerEntity>> {
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.GAZER);
+
     public GazerEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new GazerEntityModel<>(context.bakeLayer(GCEntityModelLayer.GAZER)), 0.75F);
     }
 
     @Override
     public ResourceLocation getTextureLocation(GazerEntity entity) {
-        return Constant.id(Constant.EntityTexture.GAZER);
+        return TEXTURE;
     }
 }
