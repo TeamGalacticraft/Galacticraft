@@ -140,11 +140,9 @@ public class WebStringBlock extends WebBlock {
         // If using a glowstone torch on a web string, then it gets hung in the web string becoming a web torch block.
         if (stack.is(GCItems.GLOWSTONE_TORCH)) {
             result = convertToWebTorch(stack, state, level, pos, player);
-        // If using a Web string on the web string, then extend the whole column of web strings down if we can.
-        } else if (stack.is(GCBlocks.WEB_STRING.asItem())) {
+        } else if (stack.is(GCBlocks.WEB_STRING.asItem())) { // If using a Web string on the web string, then extend the whole column of web strings down if we can.
             result = extendBlockDown(stack, level, pos, player, defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM));
-        // If using a web torch on the web string, then extend the whole column of web strings down if we can.
-        } else if (stack.is(GCBlocks.WEB_TORCH.asItem())) {
+        } else if (stack.is(GCBlocks.WEB_TORCH.asItem())) { // If using a web torch on the web string, then extend the whole column of web strings down if we can.
             result = extendBlockDown(stack, level, pos, player, GCBlocks.WEB_TORCH.defaultBlockState());
         }
 
@@ -163,20 +161,16 @@ public class WebStringBlock extends WebBlock {
         // If above changed and it isn't a web string block (and in theory not a solid block) then it breaks.
         if (direction == Direction.UP && !neighborState.is(GCBlocks.WEB_STRING)) {
             return Blocks.AIR.defaultBlockState();
-            // If below changed
-        } else if (direction == Direction.DOWN) {
+        } else if (direction == Direction.DOWN) { // If block below changed
             WebStringPart webStringState = state.getValue(WEB_STRING_PART);
-            // If below is a web string or a web torch
-            if (neighborState.is(GCBlocks.WEB_STRING) || neighborState.is(GCBlocks.WEB_TORCH)) {
-                // If it was at the top
-                if (webStringState == WebStringPart.TOP_BOTTOM || webStringState == WebStringPart.TOP) {
+            if (neighborState.is(GCBlocks.WEB_STRING) || neighborState.is(GCBlocks.WEB_TORCH)) { // If below is a web string or a web torch
+                if (webStringState == WebStringPart.TOP_BOTTOM || webStringState == WebStringPart.TOP) { // If it was at the top
                     return state.setValue(WEB_STRING_PART, WebStringPart.TOP); // Then still top
                 } else {
                     return state.setValue(WEB_STRING_PART, WebStringPart.MIDDLE); // Otherwise middle
                 }
             } else {
-                // If it was at the top
-                if (webStringState == WebStringPart.TOP) {
+                if (webStringState == WebStringPart.TOP) { // If it was at the top
                     return state.setValue(WEB_STRING_PART, WebStringPart.TOP_BOTTOM); // Then top and bottom
                 } else {
                     return state.setValue(WEB_STRING_PART, WebStringPart.BOTTOM); // Otherwise bottom
