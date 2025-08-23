@@ -67,7 +67,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public Iterator<AtmosphereProvider> getAtmosphericProviders(int x, int y, int z) {
+    public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
         if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
         LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) chunk).galacticraft$getHandlers(x & 15, y, z & 15);
@@ -75,14 +75,14 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public Iterator<BlockPos> getAtmosphericProviderLocations(int x, int y, int z) {
+    public Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
         if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
         return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getHandlers(x & 15, y, z & 15);
     }
 
     @Override
-    public boolean isBreathable(double x, double y, double z) {
-        Iterator<AtmosphereProvider> iter = this.getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
+    public boolean galacticraft$isBreathable(double x, double y, double z) {
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -91,8 +91,8 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public boolean isBreathable(int x, int y, int z) {
-        Iterator<AtmosphereProvider> iter = this.getAtmosphericProviders(x, y, z);
+    public boolean galacticraft$isBreathable(int x, int y, int z) {
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(x, y, z);
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -101,8 +101,8 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public boolean isBreathable(BlockPos pos) {
-        Iterator<AtmosphereProvider> iter = this.getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+    public boolean galacticraft$isBreathable(BlockPos pos) {
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(pos)) return true;
@@ -111,12 +111,12 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public boolean isBreathable() {
+    public boolean galacticraft$isBreathable() {
         return this.breathable;
     }
 
     @Override
-    public void addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    public void galacticraft$addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return;
         LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
@@ -124,14 +124,14 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public boolean hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    public boolean galacticraft$hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return false;
         LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         return ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$has(x & 15, y & 15, z & 15, providerPos);
     }
 
     @Override
-    public void removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    public void galacticraft$removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return;
         LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));

@@ -202,7 +202,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         assert this.level != null;
         for (BlockPos pos : BlockPos.betweenClosed(this.worldPosition.getX() - Mth.ceil(targetSize), this.worldPosition.getY() - Mth.ceil(targetSize), this.worldPosition.getZ() - Mth.ceil(targetSize),
                 this.worldPosition.getX() + Mth.ceil(targetSize), this.worldPosition.getY() + Mth.ceil(targetSize), this.worldPosition.getZ() + Mth.ceil(targetSize))) {
-            this.level.addAtmosphericProvider(pos, this.worldPosition);
+            this.level.galacticraft$addAtmosphericProvider(pos, this.worldPosition);
         }
     }
 

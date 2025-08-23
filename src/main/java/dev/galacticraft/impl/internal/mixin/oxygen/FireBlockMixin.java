@@ -35,6 +35,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public class FireBlockMixin {
     @WrapMethod(method = "canSurvive")
     public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
-        return original.call(state, level, pos) && ((LevelOxygenAccessor) level).isBreathable(pos);
+        return original.call(state, level, pos) && ((LevelOxygenAccessor) level).galacticraft$isBreathable(pos);
     }
 }

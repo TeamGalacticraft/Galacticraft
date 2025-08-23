@@ -146,7 +146,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         LivingEntity entity = ((LivingEntity) (Object) this);
         if (entity.galacticraft$oxygenConsumptionRate() == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
-        if (!entity.level().isBreathable(entity.getX(), entity.getEyeY(), entity.getZ()) && !(attribute != null && attribute.getValue() >= 0.99D)) {
+        if (!entity.level().galacticraft$isBreathable(entity.getX(), entity.getEyeY(), entity.getZ()) && !(attribute != null && attribute.getValue() >= 0.99D)) {
             if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && !(entity instanceof Player player && player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
@@ -174,7 +174,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
         }
-        return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+        return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
@@ -191,7 +191,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (!this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && (
                 (attribute != null && attribute.getValue() >= 0.99D) ||
-                entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
+                entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
         )) {
             this.lastHurtBySuffocationTimestamp = this.tickCount;
             cir.setReturnValue(this.increaseAirSupply(air));

@@ -326,7 +326,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         for (BlockPos pos : visitedNonSolid) {
             this.sealedPositions.removeBoolean(pos);
             visited.remove(pos);
-            this.level.removeAtmosphericProvider(pos, this.worldPosition);
+            this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
         }
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
@@ -343,7 +343,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
             if (!anyPath) {
                 // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not breathable anymore
                 this.sealedPositions.removeBoolean(pos);
-                this.level.removeAtmosphericProvider(pos, this.worldPosition);
+                this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
             }
         }
     }

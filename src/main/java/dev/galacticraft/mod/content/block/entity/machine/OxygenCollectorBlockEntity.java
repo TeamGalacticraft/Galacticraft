@@ -93,7 +93,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        this.oxygenWorld = level.isBreathable();
+        this.oxygenWorld = level.galacticraft$isBreathable();
     }
 
     private int collectOxygen(@NotNull ServerLevel level, @NotNull BlockPos pos) {

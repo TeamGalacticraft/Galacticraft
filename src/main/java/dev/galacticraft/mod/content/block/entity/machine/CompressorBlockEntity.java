@@ -180,8 +180,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     private boolean shouldExtinguish(Level level, BlockPos pos, BlockState state) {
-        return !level.isBreathable(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)))
-                && !level.isBreathable(pos);
+        return !level.galacticraft$isBreathable(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)))
+                && !level.galacticraft$isBreathable(pos);
     }
 
     @Override

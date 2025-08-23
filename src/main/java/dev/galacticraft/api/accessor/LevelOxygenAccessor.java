@@ -28,60 +28,60 @@ import net.minecraft.core.BlockPos;
 import java.util.Iterator;
 
 public interface LevelOxygenAccessor {
-    default Iterator<AtmosphereProvider> getAtmosphericProviders(int x, int y, int z) {
+    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Iterator<BlockPos> getAtmosphericProviderLocations(int x, int y, int z) {
+    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isBreathable(double x, double y, double z) {
+    default boolean galacticraft$isBreathable(double x, double y, double z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isBreathable(int x, int y, int z) {
+    default boolean galacticraft$isBreathable(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isBreathable(BlockPos pos) {
+    default boolean galacticraft$isBreathable(BlockPos pos) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isBreathable() {
+    default boolean galacticraft$isBreathable() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
     // must allocate on section first!!!
-    default void addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    default void galacticraft$addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    default boolean galacticraft$hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
+    default void galacticraft$removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Iterator<BlockPos> getAtmosphericProviderLocations(BlockPos pos) {
-        return this.getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
+    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(BlockPos pos) {
+        return this.galacticraft$getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    default Iterator<AtmosphereProvider> getAtmosphericProviders(BlockPos pos) {
-        return this.getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(BlockPos pos) {
+        return this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    default void addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        this.addAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
+    default void galacticraft$addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        this.galacticraft$addAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
     }
 
-    default boolean hasAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        return this.hasAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
+    default boolean galacticraft$hasAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        return this.galacticraft$hasAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
     }
 
-    default void removeAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        this.removeAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
+    default void galacticraft$removeAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
+        this.galacticraft$removeAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
     }
 }

@@ -57,7 +57,7 @@ public abstract class CakeBlockMixin extends Block {
                 cir.setReturnValue(InteractionResult.FAIL);
             }
         } else if (Galacticraft.CONFIG.cannotEatInNoAtmosphere()
-                && !level.isBreathable(playerEyePos.x, playerEyePos.y, playerEyePos.z)
+                && !level.galacticraft$isBreathable(playerEyePos.x, playerEyePos.y, playerEyePos.z)
         ) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             cir.setReturnValue(InteractionResult.FAIL);
