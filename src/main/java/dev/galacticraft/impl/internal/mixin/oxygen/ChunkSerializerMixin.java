@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(ChunkSerializer.class)
 public abstract class ChunkSerializerMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getStates()Lnet/minecraft/world/level/chunk/PalettedContainer;"))
-    private static void galacticraft_serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, @Local(ordinal = 1) CompoundTag sectionTag, @Local LevelChunkSection section) {
+    private static void serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, @Local(ordinal = 1) CompoundTag sectionTag, @Local LevelChunkSection section) {
         ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor) section;
         CompoundTag apiTag = new CompoundTag();
         accessor.galacticraft$writeTag(apiTag);
@@ -51,7 +51,7 @@ public abstract class ChunkSerializerMixin {
     }
 
     @Inject(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;checkConsistencyWithBlocks(Lnet/minecraft/core/SectionPos;Lnet/minecraft/world/level/chunk/LevelChunkSection;)V"))
-    private static void galacticraft_deserializeOxygen(ServerLevel world, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag sectionTag, @Local LevelChunkSection levelChunkSection) {
+    private static void deserializeOxygen(ServerLevel world, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag sectionTag, @Local LevelChunkSection levelChunkSection) {
         ((ChunkSectionOxygenAccessor) levelChunkSection).galacticraft$readTag(sectionTag.getCompound(Constant.Nbt.GC_API));
     }
 }
