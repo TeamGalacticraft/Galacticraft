@@ -46,7 +46,6 @@ import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
 
@@ -54,7 +53,7 @@ import static dev.galacticraft.mod.content.GCBlocks.WEB_STRING;
 import static dev.galacticraft.mod.content.GCBlocks.WEB_TORCH;
 import static dev.galacticraft.mod.content.item.GCItems.GLOWSTONE_TORCH;
 
-public class WebStringBlock extends WebBlock {
+public class WebStringBlock extends GCWebBlock {
 
     public static final MapCodec<WebBlock> CODEC = simpleCodec(WebStringBlock::new);
 
@@ -69,7 +68,7 @@ public class WebStringBlock extends WebBlock {
     protected static final VoxelShape BOTTOM_VOXEL = Block.box(5.0, 3.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    protected VoxelShape getShape(BlockState state) {
         if (state.getValue(WEB_STRING_PART) == WebStringPart.BOTTOM) {
             return BOTTOM_VOXEL;
         } else {

@@ -37,12 +37,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
-import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 
 import static dev.galacticraft.mod.content.GCBlocks.WEB_STRING;
 
-public class WebTorchBlock extends WebBlock {
+public class WebTorchBlock extends GCWebBlock {
 
     public static final MapCodec<WebBlock> CODEC = simpleCodec(WebTorchBlock::new);
 
@@ -56,7 +55,7 @@ public class WebTorchBlock extends WebBlock {
     protected static final VoxelShape TORCH_VOXEL = Block.box(5.0, 3.0, 5.0, 11.0, 16.0, 11.0);
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    protected VoxelShape getShape(BlockState state) {
         return TORCH_VOXEL;
     }
 
