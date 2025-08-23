@@ -241,20 +241,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
 
     @Override
     public boolean canBreathe(double x, double y, double z) {
-        BlockPos pos = BlockPos.containing(x, y, z);
-        if (this.sealedPositions.containsKey(pos)) {
-            if (this.sealedPositions.getBoolean(pos)) {
-                int dX = pos.getX() + 0.5 < x ? 1 : -1;
-                int dY = pos.getY() + 0.5 < y ? 1 : -1;
-                int dZ = pos.getZ() + 0.5 < z ? 1 : -1;
-                return this.canBreathe(pos.offset(dX, 0, 0))
-                        || this.canBreathe(pos.offset(0, dY, 0))
-                        || this.canBreathe(pos.offset(0, 0, dZ));
-            } else {
-                return this.isSealed();
-            }
-        }
-        return false;
+        return this.isSealed() && this.sealedPositions.containsKey(BlockPos.containing(x, y, z));
     }
 
     @Override
