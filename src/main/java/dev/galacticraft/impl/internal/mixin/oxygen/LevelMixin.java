@@ -82,32 +82,35 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public boolean galacticraft$isBreathable(double x, double y, double z) {
+        if (this.breathable) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
         }
-        return this.breathable;
+        return false;
     }
 
     @Override
     public boolean galacticraft$isBreathable(int x, int y, int z) {
+        if (this.breathable) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(x, y, z);
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
         }
-        return this.breathable;
+        return false;
     }
 
     @Override
     public boolean galacticraft$isBreathable(BlockPos pos) {
+        if (this.breathable) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(pos)) return true;
         }
-        return this.breathable;
+        return false;
     }
 
     @Override
