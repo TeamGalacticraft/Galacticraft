@@ -207,7 +207,7 @@ public class WebStringBlock extends WebBlock {
         TOP("top"),
         MIDDLE("middle"),
         BOTTOM("bottom"),
-        TOP_BOTTOM( "top_bottom");
+        TOP_BOTTOM("top_bottom");
 
         private final String name;
 
