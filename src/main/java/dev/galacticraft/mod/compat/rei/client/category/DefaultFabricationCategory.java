@@ -47,6 +47,7 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
@@ -69,12 +70,11 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT)));
+        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT));
 
-        DecimalFormat df = new DecimalFormat("###.##");
         double processingTime = recipeDisplay.getProcessingTime();
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
-                Component.translatable("category.rei.campfire.time", df.format(processingTime / 20.0D))).noShadow().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable("category.rei.campfire.time", FORMAT.format(processingTime / 20.0D))).noShadow().color(0xFF404040, 0xFFBBBBBB));
 
         // Diamond ingredients
         // Silicon

@@ -43,7 +43,7 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     private static final int PROGRESS_X = 82;
     private static final int PROGRESS_Y = 26;
     private static final int PROGRESS_WIDTH = 52;
-    private static final int PROGRESS_HEIGHT = 23;
+    private static final int PROGRESS_HEIGHT = 24;
 
     private static final int FIRE_U = 204;
     private static final int FIRE_V = 25;

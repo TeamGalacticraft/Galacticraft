@@ -407,6 +407,7 @@
   "cape.galacticraft.venus": "Venus",
   "category.recipe_viewer.circuit_fabricator": "Circuit Fabricating",
   "category.recipe_viewer.compressing": "Compressing",
+  "category.recipe_viewer.compressing.electric": "Compressing (Electric)",
   "category.recipe_viewer.rocket": "Rocket Crafting",
   "chat.galacticraft.bed_fail": "Uh oh, what if the oxygen runs out when I am asleep? I'll need a Cryogenic Chamber to sleep in space!",
   "chat.galacticraft.cannot_eat_in_no_atmosphere": "You can't eat that while holding your breath.",

@@ -80,7 +80,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         final Point startPoint = new Point(bounds.getCenterX() - ROCKET_WORKBENCH_WIDTH / 2, bounds.getCenterY() - ROCKET_WORKBENCH_HEIGHT / 2);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new RocketBaseWidget(startPoint));
+        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT));
+
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 

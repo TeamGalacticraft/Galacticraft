@@ -24,7 +24,7 @@ package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
@@ -41,48 +41,47 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 @Environment(EnvType.CLIENT)
-public class DefaultCompressingCategory implements DisplayCategory<DefaultCompressingDisplay> {
+public class ElectricCompressingCategory implements DisplayCategory<ElectricCompressingDisplay> {
     private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
-    public CategoryIdentifier<? extends DefaultCompressingDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.COMPRESSING;
+    public CategoryIdentifier<? extends ElectricCompressingDisplay> getCategoryIdentifier() {
+        return GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING;
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.COMPRESSOR));
+        return EntryStacks.of(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR));
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.COMPRESSOR);
+        return Component.translatable(Translations.RecipeCategory.ELECTRIC_COMPRESSOR);
     }
 
-    public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - COMPRESSOR_WIDTH / 2, bounds.getCenterY() - COMPRESSOR_HEIGHT / 2);
+    public @NotNull List<Widget> setupDisplay(ElectricCompressingDisplay recipeDisplay, Rectangle bounds) {
+        final Point startPoint = new Point(bounds.getCenterX() - ELECTRIC_COMPRESSOR_WIDTH / 2, bounds.getCenterY() - ELECTRIC_COMPRESSOR_HEIGHT / 2);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ELECTRIC_COMPRESSOR_U, ELECTRIC_COMPRESSOR_V, ELECTRIC_COMPRESSOR_WIDTH, ELECTRIC_COMPRESSOR_HEIGHT));
 
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
-        widgets.add(new CompressorArrowWidget(new Rectangle(startPoint.x + COMPRESSOR_PROGRESS_X, startPoint.y + COMPRESSOR_PROGRESS_Y, COMPRESSOR_PROGRESS_WIDTH, COMPRESSOR_PROGRESS_HEIGHT), COMPRESSOR_PROGRESS_U, COMPRESSOR_PROGRESS_V, processingTime));
-        widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
-                Component.translatable("category.rei.campfire.time", FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
+        widgets.add(new CompressorArrowWidget(new Rectangle(startPoint.x + ELECTRIC_COMPRESSOR_PROGRESS_X, startPoint.y + ELECTRIC_COMPRESSOR_PROGRESS_Y, ELECTRIC_COMPRESSOR_PROGRESS_WIDTH, ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT),
+                ELECTRIC_COMPRESSOR_PROGRESS_U, ELECTRIC_COMPRESSOR_PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 12),
+                Component.translatable("category.rei.campfire.time", FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
         // Output
@@ -99,14 +98,11 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         }
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + COMPRESSED_X, startPoint.y + COMPRESSED_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
-
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
-        widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_COMPRESSED_X, startPoint.y + ELECTRIC_COMPRESSED_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
-    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
+    private int getSlotWithSize(ElectricCompressingDisplay recipeDisplay, int num) {
         if (recipeDisplay.getWidth() == 1) {
             if (num == 1) {
                 return 3;
@@ -145,12 +141,12 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public int getDisplayHeight() {
-        return COMPRESSOR_HEIGHT + 8;
+        return ELECTRIC_COMPRESSOR_HEIGHT + 8;
     }
 
     @Override
-    public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return COMPRESSOR_WIDTH + 8;
+    public int getDisplayWidth(ElectricCompressingDisplay display) {
+        return ELECTRIC_COMPRESSOR_WIDTH + 8;
     }
 
 }

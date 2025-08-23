@@ -70,6 +70,7 @@ public interface Translations {
     interface RecipeCategory {
         String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
         String COMPRESSOR = "category.recipe_viewer.compressing";
+        String ELECTRIC_COMPRESSOR = "category.recipe_viewer.compressing.electric";
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
     }
 
