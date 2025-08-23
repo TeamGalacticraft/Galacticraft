@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -40,6 +39,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+
+import static dev.galacticraft.mod.content.GCBlocks.WEB_STRING;
 
 public class WebTorchBlock extends WebBlock {
 
@@ -68,7 +69,7 @@ public class WebTorchBlock extends WebBlock {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos pos = ctx.getClickedPos();
         BlockState state = ctx.getLevel().getBlockState(pos);
-        if (!state.is(GCBlocks.WEB_STRING)) {
+        if (!state.is(WEB_STRING)) {
             return defaultBlockState().setValue(TOP, true);
         }
         return defaultBlockState().setValue(TOP, false);
@@ -78,7 +79,7 @@ public class WebTorchBlock extends WebBlock {
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         // If above changed and it isn't a web torch block (and in theory not a solid block) then it breaks.
-        if (direction == Direction.UP && !neighborState.is(GCBlocks.WEB_STRING)) {
+        if (direction == Direction.UP && !neighborState.is(WEB_STRING)) {
             return Blocks.AIR.defaultBlockState();
         }
         // No change
@@ -93,7 +94,7 @@ public class WebTorchBlock extends WebBlock {
 
     private boolean canAttachTo(BlockGetter world, BlockPos pos, Direction side) {
         BlockState blockState = world.getBlockState(pos);
-        return blockState.isFaceSturdy(world, pos, side) || blockState.is(GCBlocks.WEB_STRING);
+        return blockState.isFaceSturdy(world, pos, side) || blockState.is(WEB_STRING);
     }
 
     @Override
