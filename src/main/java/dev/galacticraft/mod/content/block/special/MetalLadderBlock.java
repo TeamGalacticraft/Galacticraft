@@ -45,6 +45,9 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
+// TODO Breaking different sorts of ladder stacks doesn't work correctly
+// TODO Placing different sorts of ladders stacks doesn't work beyond 2 or 3 blocks.
+
 public class MetalLadderBlock extends LadderBlock {
     public MetalLadderBlock(BlockBehaviour.Properties properties) {
         super(properties);
