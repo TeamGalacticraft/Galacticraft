@@ -91,6 +91,11 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerDisplays(DisplayRegistry registry) {
+        /*
+         * This will need to be changed from 1.21.2 onwards, see the following for more details:
+         * https://hackmd.io/@shedaniel/rei17_primer#Recipe-Fillers
+         * https://github.com/shedaniel/RoughlyEnoughItems/commit/ddb48e2032d1986709cad973067693eec3118504
+         */
         registry.registerRecipeFiller(FabricationRecipe.class, GCRecipes.FABRICATION_TYPE, DefaultFabricationDisplay::new);
         registry.registerRecipeFiller(ShapedCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapedCompressingDisplay::new);
         registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapelessCompressingDisplay::new);

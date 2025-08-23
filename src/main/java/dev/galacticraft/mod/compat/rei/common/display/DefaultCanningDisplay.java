@@ -48,14 +48,6 @@ public class DefaultCanningDisplay extends BasicDisplay {
         super(inputs, outputs, location);
     }
 
-    public int getWidth() {
-        return 4;
-    }
-
-    public int getHeight() {
-        return 4;
-    }
-
     public static DefaultCanningDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         return new DefaultCanningDisplay(inputs, outputs, location);
     }
@@ -79,5 +71,13 @@ public class DefaultCanningDisplay extends BasicDisplay {
             list.add(InputIngredient.of(i, inputEntries.get(i)));
         }
         return list;
+    }
+
+    public int getWidth() {
+        return 4;
+    }
+
+    public int getHeight() {
+        return 4;
     }
 }
