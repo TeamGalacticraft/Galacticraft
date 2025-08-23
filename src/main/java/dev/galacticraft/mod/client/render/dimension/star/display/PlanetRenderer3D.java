@@ -47,7 +47,6 @@ public class PlanetRenderer3D implements CelestialBodyRenderer {
         // This method is intentionally left empty
         // Each planet is rendered individually in the render method
     }
-
     @Override
     public void render(CelestialBody body, WorldRenderContext worldRenderContext) {
         if (!(body instanceof Planet3DData planet)) {
@@ -55,7 +54,7 @@ public class PlanetRenderer3D implements CelestialBodyRenderer {
         }
 
         // Get camera position
-        Vec3 cameraPos = new Vec3(cameraRenderPosition.getX(), cameraRenderPosition.getY(), cameraRenderPosition.getZ());
+        Vec3 cameraPos = cameraRenderPosition.getVec3();
 
         // Calculate planet position relative to camera
         double x = planet.getX() - cameraPos.x;
@@ -166,12 +165,21 @@ public class PlanetRenderer3D implements CelestialBodyRenderer {
         // Draw the face
         Matrix4f matrix = matrices.last().pose();
 
-        // Create a temporary VertexBuffer to draw with shader
-        VertexBuffer vertexBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
-        vertexBuffer.bind();
-        vertexBuffer.upload(buffer.build());
+        drawVertexBuffer(worldRenderContext, buffer, matrix);
+    }
 
-        vertexBuffer.drawWithShader(
+    VertexBuffer planetBuffer;
+
+    private void drawVertexBuffer(WorldRenderContext worldRenderContext, BufferBuilder buffer, Matrix4f matrix) {
+        // Create a temporary VertexBuffer to draw with shader
+        if (this.planetBuffer == null) {
+            this.planetBuffer = new VertexBuffer(VertexBuffer.Usage.STATIC);
+        }
+
+        planetBuffer.bind();
+        planetBuffer.upload(buffer.build());
+
+        planetBuffer.drawWithShader(
                 matrix,
                 worldRenderContext.projectionMatrix(),
                 GameRenderer.getPositionTexColorShader()

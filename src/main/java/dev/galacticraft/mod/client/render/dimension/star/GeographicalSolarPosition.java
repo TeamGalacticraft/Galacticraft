@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.client.render.dimension.star;
 
+import net.minecraft.world.phys.Vec3;
+
 /**
  * Represents the three-dimensional position of a celestial body in space.
  * Used for rendering other astronomical objects in the space environment.
@@ -53,6 +55,10 @@ public class GeographicalSolarPosition {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Vec3 getVec3() {
+        return new Vec3(x, y, z);
     }
 
     private static final GeographicalSolarPosition instance = new GeographicalSolarPosition(0, 0, 0);

@@ -48,6 +48,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static dev.galacticraft.mod.Constant.Cape;
 import static dev.galacticraft.mod.util.Translations.*;
 
 public class GCTranslationProvider extends TranslationProvider {
@@ -1164,6 +1165,27 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
+
+        this.add(Ui.CAPE_BUTTON, "Cape");
+        this.add(Ui.CAPES_TITLE, "Capes");
+        this.add(Ui.CAPES_STATE + "vanilla", "Vanilla");
+        this.add(Ui.CAPES_STATE + "gc", "Galacticraft");
+        this.add(Ui.CAPES_STATE + "off", "Off");
+
+        this.cape(Cape.EARTH, "Earth");
+        this.cape(Cape.JUPITER, "Jupiter");
+        this.cape(Cape.MARS, "Mars");
+        this.cape(Cape.MERCURY, "Mercury");
+        this.cape(Cape.MOON, "Moon");
+        this.cape(Cape.NEPTUNE, "Neptune");
+        this.cape(Cape.PLAIN, "Plain");
+        this.cape(Cape.SPACE_STATION, "Space Station");
+        this.cape(Cape.SUN, "Sun");
+        this.cape(Cape.URANUS, "Uranus");
+        this.cape(Cape.VENUS, "Venus");
+        this.cape(Cape.DEVELOPER, "Developer");
+        this.cape(Cape.REWOVEN, "Rewoven");
+        this.cape(Cape.DEVELOPER_RED, "Developer Red");
     }
 
     protected void generateWailaTranslations() {
@@ -1259,6 +1281,10 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void advancement(String translationKey, String title, String description) {
         this.add(translationKey + ".title", title);
         this.add(translationKey + ".description", description);
+    }
+
+    protected void cape(String key, String translation) {
+        this.add(Ui.CAPE + key, translation);
     }
 
     @Override

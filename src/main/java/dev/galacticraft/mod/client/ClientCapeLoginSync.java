@@ -20,31 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network;
+package dev.galacticraft.mod.client;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.mod.network.c2s.*;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import dev.galacticraft.mod.client.network.CapeClientNet;
+import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.misc.cape.ClientCapePrefs;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCServerPacketReceivers {
-    public static void register() {
-        registerPacket(BubbleMaxPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(EjectCanPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(OpenPetInventoryPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
-        registerPacket(CapeSelectionPayload.TYPE);
+@Environment(EnvType.CLIENT)
+public final class ClientCapeLoginSync {
+    public static void init() {
+        ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
+            ClientCapePrefs prefs = ClientCapePrefs.load();
+            CapeClientNet.sendSelectionIfOnline(
+                    prefs.mode,
+                    prefs.mode == CapeMode.GC ? prefs.gcCapeId : null
+            );
+        });
     }
 
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
-    }
+    private ClientCapeLoginSync() {}
 }

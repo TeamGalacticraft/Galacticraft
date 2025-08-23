@@ -52,7 +52,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_TANKS);
     private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
     private float xRot = 0.0F;

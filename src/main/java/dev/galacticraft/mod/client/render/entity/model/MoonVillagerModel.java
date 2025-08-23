@@ -59,8 +59,8 @@ public class MoonVillagerModel extends VillagerModel<MoonVillagerEntity> {
     }
 
     @Override
-    public void setupAnim(MoonVillagerEntity entityGoalInfo, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
-        super.setupAnim(entityGoalInfo, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
+    public void setupAnim(MoonVillagerEntity entity, float limbAngle, float limbDistance, float animationProgress, float headYaw, float headPitch) {
+        super.setupAnim(entity, limbAngle, limbDistance, animationProgress, headYaw, headPitch);
         this.hat.visible = false;
         this.hatRim.visible = false;
         this.jacket.visible = false;

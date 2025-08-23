@@ -37,7 +37,7 @@ import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEntityRenderer extends MobRenderer<EvolvedSpiderEntity, SpiderModel<EvolvedSpiderEntity>> {
-    public static final ResourceLocation TEXTURE = Constant.id("textures/entity/evolved/spider.png");
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.EVOLVED_SPIDER);
 
     public EvolvedSpiderEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new SpiderModel<>(context.bakeLayer(ModelLayers.SPIDER)), 0.8f);

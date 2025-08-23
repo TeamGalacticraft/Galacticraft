@@ -20,27 +20,40 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity;
+package dev.galacticraft.mod.misc.cape;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.model.entity.EvolvedSkeletonBossModel;
-import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
-import net.minecraft.client.renderer.entity.EntityRendererProvider;
-import net.minecraft.client.renderer.entity.MobRenderer;
-import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
+import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 
-public class EvolvedSkeletonBossRenderer extends MobRenderer<SkeletonBoss, EvolvedSkeletonBossModel> {
-    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.SKELETON_BOSS);
+import java.util.HashMap;
+import java.util.Locale;
+import java.util.Map;
 
-    public EvolvedSkeletonBossRenderer(EntityRendererProvider.Context context) {
-        super(context, new EvolvedSkeletonBossModel(context.bakeLayer(GCEntityModelLayer.SKELETON_BOSS)), 0.9F);
-        addLayer(new ItemInHandLayer<>(this, context.getItemInHandRenderer()));
+public final class CapesClientState {
+    public static final class Entry {
+        public final CapeMode mode;
+        public final String gcCapeId;
+        public Entry(CapeMode mode, String gcCapeId) {
+            this.mode = mode;
+            this.gcCapeId = gcCapeId;
+        }
     }
 
-    @Override
-    public ResourceLocation getTextureLocation(SkeletonBoss entity) {
-        return TEXTURE;
+    private static final Map<String, Entry> ASSIGN = new HashMap<>();
+
+    public static synchronized void apply(Map<String, Entry> snapshot) {
+        ASSIGN.clear();
+        ASSIGN.putAll(snapshot);
+    }
+
+    public static synchronized Entry forPlayer(AbstractClientPlayer player) {
+        if (player == null || player.getGameProfile() == null) return null;
+        String id = player.getGameProfile().getId().toString().toLowerCase(Locale.ROOT);
+        return ASSIGN.get(id);
+    }
+
+    public static ResourceLocation gcCapeTexture(String gcCapeId) {
+        var def = CapeRegistry.get(gcCapeId);
+        return def != null ? def.texture : null;
     }
 }

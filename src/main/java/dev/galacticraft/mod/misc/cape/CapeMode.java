@@ -20,31 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network;
+package dev.galacticraft.mod.misc.cape;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.mod.network.c2s.*;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
-
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCServerPacketReceivers {
-    public static void register() {
-        registerPacket(BubbleMaxPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(EjectCanPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(OpenPetInventoryPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
-        registerPacket(CapeSelectionPayload.TYPE);
-    }
-
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
-    }
+public enum CapeMode {
+    VANILLA,
+    GC,
+    OFF
 }

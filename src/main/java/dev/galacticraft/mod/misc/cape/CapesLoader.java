@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.misc.cape;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
 import com.google.gson.reflect.TypeToken;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.Util;
@@ -35,39 +34,47 @@ import java.net.URL;
 import java.nio.charset.StandardCharsets;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
+import java.util.Map;
 
-public class CapesLoader {
-    public static class PlayerCapeData {
+public final class CapesLoader {
+    public static final class PlayerRoleData {
         public String uuid;
-        public String cape;
+        public String role;
         public String name;
     }
 
-    public static HashMap<String, String> UUID_CAPE_MAP = new HashMap<>();
-    private static final Type PLAYER_CAPE_DATA_TYPE = new TypeToken<List<PlayerCapeData>>() {
-    }.getType();
+    private static final Type TYPE = new TypeToken<List<PlayerRoleData>>(){}.getType();
 
-    public static void load() {
+    public static final Map<String, CapeRole> UUID_ROLE = new HashMap<>();
+
+    public static void loadAsync() {
         Util.backgroundExecutor().execute(() -> {
-            long startLoad = System.currentTimeMillis();
-            Gson gson = new GsonBuilder().create();
-            Constant.LOGGER.info("Loading capes data...");
+            long t0 = System.currentTimeMillis();
+            Constant.LOGGER.info("Loading cape roles...");
             try {
-                List<PlayerCapeData> players = gson.fromJson(
-                        IOUtils.toString(
-                                new URL("https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes.json"),
-                                StandardCharsets.UTF_8
-                        ),
-                        PLAYER_CAPE_DATA_TYPE
+                String json = IOUtils.toString(
+                        new URL(Constant.CAPES),
+                        StandardCharsets.UTF_8
                 );
-                // It's more efficient while ingame to load the data we actually use into a map
-                for (var player : players) {
-                    UUID_CAPE_MAP.put(player.uuid, player.cape);
+                List<PlayerRoleData> players = new Gson().fromJson(json, TYPE);
+                UUID_ROLE.clear();
+                for (var p : players) {
+                    CapeRole role = switch (p.role.toLowerCase(Locale.ROOT)) {
+                        case "developer", "dev" -> CapeRole.DEVELOPER;
+                        case "patron", "patreon", "supporter" -> CapeRole.PATRON;
+                        default -> CapeRole.NONE;
+                    };
+                    UUID_ROLE.put(p.uuid.toLowerCase(Locale.ROOT), role);
                 }
+                Constant.LOGGER.info("Loaded roles for {} players ({} ms).", UUID_ROLE.size(), System.currentTimeMillis() - t0);
             } catch (IOException e) {
-                Constant.LOGGER.warn("Failed to load capes.", e);
+                Constant.LOGGER.warn("Failed to load cape roles.", e);
             }
-            Constant.LOGGER.info("Loaded capes for {} players. (Took {}ms)", UUID_CAPE_MAP.size(), System.currentTimeMillis() - startLoad);
         });
+    }
+
+    public static CapeRole roleFor(String dashedUuid) {
+        return UUID_ROLE.getOrDefault(dashedUuid.toLowerCase(Locale.ROOT), CapeRole.NONE);
     }
 }
