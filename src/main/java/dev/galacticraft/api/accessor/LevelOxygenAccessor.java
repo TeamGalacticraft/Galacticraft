@@ -40,6 +40,14 @@ public interface LevelOxygenAccessor {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
+    default boolean isBreathable(int x, int y, int z) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
+    default boolean isBreathable(BlockPos pos) {
+        throw new RuntimeException("This should be overridden by mixin!");
+    }
+
     default boolean isBreathable() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
@@ -63,10 +71,6 @@ public interface LevelOxygenAccessor {
 
     default Iterator<AtmosphereProvider> getAtmosphericProviders(BlockPos pos) {
         return this.getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    default boolean isBreathable(BlockPos pos) {
-        return this.isBreathable(pos.getX(), pos.getY(), pos.getZ());
     }
 
     default void addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {

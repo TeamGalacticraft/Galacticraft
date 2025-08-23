@@ -24,7 +24,6 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
@@ -50,7 +49,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Iterator;
 
 @Mixin(LevelChunk.class)
-public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor {
     @Shadow
     @Final
     Level level;
@@ -62,6 +61,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
     private void notifyAPsOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
         if (this.level.isClientSide) return;
+
         Iterator<BlockPos> iterator = this.galacticraft$getHandlers(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
         while (iterator.hasNext()) {
             BlockPos atPos = iterator.next();

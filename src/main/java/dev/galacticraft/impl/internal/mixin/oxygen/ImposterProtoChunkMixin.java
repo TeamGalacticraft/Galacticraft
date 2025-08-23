@@ -49,9 +49,9 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, Ch
     }
 
     @Override
-    public void galacticraft$markSectionDirty(int y) {
+    public void galacticraft$markSectionDirty(int sectionIndex) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$markSectionDirty(y);
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$markSectionDirty(sectionIndex);
         }
     }
 

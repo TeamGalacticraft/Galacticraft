@@ -28,6 +28,10 @@ import net.minecraft.world.level.block.state.BlockState;
 public interface AtmosphereProvider {
     boolean canBreathe(double x, double y, double z);
 
+    default boolean canBreathe(int x, int y, int z) {
+        return this.canBreathe(new BlockPos(x, y, z));
+    }
+
     boolean canBreathe(BlockPos pos);
 
     void notifyStateChange(BlockPos pos, BlockState newState);

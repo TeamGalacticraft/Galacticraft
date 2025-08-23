@@ -40,10 +40,16 @@ import java.util.Iterator;
 
 @Mixin(ChunkAccess.class)
 public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
-    @Shadow @Final protected LevelChunkSection[] sections;
-    @Shadow @Final protected LevelHeightAccessor levelHeightAccessor;
+    @Shadow
+    @Final
+    protected LevelChunkSection[] sections;
+
+    @Shadow
+    @Final
+    protected LevelHeightAccessor levelHeightAccessor;
+
     @Unique
-    private short dirtySections = 0b0;
+    private short dirtySections = 0;
 
     @Override
     public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
@@ -51,13 +57,13 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
     }
 
     @Override
-    public void galacticraft$markSectionDirty(int y) {
-        this.dirtySections |= (short) (0b1 << y);
+    public void galacticraft$markSectionDirty(int sectionIndex) {
+        this.dirtySections |= (short) (0b1 << sectionIndex);
     }
 
     @Override
     public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
-        if (this.dirtySections != 0b0) {
+        if (this.dirtySections != 0) {
             int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
                 if ((this.dirtySections & (0b1 << i)) != 0) {

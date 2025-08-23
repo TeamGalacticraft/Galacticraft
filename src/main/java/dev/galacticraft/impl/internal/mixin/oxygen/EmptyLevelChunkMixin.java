@@ -41,7 +41,7 @@ public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOx
     }
 
     @Override
-    public void galacticraft$markSectionDirty(int y) {
+    public void galacticraft$markSectionDirty(int sectionIndex) {
     }
 
     @Override

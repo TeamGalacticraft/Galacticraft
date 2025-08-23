@@ -29,5 +29,5 @@ import java.util.Iterator;
 public interface ChunkOxygenAccessor {
     Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z);
 
-    void galacticraft$markSectionDirty(int y);
+    void galacticraft$markSectionDirty(int sectionIndex);
 }
