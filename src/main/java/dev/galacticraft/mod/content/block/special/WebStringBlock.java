@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -51,6 +49,10 @@ import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.galacticraft.mod.content.GCBlocks.WEB_STRING;
+import static dev.galacticraft.mod.content.GCBlocks.WEB_TORCH;
+import static dev.galacticraft.mod.content.item.GCItems.GLOWSTONE_TORCH;
 
 public class WebStringBlock extends WebBlock {
 
@@ -84,7 +86,7 @@ public class WebStringBlock extends WebBlock {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos pos = ctx.getClickedPos().above();
         BlockState state = ctx.getLevel().getBlockState(pos);
-        if (state.is(GCBlocks.WEB_STRING)) {
+        if (state.is(WEB_STRING)) {
             return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM);
         }
         return defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.TOP_BOTTOM);
@@ -109,7 +111,7 @@ public class WebStringBlock extends WebBlock {
     }
 
     private ItemInteractionResult convertToWebTorch(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player) {
-        BlockState newState = GCBlocks.WEB_TORCH.defaultBlockState().setValue(WebTorchBlock.TOP,
+        BlockState newState = WEB_TORCH.defaultBlockState().setValue(WebTorchBlock.TOP,
                 state.getValue(WEB_STRING_PART) == WebStringPart.TOP
                         || state.getValue(WEB_STRING_PART) == WebStringPart.TOP_BOTTOM);
         level.setBlockAndUpdate(pos, newState);
@@ -138,12 +140,12 @@ public class WebStringBlock extends WebBlock {
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
         ItemInteractionResult result = null;
         // If using a glowstone torch on a web string, then it gets hung in the web string becoming a web torch block.
-        if (stack.is(GCItems.GLOWSTONE_TORCH)) {
+        if (stack.is(GLOWSTONE_TORCH)) {
             result = convertToWebTorch(stack, state, level, pos, player);
-        } else if (stack.is(GCBlocks.WEB_STRING.asItem())) { // If using a Web string on the web string, then extend the whole column of web strings down if we can.
+        } else if (stack.is(WEB_STRING.asItem())) { // If using a Web string on the web string, then extend the whole column of web strings down if we can.
             result = extendBlockDown(stack, level, pos, player, defaultBlockState().setValue(WEB_STRING_PART, WebStringPart.BOTTOM));
-        } else if (stack.is(GCBlocks.WEB_TORCH.asItem())) { // If using a web torch on the web string, then extend the whole column of web strings down if we can.
-            result = extendBlockDown(stack, level, pos, player, GCBlocks.WEB_TORCH.defaultBlockState());
+        } else if (stack.is(WEB_TORCH.asItem())) { // If using a web torch on the web string, then extend the whole column of web strings down if we can.
+            result = extendBlockDown(stack, level, pos, player, WEB_TORCH.defaultBlockState());
         }
 
         if (result == null) {
@@ -159,11 +161,11 @@ public class WebStringBlock extends WebBlock {
     @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         // If above changed and it isn't a web string block (and in theory not a solid block) then it breaks.
-        if (direction == Direction.UP && !neighborState.is(GCBlocks.WEB_STRING)) {
+        if (direction == Direction.UP && !neighborState.is(WEB_STRING)) {
             return Blocks.AIR.defaultBlockState();
         } else if (direction == Direction.DOWN) { // If block below changed
             WebStringPart webStringState = state.getValue(WEB_STRING_PART);
-            if (neighborState.is(GCBlocks.WEB_STRING) || neighborState.is(GCBlocks.WEB_TORCH)) { // If below is a web string or a web torch
+            if (neighborState.is(WEB_STRING) || neighborState.is(WEB_TORCH)) { // If below is a web string or a web torch
                 if (webStringState == WebStringPart.TOP_BOTTOM || webStringState == WebStringPart.TOP) { // If it was at the top
                     return state.setValue(WEB_STRING_PART, WebStringPart.TOP); // Then still top
                 } else {
@@ -189,7 +191,7 @@ public class WebStringBlock extends WebBlock {
 
     private boolean canAttachTo(BlockGetter world, BlockPos pos, Direction side) {
         BlockState blockState = world.getBlockState(pos);
-        return blockState.isFaceSturdy(world, pos, side) || blockState.is(GCBlocks.WEB_STRING);
+        return blockState.isFaceSturdy(world, pos, side) || blockState.is(WEB_STRING);
     }
 
     @Override
