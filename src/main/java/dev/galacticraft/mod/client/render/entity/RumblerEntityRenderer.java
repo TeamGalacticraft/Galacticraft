@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class RumblerEntityRenderer extends MobRenderer<RumblerEntity, RumblerEntityModel<RumblerEntity>> {
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.RUMBLER);
+
     public RumblerEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new RumblerEntityModel<>(context.bakeLayer(GCEntityModelLayer.RUMBLER)), 1.0F);
     }
 
     @Override
     public ResourceLocation getTextureLocation(RumblerEntity entity) {
-        return Constant.id(Constant.EntityTexture.RUMBLER);
+        return TEXTURE;
     }
 }

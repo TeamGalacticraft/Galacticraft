@@ -126,7 +126,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RocketEntity var1) {
+    public ResourceLocation getTextureLocation(RocketEntity entity) {
         return InventoryMenu.BLOCK_ATLAS;
     }
 }

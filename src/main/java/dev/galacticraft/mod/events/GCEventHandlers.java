@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
+import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
@@ -38,6 +39,8 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -82,6 +85,16 @@ public class GCEventHandlers {
         if (newState == null) return false;
         level.setBlockAndUpdate(pos, newState);
         entry.callback(new ExtinguishableBlockRegistry.Context(level, pos, oldState));
+        return true;
+    }
+
+    public static boolean sulfuricAcidTransformItem(ItemEntity itemEntity, ItemStack original) {
+        AcidTransformItemRegistry.Entry entry = AcidTransformItemRegistry.INSTANCE.get(original.getItem());
+        if (entry == null) return false;
+        ItemStack itemStack = entry.transform(original.copy());
+        if (itemStack == null) return false;
+        itemEntity.setItem(itemStack);
+        entry.callback(new AcidTransformItemRegistry.Context(itemEntity, original));
         return true;
     }
 }

@@ -45,7 +45,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/spider_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.SPIDER_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;

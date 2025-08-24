@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.block;
+package dev.galacticraft.impl.internal.registry;
 
 import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import net.fabricmc.fabric.api.event.lifecycle.v1.CommonLifecycleEvents;

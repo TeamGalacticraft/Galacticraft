@@ -47,8 +47,10 @@ public class CapeRootScreen extends OptionsSubScreen {
     private String selectedCapeId;
     private final List<CapeThumb> capeThumbs = new ArrayList<>();
 
-    private static final int CAPE_SRC_W = 11;
-    private static final int CAPE_SRC_H = 17;
+    private static final int CAPE_SRC_U = 1;
+    private static final int CAPE_SRC_V = 1;
+    private static final int CAPE_SRC_W = 10;
+    private static final int CAPE_SRC_H = 16;
     private static final int TEX_W = 64;
     private static final int TEX_H = 32;
 
@@ -67,7 +69,7 @@ public class CapeRootScreen extends OptionsSubScreen {
                         Component.translatable(Translations.Ui.CAPES_STATE + v.name().toLowerCase(Locale.ROOT)))
                 .withValues(CapeMode.OFF, CapeMode.VANILLA, CapeMode.GC)
                 .withInitialValue(prefs.mode)
-                .create(Component.translatable(Translations.Ui.CAPES_MODE), (btn, value) -> {
+                .create(Component.translatable(Translations.Ui.CAPE_BUTTON), (btn, value) -> {
                     prefs.mode = value;
                     prefs.save();
                     CapeClientNet.sendSelectionIfOnline(value, value == CapeMode.GC ? prefs.gcCapeId : null);
@@ -124,7 +126,7 @@ public class CapeRootScreen extends OptionsSubScreen {
         private final Runnable onClick;
 
         public CapeThumb(ResourceLocation texture, String id, boolean selected, Runnable onClick) {
-            super(0, 0, 150, 24, Component.literal(id));
+            super(0, 0, 150, 24, Component.translatable(Translations.Ui.CAPE + id));
             this.texture = texture;
             this.id = id;
             this.selected = selected;
@@ -141,23 +143,20 @@ public class CapeRootScreen extends OptionsSubScreen {
             int bg = this.isHovered() ? 0x50FFFFFF : 0x25FFFFFF;
             g.fill(x0, y0, x0 + w, y0 + h, bg);
 
-            int pad = 3;
-            int maxH = Math.max(12, h - pad * 2 - 8);
-            int destH = Math.min(18, maxH);
-            int destW = Math.max(1, destH * CAPE_SRC_W / CAPE_SRC_H);
-            int imgX = x0 + pad + 1;
-            int imgY = y0 + (h - destH) / 2 - 2;
+            int pad = (h - CAPE_SRC_H) / 2;
+            int imgX = x0 + pad;
+            int imgY = y0 + pad;
 
             g.blit(this.texture, imgX, imgY,
-                    destW, destH,
-                    0, 0,
+                    CAPE_SRC_W, CAPE_SRC_H,
+                    CAPE_SRC_U, CAPE_SRC_V,
                     CAPE_SRC_W, CAPE_SRC_H,
                     TEX_W, TEX_H);
 
             var font = Minecraft.getInstance().font;
-            int textX = imgX + destW + 6;
+            int textX = imgX + CAPE_SRC_W + pad;
             int textY = y0 + (h - 8) / 2;
-            g.drawString(font, this.id, textX, textY, 0xFFEEEEEE, false);
+            g.drawString(font, this.getMessage(), textX, textY, 0xFFEEEEEE, false);
 
             if (selected) {
                 int c = 0xFF00FF00;
