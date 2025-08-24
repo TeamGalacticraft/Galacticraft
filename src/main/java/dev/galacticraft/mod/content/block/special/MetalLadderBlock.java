@@ -45,9 +45,6 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-// TODO Breaking different sorts of ladder stacks doesn't work correctly
-// TODO Placing different sorts of ladders stacks doesn't work beyond 2 or 3 blocks.
-
 public class MetalLadderBlock extends LadderBlock {
     public MetalLadderBlock(BlockBehaviour.Properties properties) {
         super(properties);
@@ -58,12 +55,13 @@ public class MetalLadderBlock extends LadderBlock {
     private ItemInteractionResult checkCanMetalLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState, Block ladderBlock) {
         BlockState checkState = level.getBlockState(checkPos);
 
-        // Added check to ensure ladders are all facing the same way.
+        // Added check to ensure ladders are all facing the same way. If not, then pass to default interaction.
         if (checkState.getBlock() instanceof MetalLadderBlock && blockState.getBlock() instanceof MetalLadderBlock && checkState.getValue(FACING) != blockState.getValue(FACING)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        // Can only place into a fluid if its water.
+        // If we can replace the block.
         if (checkState.canBeReplaced()) {
+            // Can only be waterlogged into a fluid if its water.
             boolean waterLogged = checkState.is(Blocks.WATER)
                     && (checkState.getFluidState().getAmount() >= 8 || checkState.getFluidState().isSource())
                     || (checkState.hasProperty(WATERLOGGED) && checkState.getValue(WATERLOGGED));
@@ -76,7 +74,7 @@ public class MetalLadderBlock extends LadderBlock {
                 itemStack.shrink(1);
             }
             return ItemInteractionResult.SUCCESS;
-        } else if (!checkState.is(this)) {
+        } else if (!(checkState.getBlock() instanceof MetalLadderBlock)) {
             return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return null;
