@@ -125,7 +125,15 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
 
     @Override
     public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
-        return recipe.value().getTime();
+        return (int) (recipe.value().getTime() / 1.5F);
+    }
+
+    @Override
+    protected void craft(@NotNull ProfilerFiller profiler, @NotNull RecipeHolder<CompressingRecipe> recipe) {
+        super.craft(profiler, recipe);
+        if (recipe.equals(this.findValidRecipe(this.level))) {
+            super.craft(profiler, recipe);
+        }
     }
 
     @Override
