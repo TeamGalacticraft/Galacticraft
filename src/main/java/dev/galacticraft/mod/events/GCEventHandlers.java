@@ -75,7 +75,6 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
-        level.galacticraft$getSealerManager().tick();
     }
 
     public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {

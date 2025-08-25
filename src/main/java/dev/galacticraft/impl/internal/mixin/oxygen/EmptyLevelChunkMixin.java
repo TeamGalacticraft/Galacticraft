@@ -24,17 +24,28 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import it.unimi.dsi.fastutil.objects.ObjectIterators;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
+
+import java.util.Iterator;
 
 @Mixin(EmptyLevelChunk.class)
 public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
     @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return false;
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        return null;
     }
 
     @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
+    public void galacticraft$markSectionDirty(int sectionIndex) {
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
+        return ObjectIterators.emptyIterator();
     }
 }

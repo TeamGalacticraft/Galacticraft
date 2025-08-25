@@ -1039,7 +1039,7 @@ public interface Constant {
     }
 
     interface Nbt {
-        String GC_API = "GCApi";
+        String GC_API = "GCAPI";
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";
         String GEAR_INV = "GearInv";
@@ -1084,6 +1084,8 @@ public interface Constant {
         String DOCKED_UUID = "DockedUuid";
         String CAN_CONTENTS = "CanContents";
         String CAN_COUNT = "CanCount";
+        String SEALED = "Sealed";
+        String SOLID = "Solid";
     }
 
     interface Chunk {

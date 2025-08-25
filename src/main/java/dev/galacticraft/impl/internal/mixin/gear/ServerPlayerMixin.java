@@ -73,7 +73,7 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
         CompoundTag leftParrot = this.getShoulderEntityLeft();
         CompoundTag rightParrot = this.getShoulderEntityRight();
         if ((!leftParrot.isEmpty() || !rightParrot.isEmpty())
-                && !this.level().isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
+                && !this.level().galacticraft$isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
             long rate = Galacticraft.CONFIG.parrotOxygenConsumptionRate();
             if (!leftParrot.isEmpty()) {
                 SimpleContainer inv = new GearInventory();

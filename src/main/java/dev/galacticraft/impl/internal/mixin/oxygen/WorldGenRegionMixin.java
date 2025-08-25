@@ -22,56 +22,37 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.api.accessor.LevelBodyAccessor;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
-import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.storage.WritableLevelData;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.Iterator;
-import java.util.function.Supplier;
 
-@Mixin(Level.class)
-public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, LevelHeightAccessor {
-    @Unique
-    private boolean breathable = true;
+@Mixin(WorldGenRegion.class)
+public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelHeightAccessor {
+    @Shadow @Final private ServerLevel level;
 
-    @Shadow
-    public abstract @NotNull LevelChunk getChunk(int i, int j);
-
-    @Inject(method = "<init>", at = @At("RETURN"))
-    private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
-        Holder<CelestialBody<?, ?>> body = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
-        this.breathable = body == null || body.value().atmosphere().breathable();
-    }
+    @Shadow public abstract ChunkAccess getChunk(int chunkX, int chunkZ);
 
     @Override
     public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
         if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
-        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) chunk).galacticraft$getHandlers(x & 15, y, z & 15);
-        return new ProviderIterator((Level) (Object) this, chunk, iterator);
+        return new ProviderIterator(this.level, chunk, iterator);
     }
 
     @Override
@@ -82,7 +63,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public boolean galacticraft$isBreathable(double x, double y, double z) {
-        if (this.breathable) return true;
+        if (this.level.galacticraft$isBreathable()) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
@@ -93,7 +74,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public boolean galacticraft$isBreathable(int x, int y, int z) {
-        if (this.breathable) return true;
+        if (this.level.galacticraft$isBreathable()) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(x, y, z);
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
@@ -104,7 +85,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public boolean galacticraft$isBreathable(BlockPos pos) {
-        if (this.breathable) return true;
+        if (this.level.galacticraft$isBreathable()) return true;
         Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
@@ -115,13 +96,13 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public boolean galacticraft$isBreathable() {
-        return this.breathable;
+        return this.level.galacticraft$isBreathable();
     }
 
     @Override
     public void galacticraft$addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return;
-        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
         ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$add(x & 15, y & 15, z & 15, providerPos);
     }
@@ -129,14 +110,14 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     @Override
     public boolean galacticraft$hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return false;
-        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         return ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$has(x & 15, y & 15, z & 15, providerPos);
     }
 
     @Override
     public void galacticraft$removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
         if (this.isOutsideBuildHeight(y)) return;
-        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
+        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
         ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$remove(x & 15, y & 15, z & 15, providerPos);
     }

@@ -310,7 +310,7 @@
   "block.galacticraft.olivine_cluster": "Olivine Cluster",
   "block.galacticraft.orange_candle_moon_cheese_wheel": "Moon Cheese Wheel with Orange Candle",
   "block.galacticraft.orange_glass_fluid_pipe": "Orange Stained Glass Fluid Pipe",
-  "block.galacticraft.oxygen_bubble_distributor": "Bubble Distributor",
+  "block.galacticraft.oxygen_bubble_distributor": "Oxygen Bubble Distributor",
   "block.galacticraft.oxygen_bubble_distributor.description": "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.",
   "block.galacticraft.oxygen_collector": "Oxygen Collector",
   "block.galacticraft.oxygen_collector.description": "Oxygen Collector will store oxygen collected from leaves in the surrounding area.",
