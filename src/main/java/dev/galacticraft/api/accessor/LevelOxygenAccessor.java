@@ -22,56 +22,9 @@
 
 package dev.galacticraft.api.accessor;
 
-import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import net.minecraft.core.BlockPos;
 
-import java.util.Iterator;
-
-public interface LevelOxygenAccessor {
-    /**
-     * {@return the atmospheric providers for the given block position}
-     */
-    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * {@return the positions of the atmospheric providers for the given block position}
-     */
-    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * {@return whether the given point in the level is breathable}
-     */
-    default boolean galacticraft$isBreathable(double x, double y, double z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * {@return whether the block position in the level is breathable}
-     * It is undefined whether partially breathable block positions are breathable or not.
-     */
-    default boolean galacticraft$isBreathable(int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * {@return whether the block position in the level is breathable}
-     * It is undefined whether partially breathable block positions are breathable or not.
-     */
-    default boolean galacticraft$isBreathable(BlockPos pos) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * {@return whether this has a breathable atmosphere}
-     */
-    default boolean galacticraft$isBreathable() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
+public interface LevelOxygenAccessor extends LevelOxygenAccessorRO {
     /**
      * Adds an atmospheric provider to the given block position.
      * The given provider MUST be allocated on the chunk section before being added.
@@ -87,13 +40,6 @@ public interface LevelOxygenAccessor {
     }
 
     /**
-     * {@return whether the block at the given position has the given atmospheric provider attached}
-     */
-    default boolean galacticraft$hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
      * Removes the given atmospheric provider from the given block position.
      * If the provider does not exist, nothing changes.
      */
@@ -101,20 +47,8 @@ public interface LevelOxygenAccessor {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(BlockPos pos) {
-        return this.galacticraft$getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
-    }
-
-    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(BlockPos pos) {
-        return this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
-    }
-
     default void galacticraft$addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
         this.galacticraft$addAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
-    }
-
-    default boolean galacticraft$hasAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        return this.galacticraft$hasAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
     }
 
     default void galacticraft$removeAtmosphericProvider(BlockPos pos, BlockPos providerPos) {

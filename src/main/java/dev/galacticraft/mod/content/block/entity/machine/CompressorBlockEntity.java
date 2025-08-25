@@ -53,7 +53,6 @@ import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -180,8 +179,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     private boolean shouldExtinguish(Level level, BlockPos pos, BlockState state) {
-        return !level.galacticraft$isBreathable(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)))
-                && !level.galacticraft$isBreathable(pos);
+        return !level.galacticraft$isBreathable(pos);
     }
 
     @Override

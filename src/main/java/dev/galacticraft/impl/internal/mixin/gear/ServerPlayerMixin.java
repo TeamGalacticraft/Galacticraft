@@ -35,7 +35,6 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
@@ -73,7 +72,7 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
         CompoundTag leftParrot = this.getShoulderEntityLeft();
         CompoundTag rightParrot = this.getShoulderEntityRight();
         if ((!leftParrot.isEmpty() || !rightParrot.isEmpty())
-                && !this.level().galacticraft$isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
+                && !this.level().galacticraft$isBreathable(this.getEyePosition())) {
             long rate = Galacticraft.CONFIG.parrotOxygenConsumptionRate();
             if (!leftParrot.isEmpty()) {
                 SimpleContainer inv = new GearInventory();

@@ -20,6 +20,7 @@
     "oxygen.LevelChunkMixin",
     "oxygen.LevelChunkSectionMixin",
     "oxygen.LevelMixin",
+    "oxygen.WeatheringCopperBlocksMixin",
     "oxygen.WorldGenRegionMixin",
     "research.AdvancementRewardsMixin",
     "research.ServerPlayerMixin"

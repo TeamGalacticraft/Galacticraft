@@ -51,7 +51,6 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.EntityHitResult;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 public class GCInteractionEventHandlers {
@@ -174,8 +173,7 @@ public class GCInteractionEventHandlers {
     }
 
     private static boolean cannotEatInNoAtmosphere(Player player, Level level) {
-        Vec3 eyePos = player.getEyePosition();
-        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$isBreathable() && !level.galacticraft$isBreathable(eyePos.x, eyePos.y, eyePos.z)) {
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$isBreathable() && !level.galacticraft$isBreathable(player.getEyePosition())) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             return true;
         }
@@ -183,8 +181,7 @@ public class GCInteractionEventHandlers {
     }
 
     private static boolean cannotFeedInNoAtmosphere(Player player, Level level, LivingEntity entity) {
-        Vec3 eyePos = entity.getEyePosition();
-        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$isBreathable() && !level.galacticraft$isBreathable(eyePos.x, eyePos.y, eyePos.z)) {
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$isBreathable() && !level.galacticraft$isBreathable(player.getEyePosition())) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             return true;
         }
