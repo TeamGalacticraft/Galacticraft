@@ -299,7 +299,7 @@
         "dev/galacticraft/api/accessor/GearInventoryProvider",
         "dev/galacticraft/mod/accessor/CryogenicAccessor"
       ],
-      "net/minecraft/class_1936": [
+      "net/minecraft/class_4538": [
         "dev/galacticraft/api/accessor/LevelOxygenAccessorRO"
       ],
       "net/minecraft/class_1937": [
@@ -312,6 +312,9 @@
       ],
       "net/minecraft/class_1297": [
         "dev/galacticraft/mod/accessor/EntityAccessor"
+      ],
+      "net/minecraft/class_2248": [
+        "dev/galacticraft/api/accessor/GCBlockExtensions"
       ]
     }
   },

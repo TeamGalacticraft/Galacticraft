@@ -80,4 +80,9 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
     public void animateTick(BlockState blockState, Level world, BlockPos blockPos, RandomSource random) {
         // stop particles from spawning
     }
+
+    @Override
+    public boolean galacticraft$atmosphereSensitive() {
+        return false; // overrides the mixin
+    }
 }

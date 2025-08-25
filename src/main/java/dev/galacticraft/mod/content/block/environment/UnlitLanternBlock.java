@@ -74,4 +74,9 @@ public class UnlitLanternBlock extends LanternBlock {
 
         return super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
+
+    @Override
+    public boolean galacticraft$atmosphereSensitive() {
+        return false; // overrides the mixin
+    }
 }

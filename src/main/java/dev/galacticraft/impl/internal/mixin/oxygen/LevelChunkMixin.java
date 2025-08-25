@@ -22,12 +22,9 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
@@ -77,13 +74,6 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
                     this.galacticraft$markSectionDirty(i);
                 }
             }
-        }
-    }
-
-    @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
-    private void extinguishBlocks(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
-        if (level.galacticraft$isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
-                original.call(newState, level, pos, oldState, bl);
         }
     }
 }

@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.events.GCCauldronInteraction;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.events.GCExtinguishable;
 import dev.galacticraft.mod.events.GCSulfuricAcidHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -109,7 +108,6 @@ public class Galacticraft implements ModInitializer {
         GCCelestialHandlers.register();
         GCEventHandlers.init();
         GCCauldronInteraction.init();
-        GCExtinguishable.register();
         GCSulfuricAcidHandlers.register();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);

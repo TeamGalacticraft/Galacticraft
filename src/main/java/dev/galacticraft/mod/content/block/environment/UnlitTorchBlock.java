@@ -85,4 +85,9 @@ public class UnlitTorchBlock extends TorchBlock {
     public MapCodec<? extends UnlitTorchBlock> codec() {
         return CODEC;
     }
+
+    @Override
+    public boolean galacticraft$atmosphereSensitive() {
+        return false; // overrides the mixin
+    }
 }
