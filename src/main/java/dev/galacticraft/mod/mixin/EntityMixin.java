@@ -56,6 +56,7 @@ import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -73,7 +74,7 @@ import java.util.UUID;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;
-    private @Unique int lastStep;
+    private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;
 
     @Shadow
@@ -221,48 +222,47 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!getType().is(GCEntityTypeTags.HAS_FOOTPRINTS))
+        if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
             return;
-        double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
+        } else if ((Object) this instanceof Player player && player.getAbilities().flying) {
+            return;
+        } else if (this.getVehicle() != null) {
+            return;
+        }
+        // The entity has footprints, is not flying and is not riding anything
 
-        // If the player is on the moon, not airbourne and not riding anything
-        boolean isFlying = false;
-        if ((Object) this instanceof Player player)
-            isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+        double motionSqrd = motion.horizontalDistanceSqr();
+        Holder<DimensionType> dimensionType = this.level.dimensionTypeRegistration();
+
+        // Check that the entity is moving fast enough and is in a footprint dimension
+        if (motionSqrd > 0.001D && dimensionType.is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)) {
             // If it has been long enough since the last step
-            if (galacticraft$getDistanceSinceLastStep() > 0.35) {
-                Vector3d pos = new Vector3d(getX(), Math.floor(getY()), getZ());
+            if (this.galacticraft$getDistanceSinceLastStep() > 0.35D) {
+                float rotation = this.getYRot() * Mth.DEG_TO_RAD;
 
-                // Adjust footprint to left or right depending on step count
-                switch (galacticraft$getLastStep()) {
-                    case 0:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));
-                        break;
-                    case 1:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() - 90)) * 0.25));
-                        break;
-                }
+                // Set the footprint position to the block below
+                Vector3d pos = new Vector3d(
+                        this.getX() + this.galacticraft$getLastStep() * Mth.cos(rotation) * 0.25D,
+                        Math.floor(this.getY()),
+                        this.getZ() + this.galacticraft$getLastStep() * Mth.sin(rotation) * 0.25D
+                );
+                pos = Footprint.getFootprintPosition(this.level, rotation - Mth.PI, pos, this.position());
 
-                pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
-
-                int iPosX = Mth.floor(pos.x);
-                int iPosY = Mth.floor(pos.y - 0.05);
-                int iPosZ = Mth.floor(pos.z);
-                BlockPos blockPos = new BlockPos(iPosX, iPosY, iPosZ);
+                BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
                 BlockState state = this.level.getBlockState(blockPos);
 
                 // If the block below is the moon block
                 if (state.is(GCBlockTags.FOOTPRINTS)) {
                     long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, getYRot(), getUUID()));
+                    short age = (short) (this.level.getGameTime() % 20);
+                    this.level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(dimensionType.unwrapKey().get().location(), pos, rotation, age, this.getUUID()));
                 }
 
-                // Increment and cap step counter at 1
-                galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);
-                galacticraft$setDistanceSinceLastStep(0);
+                // Change the sign of the lastStep variable
+                this.galacticraft$swapLastStep();
+                this.galacticraft$setDistanceSinceLastStep(0);
             } else {
-                galacticraft$setDistanceSinceLastStep(galacticraft$getDistanceSinceLastStep() + motionSqrd);
+                this.galacticraft$setDistanceSinceLastStep(this.galacticraft$getDistanceSinceLastStep() + motionSqrd);
             }
         }
     }
@@ -283,8 +283,8 @@ public abstract class EntityMixin implements EntityAccessor {
     }
 
     @Override
-    public void galacticraft$setLastStep(int lastStep) {
-        this.lastStep = lastStep;
+    public void galacticraft$swapLastStep() {
+        this.lastStep = -this.lastStep;
     }
 
     @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
