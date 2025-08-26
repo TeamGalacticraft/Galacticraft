@@ -26,11 +26,7 @@ import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.galacticraft.api.accessor.GCBlockExtensions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.FireBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -38,21 +34,18 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(FireBlock.class)
 public class FireBlockMixin implements GCBlockExtensions {
-    @WrapMethod(method = "canSurvive")
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
-        return original.call(state, level, pos) && level.galacticraft$isBreathable(pos);
-    }
-
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
         return true;
     }
 
     @Override
-    public void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, boolean breathable) {
-        if (!breathable) {
-            level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL_IMMEDIATE);
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
-        }
+    public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
+        return Blocks.AIR.defaultBlockState();
+    }
+
+    @WrapMethod(method = "canSurvive")
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
+        return original.call(state, level, pos) && level.galacticraft$isBreathable(pos);
     }
 }

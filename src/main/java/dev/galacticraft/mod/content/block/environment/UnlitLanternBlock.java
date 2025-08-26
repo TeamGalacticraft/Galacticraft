@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.accessor.GCBlockExtensions;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerPlayer;
@@ -42,7 +43,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
 
-public class UnlitLanternBlock extends LanternBlock {
+public class UnlitLanternBlock extends LanternBlock implements GCBlockExtensions {
     public static final MapCodec<UnlitLanternBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
             Block.CODEC.fieldOf("lit_block").forGetter(unlitLantern -> unlitLantern.litBlock),
             propertiesCodec()
@@ -76,7 +77,12 @@ public class UnlitLanternBlock extends LanternBlock {
     }
 
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return false; // overrides the mixin
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
         return false; // overrides the mixin
     }
 }

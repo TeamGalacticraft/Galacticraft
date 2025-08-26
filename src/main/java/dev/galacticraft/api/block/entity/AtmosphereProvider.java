@@ -23,6 +23,7 @@
 package dev.galacticraft.api.block.entity;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
 public interface AtmosphereProvider {
@@ -35,4 +36,8 @@ public interface AtmosphereProvider {
     boolean canBreathe(BlockPos pos);
 
     void notifyStateChange(BlockPos pos, BlockState newState);
+
+    default BlockEntity be() {
+        return (BlockEntity) this;
+    }
 }

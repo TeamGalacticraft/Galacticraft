@@ -31,7 +31,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Iterator;
 
 public interface GCBlockExtensions {
-    default boolean galacticraft$atmosphereSensitive() {
+    // expectation: ideally for modded blocks, transforms are done before setBlock (e.g. placement state)
+    // this type of transformation is a bit over-eager as it breaks scenarios where you specifically want "invalid" states.
+    default boolean galacticraft$hasLegacyExtinguishTransform() {
+        return false;
+    }
+
+    default BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
+        return state;
+    }
+
+    default boolean galacticraft$hasAtmosphereListener() {
         return false;
     }
 

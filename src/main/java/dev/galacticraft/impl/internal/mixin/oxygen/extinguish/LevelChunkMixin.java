@@ -20,36 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.environment;
+package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.LanternBlock;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
 
-import java.util.List;
-
-public class GlowstoneLanternBlock extends LanternBlock {
-    public GlowstoneLanternBlock(Properties settings) {
-        super(settings);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_LANTERN, tooltip);
-        super.appendHoverText(stack, context, tooltip, options);
-    }
-
-    @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
-        return false; // overrides the mixin
-    }
-
-    @Override
-    public boolean galacticraft$hasAtmosphereListener() {
-        return false; // overrides the mixin
+@Mixin({Level.class, WorldGenRegion.class})
+public abstract class LevelChunkMixin implements LevelOxygenAccessor {
+    @WrapMethod(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
+    private boolean extinguishFire(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, Operation<Boolean> original) {
+        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform() && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
     }
 }

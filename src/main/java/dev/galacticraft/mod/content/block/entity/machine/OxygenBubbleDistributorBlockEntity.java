@@ -62,14 +62,16 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+
 public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity implements AtmosphereProvider {
-    public static final int MAX_SIZE = 32;
+    public static final int MAX_SIZE = 12;
 
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 1; // REVIEW: should this be 0 or 1?
@@ -129,7 +131,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
                 profiler.push("bubble");
                 if (this.size > this.targetSize) {
-                    this.setSize(Math.max(this.size - 0.1F, this.targetSize)); //todo: change rate based on SA or volume
+                    this.setSize(Math.max(this.size - 0.025F, this.targetSize)); //todo: change rate based on SA or volume
                 }
 
                 profiler.pop();
@@ -144,7 +146,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                     slot.extract(oxygenRequired);
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
                     if (this.size < this.targetSize) {
-                        this.setSize(this.size + 0.05D); //todo: change rate based on SA or volume
+                        this.setSize(Math.min(this.targetSize, this.size + 0.05D)); //todo: change rate based on SA or volume
                     }
                     profiler.pop();
                     return GCMachineStatuses.DISTRIBUTING;
@@ -160,13 +162,13 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         }
         profiler.push("size");
 
-        if (this.size > 0) {
+        if (this.size > 0.0) {
             this.setSize(0.0);
             this.trySyncSize(level, pos, profiler);
         }
 
-        if (this.size < 0) {
-            this.setSize(0);
+        if (this.size < 0.0) {
+            this.setSize(0.0);
         }
         profiler.pop();
         return status;
@@ -186,9 +188,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
             this.players = level.players().size();
             this.prevSize = this.size;
             profiler.push("network");
+            if (this.size < 0) this.size = 0;
+            BubbleSizePayload payload = new BubbleSizePayload(pos, this.size);
             for (ServerPlayer player : level.players()) {
-                if (this.size < 0) this.size = 0;
-                ServerPlayNetworking.send(player, new BubbleSizePayload(pos, this.size));
+                ServerPlayNetworking.send(player, payload);
             }
             profiler.pop();
         }
@@ -200,19 +203,41 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         }
         this.handleAllocation(targetSize, true);
         assert this.level != null;
+        Block[] blocks = new Block[]{
+                Blocks.GLASS_PANE,
+                Blocks.WHITE_STAINED_GLASS_PANE,
+                Blocks.ORANGE_STAINED_GLASS_PANE,
+                Blocks.MAGENTA_STAINED_GLASS_PANE,
+                Blocks.LIGHT_BLUE_STAINED_GLASS_PANE,
+                Blocks.YELLOW_STAINED_GLASS_PANE,
+                Blocks.LIME_STAINED_GLASS_PANE,
+                Blocks.PINK_STAINED_GLASS_PANE,
+                Blocks.GRAY_STAINED_GLASS_PANE,
+                Blocks.LIGHT_GRAY_STAINED_GLASS_PANE,
+                Blocks.CYAN_STAINED_GLASS_PANE,
+                Blocks.PURPLE_STAINED_GLASS_PANE,
+                Blocks.BLUE_STAINED_GLASS_PANE,
+                Blocks.BROWN_STAINED_GLASS_PANE,
+                Blocks.GREEN_STAINED_GLASS_PANE,
+                Blocks.RED_STAINED_GLASS_PANE,
+                Blocks.BLACK_STAINED_GLASS_PANE};
+        Block block = blocks[Math.toIntExact((level.getGameTime() / 10) % 17)];
+
         for (BlockPos pos : BlockPos.betweenClosed(this.worldPosition.getX() - Mth.ceil(targetSize), this.worldPosition.getY() - Mth.ceil(targetSize), this.worldPosition.getZ() - Mth.ceil(targetSize),
                 this.worldPosition.getX() + Mth.ceil(targetSize), this.worldPosition.getY() + Mth.ceil(targetSize), this.worldPosition.getZ() + Mth.ceil(targetSize))) {
             this.level.galacticraft$addAtmosphericProvider(pos, this.worldPosition);
+            if (!pos.equals(this.worldPosition)) this.level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE);
         }
     }
 
     private void handleAllocation(double size, boolean allocate) {
-        int minX = SectionPos.blockToSectionCoord(this.worldPosition.getX() - Mth.ceil(size)) - 1;
-        int minZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() - Mth.ceil(size)) - 1;
-        int maxX = SectionPos.blockToSectionCoord(this.worldPosition.getX() + Mth.ceil(size)) + 1;
-        int maxZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() + Mth.ceil(size)) + 1;
-        int minSection = Math.max(0, this.level.getSectionIndex(this.worldPosition.getY() - Mth.ceil(size)) - 1);
-        int maxSection = Math.min(this.level.getMaxSection(), this.level.getSectionIndex(this.worldPosition.getY() + Mth.ceil(size)) + 1);
+        int ceilSize = Mth.ceil(size) + 1;
+        int minX = SectionPos.blockToSectionCoord(this.worldPosition.getX() - ceilSize);
+        int minZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() - ceilSize);
+        int maxX = SectionPos.blockToSectionCoord(this.worldPosition.getX() + ceilSize);
+        int maxZ = SectionPos.blockToSectionCoord(this.worldPosition.getZ() + ceilSize);
+        int minSection = Math.max(0, this.level.getSectionIndex(this.worldPosition.getY() - ceilSize));
+        int maxSection = Math.min(this.level.getMaxSection(), this.level.getSectionIndex(this.worldPosition.getY() + ceilSize));
 
         ChunkPos.rangeClosed(new ChunkPos(minX, minZ), new ChunkPos(maxX, maxZ)).forEach(chunkPos -> {
             LevelChunk chunk = this.level.getChunk(chunkPos.x, chunkPos.z);
@@ -260,7 +285,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         return this.size;
     }
 
+    public double getPrevSize() {
+        return prevSize;
+    }
+
     public void setSize(double size) {
+        this.prevSize = this.size;
         this.size = size;
         this.setChanged();
     }
@@ -295,6 +325,11 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
     @Override
     public boolean canBreathe(double x, double y, double z) { // -0.5 as bubble is on top of block
         return this.worldPosition.distToCenterSqr(x, y - 0.5, z) <= this.size * this.size;
+    }
+
+    @Override
+    public boolean canBreathe(int x, int y, int z) {
+        return this.worldPosition.distToCenterSqr(x + 0.5, y + 0.5 - 0.5, z + 0.5) <= this.size * this.size;
     }
 
     @Override

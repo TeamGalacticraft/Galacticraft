@@ -30,7 +30,9 @@ import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.level.block.AbstractCandleBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
@@ -39,8 +41,22 @@ public abstract class AbstractCandleBlockMixin implements GCBlockExtensions {
     @Shadow
     protected abstract Iterable<Vec3> getParticleOffsets(BlockState state);
 
+    @Shadow
+    @Final
+    public static BooleanProperty LIT;
+
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return true;
+    }
+
+    @Override
+    public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
+        return state.setValue(LIT, false);
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
         return true;
     }
 
@@ -52,7 +68,7 @@ public abstract class AbstractCandleBlockMixin implements GCBlockExtensions {
             );
             level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-            level.setBlock(pos, state.setValue(AbstractCandleBlock.LIT, false), 11);
+            level.setBlock(pos, state.setValue(LIT, false), 11);
         }
     }
 }

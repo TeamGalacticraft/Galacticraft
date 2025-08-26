@@ -82,7 +82,12 @@ public class UnlitWallTorchBlock extends WallTorchBlock {
     }
 
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return false; // overrides the mixin
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
         return false; // overrides the mixin
     }
 }

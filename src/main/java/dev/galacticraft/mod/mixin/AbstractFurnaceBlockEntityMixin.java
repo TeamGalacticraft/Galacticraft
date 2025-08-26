@@ -67,6 +67,6 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
 
     @Unique
     private static boolean shouldExtinguish(Level level, BlockPos blockPos, BlockState blockState) {
-        return!level.galacticraft$isBreathable(blockPos);
+        return !level.galacticraft$isBreathable(blockPos);
     }
 }

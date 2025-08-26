@@ -22,6 +22,8 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.galacticraft.api.accessor.GCBlockExtensions;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
@@ -30,6 +32,7 @@ import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
@@ -38,8 +41,36 @@ import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(LanternBlock.class)
 public class LanternBlockMixin implements GCBlockExtensions {
+    @WrapMethod(method = "getStateForPlacement")
+    private BlockState extinguishNoAir(BlockPlaceContext ctx, Operation<BlockState> original) {
+        BlockState state = original.call(ctx);
+        if (state != null && !ctx.getLevel().galacticraft$isBreathable(ctx.getClickedPos())) {
+            if (state.getBlock() == Blocks.LANTERN) {
+                return GCBlocks.UNLIT_LANTERN.withPropertiesOf(state);
+            } else if (state.getBlock() == Blocks.SOUL_LANTERN) {
+                return GCBlocks.UNLIT_SOUL_LANTERN.withPropertiesOf(state);
+            }
+        }
+        return state;
+    }
+
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return true;
+    }
+
+    @Override
+    public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
+        if (state.getBlock() == Blocks.LANTERN) {
+            return GCBlocks.UNLIT_LANTERN.withPropertiesOf(state);
+        } else if (state.getBlock() == Blocks.SOUL_LANTERN) {
+            return GCBlocks.UNLIT_SOUL_LANTERN.withPropertiesOf(state);
+        }
+        return state;
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
         return true;
     }
 

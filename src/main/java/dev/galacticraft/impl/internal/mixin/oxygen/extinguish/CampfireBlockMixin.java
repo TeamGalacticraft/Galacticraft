@@ -22,19 +22,49 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.accessor.GCBlockExtensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
+import net.minecraft.world.level.block.state.properties.Property;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(CampfireBlock.class)
 public class CampfireBlockMixin implements GCBlockExtensions {
+    @Shadow
+    @Final
+    public static BooleanProperty LIT;
+
     @Override
-    public boolean galacticraft$atmosphereSensitive() {
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return true;
+    }
+
+    @Override
+    public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
+        return state.setValue(LIT, false);
+    }
+
+    @WrapOperation(method = "getStateForPlacement", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;setValue(Lnet/minecraft/world/level/block/state/properties/Property;Ljava/lang/Comparable;)Ljava/lang/Object;"))
+    private Object preventFireInNoAtmosphere(BlockState instance, Property<?> property, Comparable<?> comparable, Operation<Object> original, BlockPlaceContext ctx) {
+        if (property == LIT) {
+            original.call(instance, property, ((Boolean) comparable) && ctx.getLevel().galacticraft$isBreathable(ctx.getClickedPos()));
+        }
+        return original.call(instance, property, comparable);
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
         return true;
     }
 

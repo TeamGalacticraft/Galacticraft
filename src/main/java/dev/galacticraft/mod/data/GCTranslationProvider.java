@@ -372,7 +372,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.REFINERY, "Refinery");
         this.block(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector");
         this.block(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer");
-        this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor");
+        this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
         this.block(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor");
         this.block(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor");
         this.block(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module");

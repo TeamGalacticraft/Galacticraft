@@ -122,7 +122,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        return super.mouseClicked(mouseX, mouseY, button) | checkClick(mouseX, mouseY, button);
+        return super.mouseClicked(mouseX, mouseY, button) | this.checkClick(mouseX, mouseY, button);
     }
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
@@ -135,8 +135,8 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             }
 
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 59, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-                if (this.menu.targetSize != Byte.MAX_VALUE) {
-                    this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
+                if (this.menu.targetSize < OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+                    this.menu.targetSize = this.menu.targetSize + 1;
                     this.textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
@@ -145,7 +145,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             }
 
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-                if (this.menu.targetSize > 1) {
+                if (this.menu.targetSize >= 0) {
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
                     this.textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));

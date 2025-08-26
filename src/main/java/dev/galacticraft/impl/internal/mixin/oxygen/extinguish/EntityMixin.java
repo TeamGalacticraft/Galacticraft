@@ -20,36 +20,35 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.environment;
+package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-import java.util.List;
+@Mixin(Entity.class)
+public abstract class EntityMixin {
+    @Shadow
+    private Level level;
 
-public class GlowstoneLanternBlock extends LanternBlock {
-    public GlowstoneLanternBlock(Properties settings) {
-        super(settings);
-    }
+    @Shadow
+    private Vec3 position;
 
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_LANTERN, tooltip);
-        super.appendHoverText(stack, context, tooltip, options);
-    }
+    @Shadow
+    private int remainingFireTicks;
 
-    @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
-        return false; // overrides the mixin
-    }
+    @Shadow
+    public abstract void extinguishFire();
 
-    @Override
-    public boolean galacticraft$hasAtmosphereListener() {
-        return false; // overrides the mixin
+    @Inject(method = "baseTick", at = @At("RETURN"))
+    private void extinguishFireNoAir(CallbackInfo ci) {
+        if (this.remainingFireTicks > 0 && !this.level.galacticraft$isBreathable(this.position)) {
+            this.extinguishFire();
+        }
     }
 }

@@ -20,36 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.block.environment;
+package dev.galacticraft.api.block.entity;
 
-import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
-import net.minecraft.world.level.block.LanternBlock;
-
-import java.util.List;
-
-public class GlowstoneLanternBlock extends LanternBlock {
-    public GlowstoneLanternBlock(Properties settings) {
-        super(settings);
-    }
-
-    @Override
-    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_LANTERN, tooltip);
-        super.appendHoverText(stack, context, tooltip, options);
-    }
-
-    @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
-        return false; // overrides the mixin
-    }
-
-    @Override
-    public boolean galacticraft$hasAtmosphereListener() {
-        return false; // overrides the mixin
-    }
+public interface SpaceFillingAtmosphereProvider extends AtmosphereProvider {
 }

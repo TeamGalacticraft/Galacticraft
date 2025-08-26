@@ -23,15 +23,20 @@
 package dev.galacticraft.mod.content.block.machine;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.api.block.entity.SpaceFillingAtmosphereProvider;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Iterator;
 
 public class OxygenSealerBlock extends MachineBlock {
     private static final MapCodec<OxygenSealerBlock> CODEC = simpleCodec(OxygenSealerBlock::new);
@@ -58,5 +63,48 @@ public class OxygenSealerBlock extends MachineBlock {
                 be.destroySeal();
             }
         }
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
+        return true;
+    }
+
+    @Override
+    public void onPlace(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
+        super.onPlace(state, level, pos, blockState2, bl);
+        OxygenSealerBlockEntity be = (OxygenSealerBlockEntity) level.getBlockEntity(pos);
+        Iterator<AtmosphereProvider> iterator = level.galacticraft$getAtmosphericProviders(pos);
+        assert be != null;
+        while (iterator.hasNext()) {
+            AtmosphereProvider next = iterator.next();
+            if (!pos.equals(next.be().getBlockPos()) && next instanceof SpaceFillingAtmosphereProvider) {
+                if (next.canBreathe(pos)) {
+                    be.markContended(true);
+                    return;
+                }
+            }
+        }
+        be.markContended(false);
+    }
+
+    @Override
+    public void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, Iterator<AtmosphereProvider> iterator) {
+        checkContention(level, pos, iterator);
+    }
+
+    private static void checkContention(ServerLevel level, BlockPos pos, Iterator<AtmosphereProvider> iterator) {
+        OxygenSealerBlockEntity be = (OxygenSealerBlockEntity) level.getBlockEntity(pos);
+        assert be != null;
+        while (iterator.hasNext()) {
+            AtmosphereProvider next = iterator.next();
+            if (!pos.equals(next.be().getBlockPos()) && next instanceof SpaceFillingAtmosphereProvider) {
+                if (next.canBreathe(pos)) {
+                    be.markContended(true);
+                    return;
+                }
+            }
+        }
+        be.markContended(false);
     }
 }

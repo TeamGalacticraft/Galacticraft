@@ -23,10 +23,11 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.api.block.entity.SpaceFillingAtmosphereProvider;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.SectionProviderIterator;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -62,6 +63,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.chunk.LevelChunkSection;
@@ -70,7 +72,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.BitSet;
 
-public class OxygenSealerBlockEntity extends MachineBlockEntity implements AtmosphereProvider {
+public class OxygenSealerBlockEntity extends MachineBlockEntity implements SpaceFillingAtmosphereProvider {
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 1;
     public static final int OXYGEN_TANK = 0;
@@ -106,7 +108,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
             )
     );
-    private final Object2BooleanMap<BlockPos> sealedPositions = new Object2BooleanOpenHashMap<>();
+    private final Object2BooleanOpenHashMap<BlockPos> sealedPositions = new Object2BooleanOpenHashMap<>();
+    private final ObjectSet<BlockPos> atmosphereAwareBlocks = new ObjectOpenHashSet<>();
+    private boolean contended;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state, SPEC);
@@ -123,14 +127,17 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        // Check if the machine has enough energy
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
 
-        // Check if the oxygen tank is empty
         if (this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
+        }
+
+        if (this.contended) {
+            if (this.sealCheckTime > 1) this.sealCheckTime--;
+            return GCMachineStatuses.ALREADY_SEALED;
         }
 
         if (!this.sealedPositions.isEmpty()) {
@@ -145,7 +152,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
             }
 
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-            Object2BooleanMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
+            Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
             ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);
 
             visited.put(pos, true);
@@ -181,6 +188,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         return GCMachineStatuses.AREA_TOO_LARGE;
     }
 
+    @Override
+    protected void updateActiveState(Level level, BlockPos pos, BlockState state, boolean b) {
+        super.updateActiveState(level, pos, state, b);
+
+        for (BlockPos pos1 : this.atmosphereAwareBlocks) {
+            this.notifyBlockOfSealChange(pos1);
+        }
+    }
+
     public boolean isSealed() {
         return this.isActive();
     }
@@ -189,11 +205,18 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         return this.sealCheckTime;
     }
 
-    private void sealBlocks(Object2BooleanMap<BlockPos> visited) {
+    private void sealBlocks(Object2BooleanOpenHashMap<BlockPos> visited) {
         if (visited.isEmpty()) return;
         Object2ObjectOpenHashMap<BlockPos, LevelChunkSection> visitedSections = new Object2ObjectOpenHashMap<>();
         BlockPos.MutableBlockPos section = new BlockPos.MutableBlockPos();
-        for (BlockPos pos : visited.keySet()) {
+
+        this.sealedPositions.ensureCapacity(visited.size() + this.sealedPositions.size());
+        ObjectIterator<Object2BooleanMap.Entry<BlockPos>> iterator = visited.object2BooleanEntrySet().fastIterator();
+        while (iterator.hasNext()) {
+            Object2BooleanMap.Entry<BlockPos> e = iterator.next();
+            BlockPos pos = e.getKey();
+            this.sealedPositions.put(pos, e.getBooleanValue());
+
             section.set(SectionPos.blockToSectionCoord(pos.getX()), this.level.getSectionIndex(pos.getY()), SectionPos.blockToSectionCoord(pos.getZ()));
             if (!visitedSections.containsKey(section)) {
                 LevelChunk chunk = this.level.getChunk(section.getX(), section.getZ());
@@ -202,10 +225,19 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
                 ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(section.getY());
                 ((ChunkSectionOxygenAccessor) section1).galacticraft$ensureSpaceFor(this.worldPosition);
             }
-            ((ChunkSectionOxygenAccessor) visitedSections.get(section)).galacticraft$add(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15, this.worldPosition);
+
+            LevelChunkSection chunkSection = visitedSections.get(section);
+            ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$add(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15, this.worldPosition);
+
+            BlockState blockState = chunkSection.getBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
+            if (blockState.getBlock().galacticraft$hasAtmosphereListener()) {
+                if (this.isSealed()) {
+                    blockState.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, blockState, new SectionProviderIterator(level, chunkSection, ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$get(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15)));
+                }
+                this.atmosphereAwareBlocks.add(pos);
+            }
         }
 
-        this.sealedPositions.putAll(visited);
         this.markChanged();
     }
 
@@ -213,14 +245,21 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
         long[] positions = new long[this.sealedPositions.size()];
-        BitSet set = new BitSet(this.sealedPositions.size());
+        BitSet walls = new BitSet(this.sealedPositions.size());
+        long[] listeners = new long[this.atmosphereAwareBlocks.size()];
         int i = 0;
         for (Object2BooleanMap.Entry<BlockPos> e : this.sealedPositions.object2BooleanEntrySet()) {
             positions[i] = e.getKey().asLong();
-            set.set(i++, e.getBooleanValue());
+            walls.set(i++, e.getBooleanValue());
+        }
+        i = 0;
+        for (BlockPos pos : this.atmosphereAwareBlocks) {
+            listeners[i] = pos.asLong();
         }
         tag.putLongArray(Constant.Nbt.SEALED, positions);
-        tag.putLongArray(Constant.Nbt.SOLID, set.toLongArray());
+        tag.putLongArray(Constant.Nbt.SOLID, walls.toLongArray());
+        tag.putLongArray(Constant.Nbt.LISTENERS, listeners);
+        tag.putBoolean(Constant.Nbt.CONTENDED, this.contended);
     }
 
     @Override
@@ -231,6 +270,10 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         for (int i = 0; i < sealed.length; i++) {
             this.sealedPositions.put(BlockPos.of(sealed[i]), solid.get(i));
         }
+        for (long listener : tag.getLongArray(Constant.Nbt.LISTENERS)) {
+            this.atmosphereAwareBlocks.add(BlockPos.of(listener));
+        }
+        this.contended = tag.getBoolean(Constant.Nbt.CONTENDED);
     }
 
     @Nullable
@@ -251,18 +294,24 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
 
     @Override
     public void notifyStateChange(BlockPos pos, BlockState newState) {
-        if (pos.equals(this.worldPosition)) {
+        if (pos.equals(this.worldPosition) && !newState.is(this.getBlockState().getBlock())) {
             this.destroySeal();
             return;
         }
         if (this.sealedPositions.containsKey(pos)) {
+            if (newState.getBlock().galacticraft$hasAtmosphereListener()) {
+                this.atmosphereAwareBlocks.add(pos);
+            } else {
+                this.atmosphereAwareBlocks.remove(pos);
+            }
+
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             if (this.sealedPositions.getBoolean(pos)) {
                 if (!isSealable(pos, newState)) {
                     this.sealedPositions.put(pos, false);
 
                     // was sealed -> now not. check for leaks
-                    Object2BooleanMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
+                    Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
                     boolean sealable = true;
 
                     for (Direction direction : Direction.values()) {
@@ -327,6 +376,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
             this.sealedPositions.removeBoolean(pos);
             visited.remove(pos);
             this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
+            if (this.atmosphereAwareBlocks.remove(pos)) {
+                this.notifyBlockOfSealChange(pos);
+            }
         }
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
@@ -344,6 +396,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
                 // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not breathable anymore
                 this.sealedPositions.removeBoolean(pos);
                 this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
+                if (this.atmosphereAwareBlocks.remove(pos)) {
+                    this.notifyBlockOfSealChange(pos);
+                }
             }
         }
     }
@@ -412,6 +467,20 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         }
         this.sealedPositions.clear();
         markChanged();
+
+        // was sealed, notify blocks of loss
+        if (this.isSealed()) {
+            for (BlockPos pos : this.atmosphereAwareBlocks) {
+                notifyBlockOfSealChange(pos);
+            }
+        }
+    }
+
+    private void notifyBlockOfSealChange(BlockPos pos) {
+        BlockState state = level.getBlockState(pos);
+        if (state.getBlock().galacticraft$hasAtmosphereListener()) {
+            state.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, state, level.galacticraft$getAtmosphericProviders(pos));
+        }
     }
 
     private void markChanged() {
@@ -459,6 +528,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Atmos
         for (int i = 0; i < positions.length; i++) {
             this.sealedPositions.put(positions[i], set.get(i));
         }
+    }
+
+    public void markContended(boolean contended) {
+        assert this.isActive() != contended;
+        this.contended = contended;
     }
 
     private record SourcedPos(BlockPos pos, Direction direction) {}

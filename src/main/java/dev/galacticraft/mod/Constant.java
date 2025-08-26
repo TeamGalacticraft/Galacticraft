@@ -1087,6 +1087,8 @@ public interface Constant {
         String CAN_COUNT = "CanCount";
         String SEALED = "Sealed";
         String SOLID = "Solid";
+        String LISTENERS = "Listeners";
+        String CONTENDED = "Contended";
     }
 
     interface Chunk {

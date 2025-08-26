@@ -59,4 +59,14 @@ public class GlowstoneTorchBlock extends TorchBlock {
     public MapCodec<? extends GlowstoneTorchBlock> codec() {
         return CODEC;
     }
+
+    @Override
+    public boolean galacticraft$hasLegacyExtinguishTransform() {
+        return false; // overrides the mixin
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener() {
+        return false; // overrides the mixin
+    }
 }

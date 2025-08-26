@@ -52,11 +52,12 @@ public class OxygenBubbleDistributorRenderer implements BlockEntityRenderer<Oxyg
         if (machine.isDisabled() || !machine.isBubbleVisible()) {
             return;
         }
-        double size = machine.getSize();
+//        float size = (float) Mth.lerp(tickDelta, machine.getPrevSize(), machine.getSize()); //todo lerp size
+        float size = (float) machine.getSize();
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        matrices.scale((float) size, (float) size, (float) size);
+        matrices.scale(size, size, size);
 
         bubbleModel.render(matrices, null, vertexConsumers.getBuffer(GCRenderTypes.bubble(GCRenderTypes.OBJ_ATLAS)), light, OverlayTexture.NO_OVERLAY);
 
