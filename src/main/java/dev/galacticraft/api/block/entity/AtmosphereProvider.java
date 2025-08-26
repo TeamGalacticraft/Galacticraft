@@ -20,13 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.api.block.entity;
 
-import org.jetbrains.annotations.ApiStatus;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
 
-@ApiStatus.Internal
-public interface InternalLevelOxygenAccessor {
-    boolean getDefaultBreathable();
+public interface AtmosphereProvider {
+    boolean canBreathe(double x, double y, double z);
 
-    void setDefaultBreathable(boolean breathable);
+    default boolean canBreathe(int x, int y, int z) {
+        return this.canBreathe(new BlockPos(x, y, z));
+    }
+
+    boolean canBreathe(BlockPos pos);
+
+    void notifyStateChange(BlockPos pos, BlockState newState);
 }

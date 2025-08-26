@@ -22,98 +22,163 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.*;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import it.unimi.dsi.fastutil.Hash;
+import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ObjectIterators;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.VarInt;
 import net.minecraft.world.level.chunk.LevelChunkSection;
-import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.util.BitSet;
+import java.util.Iterator;
 
 @Mixin(LevelChunkSection.class)
 public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    private @Unique
-    @Nullable BitSet bits = null;
+    private @Unique @Nullable OxygenSectionData data = null;
 
     @Override
-    public boolean galacticraft$isInverted(int pos) {
-        return this.bits != null && this.bits.get(pos);
+    public Iterator<BlockPos> galacticraft$get(int x, int y, int z) {
+        return this.data != null ? this.data.get(index(x, y, z)) : ObjectIterators.emptyIterator();
     }
 
     @Override
-    public void galacticraft$setInverted(int pos, boolean value) {
-        if (value) {
-            if (this.bits == null) this.bits = new BitSet(pos);
-            this.bits.set(pos);
-        } else if (this.bits != null) {
-            this.bits.clear(pos);
-        }
+    public boolean galacticraft$has(int x, int y, int z, BlockPos pos) {
+        return this.data != null && this.data.has(index(x, y, z), pos);
     }
 
-    @Inject(method = "getSerializedSize", at = @At("RETURN"), cancellable = true)
-    private void increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
-        if (this.bits == null) {
-            cir.setReturnValue(cir.getReturnValueI() + VarInt.getByteSize(0));
+    @Override
+    public void galacticraft$ensureSpaceFor(BlockPos pos) {
+        if (this.data == null) {
+            this.data = new SingleSectionData(pos, new TrackingBitSet());
         } else {
-            byte[] byteArray = this.bits.toByteArray();
-            cir.setReturnValue(cir.getReturnValueI() + (VarInt.getByteSize(byteArray.length) + byteArray.length));
+            this.data = this.data.allocateSpaceFor(pos);
         }
     }
 
-    @Inject(method = "hasOnlyAir()Z", at = @At("RETURN"), cancellable = true)
-    private void verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
-        cir.setReturnValue(cir.getReturnValueZ() && this.galacticraft$isEmpty());
+    @Override
+    public void galacticraft$add(int x, int y, int z, BlockPos pos) {
+        assert this.data != null && this.data.isAllocated(pos);
+
+        this.data.add(index(x, y, z), pos);
     }
 
-    @Inject(method = "write", at = @At("RETURN"))
-    private void writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
-        this.galacticraft$writeOxygenPacket(buf);
+    @Override
+    public void galacticraft$removeAll(BlockPos pos) {
+        if (this.data != null) this.data.removeAll(pos);
     }
 
-    @Inject(method = "read", at = @At("RETURN"))
-    private void galacticraft_fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
-        this.galacticraft$readOxygenPacket(buf);
+    @Override
+    public void galacticraft$deallocate(BlockPos pos) {
+        if (this.data != null) this.data.deallocate(pos);
+    }
+
+    @Override
+    public void galacticraft$remove(int x, int y, int z, BlockPos pos) {
+        if (this.data != null) this.data.remove(index(x, y, z), pos);
     }
 
     @Override
     public boolean galacticraft$isEmpty() {
-        return this.bits == null || this.bits.isEmpty();
+        return this.data == null || this.data.isEmpty();
     }
 
     @Override
-    public BitSet galacticraft$getBits() {
-        return this.bits;
+    public void galacticraft$writeTag(CompoundTag apiTag) {
+        if (this.data != null && !this.data.isEmpty()) {
+            this.data.writeTag(apiTag);
+        }
     }
 
     @Override
-    public void galacticraft$setBits(@Nullable BitSet set) {
-        this.bits = set;
+    public void galacticraft$readTag(CompoundTag apiTag) {
+        long[] ps = apiTag.getLongArray("P");
+        ListTag d = apiTag.getList("D", Tag.TAG_LONG_ARRAY);
+        assert ps.length == d.size();
+
+        switch (ps.length) {
+            case 0 -> this.data = null;
+            case 1 -> this.data = new SingleSectionData(BlockPos.of(ps[0]), new TrackingBitSet(d.getLongArray(0)));
+            case 2, 3, 4 -> {
+                BlockPos[] pos = new BlockPos[ps.length];
+                TrackingBitSet[] bits = new TrackingBitSet[ps.length];
+                for (int i = 0; i < ps.length; i++) {
+                    pos[i] = BlockPos.of(ps[i]);
+                    bits[i] = new TrackingBitSet(d.getLongArray(i));
+                }
+                this.data = new LinearSectionData(pos, bits);
+            }
+            default -> {
+                Object2ObjectOpenHashMap<BlockPos, TrackingBitSet> map = new Object2ObjectOpenHashMap<>(ps.length, Hash.VERY_FAST_LOAD_FACTOR);
+                for (int i = 0; i < ps.length; i++) {
+                    map.put(BlockPos.of(ps[i]), new TrackingBitSet(d.getLongArray(i)));
+                }
+                this.data = new HashMapSectionData(map);
+            }
+        }
     }
 
     @Override
-    public void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        if (this.bits != null) {
-            byte[] bytes = this.bits.toByteArray();
-            buf.writeByteArray(bytes);
+    public OxygenUpdatePayload.OxygenSectionData galacticraft$updatePayload() {
+        if (this.data == null) return new OxygenUpdatePayload.OxygenSectionData(new BlockPos[0], new TrackingBitSet[0]);
+        return this.data.updatePayload();
+    }
+
+    @Override
+    public void galacticraft$loadData(OxygenUpdatePayload.OxygenSectionData data) {
+        BlockPos[] positions = data.positions();
+        TrackingBitSet[] bits = data.data();
+        switch (bits.length) {
+            case 0 -> this.data = null;
+            case 1 -> this.data = new SingleSectionData(positions[0], bits[0]);
+            case 2, 3, 4 -> this.data = new LinearSectionData(positions, bits);
+            default -> this.data = new HashMapSectionData(new Object2ObjectOpenHashMap<>(positions, bits, Hash.VERY_FAST_LOAD_FACTOR));
+        }
+    }
+
+    @WrapMethod(method = "getSerializedSize")
+    private int increaseChunkPacketSize(Operation<Integer> original) {
+        if (this.data != null) {
+            return original.call() + this.data.serializedSize();
+        } else {
+            return original.call() + VarInt.getByteSize(0);
+        }
+    }
+
+    @WrapMethod(method = "hasOnlyAir()Z")
+    private boolean verifyOxygenEmpty(Operation<Boolean> original) {
+        return original.call() && this.galacticraft$isEmpty();
+    }
+
+    @Inject(method = "write", at = @At("RETURN"))
+    private void writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+        if (this.data != null) {
+            this.data.write(buf);
         } else {
             buf.writeVarInt(0);
         }
     }
 
-    @Override
-    public void galacticraft$readOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        byte[] bytes = buf.readByteArray();
-        if (bytes.length != 0) {
-            this.bits = BitSet.valueOf(bytes);
-        } else {
-            this.bits = null;
-        }
+    @Inject(method = "read", at = @At("RETURN"))
+    private void galacticraft_fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+        this.data = OxygenSectionData.read(buf);
+    }
+
+    @Unique
+    private static int index(int x, int y, int z) {
+        return x + (y << 4) + (z << 8);
     }
 }

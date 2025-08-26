@@ -34,8 +34,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record BubbleMaxPayload(byte max) implements C2SPayload {
-    public static final StreamCodec<ByteBuf, BubbleMaxPayload> STREAM_CODEC = ByteBufCodecs.BYTE.map(BubbleMaxPayload::new, packet -> packet.max);
+public record BubbleMaxPayload(int max) implements C2SPayload {
+    public static final StreamCodec<ByteBuf, BubbleMaxPayload> STREAM_CODEC = ByteBufCodecs.INT.map(BubbleMaxPayload::new, packet -> packet.max);
     public static final ResourceLocation ID = Constant.id("bubble_max");
     public static final CustomPacketPayload.Type<BubbleMaxPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
@@ -45,8 +45,8 @@ public record BubbleMaxPayload(byte max) implements C2SPayload {
         if (context.player().containerMenu instanceof OxygenBubbleDistributorMenu menu) {
             OxygenBubbleDistributorBlockEntity machine = menu.be;
             if (machine.getSecurity().hasAccess(context.player())) {
-                if (max > 0) {
-                    machine.setTargetSize(max);
+                if (this.max >= 0 && this.max <= OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+                    machine.setTargetSize(this.max);
                 }
             }
         }

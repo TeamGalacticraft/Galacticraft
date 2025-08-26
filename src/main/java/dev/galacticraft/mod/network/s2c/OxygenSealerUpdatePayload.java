@@ -24,38 +24,50 @@ package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
-import io.netty.buffer.ByteBuf;
+import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
-import net.minecraft.network.codec.ByteBufCodecs;
+import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record BubbleUpdatePayload(BlockPos pos, int maxSize, double size, boolean visible) implements S2CPayload {
-    public static final ResourceLocation ID = Constant.id("bubble_update");
-    public static final CustomPacketPayload.Type<BubbleUpdatePayload> TYPE = new CustomPacketPayload.Type<>(ID);
-    public static final StreamCodec<ByteBuf, BubbleUpdatePayload> STREAM_CODEC = StreamCodec.composite(
-            BlockPos.STREAM_CODEC,
-            p -> p.pos,
-            ByteBufCodecs.INT,
-            p -> p.maxSize,
-            ByteBufCodecs.DOUBLE,
-            p -> p.size,
-            ByteBufCodecs.BOOL,
-            p -> p.visible,
-            BubbleUpdatePayload::new
-    );
+import java.util.BitSet;
+
+public record OxygenSealerUpdatePayload(BlockPos pos, BlockPos[] positions, BitSet set) implements S2CPayload {
+    public static final ResourceLocation ID = Constant.id("sealer_update");
+    public static final Type<OxygenSealerUpdatePayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<FriendlyByteBuf, OxygenSealerUpdatePayload> STREAM_CODEC = new StreamCodec<>() {
+        @Override
+        public void encode(FriendlyByteBuf buf, OxygenSealerUpdatePayload object2) {
+            buf.writeBlockPos(object2.pos);
+            buf.writeVarInt(object2.positions.length);
+            for (BlockPos pos : object2.positions) {
+                buf.writeLong(pos.asLong());
+            }
+            buf.writeLongArray(object2.set.toLongArray());
+        }
+
+        @Override
+        public OxygenSealerUpdatePayload decode(FriendlyByteBuf buf) {
+            BlockPos pos1 = buf.readBlockPos();
+            int len = buf.readVarInt();
+            BlockPos[] positions = new BlockPos[len];
+            for (int i = 0; i < len; i++) {
+                positions[i] = BlockPos.of(buf.readLong());
+            }
+            long[] longs = buf.readLongArray();
+            BitSet set = BitSet.valueOf(longs);
+            return new OxygenSealerUpdatePayload(pos1, positions, set);
+        }
+    };
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
         return () -> {
-            if (context.player().level().getBlockEntity(this.pos) instanceof OxygenBubbleDistributorBlockEntity machine) {
-                machine.setTargetSize(this.maxSize);
-                machine.setSize(this.size);
-                machine.setBubbleVisible(this.visible);
+            if (context.player().level().getBlockEntity(this.pos) instanceof OxygenSealerBlockEntity machine) {
+                machine.handleUpdate(this);
             }
         };
     }

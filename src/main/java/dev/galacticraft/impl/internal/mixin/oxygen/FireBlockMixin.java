@@ -20,21 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.mod.accessor.GCLevelAccessor;
-import dev.galacticraft.mod.machine.SealerManager;
-import net.minecraft.world.level.Level;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.FireBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 
-@Mixin(Level.class)
-public class LevelMixin implements GCLevelAccessor {
-    @Unique
-    private final SealerManager sealerManager = new SealerManager((Level) (Object) this);
-
-    @Override
-    public SealerManager galacticraft$getSealerManager() {
-        return sealerManager;
+@Mixin(FireBlock.class)
+public class FireBlockMixin {
+    @WrapMethod(method = "canSurvive")
+    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
+        return original.call(state, level, pos) && ((LevelOxygenAccessor) level).galacticraft$isBreathable(pos);
     }
 }

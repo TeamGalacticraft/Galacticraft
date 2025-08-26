@@ -24,39 +24,65 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.chunk.ImposterProtoChunk;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 
 import java.util.Iterator;
 
-@Mixin(ImposterProtoChunk.class)
-public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+@Mixin(ChunkAccess.class)
+public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     @Shadow
     @Final
-    private boolean allowWrites;
+    protected LevelChunkSection[] sections;
+
     @Shadow
     @Final
-    private LevelChunk wrapped;
+    protected LevelHeightAccessor levelHeightAccessor;
+
+    @Unique
+    private short dirtySections = 0;
 
     @Override
     public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
-        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$getHandlers(x, y, z);
+        return ((ChunkSectionOxygenAccessor) this.sections[this.levelHeightAccessor.getSectionIndex(y)]).galacticraft$get(x, y & 15, z);
     }
 
     @Override
     public void galacticraft$markSectionDirty(int sectionIndex) {
-        if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$markSectionDirty(sectionIndex);
-        }
+        this.dirtySections |= (short) (0b1 << sectionIndex);
     }
 
     @Override
-    public OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
-        return ((ChunkOxygenSyncer) this.wrapped).galacticraft$getPendingOxygenChanges();
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        if (this.dirtySections != 0) {
+            int count = 0;
+            for (int i = 0; i < this.sections.length; i++) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
+                    count++;
+                }
+            }
+
+            OxygenUpdatePayload.OxygenData[] data = new OxygenUpdatePayload.OxygenData[count];
+
+            int idx = 0;
+            for (byte i = 0; i < this.sections.length; i++) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
+                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$updatePayload());
+                }
+            }
+            this.dirtySections = 0;
+            return data;
+        }
+        return null;
     }
+
 }
