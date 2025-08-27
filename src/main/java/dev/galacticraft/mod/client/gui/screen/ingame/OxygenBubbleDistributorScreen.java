@@ -37,6 +37,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
 
@@ -54,17 +55,18 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         this.titleLabelX += 20;
 
         this.textField = new EditBox(this.font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
-//        this.textField.setResponder((s -> {
-//            int value = NumberUtils.toInt(s, -1);
-//            if (value < 0 || value > OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
-//                this.textField.setValue(String.valueOf(this.menu.targetSize));
-//            }
-//        }));
-//
-//        this.textField.setFilter((s -> {
-//            int value = NumberUtils.toInt(s, -1);
-//            return value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE;
-//        }));
+        this.textField.setResponder((s -> {
+            if (s.isBlank()) return;
+            int value = NumberUtils.toInt(s, -1);
+            if (value < 0 || value > OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+                this.textField.setValue(String.valueOf(this.menu.targetSize));
+            }
+        }));
+
+        this.textField.setFilter((s -> {
+            int value = NumberUtils.toInt(s, -1);
+            return s.isBlank() || value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE;
+        }));
         this.textField.setEditable(false);
         this.addRenderableWidget(this.textField);
     }
@@ -145,8 +147,8 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             }
 
             if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 158, this.topPos + 69, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-                if (this.menu.targetSize >= 0) {
-                    this.menu.targetSize = (byte) (this.menu.targetSize - 1);
+                if (this.menu.targetSize > 0) {
+                    this.menu.targetSize = this.menu.targetSize - 1;
                     this.textField.setValue(String.valueOf(this.menu.targetSize));
                     ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
