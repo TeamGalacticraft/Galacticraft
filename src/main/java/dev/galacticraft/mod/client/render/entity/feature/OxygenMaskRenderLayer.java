@@ -48,7 +48,7 @@ import net.minecraft.world.entity.monster.Zombie;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;

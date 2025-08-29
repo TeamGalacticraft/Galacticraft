@@ -44,7 +44,7 @@ import net.minecraft.world.entity.monster.Witch;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/witch_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.WITCH_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;

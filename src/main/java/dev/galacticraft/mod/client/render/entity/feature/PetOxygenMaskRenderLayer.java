@@ -47,7 +47,7 @@ import net.minecraft.world.entity.animal.Wolf;
 import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/pet_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.PET_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart realHead;
     private final @Nullable ModelPart mask;

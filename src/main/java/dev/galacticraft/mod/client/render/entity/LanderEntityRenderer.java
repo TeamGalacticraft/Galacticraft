@@ -36,17 +36,13 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 
 public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.LANDER);
     protected final LanderModel model;
 
     public LanderEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.shadowRadius = 2F;
         this.model = new LanderModel(context.bakeLayer(GCEntityModelLayer.LANDER));
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(LanderEntity entity) {
-        return Constant.id(Constant.EntityTexture.LANDER);
     }
 
     @Override
@@ -69,7 +65,12 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
 
         poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - entityYaw));
         poseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
-        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY);
+        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(this.getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(LanderEntity entity) {
+        return TEXTURE;
     }
 }

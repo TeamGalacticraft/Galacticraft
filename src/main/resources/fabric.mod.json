@@ -124,6 +124,12 @@
       }
     },
     {
+      "name": "maxryan008",
+      "contact": {
+        "homepage": "https://github.com/maxryan008"
+      }
+    },
+    {
       "name": "AlexIIL",
       "contact": {
         "homepage": "https://github.com/AlexIIL"
@@ -160,9 +166,9 @@
       }
     },
     {
-      "name": "maxryan008",
+      "name": "sebasphereda",
       "contact": {
-        "homepage": "https://github.com/maxryan008"
+        "homepage": "https://github.com/sebasphereda"
       }
     },
     {
@@ -235,6 +241,12 @@
       "name": "thackerdynasty",
       "contact": {
         "homepage": "https://github.com/thackerdynasty"
+      }
+    },
+    {
+      "name": "ScottRox",
+      "contact": {
+        "homepage": "https://github.com/ScottRox"
       }
     }
   ],

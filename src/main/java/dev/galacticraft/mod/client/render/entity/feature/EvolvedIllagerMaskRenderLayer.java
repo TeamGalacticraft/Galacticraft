@@ -44,7 +44,7 @@ import net.minecraft.world.entity.monster.AbstractIllager;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedIllagerMaskRenderLayer<T extends AbstractIllager, M extends IllagerModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/illager_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.ILLAGER_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;

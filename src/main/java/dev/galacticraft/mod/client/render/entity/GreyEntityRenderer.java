@@ -34,6 +34,9 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<GreyEntity>> {
+    public static final ResourceLocation ARCH_GREY_TEXTURE = Constant.id(Constant.EntityTexture.ARCH_GREY);
+    public static final ResourceLocation GREY_TEXTURE = Constant.id(Constant.EntityTexture.GREY);
+
     public GreyEntityRenderer(EntityRendererProvider.Context context, EntityModel<GreyEntity> model) {
         super(context, model, 0.4f);
     }
@@ -48,6 +51,6 @@ public class GreyEntityRenderer extends MobRenderer<GreyEntity, EntityModel<Grey
 
     @Override
     public ResourceLocation getTextureLocation(GreyEntity entity) {
-        return entity instanceof ArchGreyEntity ? Constant.id(Constant.EntityTexture.ARCH_GREY) : Constant.id(Constant.EntityTexture.GREY);
+        return entity instanceof ArchGreyEntity ? ARCH_GREY_TEXTURE : GREY_TEXTURE;
     }
 }

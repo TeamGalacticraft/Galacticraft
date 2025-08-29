@@ -22,7 +22,7 @@
 
 package dev.galacticraft.api.registry;
 
-import dev.galacticraft.impl.internal.block.ExtinguishableBlockRegistryImpl;
+import dev.galacticraft.impl.internal.registry.ExtinguishableBlockRegistryImpl;
 import net.fabricmc.fabric.api.util.Block2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
