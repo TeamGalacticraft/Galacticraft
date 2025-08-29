@@ -48,6 +48,7 @@ public class LaunchPadBlockEntity extends BlockEntity implements FuelDock {
     public LaunchPadBlockEntity(BlockPos pos, BlockState state, Type type) {
         super(GCBlockEntityTypes.LAUNCH_PAD, pos, state);
         this.type = type;
+        FuelDock.SIDED.registerForBlockEntity((blockEntity, direction) -> this, GCBlockEntityTypes.LAUNCH_PAD);
     }
 
     public LaunchPadBlockEntity(BlockPos pos, BlockState state) {

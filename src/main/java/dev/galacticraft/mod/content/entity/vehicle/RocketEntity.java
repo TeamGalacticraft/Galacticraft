@@ -621,8 +621,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             this.setFuel(tag.getLong("Fuel"));
         }
 
-        BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
-        if (be instanceof FuelDock pad)
+        FuelDock pad = FuelDock.SIDED.find(this.level(), BlockPos.of(tag.getLong("Linked")), null);
+        if (pad != null)
             this.linkedPad = pad;
     }
 

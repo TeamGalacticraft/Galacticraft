@@ -22,11 +22,16 @@
 
 package dev.galacticraft.api.block.entity;
 
+import dev.galacticraft.api.APIConstants;
 import dev.galacticraft.api.entity.Dockable;
+import net.fabricmc.fabric.api.lookup.v1.block.BlockApiLookup;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import org.jetbrains.annotations.Nullable;
 
 public interface FuelDock {
+    BlockApiLookup<FuelDock, @Nullable Direction> SIDED = BlockApiLookup.get(APIConstants.id("fuel_dock_sided"), FuelDock.class, Direction.class);
+
     /**
      * Gets the docked entity.
      *
