@@ -24,7 +24,6 @@ package dev.galacticraft.impl.internal.fabric;
 
 import dev.galacticraft.mod.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;

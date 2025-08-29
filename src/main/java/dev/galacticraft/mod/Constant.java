@@ -382,8 +382,10 @@ public interface Constant {
 
         interface Gas {
             String HYDROGEN = "hydrogen";
+            String HELIUM = "helium";
             String NITROGEN = "nitrogen";
             String OXYGEN = "oxygen";
+            String NEON = "neon";
             String OZONE = "ozone";
             String WATER_VAPOR = "water_vapor";
         }

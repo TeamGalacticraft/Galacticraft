@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.api.gas.GasKey;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Fluid;
 import dev.galacticraft.mod.Constant.Fluid.Gas;
@@ -50,6 +51,10 @@ public class GCFluids {
                 Component.translatable(Translations.Gas.HYDROGEN),
                 Constant.id("gas/hydrogen"), "H2"
         ));
+        public static final GasFluid HELIUM = FLUIDS.registerGas(Gas.HELIUM, GasFluid.create(
+                Component.translatable(Translations.Gas.HELIUM),
+                Constant.id("gas/helium"), "He"
+        ));
         public static final GasFluid NITROGEN = FLUIDS.registerGas(Gas.NITROGEN, GasFluid.create(
                 Component.translatable(Translations.Gas.NITROGEN),
                 Constant.id("gas/nitrogen"), "N2"
@@ -57,6 +62,10 @@ public class GCFluids {
         public static final GasFluid OXYGEN = FLUIDS.registerGas(Gas.OXYGEN, GasFluid.create(
                 Component.translatable(Translations.Gas.OXYGEN),
                 Constant.id("gas/oxygen"), "O2"
+        ));
+        public static final GasFluid NEON = FLUIDS.registerGas(Gas.NEON, GasFluid.create(
+                Component.translatable(Translations.Gas.NEON),
+                Constant.id("gas/neon"), "Ne"
         ));
         public static final GasFluid OZONE = FLUIDS.registerGas(Gas.OZONE, GasFluid.create(
                 Component.translatable(Translations.Gas.OZONE),
@@ -66,6 +75,8 @@ public class GCFluids {
                 Component.translatable(Translations.Gas.WATER_VAPOR),
                 Constant.id("gas/water_vapor"), "H2O"
         ));
+
+        public static final GasKey
     }
 
     public static void register() {}

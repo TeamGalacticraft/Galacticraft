@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.internal.mixin.gear;
 
 import dev.galacticraft.api.accessor.GearInventoryProvider;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;

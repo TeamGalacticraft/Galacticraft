@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.gas;
 
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.gas.Gases;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;

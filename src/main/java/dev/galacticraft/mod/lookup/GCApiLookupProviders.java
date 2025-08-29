@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.lookup;
 
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.item.SingleVariantFixedItemBackedFluidStorage;
 import dev.galacticraft.mod.api.pipe.FluidPipe;

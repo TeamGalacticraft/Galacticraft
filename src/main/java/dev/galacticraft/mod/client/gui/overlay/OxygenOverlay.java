@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.client.gui.overlay;
 
 import com.mojang.blaze3d.platform.Window;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
@@ -68,7 +68,7 @@ public class OxygenOverlay {
                     long capacity = 1;
 
                     if (storage != null) {
-                        amount = StorageHelper.calculateAmount(FluidVariant.of(Gases.OXYGEN), storage);
+                        amount = StorageHelper.calculateAmount(FluidVariant.of(GCFluids.Gases.OXYGEN), storage);
                         capacity = StorageHelper.theoreticalCapacity(storage);
                     }
                     hasOxygen = hasOxygen || amount > 0;

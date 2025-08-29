@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.universe;
 
 import dev.galacticraft.api.gas.GasComposition;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.content.GCCelestialHandlers;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
@@ -93,11 +93,11 @@ public class GCCelestialBodies {
                         DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
                         new GasComposition.Builder()
                                 .pressure(28)
-                                .gas(Gases.HYDROGEN_ID, 734600.000)
-                                .gas(Gases.HELIUM_ID, 248500.000)
-                                .gas(Gases.OXYGEN_ID, 7700.000)
-                                .gas(Gases.NEON_ID, 1200.000)
-                                .gas(Gases.NITROGEN_ID, 900.000)
+                                .gas(Gases.HYDROGEN, 734600.000)
+                                .gas(Gases.HELIUM, 248500.000)
+                                .gas(Gases.OXYGEN, 7700.000)
+                                .gas(Gases.NEON, 1200.000)
+                                .gas(Gases.NITROGEN, 900.000)
                                 .build(),
                         28.0f,
                         1,
@@ -117,22 +117,22 @@ public class GCCelestialBodies {
                         new GasComposition.Builder()
                                 .pressure(1.0f)
                                 .temperature(15.0f)
-                                .gas(Gases.NITROGEN_ID, 780840.000)
-                                .gas(Gases.OXYGEN_ID, 209500.000)
-                                .gas(Gases.WATER_VAPOR_ID, 25000.000)
-                                .gas(Gases.ARGON_ID, 9300.000)
-                                .gas(Gases.CARBON_DIOXIDE_ID, 399.000)
-                                .gas(Gases.NEON_ID, 18.000)
-                                .gas(Gases.HELIUM_ID, 5.420)
-                                .gas(Gases.METHANE_ID, 1.790)
-                                .gas(Gases.KRYPTON_ID, 1.140)
-                                .gas(Gases.HYDROGEN_ID, 0.550)
-                                .gas(Gases.NITROUS_OXIDE_ID, 0.325)
-                                .gas(Gases.CARBON_MONOXIDE_ID, 0.100)
-                                .gas(Gases.XENON_ID, 0.090)
-                                .gas(Gases.OZONE_ID, 0.070)
-                                .gas(Gases.NITROGEN_DIOXIDE_ID, 0.020)
-                                .gas(Gases.IODINE_ID, 0.010)
+                                .gas(Gases.NITROGEN, 780840.000)
+                                .gas(Gases.OXYGEN, 209500.000)
+                                .gas(Gases.WATER_VAPOR, 25000.000)
+//                                .gas(Gases.ARGON_ID, 9300.000) Maybe expose these later, or find some kind of progression for them?
+//                                .gas(Gases.CARBON_DIOXIDE_ID, 399.000)
+//                                .gas(Gases.NEON_ID, 18.000)
+//                                .gas(Gases.HELIUM_ID, 5.420)
+//                                .gas(Gases.METHANE_ID, 1.790)
+//                                .gas(Gases.KRYPTON_ID, 1.140)
+//                                .gas(Gases.HYDROGEN_ID, 0.550)
+//                                .gas(Gases.NITROUS_OXIDE_ID, 0.325)
+//                                .gas(Gases.CARBON_MONOXIDE_ID, 0.100)
+//                                .gas(Gases.XENON_ID, 0.090)
+//                                .gas(Gases.OZONE_ID, 0.070)
+//                                .gas(Gases.NITROGEN_DIOXIDE_ID, 0.020)
+//                                .gas(Gases.IODINE_ID, 0.010)
                                 .build(),
                         1.0f,
                         GCCelestialHandlers.OVERWORLD,

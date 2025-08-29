@@ -28,6 +28,7 @@ import dev.galacticraft.impl.codec.MapKvCodec;
 import dev.galacticraft.impl.gas.GasCompositionImpl;
 import it.unimi.dsi.fastutil.objects.Object2DoubleArrayMap;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.resources.ResourceKey;
@@ -75,6 +76,11 @@ public interface GasComposition {
 
         public Builder pressure(float pressure) {
             this.pressure = pressure;
+            return this;
+        }
+
+        public Builder gas(Fluid gas, double ppm) {
+            this.composition.put(BuiltInRegistries.FLUID.getResourceKey(gas).orElseThrow(), ppm);
             return this;
         }
 
