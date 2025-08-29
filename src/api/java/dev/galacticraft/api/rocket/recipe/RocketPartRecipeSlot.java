@@ -24,25 +24,12 @@ package dev.galacticraft.api.rocket.recipe;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.impl.rocket.recipe.RocketPartRecipeSlotImpl;
 import net.minecraft.world.item.crafting.Ingredient;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketPartRecipeSlot {
-    Codec<RocketPartRecipeSlot> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+public record RocketPartRecipeSlot(int x, int y, @NotNull Ingredient ingredient) {
+    public static final Codec<RocketPartRecipeSlot> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             Codec.INT.fieldOf("x").forGetter(RocketPartRecipeSlot::x),
             Codec.INT.fieldOf("y").forGetter(RocketPartRecipeSlot::y),
-            Ingredient.CODEC.fieldOf("ingredient").forGetter(RocketPartRecipeSlot::ingredient)).apply(instance, RocketPartRecipeSlot::create));
-
-    @Contract("_, _, _ -> new")
-    static @NotNull RocketPartRecipeSlot create(int x, int y, @NotNull Ingredient ingredient) {
-        return new RocketPartRecipeSlotImpl(x, y, ingredient);
-    }
-
-    int x();
-
-    int y();
-
-    @NotNull Ingredient ingredient();
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(RocketPartRecipeSlot::ingredient)).apply(instance, RocketPartRecipeSlot::new));
 }

@@ -41,7 +41,7 @@ public abstract class RocketBodyType<C extends RocketBodyConfig> implements Rock
 
     @Override
     public @NotNull RocketBody<C, RocketBodyType<C>> configure(@NotNull C config) {
-        return RocketBody.create(config, this);
+        return new RocketBody<>(config, this);
     }
 
     @Override

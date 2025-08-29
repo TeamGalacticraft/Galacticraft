@@ -35,7 +35,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.star.Star;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.mod.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.client.util.Graphics;
 import net.fabricmc.api.EnvType;

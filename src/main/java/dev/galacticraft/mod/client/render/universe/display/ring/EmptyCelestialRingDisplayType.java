@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.universe.display.ring;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplayType;
-import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
+import dev.galacticraft.mod.client.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector3f;
 

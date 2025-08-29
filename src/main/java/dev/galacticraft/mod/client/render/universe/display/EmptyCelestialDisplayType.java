@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.universe.display;
 
 import dev.galacticraft.api.client.universe.display.CelestialDisplayType;
-import dev.galacticraft.impl.universe.display.config.EmptyCelestialDisplayConfig;
+import dev.galacticraft.mod.client.universe.display.config.EmptyCelestialDisplayConfig;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;

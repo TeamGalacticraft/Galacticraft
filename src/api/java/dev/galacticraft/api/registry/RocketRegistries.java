@@ -43,6 +43,7 @@ public final class RocketRegistries {
     public static final ResourceKey<Registry<RocketUpgradeType<?>>> ROCKET_UPGRADE_TYPE = ResourceKey.createRegistryKey(APIConstants.id("rocket_upgrade_type"));
     public static final ResourceKey<Registry<RocketPartRecipeType<?>>> ROCKET_PART_RECIPE_TYPE = ResourceKey.createRegistryKey(APIConstants.id("rocket_part_recipe_type"));
 
+    public static final ResourceKey<Registry<ResourceKey<?>>> ROCKET_PARTS = ResourceKey.createRegistryKey(APIConstants.id("rocket_parts"));
     public static final ResourceKey<Registry<RocketLayout>> ROCKET_LAYOUT = ResourceKey.createRegistryKey(APIConstants.id("rocket_layout"));
     public static final ResourceKey<Registry<RocketCone<?, ?>>> ROCKET_CONE = ResourceKey.createRegistryKey(APIConstants.id("rocket_cone"));
     public static final ResourceKey<Registry<RocketBody<?, ?>>> ROCKET_BODY = ResourceKey.createRegistryKey(APIConstants.id("rocket_body"));

@@ -26,35 +26,70 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.rocket.recipe.config.RocketPartRecipeConfig;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
-import dev.galacticraft.impl.rocket.recipe.RocketPartRecipeImpl;
+import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.worldgen.BootstrapContext;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.Recipe;
-import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> extends Recipe<RecipeInput> {
-    Codec<RocketPartRecipe<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_PART_RECIPE_TYPE.byNameCodec().dispatch(RocketPartRecipe::type, RocketPartRecipeType::codec);
+public record RocketPartRecipe<C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>>(T type, C config) implements Recipe<RecipeInput> {
+    public static final Codec<RocketPartRecipe<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_PART_RECIPE_TYPE.byNameCodec().dispatch(RocketPartRecipe::type, RocketPartRecipeType::codec);
 
     @Contract("_, _ -> new")
-    static <C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> @NotNull RocketPartRecipe<C, RocketPartRecipeType<C>> create(C config, T type) {
-        return new RocketPartRecipeImpl<>(type, config);
+    public static <C extends RocketPartRecipeConfig, T extends RocketPartRecipeType<C>> @NotNull RocketPartRecipe<C, RocketPartRecipeType<C>> create(C config, T type) {
+        return new RocketPartRecipe<>(type, config);
     }
 
-    @NotNull T type();
+    public int slots() {
+        return this.type.slots(this.config);
+    }
 
-    @NotNull C config();
+    public int height() {
+        return this.type.height(this.config);
+    }
 
-    int slots();
-
-    int height(); // pixels
-
-    void place(@NotNull RocketPartRecipeType.SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge);
+    public void place(@NotNull RocketPartRecipeType.SlotConsumer consumer, int leftEdge, int rightEdge, int bottomEdge) {
+        this.type.place(consumer, leftEdge, rightEdge, bottomEdge, this.config);
+    }
 
     @Override
-    @NotNull NonNullList<Ingredient> getIngredients();
+    @NotNull
+    public NonNullList<Ingredient> getIngredients() {
+        return this.type.ingredients(this.config);
+    }
+
+    @Override
+    public boolean matches(RecipeInput input, Level level) {
+        return this.type.matches(input, level, this.config);
+    }
+
+    @Override
+    public @NotNull ItemStack assemble(RecipeInput input, HolderLookup.Provider lookup) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public boolean canCraftInDimensions(int width, int height) {
+        return false;
+    }
+
+    @Override
+    public @NotNull ItemStack getResultItem(HolderLookup.Provider registriesLookup) {
+        return ItemStack.EMPTY;
+    }
+
+    @Override
+    public @NotNull RecipeSerializer<?> getSerializer() {
+        throw new AssertionError();
+    }
+
+    @Override
+    public @NotNull RecipeType<?> getType() {
+        throw new AssertionError();
+    }
 
     static void bootstrapRegistries(BootstrapContext<RocketPartRecipe<?, ?>> context) {
 

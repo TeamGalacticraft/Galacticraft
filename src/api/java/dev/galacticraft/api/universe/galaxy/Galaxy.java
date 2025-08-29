@@ -28,7 +28,6 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.client.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.api.util.StreamCodecs;
-import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
@@ -42,23 +41,22 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Objects;
 import java.util.Optional;
 
-public interface Galaxy {
-    Codec<Galaxy> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
+public record Galaxy(@NotNull Component name,
+                     @NotNull Component description,
+                     CelestialPosition<?, ?> position,
+                     CelestialDisplay<?, ?> display) {
+    public static final Codec<Galaxy> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(Galaxy::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(Galaxy::description),
             CelestialPosition.CODEC.fieldOf("position").forGetter(Galaxy::position),
             CelestialDisplay.CODEC.fieldOf("display").forGetter(Galaxy::display)
-    ).apply(instance, Galaxy::create));
-    Codec<ResourceKey<Galaxy>> CODEC = ResourceKey.codec(AddonRegistries.GALAXY);
-    Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, Galaxy> STREAM_CODEC = StreamCodecs.ofRegistryEntry(AddonRegistries.GALAXY);
-
-    @Contract("_, _, _, _ -> new")
-    static @NotNull Galaxy create(@NotNull Component name, @NotNull Component description, CelestialPosition<?, ?> position, CelestialDisplay<?, ?> display) {
-        return new GalaxyImpl(name, description, position, display);
-    }
+    ).apply(instance, Galaxy::new));
+    public static final Codec<ResourceKey<Galaxy>> CODEC = ResourceKey.codec(AddonRegistries.GALAXY);
+    public static final Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Galaxy> STREAM_CODEC = StreamCodecs.ofRegistryEntry(AddonRegistries.GALAXY);
 
     static Registry<Galaxy> getRegistry(@NotNull RegistryAccess manager) {
         return manager.registryOrThrow(AddonRegistries.GALAXY);
@@ -84,11 +82,30 @@ public interface Galaxy {
         return registry.getKey(galaxy);
     }
 
-    @NotNull Component name();
+    @Override
+    public boolean equals(Object obj) {
+        if (obj == this) return true;
+        if (obj == null || obj.getClass() != this.getClass()) return false;
+        var that = (Galaxy) obj;
+        return Objects.equals(this.name, that.name()) &&
+                Objects.equals(this.description, that.description()) &&
+                Objects.equals(this.position, that.position()) &&
+                Objects.equals(this.display, that.display());
+    }
 
-    @NotNull Component description();
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, description, position, display);
+    }
 
-    CelestialPosition<?, ?> position();
-
-    CelestialDisplay<?, ?> display();
+    @Contract(pure = true)
+    @Override
+    public @NotNull
+    String toString() {
+        return "GalaxyImpl[" +
+                "name=" + name + ", " +
+                "description=" + description + ", " +
+                "position=" + position + ", " +
+                "display=" + display + ']';
+    }
 }

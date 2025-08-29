@@ -40,7 +40,7 @@ public abstract class RocketConeType<C extends RocketConeConfig> implements Rock
 
     @Override
     public @NotNull RocketCone<C, RocketConeType<C>> configure(@NotNull C config) {
-        return RocketCone.create(config, this);
+        return new RocketCone<>(config, this);
     }
 
     @Override

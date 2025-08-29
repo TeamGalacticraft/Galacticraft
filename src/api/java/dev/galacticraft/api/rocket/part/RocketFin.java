@@ -39,21 +39,16 @@ import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketFin<C extends RocketFinConfig, T extends RocketFinType<C>> extends RocketPart<C, T> {
-    Codec<RocketFin<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_FIN_TYPE.byNameCodec().dispatch(RocketFin::type, RocketFinType::codec);
-    Codec<Holder<RocketFin<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
-    Codec<HolderSet<RocketFin<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, Holder<RocketFin<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_FIN);
+public record RocketFin<C extends RocketFinConfig, T extends RocketFinType<C>>(@NotNull C config, @NotNull T type) implements RocketPart<C, T> {
+    public static final Codec<RocketFin<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_FIN_TYPE.byNameCodec().dispatch(RocketFin::type, RocketFinType::codec);
+    public static final Codec<Holder<RocketFin<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
+    public static final Codec<HolderSet<RocketFin<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_FIN, DIRECT_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<RocketFin<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_FIN);
 
-    Codec<EitherHolder<RocketFin<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_FIN, CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketFin<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_FIN, STREAM_CODEC);
+    public static final Codec<EitherHolder<RocketFin<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_FIN, CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketFin<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_FIN, STREAM_CODEC);
 
-    @Contract(pure = true, value = "_, _ -> new")
-    static @NotNull <C extends RocketFinConfig, T extends RocketFinType<C>> RocketFin<C, T> create(@NotNull C config, @NotNull T type) {
-        return GalacticraftAPI.get().createRocketFin(config, type);
-    }
-
-    default boolean canManeuver() {
+    public boolean canManeuver() {
         return this.type().canManeuver(this.config());
     }
 }

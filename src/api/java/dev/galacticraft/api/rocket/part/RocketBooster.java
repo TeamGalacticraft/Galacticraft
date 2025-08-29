@@ -39,14 +39,14 @@ import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketBooster<C extends RocketBoosterConfig, T extends RocketBoosterType<C>> extends RocketPart<C, T> {
-    Codec<RocketBooster<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_BOOSTER_TYPE.byNameCodec().dispatch(RocketBooster::type, RocketBoosterType::codec);
-    Codec<Holder<RocketBooster<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BOOSTER, DIRECT_CODEC);
-    Codec<HolderSet<RocketBooster<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BOOSTER, DIRECT_CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, Holder<RocketBooster<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_BOOSTER);
+public record RocketBooster<C extends RocketBoosterConfig, T extends RocketBoosterType<C>>(@NotNull C config, @NotNull T type) implements RocketPart<C, T> {
+    public static final Codec<RocketBooster<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_BOOSTER_TYPE.byNameCodec().dispatch(RocketBooster::type, RocketBoosterType::codec);
+    public static final Codec<Holder<RocketBooster<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BOOSTER, DIRECT_CODEC);
+    public static final Codec<HolderSet<RocketBooster<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BOOSTER, DIRECT_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<RocketBooster<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_BOOSTER);
 
-    Codec<EitherHolder<RocketBooster<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BOOSTER, CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBooster<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BOOSTER, STREAM_CODEC);
+    public static final Codec<EitherHolder<RocketBooster<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BOOSTER, CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBooster<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BOOSTER, STREAM_CODEC);
 
     @Contract(pure = true, value = "_, _ -> new")
     static @NotNull <C extends RocketBoosterConfig, T extends RocketBoosterType<C>> RocketBooster<C, T> create(@NotNull C config, @NotNull T type) {
@@ -59,7 +59,7 @@ public interface RocketBooster<C extends RocketBoosterConfig, T extends RocketBo
      * @return the maximum velocity of this booster blocks/tick.
      */
     @Contract(pure = true)
-    default double getMaximumVelocity() {
+    public double getMaximumVelocity() {
         return this.type().getMaximumVelocity(this.config());
     }
 
@@ -69,7 +69,7 @@ public interface RocketBooster<C extends RocketBoosterConfig, T extends RocketBo
      * @return the acceleration of this booster blocks/tick^2.
      */
     @Contract(pure = true)
-    default double getAccelerationPerTick() {
+    public double getAccelerationPerTick() {
         return this.type().getAccelerationPerTick(this.config());
     }
 
@@ -79,7 +79,7 @@ public interface RocketBooster<C extends RocketBoosterConfig, T extends RocketBo
      * @return the amount of fuel consumed by this booster per tick.
      */
     @Contract(pure = true)
-    default long getFuelUsagePerTick() {
+    public long getFuelUsagePerTick() {
         return this.type().getFuelUsagePerTick(this.config());
     }
 }

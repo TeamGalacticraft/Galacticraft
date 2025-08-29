@@ -23,7 +23,6 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.GalacticraftAPI;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.RocketBodyConfig;
@@ -39,19 +38,14 @@ import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketBody<C extends RocketBodyConfig, T extends RocketBodyType<C>> extends RocketPart<C, T> {
-    Codec<RocketBody<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_BODY_TYPE.byNameCodec().dispatch(RocketBody::type, RocketBodyType::codec);
-    Codec<Holder<RocketBody<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
-    Codec<HolderSet<RocketBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, Holder<RocketBody<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_BODY);
+public record RocketBody<C extends RocketBodyConfig, T extends RocketBodyType<C>>(@NotNull C config, @NotNull T type) implements RocketPart<C, T> {
+    public static final Codec<RocketBody<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_BODY_TYPE.byNameCodec().dispatch(RocketBody::type, RocketBodyType::codec);
+    public static final Codec<Holder<RocketBody<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
+    public static final Codec<HolderSet<RocketBody<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_BODY, DIRECT_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<RocketBody<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_BODY);
 
-    Codec<EitherHolder<RocketBody<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BODY, CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBody<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BODY, STREAM_CODEC);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    static @NotNull <C extends RocketBodyConfig, T extends RocketBodyType<C>> RocketBody<C, T> create(@NotNull C config, @NotNull T type) {
-        return GalacticraftAPI.get().createRocketBody(config, type);
-    }
+    public static final Codec<EitherHolder<RocketBody<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BODY, CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBody<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BODY, STREAM_CODEC);
 
     /**
      * Returns the maximum number of passengers allowed on this rocket.
@@ -59,7 +53,7 @@ public interface RocketBody<C extends RocketBodyConfig, T extends RocketBodyType
      * @return the maximum number of passengers allowed on this rocket.
      */
     @Contract(pure = true)
-    default int getMaxPassengers() {
+    public int getMaxPassengers() {
         return this.type().getMaxPassengers(this.config());
     }
 }

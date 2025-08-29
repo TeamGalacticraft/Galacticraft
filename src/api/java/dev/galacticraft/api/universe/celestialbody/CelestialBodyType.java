@@ -30,10 +30,6 @@ import dev.galacticraft.api.client.universe.display.CelestialDisplay;
 import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
-import dev.galacticraft.impl.universe.celestialbody.type.DecorativePlanetType;
-import dev.galacticraft.impl.universe.celestialbody.type.PlanetType;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
-import dev.galacticraft.impl.universe.celestialbody.type.StarType;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
@@ -148,15 +144,15 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     }
 
     public boolean isStar() {
-        return this instanceof StarType;
+        return false;
     }
 
     public boolean isPlanet() {
-        return this instanceof PlanetType;
+        return false;
     }
 
     public boolean isSatellite() {
-        return this instanceof SatelliteType;
+        return false;
     }
 
     public boolean isOrbitable() {
@@ -164,6 +160,6 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     }
 
     public boolean isDecorativePlanet() {
-        return this instanceof DecorativePlanetType;
+        return false;
     }
 }

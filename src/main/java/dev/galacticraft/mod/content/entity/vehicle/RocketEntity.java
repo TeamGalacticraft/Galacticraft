@@ -31,6 +31,7 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.api.rocket.part.RocketLayout;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.block.entity.FuelDock;
@@ -649,37 +650,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public @Nullable Holder<RocketCone<?, ?>> cone() {
-        return maybeGet(getRocketData().cone());
-    }
-
-    @Override
-    public @Nullable Holder<RocketBody<?, ?>> body() {
-        return maybeGet(getRocketData().body());
-    }
-
-    @Override
-    public @Nullable Holder<RocketFin<?, ?>> fin() {
-        return maybeGet(getRocketData().fin());
-    }
-
-    @Override
-    public @Nullable Holder<RocketBooster<?, ?>> booster() {
-        return maybeGet(getRocketData().booster());
-    }
-
-    @Override
-    public @Nullable Holder<RocketEngine<?, ?>> engine() {
-        return maybeGet(getRocketData().engine());
-    }
-
-    @Override
-    public @Nullable Holder<RocketUpgrade<?, ?>> upgrade() {
-        return maybeGet(getRocketData().upgrade());
-    }
-
-    private <T> @Nullable Holder<T> maybeGet(Optional<EitherHolder<T>> holder) {
-        return holder.flatMap(tEitherHolder -> tEitherHolder.unwrap(this.registryAccess())).orElse(null);
+    public @NotNull RocketLayout getRocketLayout() {
+        return getRocketData().layout();
     }
 
     public void setData(RocketData data) {

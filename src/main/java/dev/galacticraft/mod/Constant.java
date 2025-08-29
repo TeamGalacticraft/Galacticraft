@@ -752,6 +752,24 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface TravelPredicate {
+        String ACCESS_WEIGHT = "access_weight";
+        String CONSTANT = "constant";
+        String AND = "and";
+        String OR = "or";
+    }
+
+    // We don't really have interchangeable rocket parts, so this is fine
+    interface TieredRocketPart {
+        String BASIC = "basic";
+        String STORAGE = "storage";
+    }
+    
+    interface RocketPartRecipeTypes {
+        String WRAP_PATTERNED = "wrap_patterned";
+        String CENTERED_PATTERNED = "centered_patterned";
+    }
+
     interface CelestialOverlay {
         ResourceLocation EARTH = Constant.id("textures/gui/rocket/overworld_rocket_gui.png");
         ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");

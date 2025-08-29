@@ -40,7 +40,7 @@ public abstract class RocketBoosterType<C extends RocketBoosterConfig> implement
     }
 
     public @NotNull RocketBooster<C, RocketBoosterType<C>> configure(@NotNull C config) {
-        return RocketBooster.create(config, this);
+        return new RocketBooster<>(config, this);
     }
 
     @Override

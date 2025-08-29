@@ -40,7 +40,7 @@ public abstract class RocketFinType<C extends RocketFinConfig> implements Rocket
 
     @Override
     public @NotNull RocketFin<C, RocketFinType<C>> configure(@NotNull C config) {
-        return RocketFin.create(config, this);
+        return new RocketFin<>(config, this);
     }
 
     @Override

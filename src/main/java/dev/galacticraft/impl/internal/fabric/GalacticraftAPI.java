@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.fabric;
 
-import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.mod.accessor.SatelliteAccessor;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
@@ -36,7 +36,7 @@ import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback
 import dev.galacticraft.impl.internal.command.GCApiCommands;
 import dev.galacticraft.impl.network.GCApiPackets;
 import dev.galacticraft.impl.network.GCApiServerPacketReceivers;
-import dev.galacticraft.impl.universe.BuiltinObjects;
+import dev.galacticraft.mod.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;

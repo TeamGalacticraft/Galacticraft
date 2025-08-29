@@ -31,6 +31,9 @@ import dev.galacticraft.mod.content.advancements.critereon.GCItemSubPredicates;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.rocket.part.type.GCRocketPartTypes;
+import dev.galacticraft.mod.content.rocket.recipe.type.GCRocketPartRecipeTypes;
+import dev.galacticraft.mod.content.rocket.travelpredicate.type.GCTravelPredicates;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.events.GCCauldronInteraction;
 import dev.galacticraft.mod.events.GCEventHandlers;
@@ -77,6 +80,9 @@ public class Galacticraft implements ModInitializer {
         GCBlocks.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
+        GCRocketPartTypes.register();
+        GCRocketPartRecipeTypes.register();
+        GCTravelPredicates.register();
         GCTriggers.register();
         GCItemSubPredicates.register();
         GCCreativeModeTabs.register();

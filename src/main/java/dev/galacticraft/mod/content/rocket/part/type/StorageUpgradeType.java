@@ -27,14 +27,13 @@ import dev.galacticraft.api.rocket.part.type.RocketUpgradeType;
 import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
-import dev.galacticraft.impl.rocket.travelpredicate.type.ConstantTravelPredicateType;
+import dev.galacticraft.mod.content.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
+import dev.galacticraft.mod.content.rocket.travelpredicate.type.ConstantTravelPredicateType;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class StorageUpgradeType extends RocketUpgradeType<StorageUpgradeConfig> {
-    public static final StorageUpgradeType INSTANCE = new StorageUpgradeType();
 
     protected StorageUpgradeType() {
         super(StorageUpgradeConfig.CODEC);

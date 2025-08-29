@@ -25,9 +25,10 @@ package dev.galacticraft.api.rocket.part;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.item.EitherHolder;
+import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -40,7 +41,7 @@ public interface RocketLayout {
 
     StreamCodec<RegistryFriendlyByteBuf, ? extends RocketLayout> streamCodec();
 
-    List<EitherHolder<? extends RocketPart<?, ?>>> getParts();
+    List<ResourceKey<Registry<? extends RocketPart<?, ?>>>> parts();
 
     boolean isValid();
 

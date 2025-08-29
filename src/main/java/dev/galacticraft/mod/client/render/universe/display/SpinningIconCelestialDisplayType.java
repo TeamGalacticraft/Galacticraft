@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.render.universe.display;
 
 import com.mojang.math.Axis;
 import com.mojang.serialization.Codec;
-import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.mod.client.universe.display.config.IconCelestialDisplayConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector4f;

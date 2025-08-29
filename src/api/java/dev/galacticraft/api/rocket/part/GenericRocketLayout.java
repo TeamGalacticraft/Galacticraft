@@ -23,15 +23,24 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.google.common.collect.ImmutableList;
+import com.google.common.collect.Lists;
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.DataResult;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.registry.AddonRegistries;
+import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import io.netty.buffer.ByteBuf;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.core.Registry;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -39,37 +48,31 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 import java.util.Optional;
 
-public record GenericRocketLayout(
-        Optional<EitherHolder<RocketCone<?, ?>>> cone,
-        Optional<EitherHolder<RocketBody<?, ?>>> body,
-        Optional<EitherHolder<RocketFin<?, ?>>> fin,
-        Optional<EitherHolder<RocketBooster<?, ?>>> booster,
-        Optional<EitherHolder<RocketEngine<?, ?>>> engine,
-        Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade
-) implements RocketLayout {
-    public static final Codec<GenericRocketLayout> CODEC = RecordCodecBuilder.create(instance -> instance.group(
-            RocketCone.EITHER_CODEC.optionalFieldOf("cone").forGetter(GenericRocketLayout::cone),
-            RocketBody.EITHER_CODEC.optionalFieldOf("body").forGetter(GenericRocketLayout::body),
-            RocketFin.EITHER_CODEC.optionalFieldOf("fin").forGetter(GenericRocketLayout::fin),
-            RocketBooster.EITHER_CODEC.optionalFieldOf("booster").forGetter(GenericRocketLayout::booster),
-            RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(GenericRocketLayout::engine),
-            RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(GenericRocketLayout::upgrade)
-    ).apply(instance, GenericRocketLayout::new));
-    public static final StreamCodec<RegistryFriendlyByteBuf, GenericRocketLayout> STREAM_CODEC = StreamCodec.composite(
-            ByteBufCodecs.optional(RocketCone.EITHER_STREAM_CODEC),
-            GenericRocketLayout::cone,
-            ByteBufCodecs.optional(RocketBody.EITHER_STREAM_CODEC),
-            GenericRocketLayout::body,
-            ByteBufCodecs.optional(RocketFin.EITHER_STREAM_CODEC),
-            GenericRocketLayout::fin,
-            ByteBufCodecs.optional(RocketBooster.EITHER_STREAM_CODEC),
-            GenericRocketLayout::booster,
-            ByteBufCodecs.optional(RocketEngine.EITHER_STREAM_CODEC),
-            GenericRocketLayout::engine,
-            ByteBufCodecs.optional(RocketUpgrade.EITHER_STREAM_CODEC),
-            GenericRocketLayout::upgrade,
-            GenericRocketLayout::new
-    );
+public record GenericRocketLayout(List<ResourceKey<Registry<? extends RocketPart<?, ?>>>> parts) implements RocketLayout {
+    public static final Codec<GenericRocketLayout> CODEC = ResourceLocation.CODEC.listOf().xmap(registries -> {
+        List<ResourceKey<Registry<? extends RocketPart<?, ?>>>> result = registries.stream().map(location -> {
+            if (!BuiltInRocketRegistries.ROCKET_PARTS.containsKey(location))
+                throw new RuntimeException("Unknown rocket part registry: " + location);
+            return BuiltInRocketRegistries.ROCKET_PARTS.get(location);
+        }).map(resourceKey -> (ResourceKey<Registry<? extends RocketPart<?, ?>>>) resourceKey).toList();
+        ImmutableList.Builder<ResourceKey<Registry<? extends RocketPart<?, ?>>>> builder = ImmutableList.builder();
+        for (var data : result) {
+            builder.add(data);
+        }
+        return new GenericRocketLayout(builder.build());
+    }, layout -> layout.parts().stream().map(ResourceKey::location).toList());
+    public static final StreamCodec<ByteBuf, GenericRocketLayout> STREAM_CODEC = ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()).map(registries -> {
+        List<ResourceKey<Registry<? extends RocketPart<?, ?>>>> result = registries.stream().map(location -> {
+            if (!BuiltInRocketRegistries.ROCKET_PARTS.containsKey(location))
+                throw new RuntimeException("Unknown rocket part registry: " + location);
+            return BuiltInRocketRegistries.ROCKET_PARTS.get(location);
+        }).map(resourceKey -> (ResourceKey<Registry<? extends RocketPart<?, ?>>>) resourceKey).toList();
+        ImmutableList.Builder<ResourceKey<Registry<? extends RocketPart<?, ?>>>> builder = ImmutableList.builder();
+        for (var data : result) {
+            builder.add(data);
+        }
+        return new GenericRocketLayout(builder.build());
+    }, genericRocketLayout -> genericRocketLayout.parts().stream().map(ResourceKey::location).toList());
 
     public static GenericRocketLayout of(
             @Nullable EitherHolder<RocketCone<?, ?>> cone,
@@ -88,19 +91,7 @@ public record GenericRocketLayout(
 
     @Override
     public StreamCodec<RegistryFriendlyByteBuf, ? extends GenericRocketLayout> streamCodec() {
-        return STREAM_CODEC;
-    }
-
-    @Override
-    public List<EitherHolder<? extends RocketPart<?, ?>>> getParts() {
-        ImmutableList.Builder<EitherHolder<? extends RocketPart<?, ?>>> builder = ImmutableList.builder();
-        cone.ifPresent(builder::add);
-        body.ifPresent(builder::add);
-        fin.ifPresent(builder::add);
-        booster.ifPresent(builder::add);
-        engine.ifPresent(builder::add);
-        upgrade.ifPresent(builder::add);
-        return builder.build();
+        return STREAM_CODEC.mapStream(buf -> buf);
     }
 
     @Override

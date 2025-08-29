@@ -23,21 +23,20 @@
 package dev.galacticraft.api.registry;
 
 import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.api.APIConstants;
 import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.api.rocket.recipe.type.RocketPartRecipeType;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.recipe.type.CenteredPatternedRocketPartRecipeType;
-import dev.galacticraft.impl.rocket.recipe.type.PatternedRocketPartRecipeType;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
+import dev.galacticraft.api.rocket.travelpredicate.type.DefaultTravelPredicateType;
 import net.fabricmc.fabric.api.event.registry.FabricRegistryBuilder;
-import net.minecraft.core.MappedRegistry;
+import net.minecraft.core.DefaultedMappedRegistry;
 import net.minecraft.core.Registry;
 import net.minecraft.core.WritableRegistry;
+import net.minecraft.resources.ResourceKey;
 
 public final class BuiltInRocketRegistries {
     public static final WritableRegistry<TravelPredicateType<?>> TRAVEL_PREDICATE_TYPE = FabricRegistryBuilder.from(
-            new MappedRegistry<>(RocketRegistries.TRAVEL_PREDICATE_TYPE,
+            new DefaultedMappedRegistry<>(APIConstants.id("default").toString(), RocketRegistries.TRAVEL_PREDICATE_TYPE,
                     Lifecycle.experimental(),
                     true
             )).buildAndRegister();
@@ -71,24 +70,21 @@ public final class BuiltInRocketRegistries {
             RocketRegistries.ROCKET_PART_RECIPE_TYPE
     ).buildAndRegister();
 
+    public static final WritableRegistry<ResourceKey<?>> ROCKET_PARTS = FabricRegistryBuilder.createSimple(
+            RocketRegistries.ROCKET_PARTS
+    ).buildAndRegister();
+
     public static void initialize() {
     }
 
     static {
-        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("default"), DefaultTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("access_weight"), AccessWeightTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("constant"), ConstantTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("and"), AndTravelPredicateType.INSTANCE);
-        Registry.register(TRAVEL_PREDICATE_TYPE, Constant.id("or"), OrTravelPredicateType.INSTANCE);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_CONE.location(), RocketRegistries.ROCKET_CONE);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_BODY.location(), RocketRegistries.ROCKET_BODY);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_FIN.location(), RocketRegistries.ROCKET_FIN);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_BOOSTER.location(), RocketRegistries.ROCKET_BOOSTER);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_ENGINE.location(), RocketRegistries.ROCKET_ENGINE);
+        Registry.register(ROCKET_PARTS, RocketRegistries.ROCKET_UPGRADE.location(), RocketRegistries.ROCKET_UPGRADE);
 
-        Registry.register(ROCKET_CONE_TYPE, Constant.id("basic"), BasicRocketConeType.INSTANCE);
-        Registry.register(ROCKET_BODY_TYPE, Constant.id("basic"), BasicRocketBodyType.INSTANCE);
-        Registry.register(ROCKET_FIN_TYPE, Constant.id("basic"), BasicRocketFinType.INSTANCE);
-        Registry.register(ROCKET_BOOSTER_TYPE, Constant.id("basic"), BasicRocketBoosterType.INSTANCE);
-        Registry.register(ROCKET_ENGINE_TYPE, Constant.id("basic"), BasicRocketEngineType.INSTANCE);
-        Registry.register(ROCKET_UPGRADE_TYPE, Constant.id("storage"), StorageUpgradeType.INSTANCE);
-
-        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("wrap_patterned"), PatternedRocketPartRecipeType.INSTANCE);
-        Registry.register(ROCKET_PART_RECIPE_TYPE, Constant.id("centered_patterned"), CenteredPatternedRocketPartRecipeType.INSTANCE);
+        Registry.register(TRAVEL_PREDICATE_TYPE, APIConstants.id("default"), DefaultTravelPredicateType.INSTANCE);
     }
 }

@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.data.RocketPartRecipeBuilder;
+import dev.galacticraft.mod.data.RocketPartRecipeBuilder;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
-import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
+import dev.galacticraft.mod.content.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
+import dev.galacticraft.mod.content.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;

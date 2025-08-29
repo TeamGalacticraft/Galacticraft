@@ -40,7 +40,7 @@ public abstract class RocketUpgradeType<C extends RocketUpgradeConfig> implement
 
     @Override
     public @NotNull RocketUpgrade<C, RocketUpgradeType<C>> configure(@NotNull C config) {
-        return RocketUpgrade.create(config, this);
+        return new RocketUpgrade<>(config, this);
     }
 
     @Override

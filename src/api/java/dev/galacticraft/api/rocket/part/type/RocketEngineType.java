@@ -40,7 +40,7 @@ public abstract class RocketEngineType<C extends RocketEngineConfig> implements 
 
     @Override
     public @NotNull RocketEngine<C, RocketEngineType<C>> configure(@NotNull C config) {
-        return RocketEngine.create(config, this);
+        return new RocketEngine<>(config, this);
     }
 
     @Override

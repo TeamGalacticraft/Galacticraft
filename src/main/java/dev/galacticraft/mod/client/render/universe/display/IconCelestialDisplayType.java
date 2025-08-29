@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.universe.display;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.client.universe.display.CelestialDisplayType;
-import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.mod.client.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import net.minecraft.client.Minecraft;

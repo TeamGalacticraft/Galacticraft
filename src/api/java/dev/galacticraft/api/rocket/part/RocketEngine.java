@@ -23,7 +23,6 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.GalacticraftAPI;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.RocketEngineConfig;
@@ -36,22 +35,16 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.item.EitherHolder;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-public interface RocketEngine<C extends RocketEngineConfig, T extends RocketEngineType<C>> extends RocketPart<C, T> {
-    Codec<RocketEngine<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_ENGINE_TYPE.byNameCodec().dispatch(RocketEngine::type, RocketEngineType::codec);
-    Codec<Holder<RocketEngine<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
-    Codec<HolderSet<RocketEngine<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, Holder<RocketEngine<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_ENGINE);
+public record RocketEngine<C extends RocketEngineConfig, T extends RocketEngineType<C>>(@NotNull C config, @NotNull T type) implements RocketPart<C, T> {
+    public static final Codec<RocketEngine<?, ?>> DIRECT_CODEC = BuiltInRocketRegistries.ROCKET_ENGINE_TYPE.byNameCodec().dispatch(RocketEngine::type, RocketEngineType::codec);
+    public static final Codec<Holder<RocketEngine<?, ?>>> CODEC = RegistryFileCodec.create(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
+    public static final Codec<HolderSet<RocketEngine<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_ENGINE, DIRECT_CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, Holder<RocketEngine<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_ENGINE);
 
-    Codec<EitherHolder<RocketEngine<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_ENGINE, CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketEngine<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_ENGINE, STREAM_CODEC);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    static @NotNull <C extends RocketEngineConfig, T extends RocketEngineType<C>> RocketEngine<C, T> create(@NotNull C config, @NotNull T type) {
-        return GalacticraftAPI.get().createRocketEngine(config, type);
-    }
+    public static final Codec<EitherHolder<RocketEngine<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_ENGINE, CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketEngine<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_ENGINE, STREAM_CODEC);
 
     /**
      * Returns the fuel capacity of this rocket.
@@ -59,7 +52,7 @@ public interface RocketEngine<C extends RocketEngineConfig, T extends RocketEngi
      * @return the fuel capacity of this rocket. 1 bucket = 81000.
      * @see net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants
      */
-    default long getFuelCapacity() {
+    public long getFuelCapacity() {
         return this.type().getFuelCapacity(this.config());
     }
 }
