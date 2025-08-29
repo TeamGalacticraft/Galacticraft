@@ -22,14 +22,19 @@
 
 package dev.galacticraft.api.entity;
 
+import dev.galacticraft.api.APIConstants;
 import dev.galacticraft.api.block.entity.FuelDock;
+import net.fabricmc.fabric.api.lookup.v1.entity.EntityApiLookup;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.Nullable;
 
 /**
  * Implement into entities that are placed on fuel docks to load with cargo and
  * fuel
  */
 public interface Dockable extends Fuelable {
+    EntityApiLookup<Dockable, @Nullable Void> ENTITY = EntityApiLookup.get(APIConstants.id("dockable_entity"), Dockable.class, Void.class);
+
     /**
      * Sets the current fuel dock for this entity
      */

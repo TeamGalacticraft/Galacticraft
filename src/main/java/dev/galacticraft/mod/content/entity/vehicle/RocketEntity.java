@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.entity.vehicle;
 import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.DataResult;
 import dev.galacticraft.api.entity.ControllableEntity;
+import dev.galacticraft.api.entity.Dockable;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
@@ -110,6 +111,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
+        Dockable.ENTITY.registerForType((entity, unused) -> this, entityType);
     }
 
     public int getTimeAsState() {
