@@ -28,7 +28,7 @@ import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.mojang.math.Axis;
-import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.mod.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.satellite.Satellite;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;

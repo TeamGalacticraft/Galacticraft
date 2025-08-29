@@ -67,6 +67,8 @@ public class GalacticraftAPI implements ModInitializer {
         DynamicRegistries.registerSynced(AddonRegistries.CELESTIAL_BODY, CelestialBody.DIRECT_CODEC);
         DynamicRegistries.registerSynced(AddonRegistries.GALAXY, Galaxy.DIRECT_CODEC);
 
+        DynamicRegistries.registerSynced(RocketRegistries.ROCKET_LAYOUT, RocketLayout.CODEC);
+
         DynamicRegistries.registerSynced(RocketRegistries.ROCKET_CONE, RocketCone.DIRECT_CODEC);
         DynamicRegistries.registerSynced(RocketRegistries.ROCKET_BODY, RocketBody.DIRECT_CODEC);
         DynamicRegistries.registerSynced(RocketRegistries.ROCKET_FIN, RocketFin.DIRECT_CODEC);

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.APIConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -39,8 +40,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface Constant {
-    String MOD_ID = "galacticraft";
-    String COMMON_NAMESPACE = "c";
+    String MOD_ID = APIConstants.MOD_ID;
+    String COMMON_NAMESPACE = APIConstants.COMMON_NAMESPACE;
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     double RADIANS_TO_DEGREES = 180.0 / Math.PI;
@@ -54,12 +55,12 @@ public interface Constant {
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
+        return APIConstants.id(id);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
     static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
-        return ResourceKey.create(registry, Constant.id(id));
+        return APIConstants.key(registry, id);
     }
 
     interface Block {
@@ -378,6 +379,14 @@ public interface Constant {
         String SULFURIC_ACID_STILL = "sulfuric_acid_still";
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
+
+        interface Gas {
+            String HYDROGEN = "hydrogen";
+            String NITROGEN = "nitrogen";
+            String OXYGEN = "oxygen";
+            String OZONE = "ozone";
+            String WATER_VAPOR = "water_vapor";
+        }
 
         static ResourceLocation fluidId(String s) {
             return Constant.id("block/fluid/" + s);

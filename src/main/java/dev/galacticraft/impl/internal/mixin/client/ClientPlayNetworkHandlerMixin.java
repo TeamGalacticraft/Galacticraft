@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
-import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.mod.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;

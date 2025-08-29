@@ -24,7 +24,7 @@ package dev.galacticraft.impl.internal.mixin.client;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.impl.internal.client.tabs.InventoryTabRegistryImpl;
+import dev.galacticraft.impl.client.tabs.InventoryTabRegistryImpl;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;

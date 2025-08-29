@@ -67,15 +67,6 @@ java {
     withJavadocJar()
 }
 
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/generated")
-            exclude(".cache/")
-        }
-    }
-}
-
 group = modGroup
 version = buildString {
     append(modVersion)
@@ -101,12 +92,41 @@ version = buildString {
 println("Galacticraft: $version")
 base.archivesName.set(modName)
 
+sourceSets {
+    val api = create("api");
+
+    main {
+        compileClasspath += api.output
+        runtimeClasspath += api.output
+        resources {
+            srcDir("src/main/generated")
+            exclude(".cache/")
+        }
+    }
+}
+
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
     mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
 
+    val apiSourceSet = sourceSets.getByName("api")
+
+    createRemapConfigurations(apiSourceSet)
+
     runs {
+        mods {
+            register("galacticraft") {
+                // Source sets we want to include in the mod jar
+                sourceSet(sourceSets.main.get())
+                sourceSet(apiSourceSet)
+            }
+
+            register("galacticraft-api") {
+                sourceSet(apiSourceSet)
+            }
+        }
+
         getByName("client") {
             name("Minecraft Client")
             source(sourceSets.test.get())
@@ -137,6 +157,12 @@ loom {
         }
 
         afterEvaluate {
+            sourceSets {
+                getByName("api") {
+                    compileClasspath += configurations.getByName("minecraftNamedCompile")
+                }
+            }
+
             val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
                 componentFilter {
                     it is ModuleComponentIdentifier
@@ -216,6 +242,11 @@ configurations {
     include {
         extendsFrom(core)
     }
+
+    getByName("modApiImplementation") {
+        extendsFrom(configurations.modImplementation.get())
+        extendsFrom(configurations.implementation.get())
+    }
 }
 
 dependencies {
@@ -248,6 +279,8 @@ dependencies {
     modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
 
     modCompileOnly("mezz.jei:jei-$minecraftVersion-fabric-api:$jeiVersion")
+
+    "apiCompileOnly"("org.jetbrains:annotations:26.0.2")
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }

@@ -26,8 +26,6 @@ import dev.galacticraft.api.data.RocketPartRecipeBuilder;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
-import dev.galacticraft.impl.rocket.part.config.*;
-import dev.galacticraft.impl.rocket.part.type.*;
 import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
 import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
 import dev.galacticraft.mod.Constant;
