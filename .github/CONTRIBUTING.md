@@ -37,7 +37,7 @@ REI and JEI: `./gradlew runClient -Prei=true -Pjei=true`
 
 Neither: `./gradlew runClient -Prei=false [-Pjei=false]`
 
-*Square brackets indicate optional arguments which have no effect on the behaviour.*
+*Square brackets indicate optional arguments which have no effect on the behaviour.* \
 *Use `./gradlew.bat` instead of `./gradlew` on Windows.*
 
 ## Translations
