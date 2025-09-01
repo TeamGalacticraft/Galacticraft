@@ -9,7 +9,7 @@ ETAG_PATH = "build/contributors.etag"
 def http_get_contributors(use_etag=True):
     results = []
     token = os.environ.get("GITHUB_TOKEN", "").strip() or None
-    url = f"https://api.github.com/repos/{OWNER_REPO}/contributors?per_page=100"
+    url = f"https://api.github.com/repos/{OWNER_REPO}/stats/contributors?per_page=100"
     latest_etag = None
     first = True
 
@@ -51,11 +51,11 @@ def http_get_contributors(use_etag=True):
 def build_payload(raw):
     # filter bots & sort by contributions desc
     filtered = [
-        c
+        {**c.get("author", {}), "contributions": c.get("total", 0)}
         for c in raw
         if not (
-                "bot" in c.get("type", "").lower()
-                or "bot" in c.get("login", "").lower()
+                "bot" in c.get("author", {}).get("type", "").lower()
+                or "bot" in c.get("author", {}).get("login", "").lower()
         )
     ]
     filtered.sort(key=lambda c: c.get("contributions") or 0, reverse=True)
