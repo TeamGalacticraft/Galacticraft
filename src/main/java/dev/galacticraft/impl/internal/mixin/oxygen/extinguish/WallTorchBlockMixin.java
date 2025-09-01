@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin(WallTorchBlock.class)
 public class WallTorchBlockMixin implements GCBlockExtensions {
     @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
         return true;
     }
 
@@ -49,7 +49,7 @@ public class WallTorchBlockMixin implements GCBlockExtensions {
     }
 
     @Override
-    public boolean galacticraft$hasAtmosphereListener() {
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return true;
     }
 

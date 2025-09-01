@@ -54,12 +54,13 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         super.init();
         this.titleLabelX += 20;
 
-        this.textField = new EditBox(this.font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.size)));
+        this.textField = new EditBox(this.font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.targetSize)));
         this.textField.setResponder((s -> {
             if (s.isBlank()) return;
             int value = NumberUtils.toInt(s, -1);
-            if (value < 0 || value > OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
-                this.textField.setValue(String.valueOf(this.menu.targetSize));
+            if (value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+                this.menu.targetSize = value;
+                ClientPlayNetworking.send(new BubbleMaxPayload(value));
             }
         }));
 
@@ -67,14 +68,17 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             int value = NumberUtils.toInt(s, -1);
             return s.isBlank() || value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE;
         }));
-        this.textField.setEditable(false);
+        this.textField.setValue(String.valueOf(this.menu.targetSize));
+
         this.addRenderableWidget(this.textField);
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-        this.textField.setValue(String.valueOf(this.menu.targetSize));
+        if (!this.textField.getValue().isBlank() && NumberUtils.toInt(this.textField.getValue(), -1) != this.menu.targetSize) {
+            this.textField.setValue(String.valueOf(this.menu.targetSize));
+        }
     }
 
     @SuppressWarnings("DataFlowIssue")
@@ -140,7 +144,6 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 if (this.menu.targetSize < OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
                     this.menu.targetSize = this.menu.targetSize + 1;
                     this.textField.setValue(String.valueOf(this.menu.targetSize));
-                    ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
                     return true;
                 }
@@ -150,7 +153,6 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 if (this.menu.targetSize > 0) {
                     this.menu.targetSize = this.menu.targetSize - 1;
                     this.textField.setValue(String.valueOf(this.menu.targetSize));
-                    ClientPlayNetworking.send(new BubbleMaxPayload(this.menu.targetSize));
                     this.playButtonSound();
                     return true;
                 }

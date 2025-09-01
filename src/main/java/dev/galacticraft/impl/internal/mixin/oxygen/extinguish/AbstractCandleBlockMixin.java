@@ -46,8 +46,8 @@ public abstract class AbstractCandleBlockMixin implements GCBlockExtensions {
     public static BooleanProperty LIT;
 
     @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
-        return true;
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
+        return state.getValue(LIT);
     }
 
     @Override
@@ -56,8 +56,8 @@ public abstract class AbstractCandleBlockMixin implements GCBlockExtensions {
     }
 
     @Override
-    public boolean galacticraft$hasAtmosphereListener() {
-        return true;
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
+        return state.getValue(LIT);
     }
 
     @Override

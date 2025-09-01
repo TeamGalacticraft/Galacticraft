@@ -29,6 +29,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.block.LanternBlock;
+import net.minecraft.world.level.block.state.BlockState;
 
 import java.util.List;
 
@@ -44,12 +45,12 @@ public class GlowstoneLanternBlock extends LanternBlock {
     }
 
     @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
         return false; // overrides the mixin
     }
 
     @Override
-    public boolean galacticraft$hasAtmosphereListener() {
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return false; // overrides the mixin
     }
 }

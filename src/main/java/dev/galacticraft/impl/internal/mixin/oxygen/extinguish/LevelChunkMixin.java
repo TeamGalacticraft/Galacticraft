@@ -35,6 +35,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class LevelChunkMixin implements LevelOxygenAccessor {
     @WrapMethod(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
     private boolean extinguishFire(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, Operation<Boolean> original) {
-        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform() && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
+        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform(state) && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
     }
 }

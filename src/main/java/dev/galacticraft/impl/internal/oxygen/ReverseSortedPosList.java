@@ -20,32 +20,46 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
+package dev.galacticraft.impl.internal.oxygen;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import dev.galacticraft.api.accessor.GCBlockExtensions;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.LevelReader;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.FireBlock;
-import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Mixin;
 
-@Mixin(FireBlock.class)
-public class FireBlockMixin implements GCBlockExtensions {
-    @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
-        return true;
+public class ReverseSortedPosList extends SortedPosList {
+    public ReverseSortedPosList(BlockPos center) {
+        super(center);
     }
 
     @Override
-    public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
-        return Blocks.AIR.defaultBlockState();
+    protected int binarySearch(double distance) {
+        return binarySearch0(this.distances, 0, this.size, distance);
     }
 
-    @WrapMethod(method = "canSurvive")
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
-        return original.call(state, level, pos) && level.galacticraft$isBreathable(pos);
+    // Arrays#binarySearch0
+    private static int binarySearch0(double[] a, int fromIndex, int toIndex, double key) {
+        int low = fromIndex;
+        int high = toIndex - 1;
+
+        while (low <= high) {
+            int mid = (low + high) >>> 1;
+            double midVal = a[mid];
+
+            if (midVal > key) {
+                low = mid + 1;
+            } else if (midVal < key) {
+                high = mid - 1;
+            } else {
+                long midBits = Double.doubleToLongBits(midVal);
+                long keyBits = Double.doubleToLongBits(key);
+                if (midBits == keyBits) {
+                    return mid;
+                } else if (midBits > keyBits) {
+                    low = mid + 1;
+                } else {
+                    high = mid - 1;
+                }
+            }
+        }
+        return -(low + 1);  // key not found.
     }
+
 }

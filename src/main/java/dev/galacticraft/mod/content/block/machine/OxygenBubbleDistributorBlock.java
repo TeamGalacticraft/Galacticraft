@@ -51,11 +51,11 @@ public class OxygenBubbleDistributorBlock extends MachineBlock {
 
     @Override
     protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean moved) {
-        super.onRemove(state, level, pos, newState, moved);
         if (newState.getBlock() != this) {
-            if (level.getBlockEntity(pos) instanceof OxygenBubbleDistributorBlockEntity be) {
+            if (!level.isClientSide && level.getBlockEntity(pos) instanceof OxygenBubbleDistributorBlockEntity be) {
                 be.onBroken();
             }
         }
+        super.onRemove(state, level, pos, newState, moved);
     }
 }

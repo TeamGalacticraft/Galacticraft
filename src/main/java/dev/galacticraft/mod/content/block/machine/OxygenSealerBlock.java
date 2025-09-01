@@ -66,7 +66,7 @@ public class OxygenSealerBlock extends MachineBlock {
     }
 
     @Override
-    public boolean galacticraft$hasAtmosphereListener() {
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return true;
     }
 

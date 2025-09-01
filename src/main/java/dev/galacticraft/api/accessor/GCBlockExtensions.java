@@ -33,7 +33,7 @@ import java.util.Iterator;
 public interface GCBlockExtensions {
     // expectation: ideally for modded blocks, transforms are done before setBlock (e.g. placement state)
     // this type of transformation is a bit over-eager as it breaks scenarios where you specifically want "invalid" states.
-    default boolean galacticraft$hasLegacyExtinguishTransform() {
+    default boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
         return false;
     }
 
@@ -41,7 +41,7 @@ public interface GCBlockExtensions {
         return state;
     }
 
-    default boolean galacticraft$hasAtmosphereListener() {
+    default boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return false;
     }
 

@@ -1,3 +1,25 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
 package dev.galacticraft.impl.internal.oxygen;
 
 import it.unimi.dsi.fastutil.objects.ObjectArrays;
@@ -7,19 +29,19 @@ import java.util.Arrays;
 
 public class SortedPosList {
     private final BlockPos center;
-    private double[] distances; // alt: don't cache and just calculate from pos each time?
+    double[] distances; // alt: don't cache and just calculate from pos each time?
     private BlockPos[] positions;
-	private int size = 0;
+    int size = 0;
 
-	public SortedPosList(BlockPos center) {
+    public SortedPosList(BlockPos center) {
         this.center = center;
         this.distances = new double[0];
         this.positions = new BlockPos[0];
-	}
+    }
 
     // returns the index of the given position OR the index of where the position would be inserted (-ve)
-	private int findIndex(BlockPos pos, double distance) {
-        int i = Arrays.binarySearch(this.distances, 0, this.size, distance);
+    private int findIndex(BlockPos pos, double distance) {
+        int i = binarySearch(distance);
         // negative: not found || equal: found immediately!
         if (i < 0 || this.positions[i].equals(pos)) return i;
         // many positions can have the same distance from the center, so check for the pos
@@ -47,8 +69,12 @@ public class SortedPosList {
                 break;
             }
         }
-        return i;
-	}
+        return -(i + 1);
+    }
+
+    protected int binarySearch(double distance) {
+        return Arrays.binarySearch(this.distances, 0, this.size, distance);
+    }
 
     public boolean add(BlockPos pos, double distance) {
         int i = this.findIndex(pos, distance);
@@ -62,9 +88,9 @@ public class SortedPosList {
 
     }
 
-	public boolean add(BlockPos pos) {
-        return this.add(pos, this.calculateDistance(pos));
-	}
+    public boolean add(BlockPos pos) {
+        return this.add(pos, this.calculateDistanceSq(pos));
+    }
 
     public BlockPos get(int index) {
         return this.positions[index];
@@ -74,32 +100,32 @@ public class SortedPosList {
         return this.distances[index];
     }
 
-	public boolean remove(BlockPos pos) {
-        return this.remove(pos, this.calculateDistance(pos));
-	}
-	public boolean remove(BlockPos pos, double distance) {
-		int i = this.findIndex(pos, distance);
-		if (i >= 0) {
-			this.remove(i);
-			return true;
-		} else {
-			return false;
-		}
-	}
+    public boolean remove(BlockPos pos) {
+        return this.remove(pos, this.calculateDistanceSq(pos));
+    }
+    public boolean remove(BlockPos pos, double distance) {
+        int i = this.findIndex(pos, distance);
+        if (i >= 0) {
+            this.remove(i);
+            return true;
+        } else {
+            return false;
+        }
+    }
 
-	public boolean contains(BlockPos pos) {
-        return this.contains(pos, this.calculateDistance(pos));
-	}
+    public boolean contains(BlockPos pos) {
+        return this.contains(pos, this.calculateDistanceSq(pos));
+    }
 
     public boolean contains(BlockPos pos, double distance) {
         return this.findIndex(pos, distance) >= 0;
     }
 
-	public int size() {
-		return this.size;
-	}
+    public int size() {
+        return this.size;
+    }
 
-    public double calculateDistance(BlockPos object) {
+    public double calculateDistanceSq(BlockPos object) {
         return this.center.distToLowCornerSqr(object.getX(), object.getY() - 0.5, object.getZ());
     }
 

@@ -1089,6 +1089,7 @@ public interface Constant {
         String SOLID = "Solid";
         String LISTENERS = "Listeners";
         String CONTENDED = "Contended";
+        String UNSEALED = "Unsealed";
     }
 
     interface Chunk {

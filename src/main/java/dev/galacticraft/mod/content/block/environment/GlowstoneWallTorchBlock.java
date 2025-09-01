@@ -55,12 +55,12 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
     }
 
     @Override
-    public boolean galacticraft$hasLegacyExtinguishTransform() {
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
         return false; // overrides the mixin
     }
 
     @Override
-    public boolean galacticraft$hasAtmosphereListener() {
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return false; // overrides the mixin
     }
 }
