@@ -1,0 +1,45 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "cross": "galacticraft:block/web_string_top",
+    "particle": "galacticraft:block/web_string_top"
+  },
+  "elements": [
+    {   "from": [ 3, 14, 8 ],
+      "to": [ 13, 16, 8 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" },
+        "south": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" }
+      }
+    },
+    {   "from": [ 8, 14, 3 ],
+      "to": [ 8, 16, 13 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "west": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" },
+        "east": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" }
+      }
+    },
+    {   "from": [ 5, 0, 8 ],
+      "to": [ 11, 14, 8 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [ 5, 2, 11, 16 ], "texture": "cross" },
+        "south": { "uv": [ 5, 2, 11, 16 ], "texture": "cross" }
+      }
+    },
+    {   "from": [ 8, 0, 5 ],
+      "to": [ 8, 14, 11 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "west": { "uv": [ 5, 2, 11, 16 ], "texture": "cross" },
+        "east": { "uv": [ 5, 2, 11, 16 ], "texture": "cross" }
+      }
+    }
+  ]
+}
