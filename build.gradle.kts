@@ -49,6 +49,7 @@ val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
 val appleskinVersion         = project.property("appleskin.version").toString()
 val objVersion               = project.property("obj.version").toString()
+val glassworkVersion         = project.property("glasswork.version").toString()
 
 plugins {
     java
@@ -239,7 +240,7 @@ dependencies {
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
     "core"("dev.galacticraft:MachineLib:$machineLibVersion")
-    "core"("dev.maximus:glasswork:1.3")
+    "core"("dev.maximus:glasswork:$glassworkVersion")
     "core"("lol.bai:badpackets:fabric-$badpacketsVersion")
 
     // Optional Dependencies
