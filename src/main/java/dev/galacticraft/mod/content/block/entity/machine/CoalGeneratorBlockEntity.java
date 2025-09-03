@@ -38,6 +38,7 @@ import dev.galacticraft.machinelib.api.util.EnergySource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
 import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
@@ -48,13 +49,19 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundEvents;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -92,6 +99,9 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     private long fuelSlotModCount = -1;
     private int fuelTime = 0;
     private double heat = 0.0d;
+    private boolean lit = false;
+    private boolean curr = false;
+    private boolean prev = false;
 
     /*
      * Energy stats:
@@ -105,15 +115,38 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
+        profiler.push("charge");
+        this.drainPowerToSlot(CHARGE_SLOT);
+        profiler.pop();
+
+        if (this.fuelLength > 0) {
+            if (this.shouldExtinguish(level, pos, state)) {
+                this.fuelLength = 0;
+                this.fuelTime = 0;
+                RandomSource randomSource = level.getRandom();
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
+                return;
+            } else {
+                this.setHeat(Math.min(1, this.heat + 0.004));
+            }
+        }
+
+        boolean lit = this.fuelLength > 0;
+        if (this.lit != lit || this.curr != this.prev) {
+            this.lit = lit;
+            this.prev = this.curr;
+            level.setBlock(this.worldPosition, state.setValue(CoalGeneratorBlock.LIT, this.lit).setValue(CoalGeneratorBlock.HOT, this.prev), Block.UPDATE_CLIENTS);
+        }
+
+        profiler.push("cooling_tick");
         if (this.fuelLength == 0) {
             if (this.heat > 0) {
                 this.setHeat(Math.max(0, this.heat - 0.02d));
+                this.curr = this.heat > 0;
             }
         }
-        profiler.push("charge");
-        this.drainPowerToSlot(CHARGE_SLOT);
         profiler.pop();
     }
 
@@ -124,20 +157,17 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.energySource.trySpreadEnergy(level, pos, state);
         profiler.popPush("fuel_reset");
         if (this.fuelLength == 0) {
-            if (!this.consumeFuel()) {
-                if (this.heat > 0) {
-                    return GCMachineStatuses.COOLING_DOWN;
-                } else {
-                    return GCMachineStatuses.NO_FUEL;
-                }
+            MachineStatus status = this.consumeFuel(level, pos, state);
+            if (status != null) {
+                return status;
             }
         }
-        profiler.popPush("fuel_tick");
         if (++this.fuelTime >= this.fuelLength) {
-            this.consumeFuel();
+            this.consumeFuel(level, pos, state);
         }
-        this.setHeat(Math.min(1, this.heat + 0.004));
         profiler.pop();
+
+        this.curr = this.heat == 1.0;
 
         if (this.energyStorage().isFull()) {
             return MachineStatuses.CAPACITOR_FULL;
@@ -148,22 +178,46 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private boolean consumeFuel() {
+    @Override
+    public void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        if (this.fuelLength > 0 && ++this.fuelTime >= this.fuelLength) {
+            this.fuelLength = 0;
+            this.fuelTime = 0;
+            this.curr = true;
+        }
+    }
+
+    @Override
+    public void updateActiveState(Level level, BlockPos pos, BlockState state, boolean active) {
+        this.lit = this.fuelLength > 0;
+        this.prev = this.curr;
+        super.updateActiveState(level, pos, state.setValue(CoalGeneratorBlock.LIT, this.lit).setValue(CoalGeneratorBlock.HOT, this.curr), active);
+    }
+
+    private boolean shouldExtinguish(ServerLevel level, BlockPos pos, BlockState state) {
+        return !level.isBreathable(pos.relative(state.getValue(BlockStateProperties.HORIZONTAL_FACING)))
+                && !level.isBreathable(pos);
+    }
+
+    private MachineStatus consumeFuel(ServerLevel level, BlockPos pos, BlockState state) {
         this.fuelTime = 0;
         this.fuelLength = 0;
 
-        ItemResourceSlot slot = this.itemStorage().slot(INPUT_SLOT);
-        if (slot.getModifications() != this.fuelSlotModCount) {
-            this.fuelSlotModCount = slot.getModifications();
-            int time = FUEL_MAP.getInt(slot.getResource());
-            if (time > 0) {
-                if (slot.consumeOne() != null) {
-                    this.fuelLength = time;
-                    return true;
+        if (!this.shouldExtinguish(level, pos, state)) {
+            ItemResourceSlot slot = this.itemStorage().slot(INPUT_SLOT);
+            if (slot.getModifications() != this.fuelSlotModCount) {
+                this.fuelSlotModCount = slot.getModifications();
+                int time = FUEL_MAP.getInt(slot.getResource());
+                if (time > 0) {
+                    if (slot.consumeOne() != null) {
+                        this.fuelLength = time;
+                        return null;
+                    }
                 }
             }
+            return this.heat > 0 ? GCMachineStatuses.COOLING_DOWN : GCMachineStatuses.NO_FUEL;
         }
-        return false;
+        return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
     }
 
     public int getFuelLength() {
@@ -202,6 +256,8 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity {
         this.fuelLength = tag.getInt(Constant.Nbt.FUEL_LENGTH);
         this.fuelTime = tag.getInt(Constant.Nbt.FUEL_TIME);
         this.heat = tag.getDouble(Constant.Nbt.HEAT);
+
+        this.lit = this.fuelLength > 0;
     }
 
     @Override

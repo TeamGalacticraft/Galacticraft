@@ -34,15 +34,23 @@ import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.StateDefinition;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 
 public class CoalGeneratorBlock extends MachineBlock {
+    public static final BooleanProperty LIT = BlockStateProperties.LIT;
+    public static final BooleanProperty HOT = BooleanProperty.create("hot");
     private static final MapCodec<CoalGeneratorBlock> CODEC = simpleCodec(CoalGeneratorBlock::new);
 
     public CoalGeneratorBlock(Properties settings) {
         super(settings);
+        this.registerDefaultState(super.defaultBlockState()
+                .setValue(LIT, false)
+                .setValue(HOT, false));
     }
 
     @Override
@@ -56,8 +64,14 @@ public class CoalGeneratorBlock extends MachineBlock {
     }
 
     @Override
+    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
+        super.createBlockStateDefinition(stateBuilder);
+        stateBuilder.add(LIT).add(HOT);
+    }
+
+    @Override
     public void animateTick(BlockState state, Level world, BlockPos pos, RandomSource rand) {
-        if (isActive(state)) {
+        if (state.getValue(LIT)) {
             double x = (double) pos.getX() + 0.5D;
             double y = pos.getY();
             double z = (double) pos.getZ() + 0.5D;

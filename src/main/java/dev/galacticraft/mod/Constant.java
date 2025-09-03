@@ -47,7 +47,7 @@ public interface Constant {
 
     int OVERWORLD_SKYPROVIDER_STARTHEIGHT = 200;
     int CLOUD_HEIGHT = 200;
-    int CLOUD_LIMIT = CLOUD_HEIGHT + 100;
+    int CLOUD_LIMIT = CLOUD_HEIGHT + 50;
     int SPACE_HEIGHT = 1000;
     int REENTRY_HEIGHT = 1100;
     int ESCAPE_HEIGHT = 1200;
@@ -60,6 +60,25 @@ public interface Constant {
     @Contract(value = "_, _ -> new", pure = true)
     static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
         return ResourceKey.create(registry, Constant.id(id));
+    }
+
+    String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes_roles.json";
+
+    interface Cape {
+        String EARTH = "earth";
+        String JUPITER = "jupiter";
+        String MARS = "mars";
+        String MERCURY = "mercury";
+        String MOON = "moon";
+        String NEPTUNE = "neptune";
+        String PLAIN = "plain";
+        String SPACE_STATION = "space_station";
+        String SUN = "sun";
+        String URANUS = "uranus";
+        String VENUS = "venus";
+        String DEVELOPER = "developer";
+        String REWOVEN = "rewoven";
+        String DEVELOPER_RED = "developer_red";
     }
 
     interface Block {
@@ -229,6 +248,9 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
+        String UNLIT_SOUL_TORCH = "unlit_soul_torch";
+        String UNLIT_SOUL_WALL_TORCH = "unlit_soul_wall_torch";
+        String UNLIT_SOUL_LANTERN = "unlit_soul_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String WEB_TORCH = "web_torch";
@@ -450,6 +472,8 @@ public interface Constant {
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String MOON_CHEESE_CURD = "moon_cheese_curd";
         String MOON_CHEESE_SLICE = "moon_cheese_slice";
+        String CRACKER = "cracker";
+        String CHEESE_CRACKER = "cheese_cracker";
         String BURGER_BUN = "burger_bun";
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
@@ -634,7 +658,7 @@ public interface Constant {
         int BORDER_EDGE_TOP_LEFT = FastColor.ARGB32.color(255, 40, 40, 40);
         int BORDER_EDGE_BOTTOM_RIGHT = FastColor.ARGB32.color(255, 80, 80, 80);
         int BORDER_GREY = FastColor.ARGB32.color(255, 100, 100, 100);
-        int BORDER_Z = 9900;
+        int BORDER_Z = 799; // Just below text in toasts to prevent clipping
 
         int MAX_SPACE_STATION_NAME_LENGTH = 32;
 
@@ -746,6 +770,16 @@ public interface Constant {
         ResourceLocation VENUS = Constant.id("textures/gui/rocket/venus_rocket_gui.png");
     }
 
+    interface Skybox {
+        ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
+        ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
+        ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
+        ResourceLocation EARTH = id("textures/environment/earth.png");
+        ResourceLocation CLOUDS = id("textures/environment/clouds.png");
+        ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
+    }
+
     interface RecipeViewer {
         ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
         ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
@@ -845,6 +879,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
+        String FALLING_METEOR = "falling_meteor";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
@@ -868,6 +903,9 @@ public interface Constant {
     }
 
     interface EntityTexture {
+        String EVOLVED_SPIDER = "textures/entity/evolved/spider.png";
+        String EVOLVED_SPIDER_EYES = "textures/entity/evolved/spider_eyes.png";
+        String MOON_VILLAGER = "textures/entity/villager/moon_villager.png";
         String GREY = "textures/entity/grey.png";
         String ARCH_GREY = "textures/entity/arch_grey.png";
         String RUMBLER = "textures/entity/rumbler.png";
@@ -876,6 +914,16 @@ public interface Constant {
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
         String SKELETON_BOSS = "textures/entity/skeletonboss.png";
+    }
+
+    interface GearTexture {
+        String OXYGEN_TANKS = "textures/entity/gear/oxygen_tanks.png";
+        String OXYGEN_GEAR = "textures/entity/gear/oxygen_gear.png";
+        String PET_GEAR = "textures/entity/gear/pet_gear.png";
+        String PARROT_GEAR = "textures/entity/gear/parrot_gear.png";
+        String SPIDER_GEAR = "textures/entity/gear/spider_gear.png";
+        String WITCH_GEAR = "textures/entity/gear/witch_gear.png";
+        String ILLAGER_GEAR = "textures/entity/gear/illager_gear.png";
     }
 
     interface TextureCoordinate {

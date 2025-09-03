@@ -417,7 +417,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(BlockTags.WALL_POST_OVERRIDE)
                 .add(GCBlocks.GLOWSTONE_TORCH)
-                .add(GCBlocks.UNLIT_TORCH);
+                .add(GCBlocks.UNLIT_TORCH)
+                .add(GCBlocks.UNLIT_SOUL_TORCH);
 
         this.tag(BlockTags.DRAGON_IMMUNE)
                 .add(GCBlocks.AIR_LOCK_SEAL);
@@ -582,6 +583,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
+                        GCBlocks.UNLIT_SOUL_LANTERN,
                         GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,

@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:galacticraft/eat_moon_cheese_curd",
+  "criteria": {
+    "eat_cheese_cracker": {
+      "conditions": {
+        "item": {
+          "items": "galacticraft:cheese_cracker"
+        }
+      },
+      "trigger": "minecraft:consume_item"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.cheese_and_crackers.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:cheese_cracker"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.cheese_and_crackers.title"
+    }
+  },
+  "requirements": [
+    [
+      "eat_cheese_cracker"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

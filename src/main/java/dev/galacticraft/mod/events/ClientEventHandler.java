@@ -32,9 +32,9 @@ import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.GCBlockOutlineRenderer;
-import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
+import dev.galacticraft.mod.client.render.dimension.SatelliteSkyRenderer;
 import dev.galacticraft.mod.client.sounds.RocketSound;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
@@ -67,7 +67,7 @@ public class ClientEventHandler {
     public static void initializeSatelliteSkybox(Minecraft minecraft, ClientLevel level) {
         Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
         if (holder != null && holder.value().isSatellite()) {
-            DimensionRenderingRegistry.registerSkyRenderer(level.dimension(), AsteroidSkyRenderer.INSTANCE);
+            DimensionRenderingRegistry.registerSkyRenderer(level.dimension(), SatelliteSkyRenderer.INSTANCE);
         }
     }
 

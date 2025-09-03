@@ -37,6 +37,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -84,6 +85,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
+        this.tag(GCItemTags.WRENCHES)
+                .add(GCItems.STANDARD_WRENCH);
+        this.tag(GCItemTags.CUTS_CHEESE)
+                .addTag(ItemTags.SWORDS)
+                .addOptionalTag(GCItemTags.KNIVES);
+
         this.tag(ItemTags.AXES)
                 .add(GCItems.HEAVY_DUTY_AXE)
                 .add(GCItems.DESH_AXE)
@@ -124,6 +131,20 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.HEAVY_DUTY_BOOTS)
                 .add(GCItems.DESH_BOOTS)
                 .add(GCItems.TITANIUM_BOOTS);
+
+        this.tag(GCItemTags.ACID_RESISTANT)
+                .add(Items.DIAMOND)
+                .add(Items.DIAMOND_BLOCK)
+                .add(Items.DIAMOND_AXE)
+                .add(Items.DIAMOND_HOE)
+                .add(Items.DIAMOND_PICKAXE)
+                .add(Items.DIAMOND_SHOVEL)
+                .add(Items.DIAMOND_SWORD)
+                .add(Items.DIAMOND_HELMET)
+                .add(Items.DIAMOND_CHESTPLATE)
+                .add(Items.DIAMOND_LEGGINGS)
+                .add(Items.DIAMOND_BOOTS)
+                .add(Items.DIAMOND_HORSE_ARMOR);
 
         // Thermal armor
         this.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
@@ -180,9 +201,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.FREQUENCY_MODULES)
                 .addTag(GCItemTags.PARACHUTES)
                 .addTag(GCItemTags.SHIELD_CONTROLLERS);
-
-        this.tag(GCItemTags.WRENCHES)
-                .add(GCItems.STANDARD_WRENCH);
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
@@ -409,11 +427,11 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(GCItemTags.CHEESE_FOODS)
                 .add(GCItems.MOON_CHEESE_CURD)
                 .add(GCItems.MOON_CHEESE_SLICE)
-                .add(GCBlocks.MOON_CHEESE_WHEEL.asItem())
-                .add(GCItems.CHEESEBURGER);
+                .add(GCBlocks.MOON_CHEESE_WHEEL.asItem());
         this.tag(ConventionalItemTags.FOODS)
                 .addTag(GCItemTags.CHEESE_FOODS)
-                .addTag(GCItemTags.CANNED_FOODS);
+                .addTag(GCItemTags.CANNED_FOODS)
+                .add(GCItems.CHEESEBURGER);
 
         this.tag(GCItemTags.CANNED_FOODS)
                 .add(GCItems.CANNED_FOOD);

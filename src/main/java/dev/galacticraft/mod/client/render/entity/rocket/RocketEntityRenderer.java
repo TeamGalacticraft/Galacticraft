@@ -27,7 +27,7 @@ import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.mod.content.entity.orbital.RocketEntity;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
@@ -126,7 +126,7 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     }
 
     @Override
-    public ResourceLocation getTextureLocation(RocketEntity var1) {
+    public ResourceLocation getTextureLocation(RocketEntity entity) {
         return InventoryMenu.BLOCK_ATLAS;
     }
 }

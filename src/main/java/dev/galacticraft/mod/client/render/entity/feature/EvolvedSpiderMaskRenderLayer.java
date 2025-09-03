@@ -45,7 +45,7 @@ import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/spider_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.SPIDER_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;
@@ -53,11 +53,9 @@ public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M exten
 
     public EvolvedSpiderMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            this.head = root.getChild(PartNames.HEAD);
-            this.body = root.getChild("body1");
+            this.head = model.root().getChild(PartNames.HEAD);
+            this.body = model.root().getChild("body1");
         } else {
             this.head = null;
             this.mask = null;
@@ -66,18 +64,18 @@ public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M exten
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (this.head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.ZERO);
         }
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        root = modelPartData.bake(64, 32);
-        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
-        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
+        ModelPart modelRoot = partDefinition.bake(64, 32);
+        this.mask = this.head != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override

@@ -27,9 +27,6 @@ import dev.galacticraft.mod.network.s2c.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
-/**
- * Handles client-bound (S2C) packets
- */
 public class GCClientPacketReceiver {
     public static void register() {
         register(BubbleSizePayload.TYPE);
@@ -38,6 +35,7 @@ public class GCClientPacketReceiver {
         register(FootprintPacket.TYPE);
         register(FootprintRemovedPacket.TYPE);
         register(ResetPerspectivePacket.TYPE);
+        register(CapeAssignmentsPacket.TYPE);
     }
 
     public static <P extends S2CPayload> void register(CustomPacketPayload.Type<P> type) {

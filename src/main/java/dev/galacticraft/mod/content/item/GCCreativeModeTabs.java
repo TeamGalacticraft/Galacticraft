@@ -204,10 +204,12 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
+                output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
+                output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
                 // MISC DECOR
                 output.accept(WALKWAY);
@@ -386,6 +388,8 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_CHEESE_CURD);
                 output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(MOON_CHEESE_SLICE);
+                output.accept(CRACKER);
+                output.accept(CHEESE_CRACKER);
                 output.accept(GROUND_BEEF);
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);

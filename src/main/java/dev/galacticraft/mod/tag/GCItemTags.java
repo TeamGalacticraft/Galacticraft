@@ -30,6 +30,8 @@ import net.minecraft.world.item.Item;
 
 public class GCItemTags {
     public static final TagKey<Item> WRENCHES = commonTag("tools/wrench");
+    public static final TagKey<Item> KNIVES = commonTag("tools/knife");
+    public static final TagKey<Item> CUTS_CHEESE = galacticraftTag("cuts_cheese");
 
     public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
     public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
@@ -42,6 +44,8 @@ public class GCItemTags {
     public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+
+    public static final TagKey<Item> ACID_RESISTANT = galacticraftTag("acid_resistant");
 
     public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");

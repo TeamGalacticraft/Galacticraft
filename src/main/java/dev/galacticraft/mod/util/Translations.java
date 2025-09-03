@@ -50,6 +50,7 @@ public interface Translations {
         String MOON = "advancement.galacticraft.moon";
         String PARROT_LANDING = "advancement.galacticraft.parrot_landing";
         String EAT_MOON_CHEESE_CURD = "advancement.galacticraft.eat_moon_cheese_curd";
+        String CHEESE_AND_CRACKERS = "advancement.galacticraft.cheese_and_crackers";
         String CHEESE_TAX = "advancement.galacticraft.cheese_tax";
         String THROW_METEOR_CHUNK = "advancement.galacticraft.throw_meteor_chunk";
         String SPACE_STATION = "advancement.galacticraft.space_station";
@@ -187,6 +188,7 @@ public interface Translations {
         String CANNOT_EAT_WITH_MASK = "config.galacticraft.lifesupport.cannot_eat_with_mask";
 
         String DIFFICULTY = "config.galacticraft.difficulty";
+        String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
     }
@@ -418,6 +420,11 @@ public interface Translations {
         String TRAVELING_TO = "ui.galacticraft.traveling_to";
         String TOTAL_NUTRITION = "ui.galacticraft.total_nutrition";
         String SPACE_STATION_NAME = "ui.galacticraft.space_station_name";
+
+        String CAPE_BUTTON = "ui.options.cape";
+        String CAPES_TITLE = "ui.capes.title";
+        String CAPES_STATE = "galacticraft.capes.state.";
+        String CAPE = "cape.galacticraft.";
     }
 
     interface Boss {

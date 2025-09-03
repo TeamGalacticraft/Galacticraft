@@ -344,9 +344,9 @@ public class GCBlocks {
 
     // MACHINES
     public static final Block CIRCUIT_FABRICATOR = BLOCKS.registerWithItem(Constant.Block.CIRCUIT_FABRICATOR, new ElectricGrillBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.CIRCUIT_FABRICATOR)));
-    public static final Block COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.COMPRESSOR, new CompressorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CompressorBlock.ACTIVE) ? 13 : 0)));
+    public static final Block COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.COMPRESSOR, new CompressorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CompressorBlock.LIT) ? 13 : 0)));
     public static final Block ELECTRIC_COMPRESSOR = BLOCKS.registerWithItem(Constant.Block.ELECTRIC_COMPRESSOR, new ElectricGrillBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ELECTRIC_COMPRESSOR)));
-    public static final Block COAL_GENERATOR = BLOCKS.registerWithItem(Constant.Block.COAL_GENERATOR, new CoalGeneratorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CoalGeneratorBlock.ACTIVE) ? 13 : 0)));
+    public static final Block COAL_GENERATOR = BLOCKS.registerWithItem(Constant.Block.COAL_GENERATOR, new CoalGeneratorBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops().lightLevel(state -> state.getValue(CoalGeneratorBlock.LIT) ? 13 : 0)));
     public static final Block BASIC_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.BASIC_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.BASIC_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), SOLAR_PANEL_PART));
     public static final Block ADVANCED_SOLAR_PANEL = BLOCKS.registerWithItem(Constant.Block.ADVANCED_SOLAR_PANEL, SimpleMultiBlockMachineBlock.create(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ADVANCED_SOLAR_PANEL), MultiBlockUtil.generateSolarPanelParts(), SOLAR_PANEL_PART));
     public static final Block ENERGY_STORAGE_MODULE = BLOCKS.registerWithItem(Constant.Block.ENERGY_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.ENERGY_STORAGE_MODULE)));
@@ -368,13 +368,16 @@ public class GCBlocks {
 
     // TORCHES
     public static final Block GLOWSTONE_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_TORCH, new GlowstoneTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 14).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
-    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block UNLIT_TORCH = BLOCKS.register(Constant.Block.UNLIT_TORCH, new UnlitTorchBlock(Blocks.TORCH, BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
+    public static final Block UNLIT_SOUL_TORCH = BLOCKS.register(Constant.Block.UNLIT_SOUL_TORCH, new UnlitTorchBlock(Blocks.SOUL_TORCH, BlockBehaviour.Properties.of().noCollission().instabreak().lightLevel(blockStatex -> 0).sound(SoundType.WOOD).pushReaction(PushReaction.DESTROY)));
     public static final Block GLOWSTONE_WALL_TORCH = BLOCKS.register(Constant.Block.GLOWSTONE_WALL_TORCH, new GlowstoneWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(GLOWSTONE_TORCH).dropsLike(GLOWSTONE_TORCH)));
-    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
+    public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(Blocks.WALL_TORCH, BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
+    public static final Block UNLIT_SOUL_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_SOUL_WALL_TORCH, new UnlitWallTorchBlock(Blocks.SOUL_WALL_TORCH, BlockBehaviour.Properties.ofFullCopy(UNLIT_SOUL_TORCH).dropsLike(UNLIT_SOUL_TORCH)));
 
     // LANTERNS - Don't use registerWithItem in order for the torches to be before the lanterns
     public static final Block GLOWSTONE_LANTERN = BLOCKS.register(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
-    public static final Block UNLIT_LANTERN = BLOCKS.register(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
+    public static final Block UNLIT_LANTERN = BLOCKS.register(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(Blocks.LANTERN, BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
+    public static final Block UNLIT_SOUL_LANTERN = BLOCKS.register(Constant.Block.UNLIT_SOUL_LANTERN, new UnlitLanternBlock(Blocks.SOUL_LANTERN, BlockBehaviour.Properties.ofFullCopy(Blocks.SOUL_LANTERN).lightLevel(state -> 0)));
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

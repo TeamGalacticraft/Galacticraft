@@ -44,7 +44,7 @@ import net.minecraft.world.entity.monster.Witch;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/witch_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.WITCH_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
     private final @Nullable ModelPart body;
@@ -52,11 +52,9 @@ public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T
 
     public EvolvedWitchMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            this.head = root.getChild(PartNames.HEAD);
-            this.body = root.getChild(PartNames.BODY);
+            this.head = model.root().getChild(PartNames.HEAD);
+            this.body = model.root().getChild(PartNames.BODY);
         } else {
             this.head = null;
             this.mask = null;
@@ -65,19 +63,19 @@ public class EvolvedWitchMaskRenderLayer<T extends Witch, M extends WitchModel<T
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (this.head != null) {
-            PartDefinition maskPartData = modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
+            PartDefinition maskPartData = partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, new CubeDeformation(-0.1F)), PartPose.ZERO);
             maskPartData.addOrReplaceChild(Constant.ModelPartName.ILLAGER_NOSE_COMPARTMENT, CubeListBuilder.create().texOffs(10, 23).addBox(-2.005F, -4.065F, -6.875F, 4, 6, 3, new CubeDeformation(-0.05F)), PartPose.ZERO);
         }
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, -3.0F, 2.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 6).addBox(-2.0F, -3.0F, 2.0F, 4, 6, 8, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        root = modelPartData.bake(64, 32);
-        this.mask = this.head != null ? root.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
-        this.pipe = this.body != null ? root.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
+        ModelPart modelRoot = partDefinition.bake(64, 32);
+        this.mask = this.head != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override
