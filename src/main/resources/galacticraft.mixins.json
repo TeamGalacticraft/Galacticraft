@@ -30,8 +30,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "SpiderMixin",
-    "SurfaceRulesAccessor",
-    "TorchBlockMixin"
+    "SurfaceRulesAccessor"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
