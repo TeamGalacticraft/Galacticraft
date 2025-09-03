@@ -159,8 +159,8 @@ public class MoonBiomes {
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, GCPlacedFeatures.OLIVINE_PILLAR_SPIKE);
 
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
-        MoonBiomes.monsters(spawns, 95, 5, 100);
-        spawns.addSpawn(MobCategory.CREATURE, new MobSpawnSettings.SpawnerData(GCEntityTypes.OLI_GRUB, 1000, 2, 5));
+        spawns.creatureGenerationProbability(0.2f);
+        spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.OLI_GRUB, 1000, 2, 5));
 
         BiomeSpecialEffects effects = new BiomeSpecialEffects.Builder()
                 .fogColor(10518688)
