@@ -35,11 +35,7 @@ import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
-import dev.galacticraft.mod.client.render.entity.feature.OxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.ParrotOxygenGearRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.PetOxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.PetOxygenTanksRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.*;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
@@ -238,6 +234,7 @@ public class GalacticraftClient implements ClientModInitializer {
                 registrationHelper.register(new OxygenMaskRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
                 registrationHelper.register(new OxygenTanksRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
                 registrationHelper.register(new ParrotOxygenGearRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
+                registrationHelper.register(new OliGrubLatchRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
             } else if (entityType == EntityType.WOLF) {
                 registrationHelper.register(new PetOxygenMaskRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));
                 registrationHelper.register(new PetOxygenTanksRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));

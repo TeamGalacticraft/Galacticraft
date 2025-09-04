@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.feature.features.BasaltBeamFeature;
-import dev.galacticraft.mod.world.gen.feature.features.OliGrubEggPlacedFeature;
+import dev.galacticraft.mod.world.gen.feature.features.OliFlyEggPlacedFeature;
 import dev.galacticraft.mod.world.gen.feature.features.OlivineBeamFeature;
 import dev.galacticraft.mod.world.gen.feature.features.PillarSpikeFeature;
 import net.minecraft.core.Registry;
@@ -48,7 +48,7 @@ public class GCFeatures {
     public static void register() {
         OLIVINE_BEAM = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_BEAM_KEY, new OlivineBeamFeature(NoneFeatureConfiguration.CODEC));
         BASALT_BEAM = Registry.register(BuiltInRegistries.FEATURE, BASALT_BEAM_KEY, new BasaltBeamFeature(NoneFeatureConfiguration.CODEC));
-        OLI_GRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLI_GRUB_EGG_KEY, new OliGrubEggPlacedFeature(NoneFeatureConfiguration.CODEC));
+        OLI_GRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLI_GRUB_EGG_KEY, new OliFlyEggPlacedFeature(NoneFeatureConfiguration.CODEC));
         OLIVINE_PILLAR_SPIKE = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_PILLAR_SPIKE_KEY, new PillarSpikeFeature(NoneFeatureConfiguration.CODEC, 100));
     }
 }

@@ -153,6 +153,8 @@ public class GCBlocks {
     public static final Block CRACKED_MOON_BASALT_BRICK_SLAB = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK).strength(2.5F, 6.0F)));
     public static final Block CRACKED_MOON_BASALT_BRICK_WALL = BLOCKS.registerWithItem(Constant.Block.CRACKED_MOON_BASALT_BRICK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(CRACKED_MOON_BASALT_BRICK)));
 
+    public static final Block OLI_FLY_EGG = BLOCKS.registerWithItem(Constant.Block.OLI_FLY_EGG, new OliFlyEggBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SNIFFER_EGG)));
+
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.2F).requiresCorrectToolForDrops()));
     public static final Block MARS_SUB_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SUB_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.6F).requiresCorrectToolForDrops()));

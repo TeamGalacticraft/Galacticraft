@@ -197,6 +197,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, "Cracked Moon Basalt Brick Stairs");
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, "Cracked Moon Basalt Brick Wall");
 
+        this.block(GCBlocks.OLI_FLY_EGG, "Oli Fly Egg");
+
         this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
 
         // MARS NATURAL
@@ -902,6 +904,8 @@ public class GCTranslationProvider extends TranslationProvider {
                 "%s was dissolved by sulfuric acid while trying to escape %s");
         this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines",
                 "%s succumbed to the poison of some vines while trying to escape %s");
+        this.deathBy(GCDamageTypes.OLI_GRUB_DRAIN, "%s was sucked dry",
+                "%s was sucked dry while trying to escape %s");
 
         this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
     }

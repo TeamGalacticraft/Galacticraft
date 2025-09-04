@@ -22,10 +22,12 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.OliGrubEntityModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.entity.OliGrubEntity;
+import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
@@ -33,12 +35,20 @@ import net.minecraft.resources.ResourceLocation;
 public class OliGrubEntityRenderer extends MobRenderer<OliGrubEntity, OliGrubEntityModel<OliGrubEntity>> {
     private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.OLI_GRUB);
 
-    public OliGrubEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new OliGrubEntityModel<>(context.bakeLayer(GCEntityModelLayer.OLI_GRUB)), 0.3f);
+    public OliGrubEntityRenderer(EntityRendererProvider.Context ctx) {
+        super(ctx, new OliGrubEntityModel<>(ctx.bakeLayer(GCEntityModelLayer.OLI_GRUB)), 0.3f);
     }
 
     @Override
     public ResourceLocation getTextureLocation(OliGrubEntity entity) {
         return TEXTURE;
+    }
+
+    @Override
+    public void render(OliGrubEntity grub, float yaw, float partial, PoseStack pose, MultiBufferSource buf, int light) {
+        if (grub.isLatched() && grub.getVehicle() != null) {
+            return;
+        }
+        super.render(grub, yaw, partial, pose, buf, light);
     }
 }

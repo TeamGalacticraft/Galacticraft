@@ -147,6 +147,8 @@ public interface Constant {
         String OLIVINE_BASALT = "olivine_basalt";
         String RICH_OLIVINE_BASALT = "rich_olivine_basalt";
 
+        String OLI_FLY_EGG = "oli_fly_egg";
+
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";
