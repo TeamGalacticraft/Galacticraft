@@ -33,7 +33,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
@@ -76,14 +76,14 @@ public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
         @Override
         public ElectricCompressingDisplay read(CompoundTag tag) {
             ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
-            List<EntryIngredient> inputs = new LinkedList<>();
-            List<EntryIngredient> outputs = new LinkedList<>();
+            List<EntryIngredient> inputs = new ArrayList<>();
+            List<EntryIngredient> outputs = new ArrayList<>();
             for (Tag element : list) {
-                inputs.add(EntryIngredient.read(((ListTag) element)));
+                inputs.add(EntryIngredient.read((ListTag) element));
             }
             list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
-                outputs.add(EntryIngredient.read(((ListTag) element)));
+                outputs.add(EntryIngredient.read((ListTag) element));
             }
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
                 return new ElectricShapedCompressingDisplay(inputs, outputs);

@@ -47,11 +47,11 @@ public class ElectricShapedCompressingDisplay implements ElectricCompressingDisp
         this.input = new ArrayList<>();
         recipe.value().getIngredients().forEach((ingredient) -> {
             for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack.copyWithCount(stack.getCount() * 2)));
+                input.add(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
             }
         });
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
-        this.output = Collections.singletonList(EntryIngredients.of(stack.copyWithCount(stack.getCount() * 2)));
+        this.output = Collections.singletonList(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
         this.processingTime = (int) (recipe.value().getTime() / 1.5F);
     }
 
