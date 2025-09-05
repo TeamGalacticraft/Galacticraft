@@ -50,7 +50,7 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
     }
 
     default int getProcessingTime() {
-        return 10;
+        return 200;
     }
 
     enum Serializer implements DisplaySerializer<DefaultCompressingDisplay> {
