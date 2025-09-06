@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -48,6 +47,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_COMPRESSOR;
 
 @Environment(EnvType.CLIENT)
 public class ElectricCompressingCategory implements DisplayCategory<ElectricCompressingDisplay> {
@@ -60,7 +60,7 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR));
+        return EntryStacks.of(new ItemStack(ELECTRIC_COMPRESSOR));
     }
 
     @Override
@@ -78,10 +78,10 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
         List<Slot> slots = Lists.newArrayList();
 
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
-        widgets.add(new CompressorArrowWidget(new Rectangle(startPoint.x + ELECTRIC_COMPRESSOR_PROGRESS_X, startPoint.y + ELECTRIC_COMPRESSOR_PROGRESS_Y, ELECTRIC_COMPRESSOR_PROGRESS_WIDTH, ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT),
+        widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_COMPRESSOR_PROGRESS_X, startPoint.y + ELECTRIC_COMPRESSOR_PROGRESS_Y, ELECTRIC_COMPRESSOR_PROGRESS_WIDTH, ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT),
                 ELECTRIC_COMPRESSOR_PROGRESS_U, ELECTRIC_COMPRESSOR_PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 12),
-                Component.translatable("category.rei.campfire.time", FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(Translations.RecipeCategory.TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
         // Output

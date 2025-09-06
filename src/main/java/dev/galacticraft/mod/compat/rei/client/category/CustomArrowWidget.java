@@ -33,13 +33,13 @@ import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.RECIPE_VIEWER_DISPLAY_TEXTURE;
 
-public class CompressorArrowWidget extends Arrow {
+public class CustomArrowWidget extends Arrow {
     private Rectangle bounds;
     private int progressU;
     private int progressV;
     private double animationDuration = -1;
 
-    public CompressorArrowWidget(Rectangle bounds, int progressU, int progressV, double animationDurationMS) {
+    public CustomArrowWidget(Rectangle bounds, int progressU, int progressV, double animationDurationMS) {
         this.bounds = bounds;
         this.progressU = progressU;
         this.progressV = progressV;
@@ -66,8 +66,9 @@ public class CompressorArrowWidget extends Arrow {
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         if (this.animationDuration > 0) {
-            int width = Mth.ceil((System.currentTimeMillis() / (this.animationDuration / this.bounds.getWidth()) % (double) this.bounds.getWidth()));
-            graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.getX(), this.getY(), this.progressU, this.progressV, width, this.bounds.getHeight());
+            int quotient = this.bounds.getWidth() + 2;
+            int width = Mth.ceil((System.currentTimeMillis() / (this.animationDuration / quotient) % (double) quotient));
+            graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.getX() - 1, this.getY(), this.progressU - 1, this.progressV, width, this.bounds.getHeight());
         }
     }
 

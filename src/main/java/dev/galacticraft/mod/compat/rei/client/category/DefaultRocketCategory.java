@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
@@ -51,6 +50,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.content.GCBlocks.ROCKET_WORKBENCH;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
@@ -68,7 +68,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.ROCKET_WORKBENCH));
+        return EntryStacks.of(new ItemStack(ROCKET_WORKBENCH));
     }
 
     @Override

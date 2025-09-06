@@ -29,13 +29,17 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultRocketCategory;
+import dev.galacticraft.mod.compat.rei.client.category.ElectricArcFurnaceCategory;
 import dev.galacticraft.mod.compat.rei.client.category.ElectricCompressingCategory;
+import dev.galacticraft.mod.compat.rei.client.category.ElectricFurnaceCategory;
 import dev.galacticraft.mod.compat.rei.client.filler.EmergencyKitRecipeFiller;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricShapelessCompressingDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -60,6 +64,9 @@ import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeF
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 
 import java.util.ArrayList;
@@ -75,14 +82,16 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.add(new DefaultFabricationCategory());
         registry.add(new DefaultCompressingCategory());
         registry.add(new ElectricCompressingCategory());
+        registry.add(new ElectricFurnaceCategory());
+        registry.add(new ElectricArcFurnaceCategory());
         registry.add(new DefaultRocketCategory());
 
         registry.addWorkstations(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GCBlocks.COMPRESSOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING, EntryStacks.of(GCBlocks.ELECTRIC_COMPRESSOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.ROCKET, EntryStacks.of(GCBlocks.ROCKET_WORKBENCH));
-        registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GCBlocks.ELECTRIC_ARC_FURNACE));
-        registry.addWorkstations(BuiltinPlugin.SMELTING, EntryStacks.of(GCBlocks.ELECTRIC_FURNACE));
+        registry.addWorkstations(GalacticraftREIServerPlugin.ELECTRIC_SMELTING, EntryStacks.of(GCBlocks.ELECTRIC_FURNACE));
+        registry.addWorkstations(GalacticraftREIServerPlugin.ELECTRIC_BLASTING, EntryStacks.of(GCBlocks.ELECTRIC_ARC_FURNACE));
         registry.addWorkstations(BuiltinPlugin.FUEL, EntryStacks.of(GCBlocks.COMPRESSOR));
 
         for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {
@@ -97,6 +106,8 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, DefaultShapelessCompressingDisplay::new);
         registry.registerRecipeFiller(ShapedCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, ElectricShapedCompressingDisplay::new);
         registry.registerRecipeFiller(ShapelessCompressingRecipe.class, GCRecipes.COMPRESSING_TYPE, ElectricShapelessCompressingDisplay::new);
+        registry.registerRecipeFiller(SmeltingRecipe.class, RecipeType.SMELTING, ElectricFurnaceDisplay::new);
+        registry.registerRecipeFiller(BlastingRecipe.class, RecipeType.BLASTING, ElectricArcFurnaceDisplay::new);
         registry.registerRecipeFiller(RocketRecipe.class, GCRecipes.ROCKET_TYPE, DefaultRocketDisplay::new);
 
         for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {

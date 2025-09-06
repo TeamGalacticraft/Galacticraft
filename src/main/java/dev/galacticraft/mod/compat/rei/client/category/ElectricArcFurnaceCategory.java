@@ -23,8 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -45,62 +44,47 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_FURNACE;
 
 @Environment(EnvType.CLIENT)
-public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
+public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFurnaceDisplay> {
     private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
-    public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+    public CategoryIdentifier<? extends ElectricArcFurnaceDisplay> getCategoryIdentifier() {
+        return GalacticraftREIServerPlugin.ELECTRIC_BLASTING;
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
+        return EntryStacks.of(new ItemStack(ELECTRIC_FURNACE));
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
+        return Component.translatable(Translations.RecipeCategory.ELECTRIC_ARC_FURNACE);
     }
 
     @Override
-    public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - CIRCUIT_FABRICATOR_WIDTH / 2, bounds.getCenterY() - CIRCUIT_FABRICATOR_HEIGHT / 2);
+    public @NotNull List<Widget> setupDisplay(ElectricArcFurnaceDisplay recipeDisplay, Rectangle bounds) {
+        final Point startPoint = new Point(bounds.getCenterX() - ELECTRIC_ARC_FURNACE_WIDTH / 2, bounds.y + 14);
 
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ELECTRIC_ARC_FURNACE_U, ELECTRIC_FURNACE_V, ELECTRIC_ARC_FURNACE_WIDTH, ELECTRIC_FURNACE_HEIGHT));
 
-        double processingTime = recipeDisplay.getProcessingTime();
-        widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.TIME, FORMAT.format(processingTime / 20.0D))).noShadow().color(0xFF404040, 0xFFBBBBBB));
-
-        // Diamond ingredients
-        // Silicon
-        // Silicon
-        // Redstone
-        // User ingredients
-        // Output
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + DIAMOND_X, startPoint.y + DIAMOND_Y)).entries(recipeDisplay.getInputEntries().get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_1, startPoint.y + SILICON_Y_1)).entries(recipeDisplay.getInputEntries().get(1)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_2, startPoint.y + SILICON_Y_2)).entries(recipeDisplay.getInputEntries().get(2)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).entries(recipeDisplay.getInputEntries().get(3)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).entries(recipeDisplay.getInputEntries().get(4)));
-
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + WAFER_X, startPoint.y + WAFER_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
+        widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_ARC_FURNACE_PROGRESS_X, startPoint.y + ELECTRIC_FURNACE_PROGRESS_Y, ELECTRIC_ARC_FURNACE_PROGRESS_WIDTH, ELECTRIC_FURNACE_PROGRESS_HEIGHT), ELECTRIC_ARC_FURNACE_PROGRESS_U, ELECTRIC_FURNACE_PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
+                Component.translatable(Translations.RecipeCategory.TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_FURNACE_INPUT_X, startPoint.y + ELECTRIC_FURNACE_INPUT_Y)).entries(recipeDisplay.getInputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_ARC_FURNACE_OUTPUT_X, startPoint.y + ELECTRIC_FURNACE_OUTPUT_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
     @Override
     public int getDisplayHeight() {
-        return CIRCUIT_FABRICATOR_HEIGHT + 8;
-    }
-
-    @Override
-    public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return CIRCUIT_FABRICATOR_WIDTH + 8;
+        return 49;
     }
 
     @Override
