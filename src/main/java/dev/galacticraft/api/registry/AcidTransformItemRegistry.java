@@ -22,82 +22,82 @@
 
 package dev.galacticraft.api.registry;
 
-import dev.galacticraft.impl.internal.registry.ExtinguishableBlockRegistryImpl;
-import net.fabricmc.fabric.api.util.Block2ObjectMap;
-import net.minecraft.core.BlockPos;
+import dev.galacticraft.impl.internal.registry.AcidTransformItemRegistryImpl;
+import net.fabricmc.fabric.api.util.Item2ObjectMap;
 import net.minecraft.tags.TagKey;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Consumer;
 import java.util.function.Function;
 
-public interface ExtinguishableBlockRegistry extends Block2ObjectMap<ExtinguishableBlockRegistry.Entry> {
-    ExtinguishableBlockRegistry INSTANCE = new ExtinguishableBlockRegistryImpl();
+public interface AcidTransformItemRegistry extends Item2ObjectMap<AcidTransformItemRegistry.Entry> {
+    AcidTransformItemRegistry INSTANCE = new AcidTransformItemRegistryImpl();
 
-    default void add(Block block, BlockState transform) {
-        this.add(block, state -> transform);
+    default void add(ItemLike item, ItemStack transform) {
+        this.add(item.asItem(), state -> transform);
     }
 
-    default void add(Block block, Function<BlockState, BlockState> transform) {
-        this.add(block, new Entry(transform));
+    default void add(ItemLike item, Function<ItemStack, ItemStack> transform) {
+        this.add(item.asItem(), new Entry(transform));
     }
 
-    default void add(Block block, BlockState transform, Consumer<Context> callback) {
-        this.add(block, state -> transform, callback);
+    default void add(ItemLike item, ItemStack transform, Consumer<Context> callback) {
+        this.add(item.asItem(), state -> transform, callback);
     }
 
-    default void add(Block block, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
-        this.add(block, new Entry(transform, callback));
+    default void add(ItemLike item, Function<ItemStack, ItemStack> transform, Consumer<Context> callback) {
+        this.add(item.asItem(), new Entry(transform, callback));
     }
 
-    default void add(TagKey<Block> tag, BlockState transform) {
+    default void add(TagKey<Item> tag, ItemStack transform) {
         this.add(tag, state -> transform);
     }
 
-    default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform) {
+    default void add(TagKey<Item> tag, Function<ItemStack, ItemStack> transform) {
         this.add(tag, new Entry(transform));
     }
 
-    default void add(TagKey<Block> tag, BlockState transform, Consumer<Context> callback) {
+    default void add(TagKey<Item> tag, ItemStack transform, Consumer<Context> callback) {
         this.add(tag, state -> transform, callback);
     }
 
-    default void add(TagKey<Block> tag, Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+    default void add(TagKey<Item> tag, Function<ItemStack, ItemStack> transform, Consumer<Context> callback) {
         this.add(tag, new Entry(transform, callback));
     }
 
-    default @Nullable BlockState transform(BlockState oldState) {
-        Entry entry = this.get(oldState.getBlock());
+    default @Nullable ItemStack transform(ItemStack original) {
+        Entry entry = this.get(original.getItem());
         if (entry != null) {
-            BlockState newState = entry.transform(oldState);
-            return oldState != newState ? newState : null;
+            ItemStack itemStack = entry.transform(original);
+            return original != itemStack ? itemStack : null;
         }
         return null;
     }
 
     final class Entry {
-        private final Function<BlockState, BlockState> transform;
+        private final Function<ItemStack, ItemStack> transform;
         private final Consumer<Context> callback;
 
-        public Entry(Function<BlockState, BlockState> transform) {
+        public Entry(Function<ItemStack, ItemStack> transform) {
             this.transform = transform;
             this.callback = context -> {};
         }
 
-        public Entry(Function<BlockState, BlockState> transform, Consumer<Context> callback) {
+        public Entry(Function<ItemStack, ItemStack> transform, Consumer<Context> callback) {
             this.transform = transform;
             this.callback = callback;
         }
 
-        public Function<BlockState, BlockState> getTransform() {
+        public Function<ItemStack, ItemStack> getTransform() {
             return this.transform;
         }
 
-        public BlockState transform(BlockState state) {
-            return this.transform.apply(state);
+        public ItemStack transform(ItemStack itemStack) {
+            return this.transform.apply(itemStack);
         }
 
         public Consumer<Context> getCallback() {
@@ -109,5 +109,5 @@ public interface ExtinguishableBlockRegistry extends Block2ObjectMap<Extinguisha
         }
     }
 
-    public record Context(Level level, BlockPos pos, BlockState state) {}
+    public record Context(ItemEntity itemEntity, ItemStack itemStack) {}
 }

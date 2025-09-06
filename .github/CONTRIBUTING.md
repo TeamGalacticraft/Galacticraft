@@ -25,10 +25,27 @@ or the GitHub Actions build number (e.g., #253) in your report.
   * This helps us figure out when a bug may have been introduced,
   or if there are any commit(s) that may have already fixed this bug. 
 
+### Testing with REI/JEI
+
+You can easily select between REI and JEI when running Galacticraft in a development environment by providing additional arguments to gradlew.
+
+REI only: `./gradlew runClient [-Prei=true] [-Pjei=false]`
+
+JEI only: `./gradlew runClient [-Prei=false] -Pjei=true`
+
+REI and JEI: `./gradlew runClient -Prei=true -Pjei=true`
+
+Neither: `./gradlew runClient -Prei=false [-Pjei=false]`
+
+*Square brackets indicate optional arguments which have no effect on the behaviour.* \
+*Use `./gradlew.bat` instead of `./gradlew` on Windows.*
+
 ## Translations
 Translations are submitted through [Crowdin][crowdin].
 If your language is missing, or you're having trouble accessing the site,
 please get in touch on our [Discord server][discord].
+
+Also consult the [Minecraft Official Glossary][glossary] for information about capitalization, transcription, and which words should not be translated, or only partially translated.
 
 ## Contributing Code
 
@@ -94,6 +111,7 @@ However, we tend to squash-merge pull requests, so you are not required to do th
 [actions]: https://github.com/TeamGalacticraft/Galacticraft/actions/workflows/build.yml?query=branch%3Amain+is%3Asuccess
 [conventional commits]: https://www.conventionalcommits.org
 [crowdin]: https://teamgalacticraft.crowdin.com/galacticraft
+[glossary]: https://docs.google.com/spreadsheets/d/1xxDvR2MrPUaxXwNfn-oJX-fBerEsZkfo/edit?usp=sharing&ouid=114924866615793547606&rtpof=true&sd=true
 [datagen]: /src/main/java/dev/galacticraft/mod/data
 [discord]: https://discord.gg/n3QqhMYyFK
 [generated]: /src/main/generated

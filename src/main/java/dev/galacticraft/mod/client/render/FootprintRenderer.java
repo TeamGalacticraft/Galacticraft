@@ -71,11 +71,6 @@ public class FootprintRenderer {
 
         RenderSystem.enableBlend();
         RenderSystem.blendFuncSeparate(GlStateManager.SourceFactor.SRC_ALPHA, GlStateManager.DestFactor.ONE_MINUS_SRC_ALPHA, GlStateManager.SourceFactor.ONE, GlStateManager.DestFactor.ZERO);
-        Tesselator tessellator = Tesselator.getInstance();
-        float f7 = 1.0F;
-        float f6 = 0.0F;
-        float f8 = 0.0F;
-        float f9 = 1.0F;
 
 //        RenderSystem.alphaFunc(GL11.GL_GREATER, 0.1F); // This probably needs a custom shader?
 //        float lightMapSaveX = OpenGlHelper.lastBrightnessX;
@@ -96,29 +91,27 @@ public class FootprintRenderer {
 //                OpenGlHelper.setLightmapTextureCoords(OpenGlHelper.lightmapTexUnit, (float) j, (float) k);
 //            }
 
-            float ageScale = footprint.age / (float) Footprint.MAX_AGE;
-            BufferBuilder buffer = tessellator.begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            float ageScale = 1.0F - footprint.age / (float) Footprint.MAX_AGE;
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
+            RenderSystem.setShaderColor(ageScale, ageScale, ageScale, ageScale);
 
             Vec3 cameraPos = context.camera().getPosition();
-            float x = (float) (footprint.position.x - cameraPos.x);
-            float y = (float) (footprint.position.y - cameraPos.y) + 0.01F * (1.01F - ageScale);
-            float z = (float) (footprint.position.z - cameraPos.z);
+            poseStack.translate(
+                    footprint.position.x - cameraPos.x,
+                    footprint.position.y - cameraPos.y + 0.01F * ageScale,
+                    footprint.position.z - cameraPos.z
+            );
 
-            poseStack.translate(x, y, z);
-
-            RenderSystem.setShaderColor(1F - ageScale, 1F - ageScale, 1F - ageScale, 1F - ageScale);
-            float footprintScale = 0.5F;
             Matrix4f last = poseStack.last().pose();
-            buffer
-                    .addVertex(last, Mth.sin((45 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((45 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
-                    .setUv(f7, f9)
-                    .addVertex(last, Mth.sin((135 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((135 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
-                    .setUv(f7, f8)
-                    .addVertex(last, Mth.sin((225 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((225 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
-                    .setUv(f6, f8)
-                    .addVertex(last, Mth.sin((315 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale, 0, Mth.cos((315 - footprint.rotation) * Mth.DEG_TO_RAD) * footprintScale)
-                    .setUv(f6, f9);
+            BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
+            float footprintScale = 0.5F;
+            float rotation = 45.0F * Mth.DEG_TO_RAD - footprint.rotation;
+            for (int i = 3; i >= 0; i--) {
+                buffer = (BufferBuilder) buffer
+                        .addVertex(last, Mth.sin(rotation) * footprintScale, 0, Mth.cos(rotation) * footprintScale)
+                        .setUv(i / 2, (i == 0 || i == 3) ? 1 : 0);
+                rotation += Mth.HALF_PI;
+            }
 
             BufferUploader.drawWithShader(buffer.buildOrThrow());
             poseStack.popPose();
