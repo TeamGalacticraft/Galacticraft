@@ -44,7 +44,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
-import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_FURNACE;
+import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_ARC_FURNACE;
 
 @Environment(EnvType.CLIENT)
 public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFurnaceDisplay> {
@@ -57,7 +57,7 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(ELECTRIC_FURNACE));
+        return EntryStacks.of(new ItemStack(ELECTRIC_ARC_FURNACE));
     }
 
     @Override
