@@ -690,28 +690,29 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         float turnFactor = 2.0F;
         float angle = 180.0F;
 
-        LaunchStage stage = getLaunchStage();
+        LaunchStage stage = this.getLaunchStage();
 
-        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal())
-            onJump();
+        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal()) {
+            this.onJump();
+        }
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (up) {
-                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
+                this.setXRot(Mth.clamp(this.getXRot() - 0.5F * turnFactor, -angle, angle));
             } else if (down) {
-                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
+                this.setXRot(Mth.clamp(this.getXRot() + 0.5F * turnFactor, -angle, angle));
             }
 
             if (left) {
-                setYRot(Mth.wrapDegrees(getYRot() - turnFactor));
+                this.setYRot(this.getYRot() - turnFactor);
             } else if (right) {
-                setYRot(Mth.wrapDegrees(getYRot() + turnFactor));
+                this.setYRot(this.getYRot() + turnFactor);
             }
 
-            if (jumping) {
-                setZRot(Mth.wrapDegrees(getZRot() - turnFactor));
-            } else if (shiftKeyDown) {
-                setZRot(Mth.wrapDegrees(getZRot() + turnFactor));
+            if (jumping && !left) {
+                this.setZRot(this.getZRot() - turnFactor);
+            } else if (shiftKeyDown && !right) {
+                this.setZRot(this.getZRot() + turnFactor);
             }
         }
     }

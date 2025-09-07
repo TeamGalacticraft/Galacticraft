@@ -38,6 +38,7 @@ import net.minecraft.core.Holder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
 import net.minecraft.world.inventory.InventoryMenu;
+import org.joml.Quaternionf;
 
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
     public RocketEntityRenderer(EntityRendererProvider.Context context) {
@@ -49,18 +50,13 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, partialTick, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
-        float rotationOffset = 1.6F;
-        matrices.translate(0, rotationOffset, 0);
         if (entity.getLaunchStage() == LaunchStage.IGNITED) {
             matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
         }
-        float pitch = entity.getViewXRot(partialTick);
-        float roll = -entity.getViewZRot(partialTick);
-        // TODO: Fix roll rotation when the rocket is pointing downwards
-        matrices.mulPose(Axis.YN.rotationDegrees(180.0F + entity.getViewYRot(partialTick) - roll));
-        matrices.mulPose(Axis.XN.rotationDegrees(pitch * Mth.cos(roll * Mth.DEG_TO_RAD)));
-        matrices.mulPose(Axis.ZN.rotationDegrees(pitch * Mth.sin(roll * Mth.DEG_TO_RAD)));
-        matrices.translate(0, -rotationOffset, 0);
+        Quaternionf rotation = new Quaternionf();
+        rotation.rotateYXZ(-entity.getViewYRot(partialTick) * Mth.DEG_TO_RAD, entity.getViewXRot(partialTick) * Mth.DEG_TO_RAD, 0);
+        rotation.mul(Axis.YN.rotationDegrees(180.0F + entity.getViewZRot(partialTick)));
+        matrices.rotateAround(rotation, 0.0F, 1.6F, 0.0F);
 
         float wobbleTicks = (float) entity.getHurtTime() - partialTick;
         float wobbleStrength = entity.getDamage() - partialTick;
