@@ -111,7 +111,7 @@ public class GCEntityTypes {
             .sized(0.75F, 0.75F)
             .clientTrackingRange(8)
             .build());
-    public static final EntityType<OliGrubEntity> OLI_GRUB = ENTITIES.register(Entity.OLI_GRUB, EntityType.Builder.of(OliGrubEntity::new, MobCategory.CREATURE)
+    public static final EntityType<OliGrubEntity> OLIGRUB = ENTITIES.register(Entity.OLIGRUB, EntityType.Builder.of(OliGrubEntity::new, MobCategory.CREATURE)
             .sized(0.75F, 0.375F)
             .clientTrackingRange(8)
             .build());
@@ -192,7 +192,7 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(GAZER, GazerEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(RUMBLER, RumblerEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(COMET_CUBE, CometCubeEntity.createAttributes());
-        FabricDefaultAttributeRegistry.register(OLI_GRUB, OliGrubEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(OLIGRUB, OliGrubEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(GREY, GreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));

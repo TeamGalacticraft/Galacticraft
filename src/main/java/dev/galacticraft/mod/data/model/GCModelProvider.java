@@ -807,7 +807,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.GAZER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.RUMBLER_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.COMET_CUBE_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
-        generator.generateFlatItem(GCItems.OLI_GRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.OLIGRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
     }

@@ -1,5 +1,5 @@
 {
   "exhaustion": 0.1,
-  "message_id": "oli_grub_drain",
+  "message_id": "oligrub_drain",
   "scaling": "when_caused_by_living_non_player"
 }

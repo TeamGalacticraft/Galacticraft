@@ -298,7 +298,7 @@ public class GCItems {
     public static final Item GAZER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.GAZER, new SpawnEggItem(GCEntityTypes.GAZER, 0xdbdddb, 0x5c5c5c, new Item.Properties()));
     public static final Item RUMBLER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.RUMBLER, new SpawnEggItem(GCEntityTypes.RUMBLER, 0x5c5c5c, 0x36383e, new Item.Properties()));
     public static final Item COMET_CUBE_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.COMET_CUBE, new SpawnEggItem(GCEntityTypes.COMET_CUBE, 0xd5d8d8, 0x92b9fe, new Item.Properties()));
-    public static final Item OLI_GRUB_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.OLI_GRUB, new SpawnEggItem(GCEntityTypes.OLI_GRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties()));
+    public static final Item OLIGRUB_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.OLIGRUB, new SpawnEggItem(GCEntityTypes.OLIGRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties()));
     public static final Item GREY_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.GREY, new SpawnEggItem(GCEntityTypes.GREY, 0x656463, 0x769e41, new Item.Properties()));
     public static final Item ARCH_GREY_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.ARCH_GREY, new SpawnEggItem(GCEntityTypes.ARCH_GREY, 0x656463, 0x2d8563, new Item.Properties()));
 
@@ -324,7 +324,7 @@ public class GCItems {
         DispenserBlock.registerBehavior(GAZER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(RUMBLER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(COMET_CUBE_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
-        DispenserBlock.registerBehavior(OLI_GRUB_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(OLIGRUB_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(GREY_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(ARCH_GREY_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
     }

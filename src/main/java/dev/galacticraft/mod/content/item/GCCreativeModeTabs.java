@@ -529,7 +529,7 @@ public class GCCreativeModeTabs {
             content.addAfter(ItemStack.EMPTY, GAZER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, RUMBLER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, COMET_CUBE_SPAWN_EGG);
-            content.addAfter(ItemStack.EMPTY, OLI_GRUB_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, OLIGRUB_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, GREY_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, ARCH_GREY_SPAWN_EGG);
         });

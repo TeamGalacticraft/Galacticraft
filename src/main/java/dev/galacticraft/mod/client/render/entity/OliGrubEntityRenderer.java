@@ -33,10 +33,10 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class OliGrubEntityRenderer extends MobRenderer<OliGrubEntity, OliGrubEntityModel<OliGrubEntity>> {
-    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.OLI_GRUB);
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.OLIGRUB);
 
     public OliGrubEntityRenderer(EntityRendererProvider.Context ctx) {
-        super(ctx, new OliGrubEntityModel<>(ctx.bakeLayer(GCEntityModelLayer.OLI_GRUB)), 0.3f);
+        super(ctx, new OliGrubEntityModel<>(ctx.bakeLayer(GCEntityModelLayer.OLIGRUB)), 0.3f);
     }
 
     @Override

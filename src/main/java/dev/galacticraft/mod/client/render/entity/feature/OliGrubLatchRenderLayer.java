@@ -50,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
  * Renders a latched OliGrub on the player's limb with manual per-limb offsets/rotations.
  */
 public class OliGrubLatchRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation GRUB_TEXTURE = Constant.id(Constant.EntityTexture.OLI_GRUB);
+    private static final ResourceLocation GRUB_TEXTURE = Constant.id(Constant.EntityTexture.OLIGRUB);
     private final OliGrubEntityModel<OliGrubEntity> grubModel;
 
     private final @Nullable ModelPart head;
@@ -65,7 +65,7 @@ public class OliGrubLatchRenderLayer<T extends LivingEntity, M extends EntityMod
     public OliGrubLatchRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
         this.grubModel = new OliGrubEntityModel<>(Minecraft.getInstance().getEntityModels()
-                .bakeLayer(GCEntityModelLayer.OLI_GRUB));
+                .bakeLayer(GCEntityModelLayer.OLIGRUB));
 
         ModelPart h = null, b = null, ra = null, la = null, rl = null, ll = null;
         var model = context.getModel();

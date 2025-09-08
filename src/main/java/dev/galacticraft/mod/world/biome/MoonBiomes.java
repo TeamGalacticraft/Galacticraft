@@ -155,11 +155,11 @@ public class MoonBiomes {
 
         // Add features
         MoonBiomes.addDefaultMoonOres(generation);
-        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, GCPlacedFeatures.OLI_GRUB_EGG);
+        generation.addFeature(GenerationStep.Decoration.VEGETAL_DECORATION, GCPlacedFeatures.OLIGRUB_EGG);
         generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, GCPlacedFeatures.OLIVINE_PILLAR_SPIKE);
 
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
-        spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.OLI_GRUB, 1000, 2, 5));
+        spawns.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.OLIGRUB, 1000, 2, 5));
 
         BiomeSpecialEffects effects = new BiomeSpecialEffects.Builder()
                 .fogColor(10518688)

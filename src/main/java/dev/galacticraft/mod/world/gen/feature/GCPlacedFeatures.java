@@ -43,7 +43,7 @@ public class GCPlacedFeatures {
     public static final ResourceKey<PlacedFeature> OIL_LAKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oil_lake"));
 
     // --- OLIVINE BIOME ---
-    public static final ResourceKey<PlacedFeature> OLI_GRUB_EGG = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oli_grub_egg"));
+    public static final ResourceKey<PlacedFeature> OLIGRUB_EGG = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oligrub_egg"));
     public static final ResourceKey<PlacedFeature> OLIVINE_PILLAR_SPIKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("olivine_pillar_spike"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
@@ -56,8 +56,8 @@ public class GCPlacedFeatures {
                 BiomeFilter.biome()
         )));
 
-        context.register(OLI_GRUB_EGG, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLI_GRUB_EGG),
+        context.register(OLIGRUB_EGG, new PlacedFeature(
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLIGRUB_EGG),
                 List.of(
                         RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),

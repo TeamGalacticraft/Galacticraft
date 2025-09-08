@@ -46,7 +46,7 @@
     ],
     [],
     [
-      "galacticraft:oli_grub_egg"
+      "galacticraft:oligrub_egg"
     ]
   ],
   "has_precipitation": false,
@@ -58,7 +58,7 @@
     "misc": [],
     "monster": [
       {
-        "type": "galacticraft:oli_grub",
+        "type": "galacticraft:oligrub",
         "maxCount": 5,
         "minCount": 2,
         "weight": 1000

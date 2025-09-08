@@ -138,7 +138,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.GAZER, GazerEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.RUMBLER, RumblerEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.COMET_CUBE, CometCubeEntityRenderer::new);
-        EntityRendererRegistry.register(GCEntityTypes.OLI_GRUB, OliGrubEntityRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.OLIGRUB, OliGrubEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.GREY, GreyEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ARCH_GREY, GreyEntityRenderer::arch);
         EntityRendererRegistry.register(GCEntityTypes.FALLING_METEOR, FallingMeteorRenderer::new);

@@ -878,7 +878,7 @@ public interface Constant {
         String GREY = "grey";
         String ARCH_GREY = "arch_grey";
         String RUMBLER = "rumbler";
-        String OLI_GRUB = "oli_grub";
+        String OLIGRUB = "oligrub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
         String FALLING_METEOR = "falling_meteor";
@@ -899,7 +899,7 @@ public interface Constant {
         String GREY = "grey_spawn_egg";
         String ARCH_GREY = "arch_grey_spawn_egg";
         String RUMBLER = "rumbler_spawn_egg";
-        String OLI_GRUB = "oli_grub_spawn_egg";
+        String OLIGRUB = "oligrub_spawn_egg";
         String COMET_CUBE = "comet_cube_spawn_egg";
         String GAZER = "gazer_spawn_egg";
     }
@@ -911,7 +911,7 @@ public interface Constant {
         String GREY = "textures/entity/grey.png";
         String ARCH_GREY = "textures/entity/arch_grey.png";
         String RUMBLER = "textures/entity/rumbler.png";
-        String OLI_GRUB = "textures/entity/oli_grub.png";
+        String OLIGRUB = "textures/entity/oligrub.png";
         String COMET_CUBE = "textures/entity/comet_cube.png";
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";

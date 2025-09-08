@@ -42,7 +42,7 @@ public class GCDamageTypeTagProvider extends FabricTagProvider<DamageType> {
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(DamageTypeTags.BYPASSES_ARMOR)
                 .add(GCDamageTypes.SUFFOCATION)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
 
         this.tag(DamageTypeTags.BYPASSES_WOLF_ARMOR)
                 .add(GCDamageTypes.SUFFOCATION);
@@ -56,13 +56,13 @@ public class GCDamageTypeTagProvider extends FabricTagProvider<DamageType> {
         this.tag(DamageTypeTags.NO_IMPACT)
                 .add(GCDamageTypes.VINE_POISON)
                 .add(GCDamageTypes.SUFFOCATION)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN)
+                .add(GCDamageTypes.OLIGRUB_DRAIN)
                 .add(GCDamageTypes.SULFURIC_ACID);
 
         this.tag(DamageTypeTags.NO_KNOCKBACK)
                 .add(GCDamageTypes.VINE_POISON)
                 .add(GCDamageTypes.SUFFOCATION)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN)
+                .add(GCDamageTypes.OLIGRUB_DRAIN)
                 .add(GCDamageTypes.SULFURIC_ACID);
 
         this.tag(DamageTypeTags.ALWAYS_KILLS_ARMOR_STANDS)
@@ -82,18 +82,18 @@ public class GCDamageTypeTagProvider extends FabricTagProvider<DamageType> {
                 .add(GCDamageTypes.METEOR_STRIKE);
 
         this.tag(DamageTypeTags.BYPASSES_COOLDOWN)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
 
         this.tag(DamageTypeTags.BYPASSES_RESISTANCE)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
 
         this.tag(DamageTypeTags.BYPASSES_EFFECTS)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
 
         this.tag(DamageTypeTags.BYPASSES_SHIELD)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
 
         this.tag(DamageTypeTags.BYPASSES_ENCHANTMENTS)
-                .add(GCDamageTypes.OLI_GRUB_DRAIN);
+                .add(GCDamageTypes.OLIGRUB_DRAIN);
     }
 }

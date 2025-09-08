@@ -37,18 +37,18 @@ import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConf
 public class GCFeatures {
     public static Feature<NoneFeatureConfiguration> OLIVINE_BEAM;
     public static Feature<NoneFeatureConfiguration> BASALT_BEAM;
-    public static Feature<NoneFeatureConfiguration> OLI_GRUB_EGG;
+    public static Feature<NoneFeatureConfiguration> OLIGRUB_EGG;
     public static Feature<NoneFeatureConfiguration> OLIVINE_PILLAR_SPIKE;
 
     public static final ResourceKey<Feature<?>> OLIVINE_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("olivine_beam"));
     public static final ResourceKey<Feature<?>> BASALT_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("basalt_beam"));
-    public static final ResourceKey<Feature<?>> OLI_GRUB_EGG_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("oli_grub_egg"));
+    public static final ResourceKey<Feature<?>> OLIGRUB_EGG_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("oligrub_egg"));
     public static final ResourceKey<Feature<?>> OLIVINE_PILLAR_SPIKE_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("olivine_pillar_spike"));
 
     public static void register() {
         OLIVINE_BEAM = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_BEAM_KEY, new OlivineBeamFeature(NoneFeatureConfiguration.CODEC));
         BASALT_BEAM = Registry.register(BuiltInRegistries.FEATURE, BASALT_BEAM_KEY, new BasaltBeamFeature(NoneFeatureConfiguration.CODEC));
-        OLI_GRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLI_GRUB_EGG_KEY, new OliFlyEggPlacedFeature(NoneFeatureConfiguration.CODEC));
+        OLIGRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLIGRUB_EGG_KEY, new OliFlyEggPlacedFeature(NoneFeatureConfiguration.CODEC));
         OLIVINE_PILLAR_SPIKE = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_PILLAR_SPIKE_KEY, new PillarSpikeFeature(NoneFeatureConfiguration.CODEC, 100));
     }
 }

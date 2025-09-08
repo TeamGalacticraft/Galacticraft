@@ -204,7 +204,7 @@ public class OliGrubEntity extends Animal {
             latchTicks++;
             if (latchTicks >= nextDrainTick) {
                 var src = this.level().damageSources().source(
-                        GCDamageTypes.OLI_GRUB_DRAIN,
+                        GCDamageTypes.OLIGRUB_DRAIN,
                         this, this
                 );
                 mob.hurt(src, 1.0F);

@@ -624,7 +624,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GAZER_SPAWN_EGG, "Gazer Spawn Egg");
         this.item(GCItems.RUMBLER_SPAWN_EGG, "Rumbler Spawn Egg");
         this.item(GCItems.COMET_CUBE_SPAWN_EGG, "Comet Cube Spawn Egg");
-        this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
+        this.item(GCItems.OLIGRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
         this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
     }
@@ -810,7 +810,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.LANDER, "Lander");
         this.entity(GCEntityTypes.MOON_VILLAGER, "Moon Villager");
         this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".none", "Moon Villager");
-        this.entity(GCEntityTypes.OLI_GRUB, "Oli Grub");
+        this.entity(GCEntityTypes.OLIGRUB, "Oli Grub");
         this.entity(GCEntityTypes.PARACHEST, "Parachest");
         this.entity(GCEntityTypes.ROCKET, "Rocket");
         this.entity(GCEntityTypes.RUMBLER, "Rumbler");
@@ -904,7 +904,7 @@ public class GCTranslationProvider extends TranslationProvider {
                 "%s was dissolved by sulfuric acid while trying to escape %s");
         this.deathBy(GCDamageTypes.VINE_POISON, "%s succumbed to the poison of some vines",
                 "%s succumbed to the poison of some vines while trying to escape %s");
-        this.deathBy(GCDamageTypes.OLI_GRUB_DRAIN, "%s was sucked dry",
+        this.deathBy(GCDamageTypes.OLIGRUB_DRAIN, "%s was sucked dry",
                 "%s was sucked dry while trying to escape %s");
 
         this.add(Boss.SKELETON_BOSS_DESPAWN, "Boss despawned, don't leave the boss room while fighting! Re-enter room to respawn boss.");
