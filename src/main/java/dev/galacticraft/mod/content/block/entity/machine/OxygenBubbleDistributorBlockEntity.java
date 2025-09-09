@@ -114,13 +114,10 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
     // todo: drop reverse list, track indices instead.
     private final SortedPosList sealedListeners;
     private final ReverseSortedPosList unsealedListeners;
-    private final SortedPosList positions;
-
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
         this.sealedListeners = new SortedPosList(pos);
-        this.positions = new SortedPosList(pos);
         this.unsealedListeners = new ReverseSortedPosList(pos);
     }
 
@@ -235,21 +232,28 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         double ceilSq = Math.ceil((targetSize + 1) * (targetSize + 1));
         for (BlockPos pos : BlockPos.betweenClosed(this.worldPosition.getX() - ceilSize, this.worldPosition.getY() - ceilSize, this.worldPosition.getZ() - ceilSize,
                 this.worldPosition.getX() + ceilSize, this.worldPosition.getY() + ceilSize, this.worldPosition.getZ() + ceilSize)) {
-            double distance = this.positions.calculateDistanceSq(pos);
+            double distance = this.calculateDistanceSq(pos);
             if (distance > prevSizeSq && distance <= ceilSq) {
                 this.level.galacticraft$addAtmosphericProvider(pos, this.worldPosition);
                 BlockPos immutable = pos.immutable();
                 BlockState state = this.level.getBlockState(pos);
-                if (this.positions.add(immutable, distance) && state.getBlock().galacticraft$hasAtmosphereListener(state)) {
+                if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
                     if (distance <= curSizeSq) {
                         this.sealedListeners.add(immutable, distance);
                     } else {
                         this.unsealedListeners.add(immutable, distance);
                     }
+                } else {
+                    this.sealedListeners.remove(immutable, distance);
+                    this.unsealedListeners.remove(immutable, distance);
                 }
 //                if (!pos.equals(this.worldPosition)) this.level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE);
             }
         }
+    }
+
+    public double calculateDistanceSq(BlockPos object) {
+        return this.worldPosition.distToLowCornerSqr(object.getX(), object.getY() - 0.5, object.getZ());
     }
 
     private void handleAllocation(double size, boolean allocate) {
@@ -323,17 +327,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         }
         for (long l : tag.getLongArray(Constant.Nbt.UNSEALED)) {
             this.unsealedListeners.add(BlockPos.of(l));
-        }
-
-        this.positions.clear();
-        int ceilSize = Mth.ceil(this.targetSize);
-        double ceilSq = (this.targetSize + 1) * (this.targetSize + 1);
-        for (BlockPos pos : BlockPos.betweenClosed(this.worldPosition.getX() - ceilSize, this.worldPosition.getY() - ceilSize, this.worldPosition.getZ() - ceilSize,
-                this.worldPosition.getX() + ceilSize, this.worldPosition.getY() + ceilSize, this.worldPosition.getZ() + ceilSize)) {
-            double distance = this.positions.calculateDistanceSq(pos);
-            if (distance <= ceilSq) {
-                this.positions.add(pos.immutable(), distance);
-            }
         }
     }
 
@@ -453,26 +446,23 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
 
     @Override
     public void notifyStateChange(BlockPos pos, BlockState newState) {
-        double dist = this.positions.calculateDistanceSq(pos);
-        if (this.positions.contains(pos, dist)) {
-            if (newState.getBlock().galacticraft$hasAtmosphereListener(newState)) {
-                if (dist <= this.size * this.size) {
-                    this.sealedListeners.add(pos.immutable(), dist);
-                    this.unsealedListeners.remove(pos, dist);
-                } else {
-                    this.unsealedListeners.add(pos.immutable(), dist);
-                    this.sealedListeners.remove(pos, dist);
-                }
-            } else {
-                this.sealedListeners.remove(pos, dist);
+        double dist = this.calculateDistanceSq(pos);
+        if (newState.getBlock().galacticraft$hasAtmosphereListener(newState)) {
+            if (dist <= this.size * this.size) {
+                this.sealedListeners.add(pos.immutable(), dist);
                 this.unsealedListeners.remove(pos, dist);
+            } else {
+                this.unsealedListeners.add(pos.immutable(), dist);
+                this.sealedListeners.remove(pos, dist);
             }
+        } else {
+            this.sealedListeners.remove(pos, dist);
+            this.unsealedListeners.remove(pos, dist);
         }
     }
 
     public void onBroken() {
         this.handleAllocation(MAX_SIZE + 1, false);
-        this.positions.clear();
         this.size = 0;
         int size = this.sealedListeners.size();
         for (int i = 0; i < size; i++) {
