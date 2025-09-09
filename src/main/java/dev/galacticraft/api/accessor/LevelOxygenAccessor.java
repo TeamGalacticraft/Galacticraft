@@ -22,36 +22,5 @@
 
 package dev.galacticraft.api.accessor;
 
-import net.minecraft.core.BlockPos;
-
 public interface LevelOxygenAccessor extends LevelOxygenAccessorRO {
-    /**
-     * Adds an atmospheric provider to the given block position.
-     * The given provider MUST be allocated on the chunk section before being added.
-     *
-     * @param x the x-coordinate of the block gaining a provider
-     * @param y the y-coordinate of the block gaining a provider
-     * @param z the z-coordinate of the block gaining a provider
-     * @param providerPos the position of the atmospheric provider
-     * @see dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor#galacticraft$ensureSpaceFor(BlockPos)
-     */
-    default void galacticraft$addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    /**
-     * Removes the given atmospheric provider from the given block position.
-     * If the provider does not exist, nothing changes.
-     */
-    default void galacticraft$removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void galacticraft$addAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        this.galacticraft$addAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
-    }
-
-    default void galacticraft$removeAtmosphericProvider(BlockPos pos, BlockPos providerPos) {
-        this.galacticraft$removeAtmosphericProvider(pos.getX(), pos.getY(), pos.getZ(), providerPos);
-    }
 }

@@ -64,7 +64,7 @@ public class SectionProviderIterator implements Iterator<AtmosphereProvider> {
             if (this.level.getBlockEntity(pos) instanceof AtmosphereProvider provider) {
                 this.next = provider;
             } else {
-                ((ChunkSectionOxygenAccessor) section).galacticraft$deallocate(pos);
+                ((ChunkSectionOxygenAccessor) section).galacticraft$removeProvider(pos);
             }
         }
 

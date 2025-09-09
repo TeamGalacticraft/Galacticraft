@@ -234,7 +234,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                 this.worldPosition.getX() + ceilSize, this.worldPosition.getY() + ceilSize, this.worldPosition.getZ() + ceilSize)) {
             double distance = this.calculateDistanceSq(pos);
             if (distance > prevSizeSq && distance <= ceilSq) {
-                this.level.galacticraft$addAtmosphericProvider(pos, this.worldPosition);
                 BlockPos immutable = pos.immutable();
                 BlockState state = this.level.getBlockState(pos);
                 if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
@@ -272,9 +271,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                 for (int i = minSection; i <= maxSection; i++) {
                     ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(i);
                     if (allocate) {
-                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$ensureSpaceFor(this.worldPosition);
+                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$addProvider(this.worldPosition);
                     } else {
-                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$deallocate(this.worldPosition);
+                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$removeProvider(this.worldPosition);
                     }
                 }
             }

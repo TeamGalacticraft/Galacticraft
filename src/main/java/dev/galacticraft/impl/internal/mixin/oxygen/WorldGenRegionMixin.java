@@ -25,7 +25,6 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
 import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
@@ -97,28 +96,5 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
     @Override
     public boolean galacticraft$isBreathable() {
         return this.level.galacticraft$isBreathable();
-    }
-
-    @Override
-    public void galacticraft$addAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        if (this.isOutsideBuildHeight(y)) return;
-        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
-        ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
-        ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$add(x & 15, y & 15, z & 15, providerPos);
-    }
-
-    @Override
-    public boolean galacticraft$hasAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        if (this.isOutsideBuildHeight(y)) return false;
-        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
-        return ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$has(x & 15, y & 15, z & 15, providerPos);
-    }
-
-    @Override
-    public void galacticraft$removeAtmosphericProvider(int x, int y, int z, BlockPos providerPos) {
-        if (this.isOutsideBuildHeight(y)) return;
-        ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
-        ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(this.getSectionIndex(y));
-        ((ChunkSectionOxygenAccessor) chunk.getSection(this.getSectionIndex(y))).galacticraft$remove(x & 15, y & 15, z & 15, providerPos);
     }
 }

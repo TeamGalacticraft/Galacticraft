@@ -223,16 +223,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 LevelChunkSection section1 = chunk.getSection(section.getY());
                 visitedSections.put(section.immutable(), section1);
                 ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(section.getY());
-                ((ChunkSectionOxygenAccessor) section1).galacticraft$ensureSpaceFor(this.worldPosition);
+                ((ChunkSectionOxygenAccessor) section1).galacticraft$addProvider(this.worldPosition);
             }
 
             LevelChunkSection chunkSection = visitedSections.get(section);
-            ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$add(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15, this.worldPosition);
-
             BlockState blockState = chunkSection.getBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
             if (blockState.getBlock().galacticraft$hasAtmosphereListener(blockState)) {
                 if (this.isSealed()) {
-                    blockState.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, blockState, new SectionProviderIterator(level, chunkSection, ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$get(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15)));
+                    blockState.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, blockState, new SectionProviderIterator(level, chunkSection, ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$getProviders()));
                 }
                 this.atmosphereAwareBlocks.add(pos);
             }
@@ -375,7 +373,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         for (BlockPos pos : visitedNonSolid) {
             this.sealedPositions.removeBoolean(pos);
             visited.remove(pos);
-            this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
             if (this.atmosphereAwareBlocks.remove(pos)) {
                 this.notifyBlockOfSealChange(pos);
             }
@@ -395,7 +392,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
             if (!anyPath) {
                 // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not breathable anymore
                 this.sealedPositions.removeBoolean(pos);
-                this.level.galacticraft$removeAtmosphericProvider(pos, this.worldPosition);
                 if (this.atmosphereAwareBlocks.remove(pos)) {
                     this.notifyBlockOfSealChange(pos);
                 }
@@ -463,7 +459,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
     public void destroySeal() {
         for (BlockPos pos : this.sealedPositions.keySet()) {
             // todo: make more efficient
-            ((ChunkSectionOxygenAccessor) this.level.getChunkAt(pos).getSection(this.level.getSectionIndex(pos.getY()))).galacticraft$deallocate(this.worldPosition);
+            ((ChunkSectionOxygenAccessor) this.level.getChunkAt(pos).getSection(this.level.getSectionIndex(pos.getY()))).galacticraft$removeProvider(this.worldPosition);
         }
         this.sealedPositions.clear();
         markChanged();

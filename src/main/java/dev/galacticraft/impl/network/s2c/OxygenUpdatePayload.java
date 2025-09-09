@@ -23,7 +23,6 @@
 package dev.galacticraft.impl.network.s2c;
 
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import dev.galacticraft.impl.internal.oxygen.TrackingBitSet;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -78,19 +77,17 @@ public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CP
         );
     }
 
-    public record OxygenSectionData(BlockPos[] positions, TrackingBitSet[] data) {
+    public record OxygenSectionData(BlockPos[] positions) {
         public static final StreamCodec<FriendlyByteBuf, OxygenSectionData> CODEC = new StreamCodec<>() {
             @Override
-            public OxygenSectionData decode(FriendlyByteBuf buf) {
+            public @NotNull OxygenSectionData decode(FriendlyByteBuf buf) {
                 int count = buf.readVarInt();
 
                 BlockPos[] positions = new BlockPos[count];
-                TrackingBitSet[] bits = new TrackingBitSet[count];
                 for (int i = 0; i < count; i++) {
                     positions[i] = buf.readBlockPos();
-                    bits[i] = TrackingBitSet.read(buf);
                 }
-                return new OxygenSectionData(positions, bits);
+                return new OxygenSectionData(positions);
             }
 
             @Override
@@ -98,7 +95,6 @@ public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CP
                 buf.writeVarInt(section.positions.length);
                 for (int i = 0; i < section.positions.length; i++) {
                     buf.writeBlockPos(section.positions[i]);
-                    section.data[i].write(buf);
                 }
             }
         };

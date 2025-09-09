@@ -53,7 +53,7 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
 
     @Override
     public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
-        return ((ChunkSectionOxygenAccessor) this.sections[this.levelHeightAccessor.getSectionIndex(y)]).galacticraft$get(x, y & 15, z);
+        return ((ChunkSectionOxygenAccessor) this.sections[this.levelHeightAccessor.getSectionIndex(y)]).galacticraft$getProviders();
     }
 
     @Override

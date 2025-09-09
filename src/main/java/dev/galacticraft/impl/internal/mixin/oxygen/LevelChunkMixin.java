@@ -70,7 +70,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
                 provider.notifyStateChange(pos, blockState);
             } else {
                 for (int i = 0; i < this.sections.length; i++) {
-                    ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$deallocate(pos);
+                    ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$removeProvider(pos);
                     this.galacticraft$markSectionDirty(i);
                 }
             }

@@ -31,13 +31,10 @@ import java.util.Iterator;
 
 @ApiStatus.Internal
 public interface ChunkSectionOxygenAccessor {
-    Iterator<BlockPos> galacticraft$get(int x, int y, int z);
-    boolean galacticraft$has(int x, int y, int z, BlockPos pos);
-    void galacticraft$ensureSpaceFor(BlockPos pos);
-    void galacticraft$add(int x, int y, int z, BlockPos pos);
-    void galacticraft$removeAll(BlockPos pos);
-    void galacticraft$deallocate(BlockPos pos);
-    void galacticraft$remove(int x, int y, int z, BlockPos pos);
+    Iterator<BlockPos> galacticraft$getProviders();
+    boolean galacticraft$hasProvider(BlockPos pos);
+    void galacticraft$addProvider(BlockPos pos);
+    void galacticraft$removeProvider(BlockPos pos);
 
     boolean galacticraft$isEmpty();
 

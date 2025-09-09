@@ -39,6 +39,7 @@ public class ProviderIterator implements Iterator<AtmosphereProvider> {
     private final Iterator<BlockPos> iterator;
     private AtmosphereProvider next = null;
 
+    // todo: globally cache block entities
     public ProviderIterator(Level level, ChunkAccess chunk, Iterator<BlockPos> iterator) {
         this.chunk = chunk;
         this.level = level;
@@ -68,7 +69,7 @@ public class ProviderIterator implements Iterator<AtmosphereProvider> {
             } else {
                 LevelChunkSection[] sections = this.chunk.getSections();
                 for (int i = 0; i < sections.length; i++) {
-                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$deallocate(pos);
+                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$removeProvider(pos);
                     ((ChunkOxygenAccessor) this.chunk).galacticraft$markSectionDirty(i);
                 }
             }

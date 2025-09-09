@@ -37,6 +37,7 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
+import org.apache.commons.lang3.function.Consumers;
 import org.apache.commons.lang3.math.NumberUtils;
 
 import java.text.DecimalFormat;
@@ -55,20 +56,13 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         this.titleLabelX += 20;
 
         this.textField = new EditBox(this.font, this.leftPos + 132, this.topPos + 59, 26, 20, Component.literal(String.valueOf(this.menu.targetSize)));
-        this.textField.setResponder((s -> {
-            if (s.isBlank()) return;
-            int value = NumberUtils.toInt(s, -1);
-            if (value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
-                this.menu.targetSize = value;
-                ClientPlayNetworking.send(new BubbleMaxPayload(value));
-            }
-        }));
+        this.textField.setValue(String.valueOf(this.menu.targetSize));
+        this.textField.setResponder(this::updateFromText);
 
         this.textField.setFilter((s -> {
             int value = NumberUtils.toInt(s, -1);
             return s.isBlank() || value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE;
         }));
-        this.textField.setValue(String.valueOf(this.menu.targetSize));
 
         this.addRenderableWidget(this.textField);
     }
@@ -77,7 +71,9 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     protected void containerTick() {
         super.containerTick();
         if (!this.textField.getValue().isBlank() && NumberUtils.toInt(this.textField.getValue(), -1) != this.menu.targetSize) {
+            this.textField.setResponder(Consumers.nop());
             this.textField.setValue(String.valueOf(this.menu.targetSize));
+            this.textField.setResponder(this::updateFromText);
         }
     }
 
@@ -159,5 +155,14 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
             }
         }
         return false;
+    }
+
+    private void updateFromText(String s) {
+        if (s.isBlank()) return;
+        int value = NumberUtils.toInt(s, -1);
+        if (value >= 0 && value <= OxygenBubbleDistributorBlockEntity.MAX_SIZE) {
+            this.menu.targetSize = value;
+            ClientPlayNetworking.send(new BubbleMaxPayload(value));
+        }
     }
 }
