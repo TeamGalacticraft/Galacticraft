@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.render.entity.rocket;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
-import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
@@ -50,9 +49,19 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
         super.render(entity, yaw, partialTick, matrices, vertexConsumers, light);
         matrices.pushPose();
         Minecraft client = Minecraft.getInstance();
-        if (entity.getLaunchStage() == LaunchStage.IGNITED) {
-            matrices.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
+
+        double amplitude = switch(entity.getLaunchStage()) {
+            case IGNITED -> 0.1D;
+            case LAUNCHED -> 0.04D;
+            default -> 0.0D;
+        };
+        if (client.options.getCameraType().isFirstPerson()) {
+            amplitude *= 0.5D;
         }
+        if (amplitude > 0.0D) {
+            matrices.translate((entity.level().random.nextDouble() - 0.5D) * amplitude, 0, (entity.level().random.nextDouble() - 0.5D) * amplitude);
+        }
+
         Quaternionf rotation = new Quaternionf();
         rotation.rotateYXZ(-entity.getViewYRot(partialTick) * Mth.DEG_TO_RAD, entity.getViewXRot(partialTick) * Mth.DEG_TO_RAD, 0);
         rotation.mul(Axis.YN.rotationDegrees(180.0F + entity.getViewZRot(partialTick)));

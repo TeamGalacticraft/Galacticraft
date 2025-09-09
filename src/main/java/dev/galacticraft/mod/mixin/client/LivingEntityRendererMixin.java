@@ -26,8 +26,8 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
@@ -76,8 +76,16 @@ public abstract class LivingEntityRendererMixin {
     @Inject(method = "setupRotations", at = @At("HEAD"))
     private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
-            if (rocket.getLaunchStage() == LaunchStage.IGNITED) {
-                pose.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
+            double amplitude = switch(rocket.getLaunchStage()) {
+                case IGNITED -> 0.1D;
+                case LAUNCHED -> 0.04D;
+                default -> 0.0D;
+            };
+            if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
+                amplitude *= 0.5D;
+            }
+            if (amplitude > 0.0D) {
+                pose.translate((entity.level().random.nextDouble() - 0.5D) * amplitude, 0, (entity.level().random.nextDouble() - 0.5D) * amplitude);
             }
 
             Quaternionf rotation = new Quaternionf();
