@@ -10,7 +10,7 @@
   "legacy_random_source": false,
   "noise": {
     "height": 256,
-    "min_y": -128,
+    "min_y": -64,
     "size_horizontal": 1,
     "size_vertical": 2
   },
@@ -54,7 +54,7 @@
     "vein_toggle": 0.0
   },
   "ore_veins_enabled": false,
-  "sea_level": -128,
+  "sea_level": -64,
   "spawn_target": [
     {
       "continentalness": [

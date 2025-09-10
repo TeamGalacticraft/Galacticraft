@@ -60,7 +60,7 @@ public class OlivineCaveCarver extends CaveWorldCarver {
     protected boolean carveEllipsoid(CarvingContext context, CaveCarverConfiguration configuration, ChunkAccess chunkAccess, Function<BlockPos, Holder<Biome>> posToBiome, Aquifer aquifer, double x, double y, double z, double width, double height, CarvingMask mask, CarveSkipChecker carveSkipChecker) {
         ChunkPos chunkPos = chunkAccess.getPos();
         RandomSource random = context.randomState().aquiferRandom().at((int) Math.round(x), (int) Math.round(y), (int) Math.round(z));
-        boolean basaltInterior = random.nextFloat() < MoonConstants.OLIVINE_CAVE_BASALT_INTERIOR_CHANCE;
+        boolean basaltInterior = random.nextFloat() < MoonConstants.OlivineCaves.BASALT_INTERIOR_CHANCE;
         double d = (double) chunkPos.getMiddleBlockX();
         double e = (double) chunkPos.getMiddleBlockZ();
         double f = (double) 16.0F + width * (double) 2.0F;
@@ -116,41 +116,51 @@ public class OlivineCaveCarver extends CaveWorldCarver {
                             }
                         } else if (distance < 0.9) {
                             if ((blockState.is(GCBlockTags.OLIVINE_CAVE_REPLACEABLES) && !blockState.isAir()) || blockState.is(GCBlockTags.OLIVINE_CAVE_INTERNALS)) {
-                                chunkAccess.setBlockState(mutableBlockPos, BUDDING_BLOCK.defaultBlockState(), true);
-                                for (Direction direction : Direction.values()) {
-                                    BlockPos crystalPos = mutableBlockPos.relative(direction);
+                                float pr = random.nextFloat();
+                                if (pr < 0.3) {
+                                    chunkAccess.setBlockState(mutableBlockPos, BUDDING_BLOCK.defaultBlockState(), true);
+                                    for (Direction direction : Direction.values()) {
+                                        BlockPos crystalPos = mutableBlockPos.relative(direction);
 
-                                    int relX = crystalPos.getX() - chunkAccess.getPos().getMinBlockX();
-                                    int relZ = crystalPos.getZ() - chunkAccess.getPos().getMinBlockZ();
-                                    int crystalPosY = crystalPos.getY();
+                                        int relX = crystalPos.getX() - chunkAccess.getPos().getMinBlockX();
+                                        int relZ = crystalPos.getZ() - chunkAccess.getPos().getMinBlockZ();
+                                        int crystalPosY = crystalPos.getY();
 
-                                    if (relX >= 0 && relX < 16 && relZ >= 0 && relZ < 16 &&
-                                            crystalPosY >= context.getMinGenY() && crystalPosY < context.getMinGenY() + context.getGenDepth()) {
+                                        if (relX >= 0 && relX < 16 && relZ >= 0 && relZ < 16 &&
+                                                crystalPosY >= context.getMinGenY() && crystalPosY < context.getMinGenY() + context.getGenDepth()) {
 
-                                        BlockState neighborState = chunkAccess.getBlockState(crystalPos);
-                                        if (neighborState.isAir() && random.nextFloat() < 0.75f) {
-                                            chunkAccess.setBlockState(
-                                                    crystalPos,
-                                                    CLUSTER_BLOCK.defaultBlockState().setValue(AmethystClusterBlock.FACING, direction),
-                                                    true
-                                            );
+                                            BlockState neighborState = chunkAccess.getBlockState(crystalPos);
+                                            if (neighborState.isAir() && random.nextFloat() < 0.75f) {
+                                                chunkAccess.setBlockState(
+                                                        crystalPos,
+                                                        CLUSTER_BLOCK.defaultBlockState().setValue(AmethystClusterBlock.FACING, direction),
+                                                        true
+                                                );
+                                            }
                                         }
                                     }
+                                } else {
+                                    chunkAccess.setBlockState(mutableBlockPos, EXTERIOR_WALL_BLOCK.defaultBlockState(), true);
                                 }
                             }
                         } else if (distance < 1.5) {
                             if ((blockState.is(GCBlockTags.OLIVINE_CAVE_REPLACEABLES) || blockState.is(EXTERIOR_WALL_BLOCK)) && !blockState.isAir()) {
                                 if (basaltInterior) {
                                     float pr = random.nextFloat();
-                                    if (pr < 0.95f) {
+                                    if (pr < 0.97f) {
                                         chunkAccess.setBlockState(mutableBlockPos, EXTERIOR_WALL_BLOCK.defaultBlockState(), true);
-                                    } else if (pr < 0.995f) {
+                                    } else if (pr < 0.99) {
                                         chunkAccess.setBlockState(mutableBlockPos, OLIVINE_BASALT.defaultBlockState(), true);
                                     } else {
                                         chunkAccess.setBlockState(mutableBlockPos, RICH_OLIVINE_BASALT.defaultBlockState(), true);
                                     }
                                 } else {
-                                    chunkAccess.setBlockState(mutableBlockPos, INTERIOR_WALL_BLOCK.defaultBlockState(), true);
+                                    float pr = random.nextFloat();
+                                    if (pr < 0.95f) {
+                                        chunkAccess.setBlockState(mutableBlockPos, EXTERIOR_WALL_BLOCK.defaultBlockState(), true);
+                                    } else {
+                                        chunkAccess.setBlockState(mutableBlockPos, INTERIOR_WALL_BLOCK.defaultBlockState(), true);
+                                    }
                                 }
                             }
                         } else if (distance < 2) {

@@ -52,13 +52,13 @@ public class GCNoiseGeneratorSettings {
         HolderGetter<PlacedFeature> placedFeatures = context.lookup(Registries.PLACED_FEATURE);
 
         NoiseGeneratorSettings moonSettings = new NoiseGeneratorSettings(
-                NoiseSettings.create(MoonConstants.MOON_MIN_TERRAIN_HEIGHT, 256, 1, 2),
+                NoiseSettings.create(MoonConstants.Dimension.MIN_DIMENSION_HEIGHT, 256, 1, 2),
                 GCBlocks.MOON_ROCK.defaultBlockState(),
                 Blocks.AIR.defaultBlockState(),
                 GCNoiseGeneratorSettings.moon(densityLookup, noiseLookup),
                 MoonSurfaceRules.MOON,
                 new OverworldBiomeBuilder().spawnTarget(),
-                MoonConstants.MOON_MIN_TERRAIN_HEIGHT,
+                MoonConstants.Dimension.MIN_DIMENSION_HEIGHT,
                 false,
                 false,
                 false,

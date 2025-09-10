@@ -394,14 +394,14 @@
                       "argument1": 140.0,
                       "argument2": {
                         "type": "minecraft:mul",
-                        "argument1": 3.0,
+                        "argument1": 2.0,
                         "argument2": {
                           "type": "minecraft:shifted_noise",
                           "noise": "galacticraft:moon/erosion",
                           "shift_x": "minecraft:shift_x",
                           "shift_y": 0.0,
                           "shift_z": "minecraft:shift_z",
-                          "xz_scale": 5.0,
+                          "xz_scale": 3.0,
                           "y_scale": 0.0
                         }
                       }
@@ -484,14 +484,14 @@
                 "argument1": 140.0,
                 "argument2": {
                   "type": "minecraft:mul",
-                  "argument1": 3.0,
+                  "argument1": 2.0,
                   "argument2": {
                     "type": "minecraft:shifted_noise",
                     "noise": "galacticraft:moon/erosion",
                     "shift_x": "minecraft:shift_x",
                     "shift_y": 0.0,
                     "shift_z": "minecraft:shift_z",
-                    "xz_scale": 5.0,
+                    "xz_scale": 3.0,
                     "y_scale": 0.0
                   }
                 }

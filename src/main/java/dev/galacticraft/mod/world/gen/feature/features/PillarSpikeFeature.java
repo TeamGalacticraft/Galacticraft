@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.world.gen.feature.features;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.dimension.MoonConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.AmethystClusterBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -50,30 +52,35 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         WorldGenLevel level = context.level();
         RandomSource random = context.random();
         BlockPos origin = context.origin();
+        ChunkPos placeChunk = new ChunkPos(origin);
 
         boolean placed = false;
 
         for (int i = 0; i < attempts; i++) {
             BlockPos start = findAirInCave(level, origin.offset(random.nextInt(16), 0, random.nextInt(16)), random);
-            if (start == null) continue;
+            if (start == null || !inChunk(placeChunk, start)) continue;
 
             Vec3 direction = randomUnitDirection(random);
             BlockPos end = raycastUntilSolid(level, Vec3.atCenterOf(start), direction, 100);
 
-            if (end == null || start.distSqr(end) < 25 || !isAirLine(level, start, end)) continue;
+            if (end == null || start.distSqr(end) < 25 || !isAirLine(level, start, end, placeChunk)) continue;
 
-            placed |= queueOrPlace(level, start, GCBlocks.MOON_BASALT.defaultBlockState());
-            placed |= queueOrPlace(level, end, GCBlocks.MOON_BASALT.defaultBlockState());
+            placed |= queueOrPlaceInChunk(level, placeChunk, start, GCBlocks.MOON_BASALT.defaultBlockState());
+            placed |= queueOrPlaceInChunk(level, placeChunk, end, GCBlocks.MOON_BASALT.defaultBlockState());
 
             Vec3 beamDir = Vec3.atCenterOf(end).subtract(Vec3.atCenterOf(start));
 
-            //smartMergeBeamIntoTerrain(level, start, beamDir, GCBlocks.OLIVINE_BLOCK.defaultBlockState(), 8, 4f);
-            //smartMergeBeamIntoTerrain(level, end, beamDir.scale(-1), GCBlocks.OLIVINE_BLOCK.defaultBlockState(), 8, 4f);
+            //smartMergeBeamIntoTerrain(level, start, beamDir, GCBlocks.OLIVINE_BLOCK.defaultBlockState(), 8, 4f, placeChunk);
+            //smartMergeBeamIntoTerrain(level, end, beamDir.scale(-1), GCBlocks.OLIVINE_BLOCK.defaultBlockState(), 8, 4f, placeChunk);
 
-            placed |= drawLine(level, start, end, GCBlocks.MOON_BASALT.defaultBlockState());
+            placed |= drawLine(level, start, end, GCBlocks.MOON_BASALT.defaultBlockState(), placeChunk);
         }
 
         return placed;
+    }
+
+    private static boolean inChunk(ChunkPos chunk, BlockPos pos) {
+        return chunk.x == (pos.getX() >> 4) && chunk.z == (pos.getZ() >> 4);
     }
 
     private Vec3 randomUnitDirection(RandomSource random) {
@@ -101,7 +108,7 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
 
     private BlockPos findAirInCave(WorldGenLevel level, BlockPos center, RandomSource random) {
         for (int tries = 0; tries < 30; tries++) {
-            int y = MoonConstants.OLIVINE_CAVE_MIN_HEIGHT + random.nextInt(MoonConstants.MAX_FEATURE_SPAWN - MoonConstants.MIN_FEATURE_SPAWN);
+            int y = MoonConstants.OlivineCaves.MIN_HEIGHT + random.nextInt(MoonConstants.OlivineCaves.MAX_FEATURE_SPAWN - MoonConstants.OlivineCaves.MIN_FEATURE_SPAWN);
             BlockPos pos = new BlockPos(center.getX(), y, center.getZ());
             if (!level.getBlockState(pos).isSolidRender(level, pos)) {
                 for (Direction direction : Direction.values()) {
@@ -114,45 +121,43 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         return null;
     }
 
-    private boolean drawLine(WorldGenLevel level, BlockPos start, BlockPos end, BlockState state) {
+    private boolean drawLine(WorldGenLevel level, BlockPos start, BlockPos end, BlockState state, ChunkPos placeChunk) {
         boolean placed = false;
 
         Vec3 from = Vec3.atCenterOf(start);
         Vec3 to = Vec3.atCenterOf(end);
         Vec3 dir = to.subtract(from);
         float length = (float) dir.length();
-        Vec3 step = dir.normalize().scale(1.0 / 2.5); // 0.4 blocks per step
+        Vec3 step = dir.normalize().scale(1.0 / 2.5);
         int steps = (int) (length * 2.5);
 
-        // Determine width from length
         int width = 1 + Mth.floor((length - 10f) / 10f);
         width = Math.min(Math.max(width, 1), 5);
 
-        // Build two perpendicular basis vectors (u, v) for triangle cross-section
         Vec3 forward = dir.normalize();
         Vec3 up = new Vec3(0, 1, 0);
         if (Math.abs(forward.dot(up)) > 0.98) {
-            up = new Vec3(1, 0, 0); // avoid near-parallel
+            up = new Vec3(1, 0, 0);
         }
         Vec3 right = forward.cross(up).normalize();
         Vec3 normal = forward.cross(right).normalize();
 
-        // Triangle vertices in local space
         Vec3 a = right.scale(width);
         Vec3 b = right.scale(-width / 2.0).add(normal.scale(width * Math.sqrt(3) / 2.0));
         Vec3 c = right.scale(-width / 2.0).add(normal.scale(-width * Math.sqrt(3) / 2.0));
 
         Vec3 pos = from;
         for (int i = 0; i <= steps; i++) {
-            Vec3 center = pos;
-            placed |= fillTriangleWithBudding(level, center, a, b, c, state);
+            BlockPos check = BlockPos.containing(pos);
+            placed |= fillTriangleWithBudding(level, pos, a, b, c, state, placeChunk);
             pos = pos.add(step);
         }
 
         return placed;
     }
 
-    private boolean fillTriangleWithBudding(WorldGenLevel level, Vec3 origin, Vec3 a, Vec3 b, Vec3 c, BlockState defaultState) {
+    private boolean fillTriangleWithBudding(WorldGenLevel level, Vec3 origin, Vec3 a, Vec3 b, Vec3 c,
+                                            BlockState defaultState, ChunkPos placeChunk) {
         boolean placed = false;
 
         int resolution = 2 * Mth.ceil(a.length());
@@ -167,20 +172,19 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
                 Vec3 p = a.scale(u).add(b.scale(v)).add(c.scale(w)).add(origin);
                 BlockPos pos = BlockPos.containing(p);
 
-                // 5% chance to place budding olivine
-                if (random.nextFloat() < 0.05f) {
-                    placed |= queueOrPlace(level, pos, GCBlocks.BUDDING_OLIVINE.defaultBlockState());
+                if (random.nextFloat() < 0.02f) {
+                    placed |= queueOrPlaceInChunk(level, placeChunk, pos, GCBlocks.BUDDING_OLIVINE.defaultBlockState());
 
                     for (Direction dir : Direction.values()) {
                         BlockPos clusterPos = pos.relative(dir);
                         if (level.getBlockState(clusterPos).isAir() && random.nextFloat() < 0.75f) {
                             BlockState clusterState = GCBlocks.OLIVINE_CLUSTER.defaultBlockState()
                                     .setValue(AmethystClusterBlock.FACING, dir);
-                            placed |= queueOrPlace(level, clusterPos, clusterState);
+                            placed |= queueOrPlaceInChunk(level, placeChunk, clusterPos, clusterState);
                         }
                     }
                 } else {
-                    placed |= queueOrPlace(level, pos, defaultState);
+                    placed |= queueOrPlaceInChunk(level, placeChunk, pos, defaultState);
                 }
             }
         }
@@ -188,12 +192,12 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         return placed;
     }
 
-    private boolean isAirLine(WorldGenLevel level, BlockPos start, BlockPos end) {
+    private boolean isAirLine(WorldGenLevel level, BlockPos start, BlockPos end, ChunkPos placeChunk) {
         Vec3 from = Vec3.atCenterOf(start);
         Vec3 to = Vec3.atCenterOf(end);
         Vec3 dir = to.subtract(from);
-        int steps = (int) (dir.length() * 3); // finer steps for accuracy
-        Vec3 step = dir.normalize().scale(1.0 / 3.0); // 0.33 blocks per step
+        int steps = (int) (dir.length() * 3);
+        Vec3 step = dir.normalize().scale(1.0 / 3.0);
 
         Vec3 pos = from;
         for (int i = 0; i <= steps; i++) {
@@ -207,20 +211,18 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         return true;
     }
 
-    private void smartMergeBeamIntoTerrain(WorldGenLevel level, BlockPos tip, Vec3 beamDir, BlockState state, int curveLength, float maxRadius) {
+    private void smartMergeBeamIntoTerrain(WorldGenLevel level, BlockPos tip, Vec3 beamDir, BlockState state,
+                                           int curveLength, float maxRadius, ChunkPos placeChunk) {
         Vec3 direction = beamDir.normalize();
-        Vec3 start = Vec3.atCenterOf(tip).subtract(direction.scale(3)); // start ~3 blocks inside the beam
+        Vec3 start = Vec3.atCenterOf(tip).subtract(direction.scale(3));
 
         for (int i = 0; i < curveLength; i++) {
             float t = i / (float)curveLength;
-
-            // Arc blend path: out from the beam in a gentle arc
-            float radius = maxRadius * Mth.sin(t * Mth.HALF_PI);  // Smooth ramp
+            float radius = maxRadius * Mth.sin(t * Mth.HALF_PI);
             Vec3 center = start.add(direction.scale(i));
 
-            // Flatten the blending into a capsule shape along the beam axis
             int rX = Mth.ceil(radius);
-            int rY = Mth.ceil(radius * 0.5); // Flatten vertically
+            int rY = Mth.ceil(radius * 0.5);
             int rZ = Mth.ceil(radius);
 
             BlockPos centerPos = BlockPos.containing(center);
@@ -232,11 +234,11 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
                         Vec3 delta = Vec3.atCenterOf(pos).subtract(center);
                         if (delta.length() > radius) continue;
 
-                        // Only blend where solid terrain is adjacent *in the direction of the beam*
                         BlockPos terrainCheck = pos.relative(directionToClosestDirection(direction));
+
                         if (level.getBlockState(terrainCheck).isSolidRender(level, terrainCheck) &&
                                 !level.getBlockState(pos).isSolidRender(level, pos)) {
-                            queueOrPlace(level, pos, state);
+                            queueOrPlaceInChunk(level, placeChunk, pos, state);
                         }
                     }
                 }
@@ -260,13 +262,19 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         return closest;
     }
 
-    private boolean queueOrPlace(WorldGenLevel level, BlockPos pos, BlockState state) {
+    private boolean queueOrPlaceInChunk(WorldGenLevel level, ChunkPos placeChunk, BlockPos pos, BlockState state) {
+        if (!inChunk(placeChunk, pos)) {
+            DeferredBlockPlacement.queue(pos.immutable(), state);
+            return false;
+        }
         try {
-            if (!level.getBlockState(pos).isSolidRender(level, pos) || level.getBlockState(pos).is(GCBlocks.MOON_BASALT)) {
+            BlockState cur = level.getBlockState(pos);
+            if (!cur.isSolidRender(level, pos) || cur.is(GCBlocks.MOON_BASALT)) {
                 level.setBlock(pos, state, 2);
                 return true;
             }
         } catch (IllegalStateException e) {
+            Constant.LOGGER.error("Error {} while trying to place blocks in chunk at {}", e, pos);
             DeferredBlockPlacement.queue(pos.immutable(), state);
         }
         return false;

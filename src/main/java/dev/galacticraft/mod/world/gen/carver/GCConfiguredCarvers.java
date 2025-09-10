@@ -103,9 +103,9 @@ public class GCConfiguredCarvers {
         )));
 
         context.register(OLIVINE_CAVE_CARVER, GCCarvers.OLIVINE_CAVE.configured(new CaveCarverConfiguration(
-                MoonConstants.OLIVINE_CAVE_PROBABILITY,
-                UniformHeight.of(VerticalAnchor.aboveBottom(MoonConstants.OLIVINE_CAVE_MIN_HEIGHT - MoonConstants.MOON_MIN_TERRAIN_HEIGHT), VerticalAnchor.aboveBottom(MoonConstants.OLIVINE_CAVE_MAX_HEIGHT - MoonConstants.MOON_MIN_TERRAIN_HEIGHT)),
-                UniformFloat.of(MoonConstants.OLIVINE_CAVE_Y_SCALE_MIN, MoonConstants.OLIVINE_CAVE_Y_SCALE_MAX),
+                MoonConstants.OlivineCaves.PROBABILITY,
+                UniformHeight.of(VerticalAnchor.aboveBottom(MoonConstants.OlivineCaves.MIN_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT), VerticalAnchor.aboveBottom(MoonConstants.OlivineCaves.MAX_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT)),
+                UniformFloat.of(MoonConstants.OlivineCaves.Y_SCALE_MIN, MoonConstants.OlivineCaves.Y_SCALE_MAX),
                 VerticalAnchor.bottom(), //overridden inside the cave carver class
                 BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES),
                 UniformFloat.of(1.5f, 4.0f), // horizontal

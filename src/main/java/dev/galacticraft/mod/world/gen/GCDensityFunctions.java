@@ -153,15 +153,15 @@ public class GCDensityFunctions {
         DensityFunction cometNoise = make2DNoise(5, shiftX, shiftZ, erosionHolder);
         DensityFunction mareNoise = make2DNoise(5, shiftX, shiftZ, erosionHolder);
         DensityFunction lowLandsNoise = make2DNoise(2, shiftX, shiftZ, erosionHolder);
-        DensityFunction highLandsNoise = make2DNoise(5, shiftX, shiftZ, erosionHolder);
+        DensityFunction highLandsNoise = make2DNoise(MoonConstants.LunarHighLands.NOISE_SCALE_XZ, shiftX, shiftZ, erosionHolder);
 
-        DensityFunction cometNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.COMET_TUNDRA_SURFACE_HEIGHT, MoonConstants.COMET_TUNDRA_SURFACE_HEIGHT_VARIATION, cometNoise, y);
-        DensityFunction mareNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.BASALTIC_MARE_SURFACE_HEIGHT, MoonConstants.BASALTIC_MARE_SURFACE_HEIGHT_VARIATION, mareNoise, y);
-        DensityFunction lowLandsNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.LUNAR_LOW_LANDS_SURFACE_HEIGHT, MoonConstants.LUNAR_LOW_LANDS_SURFACE_HEIGHT_VARIATION, lowLandsNoise, y);
-        DensityFunction highLandsNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.LUNAR_HIGH_LANDS_SURFACE_HEIGHT, MoonConstants.LUNAR_HIGH_LANDS_SURFACE_HEIGHT_VARIATION, highLandsNoise, y);
+        DensityFunction cometNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.SurfaceHeights.COMET_TUNDRA, MoonConstants.HeightVariations.COMET_TUNDRA, cometNoise, y);
+        DensityFunction mareNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.SurfaceHeights.BASALTIC_MARE, MoonConstants.HeightVariations.BASALTIC_MARE, mareNoise, y);
+        DensityFunction lowLandsNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.SurfaceHeights.LUNAR_LOW_LANDS, MoonConstants.HeightVariations.LUNAR_LOW_LANDS, lowLandsNoise, y);
+        DensityFunction highLandsNoisedHeightUnclamped = clampedNoisedHeight(MoonConstants.SurfaceHeights.LUNAR_HIGH_LANDS, MoonConstants.HeightVariations.LUNAR_HIGH_LANDS, highLandsNoise, y);
 
-        DensityFunction normalizedLowToHighLands = normalizeInRange(continentalness, MoonConstants.LUNAR_HIGH_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.LUNAR_LOW_TO_HIGH_LANDS_RANGE, MoonConstants.LUNAR_HIGH_LANDS_CONTINENTALNESS_MINIMUM + MoonConstants.LUNAR_LOW_TO_HIGH_LANDS_RANGE);
-        DensityFunction normalizedMareToLowLands = normalizeInRange(continentalness, MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE, MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM + MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE);
+        DensityFunction normalizedLowToHighLands = normalizeInRange(continentalness, MoonConstants.MinimumContinentalness.LUNAR_HIGH_LANDS - MoonConstants.Ranges.LOW_TO_HIGH, MoonConstants.MinimumContinentalness.LUNAR_HIGH_LANDS + MoonConstants.Ranges.LOW_TO_HIGH);
+        DensityFunction normalizedMareToLowLands = normalizeInRange(continentalness, MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS - MoonConstants.Ranges.BASALTIC_TO_LOW, MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS + MoonConstants.Ranges.BASALTIC_TO_LOW);
 
         CubicSpline<DensityFunctions.Spline.Point, DensityFunctions.Spline.Coordinate> lowToHighLandsSpline = CubicSpline
                 .builder(new DensityFunctions.Spline.Coordinate(Holder.direct(normalizedLowToHighLands)))
@@ -200,27 +200,27 @@ public class GCDensityFunctions {
         // Use range choice to get noise + base height
         DensityFunction finalDensity = rangeChoice(
                 continentalness,
-                MoonConstants.COMET_TUNDRA_CONTINENTALNESS_MINIMUM, MoonConstants.BASALTIC_MARE_CONTINENTALNESS_MINIMUM,
+                MoonConstants.MinimumContinentalness.COMET_TUNDRA, MoonConstants.MinimumContinentalness.BASALTIC_MARE,
                 heightToDensity(cometNoisedHeightUnclamped, y), // comet tundra base height
 
                 rangeChoice(
                         continentalness,
-                        MoonConstants.BASALTIC_MARE_CONTINENTALNESS_MINIMUM, MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE,
+                        MoonConstants.MinimumContinentalness.BASALTIC_MARE, MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS - MoonConstants.Ranges.BASALTIC_TO_LOW,
                         heightToDensity(mareNoisedHeightUnclamped, y), // basaltic mare base height
 
                         rangeChoice(
                                 continentalness,
-                                MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE, MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM + MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE,
+                                MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS - MoonConstants.Ranges.BASALTIC_TO_LOW, MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS + MoonConstants.Ranges.BASALTIC_TO_LOW,
                                 blendedMareToLowLandsNoisedHeightClamped, // basaltic mare blended to lunar low lands
 
                                 rangeChoice(
                                         continentalness,
-                                        MoonConstants.LUNAR_LOW_LANDS_CONTINENTALNESS_MINIMUM + MoonConstants.BASALTIC_MARE_TO_LUNAR_LOW_LANDS_RANGE, MoonConstants.LUNAR_HIGH_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.LUNAR_LOW_TO_HIGH_LANDS_RANGE,
+                                        MoonConstants.MinimumContinentalness.LUNAR_LOW_LANDS + MoonConstants.Ranges.BASALTIC_TO_LOW, MoonConstants.MinimumContinentalness.LUNAR_HIGH_LANDS - MoonConstants.Ranges.LOW_TO_HIGH,
                                         heightToDensity(lowLandsNoisedHeightUnclamped, y), // lunar low lands base height
 
                                         rangeChoice(
                                                 continentalness,
-                                                MoonConstants.LUNAR_HIGH_LANDS_CONTINENTALNESS_MINIMUM - MoonConstants.LUNAR_LOW_TO_HIGH_LANDS_RANGE, MoonConstants.LUNAR_HIGH_LANDS_CONTINENTALNESS_MINIMUM + MoonConstants.LUNAR_LOW_TO_HIGH_LANDS_RANGE,
+                                                MoonConstants.MinimumContinentalness.LUNAR_HIGH_LANDS - MoonConstants.Ranges.LOW_TO_HIGH, MoonConstants.MinimumContinentalness.LUNAR_HIGH_LANDS + MoonConstants.Ranges.LOW_TO_HIGH,
                                                 blendedLowToHighLandsNoisedHeightClamped, // lunar low lands blended to lunar high lands
 
                                                 heightToDensity(highLandsNoisedHeightUnclamped, y) // lunar high lands base height

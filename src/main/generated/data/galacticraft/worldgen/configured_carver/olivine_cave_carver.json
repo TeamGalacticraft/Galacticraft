@@ -24,10 +24,10 @@
     "y": {
       "type": "minecraft:uniform",
       "max_inclusive": {
-        "above_bottom": 158
+        "above_bottom": 94
       },
       "min_inclusive": {
-        "above_bottom": 60
+        "above_bottom": 34
       }
     },
     "yScale": {
