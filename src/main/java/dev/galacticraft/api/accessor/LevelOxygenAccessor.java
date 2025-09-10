@@ -25,8 +25,32 @@ package dev.galacticraft.api.accessor;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * @see LevelOxygenAccessorRO
+ */
 public interface LevelOxygenAccessor extends LevelOxygenAccessorRO {
+    /**
+     * Adds an atmospheric provider to the chunk section at the given position
+     * @param sectionX the section x-position
+     * @param sectionY the section y-position
+     * @param sectionZ the section z-position
+     * @param provider the position of the provider to add
+     */
     void galacticraft$addAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
+
+    /**
+     * Removes an atmospheric provider from the chunk section at the given position
+     * @param sectionX the section x-position
+     * @param sectionY the section y-position
+     * @param sectionZ the section z-position
+     * @param provider the position of the provider to remove
+     */
     void galacticraft$removeAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
+
+    /**
+     * Notifies the block at the given position that the atmosphere has changed.
+     * @param pos the position where the atmosphere changed
+     * @param state the current block state of the block where the atmosphere changed
+     */
     default void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {}
 }

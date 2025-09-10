@@ -119,7 +119,7 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
         if (positions.length == 0) {
             this.providers = null;
         } else {
-            this.providers = Lists.newArrayList(positions); //todo: does this fail c/s split?
+            this.providers = Lists.newArrayList(positions);
         }
     }
 

@@ -26,17 +26,50 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Describes a {@link BlockEntity} that generates an atmosphere somewhere in the world.
+ *
+ * @see dev.galacticraft.api.accessor.LevelOxygenAccessor
+ * @see dev.galacticraft.api.accessor.ChunkOxygenAccessor
+ */
 public interface AtmosphereProvider {
+    /**
+     * {@return whether the given point is breathable}
+     * @param x the x-coordinate to check
+     * @param y the y-coordinate to check
+     * @param z the z-coordinate to check
+     */
     boolean canBreathe(double x, double y, double z);
 
+    /**
+     * {@return whether the given block position is breathable}
+     * It is not defined where within the block is (or is not) breathable.
+     * @param x the x-position to check
+     * @param y the y-position to check
+     * @param z the z-position to check
+     */
     default boolean canBreathe(int x, int y, int z) {
         return this.canBreathe(new BlockPos(x, y, z));
     }
 
+    /**
+     * {@return whether the given block position is breathable}
+     * It is not defined where within the block is (or is not) breathable.
+     * @param pos the position to check
+     */
     boolean canBreathe(BlockPos pos);
 
+    /**
+     * Called when a block state is updated within a chunk that has this atmospheric provider attached.
+     * @param pos the position of block that was changed
+     * @param newState the new state being placed at the position.
+     */
     void notifyStateChange(BlockPos pos, BlockState newState);
 
+    /**
+     * Helper method to get a block entity instance.
+     * @return {@code this}
+     */
     default BlockEntity be() {
         return (BlockEntity) this;
     }

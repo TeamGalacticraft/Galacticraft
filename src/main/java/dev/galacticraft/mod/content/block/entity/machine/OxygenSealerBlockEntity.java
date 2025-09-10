@@ -106,8 +106,19 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                             .filter(ResourceFilters.ofResource(Gases.OXYGEN))
             )
     );
+
+    /**
+     * Positions of all blocks that are sealed. This includes SOLID WALLS of the sealed space.
+     * Maps block position -> "is this block solid?"
+     */
     private final Object2BooleanOpenHashMap<BlockPos> sealedPositions = new Object2BooleanOpenHashMap<>();
+    /**
+     * Blocks that need to be notified if we seal/unseal them
+     */
     private final ObjectSet<BlockPos> atmosphereAwareBlocks = new ObjectOpenHashSet<>();
+    /**
+     * Whether some other block is currently sealing the space.
+     */
     private boolean contended;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
@@ -133,12 +144,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
 
-        if (this.contended) {
+        if (this.contended || this.level.galacticraft$isBreathable()) {
+            // allow for instant swap if the other sealer fails for some reason.
             if (this.sealCheckTime > 1) this.sealCheckTime--;
+
             return GCMachineStatuses.ALREADY_SEALED;
         }
 
-        if (!this.sealedPositions.isEmpty()) {
+        if (!this.sealedPositions.isEmpty()) { // we have an active, valid seal.
             this.energyStorage().extract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate());
             this.fluidStorage().slot(OXYGEN_TANK).extract(Galacticraft.CONFIG.oxygenSealerOxygenConsumptionRate());
             return GCMachineStatuses.SEALED;
@@ -149,6 +162,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 return GCMachineStatuses.BLOCKED;
             }
 
+            // CALCULATE SEALED SPACE:
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
             ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);
@@ -216,6 +230,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
             this.sealedPositions.put(pos, e.getBooleanValue());
 
             section.set(SectionPos.blockToSectionCoord(pos.getX()), this.level.getSectionIndex(pos.getY()), SectionPos.blockToSectionCoord(pos.getZ()));
+            // we only need to 'claim' each section once. might as well cache the sections too.
             if (!visitedSections.containsKey(section)) {
                 LevelChunk chunk = this.level.getChunk(section.getX(), section.getZ());
                 LevelChunkSection section1 = chunk.getSection(section.getY());
@@ -225,6 +240,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
 
             LevelChunkSection chunkSection = visitedSections.get(section);
             BlockState blockState = chunkSection.getBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
+            // if we sealed an atmospheric subscriber, then we need to let it know of the changes (now and future).
             if (blockState.getBlock().galacticraft$hasAtmosphereListener(blockState)) {
                 if (this.isSealed()) {
                     this.level.galacticraft$notifyAtmosphereChange(pos, blockState);
@@ -293,6 +309,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
             this.destroySeal();
             return;
         }
+        // we only care about state changes to sealed blocks
         if (this.sealedPositions.containsKey(pos)) {
             if (newState.getBlock().galacticraft$hasAtmosphereListener(newState)) {
                 this.atmosphereAwareBlocks.add(pos);
@@ -303,9 +320,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             if (this.sealedPositions.getBoolean(pos)) {
                 if (!isSealable(pos, newState)) {
+                    // was sealed -> now not. check for leaks
                     this.sealedPositions.put(pos, false);
 
-                    // was sealed -> now not. check for leaks
                     Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
                     boolean sealable = true;
 
@@ -332,33 +349,35 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                         this.destroySeal();
                     }
                 }
-            } else {
-                if (isSealable(pos, newState)) {
-                    this.sealedPositions.put(pos, true);
-                    ObjectOpenHashSet<BlockPos> visited = new ObjectOpenHashSet<>();
-                    ObjectOpenHashSet<BlockPos> visitedNonSolid = new ObjectOpenHashSet<>();
-                    BlockPos target = this.worldPosition.relative(Direction.UP);
+            } else if (isSealable(pos, newState)) {
+                // was not sealed -> now is. check if it blocks others.
+                this.sealedPositions.put(pos, true);
 
-                    boolean anyPass = false;
-                    // was not sealed -> now is. check if blocks others
-                    // can use pure virtual search (no leaks possible)
-                    for (Direction direction : Direction.values()) {
-                        mutable.setWithOffset(pos, direction);
-                        if (this.sealedPositions.containsKey(mutable)) {
-                            // need to navigate back to sealer +1y to confirm connection
-                            visited.clear();
-                            visitedNonSolid.clear();
-                            if (!this.tryNavigateTo(mutable, target, visited, visitedNonSolid)) {
-                                this.destroySubSeal(visited, visitedNonSolid);
-                            } else {
-                                anyPass = true;
-                            }
+                // can use pure virtual search; no leaks are possible since a new solid block was placed.
+                ObjectOpenHashSet<BlockPos> visited = new ObjectOpenHashSet<>();
+                ObjectOpenHashSet<BlockPos> visitedNonSolid = new ObjectOpenHashSet<>();
+                // SSSSS    need to navigate back to sealer +1y to confirm connection as the seal is emitted from above
+                // WWMWW
+                // UUUUU <- if we only checked WP, then newly disconnected pockets below the sealer would be considered connected
+                BlockPos target = this.worldPosition.relative(Direction.UP);
+
+                // check that all surrounding blocks are still somehow connected to the sealed space.
+                boolean anyPass = false;
+                for (Direction direction : Direction.values()) {
+                    mutable.setWithOffset(pos, direction);
+                    if (this.sealedPositions.containsKey(mutable)) {
+                        visited.clear();
+                        visitedNonSolid.clear();
+                        if (!this.tryNavigateTo(mutable, target, visited, visitedNonSolid)) {
+                            this.destroySubSeal(visited, visitedNonSolid);
+                        } else {
+                            anyPass = true;
                         }
                     }
-                    if (!anyPass) {
-                        // This should not happen???
-                        this.destroySeal();
-                    }
+                }
+                if (!anyPass) {
+                    // This should not happen???
+                    this.destroySeal();
                 }
             }
 
@@ -366,7 +385,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         }
     }
 
+    // removes the given positons from the seal, updating the blocks accordingly.
     private void destroySubSeal(ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
+        // all non-solid blocks can be removed immediately
         for (BlockPos pos : visitedNonSolid) {
             this.sealedPositions.removeBoolean(pos);
             visited.remove(pos);
@@ -376,7 +397,9 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         }
 
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
-        // only solids left - check for adjacent still sealed before removing
+        // solid blocks are more complicated - must check for adjacent sealed non-solid blocks before removing
+        // SSWUU <- given this pattern (sealed, wall, unsealed) we need the walls to remain sealed even though
+        // SSWUU    they're connected to the newly unsealed section
         for (BlockPos pos : visited) {
             boolean anyPath = false;
             for (Direction direction : Direction.values()) {
@@ -387,7 +410,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 }
             }
             if (!anyPath) {
-                // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not breathable anymore
+                // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not sealed anymore
                 this.sealedPositions.removeBoolean(pos);
                 if (this.atmosphereAwareBlocks.remove(pos)) {
                     this.notifyBlockOfSealChange(pos);
@@ -396,6 +419,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         }
     }
 
+    // attempts to navigate (via BFS) to the target position
     private boolean tryNavigateTo(BlockPos.MutableBlockPos mutable, BlockPos target, ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
         BlockPos start = mutable.immutable();
         ObjectArrayFIFOQueue<BlockPos> queue = new ObjectArrayFIFOQueue<>(32);
@@ -422,6 +446,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         return false;
     }
 
+    // attempts to from a seal starting from the given block & direction
     private boolean trySeal(BlockPos from, Direction fromDir, Object2BooleanMap<BlockPos> visited) {
         BlockPos.MutableBlockPos mutable = new  BlockPos.MutableBlockPos();
         ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);

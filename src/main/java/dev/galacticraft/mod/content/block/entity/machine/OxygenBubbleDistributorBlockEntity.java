@@ -62,7 +62,6 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.jetbrains.annotations.NotNull;
@@ -199,30 +198,12 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         }
     }
 
+    // recalculate section claims and block subscribers based on new target size
     public void distributeOxygenToArea(double targetSize, double prevSize) {
         if (targetSize < prevSize) return;
 
         this.handleAllocation(targetSize, true);
         assert this.level != null;
-        Block[] blocks = new Block[]{
-                Blocks.GLASS_PANE,
-                Blocks.WHITE_STAINED_GLASS_PANE,
-                Blocks.ORANGE_STAINED_GLASS_PANE,
-                Blocks.MAGENTA_STAINED_GLASS_PANE,
-                Blocks.LIGHT_BLUE_STAINED_GLASS_PANE,
-                Blocks.YELLOW_STAINED_GLASS_PANE,
-                Blocks.LIME_STAINED_GLASS_PANE,
-                Blocks.PINK_STAINED_GLASS_PANE,
-                Blocks.GRAY_STAINED_GLASS_PANE,
-                Blocks.LIGHT_GRAY_STAINED_GLASS_PANE,
-                Blocks.CYAN_STAINED_GLASS_PANE,
-                Blocks.PURPLE_STAINED_GLASS_PANE,
-                Blocks.BLUE_STAINED_GLASS_PANE,
-                Blocks.BROWN_STAINED_GLASS_PANE,
-                Blocks.GREEN_STAINED_GLASS_PANE,
-                Blocks.RED_STAINED_GLASS_PANE,
-                Blocks.BLACK_STAINED_GLASS_PANE};
-        Block block = blocks[Math.toIntExact((level.getGameTime() / 10) % 17)];
 
         int ceilSize = Mth.ceil(targetSize);
         double prevSizeSq = Math.floor(prevSize * prevSize);
@@ -244,7 +225,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                     this.sealedListeners.remove(immutable, distance);
                     this.unsealedListeners.remove(immutable, distance);
                 }
-//                if (!pos.equals(this.worldPosition)) this.level.setBlock(pos, block.defaultBlockState(), Block.UPDATE_CLIENTS | Block.UPDATE_IMMEDIATE | Block.UPDATE_KNOWN_SHAPE);
             }
         }
     }
@@ -253,6 +233,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         return this.worldPosition.distToLowCornerSqr(object.getX(), object.getY() - 0.5, object.getZ());
     }
 
+    // mark all surrounding chunk sections within size as provided for (or no longer provided for, if allocate=false)
     private void handleAllocation(double size, boolean allocate) {
         int ceilSize = Mth.ceil(size) + 1;
         int minX = SectionPos.blockToSectionCoord(this.worldPosition.getX() - ceilSize);
@@ -341,7 +322,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
             if (this.sealedListeners.size() > 0) {
                 double sizeSq = this.size * this.size;
                 double maxDist = this.sealedListeners.getDistance(this.sealedListeners.size() - 1);
-                if (maxDist > sizeSq) { // check if furthest listener is now uncovered
+                if (maxDist > sizeSq) { // check if furthest listener is now uncovered (newly unsealed)
                     for (int i = this.sealedListeners.size() - 1; i >= 0; i--) {
                         if (this.sealedListeners.size() == 0) break;
                         double distance = this.sealedListeners.getDistance(i);
@@ -365,7 +346,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
             if (this.unsealedListeners.size() > 0) {
                 double sizeSq = this.size * this.size;
                 double minDist = this.unsealedListeners.getDistance(this.unsealedListeners.size() - 1);
-                if (minDist <= sizeSq) { // check if closest listener is now covered
+                if (minDist <= sizeSq) { // check if closest listener is now covered (newly sealed)
                     for (int i = this.unsealedListeners.size() - 1; i >= 0; i--) {
                         if (this.unsealedListeners.size() == 0) break;
                         double distance = this.unsealedListeners.getDistance(i);

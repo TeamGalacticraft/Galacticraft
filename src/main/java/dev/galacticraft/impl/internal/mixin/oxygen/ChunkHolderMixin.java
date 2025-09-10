@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.Packet;
@@ -49,7 +49,7 @@ public abstract class ChunkHolderMixin {
 
     @Inject(method = "broadcastChanges", at = @At("RETURN"))
     private void flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
-        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$getPendingOxygenChanges();
+        OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenAccessorInternal) chunk).galacticraft$getPendingOxygenChanges();
         if (data != null) {
             this.broadcast(this.playerProvider.getPlayers(chunk.getPos(), false), ServerPlayNetworking.createS2CPacket(new OxygenUpdatePayload(chunk.getPos().toLong(), data)));
         }

@@ -22,8 +22,8 @@
 
 package dev.galacticraft.impl.internal.oxygen;
 
-import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -81,6 +81,6 @@ public class ProviderIterator implements Iterator<AtmosphereProvider> {
     public void remove() {
         this.positions.previous();
         this.positions.remove();
-        ((ChunkOxygenAccessor) this.access).galacticraft$markSectionDirty(this.y);
+        ((ChunkOxygenAccessorInternal) this.access).galacticraft$markSectionDirty(this.y);
     }
 }

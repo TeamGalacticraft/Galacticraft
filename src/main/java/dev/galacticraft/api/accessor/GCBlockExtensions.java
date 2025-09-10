@@ -31,25 +31,55 @@ import net.minecraft.world.level.block.state.BlockState;
 import java.util.Iterator;
 
 public interface GCBlockExtensions {
-    // expectation: ideally for modded blocks, transforms are done before setBlock (e.g. placement state)
-    // this type of transformation is a bit over-eager as it breaks scenarios where you specifically want "invalid" states.
+    /**
+     * {@return whether this block will transform on placement due to a lack of atmosphere}
+     * This should only be implemented if it is not possible to handle the transformation elsewhere.
+     * @param state the state being placed
+     */
     default boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
         return false;
     }
 
+    /**
+     * Extinguishes the given state due to a lack of atmosphere.
+     * @param pos the position of the block in-world
+     * @param state the state being placed
+     * @return the transformed block state.
+     */
     default BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
         return state;
     }
 
+    /**
+     * {@return whether the given block state needs to be altered to changes in atmospheric composition}
+     * @param state the state being checked
+     */
     default boolean galacticraft$hasAtmosphereListener(BlockState state) {
         return false;
     }
 
+    /**
+     * Called when the atmospheric composition changes.
+     * @param level the current level
+     * @param pos the position of the block
+     * @param state the current state of the block
+     * @param iterator all atmospheric providers at the given position
+     * @see #galacticraft$onAtmosphereChange(ServerLevel, BlockPos, BlockState, boolean)
+     */
     default void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, Iterator<AtmosphereProvider> iterator) {
         this.galacticraft$onAtmosphereChange(level, pos, state, OxygenUtil.isBreathable(pos, iterator));
     }
 
+
+    /**
+     * Called when the atmospheric composition changes.
+     * For blocks that just need to know if the position is breathable or not. Should NOT be called outside this class.
+     * @param level the current level
+     * @param pos the position of the block
+     * @param state the current state of the block
+     * @param breathable whether the given position is currently breathable
+     * @see #galacticraft$onAtmosphereChange(ServerLevel, BlockPos, BlockState, Iterator)
+     */
     default void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, boolean breathable) {
     }
-
 }

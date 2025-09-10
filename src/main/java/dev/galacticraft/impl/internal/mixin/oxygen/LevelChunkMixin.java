@@ -22,8 +22,8 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
 import net.minecraft.core.BlockPos;
@@ -52,7 +52,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(LevelChunk.class)
-public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor {
+public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessorInternal {
     @Shadow
     @Final
     Level level;

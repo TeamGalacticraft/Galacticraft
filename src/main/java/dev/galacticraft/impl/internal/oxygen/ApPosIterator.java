@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.internal.oxygen;
 
-import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.ChunkAccess;
 
@@ -42,6 +42,6 @@ public record ApPosIterator(ChunkAccess chunkAccess, Iterator<BlockPos> position
     @Override
     public void remove() {
         this.positions.remove();
-        ((ChunkOxygenAccessor) this.chunkAccess).galacticraft$markSectionDirty(this.y);
+        ((ChunkOxygenAccessorInternal) this.chunkAccess).galacticraft$markSectionDirty(this.y);
     }
 }

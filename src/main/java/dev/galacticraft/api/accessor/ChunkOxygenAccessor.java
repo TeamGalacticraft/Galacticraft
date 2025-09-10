@@ -28,11 +28,29 @@ import net.minecraft.core.BlockPos;
 import java.util.Iterator;
 
 public interface ChunkOxygenAccessor {
+    /**
+     * {@return the {@link AtmosphereProvider atmosphere providers} that service the chunk section at the given y-position}
+     * @param y the block y-height of the section to check.
+     */
     Iterator<AtmosphereProvider> galacticraft$getProviders(int y);
+
+    /**
+     * {@return the positions of the {@link AtmosphereProvider atmosphere providers} that service the chunk section at the given y-position}
+     * @param y the block y-height of the section to check.
+     */
     Iterator<BlockPos> galacticraft$getProviderPositions(int y);
 
-    void galacticraft$markSectionDirty(int sectionIndex);
-
+    /**
+     * Links the given atmospheric provider to the chunk section at the given index.
+     * @param sectionIndex the index of the chunk section being provided to.
+     * @param provider the location of the atmospheric provider being linked.
+     */
     void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider);
+
+    /**
+     * Unlinks the given atmospheric provider to the chunk section at the given index.
+     * @param sectionIndex the index of the chunk section that is no longer being provided to.
+     * @param provider the location of the atmospheric provider being unlinked.
+     */
     void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider);
 }

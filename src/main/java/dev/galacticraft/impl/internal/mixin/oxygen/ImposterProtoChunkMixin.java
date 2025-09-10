@@ -25,7 +25,7 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 import com.google.common.collect.Iterators;
 import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import java.util.Iterator;
 
 @Mixin(ImposterProtoChunk.class)
-public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessorInternal {
     @Shadow
     @Final
     private boolean allowWrites;
@@ -60,13 +60,13 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, Ch
     @Override
     public void galacticraft$markSectionDirty(int sectionIndex) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$markSectionDirty(sectionIndex);
+            ((ChunkOxygenAccessorInternal) this.wrapped).galacticraft$markSectionDirty(sectionIndex);
         }
     }
 
     @Override
     public OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
-        return ((ChunkOxygenSyncer) this.wrapped).galacticraft$getPendingOxygenChanges();
+        return ((ChunkOxygenAccessorInternal) this.wrapped).galacticraft$getPendingOxygenChanges();
     }
 
     @Override

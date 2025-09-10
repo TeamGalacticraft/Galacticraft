@@ -22,9 +22,8 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
@@ -35,7 +34,7 @@ import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(EmptyLevelChunk.class)
-public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
+public abstract class EmptyLevelChunkMixin implements ChunkOxygenAccessorInternal {
     @Override
     public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
         return null;
