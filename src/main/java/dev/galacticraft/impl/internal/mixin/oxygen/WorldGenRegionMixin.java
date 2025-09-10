@@ -22,22 +22,25 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
-import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.SectionPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.WorldGenRegion;
 import net.minecraft.util.Mth;
 import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(WorldGenRegion.class)
@@ -48,16 +51,23 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
 
     @Override
     public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
-        if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
+        if (this.isOutsideBuildHeight(y)) return Collections.emptyIterator();
         ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
-        Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) chunk).galacticraft$getHandlers(x & 15, y, z & 15);
-        return new ProviderIterator(this.level, chunk, iterator);
+        int sectionIndex = chunk.getSectionIndex(y);
+        ArrayList<BlockPos> positions = ((ChunkSectionOxygenAccessor) chunk.getSections()[sectionIndex]).galacticraft$getRawProviders();
+        if (positions == null) return Collections.emptyIterator();
+        return new ProviderIterator(this.level, chunk, positions.listIterator(), sectionIndex);
     }
 
     @Override
     public Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
-        if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
-        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getHandlers(x & 15, y, z & 15);
+        if (this.isOutsideBuildHeight(y)) return Collections.emptyIterator();
+        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviderPositions(y);
+    }
+
+    @Override
+    public void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {
+        state.getBlock().galacticraft$onAtmosphereChange(this.level, pos, state, this.galacticraft$getAtmosphericProviders(pos));
     }
 
     @Override

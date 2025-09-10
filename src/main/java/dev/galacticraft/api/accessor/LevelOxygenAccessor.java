@@ -22,5 +22,11 @@
 
 package dev.galacticraft.api.accessor;
 
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.block.state.BlockState;
+
 public interface LevelOxygenAccessor extends LevelOxygenAccessorRO {
+    void galacticraft$addAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
+    void galacticraft$removeAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
+    default void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {}
 }

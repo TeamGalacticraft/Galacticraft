@@ -20,30 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.api.accessor;
 
-import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.ApiStatus;
 
-import java.util.ArrayList;
+import java.util.Iterator;
 
-@ApiStatus.Internal
-public interface ChunkSectionOxygenAccessor {
-    boolean galacticraft$hasProvider(BlockPos pos);
-    boolean galacticraft$addProvider(BlockPos pos);
-    boolean galacticraft$removeProvider(BlockPos pos);
+public interface ChunkOxygenAccessor {
+    Iterator<AtmosphereProvider> galacticraft$getProviders(int y);
+    Iterator<BlockPos> galacticraft$getProviderPositions(int y);
 
-    boolean galacticraft$isEmpty();
+    void galacticraft$markSectionDirty(int sectionIndex);
 
-    void galacticraft$writeTag(CompoundTag apiTag);
-    void galacticraft$readTag(CompoundTag apiTag);
-
-    OxygenUpdatePayload.OxygenSectionData galacticraft$updatePayload();
-
-    void galacticraft$loadData(OxygenUpdatePayload.OxygenSectionData data);
-
-    @ApiStatus.Internal
-    ArrayList<BlockPos> galacticraft$getRawProviders();
+    void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider);
+    void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider);
 }

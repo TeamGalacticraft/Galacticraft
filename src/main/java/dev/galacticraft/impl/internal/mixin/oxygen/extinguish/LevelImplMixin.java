@@ -20,30 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.nbt.CompoundTag;
-import org.jetbrains.annotations.ApiStatus;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
 
-import java.util.ArrayList;
-
-@ApiStatus.Internal
-public interface ChunkSectionOxygenAccessor {
-    boolean galacticraft$hasProvider(BlockPos pos);
-    boolean galacticraft$addProvider(BlockPos pos);
-    boolean galacticraft$removeProvider(BlockPos pos);
-
-    boolean galacticraft$isEmpty();
-
-    void galacticraft$writeTag(CompoundTag apiTag);
-    void galacticraft$readTag(CompoundTag apiTag);
-
-    OxygenUpdatePayload.OxygenSectionData galacticraft$updatePayload();
-
-    void galacticraft$loadData(OxygenUpdatePayload.OxygenSectionData data);
-
-    @ApiStatus.Internal
-    ArrayList<BlockPos> galacticraft$getRawProviders();
+// all base classes for LevelAccessor
+@Mixin({Level.class, WorldGenRegion.class})
+public abstract class LevelImplMixin implements LevelOxygenAccessor {
+    @WrapMethod(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
+    private boolean extinguishFire(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, Operation<Boolean> original) {
+        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform(state) && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
+    }
 }

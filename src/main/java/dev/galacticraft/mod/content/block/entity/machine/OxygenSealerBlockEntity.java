@@ -23,11 +23,9 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.SpaceFillingAtmosphereProvider;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
-import dev.galacticraft.impl.internal.oxygen.SectionProviderIterator;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -222,15 +220,14 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 LevelChunk chunk = this.level.getChunk(section.getX(), section.getZ());
                 LevelChunkSection section1 = chunk.getSection(section.getY());
                 visitedSections.put(section.immutable(), section1);
-                ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(section.getY());
-                ((ChunkSectionOxygenAccessor) section1).galacticraft$addProvider(this.worldPosition);
+                ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphericProvider(section.getY(), this.worldPosition);
             }
 
             LevelChunkSection chunkSection = visitedSections.get(section);
             BlockState blockState = chunkSection.getBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
             if (blockState.getBlock().galacticraft$hasAtmosphereListener(blockState)) {
                 if (this.isSealed()) {
-                    blockState.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, blockState, new SectionProviderIterator(level, chunkSection, ((ChunkSectionOxygenAccessor) chunkSection).galacticraft$getProviders()));
+                    this.level.galacticraft$notifyAtmosphereChange(pos, blockState);
                 }
                 this.atmosphereAwareBlocks.add(pos);
             }
@@ -442,7 +439,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 mutable.setWithOffset(current.pos, direction);
                 // if NOT sealed and NOT already visited, it's a new spot.
                 if (!this.sealedPositions.containsKey(mutable) && !visited.containsKey(mutable)) {
-                    BlockState bs = level.getBlockState(mutable);
+                    BlockState bs = this.level.getBlockState(mutable);
                     boolean full = isSealable(mutable, bs);
                     BlockPos ps = mutable.immutable();
                     visited.put(ps, full);
@@ -457,23 +454,24 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
     }
 
     public void destroySeal() {
+        assert this.level != null;
         for (BlockPos pos : this.sealedPositions.keySet()) {
             // todo: make more efficient
-            ((ChunkSectionOxygenAccessor) this.level.getChunkAt(pos).getSection(this.level.getSectionIndex(pos.getY()))).galacticraft$removeProvider(this.worldPosition);
+            ((ChunkOxygenAccessor) this.level.getChunkAt(pos)).galacticraft$removeAtmosphericProvider(this.level.getSectionIndex(pos.getY()), this.worldPosition);
         }
         this.sealedPositions.clear();
-        markChanged();
+        this.markChanged();
 
         // was sealed, notify blocks of loss
         if (this.isSealed()) {
             for (BlockPos pos : this.atmosphereAwareBlocks) {
-                notifyBlockOfSealChange(pos);
+                this.notifyBlockOfSealChange(pos);
             }
         }
     }
 
     private void notifyBlockOfSealChange(BlockPos pos) {
-        BlockState state = level.getBlockState(pos);
+        BlockState state = this.level.getBlockState(pos);
         if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
             state.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, state, level.galacticraft$getAtmosphericProviders(pos));
         }

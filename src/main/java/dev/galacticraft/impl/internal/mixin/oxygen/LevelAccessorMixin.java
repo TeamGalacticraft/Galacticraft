@@ -20,14 +20,26 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
+import org.spongepowered.asm.mixin.Mixin;
 
-import java.util.Iterator;
+// all base classes for LevelAccessor
+@Mixin({Level.class, WorldGenRegion.class})
+public abstract class LevelAccessorMixin implements LevelAccessor, LevelOxygenAccessor {
+    @Override
+    public void galacticraft$removeAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
+        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$removeAtmosphericProvider(sectionY, provider);
+    }
 
-public interface ChunkOxygenAccessor {
-    Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z);
-
-    void galacticraft$markSectionDirty(int sectionIndex);
+    @Override
+    public void galacticraft$addAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
+        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$addAtmosphericProvider(sectionY, provider);
+    }
 }

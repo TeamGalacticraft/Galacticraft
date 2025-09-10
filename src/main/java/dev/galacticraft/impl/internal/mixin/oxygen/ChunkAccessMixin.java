@@ -22,9 +22,11 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.ApPosIterator;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.LevelHeightAccessor;
@@ -36,10 +38,12 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(ChunkAccess.class)
-public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+public abstract class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     @Shadow
     @Final
     protected LevelChunkSection[] sections;
@@ -48,17 +52,43 @@ public class ChunkAccessMixin implements ChunkOxygenAccessor, ChunkOxygenSyncer 
     @Final
     protected LevelHeightAccessor levelHeightAccessor;
 
+    @Shadow
+    public abstract void setUnsaved(boolean needsSaving);
+
     @Unique
     private short dirtySections = 0;
 
     @Override
-    public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
-        return ((ChunkSectionOxygenAccessor) this.sections[this.levelHeightAccessor.getSectionIndex(y)]).galacticraft$getProviders();
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        return Collections.emptyIterator();
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getProviderPositions(int y) {
+        int sectionIndex = this.levelHeightAccessor.getSectionIndex(y);
+        ArrayList<BlockPos> positions = ((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$getRawProviders();
+        if (positions == null) return Collections.emptyIterator();
+        return new ApPosIterator((ChunkAccess) (Object) this, positions.iterator(), sectionIndex);
     }
 
     @Override
     public void galacticraft$markSectionDirty(int sectionIndex) {
         this.dirtySections |= (short) (0b1 << sectionIndex);
+        this.setUnsaved(true);
+    }
+
+    @Override
+    public void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider) {
+        if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$addProvider(provider)) {
+            this.galacticraft$markSectionDirty(sectionIndex);
+        }
+    }
+
+    @Override
+    public void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider) {
+        if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$removeProvider(provider)) {
+            this.galacticraft$markSectionDirty(sectionIndex);
+        }
     }
 
     @Override

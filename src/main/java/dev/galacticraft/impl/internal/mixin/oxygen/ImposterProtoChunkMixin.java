@@ -22,7 +22,9 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import com.google.common.collect.Iterators;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import net.minecraft.core.BlockPos;
@@ -44,8 +46,15 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, Ch
     private LevelChunk wrapped;
 
     @Override
-    public Iterator<BlockPos> galacticraft$getHandlers(int x, int y, int z) {
-        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$getHandlers(x, y, z);
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        Iterator<AtmosphereProvider> iterator = ((ChunkOxygenAccessor) this.wrapped).galacticraft$getProviders(y);
+        return this.allowWrites ? iterator : Iterators.unmodifiableIterator(iterator); //todo: removal based on loading can still occur with blocked writes
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getProviderPositions(int y) {
+        Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) this.wrapped).galacticraft$getProviderPositions(y);
+        return this.allowWrites ? iterator : Iterators.unmodifiableIterator(iterator);
     }
 
     @Override
@@ -58,5 +67,19 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor, Ch
     @Override
     public OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
         return ((ChunkOxygenSyncer) this.wrapped).galacticraft$getPendingOxygenChanges();
+    }
+
+    @Override
+    public void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider) {
+        if (this.allowWrites) {
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$addAtmosphericProvider(sectionIndex, provider);
+        }
+    }
+
+    @Override
+    public void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider) {
+        if (this.allowWrites) {
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$removeAtmosphericProvider(sectionIndex, provider);
+        }
     }
 }

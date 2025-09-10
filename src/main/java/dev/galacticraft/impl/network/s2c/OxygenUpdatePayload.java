@@ -60,8 +60,7 @@ public record OxygenUpdatePayload(long chunk, OxygenData[] data) implements S2CP
             ChunkAccess chunk = context.client().level.getChunk(ChunkPos.getX(this.chunk), ChunkPos.getZ(this.chunk), ChunkStatus.FULL, false);
             if (chunk != null) {
                 for (OxygenData datum : this.data) {
-                    ChunkSectionOxygenAccessor accessor = (ChunkSectionOxygenAccessor) chunk.getSection(datum.section);
-                    accessor.galacticraft$loadData(datum.data);
+                    ((ChunkSectionOxygenAccessor) chunk.getSection(datum.section)).galacticraft$loadData(datum.data);
                 }
             }
         };

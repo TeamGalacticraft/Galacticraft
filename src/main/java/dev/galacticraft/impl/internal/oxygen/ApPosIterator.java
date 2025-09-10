@@ -20,21 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
+package dev.galacticraft.impl.internal.oxygen;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.server.level.WorldGenRegion;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import org.spongepowered.asm.mixin.Mixin;
+import net.minecraft.world.level.chunk.ChunkAccess;
 
-@Mixin({Level.class, WorldGenRegion.class})
-public abstract class LevelChunkMixin implements LevelOxygenAccessor {
-    @WrapMethod(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
-    private boolean extinguishFire(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, Operation<Boolean> original) {
-        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform(state) && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
+import java.util.Iterator;
+
+public record ApPosIterator(ChunkAccess chunkAccess, Iterator<BlockPos> positions, int y) implements Iterator<BlockPos> {
+    @Override
+    public boolean hasNext() {
+        return this.positions.hasNext();
+    }
+
+    @Override
+    public BlockPos next() {
+        return this.positions.next();
+    }
+
+    @Override
+    public void remove() {
+        this.positions.remove();
+        ((ChunkOxygenAccessor) this.chunkAccess).galacticraft$markSectionDirty(this.y);
     }
 }

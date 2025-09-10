@@ -22,9 +22,10 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
@@ -46,6 +47,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 
 @Mixin(LevelChunk.class)
@@ -58,11 +61,19 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
         super(pos, upgradeData, heightLimitView, biomeRegistry, inhabitedTime, sectionArray, blendingData);
     }
 
+    @Override
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        int sectionIndex = this.levelHeightAccessor.getSectionIndex(y);
+        ArrayList<BlockPos> positions = ((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$getRawProviders();
+        if (positions == null) return Collections.emptyIterator();
+        return new ProviderIterator(this.level, this, positions.listIterator(), sectionIndex);
+    }
+
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
     private void notifyAPsOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
         if (this.level.isClientSide) return;
 
-        Iterator<BlockPos> iterator = this.galacticraft$getHandlers(pos.getX() & 15, pos.getY(), pos.getZ() & 15);
+        Iterator<BlockPos> iterator = this.galacticraft$getProviderPositions(pos.getY());
         while (iterator.hasNext()) {
             BlockPos atPos = iterator.next();
             BlockEntity blockEntity = this.level.getBlockEntity(atPos);

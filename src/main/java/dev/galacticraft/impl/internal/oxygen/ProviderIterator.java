@@ -22,35 +22,45 @@
 
 package dev.galacticraft.impl.internal.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.chunk.ChunkAccess;
-import net.minecraft.world.level.chunk.LevelChunkSection;
 
 import java.util.Iterator;
+import java.util.ListIterator;
 import java.util.NoSuchElementException;
 
 public class ProviderIterator implements Iterator<AtmosphereProvider> {
-    private final ChunkAccess chunk;
-    private final Level level;
-    private final Iterator<BlockPos> iterator;
-    private AtmosphereProvider next = null;
+    private final BlockGetter level;
+    private final ChunkAccess access;
+    private final ListIterator<BlockPos> positions;
+    private final int y;
+    private AtmosphereProvider next;
 
-    // todo: globally cache block entities
-    public ProviderIterator(Level level, ChunkAccess chunk, Iterator<BlockPos> iterator) {
-        this.chunk = chunk;
+    public ProviderIterator(BlockGetter level, ChunkAccess access, ListIterator<BlockPos> positions, int y) {
         this.level = level;
-        this.iterator = iterator;
-        if (iterator.hasNext()) {
-            BlockPos pos = iterator.next();
-            if (this.level.getBlockEntity(pos) instanceof AtmosphereProvider provider) {
-                this.next = provider;
-            }
-        }
+        this.access = access;
+        this.positions = positions;
+        this.y = y;
+        this.next = this.computeNext();
     }
+
+    private AtmosphereProvider computeNext() {
+        if (this.positions.hasNext()) {
+            BlockEntity blockEntity = this.level.getBlockEntity(this.positions.next());
+            if (blockEntity instanceof AtmosphereProvider provider) {
+                return provider;
+            } else {
+                this.positions.remove();
+            }
+            return this.computeNext();
+        }
+        return null;
+    }
+
 
     @Override
     public boolean hasNext() {
@@ -59,22 +69,18 @@ public class ProviderIterator implements Iterator<AtmosphereProvider> {
 
     @Override
     public AtmosphereProvider next() {
-        if (this.next == null) throw new NoSuchElementException();
-        AtmosphereProvider result = this.next;
-        this.next = null;
-        if (iterator.hasNext()) {
-            BlockPos pos = iterator.next();
-            if (this.level.getBlockEntity(pos) instanceof AtmosphereProvider provider) {
-                this.next = provider;
-            } else {
-                LevelChunkSection[] sections = this.chunk.getSections();
-                for (int i = 0; i < sections.length; i++) {
-                    ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$removeProvider(pos);
-                    ((ChunkOxygenAccessor) this.chunk).galacticraft$markSectionDirty(i);
-                }
-            }
+        if (this.next == null) {
+            throw new NoSuchElementException();
         }
+        AtmosphereProvider next1 = this.next;
+        this.next = this.computeNext();
+        return next1;
+    }
 
-        return result;
+    @Override
+    public void remove() {
+        this.positions.previous();
+        this.positions.remove();
+        ((ChunkOxygenAccessor) this.access).galacticraft$markSectionDirty(this.y);
     }
 }

@@ -22,13 +22,11 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.accessor.LevelBodyAccessor;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.oxygen.ProviderIterator;
-import it.unimi.dsi.fastutil.objects.ObjectIterators;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
@@ -67,16 +65,16 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
 
     @Override
     public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
-        if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
-        LevelChunk chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
-        Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) chunk).galacticraft$getHandlers(x & 15, y, z & 15);
-        return new ProviderIterator((Level) (Object) this, chunk, iterator);
+        if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
+        if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
+        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviders(y);
     }
 
     @Override
     public Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
-        if (this.isOutsideBuildHeight(y)) return ObjectIterators.emptyIterator();
-        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getHandlers(x & 15, y, z & 15);
+        if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
+        if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
+        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviderPositions(y);
     }
 
     @Override

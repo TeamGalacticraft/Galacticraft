@@ -23,10 +23,9 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.api.gas.Gases;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.internal.oxygen.ReverseSortedPosList;
 import dev.galacticraft.impl.internal.oxygen.SortedPosList;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
@@ -66,7 +65,6 @@ import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -267,13 +265,11 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
         for (int x = minX; x <= maxX; x++) {
             for (int z = minZ; z <= maxZ; z++) {
                 LevelChunk chunk = this.level.getChunk(x, z);
-                LevelChunkSection[] sections = chunk.getSections();
-                for (int i = minSection; i <= maxSection; i++) {
-                    ((ChunkOxygenAccessor) chunk).galacticraft$markSectionDirty(i);
+                for (int sectionIndex = minSection; sectionIndex <= maxSection; sectionIndex++) {
                     if (allocate) {
-                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$addProvider(this.worldPosition);
+                        ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphericProvider(sectionIndex, this.worldPosition);
                     } else {
-                        ((ChunkSectionOxygenAccessor) sections[i]).galacticraft$removeProvider(this.worldPosition);
+                        ((ChunkOxygenAccessor) chunk).galacticraft$removeAtmosphericProvider(sectionIndex, this.worldPosition);
                     }
                 }
             }
