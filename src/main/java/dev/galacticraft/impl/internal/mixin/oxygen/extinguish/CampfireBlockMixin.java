@@ -30,6 +30,7 @@ import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.CampfireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BooleanProperty;
@@ -71,10 +72,9 @@ public class CampfireBlockMixin implements GCBlockExtensions {
     @Override
     public void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, boolean breathable) {
         if (!breathable) {
-            // todo: assuming all campfire = actual fire? should there be smoke?
             level.playSound(null, pos, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.BLOCKS, 0.2F, 1.0F);
 
-            level.setBlock(pos, state.setValue(CampfireBlock.LIT, false), 11);
+            level.setBlock(pos, state.setValue(CampfireBlock.LIT, false), Block.UPDATE_ALL_IMMEDIATE);
         }
     }
 }

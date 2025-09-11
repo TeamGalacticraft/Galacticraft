@@ -70,16 +70,16 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessorInte
     }
 
     @Override
-    public void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$addAtmosphericProvider(sectionIndex, provider);
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$addAtmosphereProvider(sectionIndex, provider);
         }
     }
 
     @Override
-    public void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$removeAtmosphericProvider(sectionIndex, provider);
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$removeAtmosphereProvider(sectionIndex, provider);
         }
     }
 }

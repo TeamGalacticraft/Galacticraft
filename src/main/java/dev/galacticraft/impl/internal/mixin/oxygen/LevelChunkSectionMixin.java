@@ -54,8 +54,7 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
     @Override
     public boolean galacticraft$addProvider(BlockPos pos) {
         if (this.providers == null) {
-            this.providers = new ArrayList<>(1);
-            this.providers.add(pos);
+            this.providers = Lists.newArrayList(pos);
             return true;
         } else if (!this.galacticraft$hasProvider(pos)) {
             this.providers.add(pos);

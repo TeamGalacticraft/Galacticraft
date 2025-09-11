@@ -60,7 +60,7 @@ public interface AtmosphereProvider {
     boolean canBreathe(BlockPos pos);
 
     /**
-     * Called when a block state is updated within a chunk that has this atmospheric provider attached.
+     * Called when a block state is updated within a chunk that has this atmosphere provider attached.
      * @param pos the position of block that was changed
      * @param newState the new state being placed at the position.
      */

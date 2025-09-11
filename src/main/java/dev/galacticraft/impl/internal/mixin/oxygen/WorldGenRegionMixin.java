@@ -50,7 +50,7 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
     @Shadow public abstract ChunkAccess getChunk(int chunkX, int chunkZ);
 
     @Override
-    public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
+    public Iterator<AtmosphereProvider> galacticraft$getAtmosphereProviders(int x, int y, int z) {
         if (this.isOutsideBuildHeight(y)) return Collections.emptyIterator();
         ChunkAccess chunk = this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z));
         int sectionIndex = chunk.getSectionIndex(y);
@@ -60,20 +60,20 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
     }
 
     @Override
-    public Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
+    public Iterator<BlockPos> galacticraft$getAtmosphereProviderLocations(int x, int y, int z) {
         if (this.isOutsideBuildHeight(y)) return Collections.emptyIterator();
         return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviderPositions(y);
     }
 
     @Override
     public void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {
-        state.getBlock().galacticraft$onAtmosphereChange(this.level, pos, state, this.galacticraft$getAtmosphericProviders(pos));
+        state.getBlock().galacticraft$onAtmosphereChange(this.level, pos, state, this.galacticraft$getAtmosphereProviders(pos));
     }
 
     @Override
     public boolean galacticraft$isBreathable(double x, double y, double z) {
         if (this.level.galacticraft$isBreathable()) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -84,7 +84,7 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
     @Override
     public boolean galacticraft$isBreathable(int x, int y, int z) {
         if (this.level.galacticraft$isBreathable()) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(x, y, z);
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(x, y, z);
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -95,7 +95,7 @@ public abstract class WorldGenRegionMixin implements LevelOxygenAccessor, LevelH
     @Override
     public boolean galacticraft$isBreathable(BlockPos pos) {
         if (this.level.galacticraft$isBreathable()) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(pos.getX(), pos.getY(), pos.getZ());
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(pos)) return true;

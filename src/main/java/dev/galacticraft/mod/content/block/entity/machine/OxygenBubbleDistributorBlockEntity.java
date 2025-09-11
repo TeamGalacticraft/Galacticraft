@@ -248,9 +248,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                 LevelChunk chunk = this.level.getChunk(x, z);
                 for (int sectionIndex = minSection; sectionIndex <= maxSection; sectionIndex++) {
                     if (allocate) {
-                        ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphericProvider(sectionIndex, this.worldPosition);
+                        ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphereProvider(sectionIndex, this.worldPosition);
                     } else {
-                        ((ChunkOxygenAccessor) chunk).galacticraft$removeAtmosphericProvider(sectionIndex, this.worldPosition);
+                        ((ChunkOxygenAccessor) chunk).galacticraft$removeAtmosphereProvider(sectionIndex, this.worldPosition);
                     }
                 }
             }
@@ -329,7 +329,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                         if (distance > sizeSq) {
                             BlockPos pos = this.sealedListeners.get(i);
                             BlockState state = this.level.getBlockState(pos);
-                            state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) level, pos, state, level.galacticraft$getAtmosphericProviders(pos));
+                            state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) level, pos, state, level.galacticraft$getAtmosphereProviders(pos));
                             if (this.sealedListeners.contains(pos, distance)) {
                                 this.unsealedListeners.add(pos, distance);
                                 if (i < this.sealedListeners.size() && this.sealedListeners.get(i) == pos) {
@@ -353,7 +353,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
                         if (distance <= sizeSq) {
                             BlockPos pos = this.unsealedListeners.get(i);
                             BlockState state = this.level.getBlockState(pos);
-                            state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) level, pos, state, level.galacticraft$getAtmosphericProviders(pos));
+                            state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) level, pos, state, level.galacticraft$getAtmosphereProviders(pos));
                             if (this.unsealedListeners.contains(pos, distance)) {
                                 this.sealedListeners.add(pos, distance);
                                 if (i < this.unsealedListeners.size() && this.unsealedListeners.get(i) == pos) {
@@ -445,7 +445,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
             BlockPos pos = this.sealedListeners.get(i);
             BlockState state = this.level.getBlockState(pos);
             if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
-                state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) this.level, pos, state, this.level.galacticraft$getAtmosphericProviders(pos));
+                state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) this.level, pos, state, this.level.galacticraft$getAtmosphereProviders(pos));
             }
         }
         this.sealedListeners.clear();

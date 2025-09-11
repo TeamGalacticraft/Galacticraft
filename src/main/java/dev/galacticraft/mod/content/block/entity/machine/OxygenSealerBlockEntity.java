@@ -235,7 +235,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 LevelChunk chunk = this.level.getChunk(section.getX(), section.getZ());
                 LevelChunkSection section1 = chunk.getSection(section.getY());
                 visitedSections.put(section.immutable(), section1);
-                ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphericProvider(section.getY(), this.worldPosition);
+                ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphereProvider(section.getY(), this.worldPosition);
             }
 
             LevelChunkSection chunkSection = visitedSections.get(section);
@@ -482,7 +482,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         assert this.level != null;
         for (BlockPos pos : this.sealedPositions.keySet()) {
             // todo: make more efficient
-            ((ChunkOxygenAccessor) this.level.getChunkAt(pos)).galacticraft$removeAtmosphericProvider(this.level.getSectionIndex(pos.getY()), this.worldPosition);
+            ((ChunkOxygenAccessor) this.level.getChunkAt(pos)).galacticraft$removeAtmosphereProvider(this.level.getSectionIndex(pos.getY()), this.worldPosition);
         }
         this.sealedPositions.clear();
         this.markChanged();
@@ -498,7 +498,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
     private void notifyBlockOfSealChange(BlockPos pos) {
         BlockState state = this.level.getBlockState(pos);
         if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
-            state.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, state, level.galacticraft$getAtmosphericProviders(pos));
+            state.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, state, level.galacticraft$getAtmosphereProviders(pos));
         }
     }
 

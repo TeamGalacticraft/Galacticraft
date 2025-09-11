@@ -51,7 +51,7 @@ public interface GCBlockExtensions {
     }
 
     /**
-     * {@return whether the given block state needs to be altered to changes in atmospheric composition}
+     * {@return whether the given block state needs to be alerted to changes in atmospheric composition}
      * @param state the state being checked
      */
     default boolean galacticraft$hasAtmosphereListener(BlockState state) {
@@ -63,7 +63,7 @@ public interface GCBlockExtensions {
      * @param level the current level
      * @param pos the position of the block
      * @param state the current state of the block
-     * @param iterator all atmospheric providers at the given position
+     * @param iterator all atmosphere providers at the given position
      * @see #galacticraft$onAtmosphereChange(ServerLevel, BlockPos, BlockState, boolean)
      */
     default void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, Iterator<AtmosphereProvider> iterator) {

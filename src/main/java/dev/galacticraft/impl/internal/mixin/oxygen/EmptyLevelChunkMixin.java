@@ -55,10 +55,10 @@ public abstract class EmptyLevelChunkMixin implements ChunkOxygenAccessorInterna
     }
 
     @Override
-    public void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
     }
 
     @Override
-    public void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
     }
 }

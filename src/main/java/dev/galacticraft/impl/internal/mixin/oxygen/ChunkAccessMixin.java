@@ -77,14 +77,14 @@ public abstract class ChunkAccessMixin implements ChunkOxygenAccessorInternal {
     }
 
     @Override
-    public void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
         if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$addProvider(provider)) {
             this.galacticraft$markSectionDirty(sectionIndex);
         }
     }
 
     @Override
-    public void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider) {
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
         if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$removeProvider(provider)) {
             this.galacticraft$markSectionDirty(sectionIndex);
         }

@@ -32,6 +32,6 @@ import org.spongepowered.asm.mixin.Mixin;
 public abstract class ServerLevelMixin implements LevelOxygenAccessor {
     @Override
     public void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {
-        state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) (Object) this, pos, state, this.galacticraft$getAtmosphericProviders(pos));
+        state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) (Object) this, pos, state, this.galacticraft$getAtmosphereProviders(pos));
     }
 }

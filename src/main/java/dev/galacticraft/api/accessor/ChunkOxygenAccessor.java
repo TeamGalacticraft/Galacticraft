@@ -41,16 +41,16 @@ public interface ChunkOxygenAccessor {
     Iterator<BlockPos> galacticraft$getProviderPositions(int y);
 
     /**
-     * Links the given atmospheric provider to the chunk section at the given index.
+     * Links the given atmosphere provider to the chunk section at the given index.
      * @param sectionIndex the index of the chunk section being provided to.
-     * @param provider the location of the atmospheric provider being linked.
+     * @param provider the location of the atmosphere provider being linked.
      */
-    void galacticraft$addAtmosphericProvider(int sectionIndex, BlockPos provider);
+    void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider);
 
     /**
-     * Unlinks the given atmospheric provider to the chunk section at the given index.
+     * Unlinks the given atmosphere provider to the chunk section at the given index.
      * @param sectionIndex the index of the chunk section that is no longer being provided to.
-     * @param provider the location of the atmospheric provider being unlinked.
+     * @param provider the location of the atmosphere provider being unlinked.
      */
-    void galacticraft$removeAtmosphericProvider(int sectionIndex, BlockPos provider);
+    void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider);
 }

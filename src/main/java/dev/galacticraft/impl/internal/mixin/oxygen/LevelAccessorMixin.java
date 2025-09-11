@@ -34,12 +34,12 @@ import org.spongepowered.asm.mixin.Mixin;
 @Mixin({Level.class, WorldGenRegion.class})
 public abstract class LevelAccessorMixin implements LevelAccessor, LevelOxygenAccessor {
     @Override
-    public void galacticraft$removeAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
-        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$removeAtmosphericProvider(sectionY, provider);
+    public void galacticraft$removeAtmosphereProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
+        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$removeAtmosphereProvider(sectionY, provider);
     }
 
     @Override
-    public void galacticraft$addAtmosphericProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
-        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$addAtmosphericProvider(sectionY, provider);
+    public void galacticraft$addAtmosphereProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider) {
+        ((ChunkOxygenAccessor) this.getChunk(sectionX, sectionZ)).galacticraft$addAtmosphereProvider(sectionY, provider);
     }
 }

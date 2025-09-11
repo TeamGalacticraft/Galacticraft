@@ -30,16 +30,16 @@ import java.util.Iterator;
 
 public interface LevelOxygenAccessorRO {
     /**
-     * {@return the atmospheric providers for the given block position}
+     * {@return the atmosphere providers for the given block position}
      */
-    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
+    default Iterator<AtmosphereProvider> galacticraft$getAtmosphereProviders(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
     /**
-     * {@return the positions of the atmospheric providers for the given block position}
+     * {@return the positions of the atmosphere providers for the given block position}
      */
-    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
+    default Iterator<BlockPos> galacticraft$getAtmosphereProviderLocations(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
@@ -77,11 +77,11 @@ public interface LevelOxygenAccessorRO {
         return this.galacticraft$isBreathable(point.x, point.y, point.z);
     }
 
-    default Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(BlockPos pos) {
-        return this.galacticraft$getAtmosphericProviderLocations(pos.getX(), pos.getY(), pos.getZ());
+    default Iterator<BlockPos> galacticraft$getAtmosphereProviderLocations(BlockPos pos) {
+        return this.galacticraft$getAtmosphereProviderLocations(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    default Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(BlockPos pos) {
-        return this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+    default Iterator<AtmosphereProvider> galacticraft$getAtmosphereProviders(BlockPos pos) {
+        return this.galacticraft$getAtmosphereProviders(pos.getX(), pos.getY(), pos.getZ());
     }
 }

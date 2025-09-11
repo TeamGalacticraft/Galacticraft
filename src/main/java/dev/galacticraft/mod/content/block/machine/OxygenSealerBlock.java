@@ -74,7 +74,7 @@ public class OxygenSealerBlock extends MachineBlock {
     public void onPlace(BlockState state, Level level, BlockPos pos, BlockState blockState2, boolean bl) {
         super.onPlace(state, level, pos, blockState2, bl);
         OxygenSealerBlockEntity be = (OxygenSealerBlockEntity) level.getBlockEntity(pos);
-        Iterator<AtmosphereProvider> iterator = level.galacticraft$getAtmosphericProviders(pos);
+        Iterator<AtmosphereProvider> iterator = level.galacticraft$getAtmosphereProviders(pos);
         assert be != null;
         while (iterator.hasNext()) {
             AtmosphereProvider next = iterator.next();

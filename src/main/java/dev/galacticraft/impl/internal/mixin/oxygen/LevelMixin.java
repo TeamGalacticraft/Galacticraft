@@ -64,14 +64,14 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     }
 
     @Override
-    public Iterator<AtmosphereProvider> galacticraft$getAtmosphericProviders(int x, int y, int z) {
+    public Iterator<AtmosphereProvider> galacticraft$getAtmosphereProviders(int x, int y, int z) {
         if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
         if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
         return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviders(y);
     }
 
     @Override
-    public Iterator<BlockPos> galacticraft$getAtmosphericProviderLocations(int x, int y, int z) {
+    public Iterator<BlockPos> galacticraft$getAtmosphereProviderLocations(int x, int y, int z) {
         if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
         if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
         return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviderPositions(y);
@@ -80,7 +80,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     @Override
     public boolean galacticraft$isBreathable(double x, double y, double z) {
         if (this.breathable) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -91,7 +91,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     @Override
     public boolean galacticraft$isBreathable(int x, int y, int z) {
         if (this.breathable) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(x, y, z);
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(x, y, z);
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(x, y, z)) return true;
@@ -102,7 +102,7 @@ public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, 
     @Override
     public boolean galacticraft$isBreathable(BlockPos pos) {
         if (this.breathable) return true;
-        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphericProviders(pos.getX(), pos.getY(), pos.getZ());
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(pos.getX(), pos.getY(), pos.getZ());
         while (iter.hasNext()) {
             AtmosphereProvider next = iter.next();
             if (next.canBreathe(pos)) return true;

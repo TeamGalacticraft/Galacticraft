@@ -85,7 +85,6 @@ public class SortedPosList {
             this.addInternal(pos, distance, j);
             return true;
         }
-
     }
 
     public boolean add(BlockPos pos) {
@@ -103,6 +102,7 @@ public class SortedPosList {
     public boolean remove(BlockPos pos) {
         return this.remove(pos, this.calculateDistanceSq(pos));
     }
+
     public boolean remove(BlockPos pos, double distance) {
         int i = this.findIndex(pos, distance);
         if (i >= 0) {
