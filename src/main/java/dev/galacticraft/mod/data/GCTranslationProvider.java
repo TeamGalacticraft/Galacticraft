@@ -198,6 +198,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, "Cracked Moon Basalt Brick Wall");
 
         this.block(GCBlocks.OLI_FLY_EGG, "Oli Fly Egg");
+        this.block(GCBlocks.MOON_WEED, "Moon Weed");
+        this.block(GCBlocks.MOON_SHRUBS, "Moon Shrubs");
+        this.block(GCBlocks.MOON_MOSS, "Moon Moss");
 
         this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
 

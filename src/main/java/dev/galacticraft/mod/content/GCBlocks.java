@@ -155,6 +155,10 @@ public class GCBlocks {
 
     public static final Block OLI_FLY_EGG = BLOCKS.registerWithItem(Constant.Block.OLI_FLY_EGG, new OliFlyEggBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SNIFFER_EGG)));
 
+    public static final Block MOON_WEED = BLOCKS.registerWithItem(Constant.Block.MOON_WEED, new MoonWeedBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).replaceable().noCollission().instabreak().sound(SoundType.MOSS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY).emissiveRendering(Blocks::always).lightLevel((state) -> 5)));
+    public static final Block MOON_SHRUBS = BLOCKS.registerWithItem(Constant.Block.MOON_SHRUBS, new MoonShrubsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).replaceable().noCollission().instabreak().sound(SoundType.MOSS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY).emissiveRendering(Blocks::always).lightLevel((state) -> 3)));
+    public static final Block MOON_MOSS = BLOCKS.registerWithItem(Constant.Block.MOON_MOSS, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).sound(SoundType.MOSS).emissiveRendering(Blocks::always)));
+
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.2F).requiresCorrectToolForDrops()));
     public static final Block MARS_SUB_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SUB_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.6F).requiresCorrectToolForDrops()));

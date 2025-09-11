@@ -256,6 +256,9 @@ public class GCModelProvider extends FabricModelProvider {
 
         // MISC WORLD GEN
         this.createCavernousVines(generator);
+        this.createMoonShrubs(generator);
+        this.createMoonWeed(generator);
+        generator.createTrivialCube(GCBlocks.MOON_MOSS);
 
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
@@ -864,6 +867,30 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(AbstractLaunchPad.Part.EAST, Variant.variant().with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90).with(VariantProperties.MODEL, side))
         ));
         generator.delegateItemModel(pad, centerModel);
+    }
+
+    private void createMoonWeed(BlockModelGenerators generator) {
+        ResourceLocation weedModel = ModelTemplates.CROSS.create(
+                GCBlocks.MOON_WEED,
+                TextureMapping.cross(TextureMapping.getBlockTexture(GCBlocks.MOON_WEED)),
+                generator.modelOutput
+        );
+
+        generator.blockStateOutput.accept(
+                BlockModelGenerators.createRotatedVariant(GCBlocks.MOON_WEED, weedModel)
+        );
+
+        generator.createSimpleFlatItemModel(GCBlocks.MOON_WEED);
+    }
+
+    private void createMoonShrubs(BlockModelGenerators generator) {
+        ResourceLocation shrubsModel = ModelLocationUtils.getModelLocation(GCBlocks.MOON_SHRUBS);
+
+        generator.blockStateOutput.accept(
+                BlockModelGenerators.createRotatedVariant(GCBlocks.MOON_SHRUBS, shrubsModel)
+        );
+
+        generator.delegateItemModel(GCBlocks.MOON_SHRUBS, shrubsModel);
     }
 
     private void createCavernousVines(BlockModelGenerators generator) {

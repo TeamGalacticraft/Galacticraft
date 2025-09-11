@@ -149,6 +149,10 @@ public interface Constant {
 
         String OLI_FLY_EGG = "oli_fly_egg";
 
+        String MOON_WEED = "moon_weed";
+        String MOON_SHRUBS = "moon_shrubs";
+        String MOON_MOSS = "moon_moss";
+
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
         String MARS_SUB_SURFACE_ROCK = "mars_sub_surface_rock";

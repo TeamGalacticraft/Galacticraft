@@ -117,6 +117,10 @@ public class GCCreativeModeTabs {
                 output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
 
+                output.accept(MOON_WEED);
+                output.accept(MOON_SHRUBS);
+                output.accept(MOON_MOSS);
+
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);
                 output.accept(MARS_SUB_SURFACE_ROCK);
