@@ -22,8 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.api.accessor.GCBlockExtensions;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
@@ -38,16 +37,16 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LanternBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LanternBlock.class)
 public class LanternBlockMixin implements GCBlockExtensions {
-    @WrapMethod(method = "getStateForPlacement")
-    private BlockState extinguishNoAir(BlockPlaceContext ctx, Operation<BlockState> original) {
-        BlockState state = original.call(ctx);
-        if (state != null && !ctx.getLevel().galacticraft$isBreathable(ctx.getClickedPos())) {
-            return this.galacticraft$extinguishBlockPlace(ctx.getClickedPos(), state);
+    @ModifyReturnValue(method = "getStateForPlacement", at = @At("RETURN"))
+    private BlockState extinguishNoAir(BlockState original, BlockPlaceContext ctx) {
+        if (original != null && !ctx.getLevel().galacticraft$isBreathable(ctx.getClickedPos())) {
+            return this.galacticraft$extinguishBlockPlace(ctx.getClickedPos(), original);
         }
-        return state;
+        return original;
     }
 
     @Override

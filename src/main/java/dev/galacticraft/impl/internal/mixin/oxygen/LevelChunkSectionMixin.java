@@ -23,8 +23,7 @@
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import com.google.common.collect.Lists;
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import dev.galacticraft.mod.Constant;
@@ -128,18 +127,18 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
         return this.providers;
     }
 
-    @WrapMethod(method = "getSerializedSize")
-    private int increaseChunkPacketSize(Operation<Integer> original) {
+    @ModifyReturnValue(method = "getSerializedSize", at = @At("RETURN"))
+    private int increaseChunkPacketSize(int original) {
         if (this.providers != null) {
-            return original.call() + VarInt.getByteSize(this.providers.size()) + Long.BYTES * this.providers.size();
+            return original + VarInt.getByteSize(this.providers.size()) + Long.BYTES * this.providers.size();
         } else {
-            return original.call() + VarInt.getByteSize(0);
+            return original + VarInt.getByteSize(0);
         }
     }
 
-    @WrapMethod(method = "hasOnlyAir()Z")
-    private boolean verifyOxygenEmpty(Operation<Boolean> original) {
-        return original.call() && this.galacticraft$isEmpty();
+    @ModifyReturnValue(method = "hasOnlyAir()Z", at = @At("RETURN"))
+    private boolean verifyOxygenEmpty(boolean original) {
+        return original && this.galacticraft$isEmpty();
     }
 
     @Inject(method = "write", at = @At("RETURN"))

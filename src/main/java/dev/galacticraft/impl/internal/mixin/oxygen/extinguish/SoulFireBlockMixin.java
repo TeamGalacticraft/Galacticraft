@@ -22,8 +22,7 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.api.accessor.GCBlockExtensions;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -35,12 +34,13 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.SoulFireBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(SoulFireBlock.class)
 public class SoulFireBlockMixin implements GCBlockExtensions {
-    @WrapMethod(method = "canSurvive")
-    public boolean canSurvive(BlockState state, LevelReader level, BlockPos pos, Operation<Boolean> original) {
-        return original.call(state, level, pos) && level.galacticraft$isBreathable(pos);
+    @ModifyReturnValue(method = "canSurvive", at = @At("RETURN"))
+    public boolean canSurvive(boolean original, BlockState state, LevelReader level, BlockPos pos) {
+        return original && level.galacticraft$isBreathable(pos);
     }
 
     @Override
