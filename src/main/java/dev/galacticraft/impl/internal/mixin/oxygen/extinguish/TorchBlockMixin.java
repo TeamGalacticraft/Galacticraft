@@ -40,23 +40,28 @@ import org.spongepowered.asm.mixin.Mixin;
 public class TorchBlockMixin implements GCBlockExtensions {
     @Override
     public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
-        return true;
+        return state.getBlock() == Blocks.TORCH || state.getBlock() == Blocks.SOUL_TORCH;
     }
 
     @Override
     public BlockState galacticraft$extinguishBlockPlace(BlockPos pos, BlockState state) {
-        return state.getBlock() == Blocks.TORCH ? GCBlocks.UNLIT_TORCH.withPropertiesOf(state) : state;
+        if (state.getBlock() == Blocks.TORCH) {
+            return GCBlocks.UNLIT_TORCH.withPropertiesOf(state);
+        } else if (state.getBlock() == Blocks.SOUL_TORCH) {
+            return GCBlocks.UNLIT_SOUL_TORCH.withPropertiesOf(state);
+        }
+        return state;
     }
 
     @Override
     public boolean galacticraft$hasAtmosphereListener(BlockState state) {
-        return true;
+        return this.galacticraft$hasLegacyExtinguishTransform(state);
     }
 
     @Override
     public void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, boolean breathable) {
         if (!breathable) {
-            if (state.getBlock() == Blocks.TORCH) {
+            if (this.galacticraft$hasLegacyExtinguishTransform(state)) {
                 double x = pos.getX() + 0.5D;
                 double y = pos.getY() + 0.92D;
                 double z = pos.getZ() + 0.5D;
@@ -64,7 +69,7 @@ public class TorchBlockMixin implements GCBlockExtensions {
                 level.sendParticles(ParticleTypes.SMOKE, x, y, z, 0, 0.0D, 0.0D, 0.0D, 0.0D);
                 level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
 
-                level.setBlock(pos, GCBlocks.UNLIT_TORCH.withPropertiesOf(state), Block.UPDATE_ALL_IMMEDIATE);
+                level.setBlock(pos, this.galacticraft$extinguishBlockPlace(pos, state), Block.UPDATE_ALL_IMMEDIATE);
             }
         }
     }

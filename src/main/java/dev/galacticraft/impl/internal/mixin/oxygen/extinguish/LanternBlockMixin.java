@@ -45,18 +45,14 @@ public class LanternBlockMixin implements GCBlockExtensions {
     private BlockState extinguishNoAir(BlockPlaceContext ctx, Operation<BlockState> original) {
         BlockState state = original.call(ctx);
         if (state != null && !ctx.getLevel().galacticraft$isBreathable(ctx.getClickedPos())) {
-            if (state.getBlock() == Blocks.LANTERN) {
-                return GCBlocks.UNLIT_LANTERN.withPropertiesOf(state);
-            } else if (state.getBlock() == Blocks.SOUL_LANTERN) {
-                return GCBlocks.UNLIT_SOUL_LANTERN.withPropertiesOf(state);
-            }
+            return this.galacticraft$extinguishBlockPlace(ctx.getClickedPos(), state);
         }
         return state;
     }
 
     @Override
     public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
-        return true;
+        return state.getBlock() == Blocks.LANTERN || state.getBlock() == Blocks.SOUL_LANTERN;
     }
 
     @Override
@@ -71,13 +67,13 @@ public class LanternBlockMixin implements GCBlockExtensions {
 
     @Override
     public boolean galacticraft$hasAtmosphereListener(BlockState state) {
-        return true;
+        return this.galacticraft$hasLegacyExtinguishTransform(state);
     }
 
     @Override
     public void galacticraft$onAtmosphereChange(ServerLevel level, BlockPos pos, BlockState state, boolean breathable) {
         if (!breathable) {
-            if (state.getBlock() == Blocks.LANTERN || state.getBlock() == Blocks.SOUL_LANTERN) {
+            if (this.galacticraft$hasAtmosphereListener(state)) {
                 double x = pos.getX() + 0.5D;
                 double y = pos.getY() + (state.getValue(LanternBlock.HANGING) ? 0.25D : 0.1875D);
                 double z = pos.getZ() + 0.5D;
@@ -86,12 +82,7 @@ public class LanternBlockMixin implements GCBlockExtensions {
                     level.sendParticles(ParticleTypes.SMOKE, x + 0.27 * (double) direction.getStepX(), y, z + 0.27 * (double) direction.getStepZ(), 0, 0.0D, 0.0D, 0.0D, 0.0D);
                 }
                 level.playSound(null, pos, SoundEvents.CANDLE_EXTINGUISH, SoundSource.BLOCKS, 1.0F, 1.0F);
-
-                if (state.getBlock() == Blocks.LANTERN) {
-                    level.setBlock(pos, GCBlocks.UNLIT_LANTERN.withPropertiesOf(state), Block.UPDATE_ALL_IMMEDIATE);
-                } else if (state.getBlock() == Blocks.SOUL_LANTERN) {
-                    level.setBlock(pos, GCBlocks.UNLIT_SOUL_LANTERN.withPropertiesOf(state), Block.UPDATE_ALL_IMMEDIATE);
-                }
+                level.setBlock(pos, this.galacticraft$extinguishBlockPlace(pos, state), Block.UPDATE_ALL_IMMEDIATE);
             }
         }
     }
