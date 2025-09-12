@@ -1,0 +1,32 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:web_torch"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_web_string": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:web_string"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_web_string"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:web_torch"
+    ]
+  }
+}
