@@ -22,23 +22,23 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.api.accessor.LevelBodyAccessor;
 import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.InternalLevelOxygenAccessor;
-import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
+import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,82 +46,72 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
+import java.util.Iterator;
 import java.util.function.Supplier;
 
 @Mixin(Level.class)
-public abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAccessor, LevelAccessor {
-    private @Unique boolean breathable = true;
+public abstract class LevelMixin implements LevelOxygenAccessor, LevelAccessor, LevelHeightAccessor {
+    @Unique
+    private boolean breathable = true;
 
     @Shadow
     public abstract @NotNull LevelChunk getChunk(int i, int j);
 
-    @Shadow
-    @Final
-    private ResourceKey<Level> dimension;
-
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
-        Holder<CelestialBody<?, ?>> holder1 = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
-        this.setDefaultBreathable(holder1 != null ? holder1.value().atmosphere().breathable() : this.breathable);
+    private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder<?> holder, Supplier<?> supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
+        Holder<CelestialBody<?, ?>> body = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
+        this.breathable = body == null || body.value().atmosphere().breathable();
     }
 
     @Override
-    public boolean isBreathable(int x, int y, int z) {
-        if (this.validPosition(x, y, z)) {
-            return this.isBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15);
+    public Iterator<AtmosphereProvider> galacticraft$getAtmosphereProviders(int x, int y, int z) {
+        if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
+        if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
+        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviders(y);
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getAtmosphereProviderLocations(int x, int y, int z) {
+        if (y < this.getMinBuildHeight()) y = this.getMinBuildHeight();
+        if (y >= this.getMaxBuildHeight()) y = this.getMaxBuildHeight() - 1;
+        return ((ChunkOxygenAccessor) this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z))).galacticraft$getProviderPositions(y);
+    }
+
+    @Override
+    public boolean galacticraft$isBreathable(double x, double y, double z) {
+        if (this.breathable) return true;
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(Mth.floor(x), Mth.floor(y), Mth.floor(z));
+        while (iter.hasNext()) {
+            AtmosphereProvider next = iter.next();
+            if (next.canBreathe(x, y, z)) return true;
         }
-        return this.breathable/* && y < this.getMaxBuildHeight() * 2*/;
+        return false;
     }
 
     @Override
-    public boolean isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
-        assert x >= 0 && x < 16 && z >= 0 && z < 16;
-        if (this.withinBuildHeight(y)) {
-            return this.breathable ^ ((ChunkOxygenAccessor) chunk).galacticraft$isInverted(x, y, z);
+    public boolean galacticraft$isBreathable(int x, int y, int z) {
+        if (this.breathable) return true;
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(x, y, z);
+        while (iter.hasNext()) {
+            AtmosphereProvider next = iter.next();
+            if (next.canBreathe(x, y, z)) return true;
         }
-        return this.breathable/* && y < this.getMaxBuildHeight() * 2*/;
+        return false;
     }
 
     @Override
-    public void setBreathable(int x, int y, int z, boolean value) {
-        if (withinWorldSize(x, z) && y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight()) {
-            this.setBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15, value);
+    public boolean galacticraft$isBreathable(BlockPos pos) {
+        if (this.breathable) return true;
+        Iterator<AtmosphereProvider> iter = this.galacticraft$getAtmosphereProviders(pos.getX(), pos.getY(), pos.getZ());
+        while (iter.hasNext()) {
+            AtmosphereProvider next = iter.next();
+            if (next.canBreathe(pos)) return true;
         }
+        return false;
     }
 
     @Override
-    public void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
-        assert x >= 0 && x < 16 && z >= 0 && z < 16;
-        if (y < this.getMinBuildHeight() || y >= this.getMaxBuildHeight()) return;
-        ((ChunkOxygenAccessor) chunk).galacticraft$setInverted(x, y, z, this.breathable ^ value);
-        if (!value) {
-            BlockPos blockPos = chunk.getPos().getBlockAt(x, y, z);
-            GCEventHandlers.extinguishBlock((Level) (Object) this, blockPos, this.getBlockState(blockPos));
-        }
-    }
-
-    @Override
-    public boolean getDefaultBreathable() {
+    public boolean galacticraft$isBreathable() {
         return this.breathable;
-    }
-
-    @Override
-    public void setDefaultBreathable(boolean breathable) {
-        this.breathable = breathable;
-    }
-
-    @Unique
-    private boolean withinBuildHeight(int y) {
-        return y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight();
-    }
-
-    @Unique
-    private static boolean withinWorldSize(int x, int z) {
-        return x >= -Level.MAX_LEVEL_SIZE && z >= -Level.MAX_LEVEL_SIZE && x < Level.MAX_LEVEL_SIZE && z < Level.MAX_LEVEL_SIZE;
-    }
-
-    @Unique
-    private boolean validPosition(int x, int y, int z) {
-        return this.withinBuildHeight(y) && withinWorldSize(x, z);
     }
 }

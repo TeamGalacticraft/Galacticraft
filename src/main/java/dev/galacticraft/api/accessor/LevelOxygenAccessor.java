@@ -23,44 +23,34 @@
 package dev.galacticraft.api.accessor;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.block.state.BlockState;
 
-public interface LevelOxygenAccessor {
+/**
+ * @see LevelOxygenAccessorRO
+ */
+public interface LevelOxygenAccessor extends LevelOxygenAccessorRO {
     /**
-     * Returns whether the supplied position in this world is breathable for entities
-     *
-     * @param pos the position to test
-     * @return whether the supplied position in the chunk is breathable for entities
+     * Adds an atmosphere provider to the chunk section at the given position
+     * @param sectionX the section x-position
+     * @param sectionY the section y-position
+     * @param sectionZ the section z-position
+     * @param provider the position of the provider to add
      */
-    default boolean isBreathable(BlockPos pos) {
-        return this.isBreathable(pos.getX(), pos.getY(), pos.getZ());
-    }
+    void galacticraft$addAtmosphereProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
 
-    default boolean isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
+    /**
+     * Removes an atmosphere provider from the chunk section at the given position
+     * @param sectionX the section x-position
+     * @param sectionY the section y-position
+     * @param sectionZ the section z-position
+     * @param provider the position of the provider to remove
+     */
+    void galacticraft$removeAtmosphereProvider(int sectionX, int sectionY, int sectionZ, BlockPos provider);
 
-    default boolean isBreathable(int x, int y, int z) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setBreathable(BlockPos pos, boolean value) {
-        this.setBreathable(pos.getX(), pos.getY(), pos.getZ(), value);
-    }
-
-    default void setBreathable(int x, int y, int z, boolean value) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default boolean getDefaultBreathable() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void setDefaultBreathable(boolean breathable) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
+    /**
+     * Notifies the block at the given position that the atmosphere has changed.
+     * @param pos the position where the atmosphere changed
+     * @param state the current block state of the block where the atmosphere changed
+     */
+    default void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {}
 }

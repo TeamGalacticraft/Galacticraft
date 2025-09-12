@@ -21,7 +21,6 @@
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
-    "LevelMixin",
     "LivingEntityMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
