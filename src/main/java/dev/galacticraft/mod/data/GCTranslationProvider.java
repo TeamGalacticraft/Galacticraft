@@ -87,6 +87,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ELECTRIC_COMPRESSOR, "Compressing (Electric)");
+        this.add(RecipeCategory.ELECTRIC_FURNACE, "Smelting (Electric)");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
         this.add(BannerPattern.ROCKET + ".white", "White Rocket");
