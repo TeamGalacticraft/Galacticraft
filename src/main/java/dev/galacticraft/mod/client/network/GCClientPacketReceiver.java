@@ -36,6 +36,7 @@ public class GCClientPacketReceiver {
         register(FootprintRemovedPacket.TYPE);
         register(ResetPerspectivePacket.TYPE);
         register(CapeAssignmentsPacket.TYPE);
+        register(HallucinationStatePacket.TYPE);
     }
 
     public static <P extends S2CPayload> void register(CustomPacketPayload.Type<P> type) {

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.attachments;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Attachments;
+import dev.galacticraft.mod.content.TranceData;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
@@ -36,4 +37,8 @@ public final class GCAttachments {
 
     public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
             .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
+
+    public static final AttachmentType<TranceData> TRANCE = AttachmentRegistry.<TranceData>builder()
+            .initializer(TranceData::new)
+            .buildAndRegister(Constant.id("trance"));
 }

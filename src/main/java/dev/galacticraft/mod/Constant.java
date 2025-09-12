@@ -152,6 +152,7 @@ public interface Constant {
         String MOON_WEED = "moon_weed";
         String MOON_SHRUBS = "moon_shrubs";
         String MOON_MOSS = "moon_moss";
+        String MOON_TANGLE = "moon_tangle";
 
         String MOON_DIRT = "moon_dirt";
         String MARS_SURFACE_ROCK = "mars_surface_rock";
@@ -589,6 +590,7 @@ public interface Constant {
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
         String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
+        String MOON_TANGLE_FRUIT = "moon_tangle_fruit";
     }
 
     interface Particle {

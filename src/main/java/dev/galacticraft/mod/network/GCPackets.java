@@ -35,6 +35,7 @@ public class GCPackets {
         PayloadTypeRegistry.playS2C().register(OpenCelestialScreenPayload.TYPE, OpenCelestialScreenPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(ResetPerspectivePacket.TYPE, ResetPerspectivePacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(CapeAssignmentsPacket.TYPE, CapeAssignmentsPacket.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(HallucinationStatePacket.TYPE, HallucinationStatePacket.STREAM_CODEC);
 
         PayloadTypeRegistry.playC2S().register(BubbleMaxPayload.TYPE, BubbleMaxPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(BubbleVisibilityPayload.TYPE, BubbleVisibilityPayload.STREAM_CODEC);

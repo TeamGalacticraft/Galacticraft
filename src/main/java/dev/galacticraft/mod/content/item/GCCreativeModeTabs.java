@@ -120,6 +120,7 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_WEED);
                 output.accept(MOON_SHRUBS);
                 output.accept(MOON_MOSS);
+                output.accept(MOON_TANGLE);
 
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);
@@ -398,6 +399,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);
                 output.accept(CHEESEBURGER);
+                output.accept(MOON_TANGLE_FRUIT);
 
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);

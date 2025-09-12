@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.content.GCEffects;
+import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.food.FoodProperties;
 
 import static net.minecraft.world.food.FoodConstants.*;
@@ -35,4 +37,5 @@ public class GCFoodComponent {
     public static final FoodProperties GROUND_BEEF = new FoodProperties.Builder().nutrition(3).saturationModifier(FOOD_SATURATION_NORMAL).build();
     public static final FoodProperties BEEF_PATTY = new FoodProperties.Builder().nutrition(4).saturationModifier(FOOD_SATURATION_GOOD).build();
     public static final FoodProperties CHEESEBURGER = new FoodProperties.Builder().nutrition(14).saturationModifier(FOOD_SATURATION_MAX).build();
+    public static final FoodProperties MOON_TANGLE_FRUIT = new FoodProperties.Builder().nutrition(8).saturationModifier(FOOD_SATURATION_NORMAL).alwaysEdible().effect(new MobEffectInstance(GCEffects.MOON_TANGLE_TRANCE, Integer.MAX_VALUE, 0, true, true, true), 1).build();
 }

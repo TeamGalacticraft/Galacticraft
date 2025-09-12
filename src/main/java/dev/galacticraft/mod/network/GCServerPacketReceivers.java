@@ -24,6 +24,7 @@ package dev.galacticraft.mod.network;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.network.c2s.*;
+import dev.galacticraft.mod.network.s2c.HallucinationStatePacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 

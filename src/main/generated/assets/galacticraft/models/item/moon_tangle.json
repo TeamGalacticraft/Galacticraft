@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "galacticraft:block/moon_tangle_middle"
+  }
+}

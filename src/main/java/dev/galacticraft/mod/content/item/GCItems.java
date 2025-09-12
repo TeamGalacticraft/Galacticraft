@@ -142,6 +142,7 @@ public class GCItems {
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
+    public static final Item MOON_TANGLE_FRUIT = ITEMS.register(Constant.Item.MOON_TANGLE_FRUIT, new MoonTangleFruitItem(new Item.Properties().food(GCFoodComponent.MOON_TANGLE_FRUIT)));
 
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));

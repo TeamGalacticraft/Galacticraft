@@ -32,6 +32,7 @@ import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.environment.MoonTangleBlock;
 import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
@@ -258,6 +259,7 @@ public class GCModelProvider extends FabricModelProvider {
         this.createCavernousVines(generator);
         this.createMoonShrubs(generator);
         this.createMoonWeed(generator);
+        this.createMoonTangle(generator);
         generator.createTrivialCube(GCBlocks.MOON_MOSS);
 
         // DUMMY
@@ -681,6 +683,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_TANGLE_FRUIT, ModelTemplates.FLAT_ITEM);
 
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
@@ -891,6 +894,39 @@ public class GCModelProvider extends FabricModelProvider {
         );
 
         generator.delegateItemModel(GCBlocks.MOON_SHRUBS, shrubsModel);
+    }
+
+    private void createMoonTangle(BlockModelGenerators generator) {
+        Block vine = GCBlocks.MOON_TANGLE;
+        ResourceLocation midModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_middle", TextureMapping.cross(blockTextureWithSuffix(vine, "_middle")), generator.modelOutput);
+        ResourceLocation endModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_end", TextureMapping.cross(blockTextureWithSuffix(vine, "_end")), generator.modelOutput);
+        ResourceLocation fruitTopModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_fruit_top", TextureMapping.cross(blockTextureWithSuffix(vine, "_fruit_top")), generator.modelOutput);
+        ResourceLocation fruitBottomModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_fruit_bottom", TextureMapping.cross(blockTextureWithSuffix(vine, "_fruit_bottom")), generator.modelOutput);
+
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(vine).with(
+                        PropertyDispatch.property(MoonTangleBlock.PART)
+                                .select(MoonTangleBlock.Part.MIDDLE, rotatedVariants(midModel))
+                                .select(MoonTangleBlock.Part.END, rotatedVariants(endModel))
+                                .select(MoonTangleBlock.Part.FRUIT_TOP, rotatedVariants(fruitTopModel))
+                                .select(MoonTangleBlock.Part.FRUIT_BOTTOM, rotatedVariants(fruitBottomModel))
+                )
+        );
+
+        generator.createSimpleFlatItemModel(vine, "_middle");
+    }
+
+    private static java.util.List<Variant> rotatedVariants(ResourceLocation model) {
+        return java.util.List.of(
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+        );
     }
 
     private void createCavernousVines(BlockModelGenerators generator) {

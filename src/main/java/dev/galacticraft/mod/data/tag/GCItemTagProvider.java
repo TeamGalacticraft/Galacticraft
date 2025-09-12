@@ -431,7 +431,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.FOODS)
                 .addTag(GCItemTags.CHEESE_FOODS)
                 .addTag(GCItemTags.CANNED_FOODS)
-                .add(GCItems.CHEESEBURGER);
+                .add(GCItems.CHEESEBURGER)
+                .add(GCItems.MOON_TANGLE_FRUIT);
 
         this.tag(GCItemTags.CANNED_FOODS)
                 .add(GCItems.CANNED_FOOD);

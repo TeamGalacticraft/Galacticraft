@@ -147,6 +147,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.MOON_WEED);
         this.dropSelf(GCBlocks.MOON_SHRUBS);
         this.dropSelf(GCBlocks.MOON_MOSS);
+        this.dropSelf(GCBlocks.MOON_TANGLE);
 
         this.dropSelf(GCBlocks.MARS_SURFACE_ROCK);
         this.dropSelf(GCBlocks.MARS_SUB_SURFACE_ROCK);

@@ -30,13 +30,17 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.TranceSystems;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
@@ -60,6 +64,13 @@ public class GCEventHandlers {
         GCInteractionEventHandlers.init();
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
+        ServerTickEvents.START_SERVER_TICK.register(GCEventHandlers::onPlayerTick);
+    }
+
+    private static void onPlayerTick(MinecraftServer minecraftServer) {
+        for (ServerPlayer sp : minecraftServer.getPlayerList().getPlayers()) {
+            TranceSystems.serverTick(sp);
+        }
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {

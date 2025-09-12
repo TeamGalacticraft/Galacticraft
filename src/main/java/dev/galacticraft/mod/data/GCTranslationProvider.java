@@ -201,6 +201,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_WEED, "Moon Weed");
         this.block(GCBlocks.MOON_SHRUBS, "Moon Shrubs");
         this.block(GCBlocks.MOON_MOSS, "Moon Moss");
+        this.block(GCBlocks.MOON_TANGLE, "Moon Tangle");
 
         this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
 
@@ -472,6 +473,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
         this.item(GCItems.CHEESEBURGER, "Cheeseburger");
+        this.item(GCItems.MOON_TANGLE_FRUIT, "Moon Tangle Fruit");
 
         // ROCKET PLATES
         this.item(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Heavy Plating");
