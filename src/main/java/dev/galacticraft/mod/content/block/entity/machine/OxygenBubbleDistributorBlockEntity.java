@@ -61,6 +61,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -140,7 +141,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
 
                 profiler.pop();
 
-                this.trySyncSize(level, pos, profiler);
+                this.trySyncSize(level, pos);
 
                 profiler.push("bubbler_distributor_transfer");
                 long oxygenRequired = Math.max((long) ((4.0 / 3.0) * Math.PI * this.size * this.size * this.size), 1); //todo: balance values
@@ -168,7 +169,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
 
         if (this.size != 0.0) {
             this.setSizeAndUpdate(0.0);
-            this.trySyncSize(level, pos, profiler);
+            this.trySyncSize(level, pos);
         }
 
         profiler.pop();
@@ -176,25 +177,26 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity imple
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.size > 0) this.setSize(0);
-        this.trySyncSize(level, pos, profiler);
-
-        super.tickDisabled(level, pos, state, profiler);
+    protected void updateActiveState(Level level, BlockPos pos, BlockState state, boolean active) {
+        super.updateActiveState(level, pos, state, active);
+        if (!active && !level.isClientSide) {
+            if (this.size > 0) {
+                this.setSizeAndUpdate(0.0);
+                this.trySyncSize((ServerLevel) level, pos);
+            }
+        }
     }
 
-    private void trySyncSize(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull ProfilerFiller profiler) {
+    private void trySyncSize(@NotNull ServerLevel level, @NotNull BlockPos pos) {
         // Could maybe get away with running this 1 in 10 ticks to reduce network traffic
         if (this.prevSize != this.size || this.players != level.players().size()) {
             this.players = level.players().size();
             this.prevSize = this.size;
-            profiler.push("network");
             if (this.size < 0) this.size = 0;
             BubbleSizePayload payload = new BubbleSizePayload(pos, this.size);
             for (ServerPlayer player : level.players()) {
                 ServerPlayNetworking.send(player, payload);
             }
-            profiler.pop();
         }
     }
 
