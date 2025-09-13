@@ -281,6 +281,9 @@
     "jei_mod_plugin": [
       "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
     ],
+    "emi": [
+      "dev.galacticraft.mod.compat.emi.GalacticraftEmiPlugin"
+    ],
     "appleskin": [
       "dev.galacticraft.mod.compat.AppleSkinEventHandler"
     ]
