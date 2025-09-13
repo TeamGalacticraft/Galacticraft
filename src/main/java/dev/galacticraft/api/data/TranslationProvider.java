@@ -93,7 +93,8 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void tag(TagKey<?> tag, String translation) {
-        this.add(tag.location().toLanguageKey("tag.item").replace("/", "."), translation);
+        String prefix = "tag." + String.valueOf(tag.registry().location().getPath());
+        this.add(tag.location().toLanguageKey(prefix).replace("/", "."), translation);
     }
 
     protected void entity(EntityType<?> entity, String translation) {
