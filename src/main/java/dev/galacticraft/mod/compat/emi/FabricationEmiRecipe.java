@@ -23,67 +23,43 @@
 package dev.galacticraft.mod.compat.emi;
 
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
-import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.WidgetHolder;
-import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
-import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
-import net.minecraft.network.chat.Component;
+import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
-public class CompressingEmiRecipe extends BasicEmiRecipe {
-    public final boolean shapeless;
-    public final int width;
-    public final int height;
+public class FabricationEmiRecipe extends BasicEmiRecipe {
     public final int time;
 
-    public CompressingEmiRecipe(RecipeHolder<CompressingRecipe> holder) {
-        super(GalacticraftEmiPlugin.COMPRESSING, holder.id(), COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
-        CompressingRecipe recipe = holder.value();
+    public FabricationEmiRecipe(RecipeHolder<FabricationRecipe> holder) {
+        super(GalacticraftEmiPlugin.FABRICATION, holder.id(), CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
+        FabricationRecipe recipe = holder.value();
         for (Ingredient ingredient : recipe.getIngredients()) {
             this.inputs.add(EmiIngredient.of(ingredient));
         }
         this.outputs.add(EmiStack.of(recipe.getResultItem(null)));
-        if (recipe instanceof ShapedCompressingRecipe shapedRecipe) {
-            this.shapeless = false;
-            this.width = shapedRecipe.getWidth();
-            this.height = shapedRecipe.getHeight();
-        } else {
-            this.shapeless = true;
-            this.width = 3;
-            this.height = 3;
-        }
-        this.time = recipe.getTime();
+        this.time = recipe.getProcessingTime();
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
         // Add the background texture
-        widgets.addTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT, COMPRESSOR_U, COMPRESSOR_V);
+        widgets.addTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT, 0, 0);
 
-        if (shapeless) {
-            widgets.addTexture(EmiTexture.SHAPELESS, COMPRESSED_X, 0);
-        }
-
-        widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, FIRE_X, FIRE_Y, 4000, false, true, true);
-        widgets.addAnimatedTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 66, 10, 52, 24, 204, 74, this.time * 50, true, false, false).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", this.time / 20.0F).getVisualOrderText()));
-        });
-
-        for (int i = 0; i < this.inputs.size(); i++) {
-            widgets.addSlot(this.inputs.get(i), (i % this.width) * 18, (i / this.width) * 18);
-        }
+        widgets.addSlot(this.inputs.get(0), DIAMOND_X - 1, DIAMOND_Y - 1);
+        widgets.addSlot(this.inputs.get(1), SILICON_X_1 - 1, SILICON_Y_1 - 1);
+        widgets.addSlot(this.inputs.get(2), SILICON_X_2 - 1, SILICON_Y_2 - 1);
+        widgets.addSlot(this.inputs.get(3), REDSTONE_X - 1, REDSTONE_Y - 1);
+        widgets.addSlot(this.inputs.get(4), INGREDIENT_X - 1, INGREDIENT_Y - 1);
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), COMPRESSED_X - 5, COMPRESSED_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.get(0), WAFER_X - 1, WAFER_Y - 1).recipeContext(this);
     }
 }

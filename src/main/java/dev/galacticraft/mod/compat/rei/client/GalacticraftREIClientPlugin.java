@@ -66,7 +66,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.add(new DefaultCompressingCategory());
         registry.add(new DefaultRocketCategory());
 
-        registry.addWorkstations(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
+        registry.addWorkstations(GalacticraftREIServerPlugin.FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GCBlocks.COMPRESSOR), EntryStacks.of(GCBlocks.ELECTRIC_COMPRESSOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.ROCKET, EntryStacks.of(GCBlocks.ROCKET_WORKBENCH));
         registry.addWorkstations(BuiltinPlugin.BLASTING, EntryStacks.of(GCBlocks.ELECTRIC_ARC_FURNACE));
@@ -107,7 +107,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.COMPRESSING,
                 new SimpleTransferHandler.IntRange(1, 10)));
-        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.CIRCUIT_FABRICATION,
+        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ROCKET,
                 new SimpleTransferHandler.IntRange(1, 15)));

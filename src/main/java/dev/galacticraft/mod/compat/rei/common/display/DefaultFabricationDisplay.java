@@ -61,7 +61,7 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.FABRICATION;
     }
 
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {

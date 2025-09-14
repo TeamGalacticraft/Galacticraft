@@ -30,6 +30,7 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
+import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -40,18 +41,22 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     // Workstations
     public static final EmiStack COMPRESSOR = EmiStack.of(GCBlocks.COMPRESSOR);
     public static final EmiStack ELECTRIC_COMPRESSOR = EmiStack.of(GCBlocks.ELECTRIC_COMPRESSOR);
+    public static final EmiStack CIRCUIT_FABRICATOR = EmiStack.of(GCBlocks.CIRCUIT_FABRICATOR);
     public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
 
     // Categories
     public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR);
+    public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR);
 
     @Override
     public void register(EmiRegistry registry) {
         registry.addCategory(COMPRESSING);
+        registry.addCategory(FABRICATION);
 
         registry.addWorkstation(COMPRESSING, COMPRESSOR);
         registry.addWorkstation(COMPRESSING, ELECTRIC_COMPRESSOR);
+        registry.addWorkstation(FABRICATION, CIRCUIT_FABRICATOR);
         registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, ELECTRIC_ARC_FURNACE);
 
@@ -59,6 +64,10 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
 
         for (RecipeHolder<CompressingRecipe> recipe : manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE)) {
             registry.addRecipe(new CompressingEmiRecipe(recipe));
+        }
+
+        for (RecipeHolder<FabricationRecipe> recipe : manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE)) {
+            registry.addRecipe(new FabricationEmiRecipe(recipe));
         }
     }
 }

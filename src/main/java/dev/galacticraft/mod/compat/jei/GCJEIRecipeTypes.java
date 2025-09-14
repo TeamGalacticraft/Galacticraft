@@ -29,7 +29,7 @@ import dev.galacticraft.mod.recipe.RocketRecipe;
 import mezz.jei.api.recipe.RecipeType;
 
 public interface GCJEIRecipeTypes {
-    RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, "fabrication", FabricationRecipe.class);
-    RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, "compressing", CompressingRecipe.class);
-    RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, "rocket", RocketRecipe.class);
+    RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, Constant.Recipe.FABRICATION, FabricationRecipe.class);
+    RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.COMPRESSING, CompressingRecipe.class);
+    RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ROCKET, RocketRecipe.class);
 }

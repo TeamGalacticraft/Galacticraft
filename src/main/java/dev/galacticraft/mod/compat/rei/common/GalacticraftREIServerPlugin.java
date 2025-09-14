@@ -32,15 +32,15 @@ import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
-    public static final CategoryIdentifier<DefaultFabricationDisplay> CIRCUIT_FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/circuit_fabricator");
-    public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/compressing");
+    public static final CategoryIdentifier<DefaultFabricationDisplay> FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FABRICATION);
+    public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.COMPRESSING);
 //    public static final CategoryIdentifier<DefaultCompressingDisplay> COAL_GENERATOR_FUEL = CategoryIdentifier.of(Constant.MOD_ID, "plugins/coal_generator_fuel");
-    public static final CategoryIdentifier<DefaultRocketDisplay> ROCKET = CategoryIdentifier.of(Constant.MOD_ID, "plugins/rocket");
+    public static final CategoryIdentifier<DefaultRocketDisplay> ROCKET = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ROCKET);
 
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
-        registry.register(CIRCUIT_FABRICATION, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
+        registry.register(FABRICATION, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
         registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
-        registry.register(ROCKET, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
+        registry.register(ROCKET, BasicDisplay.Serializer.ofSimple(DefaultRocketDisplay::createRaw));
     }
 }

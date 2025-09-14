@@ -87,7 +87,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
         this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
-        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
+        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabrication");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 

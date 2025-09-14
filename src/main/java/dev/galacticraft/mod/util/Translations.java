@@ -69,7 +69,7 @@ public interface Translations {
 
     interface RecipeCategory {
         String PREFIX = "category.recipe_viewer.";
-        String CIRCUIT_FABRICATOR = PREFIX + "circuit_fabricator";
+        String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
         String COMPRESSOR = PREFIX + "compressing";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
     }
