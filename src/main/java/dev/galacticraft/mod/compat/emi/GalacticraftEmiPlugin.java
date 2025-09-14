@@ -24,9 +24,41 @@ package dev.galacticraft.mod.compat.emi;
 
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
+import dev.emi.emi.api.stack.EmiStack;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
+import dev.galacticraft.mod.recipe.GCRecipes;
+import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.item.crafting.RecipeManager;
+
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class GalacticraftEmiPlugin implements EmiPlugin {
+    // Workstations
+    public static final EmiStack COMPRESSOR = EmiStack.of(GCBlocks.COMPRESSOR);
+    public static final EmiStack ELECTRIC_COMPRESSOR = EmiStack.of(GCBlocks.ELECTRIC_COMPRESSOR);
+    public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
+    public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
+
+    // Categories
+    public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR);
+
     @Override
     public void register(EmiRegistry registry) {
+        registry.addCategory(COMPRESSING);
+
+        registry.addWorkstation(COMPRESSING, COMPRESSOR);
+        registry.addWorkstation(COMPRESSING, ELECTRIC_COMPRESSOR);
+        registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, ELECTRIC_FURNACE);
+        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, ELECTRIC_ARC_FURNACE);
+
+        RecipeManager manager = registry.getRecipeManager();
+
+        for (RecipeHolder<CompressingRecipe> recipe : manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE)) {
+            registry.addRecipe(new CompressingEmiRecipe(recipe));
+        }
     }
 }

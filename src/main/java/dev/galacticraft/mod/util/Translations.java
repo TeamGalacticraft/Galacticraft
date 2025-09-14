@@ -68,9 +68,10 @@ public interface Translations {
     }
 
     interface RecipeCategory {
-        String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
-        String COMPRESSOR = "category.recipe_viewer.compressing";
-        String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+        String PREFIX = "category.recipe_viewer.";
+        String CIRCUIT_FABRICATOR = PREFIX + "circuit_fabricator";
+        String COMPRESSOR = PREFIX + "compressing";
+        String ROCKET_WORKBENCH = PREFIX + "rocket";
     }
 
     interface Waila {
