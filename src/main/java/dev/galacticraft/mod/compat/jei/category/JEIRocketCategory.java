@@ -29,6 +29,8 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.util.Translations;
+import mezz.jei.api.constants.VanillaTypes;
+import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -111,7 +113,11 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
                     .setStandardSlotBackground();
             builder.addInputSlot(centerX + 19, y + 18 * i)
                     .addIngredients(recipe.fins())
-                    .setStandardSlotBackground();
+                    .setStandardSlotBackground()
+                    .setCustomRenderer(
+                            (IIngredientType<ItemStack>) VanillaTypes.ITEM_STACK,
+                            MirroredIngredientRenderer.INSTANCE
+                    );
         }
         y += 18;
 
