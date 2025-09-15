@@ -28,10 +28,12 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
+    "SlotMixin",
     "SpiderMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
+    "client.AbstractContainerScreenMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",
     "client.BlockModelMixin",
