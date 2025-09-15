@@ -20,36 +20,33 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
-import com.llamalad7.mixinextras.sugar.Local;
-import dev.galacticraft.mod.accessor.MirroredSlotAccessor;
 import dev.galacticraft.mod.util.DrawableUtil;
+import me.shedaniel.math.Rectangle;
+import me.shedaniel.rei.api.client.entry.renderer.EntryRenderer;
+import me.shedaniel.rei.api.client.gui.widgets.Tooltip;
+import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
-import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
 
-@Mixin(AbstractContainerScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class AbstractContainerScreenMixin extends Screen {
-    private AbstractContainerScreenMixin() {
-        super(null);
+public class MirroredEntryRenderer implements EntryRenderer<ItemStack> {
+    public static EntryRenderer INSTANCE = new MirroredEntryRenderer();
+
+    @Override
+    public void render(EntryStack<ItemStack> entryStack, GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta) {
+        if (entryStack.isEmpty()) {
+            return;
+        }
+        DrawableUtil.renderItemMirrored(graphics, entryStack.getValue(), bounds.x, bounds.y, 0);
     }
 
-    @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderItem(Lnet/minecraft/world/item/ItemStack;III)V"))
-    private void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z, Operation<Void> original, @Local Slot slot) {
-        if (((MirroredSlotAccessor) slot).isMirrored()) {
-            DrawableUtil.renderItemMirrored(graphics, itemStack, x, y, z);
-        } else {
-            original.call(graphics, itemStack, x, y, z);
-        }
+    @Override
+    public Tooltip getTooltip(EntryStack<ItemStack> entry, TooltipContext context) {
+        return entry.getTooltip(context);
     }
 }
