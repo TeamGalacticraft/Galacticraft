@@ -90,6 +90,11 @@ public class GCBlockEntityTypes {
     }
 
     public static void register() {
-        FuelDock.SIDED.registerForBlockEntity((blockEntity, direction) -> blockEntity, GCBlockEntityTypes.LAUNCH_PAD);
+        FuelDock.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
+            if (blockEntity instanceof FuelDock fuelDock) {
+                return fuelDock;
+            }
+            return null;
+        });
     }
 }

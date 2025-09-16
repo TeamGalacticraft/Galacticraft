@@ -198,7 +198,11 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
 
-        Dockable.ENTITY.registerForType((entity, v) -> entity, ROCKET);
-        Dockable.ENTITY.registerForType((entity, v) -> entity, BUGGY);
+        Dockable.ENTITY.registerFallback((entity, v) -> {
+            if (entity instanceof Dockable dockable) {
+                return dockable;
+            }
+            return null;
+        });
     }
 }
