@@ -35,7 +35,6 @@ import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
-import mezz.jei.api.ingredients.IIngredientType;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
@@ -114,10 +113,7 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
             builder.addInputSlot(centerX + 19, y + 18 * i)
                     .addIngredients(recipe.fins())
                     .setStandardSlotBackground()
-                    .setCustomRenderer(
-                            (IIngredientType<ItemStack>) VanillaTypes.ITEM_STACK,
-                            MirroredIngredientRenderer.INSTANCE
-                    );
+                    .setCustomRenderer(VanillaTypes.ITEM_STACK, MirroredIngredientRenderer.INSTANCE);
         }
         y += 18;
 
