@@ -68,7 +68,6 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
 
     public Buggy(EntityType<?> entityType, Level level) {
         super(entityType, level);
-        Dockable.ENTITY.registerForType((entity, unused) -> this, entityType);
     }
 
     @Override

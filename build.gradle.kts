@@ -109,10 +109,6 @@ sourceSets {
     test {
         compileClasspath += api.get().output
         runtimeClasspath += api.get().output
-        resources {
-            srcDir("src/main/generated")
-            exclude(".cache/")
-        }
     }
 }
 

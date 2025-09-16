@@ -80,6 +80,7 @@ public class Galacticraft implements ModInitializer {
         GCStructureTags.register();
         GCFluids.register();
         GCBlocks.register();
+        GCBlockEntityTypes.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
         GCRocketPartTypes.register();
