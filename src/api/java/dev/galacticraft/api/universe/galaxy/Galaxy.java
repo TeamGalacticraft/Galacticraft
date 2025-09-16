@@ -25,7 +25,6 @@ package dev.galacticraft.api.universe.galaxy;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.registry.AddonRegistries;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.api.util.StreamCodecs;
 import net.minecraft.core.HolderSet;
@@ -47,12 +46,12 @@ import java.util.Optional;
 public record Galaxy(@NotNull Component name,
                      @NotNull Component description,
                      CelestialPosition<?, ?> position,
-                     CelestialDisplay<?, ?> display) {
+                     ResourceLocation display) {
     public static final Codec<Galaxy> DIRECT_CODEC = RecordCodecBuilder.create(instance -> instance.group(
             ComponentSerialization.CODEC.fieldOf("name").forGetter(Galaxy::name),
             ComponentSerialization.CODEC.fieldOf("description").forGetter(Galaxy::description),
             CelestialPosition.CODEC.fieldOf("position").forGetter(Galaxy::position),
-            CelestialDisplay.CODEC.fieldOf("display").forGetter(Galaxy::display)
+            ResourceLocation.CODEC.fieldOf("display").forGetter(Galaxy::display)
     ).apply(instance, Galaxy::new));
     public static final Codec<ResourceKey<Galaxy>> CODEC = ResourceKey.codec(AddonRegistries.GALAXY);
     public static final Codec<HolderSet<Galaxy>> LIST_CODEC = RegistryCodecs.homogeneousList(AddonRegistries.GALAXY, DIRECT_CODEC);

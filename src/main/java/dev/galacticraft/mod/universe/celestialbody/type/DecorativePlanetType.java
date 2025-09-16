@@ -27,8 +27,6 @@ import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.DecorativePlanetConfig;
@@ -36,6 +34,7 @@ import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -80,12 +79,12 @@ public class DecorativePlanetType extends CelestialBodyType<DecorativePlanetConf
     }
 
     @Override
-    public @NotNull CelestialDisplay<?, ?> display(DecorativePlanetConfig config) {
+    public @NotNull ResourceLocation display(DecorativePlanetConfig config) {
         return config.display();
     }
 
     @Override
-    public @NotNull CelestialRingDisplay<?, ?> ring(DecorativePlanetConfig config) {
+    public @NotNull ResourceLocation ring(DecorativePlanetConfig config) {
         return config.ring();
     }
 

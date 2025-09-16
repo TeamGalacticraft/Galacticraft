@@ -20,31 +20,20 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.entity.rocket.render;
+package dev.galacticraft.api.client.renderer.entity.rocket;
 
-import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.rocket.entity.Rocket;
+import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.impl.client.renderer.entity.rocket.RocketPartRendererRegistryImpl;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.NotNull;
 
-@FunctionalInterface
 @Environment(EnvType.CLIENT)
-public interface RocketPartRenderer {
-    /**
-     * Called when this rocket part is being rendered inside a gui/screen.
-     *
-     * @param graphics the gui graphics which has various methods for gui rendering; it also contains the matrix stack
-     * @param x
-     * @param y
-     * @param mouseX   the x position of the mouse
-     * @param mouseY   the y position of the mouse
-     * @param delta    time in-between ticks
-     */
-    default void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
-    }
+public interface RocketPartRendererRegistry {
+    RocketPartRendererRegistry INSTANCE = new RocketPartRendererRegistryImpl();
 
-    void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay);
+    <T extends RocketPart<?, ?>> void register(@NotNull ResourceKey<T> id, @NotNull RocketPartRenderer renderer);
+
+    <T extends RocketPart<?, ?>> @NotNull RocketPartRenderer getRenderer(ResourceKey<T> id);
 }

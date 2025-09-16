@@ -20,21 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.client.universe.display.ring;
+package dev.galacticraft.api.client.registry;
 
-import com.mojang.serialization.Codec;
-import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.GuiGraphics;
-import org.joml.Vector3f;
+import dev.galacticraft.api.APIConstants;
+import dev.galacticraft.api.client.universe.display.CelestialDisplayType;
+import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplayType;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
 
-public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type, C config) {
-    public static final Codec<CelestialRingDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE.byNameCodec().dispatch(CelestialRingDisplay::type, CelestialRingDisplayType::codec);
-
-    @Environment(EnvType.CLIENT)
-    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float alpha, float lineScale, double mouseX, double mouseY, float delta) {
-        return this.type().render(body, graphics, count, systemOffset, lineScale, alpha, mouseX, mouseY, delta, this.config());
+public final class ClientAddonRegistries {
+    private ClientAddonRegistries() {
     }
+
+    public static final ResourceKey<Registry<CelestialDisplayType<?>>> CELESTIAL_DISPLAY_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_display_type"));
+    public static final ResourceKey<Registry<CelestialRingDisplayType<?>>> CELESTIAL_RING_DISPLAY_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_ring_display_type"));
 }

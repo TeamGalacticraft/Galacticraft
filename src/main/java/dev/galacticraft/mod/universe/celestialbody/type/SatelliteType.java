@@ -201,7 +201,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
     }
 
     @Override
-    public @NotNull CelestialRingDisplay<?, ?> ring(SatelliteConfig config) {
+    public @NotNull ResourceLocation ring(SatelliteConfig config) {
         return config.getRing();
     }
 

@@ -26,13 +26,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 
@@ -89,22 +88,22 @@ public abstract class CelestialBodyType<C extends CelestialBodyConfig> {
     public abstract @NotNull CelestialPosition<?, ?> position(C config);
 
     /**
-     * Returns the celestial body's display provider
+     * Returns the id of the celestial body's display provider
      *
      * @param config the celestial body configuration to be queried
-     * @return the celestial body's display provider
-     * @see CelestialDisplay
+     * @return the id of the celestial body's display provider
+     * @see dev.galacticraft.api.client.universe.display.CelestialDisplay
      */
-    public abstract @NotNull CelestialDisplay<?, ?> display(C config);
+    public abstract @NotNull ResourceLocation display(C config);
 
     /**
-     * Returns the celestial body's ring display provider
+     * Returns the id of the celestial body's ring display provider
      *
      * @param config the celestial body configuration to be queried
-     * @return the celestial body's ring display provider
-     * @see CelestialRingDisplay
+     * @return the id of the celestial body's ring display provider
+     * @see ResourceLocation
      */
-    public abstract @NotNull CelestialRingDisplay<?, ?> ring(C config);
+    public abstract @NotNull ResourceLocation ring(C config);
 
     /**
      * Returns the {@link GasComposition atmospheric information} of this celestial body

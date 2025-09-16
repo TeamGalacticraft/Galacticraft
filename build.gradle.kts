@@ -95,11 +95,14 @@ println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 sourceSets {
-    val api = register("api");
+    val apiCommon = register("api")
+    val apiClient = register("api-client") {
+        compileClasspath += apiCommon.get().output
+    }
 
     main {
-        compileClasspath += api.get().output
-        runtimeClasspath += api.get().output
+        compileClasspath += apiCommon.get().output
+        runtimeClasspath += apiCommon.get().output
         resources {
             srcDir("src/main/generated")
             exclude(".cache/")
@@ -107,22 +110,27 @@ sourceSets {
     }
 
     test {
-        compileClasspath += api.get().output
-        runtimeClasspath += api.get().output
+        compileClasspath += apiClient.get().output
+        runtimeClasspath += apiClient.get().output
     }
 }
 
 loom {
+    splitEnvironmentSourceSets()
+
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
     mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
 
     val apiSourceSet = sourceSets["api"]
+    val apiClientSourceSet = sourceSets["api-client"]
+    val clientSourceSet = sourceSets["client"]
 
     mods {
         register("galacticraft") {
             // Source sets we want to include in the mod jar
             sourceSet(sourceSets.main.get())
+            sourceSet(clientSourceSet)
             sourceSet(apiSourceSet)
         }
 
@@ -132,6 +140,7 @@ loom {
     }
 
     createRemapConfigurations(apiSourceSet)
+    createRemapConfigurations(apiClientSourceSet)
 
     runs {
         getByName("client") {
@@ -166,7 +175,10 @@ loom {
         afterEvaluate {
             sourceSets {
                 getByName("api") {
-                    compileClasspath += configurations.getByName("minecraftNamedCompile")
+                    compileClasspath += configurations.getByName("minecraftCommonNamedCompile")
+                }
+                getByName("api-client") {
+                    compileClasspath += configurations.getByName("minecraftClientOnlyNamedCompile")
                 }
             }
 
@@ -254,6 +266,12 @@ configurations {
         extendsFrom(configurations.modImplementation.get())
         extendsFrom(configurations.implementation.get())
     }
+
+    getByName("modApi-clientApiClientImplementation") {
+        extendsFrom(configurations["modApiImplementation"])
+        extendsFrom(configurations["modClientImplementation"])
+        extendsFrom(configurations["clientImplementation"])
+    }
 }
 
 dependencies {
@@ -292,7 +310,7 @@ dependencies {
         modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
     }
 
-    "apiCompileOnly"("org.jetbrains:annotations:26.0.2")
+    implementation("org.jetbrains:annotations:26.0.2")
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }

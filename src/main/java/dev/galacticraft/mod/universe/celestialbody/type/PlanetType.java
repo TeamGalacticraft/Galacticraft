@@ -29,8 +29,6 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.Tiered;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.config.PlanetConfig;
@@ -40,6 +38,7 @@ import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -85,12 +84,12 @@ public class PlanetType extends CelestialBodyType<PlanetConfig> implements Tiere
     }
 
     @Override
-    public @NotNull CelestialDisplay<?, ?> display(PlanetConfig config) {
+    public @NotNull ResourceLocation display(PlanetConfig config) {
         return config.display();
     }
 
     @Override
-    public @NotNull CelestialRingDisplay<?, ?> ring(PlanetConfig config) {
+    public @NotNull ResourceLocation ring(PlanetConfig config) {
         return config.ring();
     }
 

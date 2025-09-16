@@ -26,8 +26,6 @@ import com.mojang.serialization.Codec;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.BuiltInAddonRegistries;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.api.util.StreamCodecs;
@@ -39,6 +37,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -133,22 +132,22 @@ public record CelestialBody<C extends CelestialBodyConfig, T extends CelestialBo
     }
 
     /**
-     * Returns this celestial body's display provider
+     * Returns the id of this celestial body's display provider
      *
-     * @return this celestial body's display provider
-     * @see CelestialDisplay
+     * @return the id of this celestial body's display provider
+     * @see dev.galacticraft.api.client.universe.display.CelestialDisplay
      */
-    public @NotNull CelestialDisplay<?, ?> display() {
+    public @NotNull ResourceLocation display() {
         return this.type.display(this.config);
     }
 
     /**
-     * Returns this celestial body's ring display provider
+     * Returns the id of this celestial body's ring display provider
      *
-     * @return this celestial body's ring display provider
-     * @see CelestialRingDisplay
+     * @return the id of this celestial body's ring display provider
+     * @see dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay
      */
-    public @NotNull CelestialRingDisplay<?, ?> ring() {
+    public @NotNull ResourceLocation ring() {
         return this.type.ring(this.config);
     }
 

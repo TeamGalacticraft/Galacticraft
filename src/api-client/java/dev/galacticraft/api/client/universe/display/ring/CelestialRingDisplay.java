@@ -20,25 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.client.universe.display;
+package dev.galacticraft.api.client.universe.display.ring;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.registry.BuiltInAddonRegistries;
+import dev.galacticraft.api.client.registry.BuiltInClientAddonRegistries;
+import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.resources.ResourceLocation;
-import org.joml.Vector4f;
+import org.joml.Vector3f;
 
-public record CelestialDisplay<C extends CelestialDisplayConfig, T extends CelestialDisplayType<C>>(T type, C config) {
-    public static final Codec<CelestialDisplay<?, ?>> CODEC = BuiltInAddonRegistries.CELESTIAL_DISPLAY_TYPE.byNameCodec().dispatch(CelestialDisplay::type, CelestialDisplayType::codec);
+public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type, C config) {
+    public static final Codec<CelestialRingDisplay<?, ?>> CODEC = BuiltInClientAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE.byNameCodec().dispatch(CelestialRingDisplay::type, CelestialRingDisplayType::codec);
 
     @Environment(EnvType.CLIENT)
-    public Vector4f render(GuiGraphics graphics, int scale, double mouseX, double mouseY, float delta) {
-        return this.type().render(graphics, scale, mouseX, mouseY, delta, this.config());
-    }
-
-    public ResourceLocation rocketOverlay() {
-        return this.type().rocketOverlay(this.config());
+    public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float alpha, float lineScale, double mouseX, double mouseY, float delta) {
+        return this.type().render(body, graphics, count, systemOffset, lineScale, alpha, mouseX, mouseY, delta, this.config());
     }
 }

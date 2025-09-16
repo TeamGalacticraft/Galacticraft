@@ -20,11 +20,9 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.client.rocket.render;
+package dev.galacticraft.api.client.renderer.entity.rocket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.api.APIConstants;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -32,24 +30,21 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 
+@FunctionalInterface
 @Environment(EnvType.CLIENT)
-public enum EmptyRocketPartRenderer implements RocketPartRenderer {
-    INSTANCE;
-    private static boolean hasWarned = false;
-
-    @Override
-    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
-        if (!hasWarned) {
-            hasWarned = true;
-            APIConstants.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");
-        }
+public interface RocketPartRenderer {
+    /**
+     * Called when this rocket part is being rendered inside a gui/screen.
+     *
+     * @param graphics the gui graphics which has various methods for gui rendering; it also contains the matrix stack
+     * @param x
+     * @param y
+     * @param mouseX   the x position of the mouse
+     * @param mouseY   the y position of the mouse
+     * @param delta    time in-between ticks
+     */
+    default void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
     }
 
-    @Override
-    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
-        if (!hasWarned) {
-            hasWarned = true;
-            APIConstants.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");
-        }
-    }
+    void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay);
 }

@@ -29,8 +29,6 @@ import dev.galacticraft.api.satellite.SatelliteOwnershipData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.api.util.StreamCodecs;
 import net.minecraft.core.Holder;
@@ -48,8 +46,8 @@ public class SatelliteConfig implements CelestialBodyConfig {
     private String customName;
     private Optional<ResourceKey<CelestialBody<?, ?>>> parent;
     private CelestialPosition<?, ?> position;
-    private CelestialDisplay<?, ?> display;
-    private CelestialRingDisplay<?, ?> ring;
+    private ResourceLocation display;
+    private ResourceLocation ring;
     private SatelliteOwnershipData ownershipData;
     private ResourceKey<Level> world;
     private Holder<CelestialTeleporter<?, ?>> teleporter;
@@ -63,8 +61,8 @@ public class SatelliteConfig implements CelestialBodyConfig {
             Codec.STRING.fieldOf("custom_name").forGetter(SatelliteConfig::getCustomName),
             CelestialBody.CODEC.optionalFieldOf("parent").forGetter(SatelliteConfig::getParent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(SatelliteConfig::getPosition),
-            CelestialDisplay.CODEC.fieldOf("display").forGetter(SatelliteConfig::getDisplay),
-            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(SatelliteConfig::getRing),
+            ResourceLocation.CODEC.fieldOf("display").forGetter(SatelliteConfig::getDisplay),
+            ResourceLocation.CODEC.fieldOf("ring").forGetter(SatelliteConfig::getRing),
             SatelliteOwnershipData.CODEC.fieldOf("ownership_data").forGetter(SatelliteConfig::getOwnershipData),
             Level.RESOURCE_KEY_CODEC.fieldOf("world").forGetter(SatelliteConfig::getWorld),
             CelestialTeleporter.CODEC.fieldOf("teleporter").forGetter(SatelliteConfig::getTeleporter),
@@ -80,8 +78,8 @@ public class SatelliteConfig implements CelestialBodyConfig {
             String customName,
             Optional<ResourceKey<CelestialBody<?, ?>>> parent,
             CelestialPosition<?, ?> position,
-            CelestialDisplay<?, ?> display,
-            CelestialRingDisplay<?, ?> ring,
+            ResourceLocation display,
+            ResourceLocation ring,
             SatelliteOwnershipData ownershipData,
             ResourceKey<Level> world,
             Holder<CelestialTeleporter<?, ?>> teleporter,
@@ -109,8 +107,8 @@ public class SatelliteConfig implements CelestialBodyConfig {
     public String getCustomName() { return customName; }
     public Optional<ResourceKey<CelestialBody<?, ?>>> getParent() { return parent; }
     public CelestialPosition<?, ?> getPosition() { return position; }
-    public CelestialDisplay<?, ?> getDisplay() { return display; }
-    public CelestialRingDisplay<?, ?> getRing() { return ring; }
+    public ResourceLocation getDisplay() { return display; }
+    public ResourceLocation getRing() { return ring; }
     public SatelliteOwnershipData getOwnershipData() { return ownershipData; }
     public ResourceKey<Level> getWorld() { return world; }
     public Holder<CelestialTeleporter<?, ?>> getTeleporter() { return teleporter; }
@@ -124,8 +122,8 @@ public class SatelliteConfig implements CelestialBodyConfig {
     public void setCustomName(String customName) { this.customName = customName; }
     public void setParent(Optional<ResourceKey<CelestialBody<?, ?>>> parent) { this.parent = parent; }
     public void setPosition(CelestialPosition<?, ?> position) { this.position = position; }
-    public void setDisplay(CelestialDisplay<?, ?> display) { this.display = display; }
-    public void setRing(CelestialRingDisplay<?, ?> ring) { this.ring = ring; }
+    public void setDisplay(ResourceLocation display) { this.display = display; }
+    public void setRing(ResourceLocation ring) { this.ring = ring; }
     public void setOwnershipData(SatelliteOwnershipData ownershipData) { this.ownershipData = ownershipData; }
     public void setWorld(ResourceKey<Level> world) { this.world = world; }
     public void setTeleporter(Holder<CelestialTeleporter<?, ?>> teleporter) { this.teleporter = teleporter; }

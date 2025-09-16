@@ -20,10 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.client.rocket.render;
+package dev.galacticraft.impl.client.renderer.entity.rocket;
 
-import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
-import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
+import dev.galacticraft.api.client.renderer.entity.rocket.RocketPartRenderer;
+import dev.galacticraft.api.client.renderer.entity.rocket.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;

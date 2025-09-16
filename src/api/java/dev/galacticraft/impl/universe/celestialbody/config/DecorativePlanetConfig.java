@@ -28,12 +28,11 @@ import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.satellite.SatelliteRecipe;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -44,8 +43,8 @@ public record DecorativePlanetConfig(
         @NotNull Component description,
         @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent,
         @NotNull CelestialPosition<?, ?> position,
-        @NotNull CelestialDisplay<?, ?> display,
-        @NotNull CelestialRingDisplay<?, ?> ring,
+        @NotNull ResourceLocation display,
+        @NotNull ResourceLocation ring,
         GasComposition atmosphere,
         float gravity,
         @Nullable SatelliteRecipe satelliteRecipe
@@ -56,14 +55,14 @@ public record DecorativePlanetConfig(
             ComponentSerialization.CODEC.fieldOf("description").forGetter(DecorativePlanetConfig::description),
             CelestialBody.CODEC.optionalFieldOf("parent").forGetter(DecorativePlanetConfig::parent),
             CelestialPosition.CODEC.fieldOf("position").forGetter(DecorativePlanetConfig::position),
-            CelestialDisplay.CODEC.fieldOf("display").forGetter(DecorativePlanetConfig::display),
-            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(DecorativePlanetConfig::ring),
+            ResourceLocation.CODEC.fieldOf("display").forGetter(DecorativePlanetConfig::display),
+            ResourceLocation.CODEC.fieldOf("ring").forGetter(DecorativePlanetConfig::ring),
             GasComposition.CODEC.fieldOf("atmosphere").forGetter(DecorativePlanetConfig::atmosphere),
             Codec.FLOAT.fieldOf("gravity").forGetter(DecorativePlanetConfig::gravity),
             SatelliteRecipe.CODEC.optionalFieldOf("satellite_recipe").forGetter(c -> Optional.ofNullable(c.satelliteRecipe))
     ).apply(instance, DecorativePlanetConfig::new));
 
-    private DecorativePlanetConfig(@NotNull Component name, @NotNull Component description, @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position, @NotNull CelestialDisplay<?, ?> display, @NotNull CelestialRingDisplay<?, ?> ring, GasComposition atmosphere, float gravity, @Nullable Optional<SatelliteRecipe> satelliteRecipe) {
+    private DecorativePlanetConfig(@NotNull Component name, @NotNull Component description, @NotNull Optional<ResourceKey<CelestialBody<?, ?>>> parent, @NotNull CelestialPosition<?, ?> position, @NotNull ResourceLocation display, @NotNull ResourceLocation ring, GasComposition atmosphere, float gravity, @Nullable Optional<SatelliteRecipe> satelliteRecipe) {
         this(name, description, parent, position, display, ring, atmosphere, gravity, satelliteRecipe.orElse(null));
     }
 }

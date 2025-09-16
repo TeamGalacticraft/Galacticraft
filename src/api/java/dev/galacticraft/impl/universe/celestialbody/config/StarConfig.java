@@ -26,13 +26,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.universe.celestialbody.CelestialBodyConfig;
-import dev.galacticraft.api.client.universe.display.CelestialDisplay;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplay;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.ComponentSerialization;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
@@ -42,8 +41,8 @@ public record StarConfig(
         @NotNull Component description,
         @NotNull Optional<ResourceKey<Galaxy>> galaxy,
         @NotNull CelestialPosition<?, ?> position,
-        @NotNull CelestialDisplay<?, ?> display,
-        @NotNull CelestialRingDisplay<?, ?> ring,
+        @NotNull ResourceLocation display,
+        @NotNull ResourceLocation ring,
         GasComposition photosphericComposition,
         float gravity,
         double luminance,
@@ -54,8 +53,8 @@ public record StarConfig(
             ComponentSerialization.CODEC.fieldOf("description").forGetter(StarConfig::description),
             Galaxy.CODEC.optionalFieldOf("galaxy").forGetter(StarConfig::galaxy),
             CelestialPosition.CODEC.fieldOf("position").forGetter(StarConfig::position),
-            CelestialDisplay.CODEC.fieldOf("display").forGetter(StarConfig::display),
-            CelestialRingDisplay.CODEC.fieldOf("ring").forGetter(StarConfig::ring),
+            ResourceLocation.CODEC.fieldOf("display").forGetter(StarConfig::display),
+            ResourceLocation.CODEC.fieldOf("ring").forGetter(StarConfig::ring),
             GasComposition.CODEC.fieldOf("photospheric_composition").forGetter(StarConfig::photosphericComposition),
             Codec.FLOAT.fieldOf("gravity").forGetter(StarConfig::gravity),
             Codec.DOUBLE.fieldOf("luminance").forGetter(StarConfig::luminance),

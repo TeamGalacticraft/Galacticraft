@@ -20,20 +20,36 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.entity.rocket.render;
+package dev.galacticraft.impl.client.renderer.entity.rocket;
 
-import dev.galacticraft.api.rocket.part.RocketPart;
-import dev.galacticraft.impl.client.rocket.render.RocketPartRendererRegistryImpl;
+import com.mojang.blaze3d.vertex.PoseStack;
+import dev.galacticraft.api.APIConstants;
+import dev.galacticraft.api.client.renderer.entity.rocket.RocketPartRenderer;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.resources.ResourceKey;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.renderer.MultiBufferSource;
 
 @Environment(EnvType.CLIENT)
-public interface RocketPartRendererRegistry {
-    RocketPartRendererRegistry INSTANCE = new RocketPartRendererRegistryImpl();
+public enum EmptyRocketPartRenderer implements RocketPartRenderer {
+    INSTANCE;
+    private static boolean hasWarned = false;
 
-    <T extends RocketPart<?, ?>> void register(@NotNull ResourceKey<T> id, @NotNull RocketPartRenderer renderer);
+    @Override
+    public void renderGUI(GuiGraphics graphics, int x, int y, int mouseX, int mouseY, float delta) {
+        if (!hasWarned) {
+            hasWarned = true;
+            APIConstants.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");
+        }
+    }
 
-    <T extends RocketPart<?, ?>> @NotNull RocketPartRenderer getRenderer(ResourceKey<T> id);
+    @Override
+    public void render(ClientLevel world, PoseStack matrices, Rocket rocket, MultiBufferSource vertices, float partialTick, int light, int overlay) {
+        if (!hasWarned) {
+            hasWarned = true;
+            APIConstants.LOGGER.warn("EmptyRocketPartRenderer renderer is in use! RocketPartRenderer wasn't registered?");
+        }
+    }
 }

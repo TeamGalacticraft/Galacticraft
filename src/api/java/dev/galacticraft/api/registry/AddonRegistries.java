@@ -28,8 +28,6 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBodyType;
 import dev.galacticraft.api.universe.celestialbody.CelestialHandler;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
-import dev.galacticraft.api.client.universe.display.CelestialDisplayType;
-import dev.galacticraft.api.client.universe.display.ring.CelestialRingDisplayType;
 import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPositionType;
 import net.minecraft.core.Registry;
@@ -40,8 +38,6 @@ public final class AddonRegistries {
     }
 
     public static final ResourceKey<Registry<CelestialPositionType<?>>> CELESTIAL_POSITION_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_position_type"));
-    public static final ResourceKey<Registry<CelestialDisplayType<?>>> CELESTIAL_DISPLAY_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_display_type"));
-    public static final ResourceKey<Registry<CelestialRingDisplayType<?>>> CELESTIAL_RING_DISPLAY_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_ring_display_type"));
     public static final ResourceKey<Registry<CelestialBodyType<?>>> CELESTIAL_BODY_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_body_type"));
     public static final ResourceKey<Registry<CelestialTeleporterType<?>>> CELESTIAL_TELEPORTER_TYPE = ResourceKey.createRegistryKey(APIConstants.id("celestial_teleporter_type"));
 
