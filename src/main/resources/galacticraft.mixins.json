@@ -28,7 +28,6 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SlotMixin",
     "SpiderMixin"
   ],
   "client": [

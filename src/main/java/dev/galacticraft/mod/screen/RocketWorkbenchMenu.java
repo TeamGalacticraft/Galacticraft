@@ -25,10 +25,10 @@ package dev.galacticraft.mod.screen;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.inventory.MirroredSlot;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.MirroredSlotAccessor;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
@@ -129,8 +129,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         nextSlot += 2;
 
         // Right fins
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18 * bodyHeight + y, recipe.fins(), true).withBackground(Constant.SlotSprite.ROCKET_FIN_RIGHT)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight + 18 + y, recipe.fins(), true).withBackground(Constant.SlotSprite.ROCKET_FIN_RIGHT)));
+        this.finSlots.add(this.addSlot(new MirroredFilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18 * bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN_RIGHT)));
+        this.finSlots.add(this.addSlot(new MirroredFilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN_RIGHT)));
         nextSlot += 2;
 
         // Engine
@@ -274,21 +274,13 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.onItemChanged();
     }
 
-    private static class FilteredSlot extends Slot implements MirroredSlotAccessor {
+    private static class FilteredSlot extends Slot {
         private final Predicate<ItemStack> filter;
-        private final boolean mirrored;
         private Pair<ResourceLocation, ResourceLocation> background;
 
         public FilteredSlot(Container container, int slot, int x, int y, Predicate<ItemStack> filter) {
             super(container, slot, x, y);
             this.filter = filter;
-            this.mirrored = false;
-        }
-
-        public FilteredSlot(Container container, int slot, int x, int y, Predicate<ItemStack> filter, boolean mirrored) {
-            super(container, slot, x, y);
-            this.filter = filter;
-            this.mirrored = mirrored;
         }
 
         @Override
@@ -310,10 +302,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             this.background = Pair.of(InventoryMenu.BLOCK_ATLAS, background);
             return this;
         }
+    }
 
-        @Override
-        public boolean isMirrored() {
-            return this.mirrored;
+    private static class MirroredFilteredSlot extends FilteredSlot implements MirroredSlot {
+        public MirroredFilteredSlot(Container container, int slot, int x, int y, Predicate<ItemStack> filter) {
+            super(container, slot, x, y, filter);
         }
     }
 

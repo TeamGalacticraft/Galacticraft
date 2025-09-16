@@ -20,10 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.api.inventory;
 
-public interface MirroredSlotAccessor {
-    default boolean isMirrored() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
+public interface MirroredSlot {
+    // Nothing to see here
 }
