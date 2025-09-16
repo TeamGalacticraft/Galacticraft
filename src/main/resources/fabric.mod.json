@@ -34,6 +34,12 @@
       }
     },
     {
+      "name": "craftablescience",
+      "contact": {
+        "homepage": "https://github.com/craftablescience"
+      }
+    },
+    {
       "name": "Blayyke",
       "contact": {
         "homepage": "https://github.com/Blayyke"
@@ -43,12 +49,6 @@
       "name": "JustPyrrha",
       "contact": {
         "homepage": "https://github.com/JustPyrrha"
-      }
-    },
-    {
-      "name": "craftablescience",
-      "contact": {
-        "homepage": "https://github.com/craftablescience"
       }
     },
     {
@@ -82,27 +82,21 @@
       }
     },
     {
-      "name": "LemmaEOF",
-      "contact": {
-        "homepage": "https://github.com/LemmaEOF"
-      }
-    },
-    {
       "name": "JustAPotota",
       "contact": {
         "homepage": "https://github.com/JustAPotota"
       }
     },
     {
-      "name": "vos6434",
+      "name": "LemmaEOF",
       "contact": {
-        "homepage": "https://github.com/vos6434"
+        "homepage": "https://github.com/LemmaEOF"
       }
     },
     {
-      "name": "hYdos",
+      "name": "vos6434",
       "contact": {
-        "homepage": "https://github.com/hYdos"
+        "homepage": "https://github.com/vos6434"
       }
     },
     {
@@ -130,21 +124,27 @@
       }
     },
     {
-      "name": "AlexIIL",
-      "contact": {
-        "homepage": "https://github.com/AlexIIL"
-      }
-    },
-    {
       "name": "Jamiscus",
       "contact": {
         "homepage": "https://github.com/Jamiscus"
       }
     },
     {
+      "name": "AlexIIL",
+      "contact": {
+        "homepage": "https://github.com/AlexIIL"
+      }
+    },
+    {
       "name": "BeyondTheHorizons",
       "contact": {
         "homepage": "https://github.com/BeyondTheHorizons"
+      }
+    },
+    {
+      "name": "ROMVoid95",
+      "contact": {
+        "homepage": "https://github.com/ROMVoid95"
       }
     },
     {
@@ -160,12 +160,6 @@
       }
     },
     {
-      "name": "ROMVoid95",
-      "contact": {
-        "homepage": "https://github.com/ROMVoid95"
-      }
-    },
-    {
       "name": "davo899",
       "contact": {
         "homepage": "https://github.com/davo899"
@@ -178,39 +172,15 @@
       }
     },
     {
-      "name": "LeMayday",
-      "contact": {
-        "homepage": "https://github.com/LeMayday"
-      }
-    },
-    {
       "name": "sebasphereda",
       "contact": {
         "homepage": "https://github.com/sebasphereda"
       }
     },
     {
-      "name": "ScottRox",
+      "name": "LeMayday",
       "contact": {
-        "homepage": "https://github.com/ScottRox"
-      }
-    },
-    {
-      "name": "thackerdynasty",
-      "contact": {
-        "homepage": "https://github.com/thackerdynasty"
-      }
-    },
-    {
-      "name": "danilwhale",
-      "contact": {
-        "homepage": "https://github.com/danilwhale"
-      }
-    },
-    {
-      "name": "benreid24",
-      "contact": {
-        "homepage": "https://github.com/benreid24"
+        "homepage": "https://github.com/LeMayday"
       }
     },
     {
@@ -220,21 +190,21 @@
       }
     },
     {
-      "name": "JunePrimavera",
+      "name": "thackerdynasty",
       "contact": {
-        "homepage": "https://github.com/JunePrimavera"
+        "homepage": "https://github.com/thackerdynasty"
       }
     },
     {
-      "name": "Geolykt",
+      "name": "IMS212",
       "contact": {
-        "homepage": "https://github.com/Geolykt"
+        "homepage": "https://github.com/IMS212"
       }
     },
     {
-      "name": "Domza64",
+      "name": "GalacticraftDev",
       "contact": {
-        "homepage": "https://github.com/Domza64"
+        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -244,15 +214,51 @@
       }
     },
     {
-      "name": "christopherweinhardt",
+      "name": "Domza64",
       "contact": {
-        "homepage": "https://github.com/christopherweinhardt"
+        "homepage": "https://github.com/Domza64"
       }
     },
     {
       "name": "Codetoil",
       "contact": {
         "homepage": "https://github.com/Codetoil"
+      }
+    },
+    {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "benreid24",
+      "contact": {
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
+      }
+    },
+    {
+      "name": "ScottRox",
+      "contact": {
+        "homepage": "https://github.com/ScottRox"
+      }
+    },
+    {
+      "name": "danilwhale",
+      "contact": {
+        "homepage": "https://github.com/danilwhale"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
       }
     }
   ],
