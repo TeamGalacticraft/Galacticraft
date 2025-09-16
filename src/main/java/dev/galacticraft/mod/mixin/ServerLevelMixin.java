@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.attachments.GCAttachments;
-import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;

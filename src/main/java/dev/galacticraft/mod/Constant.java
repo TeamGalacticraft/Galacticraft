@@ -766,7 +766,7 @@ public interface Constant {
         String BASIC = "basic";
         String STORAGE = "storage";
     }
-    
+
     interface RocketPartRecipeTypes {
         String WRAP_PATTERNED = "wrap_patterned";
         String CENTERED_PATTERNED = "centered_patterned";

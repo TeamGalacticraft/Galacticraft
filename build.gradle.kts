@@ -53,7 +53,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.10-SNAPSHOT")
+    id("fabric-loom") version("1.11-SNAPSHOT")
     id("com.diffplug.spotless") version("7.0.4")
     id("org.ajoberstar.grgit") version("5.3.2")
     id("dev.galacticraft.mojarn") version("0.6.1+19")
@@ -93,11 +93,20 @@ println("Galacticraft: $version")
 base.archivesName.set(modName)
 
 sourceSets {
-    val api = create("api");
+    val api = register("api");
 
     main {
-        compileClasspath += api.output
-        runtimeClasspath += api.output
+        compileClasspath += api.get().output
+        runtimeClasspath += api.get().output
+        resources {
+            srcDir("src/main/generated")
+            exclude(".cache/")
+        }
+    }
+
+    test {
+        compileClasspath += api.get().output
+        runtimeClasspath += api.get().output
         resources {
             srcDir("src/main/generated")
             exclude(".cache/")
@@ -110,7 +119,7 @@ loom {
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
     mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
 
-    val apiSourceSet = sourceSets.getByName("api")
+    val apiSourceSet = sourceSets["api"]
 
     mods {
         register("galacticraft") {

@@ -74,9 +74,13 @@ public class GCFluids {
                 Component.translatable(Translations.Gas.WATER_VAPOR),
                 Constant.id("gas/water_vapor"), "H2O"
         ));
+
+        public static void register() {}
     }
 
-    public static void register() {}
+    public static void register() {
+        Gases.register();
+    }
 
     public static void registerFluidVariantAttributes() {
         FluidVariantAttributes.register(CRUDE_OIL, new GCFluidAttribute(

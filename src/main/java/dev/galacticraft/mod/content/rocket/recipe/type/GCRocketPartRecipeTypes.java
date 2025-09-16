@@ -29,7 +29,7 @@ import dev.galacticraft.mod.content.GCRegistry;
 
 public class GCRocketPartRecipeTypes {
     public static final GCRegistry<RocketPartRecipeType<?>> RECIPE_TYPES = new GCRegistry<>(BuiltInRocketRegistries.ROCKET_PART_RECIPE_TYPE);
-    
+
     public static final PatternedRocketPartRecipeType WRAP_PATTERNED = RECIPE_TYPES.register(RocketPartRecipeTypes.WRAP_PATTERNED, new PatternedRocketPartRecipeType());
     public static final CenteredPatternedRocketPartRecipeType CENTERED_PATTERNED = RECIPE_TYPES.register(RocketPartRecipeTypes.CENTERED_PATTERNED, new CenteredPatternedRocketPartRecipeType());
 
