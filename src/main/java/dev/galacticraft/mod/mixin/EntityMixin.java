@@ -31,7 +31,6 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.events.GCEventHandlers;
-import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.core.Holder;
@@ -52,10 +51,7 @@ import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
