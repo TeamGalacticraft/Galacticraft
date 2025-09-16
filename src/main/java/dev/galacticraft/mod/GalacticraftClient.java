@@ -24,6 +24,7 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
@@ -51,6 +52,8 @@ import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
+import dev.galacticraft.mod.misc.cape.CapeRegistry;
+import dev.galacticraft.mod.misc.cape.CapesClientRole;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.network.c2s.OpenGcInventoryPayload;
 import dev.galacticraft.mod.network.c2s.OpenRocketPayload;
@@ -96,7 +99,10 @@ public class GalacticraftClient implements ClientModInitializer {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting client initialization.");
         ClientEventHandler.init();
-        CapesLoader.load();
+        ClientCapeLoginSync.init();
+        CapesClientRole.ensureLoadedAsync();
+        CapeRegistry.bootstrap();
+        CapesLoader.loadAsync();
 
         MenuScreens.register(GCMenuTypes.BASIC_SOLAR_PANEL, BasicSolarPanelScreen::new);
         MenuScreens.register(GCMenuTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelScreen::new);
@@ -139,6 +145,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.OLI_GRUB, OliGrubEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.GREY, GreyEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ARCH_GREY, GreyEntityRenderer::arch);
+        EntityRendererRegistry.register(GCEntityTypes.FALLING_METEOR, FallingMeteorRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);

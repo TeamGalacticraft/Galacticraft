@@ -26,6 +26,7 @@ import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.core.SectionPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
@@ -34,6 +35,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
@@ -58,44 +60,43 @@ public class GCFootprintTracker {
     }
 
     public void tickFootprints(Entity entity, MoverType type, Vec3 motion) {
-        double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
+        if ((Object) this instanceof Player player && player.getAbilities().flying) {
+            return;
+        } else if (entity.getVehicle() != null) {
+            return;
+        }
         Level level = entity.level();
+        // The entity has footprints, is not flying and is not riding anything
 
-        // If the player is on the moon, not airbourne and not riding anything
-        boolean isFlying = false;
-        if ((Object) this instanceof Player player)
-            isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && level.dimensionTypeRegistration().is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS) && entity.getVehicle() == null && !isFlying) {
+        double motionSqrd = motion.horizontalDistanceSqr();
+        Holder<DimensionType> dimensionType = level.dimensionTypeRegistration();
+
+        // Check that the entity is moving fast enough and is in a footprint dimension
+        if (motionSqrd > 0.001D && dimensionType.is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)) {
             // If it has been long enough since the last step
-            if (getDistanceSinceLastStep() > 0.35) {
-                Vector3d pos = new Vector3d(entity.getX(), Math.floor(entity.getY()), entity.getZ());
+            if (this.getDistanceSinceLastStep() > 0.35D) {
+                float rotation = entity.getYRot() * Mth.DEG_TO_RAD;
 
-                // Adjust footprint to left or right depending on step count
-                switch (getLastStep()) {
-                    case 0:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-entity.getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-entity.getYRot() + 90)) * 0.25));
-                        break;
-                    case 1:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-entity.getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-entity.getYRot() - 90)) * 0.25));
-                        break;
-                }
+                // Set the footprint position to the block below
+                Vector3d pos = new Vector3d(
+                        entity.getX() + getLastStep() * Mth.cos(rotation) * 0.25D,
+                        Math.floor(entity.getY()),
+                        entity.getZ() + getLastStep() * Mth.sin(rotation) * 0.25D
+                );
+                pos = Footprint.getFootprintPosition(level, rotation - Mth.PI, pos, entity.position());
 
-                pos = Footprint.getFootprintPosition(level, entity.getYRot() - 180, pos, entity.position());
-
-                int iPosX = Mth.floor(pos.x);
-                int iPosY = Mth.floor(pos.y - 0.05);
-                int iPosZ = Mth.floor(pos.z);
-                BlockPos blockPos = new BlockPos(iPosX, iPosY, iPosZ);
+                BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
                 BlockState state = level.getBlockState(blockPos);
 
                 // If the block below is the moon block
                 if (state.is(GCBlockTags.FOOTPRINTS)) {
                     long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER).addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, entity.getYRot(), entity.getUUID()));
+                    short age = (short) (level.getGameTime() % 20);
+                    level.getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER).addFootprint(chunkKey, new Footprint(dimensionType.unwrapKey().get().location(), pos, rotation, age, entity.getUUID()));
                 }
 
-                // Increment and cap step counter at 1
-                setLastStep((getLastStep() + 1) % 2);
+                // Change the sign of the lastStep variable
+                setLastStep(-this.lastStep);
                 setDistanceSinceLastStep(0);
             } else {
                 setDistanceSinceLastStep(getDistanceSinceLastStep() + motionSqrd);

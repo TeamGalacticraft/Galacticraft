@@ -39,8 +39,8 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 public class GCEntityTypes {
     public static final GCRegistry<EntityType<?>> ENTITIES = new GCRegistry<>(BuiltInRegistries.ENTITY_TYPE);
     public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = ENTITIES.register(Entity.MOON_VILLAGER, EntityType.Builder.of(MoonVillagerEntity::new, MobCategory.MISC)
-            .sized(0.6F, 1.95F)
-            .eyeHeight(1.62F)
+            .sized(0.6F, 2.5F)
+            .eyeHeight(1.72F)
             .clientTrackingRange(10)
             .build());
     public static final EntityType<EvolvedZombieEntity> EVOLVED_ZOMBIE = ENTITIES.register(Entity.EVOLVED_ZOMBIE, EntityType.Builder.of(EvolvedZombieEntity::new, MobCategory.MONSTER)
@@ -50,7 +50,7 @@ public class GCEntityTypes {
             .ridingOffset(-0.7F)
             .clientTrackingRange(8)
             .build());
-    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER =  ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
+    public static final EntityType<EvolvedCreeperEntity> EVOLVED_CREEPER = ENTITIES.register(Entity.EVOLVED_CREEPER, EntityType.Builder.of(EvolvedCreeperEntity::new, MobCategory.MONSTER)
             .sized(0.6F, 1.7F)
             .clientTrackingRange(8)
             .build());
@@ -98,28 +98,39 @@ public class GCEntityTypes {
             .clientTrackingRange(8)
             .build());
     public static final EntityType<GazerEntity> GAZER = ENTITIES.register(Entity.GAZER, EntityType.Builder.of(GazerEntity::new, MobCategory.MONSTER)
-            .sized(2F, 3.0F)
+            .sized(1.5F, 2.625F)
+            .eyeHeight(1.6F)
             .clientTrackingRange(8)
             .build());
     public static final EntityType<RumblerEntity> RUMBLER = ENTITIES.register(Entity.RUMBLER, EntityType.Builder.of(RumblerEntity::new, MobCategory.MONSTER)
-            .sized(1.0F, 1.55F)
+            .sized(1.5F, 1.5F)
+            .eyeHeight(0.8F)
             .clientTrackingRange(8)
             .build());
     public static final EntityType<CometCubeEntity> COMET_CUBE = ENTITIES.register(Entity.COMET_CUBE, EntityType.Builder.of(CometCubeEntity::new, MobCategory.MONSTER)
-            .sized(1.0F, 1.55F)
+            .sized(0.75F, 0.75F)
             .clientTrackingRange(8)
             .build());
     public static final EntityType<OliGrubEntity> OLI_GRUB = ENTITIES.register(Entity.OLI_GRUB, EntityType.Builder.of(OliGrubEntity::new, MobCategory.CREATURE)
-            .sized(1.0F, 1.55F)
+            .sized(0.75F, 0.375F)
             .clientTrackingRange(8)
             .build());
     public static final EntityType<GreyEntity> GREY = ENTITIES.register(Entity.GREY, EntityType.Builder.of(GreyEntity::new, MobCategory.CREATURE)
             .sized(0.6F, 1.55F)
+            .eyeHeight(1.25F)
             .clientTrackingRange(8)
             .build());
     public static final EntityType<ArchGreyEntity> ARCH_GREY = ENTITIES.register(Entity.ARCH_GREY, EntityType.Builder.of(ArchGreyEntity::new, MobCategory.CREATURE)
             .sized(0.6F, 1.55F)
+            .eyeHeight(1.25F)
             .clientTrackingRange(8)
+            .build());
+
+    public static final EntityType<FallingMeteorEntity> FALLING_METEOR = ENTITIES.register(Entity.FALLING_METEOR, EntityType.Builder.of(FallingMeteorEntity::new, MobCategory.AMBIENT)
+            .clientTrackingRange(16)
+            .updateInterval(5)
+            .sized(1.0f, 1.0f)
+            .eyeHeight(0.5f)
             .build());
 
     public static final EntityType<BubbleEntity> BUBBLE = ENTITIES.register(Entity.BUBBLE, EntityType.Builder.of(BubbleEntity::new, MobCategory.MISC)

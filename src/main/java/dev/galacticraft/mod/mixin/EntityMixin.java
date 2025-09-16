@@ -30,6 +30,8 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.events.GCEventHandlers;
+import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.core.Holder;
@@ -43,11 +45,17 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -63,13 +71,10 @@ import java.util.UUID;
 
 @Mixin(Entity.class)
 public abstract class EntityMixin implements AttachmentTarget {
-    private @Unique int lastAcidSoundPlayTick = -20;
+    private @Unique int timeInAcid = 0;
 
     @Shadow
     private Level level;
-
-    @Shadow
-    public int tickCount;
 
 //    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
 //    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
@@ -90,6 +95,9 @@ public abstract class EntityMixin implements AttachmentTarget {
 
     @Shadow
     protected UUID uuid;
+
+    @Shadow
+    private int id;
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
@@ -128,46 +136,62 @@ public abstract class EntityMixin implements AttachmentTarget {
     @Shadow
     public abstract EntityType<?> getType();
 
-    @Shadow private int id;
+    @Shadow
+    @Final
+    protected abstract void discard();
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
-        boolean isCreative = (player != null) && (player.isCreative() || player.isSpectator());
+        boolean invulnerable = player != null && player.getAbilities().invulnerable;
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if (!isCreative) {
+                if (!invulnerable) {
                     this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
                 }
             }
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enters an acid fluid, this entity needs to take damage
-            if (!isCreative) {
-                this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
-                        .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+        }
 
-                if (this.shouldPlaySulfuricAcidSound()) {
-                    this.playSulfuricAcidSound();
-                    this.addSulfuricAcidParticles();
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
+            // The entity enters an acid fluid, this entity needs to take damage
+            if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
+                boolean damage = this.timeInAcid >= 30;
+                boolean playSound = true;
+                if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
+                    this.discard();
+                    return;
+                }
+
+                if ((Object) this instanceof ItemEntity itemEntity) {
+                    ItemStack itemStack = itemEntity.getItem();
+                    if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
+                        damage = false;
+                        playSound = false;
+                    } else if (damage) {
+                        damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
+                    }
+                } else {
+                    damage = true;
+                }
+
+                if (damage) {
+                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
+                            .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+                }
+                if (playSound && this.timeInAcid % 5 == 0) {
+                    this.sulfuricAcidEffects();
                 }
             }
+            ++this.timeInAcid;
+        } else {
+            this.timeInAcid = 0;
         }
     }
 
     @Unique
-    private boolean shouldPlaySulfuricAcidSound() {
-        return this.tickCount >= this.lastAcidSoundPlayTick + 5;
-    }
-
-    @Unique
-    private void playSulfuricAcidSound() {
+    private void sulfuricAcidEffects() {
         this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-        this.lastAcidSoundPlayTick = this.tickCount;
-    }
-
-    @Unique
-    private void addSulfuricAcidParticles() {
         for (int i = 0; i < 4; i++) {
             level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
         }

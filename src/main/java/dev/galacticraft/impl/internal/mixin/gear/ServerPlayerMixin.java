@@ -70,9 +70,11 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void galacticraft_parrotOxygenCheck(CallbackInfo ci) {
-        if (!this.level().isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
-            Long rate = Galacticraft.CONFIG.parrotOxygenConsumptionRate();
-            CompoundTag leftParrot = this.getShoulderEntityLeft();
+        CompoundTag leftParrot = this.getShoulderEntityLeft();
+        CompoundTag rightParrot = this.getShoulderEntityRight();
+        if ((!leftParrot.isEmpty() || !rightParrot.isEmpty())
+                && !this.level().isBreathable(this.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(this.getPose()))))) {
+            long rate = Galacticraft.CONFIG.parrotOxygenConsumptionRate();
             if (!leftParrot.isEmpty()) {
                 SimpleContainer inv = new GearInventory();
                 inv.fromTag(leftParrot.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
@@ -91,7 +93,6 @@ public abstract class ServerPlayerMixin extends Player implements GearInventoryP
                     }
                 }
             }
-            CompoundTag rightParrot = this.getShoulderEntityRight();
             if (!rightParrot.isEmpty()) {
                 SimpleContainer inv = new GearInventory();
                 inv.fromTag(rightParrot.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());

@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content;
+package dev.galacticraft.mod.events;
 
 import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.mixin.AbstractCandleBlockInvoker;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;

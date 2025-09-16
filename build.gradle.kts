@@ -25,6 +25,8 @@ import java.time.format.DateTimeFormatter
 
 // Build Info
 val isCi = (System.getenv("CI") ?: "false") == "true"
+val runJei = project.getProperties().getOrDefault("jei", "false").toString().toBoolean()
+val runRei = project.getProperties().getOrDefault("rei", !runJei).toString().toBoolean()
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -285,9 +287,14 @@ dependencies {
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$reiVersion")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$reiVersion")
-    modRuntimeOnly("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
+    if (runRei) {
+        modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
+    }
 
     modCompileOnly("mezz.jei:jei-$minecraftVersion-fabric-api:$jeiVersion")
+    if (runJei) {
+        modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
+    }
 
     "apiCompileOnly"("org.jetbrains:annotations:26.0.2")
 

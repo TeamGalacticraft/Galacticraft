@@ -444,7 +444,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) {
         if (!onGround()) {
             if (up)
                 setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));

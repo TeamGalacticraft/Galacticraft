@@ -53,6 +53,7 @@
     "client.PauseMenuScreenMixin",
     "client.PlayerMixin",
     "client.ScreenEffectRendererMixin",
+    "client.SkinCustomizationScreenMixin",
     "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",

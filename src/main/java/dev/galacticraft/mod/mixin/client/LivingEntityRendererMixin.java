@@ -26,14 +26,15 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
-import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
 import net.minecraft.core.Direction;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.Pose;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -75,22 +76,22 @@ public abstract class LivingEntityRendererMixin {
     @Inject(method = "setupRotations", at = @At("HEAD"))
     private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
-            double rotationOffset = 0.5D;
-            pose.translate(0, rotationOffset, 0);
-            if (rocket.getLaunchStage() == LaunchStage.IGNITED) {
-                pose.translate((entity.level().random.nextDouble() - 0.5D) * 0.1D, 0, (entity.level().random.nextDouble() - 0.5D) * 0.1D);
+            double amplitude = switch(rocket.getLaunchStage()) {
+                case IGNITED -> 0.1D;
+                case LAUNCHED -> 0.04D;
+                default -> 0.0D;
+            };
+            if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
+                amplitude *= 0.5D;
             }
-            float pitch = rocket.getXRot();
-            float yaw = rocket.getYRot();
-            if (pitch < -90.0F || pitch > 90.0F) {
-                // TODO: Fix rotation when the rocket is pointing downwards
-                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
-                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
-            } else {
-                pose.mulPose(Axis.XP.rotationDegrees(pitch * Mth.cos(yaw * Mth.DEG_TO_RAD)));
-                pose.mulPose(Axis.ZP.rotationDegrees(pitch * Mth.sin(yaw * Mth.DEG_TO_RAD)));
+            if (amplitude > 0.0D) {
+                pose.translate((entity.level().random.nextDouble() - 0.5D) * amplitude, 0, (entity.level().random.nextDouble() - 0.5D) * amplitude);
             }
-            pose.translate(0, -rotationOffset, 0);
+
+            Quaternionf rotation = new Quaternionf();
+            rotation.rotateYXZ(-rocket.getViewYRot(tickDelta) * Mth.DEG_TO_RAD, rocket.getViewXRot(tickDelta) * Mth.DEG_TO_RAD, 0);
+            rotation.mul(Axis.YP.rotationDegrees(rocket.getViewYRot(tickDelta)));
+            pose.rotateAround(rotation, 0.0F, 0.5F, 0.0F);
         }
     }
 }

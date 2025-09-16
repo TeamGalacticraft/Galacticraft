@@ -33,34 +33,40 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
 public class ParachestModel extends HierarchicalModel<ParachestEntity> {
-
+    private static final String PARACHUTE_0 = "parachute_0";
+    private static final String PARACHUTE_1 = "parachute_1";
+    private static final String PARACHUTE_2 = "parachute_2";
+    private static final String PARACHUTE_STRING_0 = "parachute_string_0";
+    private static final String PARACHUTE_STRING_1 = "parachute_string_1";
+    private static final String PARACHUTE_STRING_2 = "parachute_string_2";
+    private static final String PARACHUTE_STRING_3 = "parachute_string_3";
     private final ModelPart root;
     public ModelPart[] parachute = new ModelPart[3];
     public ModelPart[] parachuteStrings = new ModelPart[4];
 
     public ParachestModel(ModelPart parachute) {
         this.root = parachute;
-        this.parachute[0] = parachute.getChild("parachute_0");
-        this.parachute[1] = parachute.getChild("parachute_1");
-        this.parachute[2] = parachute.getChild("parachute_2");
-        this.parachuteStrings[0] = parachute.getChild("parachute_string_0");
-        this.parachuteStrings[1] = parachute.getChild("parachute_string_1");
-        this.parachuteStrings[2] = parachute.getChild("parachute_string_2");
-        this.parachuteStrings[3] = parachute.getChild("parachute_string_3");
+        this.parachute[0] = parachute.getChild(PARACHUTE_0);
+        this.parachute[1] = parachute.getChild(PARACHUTE_1);
+        this.parachute[2] = parachute.getChild(PARACHUTE_2);
+        this.parachuteStrings[0] = parachute.getChild(PARACHUTE_STRING_0);
+        this.parachuteStrings[1] = parachute.getChild(PARACHUTE_STRING_1);
+        this.parachuteStrings[2] = parachute.getChild(PARACHUTE_STRING_2);
+        this.parachuteStrings[3] = parachute.getChild(PARACHUTE_STRING_3);
     }
 
     public static LayerDefinition createParachuteLayer() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
 
-        partDefinition.addOrReplaceChild("parachute_0", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(15.0F, 4.0F, 0.0F));
-        partDefinition.addOrReplaceChild("parachute_1", CubeListBuilder.create().texOffs(0, 42).addBox(-20.0F, -45.0F, -20.0F, 40, 2, 40), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("parachute_2", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(11.0F, -11.0F, 0.0F));
+        partDefinition.addOrReplaceChild(PARACHUTE_0, CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(15.0F, 4.0F, 0.0F));
+        partDefinition.addOrReplaceChild(PARACHUTE_1, CubeListBuilder.create().texOffs(0, 42).addBox(-20.0F, -45.0F, -20.0F, 40, 2, 40), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_2, CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(11.0F, -11.0F, 0.0F));
 
-        partDefinition.addOrReplaceChild("parachute_string_0", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("parachute_string_1", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("parachute_string_2", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
-        partDefinition.addOrReplaceChild("parachute_string_3", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_0, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_1, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_2, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_3, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
 
         return LayerDefinition.create(meshDefinition, 256, 256);
     }

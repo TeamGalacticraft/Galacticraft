@@ -23,29 +23,40 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.misc.cape.CapesLoader;
+import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.misc.cape.CapesClientState;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
-import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AbstractClientPlayer.class)
 @Environment(EnvType.CLIENT)
 public abstract class AbstractClientPlayerMixin {
-    @Shadow
-    @Nullable
-    protected abstract PlayerInfo getPlayerInfo();
-
     @ModifyReturnValue(method = "getSkin", at = @At("RETURN"))
-    private PlayerSkin getCapeTexture_gc(PlayerSkin original) {
-        if (CapesLoader.UUID_CAPE_MAP != null && this.getPlayerInfo() != null && CapesLoader.UUID_CAPE_MAP.containsKey(this.getPlayerInfo().getProfile().getId().toString())) {
-            return new PlayerSkin(original.texture(), original.textureUrl(), Constant.id("textures/cape/cape_" + CapesLoader.UUID_CAPE_MAP.get(this.getPlayerInfo().getProfile().getId().toString()) + ".png"), original.elytraTexture(), original.model(), original.secure());
+    private PlayerSkin gc$injectCape(PlayerSkin original) {
+        CapesClientState.Entry entry = CapesClientState.forPlayer((AbstractClientPlayer)(Object)this);
+        if (entry == null) return original;
+
+        if (entry.mode == CapeMode.OFF) {
+            return new PlayerSkin(
+                    original.texture(), original.textureUrl(),
+                    null,
+                    original.elytraTexture(),
+                    original.model(), original.secure()
+            );
+        } else if (entry.mode == CapeMode.GC && entry.gcCapeId != null) {
+            var rl = CapesClientState.gcCapeTexture(entry.gcCapeId);
+            if (rl != null) {
+                return new PlayerSkin(
+                        original.texture(), original.textureUrl(),
+                        rl,
+                        original.elytraTexture(),
+                        original.model(), original.secure()
+                );
+            }
         }
         return original;
     }

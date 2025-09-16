@@ -66,24 +66,24 @@ public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<R
     }
 
     public static LayerDefinition getTexturedModelData() {
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_TOP, CubeListBuilder.create().texOffs(0, 32).addBox(2.0F, -4.0F, -14.0F, 12, 4, 12, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_TOP, CubeListBuilder.create().texOffs(0, 32).addBox(2.0F, -4.0F, -14.0F, 12, 4, 12, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
 
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_ARM, CubeListBuilder.create().texOffs(48, 32).addBox(-2.0F, -15.0F, -4.0F, 4, 16, 4, CubeDeformation.NONE), PartPose.rotation(157.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
-        PartDefinition plierSmallArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM, CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, -12.0F, -1.0F, 2, 13, 2, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_ARM, CubeListBuilder.create().texOffs(48, 32).addBox(-2.0F, -15.0F, -4.0F, 4, 16, 4, CubeDeformation.NONE), PartPose.rotation(157.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
+        PartDefinition plierSmallArm = partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_SMALL_ARM, CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, -12.0F, -1.0F, 2, 13, 2, CubeDeformation.NONE), PartPose.rotation(Mth.PI, 0.0F, 0.0F));
         plierSmallArm.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_PLIER_TOOL_PLIERS, CubeListBuilder.create().texOffs(0, 0).addBox(-2.0F, -2.0F, 12.01F, 4, 4, 3, CubeDeformation.NONE), PartPose.rotation(Mth.HALF_PI, Mth.PI, 0.0F));
 
-        PartDefinition drillArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_SMALL_ARM, CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, -14.0F, -1.0F, 2, 14, 2, CubeDeformation.NONE), PartPose.rotation(202.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
-        PartDefinition drillTool = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_DRILL, CubeListBuilder.create().texOffs(0, 48).addBox(-2.0F, -2.0F, -2.0F, 4, 8, 4, CubeDeformation.NONE), PartPose.rotation(Mth.HALF_PI, Mth.PI, 0.0F));
+        PartDefinition drillArm = partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_SMALL_ARM, CubeListBuilder.create().texOffs(48, 0).addBox(-1.0F, -14.0F, -1.0F, 2, 14, 2, CubeDeformation.NONE), PartPose.rotation(202.5F * Mth.DEG_TO_RAD, 0.0F, 0.0F));
+        PartDefinition drillTool = partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_DRILL, CubeListBuilder.create().texOffs(0, 48).addBox(-2.0F, -2.0F, -2.0F, 4, 8, 4, CubeDeformation.NONE), PartPose.rotation(Mth.HALF_PI, Mth.PI, 0.0F));
         drillTool.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DRILL_TOOL_DRILL_BIT, CubeListBuilder.create().texOffs(0, 6).addBox(0.0F, 6.0F, -0.5F, 0, 4, 1, CubeDeformation.NONE), PartPose.ZERO);
 
-        PartDefinition flashlightArm = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HOLDER, CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -14.0F, -0.5F, 1, 14, 1, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
-        PartDefinition flashlight = modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HANDLE, CubeListBuilder.create().texOffs(0, 40).addBox(-2.0F, -1.0F, -1.0F, 4, 2, 2, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, Mth.PI));
+        PartDefinition flashlightArm = partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HOLDER, CubeListBuilder.create().texOffs(56, 0).addBox(-1.0F, -14.0F, -0.5F, 1, 14, 1, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
+        PartDefinition flashlight = partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_HANDLE, CubeListBuilder.create().texOffs(0, 40).addBox(-2.0F, -1.0F, -1.0F, 4, 2, 2, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, Mth.PI));
         flashlight.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_FLASHLIGHT_LIGHT, CubeListBuilder.create().texOffs(0, 32).addBox(-4.0F, -2.0F, -2.0F, 2, 4, 4, CubeDeformation.NONE), PartPose.ZERO);
 
-        modelPartData.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DISPLAY, CubeListBuilder.create().texOffs(16, 48).addBox(0.0F, -6.0F, -4.0F, 1, 6, 8, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
-        return LayerDefinition.create(modelData, 64, 64);
+        partDefinition.addOrReplaceChild(Constant.ModelPartName.ROCKET_WORKBENCH_DISPLAY, CubeListBuilder.create().texOffs(16, 48).addBox(0.0F, -6.0F, -4.0F, 1, 6, 8, CubeDeformation.NONE), PartPose.rotation(0.0F, 0.0F, 202.5F * Mth.DEG_TO_RAD));
+        return LayerDefinition.create(meshDefinition, 64, 64);
     }
 
     @Override
