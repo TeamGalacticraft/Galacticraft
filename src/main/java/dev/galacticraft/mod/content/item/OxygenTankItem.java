@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;

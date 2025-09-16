@@ -20,22 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.impl;
 
-public interface EntityAccessor {
-    default double galacticraft$getDistanceSinceLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
+import dev.galacticraft.api.GalacticraftAPI;
+
+public class GalacticraftAPIImpl implements GalacticraftAPI {
+    private static GalacticraftAPI activeAPI;
+
+    public static GalacticraftAPI getActiveAPI() {
+        if (activeAPI == null) {
+            throw new UnsupportedOperationException("GalacticraftAPI has not been initialized");
+        }
+        return activeAPI;
     }
 
-    default void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default int galacticraft$getLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void galacticraft$setLastStep(int lastStep) {
-        throw new RuntimeException("This should be overridden by mixin!");
+    public static void registerAPI(GalacticraftAPI api) {
+        activeAPI = api;
     }
 }

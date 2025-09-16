@@ -27,6 +27,7 @@ import dev.galacticraft.impl.internal.inventory.MappedInventory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCAccessorySlots;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.world.inventory.GearInventory;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;

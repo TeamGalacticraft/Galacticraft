@@ -23,7 +23,6 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.GalacticraftAPI;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.RocketFinConfig;
@@ -36,7 +35,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.RegistryFileCodec;
 import net.minecraft.world.item.EitherHolder;
-import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public record RocketFin<C extends RocketFinConfig, T extends RocketFinType<C>>(@NotNull C config, @NotNull T type) implements RocketPart<C, T> {

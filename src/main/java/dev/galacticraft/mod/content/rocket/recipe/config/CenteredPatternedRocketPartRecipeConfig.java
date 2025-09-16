@@ -111,7 +111,7 @@ public record CenteredPatternedRocketPartRecipeConfig(int height, @NotNull List<
                 if (spacing.containsKey(c)) {
                     x += spacing.get(c);
                 } else {
-                    builder.add(RocketPartRecipeSlot.create(-offset[i] + x, y, ingredients.get(c)));
+                    builder.add(new RocketPartRecipeSlot(-offset[i] + x, y, ingredients.get(c)));
                     x += 18;
                 }
             }

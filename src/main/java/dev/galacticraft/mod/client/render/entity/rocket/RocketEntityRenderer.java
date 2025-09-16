@@ -26,7 +26,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
 import dev.galacticraft.api.entity.rocket.render.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.LaunchStage;
-import dev.galacticraft.api.rocket.part.RocketLayout;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
@@ -42,7 +41,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.List;
 import java.util.Optional;
 
 public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
@@ -82,12 +80,12 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0F, 0.4375F, 0.0F);
 
-        RocketLayout layout = entity.getRocketLayout();
-        List<Holder<? extends RocketPart<?, ?>>> parts = layout.parts().stream().map(eitherHolder -> maybeGet(entity, eitherHolder));
-
-        for (EitherHolder<? extends RocketPart<?, ?>> part : layout.parts()) {
-            part.
-        }
+//        RocketLayout layout = entity.getRocketLayout();
+//        List<Holder<? extends RocketPart<?, ?>>> parts = layout.parts().stream().map(eitherHolder -> maybeGet(entity, eitherHolder));
+//
+//        for (EitherHolder<? extends RocketPart<?, ?>> part : layout.parts()) {
+//            part.
+//        }
 
         Holder<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {

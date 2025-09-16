@@ -28,8 +28,8 @@ import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 import dev.galacticraft.api.rocket.travelpredicate.ConfiguredTravelPredicate;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.mod.content.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
-import dev.galacticraft.mod.content.rocket.travelpredicate.type.ConstantTravelPredicateType;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
+import dev.galacticraft.mod.content.rocket.travelpredicate.type.GCTravelPredicates;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -50,7 +50,7 @@ public class StorageUpgradeType extends RocketUpgradeType<StorageUpgradeConfig> 
 
     @Override
     public @NotNull ConfiguredTravelPredicate<?, ?> travelPredicate(@NotNull StorageUpgradeConfig config) {
-        return ConstantTravelPredicateType.INSTANCE.configure(new ConstantTravelPredicateConfig(TravelPredicateType.Result.PASS));
+        return GCTravelPredicates.CONSTANT.configure(new ConstantTravelPredicateConfig(TravelPredicateType.Result.PASS));
     }
 
     @Override

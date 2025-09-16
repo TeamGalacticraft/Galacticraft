@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content;
 
-import dev.galacticraft.api.gas.GasKey;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Fluid;
 import dev.galacticraft.mod.Constant.Fluid.Gas;
@@ -75,8 +74,6 @@ public class GCFluids {
                 Component.translatable(Translations.Gas.WATER_VAPOR),
                 Constant.id("gas/water_vapor"), "H2O"
         ));
-
-        public static final GasKey
     }
 
     public static void register() {}

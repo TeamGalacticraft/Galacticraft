@@ -237,11 +237,6 @@ public final class GasFluid extends Fluid implements FluidVariantAttributeHandle
     }
 
     @Override
-    public @NotNull Component getName() {
-        return this.name;
-    }
-
-    @Override
     public @NotNull String getSymbol() {
         return this.symbol;
     }

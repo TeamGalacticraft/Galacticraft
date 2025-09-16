@@ -22,31 +22,16 @@
 
 package dev.galacticraft.api;
 
-import dev.galacticraft.api.rocket.part.*;
-import dev.galacticraft.api.rocket.part.config.*;
-import dev.galacticraft.api.rocket.part.type.*;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import dev.galacticraft.impl.GalacticraftAPIImpl;
+import org.jetbrains.annotations.ApiStatus;
 
+@ApiStatus.NonExtendable
 public interface GalacticraftAPI {
     static GalacticraftAPI get() {
+        return GalacticraftAPIImpl.getActiveAPI();
     }
 
-    static void register(GalacticraftAPI api) {}
-
-    // Rocket Recipes
-    @Contract(pure = true, value = "_, _ -> new")
-    @NotNull <C extends RocketBodyConfig, T extends RocketBodyType<C>> RocketBody<C, T> createRocketBody(@NotNull C config, @NotNull T type);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    @NotNull <C extends RocketBoosterConfig, T extends RocketBoosterType<C>> RocketBooster<C, T> createRocketBooster(@NotNull C config, @NotNull T type);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    @NotNull <C extends RocketConeConfig, T extends RocketConeType<C>> RocketCone<C, T> createRocketCone(@NotNull C config, @NotNull T type);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    @NotNull <C extends RocketEngineConfig, T extends RocketEngineType<C>> RocketEngine<C, T> createRocketEngine(@NotNull C config, @NotNull T type);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    @NotNull <C extends RocketFinConfig, T extends RocketFinType<C>> RocketFin<C, T> createRocketFin(@NotNull C config, @NotNull T type);
+    static void register(GalacticraftAPI api) {
+        GalacticraftAPIImpl.registerAPI(api);
+    }
 }

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.impl.gas;
 
+import dev.galacticraft.api.APIConstants;
 import dev.galacticraft.api.gas.GasComposition;
 import it.unimi.dsi.fastutil.objects.Object2DoubleMap;
 import net.minecraft.core.registries.Registries;
@@ -43,7 +44,7 @@ public record GasCompositionImpl(@NotNull Object2DoubleMap<ResourceKey<Fluid>> c
     }
 
     public boolean breathable() {
-        double oxygen = this.composition().getOrDefault(ResourceKey.create(Registries.FLUID, Gases.OXYGEN_ID), 0.0);
+        double oxygen = this.composition().getOrDefault(APIConstants.Gases.OXYGEN, 0.0);
         return oxygen > 195000.0 && oxygen < 235000.0; //195000ppm to 235000ppm (19.5% to 23.5%)
     }
 

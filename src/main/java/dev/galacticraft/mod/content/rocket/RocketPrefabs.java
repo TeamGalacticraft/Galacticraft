@@ -20,25 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket;
+package dev.galacticraft.mod.content.rocket;
 
-import dev.galacticraft.api.rocket.part.EmptyRocketLayout;
-import dev.galacticraft.api.rocket.part.GenericRocketLayout;
+import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.content.GCRocketParts;
 import net.minecraft.world.item.EitherHolder;
 
 import java.util.Optional;
 
 public class RocketPrefabs {
-    public static final RocketData MISSING = new RocketData(EmptyRocketLayout.INSTANCE, 0);
-    public static final RocketData TIER_1 = new RocketData(GenericRocketLayout.of(
+    public static final RocketData MISSING = new RocketData(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), 0);
+    public static final RocketData TIER_1 = new RocketData(
             new EitherHolder<>(GCRocketParts.TIER_1_CONE),
             new EitherHolder<>(GCRocketParts.TIER_1_BODY),
             new EitherHolder<>(GCRocketParts.TIER_1_FIN),
             null,
             new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
-            null
-    ), 0xFFFFFFFF);
+            null,
+            0xFFFFFFFF);
     public static final RocketData TIER_1_STORAGE_UPGRADE = new RocketData(
             new EitherHolder<>(GCRocketParts.TIER_1_CONE),
             new EitherHolder<>(GCRocketParts.TIER_1_BODY),

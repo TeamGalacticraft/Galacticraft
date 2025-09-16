@@ -23,16 +23,20 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.Registry;
+import net.minecraft.core.HolderSet;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.resources.ResourceKey;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.List;
-
+/**
+ * Currently unused, this interface in the future is supposed to determine what kind of rocket parts a {@link Rocket} can hold in {@link RocketData}
+ */
+@ApiStatus.Experimental
 public interface RocketLayout {
     Codec<RocketLayout> CODEC = null;
     StreamCodec<RegistryFriendlyByteBuf, RocketLayout> STREAM_CODEC = null;
@@ -41,7 +45,7 @@ public interface RocketLayout {
 
     StreamCodec<RegistryFriendlyByteBuf, ? extends RocketLayout> streamCodec();
 
-    List<ResourceKey<Registry<? extends RocketPart<?, ?>>>> parts();
+    HolderSet<? extends RocketPart<?, ?>> parts();
 
     boolean isValid();
 

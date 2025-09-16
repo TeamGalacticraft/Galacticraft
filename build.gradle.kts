@@ -112,21 +112,21 @@ loom {
 
     val apiSourceSet = sourceSets.getByName("api")
 
+    mods {
+        register("galacticraft") {
+            // Source sets we want to include in the mod jar
+            sourceSet(sourceSets.main.get())
+            sourceSet(apiSourceSet)
+        }
+
+        register("galacticraft-api") {
+            sourceSet(apiSourceSet)
+        }
+    }
+
     createRemapConfigurations(apiSourceSet)
 
     runs {
-        mods {
-            register("galacticraft") {
-                // Source sets we want to include in the mod jar
-                sourceSet(sourceSets.main.get())
-                sourceSet(apiSourceSet)
-            }
-
-            register("galacticraft-api") {
-                sourceSet(apiSourceSet)
-            }
-        }
-
         getByName("client") {
             name("Minecraft Client")
             source(sourceSets.test.get())

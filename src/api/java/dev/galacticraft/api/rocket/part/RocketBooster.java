@@ -23,7 +23,6 @@
 package dev.galacticraft.api.rocket.part;
 
 import com.mojang.serialization.Codec;
-import dev.galacticraft.api.GalacticraftAPI;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
 import dev.galacticraft.api.rocket.part.config.RocketBoosterConfig;
@@ -47,11 +46,6 @@ public record RocketBooster<C extends RocketBoosterConfig, T extends RocketBoost
 
     public static final Codec<EitherHolder<RocketBooster<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_BOOSTER, CODEC);
     public static final StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketBooster<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_BOOSTER, STREAM_CODEC);
-
-    @Contract(pure = true, value = "_, _ -> new")
-    static @NotNull <C extends RocketBoosterConfig, T extends RocketBoosterType<C>> RocketBooster<C, T> create(@NotNull C config, @NotNull T type) {
-        return GalacticraftAPI.get().createRocketBooster(config, type);
-    }
 
     /**
      * Returns the maximum velocity of this booster in blocks/tick.

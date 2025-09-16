@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
+import dev.galacticraft.api.util.StreamCodecs;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
 import net.minecraft.network.codec.ByteBufCodecs;

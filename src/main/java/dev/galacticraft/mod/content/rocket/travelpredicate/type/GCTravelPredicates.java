@@ -28,15 +28,16 @@ import dev.galacticraft.mod.Constant.TravelPredicate;
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.content.rocket.travelpredicate.config.AccessWeightTravelPredicateConfig;
 import dev.galacticraft.mod.content.rocket.travelpredicate.config.AndTravelPredicateConfig;
+import dev.galacticraft.mod.content.rocket.travelpredicate.config.ConstantTravelPredicateConfig;
 import dev.galacticraft.mod.content.rocket.travelpredicate.config.OrTravelPredicateConfig;
 
 public class GCTravelPredicates {
     public static final GCRegistry<TravelPredicateType<?>> TRAVEL_PREDICATES = new GCRegistry<>(BuiltInRocketRegistries.TRAVEL_PREDICATE_TYPE);
 
-    public static final TravelPredicateType<?> ACCESS_WEIGHT = TRAVEL_PREDICATES.register(TravelPredicate.ACCESS_WEIGHT, new AccessWeightTravelPredicateType(AccessWeightTravelPredicateConfig.CODEC));
-    public static final TravelPredicateType<?> CONSTANT = TRAVEL_PREDICATES.register(TravelPredicate.CONSTANT, new ConstantTravelPredicateType());
-    public static final TravelPredicateType<?> AND = TRAVEL_PREDICATES.register(TravelPredicate.AND, new AndTravelPredicateType(AndTravelPredicateConfig.CODEC));
-    public static final TravelPredicateType<?> OR = TRAVEL_PREDICATES.register(TravelPredicate.OR, new OrTravelPredicateType(OrTravelPredicateConfig.CODEC));
+    public static final TravelPredicateType<AccessWeightTravelPredicateConfig> ACCESS_WEIGHT = TRAVEL_PREDICATES.register(TravelPredicate.ACCESS_WEIGHT, new AccessWeightTravelPredicateType(AccessWeightTravelPredicateConfig.CODEC));
+    public static final TravelPredicateType<ConstantTravelPredicateConfig> CONSTANT = TRAVEL_PREDICATES.register(TravelPredicate.CONSTANT, new ConstantTravelPredicateType());
+    public static final TravelPredicateType<AndTravelPredicateConfig> AND = TRAVEL_PREDICATES.register(TravelPredicate.AND, new AndTravelPredicateType(AndTravelPredicateConfig.CODEC));
+    public static final TravelPredicateType<OrTravelPredicateConfig> OR = TRAVEL_PREDICATES.register(TravelPredicate.OR, new OrTravelPredicateType(OrTravelPredicateConfig.CODEC));
 
     public static void register() {}
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.api.accessor;
 
 public interface CryogenicAccessor {
 

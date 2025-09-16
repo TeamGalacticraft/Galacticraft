@@ -23,6 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
@@ -46,7 +47,6 @@ import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.content.*;
-import dev.galacticraft.mod.content.advancements.critereon.GCItemSubPredicates;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.content.item.GCItems;

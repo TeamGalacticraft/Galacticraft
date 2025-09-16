@@ -22,30 +22,28 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import dev.galacticraft.mod.accessor.GCLevelAccessor;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientLevelMixin implements GCLevelAccessor {
-    private final @Unique FootprintManager footprintManager = new FootprintManager();
+public abstract class ClientLevelMixin implements AttachmentTarget {
+    @Inject(method = "<init>", at = @At("RETURN"))
+    private void setFootprintManager(CallbackInfo ci) {
+        setAttached(GCAttachments.FOOTPRINT_MANAGER, new FootprintManager());
+    }
 
     @Inject(method = "tickTime", at = @At("RETURN"))
     private void update(CallbackInfo ci) {
         ((Level) (Object) this).updateSkyBrightness();
-    }
-
-    @Override
-    public FootprintManager galacticraft$getFootprintManager() {
-        return footprintManager;
     }
 }

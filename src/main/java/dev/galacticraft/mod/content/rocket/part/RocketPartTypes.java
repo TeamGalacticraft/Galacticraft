@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part;
+package dev.galacticraft.mod.content.rocket.part;
 
 import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.part.config.*;
 import dev.galacticraft.api.rocket.part.type.*;
 import dev.galacticraft.mod.Constant;

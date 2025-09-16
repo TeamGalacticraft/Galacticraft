@@ -93,7 +93,6 @@ public class GalacticraftAPI implements ModInitializer {
 
             });
         });
-        Gases.init();
         GCApiPackets.register();
         GCApiServerPacketReceivers.register();
         Constant.LOGGER.info("API Initialization Complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);

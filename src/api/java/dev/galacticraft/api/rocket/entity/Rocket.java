@@ -27,8 +27,10 @@ import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.part.*;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Holder;
 import net.minecraft.world.damagesource.DamageSource;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public interface Rocket extends Dockable {
     /**
@@ -42,7 +44,19 @@ public interface Rocket extends Dockable {
 
     @NotNull RocketData getRocketData();
 
-    @NotNull RocketLayout getRocketLayout();
+    @Nullable Holder<RocketCone<?, ?>> cone();
+
+    @Nullable Holder<RocketBody<?, ?>> body();
+
+    @Nullable Holder<RocketFin<?, ?>> fin();
+
+    @Nullable Holder<RocketBooster<?, ?>> booster();
+
+    @Nullable Holder<RocketEngine<?, ?>> engine();
+
+    @Nullable Holder<RocketUpgrade<?, ?>> upgrade();
+
+//    @NotNull RocketLayout getRocketLayout();
 
     @NotNull BlockPos getLinkedPad();
 

@@ -1213,6 +1213,9 @@ public interface Constant {
     interface Attachments {
         String SERVER_PLAYER = "server_player";
         String CLIENT_PLAYER = "client_player";
+        String SEALER_MANAGER = "sealer_manager";
+        String FOOTPRINT_TRACKER = "footprint_tracker";
+        String FOOTPRINT_MANAGER = "footprint_manager";
     }
 
     interface Teleporters {

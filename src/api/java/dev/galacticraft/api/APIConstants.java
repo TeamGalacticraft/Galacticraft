@@ -23,8 +23,10 @@
 package dev.galacticraft.api;
 
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.level.material.Fluid;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.jetbrains.annotations.Contract;
@@ -46,6 +48,6 @@ public interface APIConstants {
     }
 
     interface Gases {
-
+        ResourceKey<Fluid> OXYGEN = key(Registries.FLUID, "oxygen");
     }
 }

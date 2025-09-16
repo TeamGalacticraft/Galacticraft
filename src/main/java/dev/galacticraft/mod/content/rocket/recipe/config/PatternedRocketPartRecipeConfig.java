@@ -109,7 +109,7 @@ public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPa
                 if (spacing.containsKey(c)) {
                     x += spacing.get(c);
                 } else {
-                    left.add(RocketPartRecipeSlot.create(-widths[i] + x, y, ingredients.get(c)));
+                    left.add(new RocketPartRecipeSlot(-widths[i] + x, y, ingredients.get(c)));
                     x += 18;
                 }
             }
@@ -127,7 +127,7 @@ public record PatternedRocketPartRecipeConfig(int height, @NotNull List<RocketPa
                 if (spacing.containsKey(c)) {
                     x += spacing.get(c);
                 } else {
-                    right.add(RocketPartRecipeSlot.create(x, y, ingredients.get(c)));
+                    right.add(new RocketPartRecipeSlot(x, y, ingredients.get(c)));
                     x += 18;
                 }
             }

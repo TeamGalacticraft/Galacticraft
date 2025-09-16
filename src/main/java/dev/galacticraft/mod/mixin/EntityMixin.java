@@ -28,14 +28,12 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
-import dev.galacticraft.mod.accessor.EntityAccessor;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
-import net.minecraft.core.BlockPos;
+import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
-import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
@@ -49,13 +47,10 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
-import org.joml.Vector3d;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -67,19 +62,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAccessor {
-    private @Unique double distanceSinceLastStep;
-    private @Unique int lastStep;
+public abstract class EntityMixin implements AttachmentTarget {
     private @Unique int lastAcidSoundPlayTick = -20;
-
-    @Shadow
-    public abstract Vec3 getDeltaMovement();
-
-    @Shadow
-    private float yRot;
-
-    @Shadow
-    private float xRot;
 
     @Shadow
     private Level level;
@@ -106,18 +90,6 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     protected UUID uuid;
-
-    @Shadow
-    public abstract boolean isAlwaysTicking();
-
-    @Shadow
-    private int id;
-
-    @Shadow
-    public abstract boolean isInvulnerable();
-
-    @Shadow
-    public abstract boolean isInvulnerableTo(DamageSource source);
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
@@ -155,6 +127,8 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     public abstract EntityType<?> getType();
+
+    @Shadow private int id;
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
@@ -202,70 +176,9 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!getType().is(GCEntityTypeTags.HAS_FOOTPRINTS))
-            return;
-        double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
-
-        // If the player is on the moon, not airbourne and not riding anything
-        boolean isFlying = false;
-        if ((Object) this instanceof Player player)
-            isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
-            // If it has been long enough since the last step
-            if (galacticraft$getDistanceSinceLastStep() > 0.35) {
-                Vector3d pos = new Vector3d(getX(), Math.floor(getY()), getZ());
-
-                // Adjust footprint to left or right depending on step count
-                switch (galacticraft$getLastStep()) {
-                    case 0:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));
-                        break;
-                    case 1:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() - 90)) * 0.25));
-                        break;
-                }
-
-                pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
-
-                int iPosX = Mth.floor(pos.x);
-                int iPosY = Mth.floor(pos.y - 0.05);
-                int iPosZ = Mth.floor(pos.z);
-                BlockPos blockPos = new BlockPos(iPosX, iPosY, iPosZ);
-                BlockState state = this.level.getBlockState(blockPos);
-
-                // If the block below is the moon block
-                if (state.is(GCBlockTags.FOOTPRINTS)) {
-                    long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, getYRot(), getUUID()));
-                }
-
-                // Increment and cap step counter at 1
-                galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);
-                galacticraft$setDistanceSinceLastStep(0);
-            } else {
-                galacticraft$setDistanceSinceLastStep(galacticraft$getDistanceSinceLastStep() + motionSqrd);
-            }
+        if (getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
+            getAttachedOrCreate(GCAttachments.FOOTPRINT_TRACKER).tickFootprints((Entity) (Object) this, type, motion);
         }
-    }
-
-    @Override
-    public double galacticraft$getDistanceSinceLastStep() {
-        return this.distanceSinceLastStep;
-    }
-
-    @Override
-    public void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        this.distanceSinceLastStep = distanceSinceLastStep;
-    }
-
-    @Override
-    public int galacticraft$getLastStep() {
-        return this.lastStep;
-    }
-
-    @Override
-    public void galacticraft$setLastStep(int lastStep) {
-        this.lastStep = lastStep;
     }
 
     @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))

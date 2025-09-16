@@ -29,9 +29,9 @@ import dev.galacticraft.api.entity.Dockable;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.mod.content.rocket.RocketPrefabs;
 import dev.galacticraft.api.rocket.entity.Rocket;
-import dev.galacticraft.api.rocket.part.RocketLayout;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.api.block.entity.FuelDock;
@@ -83,7 +83,6 @@ import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -650,9 +649,43 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public @NotNull RocketLayout getRocketLayout() {
-        return getRocketData().layout();
+    public @Nullable Holder<RocketCone<?, ?>> cone() {
+        return maybeGet(getRocketData().cone());
     }
+
+    @Override
+    public @Nullable Holder<RocketBody<?, ?>> body() {
+        return maybeGet(getRocketData().body());
+    }
+
+    @Override
+    public @Nullable Holder<RocketFin<?, ?>> fin() {
+        return maybeGet(getRocketData().fin());
+    }
+
+    @Override
+    public @Nullable Holder<RocketBooster<?, ?>> booster() {
+        return maybeGet(getRocketData().booster());
+    }
+
+    @Override
+    public @Nullable Holder<RocketEngine<?, ?>> engine() {
+        return maybeGet(getRocketData().engine());
+    }
+
+    @Override
+    public @Nullable Holder<RocketUpgrade<?, ?>> upgrade() {
+        return maybeGet(getRocketData().upgrade());
+    }
+
+    private <T> @Nullable Holder<T> maybeGet(Optional<EitherHolder<T>> holder) {
+        return holder.flatMap(tEitherHolder -> tEitherHolder.unwrap(this.registryAccess())).orElse(null);
+    }
+
+//    @Override
+//    public @NotNull RocketLayout getRocketLayout() {
+//        return getRocketData().layout();
+//    }
 
     public void setData(RocketData data) {
         this.entityData.set(ROCKET_DATA, data);
