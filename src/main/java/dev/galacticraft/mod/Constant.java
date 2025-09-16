@@ -849,7 +849,8 @@ public interface Constant {
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
         ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
-        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_FIN_LEFT = id("slot/rocket_fin_left");
+        ResourceLocation ROCKET_FIN_RIGHT = id("slot/rocket_fin_right");
         ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
         ResourceLocation CHEST = id("slot/chest");
         ResourceLocation FOOD_CAN = id("slot/food_can");
