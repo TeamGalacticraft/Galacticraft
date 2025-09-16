@@ -30,8 +30,6 @@ import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.render.block.entity.BubbleDistributorRenderer;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.culling.Frustum;
 import net.minecraft.client.renderer.entity.EntityRenderer;
@@ -39,7 +37,6 @@ import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(EnvType.CLIENT)
 public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     public static final ResourceLocation TEXTURE = Constant.id("textures/model/sphere.png");
     public static GCModel bubbleModel;

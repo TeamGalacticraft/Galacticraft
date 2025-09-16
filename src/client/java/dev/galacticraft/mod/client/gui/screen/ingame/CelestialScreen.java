@@ -38,8 +38,6 @@ import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.mod.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.client.util.Graphics;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -66,7 +64,6 @@ import static dev.galacticraft.mod.Constant.CelestialScreen.*;
 import static dev.galacticraft.mod.Constant.REENTRY_HEIGHT;
 
 @SuppressWarnings({"DataFlowIssue"})
-@Environment(EnvType.CLIENT)
 public class CelestialScreen extends Screen implements ClientSatelliteAccessor.SatelliteListener {
     protected int borderSize = 0;
     protected int borderEdgeSize = 0;

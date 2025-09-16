@@ -25,8 +25,6 @@ package dev.galacticraft.mod.client.mixin;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.entity.LightningBolt;
 import net.minecraft.world.entity.player.Player;
@@ -34,7 +32,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LightningBolt.class)
-@Environment(EnvType.CLIENT)
 public abstract class LightningBoltMixin {
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z"))
     private boolean gc$cancelThunder(boolean original) {

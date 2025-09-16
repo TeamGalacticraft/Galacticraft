@@ -26,8 +26,6 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.misc.cape.CapesClientRole;
 import dev.galacticraft.mod.screen.CapeRootScreen;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.AbstractWidget;
 import net.minecraft.client.gui.components.Button;
@@ -44,7 +42,6 @@ import java.util.List;
 import java.util.Locale;
 
 
-@Environment(EnvType.CLIENT)
 @Mixin(SkinCustomizationScreen.class)
 public abstract class SkinCustomizationScreenMixin extends Screen {
     protected SkinCustomizationScreenMixin(Component title) { super(title); }

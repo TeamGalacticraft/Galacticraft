@@ -24,8 +24,6 @@ package dev.galacticraft.impl.client.internal.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.ReceivingLevelScreen;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -38,7 +36,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-@Environment(EnvType.CLIENT)
 public abstract class MinecraftMixin {
     @Shadow
     public abstract SoundManager getSoundManager();

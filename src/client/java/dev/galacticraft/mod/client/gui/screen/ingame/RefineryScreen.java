@@ -26,12 +26,9 @@ import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.RefineryBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class RefineryScreen extends MachineScreen<RefineryBlockEntity, MachineMenu<RefineryBlockEntity>> {
     public RefineryScreen(MachineMenu<RefineryBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.REFINERY_SCREEN);

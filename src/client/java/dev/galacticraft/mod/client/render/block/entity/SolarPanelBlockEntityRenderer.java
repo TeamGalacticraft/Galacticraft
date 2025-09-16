@@ -29,8 +29,6 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.block.entity.machine.AbstractSolarPanelBlockEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
 import net.minecraft.client.model.geom.builders.*;
@@ -42,7 +40,6 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 
-@Environment(EnvType.CLIENT)
 public class SolarPanelBlockEntityRenderer implements BlockEntityRenderer<AbstractSolarPanelBlockEntity> {
     private static final ResourceLocation TEXTURE = Constant.id("textures/model/solar_panel.png");
     private final ModelPart panel;

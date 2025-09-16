@@ -25,8 +25,6 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.mod.client.network.CapeClientNet;
 import dev.galacticraft.mod.misc.cape.*;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -41,7 +39,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-@Environment(EnvType.CLIENT)
 public class CapeRootScreen extends OptionsSubScreen {
     private ClientCapePrefs prefs;
     private String selectedCapeId;

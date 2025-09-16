@@ -24,14 +24,11 @@ package dev.galacticraft.api.client.renderer.entity.rocket;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.api.rocket.entity.Rocket;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.MultiBufferSource;
 
 @FunctionalInterface
-@Environment(EnvType.CLIENT)
 public interface RocketPartRenderer {
     /**
      * Called when this rocket part is being rendered inside a gui/screen.

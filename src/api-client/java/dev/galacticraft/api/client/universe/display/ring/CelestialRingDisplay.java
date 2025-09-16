@@ -25,15 +25,12 @@ package dev.galacticraft.api.client.universe.display.ring;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.client.registry.BuiltInClientAddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector3f;
 
 public record CelestialRingDisplay<C extends CelestialRingDisplayConfig, T extends CelestialRingDisplayType<C>>(T type, C config) {
     public static final Codec<CelestialRingDisplay<?, ?>> CODEC = BuiltInClientAddonRegistries.CELESTIAL_RING_DISPLAY_TYPE.byNameCodec().dispatch(CelestialRingDisplay::type, CelestialRingDisplayType::codec);
 
-    @Environment(EnvType.CLIENT)
     public boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float alpha, float lineScale, double mouseX, double mouseY, float delta) {
         return this.type().render(body, graphics, count, systemOffset, lineScale, alpha, mouseX, mouseY, delta, this.config());
     }

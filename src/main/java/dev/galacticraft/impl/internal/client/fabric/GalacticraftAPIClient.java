@@ -25,12 +25,9 @@ package dev.galacticraft.impl.internal.client.fabric;
 import dev.galacticraft.impl.network.GCApiClientPacketReceivers;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
-@Environment(EnvType.CLIENT)
 public class GalacticraftAPIClient implements ClientModInitializer {
     @Override
     public void onInitializeClient() {

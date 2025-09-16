@@ -25,15 +25,12 @@ package dev.galacticraft.impl.client.renderer.entity.rocket;
 import dev.galacticraft.api.client.renderer.entity.rocket.RocketPartRenderer;
 import dev.galacticraft.api.client.renderer.entity.rocket.RocketPartRendererRegistry;
 import dev.galacticraft.api.rocket.part.RocketPart;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.HashMap;
 import java.util.Map;
 
-@Environment(EnvType.CLIENT)
 public class RocketPartRendererRegistryImpl implements RocketPartRendererRegistry {
     private final Map<ResourceKey<? extends RocketPart<?, ?>>, RocketPartRenderer> renderers = new HashMap<>();
 

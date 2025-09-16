@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.Renderer;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
@@ -54,7 +52,6 @@ import java.util.Map;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public class WalkwayCenterModel implements UnbakedModel {
     private final ResourceLocation texture;
 

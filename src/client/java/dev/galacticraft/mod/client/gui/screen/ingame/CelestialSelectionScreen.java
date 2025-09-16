@@ -39,8 +39,6 @@ import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.util.Translations;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
@@ -59,7 +57,6 @@ import java.util.stream.Collectors;
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
 
 @SuppressWarnings({"SpellCheckingInspection", "DataFlowIssue"})
-@Environment(EnvType.CLIENT)
 public class CelestialSelectionScreen extends CelestialScreen {
     protected int LHS = 0;
     protected int RHS = 0;

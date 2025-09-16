@@ -23,8 +23,6 @@
 package dev.galacticraft.impl.client.internal.mixin;
 
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleEngine;
@@ -36,7 +34,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ParticleEngine.class)
-@Environment(EnvType.CLIENT)
 public abstract class ParticleManagerMixin {
     @Shadow
     protected ClientLevel level;

@@ -29,8 +29,6 @@ import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
 import dev.galacticraft.mod.network.c2s.EjectCanPayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
@@ -38,7 +36,6 @@ import net.minecraft.world.entity.player.Inventory;
 
 import static dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity.*;
 
-@Environment(EnvType.CLIENT)
 public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodCannerMenu> {
     public FoodCannerScreen(FoodCannerMenu handler, Inventory inv, Component title) {
         super(handler, title, Constant.ScreenTexture.FOOD_CANNER_SCREEN);

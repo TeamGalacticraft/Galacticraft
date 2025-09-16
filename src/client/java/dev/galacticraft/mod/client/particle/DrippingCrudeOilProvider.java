@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.particle;
 
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.DripParticle;
 import net.minecraft.client.particle.Particle;
@@ -34,7 +32,6 @@ import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
-@Environment(EnvType.CLIENT)
 public record DrippingCrudeOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable

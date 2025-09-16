@@ -24,12 +24,9 @@ package dev.galacticraft.api.client.renderer.entity.rocket;
 
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.impl.client.renderer.entity.rocket.RocketPartRendererRegistryImpl;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.resources.ResourceKey;
 import org.jetbrains.annotations.NotNull;
 
-@Environment(EnvType.CLIENT)
 public interface RocketPartRendererRegistry {
     RocketPartRendererRegistry INSTANCE = new RocketPartRendererRegistryImpl();
 

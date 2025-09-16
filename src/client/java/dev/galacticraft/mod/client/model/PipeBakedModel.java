@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
 import net.fabricmc.fabric.api.renderer.v1.mesh.Mesh;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
@@ -52,7 +50,6 @@ import java.util.*;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public class PipeBakedModel implements BakedModel {
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;

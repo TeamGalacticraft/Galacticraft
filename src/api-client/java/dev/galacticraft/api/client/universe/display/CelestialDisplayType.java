@@ -24,8 +24,6 @@ package dev.galacticraft.api.client.universe.display;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.resources.ResourceLocation;
 import org.joml.Vector4f;
@@ -38,7 +36,6 @@ public abstract class CelestialDisplayType<C extends CelestialDisplayConfig> {
         this.codec = codec.fieldOf("config").xmap((config) -> new CelestialDisplay<>(this, config), CelestialDisplay::config);
     }
 
-    @Environment(EnvType.CLIENT)
     public abstract Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, C config);
 
     /**

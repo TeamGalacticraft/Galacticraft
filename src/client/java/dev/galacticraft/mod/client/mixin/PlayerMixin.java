@@ -27,8 +27,6 @@ import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.misc.cape.CapeMode;
 import dev.galacticraft.mod.misc.cape.CapesClientState;
 import dev.galacticraft.mod.network.c2s.OpenPetInventoryPayload;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.resources.PlayerSkin;
@@ -38,7 +36,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
-@Environment(EnvType.CLIENT)
 public abstract class PlayerMixin implements PetInventoryOpener {
     @Override
     public void galacticraft$sendOpenPetInventory(int petId) {

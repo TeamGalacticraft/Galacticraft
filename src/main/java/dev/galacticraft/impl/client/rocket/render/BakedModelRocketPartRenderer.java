@@ -31,8 +31,6 @@ import dev.galacticraft.api.entity.rocket.render.RocketPartRenderer;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -44,7 +42,6 @@ import net.minecraft.resources.ResourceLocation;
 
 import java.util.function.Supplier;
 
-@Environment(EnvType.CLIENT)
 public record BakedModelRocketPartRenderer(ResourceLocation model,
                                            Supplier<RenderType> layer) implements RocketPartRenderer {
 

@@ -25,8 +25,6 @@ package dev.galacticraft.api.client.universe.display.ring;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector3f;
 
@@ -37,7 +35,6 @@ public abstract class CelestialRingDisplayType<C extends CelestialRingDisplayCon
         this.codec = codec.fieldOf("config").xmap((config) -> new CelestialRingDisplay<>(this, config), CelestialRingDisplay::config);
     }
 
-    @Environment(EnvType.CLIENT)
     public abstract boolean render(CelestialBody<?, ?> body, GuiGraphics graphics, int count, Vector3f systemOffset, float lineScale, float alpha, double mouseX, double mouseY, float delta, C config);
 
     public MapCodec<CelestialRingDisplay<C, CelestialRingDisplayType<C>>> codec() {

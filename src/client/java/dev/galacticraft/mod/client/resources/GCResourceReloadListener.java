@@ -25,8 +25,6 @@ package dev.galacticraft.mod.client.resources;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandler;
 import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry;
 import net.fabricmc.fabric.api.resource.ResourceReloadListenerKeys;
@@ -40,7 +38,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import java.util.Arrays;
 import java.util.Collection;
 
-@Environment(EnvType.CLIENT)
 public class GCResourceReloadListener implements SimpleSynchronousResourceReloadListener {
     public static final GCResourceReloadListener INSTANCE = new GCResourceReloadListener();
     public static final ResourceLocation ID = Constant.id("resource_reload_listener");

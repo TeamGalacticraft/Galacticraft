@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.content;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
@@ -31,7 +29,6 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 
-@Environment(EnvType.CLIENT)
 public class ClientCannedFoodTooltip implements ClientTooltipComponent {
     private static final ResourceLocation BACKGROUND_SPRITE = ResourceLocation.withDefaultNamespace("container/bundle/background");
     private static final int MARGIN_Y = 4;
@@ -97,7 +94,6 @@ public class ClientCannedFoodTooltip implements ClientTooltipComponent {
         return (int) Math.ceil(((double) this.contents.size() + 1.0) / (double) this.gridSizeX());
     }
 
-    @Environment(EnvType.CLIENT)
     private static enum Texture {
         BLOCKED_SLOT(ResourceLocation.withDefaultNamespace("container/bundle/blocked_slot"), 18, 20),
         SLOT(ResourceLocation.withDefaultNamespace("container/bundle/slot"), 18, 20);

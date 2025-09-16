@@ -29,15 +29,12 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.CraftingInput;
 
-@Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> {
     private static final int PROGRESS_U = 177;
     private static final int PROGRESS_V = 0;

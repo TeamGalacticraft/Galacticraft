@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.client.mixin;
 
 import dev.galacticraft.mod.client.gui.widget.SpaceRaceButtonWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -34,7 +32,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PauseScreen.class)
-@Environment(EnvType.CLIENT)
 public abstract class PauseMenuScreenMixin extends Screen {
     protected PauseMenuScreenMixin(Component text) {
         super(text);

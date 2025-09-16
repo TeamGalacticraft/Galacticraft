@@ -24,12 +24,9 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.content.block.entity.machine.BasicSolarPanelBlockEntity;
 import dev.galacticraft.mod.screen.SolarPanelMenu;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
-@Environment(EnvType.CLIENT)
 public class BasicSolarPanelScreen extends SolarPanelScreen<BasicSolarPanelBlockEntity, SolarPanelMenu<BasicSolarPanelBlockEntity>> {
     public BasicSolarPanelScreen(SolarPanelMenu<BasicSolarPanelBlockEntity> handler, Inventory inv, Component title) {
         super(handler, inv, title);

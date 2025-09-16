@@ -23,8 +23,6 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.APIConstants;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
@@ -1158,7 +1156,6 @@ public interface Constant {
         }
     }
 
-    @Environment(EnvType.CLIENT)
     interface ModelPartName {
         String OXYGEN_MASK = "oxygen_mask";
         String REAL_OXYGEN_MASK = "real_oxygen_mask";

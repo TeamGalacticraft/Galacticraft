@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.particle;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
@@ -101,7 +99,6 @@ public class LanderParticle extends TextureSheetParticle {
         this.zd *= 0.9599999785423279D;
     }
 
-    @Environment(EnvType.CLIENT)
     public record Provider(SpriteSet sprites) implements ParticleProvider<SimpleParticleType> {
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
             return new LanderParticle(clientLevel, d, e, f, g, h, i, this.sprites);

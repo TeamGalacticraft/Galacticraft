@@ -22,12 +22,9 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.minecraft.client.renderer.DimensionSpecialEffects;
 import net.minecraft.world.phys.Vec3;
 
-@Environment(EnvType.CLIENT)
 public class MoonDimensionEffects extends DimensionSpecialEffects {
     private static final float[] FOG_COLOR = {0.0F, 0.0F, 0.0F, 0.0F};
     public static final MoonDimensionEffects INSTANCE = new MoonDimensionEffects();

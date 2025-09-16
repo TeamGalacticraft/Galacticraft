@@ -24,8 +24,6 @@ package dev.galacticraft.mod.client.mixin;
 
 import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentTarget;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.world.level.Level;
@@ -35,7 +33,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
-@Environment(EnvType.CLIENT)
 public abstract class ClientLevelMixin implements AttachmentTarget {
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setFootprintManager(CallbackInfo ci) {
