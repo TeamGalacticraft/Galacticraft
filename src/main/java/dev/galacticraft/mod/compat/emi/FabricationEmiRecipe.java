@@ -30,7 +30,6 @@ import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class FabricationEmiRecipe extends BasicEmiRecipe {

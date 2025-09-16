@@ -31,6 +31,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
@@ -44,21 +45,25 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack CIRCUIT_FABRICATOR = EmiStack.of(GCBlocks.CIRCUIT_FABRICATOR);
     public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
+    public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Categories
     public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR);
     public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR);
+    public static final EmiRecipeCategory ROCKET = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ROCKET), ROCKET_WORKBENCH);
 
     @Override
     public void register(EmiRegistry registry) {
         registry.addCategory(COMPRESSING);
         registry.addCategory(FABRICATION);
+        registry.addCategory(ROCKET);
 
         registry.addWorkstation(COMPRESSING, COMPRESSOR);
         registry.addWorkstation(COMPRESSING, ELECTRIC_COMPRESSOR);
         registry.addWorkstation(FABRICATION, CIRCUIT_FABRICATOR);
         registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, ELECTRIC_ARC_FURNACE);
+        registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
         RecipeManager manager = registry.getRecipeManager();
 
@@ -68,6 +73,10 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
 
         for (RecipeHolder<FabricationRecipe> recipe : manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE)) {
             registry.addRecipe(new FabricationEmiRecipe(recipe));
+        }
+
+        for (RecipeHolder<RocketRecipe> recipe : manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE)) {
+            registry.addRecipe(new RocketEmiRecipe(recipe));
         }
     }
 }
