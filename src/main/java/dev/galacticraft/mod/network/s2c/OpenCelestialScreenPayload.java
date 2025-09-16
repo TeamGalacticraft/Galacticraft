@@ -26,10 +26,7 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.util.StreamCodecs;
-import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
@@ -40,7 +37,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public record OpenCelestialScreenPayload(@Nullable RocketData data,
-                                         Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
+                                         Holder<CelestialBody<?, ?>> celestialBody) implements CustomPacketPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
             p -> p.data,
@@ -50,20 +47,10 @@ public record OpenCelestialScreenPayload(@Nullable RocketData data,
     );
 
     public static final ResourceLocation ID = Constant.id("open_celestial_screen");
-    public static final Type<OpenCelestialScreenPayload> TYPE = new Type<>(ID);
+    public static final CustomPacketPayload.Type<OpenCelestialScreenPayload> TYPE = new CustomPacketPayload.Type<>(ID);
 
     @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
+    public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    @Override
-    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                context.client().setScreen(new CelestialSelectionScreen(false, OpenCelestialScreenPayload.this.data(), true, OpenCelestialScreenPayload.this.celestialBody.value()));
-            }
-        };
     }
 }

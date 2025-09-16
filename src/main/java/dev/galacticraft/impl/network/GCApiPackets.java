@@ -24,7 +24,6 @@ package dev.galacticraft.impl.network;
 
 import dev.galacticraft.impl.network.c2s.FlagDataPayload;
 import dev.galacticraft.impl.network.c2s.TeamNamePayload;
-import dev.galacticraft.impl.network.s2c.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class GCApiPackets {

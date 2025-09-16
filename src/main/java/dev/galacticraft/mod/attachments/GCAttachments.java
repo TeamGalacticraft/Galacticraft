@@ -35,8 +35,6 @@ public final class GCAttachments {
             .persistent(GCServerPlayer.CODEC)
             .copyOnDeath());
 
-    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.create(Constant.id(Attachments.CLIENT_PLAYER));
-
     public static final AttachmentType<SealerManager> SEALER_MANAGER = AttachmentRegistry.create(Constant.id(Attachments.SEALER_MANAGER));
 
     public static final AttachmentType<GCFootprintTracker> FOOTPRINT_TRACKER = AttachmentRegistry.createDefaulted(

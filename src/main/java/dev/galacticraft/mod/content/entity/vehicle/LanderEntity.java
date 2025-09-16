@@ -34,7 +34,7 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
+import dev.galacticraft.mod.network.s2c.ResetPerspectivePayload;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.ParachestMenu;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -240,7 +240,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                     entity.removeVehicle();
                     if (entity instanceof ServerPlayer player) {
                         player.awardStat(GCStats.CRASH_LANDING);
-                        ServerPlayNetworking.send(player, new ResetPerspectivePacket());
+                        ServerPlayNetworking.send(player, new ResetPerspectivePayload());
                     }
                     entity.setDeltaMovement(Vec3.ZERO);
                     entity.setPos(entity.getX(), this.getY() + 2.25, entity.getZ());

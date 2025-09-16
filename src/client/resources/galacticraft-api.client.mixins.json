@@ -1,0 +1,22 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.impl.client.internal.mixin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AbstractClientPlayerEntityMixin",
+    "AbstractContainerScreenMixin",
+    "ClientLevelMixin",
+    "ClientPlayNetworkHandlerMixin",
+    "FogRendererMixin",
+    "LevelRendererMixin",
+    "MinecraftMixin",
+    "ParticleAccessor",
+    "ParticleManagerMixin",
+    "SoundEngineMixin",
+    "SoundManagerAccessor"
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

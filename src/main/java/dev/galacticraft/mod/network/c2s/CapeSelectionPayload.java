@@ -26,7 +26,7 @@ import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.cape.CapeMode;
 import dev.galacticraft.mod.misc.cape.ServerCapeManager;
-import dev.galacticraft.mod.network.s2c.CapeAssignmentsPacket;
+import dev.galacticraft.mod.network.s2c.CapeAssignmentsPayload;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
@@ -67,16 +67,16 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
         ServerCapeManager.set(player, m, id);
 
         var snap = ServerCapeManager.snapshot();
-        var list = new ArrayList<CapeAssignmentsPacket.Entry>(snap.size());
+        var list = new ArrayList<CapeAssignmentsPayload.Entry>(snap.size());
         for (var e : snap.entrySet()) {
             var a = e.getValue();
-            list.add(new CapeAssignmentsPacket.Entry(
+            list.add(new CapeAssignmentsPayload.Entry(
                     e.getKey(),
                     a.mode,
                     a.mode == CapeMode.GC ? a.gcCapeId : null
             ));
         }
-        var payload = new CapeAssignmentsPacket(list);
+        var payload = new CapeAssignmentsPayload(list);
 
         for (var p : context.server().getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(p, payload);

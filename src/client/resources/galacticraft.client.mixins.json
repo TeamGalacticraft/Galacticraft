@@ -1,0 +1,37 @@
+{
+  "required": true,
+  "package": "dev.galacticraft.mod.client.mixin",
+  "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
+  "compatibilityLevel": "JAVA_21",
+  "client": [
+    "AbstractClientPlayerMixin",
+    "AlphaWarningTitleScreenMixin",
+    "AnimalModelAgeableListModel",
+    "BlockModelMixin",
+    "BlockModelMixin$DeserializerMixin",
+    "CameraMixin",
+    "CapeLayerMixin",
+    "ClientLevelMixin",
+    "ClientPacketListenerMixin",
+    "FabricItemMixin",
+    "FogRendererMixin",
+    "GameRendererMixin",
+    "HumanoidModelMixin",
+    "ItemInHandRendererMixin",
+    "LevelRendererMixin",
+    "LightningBoltMixin",
+    "LivingEntityRendererMixin",
+    "LocalPlayerMixin",
+    "MinecraftMixin",
+    "ParrotOnShoulderLayerMixin",
+    "PauseMenuScreenMixin",
+    "PlayerMixin",
+    "ScreenEffectRendererMixin",
+    "SkinCustomizationScreenMixin",
+    "SpriteContentAccessor"
+  ],
+  "minVersion": "0.8.0",
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

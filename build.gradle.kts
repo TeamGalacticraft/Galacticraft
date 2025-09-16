@@ -200,6 +200,17 @@ loom {
     }
 }
 
+sourceSets {
+    val apiSourceSet = sourceSets["api"]
+    val apiClientSourceSet = sourceSets["api-client"]
+    getByName("client") {
+        compileClasspath += apiSourceSet.output
+        runtimeClasspath += apiSourceSet.output
+        compileClasspath += apiClientSourceSet.output
+        runtimeClasspath += apiClientSourceSet.output
+    }
+}
+
 repositories {
     mavenLocal()
     maven("https://repo.terradevelopment.net/repository/maven-releases/") {

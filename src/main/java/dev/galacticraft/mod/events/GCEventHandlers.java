@@ -34,7 +34,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
+import dev.galacticraft.mod.network.s2c.FootprintRemovedPayload;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
@@ -80,7 +80,7 @@ public class GCEventHandlers {
                 if (level.dimension().location().equals(targetPoint.dimension().location())) {
                     long packedPos = ChunkPos.asLong(targetPoint.pos());
                     PlayerLookup.around(level, targetPoint.pos(), 50).forEach(player -> {
-                        ServerPlayNetworking.send(player, new FootprintRemovedPacket(packedPos, targetPoint.pos()));
+                        ServerPlayNetworking.send(player, new FootprintRemovedPayload(packedPos, targetPoint.pos()));
                     });
                 }
             }

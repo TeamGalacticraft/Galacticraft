@@ -279,13 +279,13 @@
       "dev.galacticraft.mod.compat.ModMenuApiImpl"
     ],
     "rei_client": [
-      "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin"
+      "dev.galacticraft.mod.client.compat.rei.GalacticraftREIClientPlugin"
     ],
     "rei_common": [
       "dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin"
     ],
     "jei_mod_plugin": [
-      "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
+      "dev.galacticraft.mod.client.compat.jei.GCJEIPlugin"
     ],
     "appleskin": [
       "dev.galacticraft.mod.compat.AppleSkinEventHandler"
@@ -293,7 +293,15 @@
   },
   "mixins": [
     "galacticraft.mixins.json",
-    "galacticraft-api.mixins.json"
+    {
+      "config": "galacticraft.client.mixins.json",
+      "environment": "client"
+    },
+    "galacticraft-api.mixins.json",
+    {
+      "config": "galacticraft-api.client.mixins.json",
+      "environment": "client"
+    }
   ],
   "accessWidener": "galacticraft.accesswidener",
   "custom": {

@@ -29,33 +29,6 @@
     "ServerPlayerMixin",
     "SpiderMixin"
   ],
-  "client": [
-    "client.AbstractClientPlayerMixin",
-    "client.AlphaWarningTitleScreenMixin",
-    "client.AnimalModelAgeableListModel",
-    "client.BlockModelMixin",
-    "client.BlockModelMixin$DeserializerMixin",
-    "client.CameraMixin",
-    "client.CapeLayerMixin",
-    "client.ClientLevelMixin",
-    "client.ClientPacketListenerMixin",
-    "client.FabricItemMixin",
-    "client.FogRendererMixin",
-    "client.GameRendererMixin",
-    "client.HumanoidModelMixin",
-    "client.ItemInHandRendererMixin",
-    "client.LevelRendererMixin",
-    "client.LightningBoltMixin",
-    "client.LivingEntityRendererMixin",
-    "client.LocalPlayerMixin",
-    "client.MinecraftMixin",
-    "client.ParrotOnShoulderLayerMixin",
-    "client.PauseMenuScreenMixin",
-    "client.PlayerMixin",
-    "client.ScreenEffectRendererMixin",
-    "client.SkinCustomizationScreenMixin",
-    "client.SpriteContentAccessor"
-  ],
   "minVersion": "0.8.0",
   "injectors": {
     "defaultRequire": 1

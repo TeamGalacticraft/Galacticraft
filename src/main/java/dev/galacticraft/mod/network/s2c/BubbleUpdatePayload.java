@@ -22,11 +22,8 @@
 
 package dev.galacticraft.mod.network.s2c;
 
-import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
@@ -34,7 +31,7 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record BubbleUpdatePayload(BlockPos pos, byte maxSize, double size, boolean visible) implements S2CPayload {
+public record BubbleUpdatePayload(BlockPos pos, byte maxSize, double size, boolean visible) implements CustomPacketPayload {
     public static final ResourceLocation ID = Constant.id("bubble_update");
     public static final CustomPacketPayload.Type<BubbleUpdatePayload> TYPE = new CustomPacketPayload.Type<>(ID);
     public static final StreamCodec<ByteBuf, BubbleUpdatePayload> STREAM_CODEC = StreamCodec.composite(
@@ -50,18 +47,7 @@ public record BubbleUpdatePayload(BlockPos pos, byte maxSize, double size, boole
     );
 
     @Override
-    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> {
-            if (context.player().level().getBlockEntity(this.pos) instanceof OxygenBubbleDistributorBlockEntity machine) {
-                machine.setTargetSize(this.maxSize);
-                machine.setSize(this.size);
-                machine.setBubbleVisible(this.visible);
-            }
-        };
-    }
-
-    @Override
-    public @NotNull Type<? extends CustomPacketPayload> type() {
+    public @NotNull CustomPacketPayload.Type<? extends CustomPacketPayload> type() {
         return TYPE;
     }
 }

@@ -23,17 +23,17 @@
     "research.ServerPlayerMixin"
   ],
   "client": [
-    "client.AbstractClientPlayerEntityMixin",
-    "client.AbstractContainerScreenMixin",
-    "client.ClientLevelMixin",
-    "client.ClientPlayNetworkHandlerMixin",
-    "client.FogRendererMixin",
-    "client.LevelRendererMixin",
-    "client.MinecraftMixin",
-    "client.ParticleAccessor",
-    "client.ParticleManagerMixin",
-    "client.SoundEngineMixin",
-    "client.SoundManagerAccessor"
+    "dev.galacticraft.impl.client.internal.mixin.AbstractClientPlayerEntityMixin",
+    "dev.galacticraft.impl.client.internal.mixin.AbstractContainerScreenMixin",
+    "dev.galacticraft.impl.client.internal.mixin.ClientLevelMixin",
+    "dev.galacticraft.impl.client.internal.mixin.ClientPlayNetworkHandlerMixin",
+    "dev.galacticraft.impl.client.internal.mixin.FogRendererMixin",
+    "dev.galacticraft.impl.client.internal.mixin.LevelRendererMixin",
+    "dev.galacticraft.impl.client.internal.mixin.MinecraftMixin",
+    "dev.galacticraft.impl.client.internal.mixin.ParticleAccessor",
+    "dev.galacticraft.impl.client.internal.mixin.ParticleManagerMixin",
+    "dev.galacticraft.impl.client.internal.mixin.SoundEngineMixin",
+    "dev.galacticraft.impl.client.internal.mixin.SoundManagerAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.network;
 
 import dev.galacticraft.mod.network.c2s.*;
-import dev.galacticraft.mod.network.s2c.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class GCPackets {

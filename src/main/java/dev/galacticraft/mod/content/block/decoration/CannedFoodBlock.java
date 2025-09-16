@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.decoration;
 
-import dev.galacticraft.mod.client.model.CannedFoodBakedModel;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -44,6 +43,18 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class CannedFoodBlock extends Block implements EntityBlock {
+    // Define relative positions for each can layout
+    public static float[][][] POSITIONS = {
+            {{8, 0, 8}}, // 1 can
+            {{4, 0, 8}, {12, 0, 8}}, // 2 cans
+            {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}}, // 3 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}}, // 4 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}}, // 5 cans (layer 2 starts)
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}}, // 6 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}}, // 7 cans
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 4}, {4, 8, 12}, {12, 8, 12}} // 8 cans (full)
+    };
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
 
     public CannedFoodBlock(Properties properties) {
@@ -75,7 +86,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
         if (be instanceof CannedFoodBlockEntity cannedFoodBlockEntity) {
             int canCount = cannedFoodBlockEntity.getCanCount();
             for (int i = 0; i < canCount; i++) {
-                float[] position = CannedFoodBakedModel.POSITIONS[canCount - 1][i];
+                float[] position = POSITIONS[canCount - 1][i];
 
                 float x = position[0];
                 float y = position[1];

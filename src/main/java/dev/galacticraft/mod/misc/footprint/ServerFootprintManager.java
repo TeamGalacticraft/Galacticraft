@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
-import dev.galacticraft.mod.network.s2c.FootprintPacket;
+import dev.galacticraft.mod.network.s2c.FootprintPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.server.level.ServerLevel;
@@ -39,7 +39,7 @@ public class ServerFootprintManager extends FootprintManager {
             PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player -> {
                 List<Footprint> toSync = new ArrayList<>(footprints);
                 toSync.removeIf(footprint -> footprint.owner.equals(player.getUUID()));
-                ServerPlayNetworking.send(player, new FootprintPacket(packedPos, toSync));
+                ServerPlayNetworking.send(player, new FootprintPayload(packedPos, toSync));
             });
         }
     }

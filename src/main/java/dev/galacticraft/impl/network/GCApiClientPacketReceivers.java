@@ -22,7 +22,6 @@
 
 package dev.galacticraft.impl.network;
 
-import dev.galacticraft.impl.network.s2c.*;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 

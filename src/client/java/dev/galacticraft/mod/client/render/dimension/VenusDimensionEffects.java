@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.render.dimension;
 
-import dev.galacticraft.mod.api.dimension.GalacticDimensionEffects;
+import dev.galacticraft.mod.client.api.dimension.GalacticDimensionEffects;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.minecraft.client.Camera;
 import net.minecraft.client.Minecraft;

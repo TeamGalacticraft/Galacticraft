@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
+import dev.galacticraft.mod.client.mixin.AnimalModelAgeableListModel;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
