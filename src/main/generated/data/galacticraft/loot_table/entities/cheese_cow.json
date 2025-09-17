@@ -1,0 +1,36 @@
+{
+  "type": "minecraft:entity",
+  "pools": [
+    {
+      "bonus_rolls": 0.0,
+      "entries": [
+        {
+          "type": "minecraft:item",
+          "functions": [
+            {
+              "add": false,
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 3.0,
+                "min": 0.0
+              },
+              "function": "minecraft:set_count"
+            },
+            {
+              "count": {
+                "type": "minecraft:uniform",
+                "max": 6.0,
+                "min": 0.0
+              },
+              "enchantment": "minecraft:looting",
+              "function": "minecraft:enchanted_count_increase"
+            }
+          ],
+          "name": "galacticraft:moon_cheese_curd"
+        }
+      ],
+      "rolls": 1.0
+    }
+  ],
+  "random_sequence": "galacticraft:entities/cheese_cow"
+}

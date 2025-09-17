@@ -443,7 +443,10 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCItems.TITANIUM_INGOT)
                 .requires(GCItems.TITANIUM_INGOT)
                 .save(output);
-
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.MOON_CHEESE_WHEEL)
+                .unlockedBy(getHasName(GCItems.CHEESE_WHIZ_BUCKET), has(GCItems.CHEESE_WHIZ_BUCKET))
+                .requires(GCItems.CHEESE_WHIZ_BUCKET)
+                .save(output);
         ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_BRONZE), has(GCItems.COMPRESSED_BRONZE))
                 .define('S', GCItems.COMPRESSED_STEEL)

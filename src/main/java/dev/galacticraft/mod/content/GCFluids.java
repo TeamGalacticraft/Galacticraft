@@ -39,6 +39,8 @@ public class GCFluids {
     public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
     public static final FlowingFluid SULFURIC_ACID = new SulfuricAcidFluid.Still();
     public static final FlowingFluid FLOWING_SULFURIC_ACID = new SulfuricAcidFluid.Flowing();
+    public static final FlowingFluid CHEESE_WHIZ = new CheeseWhizFluid.Still();
+    public static final FlowingFluid FLOWING_CHEESE_WHIZ = new CheeseWhizFluid.Flowing();
 
     public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
 
@@ -50,6 +52,8 @@ public class GCFluids {
         register(Constant.Fluid.SULFURIC_ACID_STILL, SULFURIC_ACID);
         register(Constant.Fluid.SULFURIC_ACID_FLOWING, FLOWING_SULFURIC_ACID);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
+        register(Constant.Fluid.CHEESE_WHIZ_STILL, CHEESE_WHIZ);
+        register(Constant.Fluid.CHEESE_WHIZ_FLOWING, FLOWING_CHEESE_WHIZ);
     }
 
     public static void registerFluidVariantAttributes() {
@@ -75,6 +79,12 @@ public class GCFluids {
                 Component.translatable("block.galacticraft.oxygen")
                         .setStyle(Constant.Text.AQUA_STYLE),
                 500,
+                true
+        ));
+        FluidVariantAttributes.register(CHEESE_WHIZ, new GCFluidAttribute(
+                Component.translatable(GCBlocks.CHEESE_WHIZ.getDescriptionId())
+                        .setStyle(Constant.Text.YELLOW_STYLE),
+                FluidConstants.LAVA_VISCOSITY,
                 true
         ));
     }

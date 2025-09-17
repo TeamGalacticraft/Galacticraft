@@ -169,6 +169,11 @@ public class GCEntityTypes {
     public static final EntityType<ThrowableMeteorChunkEntity> THROWABLE_METEOR_CHUNK = ENTITIES.register(Constant.Item.THROWABLE_METEOR_CHUNK, EntityType.Builder.<ThrowableMeteorChunkEntity>of(ThrowableMeteorChunkEntity::new, MobCategory.MISC)
             .sized(0.25F, 0.25F)
             .build());
+
+    public static final EntityType<CheeseCowEntity> CHEES_COW = ENTITIES.register(Entity.CHEESE_COW, EntityType.Builder.of(CheeseCowEntity::new, MobCategory.CREATURE)
+            .sized(1.0F, 1.0F)
+            .build());
+
     // Bosses
     public static final EntityType<SkeletonBoss> SKELETON_BOSS = ENTITIES.register(Entity.EVOLVED_SKELETON_BOSS, EntityType.Builder.of(SkeletonBoss::new, MobCategory.MONSTER)
             .sized(1.5F, 4.0F)
@@ -196,5 +201,6 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(GREY, GreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
+        FabricDefaultAttributeRegistry.register(CHEES_COW, CheeseCowEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MOVEMENT_SPEED, 0.2D));
     }
 }

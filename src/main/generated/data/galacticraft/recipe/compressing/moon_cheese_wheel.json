@@ -1,0 +1,12 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "item": "galacticraft:cheese_whiz_bucket"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:moon_cheese_wheel"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:galacticraft/eat_moon_cheese_curd",
+  "criteria": {
+    "milk_cheese_cow": {
+      "conditions": {
+        "entity": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "type": "galacticraft:cheese_cow"
+            }
+          }
+        ],
+        "item": {
+          "items": "minecraft:bucket"
+        }
+      },
+      "trigger": "minecraft:player_interacted_with_entity"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.cheese_whiz.description"
+    },
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_cheese_wheel"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.cheese_whiz.title"
+    }
+  },
+  "requirements": [
+    [
+      "milk_cheese_cow"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

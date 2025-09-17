@@ -468,10 +468,12 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(GCItemTags.OIL_BUCKETS).add(GCItems.CRUDE_OIL_BUCKET);
         this.tag(GCItemTags.FUEL_BUCKETS).add(GCItems.FUEL_BUCKET);
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS).add(GCItems.SULFURIC_ACID_BUCKET);
+        this.tag(GCItemTags.CHEESE_WHIZ_BUCKET).add(GCItems.CHEESE_WHIZ_BUCKET);
         this.tag(ConventionalItemTags.BUCKETS)
                 .addTag(GCItemTags.OIL_BUCKETS)
                 .addTag(GCItemTags.FUEL_BUCKETS)
-                .addTag(GCItemTags.SULFURIC_ACID_BUCKETS);
+                .addTag(GCItemTags.SULFURIC_ACID_BUCKETS)
+                .addTag(GCItemTags.CHEESE_WHIZ_BUCKET);
 
         this.copy(GCBlockTags.STAIRS, GCItemTags.STAIRS);
         this.copy(GCBlockTags.SLABS, GCItemTags.SLABS);

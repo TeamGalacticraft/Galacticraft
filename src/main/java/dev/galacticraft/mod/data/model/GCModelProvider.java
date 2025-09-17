@@ -371,6 +371,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
+        generator.createNonTemplateModelBlock(GCBlocks.CHEESE_WHIZ);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);
@@ -730,6 +731,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.CRUDE_OIL_BUCKET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FUEL_BUCKET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.SULFURIC_ACID_BUCKET, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.CHEESE_WHIZ_BUCKET, ModelTemplates.FLAT_ITEM);
 
         // GALACTICRAFT INVENTORY
         generator.generateFlatItem(GCItems.PARACHUTE, ModelTemplates.FLAT_ITEM);
@@ -809,6 +811,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.OLI_GRUB_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
         generator.generateFlatItem(GCItems.ARCH_GREY_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
+        generator.generateFlatItem(GCItems.CHEESE_COW_SPAWN_EGG, GCModelTemplates.SPAWN_EGG);
     }
 
     private void createLayeredItem(ItemModelGenerators generator, Item item, String overlay) {

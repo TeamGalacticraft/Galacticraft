@@ -150,6 +150,7 @@ public class GCItemTags {
     public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
     public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
     public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");
+    public static final TagKey<Item> CHEESE_WHIZ_BUCKET = commonTag( "buckets/cheese_whiz");
 
     public static final TagKey<Item> SLABS = galacticraftTag("slabs");
     public static final TagKey<Item> STAIRS = galacticraftTag("stairs");

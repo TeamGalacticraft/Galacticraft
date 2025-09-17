@@ -294,6 +294,7 @@ public interface Constant {
         String FUEL = "fuel";
         String CRUDE_OIL = "crude_oil";
         String SULFURIC_ACID = "sulfuric_acid";
+        String CHEESE_WHIZ = "cheese_whiz";
 
         // Machines
         String CIRCUIT_FABRICATOR = "circuit_fabricator";
@@ -397,6 +398,8 @@ public interface Constant {
         String SULFURIC_ACID_STILL = "sulfuric_acid_still";
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
+        String CHEESE_WHIZ_STILL = "cheese_whiz_still";
+        String CHEESE_WHIZ_FLOWING = "cheese_whiz_flowing";
 
         static ResourceLocation fluidId(String s) {
             return Constant.id("block/fluid/" + s);
@@ -527,6 +530,7 @@ public interface Constant {
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
         String FUEL_BUCKET = "fuel_bucket";
         String SULFURIC_ACID_BUCKET = "sulfuric_acid_bucket";
+        String CHEESE_WHIZ_BUCKET = "cheese_whiz_bucket";
 
         //GC INVENTORY
         String PARACHUTE = "parachute";
@@ -591,6 +595,8 @@ public interface Constant {
         String FALLING_FUEL = "falling_fuel";
         String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
         String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+        String DRIPPING_CHEESE_WHIZ = "dripping_cheese_whiz";
+        String FALLING_CHEESE_WHIZ = "falling_cheese_whiz";
 
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
@@ -880,6 +886,7 @@ public interface Constant {
         String GAZER = "gazer";
         String FALLING_METEOR = "falling_meteor";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
+        String CHEESE_COW = "cheese_cow";
     }
 
     interface SpawnEgg {
@@ -899,6 +906,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub_spawn_egg";
         String COMET_CUBE = "comet_cube_spawn_egg";
         String GAZER = "gazer_spawn_egg";
+        String CHEESE_COW = "cheese_cow_egg";
     }
 
     interface EntityTexture {
@@ -913,6 +921,7 @@ public interface Constant {
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
         String SKELETON_BOSS = "textures/entity/skeletonboss.png";
+        String CHEESE_COW = "textures/entity/cheese_cow/cheese_cow.png";
     }
 
     interface GearTexture {

@@ -153,6 +153,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.PARACHEST, ParachestRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.THROWABLE_METEOR_CHUNK, ThrownItemRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.SKELETON_BOSS, EvolvedSkeletonBossRenderer::new);
+        EntityRendererRegistry.register(GCEntityTypes.CHEES_COW, CheeseCowEntityRender :: new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
@@ -193,6 +194,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_SULFURIC_ACID, DrippingSulfuricAcidProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_SULFURIC_ACID, FallingSulfuricAcidProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CHEESE_WHIZ, DrippingCheeseWhizProvider:: new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CHEESE_WHIZ, FallingCheeseWhizProvider:: new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
@@ -216,10 +219,15 @@ public class GalacticraftClient implements ClientModInitializer {
                 Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_STILL),
                 Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_FLOWING)
         );
+        FluidRenderHandler cheesewhiz = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.CHEESE_WHIZ_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.CHEESE_WHIZ_FLOWING)
+        );
 
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, GCFluids.FLOWING_CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, GCFluids.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CHEESE_WHIZ, GCFluids.FLOWING_CHEESE_WHIZ, cheesewhiz);
 
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.FUEL, GCFluids.FLOWING_FUEL);
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID);

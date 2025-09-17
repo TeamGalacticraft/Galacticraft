@@ -125,6 +125,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
         this.block(GCBlocks.FUEL, "Fuel");
         this.block(GCBlocks.SULFURIC_ACID, "Sulfuric Acid");
+        this.block(GCBlocks.CHEESE_WHIZ, "Cheese Whiz");
 
         // DECORATION BLOCKS
         this.decorationSet(GCBlocks.ALUMINUM_DECORATION, "Aluminum Decoration");
@@ -526,6 +527,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.CRUDE_OIL_BUCKET, "Oil Bucket");
         this.item(GCItems.FUEL_BUCKET, "Fuel Bucket");
         this.item(GCItems.SULFURIC_ACID_BUCKET, "Sulfuric Acid Bucket");
+        this.item(GCItems.CHEESE_WHIZ_BUCKET, "Cheese Whiz Bucket");
 
         // GALACTICRAFT INVENTORY
         this.item(GCItems.PARACHUTE, "Parachute");
@@ -624,6 +626,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
         this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
+        this.item(GCItems.CHEESE_COW_SPAWN_EGG, "Cheese Cow Spawn Egg");
     }
 
     protected void generateTagTranslations() {
@@ -764,6 +767,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+        this.tag(GCItemTags.CHEESE_WHIZ_BUCKET, "Cheese Whiz Buckets");
     }
 
     protected void generateGasTranslations() {
@@ -812,6 +816,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.ROCKET, "Rocket");
         this.entity(GCEntityTypes.RUMBLER, "Rumbler");
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+        this.entity(GCEntityTypes.CHEES_COW, "Cheese Cow");
     }
 
     protected void generateCelestialBodyTranslations() {

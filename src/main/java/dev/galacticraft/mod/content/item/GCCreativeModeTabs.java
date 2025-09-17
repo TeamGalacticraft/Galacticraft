@@ -491,6 +491,7 @@ public class GCCreativeModeTabs {
                 output.accept(CRUDE_OIL_BUCKET);
                 output.accept(FUEL_BUCKET);
                 output.accept(SULFURIC_ACID_BUCKET);
+                output.accept(CHEESE_WHIZ_BUCKET);
             })
             .build();
 
@@ -531,6 +532,7 @@ public class GCCreativeModeTabs {
             content.addAfter(ItemStack.EMPTY, OLI_GRUB_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, GREY_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, ARCH_GREY_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, CHEESE_COW_SPAWN_EGG);
         });
     }
 

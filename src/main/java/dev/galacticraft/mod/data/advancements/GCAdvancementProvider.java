@@ -25,6 +25,7 @@ package dev.galacticraft.mod.data;
 import dev.galacticraft.api.component.GCItemSubPredicates;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.advancements.critereon.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCDamageTypeTags;
@@ -487,6 +488,23 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
                         Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(EntityType.WOLF)))
                 ))
                 .save(consumer, Constant.MOD_ID + "/cheese_tax");
+
+        AdvancementHolder cheeseWhizAdvancement = Advancement.Builder.advancement().parent(eatMoonCheeseCurdAdvancement)
+                .display(
+                        GCItems.MOON_CHEESE_WHEEL,
+                        title(CHEESE_WHIZ),
+                        description(CHEESE_WHIZ),
+                        null,
+                        AdvancementType.TASK,
+                        true,
+                        true,
+                        false
+                )
+                .addCriterion("milk_cheese_cow", PlayerInteractTrigger.TriggerInstance.itemUsedOnEntity(
+                        ItemPredicate.Builder.item().of(Items.BUCKET),
+                        Optional.of(EntityPredicate.wrap(EntityPredicate.Builder.entity().of(GCEntityTypes.CHEES_COW)))
+                ))
+                .save(consumer, Constant.MOD_ID + "/cheese_whiz");
 
         AdvancementHolder throwMeteorChunkAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
                 .display(
