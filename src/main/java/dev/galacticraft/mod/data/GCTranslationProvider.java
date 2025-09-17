@@ -357,6 +357,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CAVERNOUS_VINES, "Cavernous Vines");
         this.block(GCBlocks.CAVERNOUS_VINES_PLANT, "Cavernous Vines Plant");
         this.block(GCBlocks.BOSS_SPAWNER, "Boss Spawner");
+        this.block(GCBlocks.DUNGEON_ENTRANCE_BLOCK, "Dungeon Entrance Block");
+        this.block(GCBlocks.DUNGEON_EXIT_BLOCK, "Dungeon Exit Block");
 
         // MULTIBLOCK PARTS
         this.block(GCBlocks.SOLAR_PANEL_PART, "Solar Panel");

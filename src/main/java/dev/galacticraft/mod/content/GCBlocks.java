@@ -340,6 +340,8 @@ public class GCBlocks {
     public static final Block CAVERNOUS_VINES = BLOCKS.registerWithItem(Constant.Block.CAVERNOUS_VINES, new CavernousVinesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).randomTicks().noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY)));
     public static final Block CAVERNOUS_VINES_PLANT = BLOCKS.register(Constant.Block.CAVERNOUS_VINES_PLANT, new CavernousVinesPlantBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY).dropsLike(CAVERNOUS_VINES)));
     public static final Block BOSS_SPAWNER = BLOCKS.registerWithItem(Constant.Block.BOSS_SPAWNER, new BossSpawner(BlockBehaviour.Properties.ofFullCopy(Blocks.SPAWNER).noLootTable().noCollission()));
+    public static final Block DUNGEON_EXIT_BLOCK = BLOCKS.registerWithItem(Constant.Block.DUNGEON_EXIT_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noLootTable().noCollission()));
+    public static final Block DUNGEON_ENTRANCE_BLOCK = BLOCKS.registerWithItem(Constant.Block.DUNGEON_ENTRANCE_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noLootTable().noCollission()));
 
     // MUTLIBLOCK PARTS
     public static final BaseEntityBlock SOLAR_PANEL_PART = BLOCKS.register(Constant.Block.SOLAR_PANEL_PART, new SolarPanelPartBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLUE).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL)));
@@ -385,6 +387,8 @@ public class GCBlocks {
     public static final Block GLOWSTONE_LANTERN = BLOCKS.register(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
     public static final Block UNLIT_LANTERN = BLOCKS.register(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(Blocks.LANTERN, BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
     public static final Block UNLIT_SOUL_LANTERN = BLOCKS.register(Constant.Block.UNLIT_SOUL_LANTERN, new UnlitLanternBlock(Blocks.SOUL_LANTERN, BlockBehaviour.Properties.ofFullCopy(Blocks.SOUL_LANTERN).lightLevel(state -> 0)));
+
+
 
     public static void register() {
         FlammableBlockRegistry.getDefaultInstance().add(FUEL, 80, 130);

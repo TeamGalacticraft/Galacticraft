@@ -288,6 +288,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
         this.add(GCBlocks.BOSS_SPAWNER, noDrop());
+        this.add(GCBlocks.DUNGEON_ENTRANCE_BLOCK, noDrop());
+        this.add(GCBlocks.DUNGEON_EXIT_BLOCK, noDrop());
 
         this.add(GCBlocks.FUELING_PAD, this::createLaunchPadTable);
         this.add(GCBlocks.ROCKET_LAUNCH_PAD, this::createLaunchPadTable);

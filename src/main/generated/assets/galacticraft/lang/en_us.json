@@ -209,6 +209,8 @@
   "block.galacticraft.detailed_titanium_decoration_stairs": "Detailed Titanium Decoration Stairs",
   "block.galacticraft.detailed_titanium_decoration_wall": "Detailed Titanium Decoration Wall",
   "block.galacticraft.diagonal_light_panel": "Light Panel (Diagonal)",
+  "block.galacticraft.dungeon_entrance_block": "Dungeon Entrance Block",
+  "block.galacticraft.dungeon_exit_block": "Dungeon Exit Block",
   "block.galacticraft.electric_arc_furnace": "Electric Arc Furnace",
   "block.galacticraft.electric_arc_furnace.description": "Electric Arc Furnace is used as a better and faster alternative to both traditional coal and electric furnaces: double output from ores!",
   "block.galacticraft.electric_compressor": "Electric Compressor",

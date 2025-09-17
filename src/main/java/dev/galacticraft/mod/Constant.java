@@ -273,6 +273,8 @@ public interface Constant {
         String TREASURE_CHEST_TIER_3 = "treasure_chest_tier_3";
         String CRASHED_PROBE_BLOCK = "crashed_probe";
         String BOSS_SPAWNER = "boss_spawner";
+        String DUNGEON_ENTRANCE_BLOCK = "dungeon_entrance_block";
+        String DUNGEON_EXIT_BLOCK = "dungeon_exit_block";
 
         // Moon Cheese
         String MOON_CHEESE_BLOCK = "moon_cheese_block";
