@@ -42,6 +42,7 @@ public class MirroredIngredientRenderer implements IIngredientRenderer<ItemStack
     }
 
     @Override
+    @SuppressWarnings("removal")
     public List<Component> getTooltip(ItemStack itemStack, TooltipFlag tooltipFlag) {
         Minecraft minecraft = Minecraft.getInstance();
         return itemStack.getTooltipLines(TooltipContext.of(minecraft.level), minecraft.player, tooltipFlag);
