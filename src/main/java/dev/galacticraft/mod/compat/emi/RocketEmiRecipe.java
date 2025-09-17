@@ -64,28 +64,29 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
         final int centerX = 45;
 
         // Cone
-        widgets.addSlot(this.inputs.get(0), centerX - 8, y);
+        int slot = 0;
+        widgets.addSlot(this.inputs.get(slot++), centerX - 8, y);
 
         // Body
         for (int i = 0; i < this.bodyHeight; i++) {
             y += 18;
-            widgets.addSlot(this.inputs.get(2 * i + 1), centerX - 17, y);
-            widgets.addSlot(this.inputs.get(2 * i + 2), centerX + 1, y);
+            widgets.addSlot(this.inputs.get(slot++), centerX - 17, y);
+            widgets.addSlot(this.inputs.get(slot++), centerX + 1, y);
         }
 
         // Fins
         for (int i = 0; i < 2; i++) {
-            widgets.addSlot(this.inputs.get(2 * this.bodyHeight + 1 + i), centerX - 35, y + 18 * i);
-            widgets.addSlot(this.inputs.get(2 * this.bodyHeight + 2 + i), centerX + 19, y + 18 * i);
+            widgets.addSlot(this.inputs.get(slot++), centerX - 35, y + 18 * i);
+            widgets.add(new MirroredSlotWidget(this.inputs.get(slot++), centerX + 19, y + 18 * i));
         }
         y += 18;
 
         // Engine
-        widgets.addSlot(this.inputs.get(2 * this.bodyHeight + 5), centerX - 8, y);
+        widgets.addSlot(this.inputs.get(slot++), centerX - 8, y);
 
         // Storage
-        if (2 * this.bodyHeight + 6 < this.inputs.size()) {
-            widgets.addSlot(this.inputs.get(2 * this.bodyHeight + 6), centerX - 8, y + 24);
+        if (slot < this.inputs.size()) {
+            widgets.addSlot(this.inputs.get(slot++), centerX - 8, y + 24);
         } else {
             widgets.addTexture(ROCKET_WORKBENCH_DISPLAY_TEXTURE, centerX - 8, y + 24, 16, 16, CHEST_SLOT_U, CHEST_SLOT_V);
         }
