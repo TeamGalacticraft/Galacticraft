@@ -30,7 +30,6 @@ import dev.galacticraft.mod.client.render.dimension.OverworldRenderer;
 import dev.galacticraft.mod.client.trance.ClientTranceState;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Camera;
-import net.minecraft.client.DeltaTracker;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.*;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
