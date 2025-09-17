@@ -30,7 +30,9 @@ import me.shedaniel.rei.api.client.gui.widgets.TooltipContext;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
@@ -47,6 +49,9 @@ public class MirroredEntryRenderer implements EntryRenderer<ItemStack> {
 
     @Override
     public Tooltip getTooltip(EntryStack<ItemStack> entry, TooltipContext context) {
-        return entry.getTooltip(context);
+        Minecraft minecraft = Minecraft.getInstance();
+        return Tooltip.create(entry.getValue().getTooltipLines(
+                Item.TooltipContext.of(minecraft.level), minecraft.player, context.getFlag()
+        ));
     }
 }
