@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data;
 
-import dev.galacticraft.api.component.GCItemSubPredicates;
+import dev.galacticraft.mod.content.advancements.critereon.GCItemSubPredicates;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.advancements.critereon.*;

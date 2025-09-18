@@ -31,7 +31,7 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCCelestialBodies;
+import dev.galacticraft.mod.universe.GCCelestialBodies;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;

@@ -28,7 +28,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.api.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.BlockPos;

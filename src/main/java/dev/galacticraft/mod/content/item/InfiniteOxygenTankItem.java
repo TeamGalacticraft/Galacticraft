@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.content.item;
 
 import com.google.common.collect.Iterators;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;

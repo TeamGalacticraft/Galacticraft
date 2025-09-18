@@ -25,6 +25,7 @@ package dev.galacticraft.mod.events;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
@@ -78,7 +79,7 @@ public class ClientEventHandler {
     }
 
     public static void tickFootprints(ClientLevel level) {
-        FootprintManager footprintManager = level.galacticraft$getFootprintManager();
+        FootprintManager footprintManager = level.getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER);
         footprintManager.getFootprints().forEach((packedPos, footprints) -> {
             footprintManager.tick(level, packedPos);
         });

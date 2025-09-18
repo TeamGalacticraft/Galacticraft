@@ -24,11 +24,11 @@ package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.api.util.StreamCodecs;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.mod.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
-import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;

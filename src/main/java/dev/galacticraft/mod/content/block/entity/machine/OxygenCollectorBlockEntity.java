@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -40,6 +39,7 @@ import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;

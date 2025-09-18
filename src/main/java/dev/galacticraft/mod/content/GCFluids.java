@@ -23,33 +23,63 @@
 package dev.galacticraft.mod.content;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Constant.Fluid;
+import dev.galacticraft.mod.Constant.Fluid.Gas;
 import dev.galacticraft.mod.content.fluid.*;
+import dev.galacticraft.mod.content.fluid.gas.GasFluid;
+import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
-import net.minecraft.core.Registry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.level.material.FlowingFluid;
-import net.minecraft.world.level.material.Fluid;
 
 public class GCFluids {
-    public static final FlowingFluid CRUDE_OIL = new CrudeOilFluid.Still();
-    public static final FlowingFluid FLOWING_CRUDE_OIL = new CrudeOilFluid.Flowing();
-    public static final FlowingFluid FUEL = new FuelFluid.Still();
-    public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
-    public static final FlowingFluid SULFURIC_ACID = new SulfuricAcidFluid.Still();
-    public static final FlowingFluid FLOWING_SULFURIC_ACID = new SulfuricAcidFluid.Flowing();
+    public static final GCFluidRegistry FLUIDS = new GCFluidRegistry();
+    public static final FlowingFluid CRUDE_OIL = FLUIDS.register(Fluid.CRUDE_OIL_STILL, new CrudeOilFluid.Still());
+    public static final FlowingFluid FLOWING_CRUDE_OIL = FLUIDS.register(Fluid.CRUDE_OIL_FLOWING, new CrudeOilFluid.Flowing());
+    public static final FlowingFluid FUEL = FLUIDS.register(Fluid.FUEL_STILL, new FuelFluid.Still());
+    public static final FlowingFluid FLOWING_FUEL = FLUIDS.register(Fluid.FUEL_FLOWING, new FuelFluid.Flowing());
+    public static final FlowingFluid SULFURIC_ACID = FLUIDS.register(Fluid.SULFURIC_ACID_STILL, new SulfuricAcidFluid.Still());
+    public static final FlowingFluid FLOWING_SULFURIC_ACID = FLUIDS.register(Fluid.SULFURIC_ACID_FLOWING, new SulfuricAcidFluid.Flowing());
 
-    public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
+    public static final OxygenFluid LIQUID_OXYGEN = FLUIDS.register(Fluid.LIQUID_OXYGEN, new OxygenFluid());
+
+    // Gases
+    public static final class Gases {
+        public static final GasFluid HYDROGEN = FLUIDS.registerGas(Gas.HYDROGEN, GasFluid.create(
+                Component.translatable(Translations.Gas.HYDROGEN),
+                Constant.id("gas/hydrogen"), "H2"
+        ));
+        public static final GasFluid HELIUM = FLUIDS.registerGas(Gas.HELIUM, GasFluid.create(
+                Component.translatable(Translations.Gas.HELIUM),
+                Constant.id("gas/helium"), "He"
+        ));
+        public static final GasFluid NITROGEN = FLUIDS.registerGas(Gas.NITROGEN, GasFluid.create(
+                Component.translatable(Translations.Gas.NITROGEN),
+                Constant.id("gas/nitrogen"), "N2"
+        ));
+        public static final GasFluid OXYGEN = FLUIDS.registerGas(Gas.OXYGEN, GasFluid.create(
+                Component.translatable(Translations.Gas.OXYGEN),
+                Constant.id("gas/oxygen"), "O2"
+        ));
+        public static final GasFluid NEON = FLUIDS.registerGas(Gas.NEON, GasFluid.create(
+                Component.translatable(Translations.Gas.NEON),
+                Constant.id("gas/neon"), "Ne"
+        ));
+        public static final GasFluid OZONE = FLUIDS.registerGas(Gas.OZONE, GasFluid.create(
+                Component.translatable(Translations.Gas.OZONE),
+                Constant.id("gas/ozone"), "O3"
+        ));
+        public static final GasFluid WATER_VAPOR = FLUIDS.registerGas(Gas.WATER_VAPOR, GasFluid.create(
+                Component.translatable(Translations.Gas.WATER_VAPOR),
+                Constant.id("gas/water_vapor"), "H2O"
+        ));
+
+        public static void register() {}
+    }
 
     public static void register() {
-        register(Constant.Fluid.CRUDE_OIL_STILL, CRUDE_OIL);
-        register(Constant.Fluid.CRUDE_OIL_FLOWING, FLOWING_CRUDE_OIL);
-        register(Constant.Fluid.FUEL_STILL, FUEL);
-        register(Constant.Fluid.FUEL_FLOWING, FLOWING_FUEL);
-        register(Constant.Fluid.SULFURIC_ACID_STILL, SULFURIC_ACID);
-        register(Constant.Fluid.SULFURIC_ACID_FLOWING, FLOWING_SULFURIC_ACID);
-        register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
+        Gases.register();
     }
 
     public static void registerFluidVariantAttributes() {
@@ -77,9 +107,5 @@ public class GCFluids {
                 500,
                 true
         ));
-    }
-
-    private static void register(String id, Fluid fluid) {
-        Registry.register(BuiltInRegistries.FLUID, Constant.id(id), fluid);
     }
 }
