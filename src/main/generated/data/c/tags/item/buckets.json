@@ -2,6 +2,7 @@
   "values": [
     "#c:buckets/oil",
     "#c:buckets/fuel",
+    "#c:sulfuric_acid",
     "#c:buckets/cheese_whiz"
   ]
 }
