@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
@@ -37,7 +36,6 @@ import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
@@ -49,8 +47,6 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.state.BlockState;
 
 import static dev.galacticraft.mod.Constant.CelestialBody.EARTH;
 
@@ -85,7 +81,6 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
-        level.galacticraft$getSealerManager().tick();
     }
 
     public static void onServerTick(MinecraftServer server) {
@@ -130,16 +125,6 @@ public class GCEventHandlers {
         meteor.setSize(meteorSize);
 
         level.addFreshEntity(meteor);
-    }
-
-    public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {
-        ExtinguishableBlockRegistry.Entry entry = ExtinguishableBlockRegistry.INSTANCE.get(oldState.getBlock());
-        if (entry == null) return false;
-        BlockState newState = entry.transform(oldState);
-        if (newState == null) return false;
-        level.setBlockAndUpdate(pos, newState);
-        entry.callback(new ExtinguishableBlockRegistry.Context(level, pos, oldState));
-        return true;
     }
 
     public static boolean sulfuricAcidTransformItem(ItemEntity itemEntity, ItemStack original) {

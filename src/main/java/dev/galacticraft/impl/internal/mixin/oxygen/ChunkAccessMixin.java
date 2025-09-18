@@ -1,0 +1,117 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.impl.internal.mixin.oxygen;
+
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
+import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
+import dev.galacticraft.impl.internal.oxygen.ApPosIterator;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.LevelHeightAccessor;
+import net.minecraft.world.level.chunk.ChunkAccess;
+import net.minecraft.world.level.chunk.LevelChunkSection;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Final;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
+
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
+
+@Mixin(ChunkAccess.class)
+public abstract class ChunkAccessMixin implements ChunkOxygenAccessorInternal {
+    @Shadow
+    @Final
+    protected LevelChunkSection[] sections;
+
+    @Shadow
+    @Final
+    protected LevelHeightAccessor levelHeightAccessor;
+
+    @Shadow
+    public abstract void setUnsaved(boolean needsSaving);
+
+    @Unique
+    private short dirtySections = 0;
+
+    @Override
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        return Collections.emptyIterator();
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getProviderPositions(int y) {
+        int sectionIndex = this.levelHeightAccessor.getSectionIndex(y);
+        ArrayList<BlockPos> positions = ((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$getRawProviders();
+        if (positions == null) return Collections.emptyIterator();
+        return new ApPosIterator((ChunkAccess) (Object) this, positions.iterator(), sectionIndex);
+    }
+
+    @Override
+    public void galacticraft$markSectionDirty(int sectionIndex) {
+        this.dirtySections |= (short) (0b1 << sectionIndex);
+        this.setUnsaved(true);
+    }
+
+    @Override
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
+        if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$addProvider(provider)) {
+            this.galacticraft$markSectionDirty(sectionIndex);
+        }
+    }
+
+    @Override
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
+        if (((ChunkSectionOxygenAccessor) this.sections[sectionIndex]).galacticraft$removeProvider(provider)) {
+            this.galacticraft$markSectionDirty(sectionIndex);
+        }
+    }
+
+    @Override
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        if (this.dirtySections != 0) {
+            int count = 0;
+            for (int i = 0; i < this.sections.length; i++) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
+                    count++;
+                }
+            }
+
+            OxygenUpdatePayload.OxygenData[] data = new OxygenUpdatePayload.OxygenData[count];
+
+            int idx = 0;
+            for (byte i = 0; i < this.sections.length; i++) {
+                if ((this.dirtySections & (0b1 << i)) != 0) {
+                    data[idx++] = new OxygenUpdatePayload.OxygenData(i, ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$updatePayload());
+                }
+            }
+            this.dirtySections = 0;
+            return data;
+        }
+        return null;
+    }
+
+}

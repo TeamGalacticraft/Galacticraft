@@ -85,4 +85,14 @@ public class UnlitTorchBlock extends TorchBlock {
     public MapCodec<? extends UnlitTorchBlock> codec() {
         return CODEC;
     }
+
+    @Override
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
+        return false; // overrides the mixin
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
+        return false; // overrides the mixin
+    }
 }

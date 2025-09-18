@@ -28,7 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.GCModel;
 import dev.galacticraft.mod.client.model.GCModelLoader;
 import dev.galacticraft.mod.client.model.GCRenderTypes;
-import dev.galacticraft.mod.client.render.block.entity.BubbleDistributorRenderer;
+import dev.galacticraft.mod.client.render.block.entity.OxygenBubbleDistributorRenderer;
 import dev.galacticraft.mod.content.entity.BubbleEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -51,7 +51,7 @@ public class BubbleEntityRenderer extends EntityRenderer<BubbleEntity> {
     @Override
     public void render(BubbleEntity entity, float yaw, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light) {
         if (bubbleModel == null) {
-            bubbleModel = GCModelLoader.INSTANCE.getModel(BubbleDistributorRenderer.MODEL);
+            bubbleModel = GCModelLoader.INSTANCE.getModel(OxygenBubbleDistributorRenderer.MODEL);
             assert bubbleModel != null;
         }
         float size = entity.getSize();

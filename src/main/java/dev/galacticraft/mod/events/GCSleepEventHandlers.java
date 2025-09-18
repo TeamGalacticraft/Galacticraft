@@ -60,7 +60,7 @@ public class GCSleepEventHandlers {
 
     public static boolean allowSettingSpawn(Player player, BlockPos sleepingPos) {
         Level level = player.level();
-        return level.isBreathable(sleepingPos) || level.getBlockState(sleepingPos).getBlock() instanceof CryogenicChamberBlock;
+        return level.galacticraft$isBreathable(sleepingPos) || level.getBlockState(sleepingPos).getBlock() instanceof CryogenicChamberBlock;
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
@@ -75,7 +75,7 @@ public class GCSleepEventHandlers {
 
     public static Player.BedSleepingProblem sleepInSpace(Player player, BlockPos sleepingPos) {
         Level level = player.level();
-        if (!level.isBreathable(sleepingPos) && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock) {
+        if (!level.galacticraft$isBreathable(sleepingPos) && level.getBlockState(sleepingPos).getBlock() instanceof BedBlock) {
             player.sendSystemMessage(Component.translatable(Translations.Chat.BED_FAIL));
             return Player.BedSleepingProblem.NOT_POSSIBLE_HERE;
         }
