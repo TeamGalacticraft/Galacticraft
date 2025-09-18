@@ -96,6 +96,7 @@ public class GCItems {
     public static final Item COMPRESSED_BRONZE = registerGeneric(Constant.Item.COMPRESSED_BRONZE);
     public static final Item COMPRESSED_IRON = registerGeneric(Constant.Item.COMPRESSED_IRON);
     public static final Item COMPRESSED_STEEL = registerGeneric(Constant.Item.COMPRESSED_STEEL);
+
     // ROCKET PLATES
     public static final Item TIER_1_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_1_HEAVY_DUTY_PLATE);
     public static final Item TIER_2_HEAVY_DUTY_PLATE = registerGeneric(Constant.Item.TIER_2_HEAVY_DUTY_PLATE);
