@@ -1240,6 +1240,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "Wensleydale? Stilton?", "Eat Moon Cheese Curd");
         this.advancement(Advancements.CHEESE_AND_CRACKERS, "It's Like No Cheese I've Ever Tasted...", "Eat cheese and crackers");
         this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give Cheese to a pet Wolf");
+        this.advancement(Advancements.CHEESE_WHIZ, "Is this cheese?", "Milk a cheese cow");
         this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a Throwable Meteor Chunk");
         this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own Space Station!");
         this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an Evolved Skeleton Boss in a Moon Dungeon");
