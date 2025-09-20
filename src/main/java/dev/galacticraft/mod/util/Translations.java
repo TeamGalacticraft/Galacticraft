@@ -71,6 +71,9 @@ public interface Translations {
         String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
         String COMPRESSOR = "category.recipe_viewer.compressing";
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+
+        String REI_TIME = "category.rei.campfire.time";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
     }
 
     interface Waila {
@@ -188,6 +191,7 @@ public interface Translations {
         String CANNOT_EAT_WITH_MASK = "config.galacticraft.lifesupport.cannot_eat_with_mask";
 
         String DIFFICULTY = "config.galacticraft.difficulty";
+        String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
     }

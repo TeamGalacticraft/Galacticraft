@@ -20,22 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.api.inventory;
 
-public interface EntityAccessor {
-    default double galacticraft$getDistanceSinceLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default int galacticraft$getLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
-
-    default void galacticraft$swapLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
-    }
+public interface MirroredSlot {
+    // Nothing to see here
 }

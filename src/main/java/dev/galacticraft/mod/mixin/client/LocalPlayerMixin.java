@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.entity.ControllableEntity;
+import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.content.entity.vehicle.AbstractLanderEntity;
@@ -64,27 +66,29 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         super(clientLevel, gameProfile);
     }
 
-    @Inject(at = @At("RETURN"), method = "aiStep")
+    @Inject(method = "aiStep", at = @At("RETURN"))
     private void gcRocketJumpCheck(CallbackInfo ci) {
-        LocalPlayer player = (LocalPlayer) (Object) this;
-        if (player.isPassenger() && player.getVehicle() instanceof ControllableEntity controllable) {
-            controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown);
-            ClientPlayNetworking.send(new ControlEntityPayload(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown));
+        if (this.isPassenger() && this.getVehicle() instanceof ControllableEntity controllable) {
+            boolean invertControls = this.minecraft.options.getCameraType().isFirstPerson();
+            controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown, invertControls);
+            ClientPlayNetworking.send(new ControlEntityPayload(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown, invertControls));
         }
     }
 
-    @Inject(method = "isCrouching", at = @At("HEAD"), cancellable = true)
-    private void gc$isCrouching(CallbackInfoReturnable<Boolean> cir) {
-        if (this.isHoldingRocket()) {
-            cir.setReturnValue(true);
+    @ModifyReturnValue(method = "isCrouching", at = @At("RETURN"))
+    private boolean gc$isCrouching(boolean original) {
+        if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
+            return false;
         }
+        return this.isHoldingRocket() || original;
     }
 
-    @Inject(method = "isShiftKeyDown", at = @At("HEAD"), cancellable = true)
-    private void gc$isShiftKeyDown(CallbackInfoReturnable<Boolean> cir) {
-        if (this.isHoldingRocket()) {
-            cir.setReturnValue(true);
+    @ModifyReturnValue(method = "isShiftKeyDown", at = @At("RETURN"))
+    private boolean gc$isShiftKeyDown(boolean original) {
+        if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
+            return false;
         }
+        return this.isHoldingRocket() || original;
     }
 
     @Unique

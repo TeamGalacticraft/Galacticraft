@@ -57,6 +57,9 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int DIAMOND_SLOT = 1;
@@ -133,6 +136,20 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
         ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
+    }
+
+    @Override
+    public List<ItemStack> inputItemStacks() {
+        List<ItemStack> items = new ArrayList<>();
+        for (int i = DIAMOND_SLOT; i <= INPUT_SLOT; i++) {
+            items.add(this.itemStorage().getItem(i));
+        }
+        return items;
+    }
+
+    @Override
+    public List<ItemStack> outputItemStacks() {
+        return List.of(this.itemStorage().getItem(OUTPUT_SLOT));
     }
 
     @Override

@@ -85,6 +85,8 @@ public interface Config {
 
     boolean cannotEatInNoAtmosphere();
 
+    float meteorSpawnMultiplier();
+
     double bossHealthMultiplier();
 
     boolean enableGcHouston();

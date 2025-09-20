@@ -20,22 +20,36 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.accessor;
+package dev.galacticraft.mod.compat.jei.category;
 
-public interface EntityAccessor {
-    default double galacticraft$getDistanceSinceLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
+import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
+import mezz.jei.api.gui.drawable.IDrawable;
+import net.minecraft.client.gui.GuiGraphics;
+
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+
+public class JEIFabricationProgressBar implements IDrawable {
+    private int processingTime = 1;
+    private long startTime;
+
+    public void setProcessingTime(int processingTime) {
+        this.processingTime = processingTime * 50;
+        this.startTime = System.currentTimeMillis();
     }
 
-    default void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        throw new RuntimeException("This should be overridden by mixin!");
+    @Override
+    public int getWidth() {
+        return 0;
     }
 
-    default int galacticraft$getLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
+    @Override
+    public int getHeight() {
+        return 0;
     }
 
-    default void galacticraft$swapLastStep() {
-        throw new RuntimeException("This should be overridden by mixin!");
+    @Override
+    public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+        float progress = ((System.currentTimeMillis() - this.startTime) % this.processingTime) / (float) this.processingTime;
+        CircuitFabricatorProgressAnimation.render(graphics, xOffset, yOffset, progress);
     }
 }

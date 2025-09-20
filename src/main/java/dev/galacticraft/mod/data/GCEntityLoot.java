@@ -233,6 +233,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
         add(GCEntityTypes.OLI_GRUB, noDrops());
         add(GCEntityTypes.GREY, noDrops());
         add(GCEntityTypes.ARCH_GREY, noDrops());
+        add(GCEntityTypes.FALLING_METEOR, noDrops());
 
         add(GCEntityTypes.SKELETON_BOSS,
                 LootTable.lootTable()

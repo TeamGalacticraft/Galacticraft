@@ -89,7 +89,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) {
         if (up) { // Accelerate
             this.speed += this.accel / 20D;
             this.shouldClimb = true;

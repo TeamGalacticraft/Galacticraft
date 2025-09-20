@@ -27,6 +27,10 @@ import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
@@ -35,21 +39,27 @@ import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
+import net.minecraft.core.Holder;
 import net.minecraft.network.chat.Component;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+
+import static dev.galacticraft.mod.Constant.CelestialBody.EARTH;
 
 public class GCEventHandlers {
     public static void init() {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
+        ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
@@ -76,6 +86,50 @@ public class GCEventHandlers {
             footprintManager.footprintBlockChanges.clear();
         }
         level.galacticraft$getSealerManager().tick();
+    }
+
+    public static void onServerTick(MinecraftServer server) {
+        // throw meteors around players
+        PlayerLookup.all(server).forEach(player -> {
+            ServerLevel level = player.serverLevel();
+            Holder<CelestialBody<?, ?>> celestialBody = level.galacticraft$getCelestialBody();
+            if (celestialBody == null || celestialBody.is(EARTH)) return;
+
+            // calculate frequency of meteors on current celestial body
+            float atmospherePressure = celestialBody.value().atmosphere().pressure();
+            float frequency = (atmospherePressure <= Mth.EPSILON) ? 5.0f : (atmospherePressure * 100.0f);
+            frequency /= Galacticraft.CONFIG.meteorSpawnMultiplier();
+
+            // throw meteor
+            int chance = Math.max(1, (int) (frequency * 750.0f));
+            if (level.random.nextInt(chance) == 0) {
+                throwMeteor(server, level, player, 1);
+            }
+
+            // throw bigger meteor if you're lucky enough
+            if (level.random.nextInt(chance * 3) == 0) {
+                throwMeteor(server, level, player, 6);
+            }
+        });
+    }
+
+    private static void throwMeteor(MinecraftServer server, ServerLevel level, Player targetPlayer, int meteorSize) {
+        Player nearestPlayer = level.getNearestPlayer(targetPlayer, 100.0);
+        if (nearestPlayer == null || nearestPlayer.getId() > targetPlayer.getId()) return;
+
+        int maxOffset = server.getPlayerList().getViewDistance() * Constant.Chunk.WIDTH - 1;
+
+        int offsetX = Math.min(maxOffset, level.random.nextInt(20) + 160);
+        int offsetZ = level.random.nextInt(20) - 10;
+        double deltaX = (level.random.nextDouble() - 0.5) * 2.0;
+        double deltaZ = (level.random.nextDouble() - 0.5) * 5.0;
+
+        FallingMeteorEntity meteor = new FallingMeteorEntity(GCEntityTypes.FALLING_METEOR, level);
+        meteor.setPos(targetPlayer.getX() + offsetX, level.getMaxBuildHeight() + 99.0, targetPlayer.getZ() + offsetZ);
+        meteor.setDeltaMovement(deltaX, 0.0, deltaZ);
+        meteor.setSize(meteorSize);
+
+        level.addFreshEntity(meteor);
     }
 
     public static boolean extinguishBlock(Level level, BlockPos pos, BlockState oldState) {

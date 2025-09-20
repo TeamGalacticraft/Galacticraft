@@ -22,15 +22,22 @@
 
 package dev.galacticraft.mod.util;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
@@ -115,5 +122,27 @@ public class DrawableUtil {
 
     public static void drawSprite_F(PoseStack matrices, float x, float y, float z, float width, float height, TextureAtlasSprite sprite) {
         drawTexturedQuad_F(matrices.last().pose(), x, x + width, y, y + height, z, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
+    }
+
+    public static void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z) {
+        if (itemStack.isEmpty()) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        BakedModel bakedModel = minecraft.getItemRenderer().getModel(itemStack, minecraft.level, minecraft.player, z);
+        PoseStack matrices = graphics.pose();
+        matrices.pushPose();
+        matrices.translate(x + 8, y + 8, 150);
+        matrices.scale(-16.0F, -16.0F, -16.0F);
+        boolean useLighting = !bakedModel.usesBlockLight();
+        if (useLighting) {
+            Lighting.setupForFlatItems();
+        }
+        minecraft.getItemRenderer().render(itemStack, ItemDisplayContext.GUI, false, matrices, graphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+        graphics.flush();
+        if (useLighting) {
+            Lighting.setupFor3DItems();
+        }
+        matrices.popPose();
     }
 }

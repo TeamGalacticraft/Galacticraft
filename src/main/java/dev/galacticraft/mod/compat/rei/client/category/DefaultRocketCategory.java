@@ -39,11 +39,13 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -54,7 +56,8 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
-
+    // Do not replace with Constant.SlotSprite.CHEST or it will be displayed as a missing texture!
+    private static final ResourceLocation CHEST_SLOT_SPRITE = Constant.id("textures/gui/slot/chest.png");
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
 
     static {
@@ -95,8 +98,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         }
 
         // Fins
-        for (int y = 0; y < 2; ++y) {
-            for (int x = 0; x < 2; ++x) {
+        for (int x = 0; x < 2; ++x) {
+            for (int y = 0; y < 2; ++y) {
                 slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 54) + 11, startPoint.y + ((y + 4) * 18) + 6)).markInput());
             }
         }
@@ -105,11 +108,17 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         slots.add(Widgets.createSlot(new Point(startPoint.x + 38, startPoint.y + (5 * 18) + 6)).markInput());
 
         // Chest
-        slots.add(new SlotSpriteWidget(new Point(startPoint.x + 38, startPoint.y + (6 * 18) + 12), Constant.id("textures/gui/slot/chest.png")).markInput());
+        slots.add(new SlotSpriteWidget(new Point(startPoint.x + 38, startPoint.y + (6 * 18) + 12), CHEST_SLOT_SPRITE).markInput());
 
         for (int i = 0; i < input.size(); ++i) {
             if (!input.get(i).isEmpty()) {
-                slots.get(i).entries(input.get(i));
+                if (i == 11 || i == 12) {
+                    slots.get(i).entries(input.get(i).stream().map(
+                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
+                    ).toList());
+                } else {
+                    slots.get(i).entries(input.get(i));
+                }
             }
         }
 

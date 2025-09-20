@@ -806,6 +806,8 @@ public interface Constant {
         int INGREDIENT_Y = 1;
         int WAFER_X = 122;
         int WAFER_Y = 56;
+        int CIRCUIT_FABRICATOR_PROGRESS_X = 18;
+        int CIRCUIT_FABRICATOR_PROGRESS_Y = 7;
 
         int COMPRESSOR_U = 0;
         int COMPRESSOR_V = 74;
@@ -855,7 +857,8 @@ public interface Constant {
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
         ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
-        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_FIN_LEFT = id("slot/rocket_fin_left");
+        ResourceLocation ROCKET_FIN_RIGHT = id("slot/rocket_fin_right");
         ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
         ResourceLocation CHEST = id("slot/chest");
         ResourceLocation FOOD_CAN = id("slot/food_can");
@@ -884,6 +887,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
+        String FALLING_METEOR = "falling_meteor";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
