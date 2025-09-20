@@ -22,50 +22,47 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
-import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
+import com.google.common.collect.Lists;
+import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
+public class ElectricShapelessCompressingDisplay implements ElectricCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = 200;
+    private int processingTime = (int) (200 / 1.5F);
 
-    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
-        this.input = input;
-        this.output = output;
-    }
-
-    public DefaultShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
-        this.input = new ArrayList<>();
+    public ElectricShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
+        this.input = Lists.newArrayList();
         recipe.value().getIngredients().forEach((ingredient) -> {
             for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack));
+                input.add(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
-        this.processingTime = recipe.value().getTime();
+        ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
+        this.output = Collections.singletonList(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
+        this.processingTime = (int) (recipe.value().getTime() / 1.5F);
+    }
+
+    public ElectricShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
+        this.input = inputs;
+        this.output = outputs;
     }
 
     @Override
-    public List<EntryIngredient> getRequiredEntries() {
+    public @NotNull List<EntryIngredient> getInputEntries() {
         return this.input;
     }
 
     @Override
-    public List<EntryIngredient> getInputEntries() {
-        return this.input;
-    }
-
-    @Override
-    public List<EntryIngredient> getOutputEntries() {
+    public @NotNull List<EntryIngredient> getOutputEntries() {
         return this.output;
     }
 
