@@ -72,6 +72,9 @@ public interface Translations {
         String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
         String COMPRESSOR = PREFIX + "compressing";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
+
+        String REI_TIME = "category.rei.campfire.time";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
     }
 
     interface Waila {

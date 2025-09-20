@@ -22,29 +22,34 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
-import dev.galacticraft.mod.util.DrawableUtil;
-import mezz.jei.api.ingredients.IIngredientRenderer;
-import net.minecraft.client.Minecraft;
+import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
+import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item.TooltipContext;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.TooltipFlag;
 
-import java.util.List;
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
-public class MirroredIngredientRenderer implements IIngredientRenderer<ItemStack> {
-    public static IIngredientRenderer<ItemStack> INSTANCE = new MirroredIngredientRenderer();
+public class JEIFabricationProgressBar implements IDrawable {
+    private int processingTime = 1;
+    private long startTime;
 
-    @Override
-    public void render(GuiGraphics graphics, ItemStack itemStack) {
-        DrawableUtil.renderItemMirrored(graphics, itemStack, 0, 0, 0);
+    public void setProcessingTime(int processingTime) {
+        this.processingTime = processingTime * 50;
+        this.startTime = System.currentTimeMillis();
     }
 
     @Override
-    @SuppressWarnings("removal")
-    public List<Component> getTooltip(ItemStack itemStack, TooltipFlag tooltipFlag) {
-        Minecraft minecraft = Minecraft.getInstance();
-        return itemStack.getTooltipLines(TooltipContext.of(minecraft.level), minecraft.player, tooltipFlag);
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
+
+    @Override
+    public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+        float progress = ((System.currentTimeMillis() - this.startTime) % this.processingTime) / (float) this.processingTime;
+        CircuitFabricatorProgressAnimation.render(graphics, xOffset, yOffset, progress);
     }
 }

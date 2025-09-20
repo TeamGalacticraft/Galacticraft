@@ -800,6 +800,8 @@ public interface Constant {
         int INGREDIENT_Y = 1;
         int WAFER_X = 122;
         int WAFER_Y = 56;
+        int CIRCUIT_FABRICATOR_PROGRESS_X = 18;
+        int CIRCUIT_FABRICATOR_PROGRESS_Y = 7;
 
         int COMPRESSOR_U = 0;
         int COMPRESSOR_V = 74;

@@ -25,10 +25,13 @@ package dev.galacticraft.mod.compat.jei.category;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.placement.HorizontalAlignment;
+import mezz.jei.api.gui.placement.VerticalAlignment;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeIngredientRole;
@@ -42,9 +45,11 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe> {
     private final IDrawable icon;
+    private final JEIFabricationProgressBar progressBar;
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
+        this.progressBar = new JEIFabricationProgressBar();
     }
 
     @Override
@@ -54,7 +59,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
+        return Component.translatable(RecipeCategory.CIRCUIT_FABRICATOR);
     }
 
     @Override
@@ -90,7 +95,22 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
     }
 
     @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, FabricationRecipe recipe, IFocusGroup focuses) {
+        int processingTime = recipe.getProcessingTime();
+        if (processingTime > 0) {
+            this.progressBar.setProcessingTime(processingTime);
+            Component timeString = Component.translatable(RecipeCategory.JEI_TIME, processingTime / 20);
+            builder.addText(timeString, this.getWidth() - 20, 10)
+                .setPosition(0, 0, this.getWidth(), this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                .setTextAlignment(HorizontalAlignment.CENTER)
+                .setTextAlignment(VerticalAlignment.TOP)
+                .setColor(0xFF808080);
+        }
+    }
+
+    @Override
     public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
+        this.progressBar.draw(graphics, CIRCUIT_FABRICATOR_PROGRESS_X, CIRCUIT_FABRICATOR_PROGRESS_Y);
     }
 }
