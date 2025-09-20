@@ -37,6 +37,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.util.Translations.RecipeCategory.EMI_TIME;
 
 public class CompressingEmiRecipe extends BasicEmiRecipe {
     public final boolean shapeless;
@@ -74,7 +75,7 @@ public class CompressingEmiRecipe extends BasicEmiRecipe {
 
         widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, FIRE_X, FIRE_Y, 4000, false, true, true);
         widgets.addAnimatedTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 66, 10, 52, 24, 204, 74, this.time * 50, true, false, false).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable("emi.cooking.time", this.time / 20.0F).getVisualOrderText()));
+            return List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText()));
         });
 
         for (int i = 0; i < this.inputs.size(); i++) {

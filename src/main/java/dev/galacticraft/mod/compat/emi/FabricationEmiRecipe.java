@@ -33,7 +33,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 public class FabricationEmiRecipe extends BasicEmiRecipe {
-    public final int time;
+    public final int processingTime;
 
     public FabricationEmiRecipe(RecipeHolder<FabricationRecipe> holder) {
         super(GalacticraftEmiPlugin.FABRICATION, holder.id(), CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
@@ -42,13 +42,14 @@ public class FabricationEmiRecipe extends BasicEmiRecipe {
             this.inputs.add(EmiIngredient.of(ingredient));
         }
         this.outputs.add(EmiStack.of(recipe.getResultItem(null)));
-        this.time = recipe.getProcessingTime();
+        this.processingTime = recipe.getProcessingTime();
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
         // Add the background texture
         widgets.addTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT, 0, 0);
+        widgets.add(new FabricationProgressEmiWidget(CIRCUIT_FABRICATOR_PROGRESS_X, CIRCUIT_FABRICATOR_PROGRESS_Y, this.processingTime));
 
         widgets.addSlot(this.inputs.get(0), DIAMOND_X - 1, DIAMOND_Y - 1);
         widgets.addSlot(this.inputs.get(1), SILICON_X_1 - 1, SILICON_Y_1 - 1);
