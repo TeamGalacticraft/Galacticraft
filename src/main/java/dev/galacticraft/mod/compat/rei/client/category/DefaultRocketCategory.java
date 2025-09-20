@@ -45,6 +45,7 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
@@ -55,7 +56,8 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
-
+    // Do not replace with Constant.SlotSprite.CHEST or it will be displayed as a missing texture!
+    private static final ResourceLocation CHEST_SLOT_SPRITE = Constant.id("textures/gui/slot/chest.png");
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
 
     static {
@@ -106,7 +108,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         slots.add(Widgets.createSlot(new Point(startPoint.x + 38, startPoint.y + (5 * 18) + 6)).markInput());
 
         // Chest
-        slots.add(new SlotSpriteWidget(new Point(startPoint.x + 38, startPoint.y + (6 * 18) + 12), Constant.SlotSprite.CHEST).markInput());
+        slots.add(new SlotSpriteWidget(new Point(startPoint.x + 38, startPoint.y + (6 * 18) + 12), CHEST_SLOT_SPRITE).markInput());
 
         for (int i = 0; i < input.size(); ++i) {
             if (!input.get(i).isEmpty()) {
