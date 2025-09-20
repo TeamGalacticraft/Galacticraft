@@ -158,10 +158,6 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
         } else if (--this.sealCheckTime == 0) {
             this.sealCheckTime = SEAL_CHECK_TIME;
 
-            if (level.getBlockState(pos.relative(Direction.UP)).isCollisionShapeFullBlock(this.level, pos.relative(Direction.UP))) {
-                return GCMachineStatuses.BLOCKED;
-            }
-
             // CALCULATE SEALED SPACE:
             BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
             Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
@@ -361,6 +357,16 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 // UUUUU <- if we only checked WP, then newly disconnected pockets below the sealer would be considered connected
                 BlockPos target = this.worldPosition.relative(Direction.UP);
 
+                // special case: block placed on top of sealer
+                if (target.equals(pos)) {
+                    this.destroySeal();
+                    Object2BooleanOpenHashMap<BlockPos> sealed = new Object2BooleanOpenHashMap<>();
+                    sealed.put(pos, true);
+                    this.sealBlocks(sealed);
+                    this.markChanged();
+                    return;
+                }
+
                 // check that all surrounding blocks are still somehow connected to the sealed space.
                 boolean anyPass = false;
                 for (Direction direction : Direction.values()) {
@@ -377,6 +383,7 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
                 }
                 if (!anyPass) {
                     // This should not happen???
+                    Constant.LOGGER.warn("Block placement resulted in total seal destruction?");
                     this.destroySeal();
                 }
             }
@@ -421,6 +428,11 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity implements Space
 
     // attempts to navigate (via BFS) to the target position
     private boolean tryNavigateTo(BlockPos.MutableBlockPos mutable, BlockPos target, ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
+        if (this.sealedPositions.getOrDefault(mutable, false) || mutable.equals(target)) {
+            visited.add(mutable.immutable());
+            return mutable.equals(target);
+        }
+
         BlockPos start = mutable.immutable();
         ObjectArrayFIFOQueue<BlockPos> queue = new ObjectArrayFIFOQueue<>(32);
         queue.enqueue(start);
