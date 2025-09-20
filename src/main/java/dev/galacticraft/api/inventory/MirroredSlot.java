@@ -20,8 +20,8 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.entity;
+package dev.galacticraft.api.inventory;
 
-public interface ControllableEntity {
-    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls);
+public interface MirroredSlot {
+    // Nothing to see here
 }

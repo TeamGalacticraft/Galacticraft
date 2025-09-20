@@ -27,6 +27,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberBlockEntity;
 import dev.galacticraft.mod.content.block.entity.CryogenicChamberPartBlockEntity;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.client.Camera;
 import net.minecraft.core.BlockPos;
@@ -36,6 +37,9 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.Vec3;
+import org.joml.Vector3f;
+import org.joml.Quaternionf;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -46,10 +50,19 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Camera.class)
 public abstract class CameraMixin {
     @Shadow
-    protected abstract void setRotation(float f, float g);
+    protected abstract void setRotation(float yaw, float pitch);
 
     @Shadow
-    protected abstract void move(float f, float g, float h);
+    protected abstract void setPosition(Vec3 vec3);
+
+    @Shadow
+    protected abstract void move(float x, float y, float z);
+
+    @Shadow
+    protected abstract float getXRot();
+
+    @Shadow
+    protected abstract float getYRot();
 
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
@@ -79,10 +92,21 @@ public abstract class CameraMixin {
                 if (sleepTimer < 100) {
                     yRot += partialTicks;
                 }
-                entity.xRotO = 45;
+                entity.xRotO = 45.0F;
                 this.setRotation(yRot, 0.0F);
                 this.move(-4.1F, 0.3F, 0.0F);
             }
+        } else if (!detached && entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
+            float pitch = rocket.getViewXRot(partialTicks);
+            float yaw = rocket.getViewYRot(partialTicks);
+            this.setRotation(this.getYRot() + yaw - rocket.getInitialYRot(), this.getXRot() + pitch);
+
+            Quaternionf rotation = new Quaternionf();
+            rotation.rotateYXZ(-yaw * Mth.DEG_TO_RAD, pitch * Mth.DEG_TO_RAD, 0);
+            Vector3f vector = new Vector3f(0.0F, 1.12F, 0.0F);
+            vector.rotate(rotation);
+            vector.y += 1.6F;
+            this.setPosition(rocket.getPosition(partialTicks).add(new Vec3(vector)));
         }
     }
 

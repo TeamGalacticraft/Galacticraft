@@ -25,7 +25,7 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -62,7 +62,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
+        return Component.translatable(RecipeCategory.CIRCUIT_FABRICATOR);
     }
 
     @Override
@@ -73,9 +73,10 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT));
 
-        double processingTime = recipeDisplay.getProcessingTime();
+        double processingTime = recipeDisplay.getProcessingTime() / 20.0D;
+        widgets.add(new FabricationProgressWidget(startPoint.x + CIRCUIT_FABRICATOR_PROGRESS_X, startPoint.y + CIRCUIT_FABRICATOR_PROGRESS_Y, recipeDisplay.getProcessingTime()));
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.TIME, FORMAT.format(processingTime / 20.0D))).noShadow().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(RecipeCategory.REI_TIME, FORMAT.format(processingTime))).noShadow().color(0xFF404040, 0xFFBBBBBB));
 
         // Diamond ingredients
         // Silicon

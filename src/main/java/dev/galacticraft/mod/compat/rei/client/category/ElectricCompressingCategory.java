@@ -81,7 +81,7 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
         widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_COMPRESSOR_PROGRESS_X, startPoint.y + ELECTRIC_COMPRESSOR_PROGRESS_Y, ELECTRIC_COMPRESSOR_PROGRESS_WIDTH, ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT),
                 ELECTRIC_COMPRESSOR_PROGRESS_U, ELECTRIC_COMPRESSOR_PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 12),
-                Component.translatable(Translations.RecipeCategory.TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
         // Output

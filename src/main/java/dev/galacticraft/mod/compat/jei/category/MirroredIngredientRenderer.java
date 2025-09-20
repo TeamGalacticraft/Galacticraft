@@ -20,8 +20,31 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.entity;
+package dev.galacticraft.mod.compat.jei.category;
 
-public interface ControllableEntity {
-    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls);
+import dev.galacticraft.mod.util.DrawableUtil;
+import mezz.jei.api.ingredients.IIngredientRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
+import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item.TooltipContext;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
+
+import java.util.List;
+
+public class MirroredIngredientRenderer implements IIngredientRenderer<ItemStack> {
+    public static IIngredientRenderer<ItemStack> INSTANCE = new MirroredIngredientRenderer();
+
+    @Override
+    public void render(GuiGraphics graphics, ItemStack itemStack) {
+        DrawableUtil.renderItemMirrored(graphics, itemStack, 0, 0, 0);
+    }
+
+    @Override
+    @SuppressWarnings("removal")
+    public List<Component> getTooltip(ItemStack itemStack, TooltipFlag tooltipFlag) {
+        Minecraft minecraft = Minecraft.getInstance();
+        return itemStack.getTooltipLines(TooltipContext.of(minecraft.level), minecraft.player, tooltipFlag);
+    }
 }

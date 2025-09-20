@@ -76,7 +76,7 @@ public class ElectricFurnaceCategory implements DisplayCategory<ElectricFurnaceD
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
         widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_FURNACE_PROGRESS_X, startPoint.y + ELECTRIC_FURNACE_PROGRESS_Y, ELECTRIC_FURNACE_PROGRESS_WIDTH, ELECTRIC_FURNACE_PROGRESS_HEIGHT), ELECTRIC_FURNACE_PROGRESS_U, ELECTRIC_FURNACE_PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(Translations.RecipeCategory.REI_TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_FURNACE_INPUT_X, startPoint.y + ELECTRIC_FURNACE_INPUT_Y)).entries(recipeDisplay.getInputEntries().get(0)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_FURNACE_OUTPUT_X, startPoint.y + ELECTRIC_FURNACE_OUTPUT_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;

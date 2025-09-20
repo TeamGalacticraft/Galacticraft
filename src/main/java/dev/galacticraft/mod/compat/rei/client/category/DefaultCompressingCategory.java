@@ -82,7 +82,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
         widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + COMPRESSOR_PROGRESS_X, startPoint.y + COMPRESSOR_PROGRESS_Y, COMPRESSOR_PROGRESS_WIDTH, COMPRESSOR_PROGRESS_HEIGHT), COMPRESSOR_PROGRESS_U, COMPRESSOR_PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
         // Output

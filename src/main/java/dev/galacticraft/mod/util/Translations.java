@@ -75,8 +75,9 @@ public interface Translations {
         String ELECTRIC_ARC_FURNACE = "category.recipe_viewer.blasting.electric";
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
 
-        String TIME = "category.rei.campfire.time";
-        String TIME_AND_XP = "category.rei.cooking.time&xp";
+        String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
     }
 
     interface Waila {

@@ -20,8 +20,36 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.entity;
+package dev.galacticraft.mod.compat.jei.category;
 
-public interface ControllableEntity {
-    void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls);
+import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
+import mezz.jei.api.gui.drawable.IDrawable;
+import net.minecraft.client.gui.GuiGraphics;
+
+import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+
+public class JEIFabricationProgressBar implements IDrawable {
+    private int processingTime = 1;
+    private long startTime;
+
+    public void setProcessingTime(int processingTime) {
+        this.processingTime = processingTime * 50;
+        this.startTime = System.currentTimeMillis();
+    }
+
+    @Override
+    public int getWidth() {
+        return 0;
+    }
+
+    @Override
+    public int getHeight() {
+        return 0;
+    }
+
+    @Override
+    public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+        float progress = ((System.currentTimeMillis() - this.startTime) % this.processingTime) / (float) this.processingTime;
+        CircuitFabricatorProgressAnimation.render(graphics, xOffset, yOffset, progress);
+    }
 }
