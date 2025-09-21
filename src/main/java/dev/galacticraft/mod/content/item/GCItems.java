@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.mod.content.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.*;

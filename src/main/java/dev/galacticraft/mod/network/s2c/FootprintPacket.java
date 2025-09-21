@@ -22,11 +22,11 @@
 
 package dev.galacticraft.mod.network.s2c;
 
+import dev.galacticraft.api.util.StreamCodecs;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.misc.footprint.Footprint;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.codec.ByteBufCodecs;

@@ -23,6 +23,7 @@
 package dev.galacticraft.impl.data;
 
 import com.mojang.serialization.Lifecycle;
+import dev.galacticraft.mod.data.content.GCDynamicRegistryProvider;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderLookup;

@@ -59,13 +59,19 @@ public class GCRegistry<T> {
 
     private final Registry<T> registry;
     private final List<Holder.Reference<T>> entries = new ArrayList<>();
+    private final String modId;
 
     public GCRegistry(Registry<T> registry) {
+        this(registry, Constant.MOD_ID);
+    }
+
+    public GCRegistry(Registry<T> registry, String modId) {
         this.registry = registry;
+        this.modId = Constant.MOD_ID;
     }
 
     protected ResourceLocation getId(String id) {
-        return Constant.id(id);
+        return ResourceLocation.fromNamespaceAndPath(modId, id);
     }
 
     public <V extends T> V register(String id, V object) {

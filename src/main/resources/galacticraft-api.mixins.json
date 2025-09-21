@@ -29,7 +29,7 @@
     "client.ClientPlayNetworkHandlerMixin",
     "client.FogRendererMixin",
     "client.LevelRendererMixin",
-    "client.MinecraftClientMixin",
+    "client.MinecraftMixin",
     "client.ParticleAccessor",
     "client.ParticleManagerMixin",
     "client.SoundEngineMixin",

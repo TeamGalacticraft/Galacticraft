@@ -22,7 +22,7 @@
 
 package dev.galacticraft.impl.network.s2c;
 
-import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.mod.accessor.SatelliteAccessor;
 import dev.galacticraft.mod.Constant;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
