@@ -40,7 +40,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
@@ -62,7 +61,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -89,6 +87,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
+
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.CRASH_LANDING;
 
 @SuppressWarnings("UnstableApiUsage")
 public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
@@ -529,7 +529,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 for (int i = 0; i < 4; i++) {
                     this.level().explode(
                             this,
-                            new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
+                            this.damageSources().source(CRASH_LANDING),
                             new ExplosionDamageCalculator(),
                             this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
                             this.position().y + (this.level().random.nextDouble() * 3),
