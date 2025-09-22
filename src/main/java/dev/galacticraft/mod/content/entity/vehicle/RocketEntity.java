@@ -244,6 +244,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
+    public ItemStack getPickResult() {
+        return this.getDropItem();
+    }
+
+    @Override
     public ItemStack getDropItem() {
         ItemStack rocket = new ItemStack(GCItems.ROCKET);
         rocket.applyComponents(this.getRocketData().asPatch());
