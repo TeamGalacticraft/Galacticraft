@@ -34,13 +34,13 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record BubbleUpdatePayload(BlockPos pos, byte maxSize, double size, boolean visible) implements S2CPayload {
+public record BubbleUpdatePayload(BlockPos pos, int maxSize, double size, boolean visible) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("bubble_update");
     public static final CustomPacketPayload.Type<BubbleUpdatePayload> TYPE = new CustomPacketPayload.Type<>(ID);
     public static final StreamCodec<ByteBuf, BubbleUpdatePayload> STREAM_CODEC = StreamCodec.composite(
             BlockPos.STREAM_CODEC,
             p -> p.pos,
-            ByteBufCodecs.BYTE,
+            ByteBufCodecs.INT,
             p -> p.maxSize,
             ByteBufCodecs.DOUBLE,
             p -> p.size,

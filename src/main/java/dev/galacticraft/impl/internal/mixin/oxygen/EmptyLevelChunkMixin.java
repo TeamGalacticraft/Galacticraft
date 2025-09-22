@@ -22,19 +22,43 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.EmptyLevelChunk;
+import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
+import java.util.Collections;
+import java.util.Iterator;
+
 @Mixin(EmptyLevelChunk.class)
-public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
+public abstract class EmptyLevelChunkMixin implements ChunkOxygenAccessorInternal {
     @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return false;
+    public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        return null;
     }
 
     @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
+    public void galacticraft$markSectionDirty(int sectionIndex) {
+    }
+
+    @Override
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        return Collections.emptyIterator();
+    }
+
+    @Override
+    public Iterator<BlockPos> galacticraft$getProviderPositions(int y) {
+        return Collections.emptyIterator();
+    }
+
+    @Override
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
+    }
+
+    @Override
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
     }
 }

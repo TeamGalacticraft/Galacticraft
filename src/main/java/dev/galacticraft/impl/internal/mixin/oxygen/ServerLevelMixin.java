@@ -20,26 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen;
 
-public interface ChunkOxygenAccessor {
-    /**
-     * Returns whether the supplied position in the chunk is breathable for entities
-     *
-     * @param x the position to test on the X-axis, normalized from 0 to 15
-     * @param y the position to test on the Y-axis, must be within world height
-     * @param z the position to test on the Z-axis, normalized from 0 to 15
-     * @return whether the supplied position in the chunk is breathable for entities
-     */
-    boolean galacticraft$isInverted(int x, int y, int z);
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
 
-    /**
-     * Sets the breathable state for entities for the supplied position
-     *
-     * @param x        the position to test on the X-axis, normalized from 0 to 15
-     * @param y        the position to test on the Y-axis, must be within world height
-     * @param z        the position to test on the Z-axis, normalized from 0 to 15
-     * @param inverted whether the supplied position is breathable
-     */
-    void galacticraft$setInverted(int x, int y, int z, boolean inverted);
+@Mixin(ServerLevel.class)
+public abstract class ServerLevelMixin implements LevelOxygenAccessor {
+    @Override
+    public void galacticraft$notifyAtmosphereChange(BlockPos pos, BlockState state) {
+        state.getBlock().galacticraft$onAtmosphereChange((ServerLevel) (Object) this, pos, state, this.galacticraft$getAtmosphereProviders(pos));
+    }
 }

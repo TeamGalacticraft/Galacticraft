@@ -34,11 +34,11 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
 
-public class BubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubbleDistributorBlockEntity> {
+public class OxygenBubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubbleDistributorBlockEntity> {
     public static final ResourceLocation MODEL = Constant.id("models/misc/sphere.json");
     public final GCModel bubbleModel;
 
-    public BubbleDistributorRenderer(BlockEntityRendererProvider.Context context) {
+    public OxygenBubbleDistributorRenderer(BlockEntityRendererProvider.Context context) {
         this.bubbleModel = GCModelLoader.INSTANCE.getModel(MODEL);
 
         if (bubbleModel == null) {
@@ -52,11 +52,12 @@ public class BubbleDistributorRenderer implements BlockEntityRenderer<OxygenBubb
         if (machine.isDisabled() || !machine.isBubbleVisible()) {
             return;
         }
-        double size = machine.getSize();
+//        float size = (float) Mth.lerp(tickDelta, machine.getPrevSize(), machine.getSize()); //todo lerp size
+        float size = (float) machine.getSize();
 
         matrices.pushPose();
         matrices.translate(0.5F, 1.0F, 0.5F);
-        matrices.scale((float) size, (float) size, (float) size);
+        matrices.scale(size, size, size);
 
         bubbleModel.render(matrices, null, vertexConsumers.getBuffer(GCRenderTypes.bubble(GCRenderTypes.OBJ_ATLAS)), light, OverlayTexture.NO_OVERLAY);
 

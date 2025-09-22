@@ -32,7 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistributorBlockEntity> {
     public boolean bubbleVisible;
-    public byte targetSize;
+    public int targetSize;
     public double size;
 
     public OxygenBubbleDistributorMenu(int syncId, Player player, OxygenBubbleDistributorBlockEntity machine) {
@@ -49,7 +49,7 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
     @Override
     public void registerData(@NotNull MenuData data) {
         super.registerData(data);
-        data.registerByte(this.be::getTargetSize, b -> this.targetSize = (byte) b);
+        data.registerInt(this.be::getTargetSize, b -> this.targetSize = b);
         data.registerDouble(this.be::getSize, d -> this.size = d);
         data.registerBoolean(this.be::isBubbleVisible, b -> this.bubbleVisible = b);
     }

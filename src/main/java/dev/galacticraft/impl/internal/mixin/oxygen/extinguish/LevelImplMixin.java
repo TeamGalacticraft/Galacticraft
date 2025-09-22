@@ -20,13 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.accessor;
+package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import org.jetbrains.annotations.ApiStatus;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.api.accessor.LevelOxygenAccessor;
+import net.minecraft.core.BlockPos;
+import net.minecraft.server.level.WorldGenRegion;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
+import org.spongepowered.asm.mixin.Mixin;
 
-@ApiStatus.Internal
-public interface InternalLevelOxygenAccessor {
-    boolean getDefaultBreathable();
-
-    void setDefaultBreathable(boolean breathable);
+// all base classes for LevelAccessor
+@Mixin({Level.class, WorldGenRegion.class})
+public abstract class LevelImplMixin implements LevelOxygenAccessor {
+    @WrapMethod(method = "setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;II)Z")
+    private boolean extinguishFire(BlockPos pos, BlockState state, int flags, int maxUpdateDepth, Operation<Boolean> original) {
+        return original.call(pos, state.getBlock().galacticraft$hasLegacyExtinguishTransform(state) && !this.galacticraft$isBreathable(pos) ? state.getBlock().galacticraft$extinguishBlockPlace(pos, state) : state, flags, maxUpdateDepth);
+    }
 }

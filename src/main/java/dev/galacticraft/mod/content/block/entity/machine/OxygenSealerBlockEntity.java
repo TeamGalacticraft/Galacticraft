@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.block.entity.SpaceFillingAtmosphereProvider;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
@@ -40,31 +42,44 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.network.s2c.OxygenSealerUpdatePayload;
 import dev.galacticraft.mod.screen.OxygenSealerMenu;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.util.FluidUtil;
+import it.unimi.dsi.fastutil.objects.*;
+import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
+import net.minecraft.core.HolderLookup;
+import net.minecraft.core.SectionPos;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LevelChunkSection;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class OxygenSealerBlockEntity extends MachineBlockEntity {
+import java.util.BitSet;
+
+public class OxygenSealerBlockEntity extends MachineBlockEntity implements SpaceFillingAtmosphereProvider {
     public static final int CHARGE_SLOT = 0;
     public static final int OXYGEN_INPUT_SLOT = 1;
     public static final int OXYGEN_TANK = 0;
 
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(20);
-    public static final int SEAL_CHECK_TIME = 20;
+    public static final int SEAL_CHECK_TIME = 40;
+    public static final int MAX_SEALER_VOLUME = 1024; //2048
 
-    private boolean isSealed = false;
-    private boolean hasEnergy = false;
-    private boolean hasOxygen = false;
-    private boolean blocked = false;
+    private int sealCheckTime = SEAL_CHECK_TIME;
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -92,17 +107,22 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
             )
     );
 
+    /**
+     * Positions of all blocks that are sealed. This includes SOLID WALLS of the sealed space.
+     * Maps block position -> "is this block solid?"
+     */
+    private final Object2BooleanOpenHashMap<BlockPos> sealedPositions = new Object2BooleanOpenHashMap<>();
+    /**
+     * Blocks that need to be notified if we seal/unseal them
+     */
+    private final ObjectSet<BlockPos> atmosphereAwareBlocks = new ObjectOpenHashSet<>();
+    /**
+     * Whether some other block is currently sealing the space.
+     */
+    private boolean contended;
 
     public OxygenSealerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_SEALER, pos, state, SPEC);
-    }
-
-    @Override
-    public void setLevel(Level level) {
-        super.setLevel(level);
-        if (!level.isClientSide) {
-            level.galacticraft$getSealerManager().addSealer(this);
-        }
     }
 
     @Override
@@ -116,50 +136,151 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        // Check if the machine has enough energy
         if (!this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate())) {
-            this.hasEnergy = false;
             return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
-        this.hasEnergy = true;
 
-        // Check if the oxygen tank is empty
         if (this.fluidStorage().slot(OXYGEN_TANK).isEmpty()) {
-            this.hasOxygen = false;
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
-        this.hasOxygen = true;
 
-        if (!level.getBlockState(pos.offset(0, 1, 0)).isAir()) {
-            this.blocked = true;
-            return GCMachineStatuses.BLOCKED;
-        }
-        this.blocked = false;
+        if (this.contended || this.level.galacticraft$isBreathable()) {
+            // allow for instant swap if the other sealer fails for some reason.
+            if (this.sealCheckTime > 1) this.sealCheckTime--;
 
-        if (this.hasEnergy) {
-            this.consumeEnergy();
+            return GCMachineStatuses.ALREADY_SEALED;
         }
 
-        if (this.isSealed) {
-            // Consume oxygen if sealed
-            this.consumeOxygen();
+        if (!this.sealedPositions.isEmpty()) { // we have an active, valid seal.
+            this.energyStorage().extract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate());
+            this.fluidStorage().slot(OXYGEN_TANK).extract(Galacticraft.CONFIG.oxygenSealerOxygenConsumptionRate());
             return GCMachineStatuses.SEALED;
-        } else {
-            return GCMachineStatuses.AREA_TOO_LARGE;
+        } else if (--this.sealCheckTime == 0) {
+            this.sealCheckTime = SEAL_CHECK_TIME;
+
+            // CALCULATE SEALED SPACE:
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
+            ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);
+
+            visited.put(pos, true);
+            visited.put(pos.relative(Direction.UP), false);
+            queue.enqueue(new SourcedPos(pos.relative(Direction.UP), Direction.DOWN));
+
+            while (!queue.isEmpty() && (queue.size() + visited.size() <= MAX_SEALER_VOLUME)) {
+                SourcedPos current = queue.dequeue();
+                if (level.isOutsideBuildHeight(current.pos.getY())) {
+                    if (queue.isEmpty()) queue.enqueue(new SourcedPos(null, Direction.DOWN)); // ensure no accidental passes!
+                    break;
+                }
+                for (Direction direction : Direction.values()) {
+                    if (direction == current.direction) continue;
+                    mutable.setWithOffset(current.pos, direction);
+                    if (!visited.containsKey(mutable)) {
+                        BlockState bs = level.getBlockState(mutable);
+                        boolean full = isSealable(mutable, bs);
+                        BlockPos ps = mutable.immutable();
+                        visited.put(ps, full);
+                        if (!full) {
+                            queue.enqueue(new SourcedPos(ps, direction.getOpposite()));
+                        }
+                    }
+                }
+            }
+
+            if (queue.isEmpty()) {
+                // found area - seal it!
+                this.sealBlocks(visited);
+            } // no area, no change.
         }
+        return GCMachineStatuses.AREA_TOO_LARGE;
     }
 
     @Override
-    protected void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickDisabled(level, pos, state, profiler);
+    protected void updateActiveState(Level level, BlockPos pos, BlockState state, boolean b) {
+        super.updateActiveState(level, pos, state, b);
+
+        for (BlockPos pos1 : this.atmosphereAwareBlocks) {
+            this.notifyBlockOfSealChange(pos1);
+        }
+    }
+
+    public boolean isSealed() {
+        return this.isActive();
+    }
+
+    public int getSealTickTime() {
+        return this.sealCheckTime;
+    }
+
+    private void sealBlocks(Object2BooleanOpenHashMap<BlockPos> visited) {
+        if (visited.isEmpty()) return;
+        Object2ObjectOpenHashMap<BlockPos, LevelChunkSection> visitedSections = new Object2ObjectOpenHashMap<>();
+        BlockPos.MutableBlockPos section = new BlockPos.MutableBlockPos();
+
+        this.sealedPositions.ensureCapacity(visited.size() + this.sealedPositions.size());
+        ObjectIterator<Object2BooleanMap.Entry<BlockPos>> iterator = visited.object2BooleanEntrySet().fastIterator();
+        while (iterator.hasNext()) {
+            Object2BooleanMap.Entry<BlockPos> e = iterator.next();
+            BlockPos pos = e.getKey();
+            this.sealedPositions.put(pos, e.getBooleanValue());
+
+            section.set(SectionPos.blockToSectionCoord(pos.getX()), this.level.getSectionIndex(pos.getY()), SectionPos.blockToSectionCoord(pos.getZ()));
+            // we only need to 'claim' each section once. might as well cache the sections too.
+            if (!visitedSections.containsKey(section)) {
+                LevelChunk chunk = this.level.getChunk(section.getX(), section.getZ());
+                LevelChunkSection section1 = chunk.getSection(section.getY());
+                visitedSections.put(section.immutable(), section1);
+                ((ChunkOxygenAccessor) chunk).galacticraft$addAtmosphereProvider(section.getY(), this.worldPosition);
+            }
+
+            LevelChunkSection chunkSection = visitedSections.get(section);
+            BlockState blockState = chunkSection.getBlockState(pos.getX() & 15, pos.getY() & 15, pos.getZ() & 15);
+            // if we sealed an atmospheric subscriber, then we need to let it know of the changes (now and future).
+            if (blockState.getBlock().galacticraft$hasAtmosphereListener(blockState)) {
+                if (this.isSealed()) {
+                    this.level.galacticraft$notifyAtmosphereChange(pos, blockState);
+                }
+                this.atmosphereAwareBlocks.add(pos);
+            }
+        }
+
+        this.markChanged();
     }
 
     @Override
-    public void setRemoved() {
-        super.setRemoved();
-        if (this.level != null && !this.level.isClientSide) {
-            this.level.galacticraft$getSealerManager().removeSealer(this);
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
+        long[] positions = new long[this.sealedPositions.size()];
+        BitSet walls = new BitSet(this.sealedPositions.size());
+        long[] listeners = new long[this.atmosphereAwareBlocks.size()];
+        int i = 0;
+        for (Object2BooleanMap.Entry<BlockPos> e : this.sealedPositions.object2BooleanEntrySet()) {
+            positions[i] = e.getKey().asLong();
+            walls.set(i++, e.getBooleanValue());
         }
+        i = 0;
+        for (BlockPos pos : this.atmosphereAwareBlocks) {
+            listeners[i] = pos.asLong();
+        }
+        tag.putLongArray(Constant.Nbt.SEALED, positions);
+        tag.putLongArray(Constant.Nbt.SOLID, walls.toLongArray());
+        tag.putLongArray(Constant.Nbt.LISTENERS, listeners);
+        tag.putBoolean(Constant.Nbt.CONTENDED, this.contended);
+    }
+
+    @Override
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
+        long[] sealed = tag.getLongArray(Constant.Nbt.SEALED);
+        BitSet solid = BitSet.valueOf(tag.getLongArray(Constant.Nbt.SOLID));
+        for (int i = 0; i < sealed.length; i++) {
+            this.sealedPositions.put(BlockPos.of(sealed[i]), solid.get(i));
+        }
+        for (long listener : tag.getLongArray(Constant.Nbt.LISTENERS)) {
+            this.atmosphereAwareBlocks.add(BlockPos.of(listener));
+        }
+        this.contended = tag.getBoolean(Constant.Nbt.CONTENDED);
     }
 
     @Nullable
@@ -168,36 +289,282 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         return new OxygenSealerMenu(syncId, player, this);
     }
 
-    private void consumeOxygen() {
-        this.fluidStorage().slot(OXYGEN_TANK).extract(Galacticraft.CONFIG.oxygenSealerOxygenConsumptionRate());
+    @Override
+    public boolean canBreathe(double x, double y, double z) {
+        return this.isSealed() && this.sealedPositions.containsKey(BlockPos.containing(x, y, z));
     }
 
-    private void consumeEnergy() {
-        this.energyStorage().extract(Galacticraft.CONFIG.oxygenSealerEnergyConsumptionRate());
+    @Override
+    public boolean canBreathe(BlockPos pos) {
+        return this.isSealed() && this.sealedPositions.containsKey(pos);
     }
 
-    public boolean isSealed() {
-        return this.isSealed;
+    @Override
+    public void notifyStateChange(BlockPos pos, BlockState newState) {
+        if (pos.equals(this.worldPosition) && !newState.is(this.getBlockState().getBlock())) {
+            this.destroySeal();
+            return;
+        }
+        // we only care about state changes to sealed blocks
+        if (this.sealedPositions.containsKey(pos)) {
+            if (newState.getBlock().galacticraft$hasAtmosphereListener(newState)) {
+                this.atmosphereAwareBlocks.add(pos);
+            } else {
+                this.atmosphereAwareBlocks.remove(pos);
+            }
+
+            BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+            if (this.sealedPositions.getBoolean(pos)) {
+                if (!isSealable(pos, newState)) {
+                    // was sealed -> now not. check for leaks
+                    this.sealedPositions.put(pos, false);
+
+                    Object2BooleanOpenHashMap<BlockPos> visited = new Object2BooleanOpenHashMap<>();
+                    boolean sealable = true;
+
+                    for (Direction direction : Direction.values()) {
+                        mutable.setWithOffset(pos, direction);
+                        if (!this.sealedPositions.containsKey(mutable) && !visited.containsKey(mutable)) {
+                            if (isSealable(mutable, level.getBlockState(mutable))) {
+                                visited.put(mutable.immutable(), true); // newly uncovered WALL.
+                                if (this.sealedPositions.size() == MAX_SEALER_VOLUME) {
+                                    sealable = false;
+                                    break;
+                                }
+                            } else if (!this.trySeal(pos, direction, visited) || visited.size() + this.sealedPositions.size() > MAX_SEALER_VOLUME) { // newly made unsealed hole - try to seal it.
+                                sealable = false;
+                                break;
+                            }
+                        }
+                    }
+                    if (sealable) {
+                        // it's still sealed - update!
+                        this.sealBlocks(visited);
+                    } else {
+                        // no longer sealed - destroy.
+                        this.destroySeal();
+                    }
+                }
+            } else if (isSealable(pos, newState)) {
+                // was not sealed -> now is. check if it blocks others.
+                this.sealedPositions.put(pos, true);
+
+                // can use pure virtual search; no leaks are possible since a new solid block was placed.
+                ObjectOpenHashSet<BlockPos> visited = new ObjectOpenHashSet<>();
+                ObjectOpenHashSet<BlockPos> visitedNonSolid = new ObjectOpenHashSet<>();
+                // SSSSS    need to navigate back to sealer +1y to confirm connection as the seal is emitted from above
+                // WWMWW
+                // UUUUU <- if we only checked WP, then newly disconnected pockets below the sealer would be considered connected
+                BlockPos target = this.worldPosition.relative(Direction.UP);
+
+                // special case: block placed on top of sealer
+                if (target.equals(pos)) {
+                    this.destroySeal();
+                    Object2BooleanOpenHashMap<BlockPos> sealed = new Object2BooleanOpenHashMap<>();
+                    sealed.put(pos, true);
+                    this.sealBlocks(sealed);
+                    this.markChanged();
+                    return;
+                }
+
+                // check that all surrounding blocks are still somehow connected to the sealed space.
+                boolean anyPass = false;
+                for (Direction direction : Direction.values()) {
+                    mutable.setWithOffset(pos, direction);
+                    if (this.sealedPositions.containsKey(mutable)) {
+                        visited.clear();
+                        visitedNonSolid.clear();
+                        if (!this.tryNavigateTo(mutable, target, visited, visitedNonSolid)) {
+                            this.destroySubSeal(visited, visitedNonSolid);
+                        } else {
+                            anyPass = true;
+                        }
+                    }
+                }
+                if (!anyPass) {
+                    // This should not happen???
+                    Constant.LOGGER.warn("Block placement resulted in total seal destruction?");
+                    this.destroySeal();
+                }
+            }
+
+            this.markChanged();
+        }
     }
 
-    public void setSealed(boolean sealed) {
-        this.isSealed = sealed;
+    // removes the given positons from the seal, updating the blocks accordingly.
+    private void destroySubSeal(ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
+        // all non-solid blocks can be removed immediately
+        for (BlockPos pos : visitedNonSolid) {
+            this.sealedPositions.removeBoolean(pos);
+            visited.remove(pos);
+            if (this.atmosphereAwareBlocks.remove(pos)) {
+                this.notifyBlockOfSealChange(pos);
+            }
+        }
+
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        // solid blocks are more complicated - must check for adjacent sealed non-solid blocks before removing
+        // SSWUU <- given this pattern (sealed, wall, unsealed) we need the walls to remain sealed even though
+        // SSWUU    they're connected to the newly unsealed section
+        for (BlockPos pos : visited) {
+            boolean anyPath = false;
+            for (Direction direction : Direction.values()) {
+                mutable.setWithOffset(pos, direction);
+                if (!this.sealedPositions.getOrDefault(mutable, true)) {
+                    anyPath = true;
+                    break;
+                }
+            }
+            if (!anyPath) {
+                // all surrounding blocks either SOLID (not transitive), or otherwise not breathable - this block is not sealed anymore
+                this.sealedPositions.removeBoolean(pos);
+                if (this.atmosphereAwareBlocks.remove(pos)) {
+                    this.notifyBlockOfSealChange(pos);
+                }
+            }
+        }
     }
 
-    public boolean hasEnergy() {
-        return this.hasEnergy;
+    // attempts to navigate (via BFS) to the target position
+    private boolean tryNavigateTo(BlockPos.MutableBlockPos mutable, BlockPos target, ObjectOpenHashSet<BlockPos> visited, ObjectOpenHashSet<BlockPos> visitedNonSolid) {
+        if (this.sealedPositions.getOrDefault(mutable, false) || mutable.equals(target)) {
+            visited.add(mutable.immutable());
+            return mutable.equals(target);
+        }
+
+        BlockPos start = mutable.immutable();
+        ObjectArrayFIFOQueue<BlockPos> queue = new ObjectArrayFIFOQueue<>(32);
+        queue.enqueue(start);
+        visited.add(start);
+
+        while (!queue.isEmpty()) {
+            BlockPos current = queue.dequeue();
+            for (Direction direction : Direction.values()) {
+                mutable.setWithOffset(current, direction);
+                if (target.equals(mutable)) return true;
+                if (this.sealedPositions.containsKey(mutable)) {
+                    if (!visited.contains(mutable)) {
+                        BlockPos pos = mutable.immutable();
+                        visited.add(pos);
+                        if (!this.sealedPositions.getBoolean(mutable)) {
+                            visitedNonSolid.add(pos);
+                            queue.enqueue(pos);
+                        }
+                    }
+                }
+            }
+        }
+        return false;
     }
 
-    public boolean hasOxygen() {
-        return this.hasOxygen;
+    // attempts to from a seal starting from the given block & direction
+    private boolean trySeal(BlockPos from, Direction fromDir, Object2BooleanMap<BlockPos> visited) {
+        BlockPos.MutableBlockPos mutable = new  BlockPos.MutableBlockPos();
+        ObjectArrayFIFOQueue<SourcedPos> queue = new ObjectArrayFIFOQueue<>(32);
+
+        visited.put(from, false);
+        visited.put(from.relative(fromDir), false); // newly uncovered AIR.
+        queue.enqueue(new SourcedPos(from.relative(fromDir), fromDir.getOpposite()));
+
+        while (!queue.isEmpty() && (this.sealedPositions.size() + queue.size() + visited.size() <= MAX_SEALER_VOLUME)) {
+            SourcedPos current = queue.dequeue();
+            if (this.level.isOutsideBuildHeight(current.pos.getY())) return false;
+
+            for (Direction direction : Direction.values()) {
+                if (direction == current.direction) continue;
+                mutable.setWithOffset(current.pos, direction);
+                // if NOT sealed and NOT already visited, it's a new spot.
+                if (!this.sealedPositions.containsKey(mutable) && !visited.containsKey(mutable)) {
+                    BlockState bs = this.level.getBlockState(mutable);
+                    boolean full = isSealable(mutable, bs);
+                    BlockPos ps = mutable.immutable();
+                    visited.put(ps, full);
+                    if (!full) {
+                        queue.enqueue(new SourcedPos(ps, direction.getOpposite()));
+                    }
+                }
+            }
+        }
+
+        return queue.isEmpty();
     }
 
-    public boolean isBlocked() {
-        return this.blocked;
+    public void destroySeal() {
+        assert this.level != null;
+        for (BlockPos pos : this.sealedPositions.keySet()) {
+            // todo: make more efficient
+            ((ChunkOxygenAccessor) this.level.getChunkAt(pos)).galacticraft$removeAtmosphereProvider(this.level.getSectionIndex(pos.getY()), this.worldPosition);
+        }
+        this.sealedPositions.clear();
+        this.markChanged();
+
+        // was sealed, notify blocks of loss
+        if (this.isSealed()) {
+            for (BlockPos pos : this.atmosphereAwareBlocks) {
+                this.notifyBlockOfSealChange(pos);
+            }
+        }
     }
 
-    public int getSealTickTime() {
-        if (this.level == null) return 0;
-        return SEAL_CHECK_TIME - (int) (this.level.getGameTime() % SEAL_CHECK_TIME);
+    private void notifyBlockOfSealChange(BlockPos pos) {
+        BlockState state = this.level.getBlockState(pos);
+        if (state.getBlock().galacticraft$hasAtmosphereListener(state)) {
+            state.getBlock().galacticraft$onAtmosphereChange(((ServerLevel) this.level), pos, state, level.galacticraft$getAtmosphereProviders(pos));
+        }
     }
+
+    private void markChanged() {
+        this.setChanged();
+        CustomPacketPayload updatePayload = this.createUpdatePayload();
+        for (ServerPlayer player : PlayerLookup.tracking(this)) {
+            ServerPlayNetworking.send(player, updatePayload);
+        }
+    }
+
+    private boolean isSealable(BlockPos pos, BlockState newState) {
+        return newState.isCollisionShapeFullBlock(this.level, pos) || newState.is(GCBlockTags.SEALABLE);
+    }
+
+    @Override
+    public @NotNull CustomPacketPayload createUpdatePayload() {
+        BlockPos[] positions = this.sealedPositions.keySet().toArray(new BlockPos[0]);
+        BitSet values = new BitSet(this.sealedPositions.size());
+        int i = 0;
+        for (boolean value : this.sealedPositions.values()) {
+            if (value) values.set(i);
+            i++;
+        }
+        return new OxygenSealerUpdatePayload(this.worldPosition, positions, values);
+    }
+
+    @Override
+    public void populateUpdateTag(CompoundTag tag) {
+        super.populateUpdateTag(tag);
+        long[] positions = new long[this.sealedPositions.size()];
+        BitSet set = new BitSet(this.sealedPositions.size());
+        int i = 0;
+        for (Object2BooleanMap.Entry<BlockPos> e : this.sealedPositions.object2BooleanEntrySet()) {
+            positions[i] = e.getKey().asLong();
+            set.set(i++, e.getBooleanValue());
+        }
+        tag.putLongArray(Constant.Nbt.SEALED, positions);
+        tag.putLongArray(Constant.Nbt.SOLID, set.toLongArray());
+    }
+
+    public void handleUpdate(OxygenSealerUpdatePayload payload) {
+        this.sealedPositions.clear();
+        BlockPos[] positions = payload.positions();
+        BitSet set = payload.set();
+        for (int i = 0; i < positions.length; i++) {
+            this.sealedPositions.put(positions[i], set.get(i));
+        }
+    }
+
+    public void markContended(boolean contended) {
+        assert this.isActive() != contended;
+        this.contended = contended;
+    }
+
+    private record SourcedPos(BlockPos pos, Direction direction) {}
 }

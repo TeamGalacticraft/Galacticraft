@@ -22,15 +22,22 @@
 
 package dev.galacticraft.impl.internal.mixin.oxygen;
 
-import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
+import com.google.common.collect.Iterators;
+import dev.galacticraft.api.accessor.ChunkOxygenAccessor;
+import dev.galacticraft.api.block.entity.AtmosphereProvider;
+import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessorInternal;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.chunk.ImposterProtoChunk;
 import net.minecraft.world.level.chunk.LevelChunk;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
+import java.util.Iterator;
+
 @Mixin(ImposterProtoChunk.class)
-public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
+public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessorInternal {
     @Shadow
     @Final
     private boolean allowWrites;
@@ -39,14 +46,40 @@ public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
     private LevelChunk wrapped;
 
     @Override
-    public boolean galacticraft$isInverted(int x, int y, int z) {
-        return ((ChunkOxygenAccessor) this.wrapped).galacticraft$isInverted(x, y, z);
+    public Iterator<AtmosphereProvider> galacticraft$getProviders(int y) {
+        Iterator<AtmosphereProvider> iterator = ((ChunkOxygenAccessor) this.wrapped).galacticraft$getProviders(y);
+        return this.allowWrites ? iterator : Iterators.unmodifiableIterator(iterator); //todo: removal based on loading can still occur with blocked writes
     }
 
     @Override
-    public void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
+    public Iterator<BlockPos> galacticraft$getProviderPositions(int y) {
+        Iterator<BlockPos> iterator = ((ChunkOxygenAccessor) this.wrapped).galacticraft$getProviderPositions(y);
+        return this.allowWrites ? iterator : Iterators.unmodifiableIterator(iterator);
+    }
+
+    @Override
+    public void galacticraft$markSectionDirty(int sectionIndex) {
         if (this.allowWrites) {
-            ((ChunkOxygenAccessor) this.wrapped).galacticraft$setInverted(x, y, z, inverted);
+            ((ChunkOxygenAccessorInternal) this.wrapped).galacticraft$markSectionDirty(sectionIndex);
+        }
+    }
+
+    @Override
+    public OxygenUpdatePayload.OxygenData[] galacticraft$getPendingOxygenChanges() {
+        return ((ChunkOxygenAccessorInternal) this.wrapped).galacticraft$getPendingOxygenChanges();
+    }
+
+    @Override
+    public void galacticraft$addAtmosphereProvider(int sectionIndex, BlockPos provider) {
+        if (this.allowWrites) {
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$addAtmosphereProvider(sectionIndex, provider);
+        }
+    }
+
+    @Override
+    public void galacticraft$removeAtmosphereProvider(int sectionIndex, BlockPos provider) {
+        if (this.allowWrites) {
+            ((ChunkOxygenAccessor) this.wrapped).galacticraft$removeAtmosphereProvider(sectionIndex, provider);
         }
     }
 }

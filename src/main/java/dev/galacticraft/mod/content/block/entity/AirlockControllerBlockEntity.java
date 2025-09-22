@@ -233,7 +233,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.protocol.minX + 1; x <= this.protocol.maxX - 1; x++) {
                     for (z = this.protocol.minZ + 1; z <= this.protocol.maxZ - 1; z++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.above());
+                        breathable = this.level.galacticraft$isBreathable(pos.above());
                         if (breathable) {
                             if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                                 sealedSide = true;
@@ -241,7 +241,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                             }
                             continue;
                         }
-                        breathable = this.level.isBreathable(pos.below());
+                        breathable = this.level.galacticraft$isBreathable(pos.below());
                         if (breathable) {
                             if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                                 sealedSide = true;
@@ -271,7 +271,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (x = this.lastProtocol.minX + 1; x <= this.lastProtocol.maxX - 1; x++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.north());
+                        breathable = this.level.galacticraft$isBreathable(pos.north());
                         if (breathable) {
                             if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
@@ -279,7 +279,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                             }
                             continue;
                         }
-                        breathable = this.level.isBreathable(pos.south());
+                        breathable = this.level.galacticraft$isBreathable(pos.south());
                         if (breathable) {
                             if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
@@ -307,7 +307,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                 for (z = this.lastProtocol.minZ + 1; z <= this.lastProtocol.maxZ - 1; z++) {
                     for (y = this.lastProtocol.minY + 1; y <= this.lastProtocol.maxY - 1; y++) {
                         pos = new BlockPos(x, y, z);
-                        breathable = this.level.isBreathable(pos.west());
+                        breathable = this.level.galacticraft$isBreathable(pos.west());
                         if (breathable) {
                             if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;
@@ -315,7 +315,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                             }
                             continue;
                         }
-                        breathable = this.level.isBreathable(pos.east());
+                        breathable = this.level.galacticraft$isBreathable(pos.east());
                         if (breathable) {
                             if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                                 sealedSide = true;

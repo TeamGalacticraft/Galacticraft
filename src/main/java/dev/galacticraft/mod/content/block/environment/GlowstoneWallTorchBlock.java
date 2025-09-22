@@ -53,4 +53,14 @@ public class GlowstoneWallTorchBlock extends WallTorchBlock {
         TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_TORCH, tooltip);
         super.appendHoverText(stack, context, tooltip, options);
     }
+
+    @Override
+    public boolean galacticraft$hasLegacyExtinguishTransform(BlockState state) {
+        return false; // overrides the mixin
+    }
+
+    @Override
+    public boolean galacticraft$hasAtmosphereListener(BlockState state) {
+        return false; // overrides the mixin
+    }
 }

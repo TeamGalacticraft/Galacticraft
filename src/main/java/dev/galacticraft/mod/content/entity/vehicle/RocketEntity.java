@@ -513,7 +513,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (ticksSinceJump > 1000 && this.onGround()) {
-                boolean createFire = this.level().getDefaultBreathable();
+                boolean createFire = this.level().galacticraft$isBreathable();
 
                 for (Entity entity : this.getPassengers()) {
                     if (entity instanceof ServerPlayer player) {

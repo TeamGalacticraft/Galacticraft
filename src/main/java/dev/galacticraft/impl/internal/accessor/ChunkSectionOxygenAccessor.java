@@ -22,34 +22,28 @@
 
 package dev.galacticraft.impl.internal.accessor;
 
-import net.minecraft.network.FriendlyByteBuf;
+import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
+import net.minecraft.core.BlockPos;
+import net.minecraft.nbt.CompoundTag;
 import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.NotNull;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.BitSet;
+import java.util.ArrayList;
 
 @ApiStatus.Internal
 public interface ChunkSectionOxygenAccessor {
-    default boolean galacticraft$isInverted(int x, int y, int z) {
-        return this.galacticraft$isInverted(x + (y << 4) + (z << 8));
-    }
-
-    boolean galacticraft$isInverted(int pos);
-
-    default void galacticraft$setInverted(int x, int y, int z, boolean inverted) {
-        this.galacticraft$setInverted(x + (y << 4) + (z << 8), inverted);
-    }
-
-    void galacticraft$setInverted(int pos, boolean value);
+    boolean galacticraft$hasProvider(BlockPos pos);
+    boolean galacticraft$addProvider(BlockPos pos);
+    boolean galacticraft$removeProvider(BlockPos pos);
 
     boolean galacticraft$isEmpty();
 
-    @Nullable BitSet galacticraft$getBits();
+    void galacticraft$writeTag(CompoundTag apiTag);
+    void galacticraft$readTag(CompoundTag apiTag);
 
-    void galacticraft$setBits(@Nullable BitSet set);
+    OxygenUpdatePayload.OxygenSectionData galacticraft$updatePayload();
 
-    void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf);
+    void galacticraft$loadData(OxygenUpdatePayload.OxygenSectionData data);
 
-    void galacticraft$readOxygenPacket(@NotNull FriendlyByteBuf buf);
+    @ApiStatus.Internal
+    ArrayList<BlockPos> galacticraft$getRawProviders();
 }

@@ -20,21 +20,35 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.impl.internal.mixin.oxygen.extinguish;
 
-import dev.galacticraft.mod.accessor.GCLevelAccessor;
-import dev.galacticraft.mod.machine.SealerManager;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
-@Mixin(Level.class)
-public class LevelMixin implements GCLevelAccessor {
-    @Unique
-    private final SealerManager sealerManager = new SealerManager((Level) (Object) this);
+@Mixin(Entity.class)
+public abstract class EntityMixin {
+    @Shadow
+    private Level level;
 
-    @Override
-    public SealerManager galacticraft$getSealerManager() {
-        return sealerManager;
+    @Shadow
+    private Vec3 position;
+
+    @Shadow
+    private int remainingFireTicks;
+
+    @Shadow
+    public abstract void extinguishFire();
+
+    @Inject(method = "baseTick", at = @At("RETURN"))
+    private void extinguishFireNoAir(CallbackInfo ci) {
+        if (this.remainingFireTicks > 0 && !this.level.galacticraft$isBreathable(this.position)) {
+            this.extinguishFire();
+        }
     }
 }
