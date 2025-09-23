@@ -26,6 +26,8 @@ import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
+import dev.emi.emi.api.render.EmiRenderable;
+import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -47,10 +49,15 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
+    // Simplified Icons
+    public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 152, 74, 16, 16);
+    public static final EmiRenderable FABRICATION_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 168, 74, 16, 16);
+    public static final EmiRenderable ROCKET_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 184, 74, 16, 16);
+
     // Categories
-    public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR);
-    public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR);
-    public static final EmiRecipeCategory ROCKET = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ROCKET), ROCKET_WORKBENCH);
+    public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR, COMPRESSING_ICON);
+    public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR, FABRICATION_ICON);
+    public static final EmiRecipeCategory ROCKET = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ROCKET), ROCKET_WORKBENCH, ROCKET_ICON);
 
     @Override
     public void register(EmiRegistry registry) {
