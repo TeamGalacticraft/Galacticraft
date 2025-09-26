@@ -214,8 +214,14 @@ public class GCCreativeModeTabs {
                 output.accept(WALKWAY);
                 output.accept(WIRE_WALKWAY);
                 output.accept(FLUID_PIPE_WALKWAY);
-                output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
+
+                //LADDER
+                output.accept(TIN_LADDER);
+                output.accept(ALUMINUM_LADDER);
+                output.accept(TITANIUM_LADDER);
+                output.accept(BRONZE_LADDER);
+                output.accept(STEEL_LADDER);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);
