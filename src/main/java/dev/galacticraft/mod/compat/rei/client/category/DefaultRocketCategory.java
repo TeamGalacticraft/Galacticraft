@@ -26,7 +26,6 @@ import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.util.Translations;
@@ -53,6 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.content.GCBlocks.ROCKET_WORKBENCH;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
@@ -71,7 +71,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.ROCKET_WORKBENCH));
+        return EntryStacks.of(new ItemStack(ROCKET_WORKBENCH));
     }
 
     @Override
@@ -83,7 +83,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         final Point startPoint = new Point(bounds.getCenterX() - ROCKET_WORKBENCH_WIDTH / 2, bounds.getCenterY() - ROCKET_WORKBENCH_HEIGHT / 2);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new RocketBaseWidget(startPoint));
+        widgets.add(Widgets.createTexturedWidget(ROCKET_WORKBENCH_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT));
+
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 

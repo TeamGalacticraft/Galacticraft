@@ -38,18 +38,20 @@ import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_X;
 import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_Y;
 
 public class RocketPreviewWidget extends Widget {
-    private final Point startPoint;
+    private final int x;
+    private final int y;
     private final RocketEntity entity;
 
     public RocketPreviewWidget(Point startPoint, RocketEntity entity) {
-        this.startPoint = startPoint;
+        this.x = startPoint.x + ROCKET_PREVIEW_X;
+        this.y = startPoint.y + ROCKET_PREVIEW_Y;
         this.entity = entity;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         this.entity.setYRot(this.entity.getYRot() + delta);
-        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.startPoint.x + ROCKET_PREVIEW_X, this.startPoint.y + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.x, this.y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override
