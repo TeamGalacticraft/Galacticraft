@@ -41,15 +41,19 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe> {
     private final IDrawable icon;
     private final JEIFabricationProgressBar progressBar;
+    private final int progressX;
+    private final int progressY;
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
         this.progressBar = new JEIFabricationProgressBar();
+        this.progressX = PROGRESS_X - RECIPE_VIEWER_X;
+        this.progressY = PROGRESS_Y - RECIPE_VIEWER_Y;
     }
 
     @Override
@@ -64,12 +68,12 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public int getWidth() {
-        return CIRCUIT_FABRICATOR_WIDTH;
+        return RECIPE_VIEWER_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return CIRCUIT_FABRICATOR_HEIGHT;
+        return RECIPE_VIEWER_HEIGHT;
     }
 
     @Override
@@ -79,18 +83,24 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, FabricationRecipe recipe, IFocusGroup focuses) {
-        builder.addSlot(RecipeIngredientRole.INPUT, DIAMOND_X, DIAMOND_Y)
+        builder.addInputSlot(DIAMOND_X - RECIPE_VIEWER_X, DIAMOND_Y - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(0));
-        builder.addSlot(RecipeIngredientRole.INPUT, SILICON_X_1, SILICON_Y_1)
+        builder.addInputSlot(SILICON_X_1 - RECIPE_VIEWER_X, SILICON_Y_1 - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(1));
-        builder.addSlot(RecipeIngredientRole.INPUT, SILICON_X_2, SILICON_Y_2)
+        builder.addInputSlot(SILICON_X_2 - RECIPE_VIEWER_X, SILICON_Y_2 - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(2));
-        builder.addSlot(RecipeIngredientRole.CATALYST, REDSTONE_X, REDSTONE_Y)
+        builder.addSlot(RecipeIngredientRole.CATALYST, REDSTONE_X - RECIPE_VIEWER_X, REDSTONE_Y - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(3));
-        builder.addSlot(RecipeIngredientRole.CATALYST, INGREDIENT_X, INGREDIENT_Y)
+        builder.addSlot(RecipeIngredientRole.CATALYST, INGREDIENT_X - RECIPE_VIEWER_X, INGREDIENT_Y - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(4));
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, WAFER_X, WAFER_Y)
+        builder.addOutputSlot(OUTPUT_X - RECIPE_VIEWER_X, OUTPUT_Y - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
@@ -110,7 +120,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, CIRCUIT_FABRICATOR_U, CIRCUIT_FABRICATOR_V, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT);
-        this.progressBar.draw(graphics, CIRCUIT_FABRICATOR_PROGRESS_X, CIRCUIT_FABRICATOR_PROGRESS_Y);
+        graphics.blit(SCREEN_TEXTURE, this.progressX, this.progressY, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
+        this.progressBar.draw(graphics, this.progressX, this.progressY);
     }
 }

@@ -26,8 +26,6 @@ import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
 import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphics;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
-
 public class JEIFabricationProgressBar implements IDrawable {
     private int processingTime = 1;
     private long startTime;
