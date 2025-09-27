@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -35,10 +34,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.RecipeInput;
 
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
+
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> {
     public CircuitFabricatorScreen(RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
         this.imageHeight = 176;
         this.imageWidth = 176;
 
@@ -51,7 +52,7 @@ public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBloc
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getProgress() > 0) {
             float progress = (float) this.menu.getProgress() / (float) this.menu.getMaxProgress();
-            CircuitFabricatorProgressAnimation.render(graphics, this.leftPos + 48, this.topPos + 23, progress);
+            CircuitFabricatorProgressAnimation.render(graphics, this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, progress);
         }
     }
 }

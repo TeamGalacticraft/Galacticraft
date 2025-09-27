@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
@@ -43,17 +42,12 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
-public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> implements VariableSizedContainer.Listener {
-    private static final int NORMAL_SLOT_U = 7;
-    private static final int NORMAL_SLOT_V = 224;
-    private static final int NORMAL_SLOT_SIZE = 18;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
+public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> implements VariableSizedContainer.Listener {
     private static final int UI_WIDTH = 176;
     private static final int MAIN_UI_WIDTH = 176;
     private static final int UI_HEIGHT = 249;
-
-    private static final int ROCKET_PREVIEW_X = 133;
-    private static final int ROCKET_PREVIEW_Y = 100;
 
     private final RocketEntity entity;
 
@@ -95,18 +89,18 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.inventoryLabelY = this.imageHeight - 96;
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 256, 256)) {
+            try (Graphics.Texture texture = graphics.texture(SCREEN_TEXTURE, 256, 256)) {
                 texture.blit(this.leftPos, this.topPos, 0, 0, UI_WIDTH, UI_HEIGHT);
 
                 for (Slot slot : this.menu.slots) {
                     if (slot.container instanceof VariableSizedContainer) {
-                        texture.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
+                        texture.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, SLOT_U, SLOT_V, SLOT_WIDTH, SLOT_HEIGHT);
                     }
                 }
             }
         }
 
-        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_X, this.topPos + ROCKET_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override

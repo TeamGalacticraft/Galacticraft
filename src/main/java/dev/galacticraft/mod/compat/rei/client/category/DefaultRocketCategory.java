@@ -29,6 +29,7 @@ import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -52,7 +53,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
@@ -80,35 +81,20 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultRocketDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - ROCKET_WORKBENCH_WIDTH / 2, bounds.getCenterY() - ROCKET_WORKBENCH_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 4, bounds.y - RECIPE_VIEWER_Y + 4);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new RocketBaseWidget(startPoint));
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
-        // Cone
-        slots.add(Widgets.createSlot(new Point(startPoint.x + 38, startPoint.y + 6)).markInput());
-
-        // Body
-        for (int y = 0; y < 4; ++y) {
-            for (int x = 0; x < 2; ++x) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 18) + 29, startPoint.y + (y * 18) + 24)).markInput());
-            }
+        for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipeDisplay.bodyHeight, recipeDisplay.hasBoosters)) {
+            slots.add(Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput());
         }
-
-        // Fins
-        for (int x = 0; x < 2; ++x) {
-            for (int y = 0; y < 2; ++y) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 54) + 11, startPoint.y + ((y + 4) * 18) + 6)).markInput());
-            }
-        }
-
-        // Engine
-        slots.add(Widgets.createSlot(new Point(startPoint.x + 38, startPoint.y + (5 * 18) + 6)).markInput());
 
         // Chest
-        slots.add(new SlotSpriteWidget(new Point(startPoint.x + 38, startPoint.y + (6 * 18) + 12), CHEST_SLOT_SPRITE).markInput());
+        final Point chestPoint = new Point(startPoint.x + CHEST_X, startPoint.y + CHEST_Y);
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, chestPoint.x - 2, chestPoint.y - 2, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT));
+        slots.add(new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput());
 
         for (int i = 0; i < input.size(); ++i) {
             if (!input.get(i).isEmpty()) {
@@ -123,7 +109,12 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         }
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + ROCKET_OUTPUT_X, startPoint.y + ROCKET_OUTPUT_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, outputPoint.x - OUTPUT_X_OFFSET, outputPoint.y - OUTPUT_Y_OFFSET, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT));
+        widgets.add(Widgets.createSlotBase(new Rectangle(outputPoint.x - 4, outputPoint.y - 4, OUTPUT_INNER_WIDTH, OUTPUT_INNER_HEIGHT)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
         widgets.add(new RocketPreviewWidget(startPoint, ROCKET_ENTITY));
         return widgets;
     }
@@ -135,11 +126,11 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
 
     @Override
     public int getDisplayHeight() {
-        return ROCKET_WORKBENCH_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 8;
     }
 
     @Override
     public int getDisplayWidth(DefaultRocketDisplay display) {
-        return ROCKET_WORKBENCH_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 8;
     }
 }

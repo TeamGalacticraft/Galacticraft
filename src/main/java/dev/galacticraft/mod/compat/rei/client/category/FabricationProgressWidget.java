@@ -31,8 +31,6 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
-
 public class FabricationProgressWidget extends Widget {
     private final int x;
     private final int y;

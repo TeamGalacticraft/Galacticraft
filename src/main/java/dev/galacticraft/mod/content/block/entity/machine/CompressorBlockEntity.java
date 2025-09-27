@@ -57,6 +57,8 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.galacticraft.mod.Constant.Compressor.*;
+
 public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
@@ -73,14 +75,14 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.builder()
                     .add(ItemResourceSlot.builder(TransferType.TRANSFER)
-                            .pos(83, 47)
+                            .pos(FUEL_X, FUEL_Y)
                             .filter((item, tag) -> {
                                 Integer integer = FuelRegistry.INSTANCE.get(item);
                                 return integer != null && integer > 0;
                             }))
-                    .add3x3Grid(TransferType.INPUT, 17, 17)
+                    .add3x3Grid(TransferType.INPUT, GRID_X, GRID_Y)
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(143, 36))
+                            .pos(OUTPUT_X, OUTPUT_Y))
     );
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {

@@ -24,11 +24,12 @@ package dev.galacticraft.mod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorProgressAnimation {
@@ -50,7 +51,7 @@ public class CircuitFabricatorProgressAnimation {
 
     public static void render(GuiGraphics graphics, int x, int y, float progress) {
         PoseStack matrices = graphics.pose();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
         progress *= SUMS[6];
         if (progress <= SUMS[1]) {
             DrawableUtil.drawProgressTexture(matrices, x, y, 0, 180, Math.min(A, progress), 3);
