@@ -733,10 +733,10 @@ public interface Constant {
         int PREVIEW_DARK_U = 178;
         int PREVIEW_DARK_V = 26;
 
-        int RECIPE_VIEWER_X = 6;
-        int RECIPE_VIEWER_Y = 20;
-        int RECIPE_VIEWER_WIDTH = 162;
-        int RECIPE_VIEWER_HEIGHT = 145;
+        int RECIPE_VIEWER_X = 16;
+        int RECIPE_VIEWER_Y = 26;
+        int RECIPE_VIEWER_WIDTH = 149;
+        int RECIPE_VIEWER_HEIGHT = 134;
     }
 
     interface CelestialScreen {

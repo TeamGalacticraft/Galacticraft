@@ -67,7 +67,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 4, bounds.y - RECIPE_VIEWER_Y + 4);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
@@ -96,12 +96,12 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
     public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override

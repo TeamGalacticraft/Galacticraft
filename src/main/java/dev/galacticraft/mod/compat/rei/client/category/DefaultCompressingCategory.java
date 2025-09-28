@@ -70,7 +70,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 4, bounds.y - RECIPE_VIEWER_Y + 4);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
@@ -147,11 +147,11 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
     public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 }
