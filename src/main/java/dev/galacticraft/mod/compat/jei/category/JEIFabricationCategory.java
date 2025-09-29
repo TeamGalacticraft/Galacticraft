@@ -44,16 +44,15 @@ import net.minecraft.world.item.ItemStack;
 import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe> {
+    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+
     private final IDrawable icon;
     private final JEIFabricationProgressBar progressBar;
-    private final int progressX;
-    private final int progressY;
 
     public JEIFabricationCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
         this.progressBar = new JEIFabricationProgressBar();
-        this.progressX = PROGRESS_X - RECIPE_VIEWER_X;
-        this.progressY = PROGRESS_Y - RECIPE_VIEWER_Y;
     }
 
     @Override
@@ -120,7 +119,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
 
     @Override
     public void draw(FabricationRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(SCREEN_TEXTURE, this.progressX, this.progressY, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
-        this.progressBar.draw(graphics, this.progressX, this.progressY);
+        graphics.blit(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
+        this.progressBar.draw(graphics, PROGRESS_BAR_X, PROGRESS_BAR_Y);
     }
 }

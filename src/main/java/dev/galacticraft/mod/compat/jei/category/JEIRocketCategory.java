@@ -48,24 +48,23 @@ import net.minecraft.world.item.crafting.Ingredient;
 import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
 public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
-    private final IDrawable icon, chestSprite;
-    private final int chestX, chestY, outputX, outputY;
-    private final int previewX, previewY, rocketX, rocketY;
+    private static final int CHEST_BORDER_X = CHEST_X - 2 - RECIPE_VIEWER_X;
+    private static final int CHEST_BORDER_Y = CHEST_Y - 2 - RECIPE_VIEWER_Y;
+    private static final int OUTPUT_BORDER_X = OUTPUT_X - OUTPUT_X_OFFSET - RECIPE_VIEWER_X;
+    private static final int OUTPUT_BORDER_Y = OUTPUT_Y - OUTPUT_Y_OFFSET - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_BACKGROUND_X = PREVIEW_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_BACKGROUND_Y = PREVIEW_Y - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_ROCKET_X = ROCKET_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_ROCKET_Y = ROCKET_Y - RECIPE_VIEWER_Y;
 
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
+
+    private final IDrawable icon, chestSprite;
 
     public JEIRocketCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.ROCKET_WORKBENCH));
         this.chestSprite = helper.createDrawable(SCREEN_TEXTURE, CHEST_U + 2, CHEST_V + 2, 16, 16);
         ROCKET_ENTITY.setYRot(90.0F);
-        this.chestX = CHEST_X - 2 - RECIPE_VIEWER_X;
-        this.chestY = CHEST_Y - 2 - RECIPE_VIEWER_Y;
-        this.outputX = OUTPUT_X - OUTPUT_X_OFFSET - RECIPE_VIEWER_X;
-        this.outputY = OUTPUT_Y - OUTPUT_Y_OFFSET - RECIPE_VIEWER_Y;
-        this.previewX = PREVIEW_X - RECIPE_VIEWER_X;
-        this.previewY = PREVIEW_Y - RECIPE_VIEWER_Y;
-        this.rocketX = ROCKET_X - RECIPE_VIEWER_X;
-        this.rocketY = ROCKET_Y - RECIPE_VIEWER_Y;
     }
 
     @Override
@@ -116,7 +115,7 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
         }
 
         // Storage
-        IRecipeSlotBuilder storageSlot = builder.addInputSlot(this.chestX + 2, this.chestY + 2)
+        IRecipeSlotBuilder storageSlot = builder.addInputSlot(CHEST_X - RECIPE_VIEWER_X, CHEST_Y - RECIPE_VIEWER_Y)
                     .addIngredients(recipe.storage());
         if (recipe.storage() == Ingredient.EMPTY) {
             storageSlot.setBackground(this.chestSprite, 0, 0);
@@ -125,17 +124,17 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
         }
 
         // Output
-        builder.addOutputSlot(this.outputX + OUTPUT_X_OFFSET, this.outputY + OUTPUT_Y_OFFSET)
+        builder.addOutputSlot(OUTPUT_X - RECIPE_VIEWER_X, OUTPUT_Y - RECIPE_VIEWER_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
     @Override
     public void draw(RocketRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(SCREEN_TEXTURE, this.chestX, this.chestY, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT);
-        graphics.blit(SCREEN_TEXTURE, this.outputX, this.outputY, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT);
-        graphics.blit(SCREEN_TEXTURE, this.previewX, this.previewY, PREVIEW_U, PREVIEW_V, PREVIEW_WIDTH, PREVIEW_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, CHEST_BORDER_X, CHEST_BORDER_Y, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, OUTPUT_BORDER_X, OUTPUT_BORDER_Y, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, PREVIEW_BACKGROUND_X, PREVIEW_BACKGROUND_Y, PREVIEW_U, PREVIEW_V, PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
         ROCKET_ENTITY.setYRot(ROCKET_ENTITY.getYRot() + 0.2F);
-        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.rocketX, this.rocketY, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, ROCKET_ENTITY);
+        RocketWorkbenchScreen.renderEntityInInventory(graphics, PREVIEW_ROCKET_X, PREVIEW_ROCKET_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, ROCKET_ENTITY);
     }
 }

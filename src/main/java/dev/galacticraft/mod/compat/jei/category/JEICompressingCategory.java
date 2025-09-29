@@ -42,6 +42,9 @@ import net.minecraft.world.item.ItemStack;
 import static dev.galacticraft.mod.Constant.Compressor.*;
 
 public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe> {
+    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+
     private final IDrawable icon;
     private final ICraftingGridHelper craftingGridHelper;
 
@@ -92,6 +95,6 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     @Override
     public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(SCREEN_TEXTURE, PROGRESS_X - RECIPE_VIEWER_X, PROGRESS_Y - RECIPE_VIEWER_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
     }
 }
