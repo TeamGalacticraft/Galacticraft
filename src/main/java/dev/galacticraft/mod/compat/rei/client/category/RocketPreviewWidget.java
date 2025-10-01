@@ -25,6 +25,7 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import dev.galacticraft.mod.client.gui.screen.ingame.RocketWorkbenchScreen;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import me.shedaniel.math.Point;
+import me.shedaniel.rei.api.client.REIRuntime;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
@@ -34,24 +35,30 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_X;
-import static dev.galacticraft.mod.Constant.RecipeViewer.ROCKET_PREVIEW_Y;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
 public class RocketPreviewWidget extends Widget {
-    private final int x;
-    private final int y;
+    private final int previewX, previewY, rocketX, rocketY;
     private final RocketEntity entity;
 
     public RocketPreviewWidget(Point startPoint, RocketEntity entity) {
-        this.x = startPoint.x + ROCKET_PREVIEW_X;
-        this.y = startPoint.y + ROCKET_PREVIEW_Y;
+        this.previewX = startPoint.x + PREVIEW_X;
+        this.previewY = startPoint.y + PREVIEW_Y;
+        this.rocketX = startPoint.x + ROCKET_X;
+        this.rocketY = startPoint.y + ROCKET_Y;
         this.entity = entity;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        if (REIRuntime.getInstance().isDarkThemeEnabled()) {
+            graphics.blit(SCREEN_TEXTURE, this.previewX, this.previewY, PREVIEW_DARK_U, PREVIEW_DARK_V, PREVIEW_WIDTH, PREVIEW_HEIGHT);
+        } else {
+            graphics.blit(SCREEN_TEXTURE, this.previewX, this.previewY, PREVIEW_U, PREVIEW_V, PREVIEW_WIDTH, PREVIEW_HEIGHT);
+        }
+
         this.entity.setYRot(this.entity.getYRot() + delta);
-        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.x, this.y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        RocketWorkbenchScreen.renderEntityInInventory(graphics, this.rocketX, this.rocketY, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override

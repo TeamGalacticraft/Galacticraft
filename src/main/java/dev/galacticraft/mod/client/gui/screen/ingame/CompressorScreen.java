@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -36,24 +35,12 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 
+import static dev.galacticraft.mod.Constant.Compressor.*;
+
 @Environment(EnvType.CLIENT)
 public class CompressorScreen extends MachineScreen<CompressorBlockEntity, CompressorMenu> {
-    private static final int PROGRESS_U = 204;
-    private static final int PROGRESS_V = 0;
-    private static final int PROGRESS_X = 82;
-    private static final int PROGRESS_Y = 26;
-    private static final int PROGRESS_WIDTH = 52;
-    private static final int PROGRESS_HEIGHT = 24;
-
-    private static final int FIRE_U = 204;
-    private static final int FIRE_V = 25;
-    private static final int FIRE_WIDTH = 14;
-    private static final int FIRE_HEIGHT = 14;
-    private static final int FIRE_X = 83;
-    private static final int FIRE_Y = 25;
-
     public CompressorScreen(CompressorMenu handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.COMPRESSOR_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
     }
 
     @Override
@@ -67,7 +54,7 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
         if (this.menu.getFuelLength() > 0) {
             float fuelUsageScale = 1.0F - (float) (this.menu.getFuelLength() - this.menu.getFuelTime()) / (float) this.menu.getFuelLength();
             int height = Mth.ceil((FIRE_HEIGHT - 1) * fuelUsageScale) + 1;
-            RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
+            RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
             DrawableUtil.drawProgressTexture(matrices, this.leftPos + FIRE_X, (this.topPos + FIRE_Y + FIRE_HEIGHT - height), FIRE_U, FIRE_V + (FIRE_HEIGHT - height), FIRE_WIDTH, height);
         }
     }
@@ -75,7 +62,7 @@ public class CompressorScreen extends MachineScreen<CompressorBlockEntity, Compr
     protected void drawCraftProgressBar(PoseStack matrices) {
         float progressScale = (float) this.menu.getProgress() / (float) this.menu.getMaxProgress();
         int width = Mth.ceil(PROGRESS_WIDTH * progressScale);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.COMPRESSOR_SCREEN);
+        RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
         DrawableUtil.drawProgressTexture(matrices, this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT);
     }
 }

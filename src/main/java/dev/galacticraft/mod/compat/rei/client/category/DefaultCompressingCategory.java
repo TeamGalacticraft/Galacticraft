@@ -48,7 +48,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.Compressor.*;
 import static dev.galacticraft.mod.content.GCBlocks.COMPRESSOR;
 
 @Environment(EnvType.CLIENT)
@@ -71,10 +71,10 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - COMPRESSOR_WIDTH / 2, bounds.getCenterY() - COMPRESSOR_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
@@ -89,7 +89,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1)).markInput());
+                slots.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + (x * 18), startPoint.y + GRID_Y + (i * 18))).markInput());
             }
         }
         for (i = 0; i < input.size(); ++i) {
@@ -99,7 +99,10 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         }
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + COMPRESSED_X, startPoint.y + COMPRESSED_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
+        widgets.add(Widgets.createResultSlotBackground(outputPoint));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
         widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
@@ -145,12 +148,11 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public int getDisplayHeight() {
-        return COMPRESSOR_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
     public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return COMPRESSOR_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 10;
     }
-
 }

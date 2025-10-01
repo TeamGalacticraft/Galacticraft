@@ -33,16 +33,18 @@ import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.Compressor.*;
 
 public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe> {
+    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+
     private final IDrawable icon;
     private final ICraftingGridHelper craftingGridHelper;
 
@@ -63,12 +65,12 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
 
     @Override
     public int getWidth() {
-        return COMPRESSOR_WIDTH;
+        return RECIPE_VIEWER_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return COMPRESSOR_HEIGHT;
+        return RECIPE_VIEWER_HEIGHT;
     }
 
     @Override
@@ -86,12 +88,13 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
         }
         this.craftingGridHelper.createAndSetIngredients(builder, recipe.getIngredients(), width, height);
 
-        builder.addSlot(RecipeIngredientRole.OUTPUT, COMPRESSED_X, COMPRESSED_Y)
+        builder.addOutputSlot(OUTPUT_X - RECIPE_VIEWER_X, OUTPUT_Y - RECIPE_VIEWER_Y)
+                .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
     @Override
     public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
     }
 }

@@ -24,11 +24,12 @@ package dev.galacticraft.mod.client.gui;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
+
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 @Environment(EnvType.CLIENT)
 public class CircuitFabricatorProgressAnimation {
@@ -42,15 +43,15 @@ public class CircuitFabricatorProgressAnimation {
             A,
             A + B,
             A + B + C,
-            A + B + C + 20,
-            A + B + C + 47,
+            A + B + C + 4,
+            A + B + C + 28,
             A + B + D,
             A + B + D + E + 1
     };
 
     public static void render(GuiGraphics graphics, int x, int y, float progress) {
         PoseStack matrices = graphics.pose();
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.CIRCUIT_FABRICATOR_SCREEN);
+        RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
         progress *= SUMS[6];
         if (progress <= SUMS[1]) {
             DrawableUtil.drawProgressTexture(matrices, x, y, 0, 180, Math.min(A, progress), 3);
@@ -71,10 +72,10 @@ public class CircuitFabricatorProgressAnimation {
             } else {
                 DrawableUtil.drawProgressTexture(matrices, x + 31, y + 30, 31, 217, C, 21);
                 if (progress > SUMS[3]) {
-                    DrawableUtil.drawProgressTexture(matrices, x + 65, y + 32, 65, 219, 3, Math.min(E, progress - SUMS[3]));
+                    DrawableUtil.drawProgressTexture(matrices, x + 65, y + 48 - Math.min(E, progress - SUMS[3]), 65, 219, 3, Math.min(E, progress - SUMS[3]));
                 }
                 if (progress > SUMS[4]) {
-                    DrawableUtil.drawProgressTexture(matrices, x + 92, y + 30 - Math.min(19, progress - SUMS[4]), 92, 198, 3, Math.min(B, progress - SUMS[4]));
+                    DrawableUtil.drawProgressTexture(matrices, x + 92, y + 11, 92, 198, 3, Math.min(B, progress - SUMS[4]));
                 }
                 if (progress > SUMS[5]) {
                     DrawableUtil.drawProgressTexture(matrices, x + 110, y + 32, 110, 219, 3, progress - SUMS[5]);
