@@ -347,12 +347,13 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.COBBLED_LUNASLATE_STAIRS,
                 GCBlocks.COBBLED_LUNASLATE_WALL
         );
+        smeltBuildingBlock(output, GCBlocks.LUNASLATE, GCBlocks.COBBLED_LUNASLATE);
+
         decorationBlockVariants(output, GCBlocks.MOON_BASALT,
                 GCBlocks.MOON_BASALT_SLAB,
                 GCBlocks.MOON_BASALT_STAIRS,
                 GCBlocks.MOON_BASALT_WALL
         );
-
         decorationBlockVariants(output, GCBlocks.MOON_BASALT_BRICK,
                 GCBlocks.MOON_BASALT_BRICK_SLAB,
                 GCBlocks.MOON_BASALT_BRICK_STAIRS,
@@ -363,6 +364,8 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL
         );
+        squareStone(output, GCBlocks.MOON_BASALT_BRICK, GCBlocks.MOON_BASALT);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_BASALT_BRICK, GCBlocks.MOON_BASALT_BRICK);
 
         decorationBlockVariants(output, GCBlocks.MARS_STONE,
                 GCBlocks.MARS_STONE_SLAB,
@@ -374,6 +377,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.MARS_COBBLESTONE_STAIRS,
                 GCBlocks.MARS_COBBLESTONE_WALL
         );
+        smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
     }
 
     private static void decorationBlockVariants(RecipeOutput output, ItemLike base, ItemLike slab, ItemLike stairs, ItemLike wall) {
@@ -393,6 +397,8 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("#")
                 .unlockedBy(getHasName(base), has(base))
                 .save(output);
+
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, pillar, base);
     }
 
     public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base) {

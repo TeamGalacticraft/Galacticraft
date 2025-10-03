@@ -44,7 +44,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
@@ -67,14 +67,14 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - CIRCUIT_FABRICATOR_WIDTH / 2, bounds.getCenterY() - CIRCUIT_FABRICATOR_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         double processingTime = recipeDisplay.getProcessingTime() / 20.0D;
-        widgets.add(new FabricationProgressWidget(startPoint.x + CIRCUIT_FABRICATOR_PROGRESS_X, startPoint.y + CIRCUIT_FABRICATOR_PROGRESS_Y, recipeDisplay.getProcessingTime()));
+        widgets.add(new FabricationProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, recipeDisplay.getProcessingTime()));
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
                 Component.translatable(RecipeCategory.REI_TIME, FORMAT.format(processingTime))).noShadow().color(0xFF404040, 0xFFBBBBBB));
 
@@ -90,18 +90,18 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).entries(recipeDisplay.getInputEntries().get(3)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).entries(recipeDisplay.getInputEntries().get(4)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + WAFER_X, startPoint.y + WAFER_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
     @Override
     public int getDisplayHeight() {
-        return CIRCUIT_FABRICATOR_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
     public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return CIRCUIT_FABRICATOR_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override

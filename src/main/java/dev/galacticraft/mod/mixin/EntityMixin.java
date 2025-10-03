@@ -38,7 +38,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -46,6 +45,7 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -116,10 +116,7 @@ public abstract class EntityMixin implements EntityAccessor {
     private int id;
 
     @Shadow
-    public abstract boolean isInvulnerable();
-
-    @Shadow
-    public abstract boolean isInvulnerableTo(DamageSource source);
+    public abstract DamageSources damageSources();
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
@@ -170,7 +167,7 @@ public abstract class EntityMixin implements EntityAccessor {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if (!invulnerable) {
-                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
+                    this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
                 }
             }
         }
@@ -198,8 +195,7 @@ public abstract class EntityMixin implements EntityAccessor {
                 }
 
                 if (damage) {
-                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
-                            .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+                    this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
                 if (playSound && this.timeInAcid % 5 == 0) {
                     this.sulfuricAcidEffects();
