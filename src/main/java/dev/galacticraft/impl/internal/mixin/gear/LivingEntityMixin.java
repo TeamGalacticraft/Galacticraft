@@ -33,7 +33,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.content.item.InfiniteOxygenTankItem;
 import dev.galacticraft.mod.tag.GCFluidTags;
@@ -48,7 +47,6 @@ import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -57,7 +55,6 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
@@ -77,6 +74,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.Collection;
+
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.SUFFOCATION;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
@@ -152,15 +151,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
                     this.lastHurtBySuffocationTimestamp = this.tickCount;
-                    entity.hurt(new DamageSource(entity.level().registryAccess()
-                            .registryOrThrow(Registries.DAMAGE_TYPE)
-                            .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 2.0f);
+                    entity.hurt(this.damageSources().source(SUFFOCATION), 2.0f);
                 } else if (this.tickCount - this.lastHurtBySuffocationTimestamp > 20) {
                     // A small amount of depressurization damage
                     this.lastHurtBySuffocationTimestamp = this.tickCount;
-                    entity.hurt(new DamageSource(entity.level().registryAccess()
-                            .registryOrThrow(Registries.DAMAGE_TYPE)
-                            .getHolderOrThrow(GCDamageTypes.SUFFOCATION)), 1.0f);
+                    entity.hurt(this.damageSources().source(SUFFOCATION), 1.0f);
                 }
             }
         }

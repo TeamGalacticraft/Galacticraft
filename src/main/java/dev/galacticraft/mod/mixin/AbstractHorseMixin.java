@@ -63,6 +63,6 @@ public abstract class AbstractHorseMixin extends LivingEntity {
             }
             return success ? InteractionResult.SUCCESS : InteractionResult.PASS;
         }
-        return original.call(itemStack);
+        return original.call(player, itemStack);
     }
 }

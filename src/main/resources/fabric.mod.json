@@ -34,6 +34,12 @@
       }
     },
     {
+      "name": "craftablescience",
+      "contact": {
+        "homepage": "https://github.com/craftablescience"
+      }
+    },
+    {
       "name": "Blayyke",
       "contact": {
         "homepage": "https://github.com/Blayyke"
@@ -43,12 +49,6 @@
       "name": "JustPyrrha",
       "contact": {
         "homepage": "https://github.com/JustPyrrha"
-      }
-    },
-    {
-      "name": "craftablescience",
-      "contact": {
-        "homepage": "https://github.com/craftablescience"
       }
     },
     {
@@ -100,15 +100,9 @@
       }
     },
     {
-      "name": "hYdos",
+      "name": "supersimple33",
       "contact": {
-        "homepage": "https://github.com/hYdos"
-      }
-    },
-    {
-      "name": "Littledog1229",
-      "contact": {
-        "homepage": "https://github.com/Littledog1229"
+        "homepage": "https://github.com/supersimple33"
       }
     },
     {
@@ -118,21 +112,27 @@
       }
     },
     {
-      "name": "supersimple33",
+      "name": "Littledog1229",
       "contact": {
-        "homepage": "https://github.com/supersimple33"
+        "homepage": "https://github.com/Littledog1229"
       }
     },
     {
-      "name": "AlexIIL",
+      "name": "maxryan008",
       "contact": {
-        "homepage": "https://github.com/AlexIIL"
+        "homepage": "https://github.com/maxryan008"
       }
     },
     {
       "name": "Jamiscus",
       "contact": {
         "homepage": "https://github.com/Jamiscus"
+      }
+    },
+    {
+      "name": "AlexIIL",
+      "contact": {
+        "homepage": "https://github.com/AlexIIL"
       }
     },
     {
@@ -148,27 +148,21 @@
       }
     },
     {
-      "name": "ChipWolf",
-      "contact": {
-        "homepage": "https://github.com/ChipWolf"
-      }
-    },
-    {
       "name": "ROMVoid95",
       "contact": {
         "homepage": "https://github.com/ROMVoid95"
       }
     },
     {
-      "name": "maxryan008",
+      "name": "ChipWolf",
       "contact": {
-        "homepage": "https://github.com/maxryan008"
+        "homepage": "https://github.com/ChipWolf"
       }
     },
     {
-      "name": "LeMayday",
+      "name": "sebasphereda",
       "contact": {
-        "homepage": "https://github.com/LeMayday"
+        "homepage": "https://github.com/sebasphereda"
       }
     },
     {
@@ -178,27 +172,15 @@
       }
     },
     {
+      "name": "LeMayday",
+      "contact": {
+        "homepage": "https://github.com/LeMayday"
+      }
+    },
+    {
       "name": "davo899",
       "contact": {
         "homepage": "https://github.com/davo899"
-      }
-    },
-    {
-      "name": "Codetoil",
-      "contact": {
-        "homepage": "https://github.com/Codetoil"
-      }
-    },
-    {
-      "name": "christopherweinhardt",
-      "contact": {
-        "homepage": "https://github.com/christopherweinhardt"
-      }
-    },
-    {
-      "name": "CoderFroty",
-      "contact": {
-        "homepage": "https://github.com/CoderFroty"
       }
     },
     {
@@ -208,9 +190,27 @@
       }
     },
     {
+      "name": "GalacticraftDev",
+      "contact": {
+        "homepage": "https://github.com/GalacticraftDev"
+      }
+    },
+    {
       "name": "Geolykt",
       "contact": {
         "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
       }
     },
     {
@@ -220,21 +220,45 @@
       }
     },
     {
-      "name": "marquito73",
-      "contact": {
-        "homepage": "https://github.com/marquito73"
-      }
-    },
-    {
       "name": "benreid24",
       "contact": {
         "homepage": "https://github.com/benreid24"
       }
     },
     {
+      "name": "marquito73",
+      "contact": {
+        "homepage": "https://github.com/marquito73"
+      }
+    },
+    {
       "name": "thackerdynasty",
       "contact": {
         "homepage": "https://github.com/thackerdynasty"
+      }
+    },
+    {
+      "name": "CoderFroty",
+      "contact": {
+        "homepage": "https://github.com/CoderFroty"
+      }
+    },
+    {
+      "name": "Codetoil",
+      "contact": {
+        "homepage": "https://github.com/Codetoil"
+      }
+    },
+    {
+      "name": "danilwhale",
+      "contact": {
+        "homepage": "https://github.com/danilwhale"
+      }
+    },
+    {
+      "name": "ScottRox",
+      "contact": {
+        "homepage": "https://github.com/ScottRox"
       }
     }
   ],

@@ -49,7 +49,7 @@ import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class ParrotOxygenGearRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/parrot_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.PARROT_GEAR);
     private final @Nullable ModelPart head;
     private final @Nullable ModelPart feather;
     private final @Nullable ModelPart mask;

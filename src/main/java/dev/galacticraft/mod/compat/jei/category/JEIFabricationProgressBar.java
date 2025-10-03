@@ -20,54 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat.rei.client.category;
+package dev.galacticraft.mod.compat.jei.category;
 
-import me.shedaniel.math.Point;
-import me.shedaniel.rei.api.client.gui.widgets.Widget;
+import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
+import mezz.jei.api.gui.drawable.IDrawable;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.events.GuiEventListener;
-import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.List;
+public class JEIFabricationProgressBar implements IDrawable {
+    private int processingTime = 1;
+    private long startTime;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
-
-public class RocketBaseWidget extends Widget {
-    private final Point startPoint;
-
-    public RocketBaseWidget(Point startPoint) {
-        this.startPoint = startPoint;
+    public void setProcessingTime(int processingTime) {
+        this.processingTime = processingTime * 50;
+        this.startTime = System.currentTimeMillis();
     }
 
     @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.blit(ROCKET_WORKBENCH_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
+    public int getWidth() {
+        return 0;
     }
 
     @Override
-    public List<? extends GuiEventListener> children() {
-        return Collections.emptyList();
+    public int getHeight() {
+        return 0;
     }
 
     @Override
-    public boolean isDragging() {
-        return false;
-    }
-
-    @Override
-    public void setDragging(boolean dragging) {
-
-    }
-
-    @Nullable
-    @Override
-    public GuiEventListener getFocused() {
-        return null;
-    }
-
-    @Override
-    public void setFocused(@Nullable GuiEventListener focused) {
-
+    public void draw(GuiGraphics graphics, int xOffset, int yOffset) {
+        float progress = ((System.currentTimeMillis() - this.startTime) % this.processingTime) / (float) this.processingTime;
+        CircuitFabricatorProgressAnimation.render(graphics, xOffset, yOffset, progress);
     }
 }

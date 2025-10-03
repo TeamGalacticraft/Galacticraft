@@ -34,14 +34,14 @@ import net.minecraft.resources.ResourceLocation;
 
 @Environment(EnvType.CLIENT)
 public class MoonVillagerRenderer extends MobRenderer<MoonVillagerEntity, MoonVillagerModel> {
-    private static final ResourceLocation BASE_TEXTURE = Constant.id("textures/entity/villager/moon_villager.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.MOON_VILLAGER);
 
     public MoonVillagerRenderer(EntityRendererProvider.Context context) {
         super(context, new MoonVillagerModel(context.bakeLayer(GCEntityModelLayer.MOON_VILLAGER)), 0.5f);
     }
 
     @Override
-    public ResourceLocation getTextureLocation(MoonVillagerEntity entityGoalInfo) {
-        return BASE_TEXTURE;
+    public ResourceLocation getTextureLocation(MoonVillagerEntity entity) {
+        return TEXTURE;
     }
 }

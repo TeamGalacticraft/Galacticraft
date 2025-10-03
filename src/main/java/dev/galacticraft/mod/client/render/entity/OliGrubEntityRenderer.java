@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class OliGrubEntityRenderer extends MobRenderer<OliGrubEntity, OliGrubEntityModel<OliGrubEntity>> {
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.OLI_GRUB);
+
     public OliGrubEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new OliGrubEntityModel<>(context.bakeLayer(GCEntityModelLayer.OLI_GRUB)), 0.3f);
     }
 
     @Override
     public ResourceLocation getTextureLocation(OliGrubEntity entity) {
-        return Constant.id(Constant.EntityTexture.OLI_GRUB);
+        return TEXTURE;
     }
 }

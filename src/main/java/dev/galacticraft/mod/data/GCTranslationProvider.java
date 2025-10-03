@@ -48,6 +48,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static dev.galacticraft.mod.Constant.Cape;
 import static dev.galacticraft.mod.util.Translations.*;
 
 public class GCTranslationProvider extends TranslationProvider {
@@ -641,6 +642,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
 
+        this.tag(GCItemTags.ACID_RESISTANT, "Sulfuric Acid Resistant Items");
+
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
@@ -1009,6 +1012,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
 
         this.add(Config.DIFFICULTY, "Difficulty");
+        this.add(Config.METEOR_SPAWN_MULTIPLIER, "Meteor Spawn Multiplier");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
         this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
 
@@ -1169,7 +1173,21 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.CAPES_STATE + "vanilla", "Vanilla");
         this.add(Ui.CAPES_STATE + "gc", "Galacticraft");
         this.add(Ui.CAPES_STATE + "off", "Off");
-        this.add(Ui.CAPES_MODE, "Cape: ");
+
+        this.cape(Cape.EARTH, "Earth");
+        this.cape(Cape.JUPITER, "Jupiter");
+        this.cape(Cape.MARS, "Mars");
+        this.cape(Cape.MERCURY, "Mercury");
+        this.cape(Cape.MOON, "Moon");
+        this.cape(Cape.NEPTUNE, "Neptune");
+        this.cape(Cape.PLAIN, "Plain");
+        this.cape(Cape.SPACE_STATION, "Space Station");
+        this.cape(Cape.SUN, "Sun");
+        this.cape(Cape.URANUS, "Uranus");
+        this.cape(Cape.VENUS, "Venus");
+        this.cape(Cape.DEVELOPER, "Developer");
+        this.cape(Cape.REWOVEN, "Rewoven");
+        this.cape(Cape.DEVELOPER_RED, "Developer Red");
     }
 
     protected void generateWailaTranslations() {
@@ -1265,6 +1283,10 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void advancement(String translationKey, String title, String description) {
         this.add(translationKey + ".title", title);
         this.add(translationKey + ".description", description);
+    }
+
+    protected void cape(String key, String translation) {
+        this.add(Ui.CAPE + key, translation);
     }
 
     @Override

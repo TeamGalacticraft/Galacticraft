@@ -22,10 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
@@ -38,6 +35,8 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 import java.util.function.ToIntFunction;
 
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.VINE_POISON;
+
 public interface CavernousVines {
     VoxelShape SHAPE = Block.box(1.0, 0.0, 1.0, 15.0, 16.0, 15.0);
     BooleanProperty POISONOUS = BooleanProperty.create("poisonous");
@@ -49,7 +48,7 @@ public interface CavernousVines {
             return;
         }
         if (blockState.getValue(POISONOUS)) {
-            livingEntity.hurt(new DamageSource(livingEntity.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.VINE_POISON)), 0.5f);
+            livingEntity.hurt(livingEntity.damageSources().source(VINE_POISON), 0.5f);
         }
         livingEntity.setDeltaMovement(livingEntity.getDeltaMovement().x, 0.1D, livingEntity.getDeltaMovement().z);
         livingEntity.setYRot(livingEntity.getYRot() + 0.1F); // Spin the entity

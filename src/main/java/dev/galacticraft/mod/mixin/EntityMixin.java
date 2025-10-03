@@ -30,6 +30,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
@@ -37,7 +38,6 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -45,13 +45,18 @@ import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
+import net.minecraft.world.damagesource.DamageSources;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.Projectile;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -69,8 +74,8 @@ import java.util.UUID;
 @Mixin(Entity.class)
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;
-    private @Unique int lastStep;
-    private @Unique int lastAcidSoundPlayTick = -20;
+    private @Unique int lastStep = -1;
+    private @Unique int timeInAcid = 0;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
@@ -83,9 +88,6 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     private Level level;
-
-    @Shadow
-    public int tickCount;
 
 //    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
 //    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
@@ -114,10 +116,7 @@ public abstract class EntityMixin implements EntityAccessor {
     private int id;
 
     @Shadow
-    public abstract boolean isInvulnerable();
-
-    @Shadow
-    public abstract boolean isInvulnerableTo(DamageSource source);
+    public abstract DamageSources damageSources();
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
@@ -156,44 +155,61 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     public abstract EntityType<?> getType();
 
+    @Shadow
+    @Final
+    protected abstract void discard();
+
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
-        boolean isCreative = (player != null) && (player.isCreative() || player.isSpectator());
+        boolean invulnerable = player != null && player.getAbilities().invulnerable;
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if (!isCreative) {
-                    this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.OIL_BOOM)), 20.0f);
+                if (!invulnerable) {
+                    this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
                 }
             }
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enters an acid fluid, this entity needs to take damage
-            if (!isCreative) {
-                this.hurt(new DamageSource(this.level.registryAccess().registryOrThrow(Registries.DAMAGE_TYPE)
-                        .getHolderOrThrow(GCDamageTypes.SULFURIC_ACID)), 2.0f);
+        }
 
-                if (this.shouldPlaySulfuricAcidSound()) {
-                    this.playSulfuricAcidSound();
-                    this.addSulfuricAcidParticles();
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
+            // The entity enters an acid fluid, this entity needs to take damage
+            if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
+                boolean damage = this.timeInAcid >= 30;
+                boolean playSound = true;
+                if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
+                    this.discard();
+                    return;
+                }
+
+                if ((Object) this instanceof ItemEntity itemEntity) {
+                    ItemStack itemStack = itemEntity.getItem();
+                    if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
+                        damage = false;
+                        playSound = false;
+                    } else if (damage) {
+                        damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
+                    }
+                } else {
+                    damage = true;
+                }
+
+                if (damage) {
+                    this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
+                }
+                if (playSound && this.timeInAcid % 5 == 0) {
+                    this.sulfuricAcidEffects();
                 }
             }
+            ++this.timeInAcid;
+        } else {
+            this.timeInAcid = 0;
         }
     }
 
     @Unique
-    private boolean shouldPlaySulfuricAcidSound() {
-        return this.tickCount >= this.lastAcidSoundPlayTick + 5;
-    }
-
-    @Unique
-    private void playSulfuricAcidSound() {
+    private void sulfuricAcidEffects() {
         this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-        this.lastAcidSoundPlayTick = this.tickCount;
-    }
-
-    @Unique
-    private void addSulfuricAcidParticles() {
         for (int i = 0; i < 4; i++) {
             level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
         }
@@ -202,48 +218,47 @@ public abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!getType().is(GCEntityTypeTags.HAS_FOOTPRINTS))
+        if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
             return;
-        double motionSqrd = Mth.lengthSquared(motion.x, motion.z);
+        } else if ((Object) this instanceof Player player && player.getAbilities().flying) {
+            return;
+        } else if (this.getVehicle() != null) {
+            return;
+        }
+        // The entity has footprints, is not flying and is not riding anything
 
-        // If the player is on the moon, not airbourne and not riding anything
-        boolean isFlying = false;
-        if ((Object) this instanceof Player player)
-            isFlying = player.getAbilities().flying;
-        if (motionSqrd > 0.001 && this.level.dimensionTypeRegistration().is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS) && getVehicle() == null && !isFlying) {
+        double motionSqrd = motion.horizontalDistanceSqr();
+        Holder<DimensionType> dimensionType = this.level.dimensionTypeRegistration();
+
+        // Check that the entity is moving fast enough and is in a footprint dimension
+        if (motionSqrd > 0.001D && dimensionType.is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)) {
             // If it has been long enough since the last step
-            if (galacticraft$getDistanceSinceLastStep() > 0.35) {
-                Vector3d pos = new Vector3d(getX(), Math.floor(getY()), getZ());
+            if (this.galacticraft$getDistanceSinceLastStep() > 0.35D) {
+                float rotation = this.getYRot() * Mth.DEG_TO_RAD;
 
-                // Adjust footprint to left or right depending on step count
-                switch (galacticraft$getLastStep()) {
-                    case 0:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() + 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() + 90)) * 0.25));
-                        break;
-                    case 1:
-                        pos.add(new Vector3d(Math.sin(Math.toRadians(-getYRot() - 90)) * 0.25, 0, Math.cos(Math.toRadians(-getYRot() - 90)) * 0.25));
-                        break;
-                }
+                // Set the footprint position to the block below
+                Vector3d pos = new Vector3d(
+                        this.getX() + this.galacticraft$getLastStep() * Mth.cos(rotation) * 0.25D,
+                        Math.floor(this.getY()),
+                        this.getZ() + this.galacticraft$getLastStep() * Mth.sin(rotation) * 0.25D
+                );
+                pos = Footprint.getFootprintPosition(this.level, rotation - Mth.PI, pos, this.position());
 
-                pos = Footprint.getFootprintPosition(level, getYRot() - 180, pos, position());
-
-                int iPosX = Mth.floor(pos.x);
-                int iPosY = Mth.floor(pos.y - 0.05);
-                int iPosZ = Mth.floor(pos.z);
-                BlockPos blockPos = new BlockPos(iPosX, iPosY, iPosZ);
+                BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
                 BlockState state = this.level.getBlockState(blockPos);
 
                 // If the block below is the moon block
                 if (state.is(GCBlockTags.FOOTPRINTS)) {
                     long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(level.dimensionTypeRegistration().unwrapKey().get().location(), pos, getYRot(), getUUID()));
+                    short age = (short) (this.level.getGameTime() % 20);
+                    this.level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(dimensionType.unwrapKey().get().location(), pos, rotation, age, this.getUUID()));
                 }
 
-                // Increment and cap step counter at 1
-                galacticraft$setLastStep((galacticraft$getLastStep() + 1) % 2);
-                galacticraft$setDistanceSinceLastStep(0);
+                // Change the sign of the lastStep variable
+                this.galacticraft$swapLastStep();
+                this.galacticraft$setDistanceSinceLastStep(0);
             } else {
-                galacticraft$setDistanceSinceLastStep(galacticraft$getDistanceSinceLastStep() + motionSqrd);
+                this.galacticraft$setDistanceSinceLastStep(this.galacticraft$getDistanceSinceLastStep() + motionSqrd);
             }
         }
     }
@@ -264,8 +279,8 @@ public abstract class EntityMixin implements EntityAccessor {
     }
 
     @Override
-    public void galacticraft$setLastStep(int lastStep) {
-        this.lastStep = lastStep;
+    public void galacticraft$swapLastStep() {
+        this.lastStep = -this.lastStep;
     }
 
     @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))

@@ -22,33 +22,30 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import me.shedaniel.math.Point;
+import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
-import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+public class FabricationProgressWidget extends Widget {
+    private final int x;
+    private final int y;
+    private final int processingTime;
 
-public class BaseWidget extends Widget {
-    private final Point startPoint;
-
-    public BaseWidget(Point startPoint) {
-        this.startPoint = startPoint;
+    public FabricationProgressWidget(int x, int y, int processingTime) {
+        this.x = x;
+        this.y = y;
+        this.processingTime = processingTime * 50;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x, this.startPoint.y, COMPRESSOR_U, COMPRESSOR_V, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
-
-        int height = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 14.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 2, this.startPoint.y + 21 + (14 - height), 82, 77 + (14 - height), 14, height);
-        int width = Mth.ceil((double) (System.currentTimeMillis() / 250L) % 24.0D);
-        graphics.blit(RECIPE_VIEWER_DISPLAY_TEXTURE, this.startPoint.x + 24, this.startPoint.y + 18, 82, 91, width, 17);
+        float progress = (System.currentTimeMillis() % this.processingTime) / (float) this.processingTime;
+        CircuitFabricatorProgressAnimation.render(graphics, this.x, this.y, progress);
     }
 
     @Override
