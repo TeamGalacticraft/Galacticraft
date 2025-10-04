@@ -5,7 +5,8 @@
     "particle": "galacticraft:block/web_string_top_bottom"
   },
   "elements": [
-    {   "from": [ 3, 14, 8 ],
+    {
+      "from": [ 3, 14, 8 ],
       "to": [ 13, 16, 8 ],
       "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
       "shade": false,
@@ -14,7 +15,8 @@
         "south": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" }
       }
     },
-    {   "from": [ 8, 14, 3 ],
+    {
+      "from": [ 8, 14, 3 ],
       "to": [ 8, 16, 13 ],
       "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
       "shade": false,
@@ -23,7 +25,8 @@
         "east": { "uv": [ 3, 0, 13, 2 ], "texture": "cross" }
       }
     },
-    {   "from": [ 5, 3, 8 ],
+    {
+      "from": [ 5, 3, 8 ],
       "to": [ 11, 14, 8 ],
       "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
       "shade": false,
@@ -32,7 +35,8 @@
         "south": { "uv": [ 5, 2, 11, 13 ], "texture": "cross" }
       }
     },
-    {   "from": [ 8, 3, 5 ],
+    {
+      "from": [ 8, 3, 5 ],
       "to": [ 8, 14, 11 ],
       "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
       "shade": false,

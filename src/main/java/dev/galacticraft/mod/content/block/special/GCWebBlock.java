@@ -53,22 +53,24 @@ public class GCWebBlock extends WebBlock {
     }
 
     @Override
-    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) { return getShape(state); }
+    protected VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return getShape(state);
+    }
 
     // Must override this method or an exception will be generated!
-    protected VoxelShape getShape(BlockState state) { return null; }
+    protected VoxelShape getShape(BlockState state) {
+        return null;
+    }
 
     protected AABB getShapeInWorldCoordinates(BlockState state, BlockPos pos) {
-        AABB shape = getShape(state).bounds();
-        return new AABB(pos.getX() + shape.minX, pos.getY() + shape.minY, pos.getZ() + shape.minZ,
-                pos.getX() + shape.maxX, pos.getY() + shape.maxY, pos.getZ() + shape.maxZ);
+        return getShape(state).bounds().move(pos);
     }
 
     @Override
     protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entityGoalInfo) {
         AABB entityBB = entityGoalInfo.getBoundingBox();
         AABB shapeBB = getShapeInWorldCoordinates(state, pos);
-        if(shapeBB.intersects(entityBB)) {
+        if (shapeBB.intersects(entityBB)) {
             super.entityInside(state, level, pos, entityGoalInfo);
         }
     }

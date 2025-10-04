@@ -479,29 +479,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(blockState);
     }
 
-//    private static void createWebString(BlockModelGenerators generator, Block webString) {
-//        generator.createSimpleFlatItemModel(webString, "_middle");
-//        ResourceLocation topModel = generator.createSuffixedVariant(webString, "_top", ModelTemplates.CROSS, TextureMapping::cross);
-//        ResourceLocation middleModel = generator.createSuffixedVariant(webString, "_middle", ModelTemplates.CROSS, TextureMapping::cross);
-//        ResourceLocation bottomModel = generator.createSuffixedVariant(webString, "_bottom", ModelTemplates.CROSS, TextureMapping::cross);
-//        ResourceLocation topBottomModel = generator.createSuffixedVariant(webString, "_top_bottom", ModelTemplates.CROSS, TextureMapping::cross);
-//        PropertyDispatch variants = PropertyDispatch.property(WebStringBlock.WEB_STRING_PART)
-//                .select(WebStringBlock.WebStringPart.TOP, Variant.variant().with(VariantProperties.MODEL, topModel))
-//                .select(WebStringBlock.WebStringPart.MIDDLE, Variant.variant().with(VariantProperties.MODEL, middleModel))
-//                .select(WebStringBlock.WebStringPart.BOTTOM, Variant.variant().with(VariantProperties.MODEL, bottomModel))
-//                .select(WebStringBlock.WebStringPart.TOP_BOTTOM, Variant.variant().with(VariantProperties.MODEL, topBottomModel));
-//        MultiVariantGenerator variantGenerator = MultiVariantGenerator.multiVariant(webString).with(variants);
-//        generator.blockStateOutput.accept(variantGenerator);
-//    }
-//
-//    private static void createWebTorch(BlockModelGenerators generator, Block webTorch) {
-//        generator.createSimpleFlatItemModel(webTorch);
-//        ResourceLocation normalModel = generator.createSuffixedVariant(webTorch, "", ModelTemplates.CROSS, TextureMapping::cross);
-//        ResourceLocation topModel = generator.createSuffixedVariant(webTorch, "_top", ModelTemplates.CROSS, TextureMapping::cross);
-//        MultiVariantGenerator variants = MultiVariantGenerator.multiVariant(webTorch).with(BlockModelGenerators.createBooleanModelDispatch(WebTorchBlock.TOP, topModel, normalModel));
-//        generator.blockStateOutput.accept(variants);
-//    }
-
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {
         ResourceLocation walkwayPlatform = Constant.id("block/walkway");
         MultiPartGenerator blockState = MultiPartGenerator.multiPart(walkway)
