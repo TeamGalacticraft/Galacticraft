@@ -1,3 +1,6 @@
 {
-  "parent": "galacticraft:block/moon_dungeon_brick"
+  "parent": "minecraft:item/generated",
+  "textures": {
+    "layer0": "galacticraft:item/moon_dungeon_brick"
+  }
 }

@@ -522,7 +522,7 @@ public class GCAdvancementProvider extends FabricAdvancementProvider {
 
         AdvancementHolder moonDungeonAdvancement = Advancement.Builder.advancement().parent(moonAdvancement)
                 .display(
-                        GCBlocks.MOON_DUNGEON_BRICK,
+                        GCBlocks.MOON_DUNGEON_BRICKS,
                         title(MOON_DUNGEON),
                         description(MOON_DUNGEON),
                         null,

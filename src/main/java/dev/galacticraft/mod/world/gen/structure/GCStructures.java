@@ -95,7 +95,7 @@ public class GCStructures {
                 true,
                 Heightmap.Types.WORLD_SURFACE_WG
         ));
-        context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCBiomeTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
+        context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCBiomeTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICKS.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
     }
 

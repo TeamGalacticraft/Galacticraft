@@ -282,7 +282,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_WALL
         );
-        decorationBlockVariants(output, GCBlocks.MOON_DUNGEON_BRICK,
+        decorationBlockVariants(output, GCBlocks.MOON_DUNGEON_BRICKS,
                 GCBlocks.MOON_DUNGEON_BRICK_SLAB,
                 GCBlocks.MOON_DUNGEON_BRICK_STAIRS,
                 GCBlocks.MOON_DUNGEON_BRICK_WALL
@@ -302,6 +302,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.POLISHED_MOON_ROCK_STAIRS,
                 GCBlocks.POLISHED_MOON_ROCK_WALL
         );
+
+        smeltBuildingBlock(output, GCItems.MOON_DUNGEON_BRICK, GCBlocks.MOON_TURF);
+        squareStone(output, GCBlocks.MOON_DUNGEON_BRICKS, GCItems.MOON_DUNGEON_BRICK, 1);
+        chiseledStone(output, GCBlocks.CHISELED_MOON_DUNGEON_BRICKS, GCBlocks.MOON_DUNGEON_BRICK_SLAB, GCBlocks.MOON_DUNGEON_BRICKS);
+
         smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
         smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
         squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
@@ -374,8 +379,12 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base) {
+        squareStone(output, brick, base, 4);
+    }
+
+    public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base, int count) {
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, brick, base);
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, count)
                 .define('#', base)
                 .pattern("##")
                 .pattern("##")
@@ -390,8 +399,12 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void chiseledStone(RecipeOutput output, ItemLike chiseled, ItemLike brickSlab, ItemLike base, ItemLike brick) {
-        chiseled(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brickSlab);
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, base);
+        chiseledStone(output, chiseled, brickSlab, brick);
+    }
+
+    public static void chiseledStone(RecipeOutput output, ItemLike chiseled, ItemLike brickSlab, ItemLike brick) {
+        chiseled(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brickSlab);
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brick);
     }
 

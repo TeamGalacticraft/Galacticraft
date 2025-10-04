@@ -143,10 +143,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_DIRT_PATH, "Moon Dirt Path");
         this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
 
-        this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick");
-        this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick Slab");
-        this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick Stairs");
-        this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick Wall");
+        this.block(GCBlocks.MOON_DUNGEON_BRICKS, "Moon Dungeon Bricks");
+        this.block(GCBlocks.MOON_DUNGEON_BRICK_SLAB, "Moon Dungeon Brick Slab");
+        this.block(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, "Moon Dungeon Brick Stairs");
+        this.block(GCBlocks.MOON_DUNGEON_BRICK_WALL, "Moon Dungeon Brick Wall");
+        this.block(GCBlocks.CHISELED_MOON_DUNGEON_BRICKS, "Chiseled Moon Dungeon Bricks");
 
         this.block(GCBlocks.MOON_ROCK, "Moon Rock");
         this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
@@ -389,6 +390,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateItemTranslations() {
         // MATERIALS
+        this.item(GCItems.MOON_DUNGEON_BRICK, "Moon Dungeon Brick");
+
         this.item(GCItems.SILICON, "Silicon");
 
         this.item(GCItems.RAW_METEORIC_IRON, "Raw Meteoric Iron");

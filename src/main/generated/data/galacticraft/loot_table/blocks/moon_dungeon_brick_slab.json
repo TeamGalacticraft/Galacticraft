@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:moon_dungeon_brick"
+          "name": "galacticraft:moon_dungeon_brick_slab"
         }
       ],
       "rolls": 1.0
