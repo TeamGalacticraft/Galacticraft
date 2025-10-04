@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
 import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
+import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
@@ -304,7 +305,7 @@ public class GCModelProvider extends FabricModelProvider {
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.FOOD_CANNER,
+        createFoodCanner(generator, GCBlocks.FOOD_CANNER,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/food_canner_active")
@@ -312,6 +313,10 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/food_canner")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner_empty")
                         .build()
         );
 
@@ -430,6 +435,19 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
                 )));
+    }
+
+    private static void createFoodCanner(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider canTex, TextureProvider emptyTex) {
+        ResourceLocation can = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), canTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation empty = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_empty"), emptyTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(MachineBlock.ACTIVE, FoodCannerBlock.CAN)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, empty))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, empty))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, can))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
