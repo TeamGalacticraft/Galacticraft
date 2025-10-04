@@ -62,7 +62,11 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
                 output.accept(MOON_SURFACE_ROCK);
+
                 output.accept(MOON_DUNGEON_BRICK);
+                output.accept(MOON_DUNGEON_BRICK_SLAB);
+                output.accept(MOON_DUNGEON_BRICK_STAIRS);
+                output.accept(MOON_DUNGEON_BRICK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
