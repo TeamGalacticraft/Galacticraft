@@ -94,6 +94,10 @@ public interface Constant {
         String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
         String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
         String CHISELED_MOON_DUNGEON_BRICKS = "chiseled_moon_dungeon_bricks";
+        String CRACKED_MOON_DUNGEON_BRICKS = "cracked_moon_dungeon_bricks";
+        String CRACKED_MOON_DUNGEON_BRICK_SLAB = "cracked_moon_dungeon_brick_slab";
+        String CRACKED_MOON_DUNGEON_BRICK_STAIRS = "cracked_moon_dungeon_brick_stairs";
+        String CRACKED_MOON_DUNGEON_BRICK_WALL = "cracked_moon_dungeon_brick_wall";
 
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";

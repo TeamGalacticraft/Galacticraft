@@ -105,6 +105,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.CHISELED_MOON_ROCK_BRICK);
         generator.createTrivialCube(GCBlocks.CHISELED_MOON_DUNGEON_BRICKS);
+//        generator.createTrivialCube(GCBlocks.CRACKED_MOON_DUNGEON_BRICKS);
         generator.createAxisAlignedPillarBlock(GCBlocks.MOON_ROCK_PILLAR, TexturedModel.COLUMN);
         generator.createAxisAlignedPillarBlock(GCBlocks.OLIVINE_BLOCK, TexturedModel.COLUMN);
 

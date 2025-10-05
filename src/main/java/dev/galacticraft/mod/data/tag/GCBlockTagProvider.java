@@ -444,6 +444,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var stairs = new Block[] {
                 GCBlocks.MOON_DUNGEON_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_STAIRS,
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -460,6 +461,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var slabs = new Block[] {
                 GCBlocks.MOON_DUNGEON_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_SLAB,
                 GCBlocks.MOON_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_BRICK_SLAB,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
@@ -476,6 +478,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         var walls = new Block[] {
                 GCBlocks.MOON_DUNGEON_BRICK_WALL,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_WALL,
                 GCBlocks.MOON_ROCK_WALL,
                 GCBlocks.MOON_ROCK_BRICK_WALL,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
@@ -644,6 +647,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MOON_ROCK,
                         GCBlocks.MOON_DUNGEON_BRICKS,
                         GCBlocks.CHISELED_MOON_DUNGEON_BRICKS,
+                        GCBlocks.CRACKED_MOON_DUNGEON_BRICKS,
                         GCBlocks.MOON_ROCK_BRICK,
                         GCBlocks.CRACKED_MOON_ROCK_BRICK,
                         GCBlocks.POLISHED_MOON_ROCK,

@@ -68,6 +68,10 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_DUNGEON_BRICK_STAIRS);
                 output.accept(MOON_DUNGEON_BRICK_WALL);
                 output.accept(CHISELED_MOON_DUNGEON_BRICKS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICKS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_SLAB);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);

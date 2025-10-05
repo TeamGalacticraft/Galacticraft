@@ -147,7 +147,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_DUNGEON_BRICK_SLAB, "Moon Dungeon Brick Slab");
         this.block(GCBlocks.MOON_DUNGEON_BRICK_STAIRS, "Moon Dungeon Brick Stairs");
         this.block(GCBlocks.MOON_DUNGEON_BRICK_WALL, "Moon Dungeon Brick Wall");
+
         this.block(GCBlocks.CHISELED_MOON_DUNGEON_BRICKS, "Chiseled Moon Dungeon Bricks");
+
+        this.block(GCBlocks.CRACKED_MOON_DUNGEON_BRICKS, "Cracked Moon Dungeon Bricks");
+        this.block(GCBlocks.CRACKED_MOON_DUNGEON_BRICK_SLAB, "Cracked Moon Dungeon Brick Slab");
+        this.block(GCBlocks.CRACKED_MOON_DUNGEON_BRICK_STAIRS, "Cracked Moon Dungeon Brick Stairs");
+        this.block(GCBlocks.CRACKED_MOON_DUNGEON_BRICK_WALL, "Cracked Moon Dungeon Brick Wall");
 
         this.block(GCBlocks.MOON_ROCK, "Moon Rock");
         this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
