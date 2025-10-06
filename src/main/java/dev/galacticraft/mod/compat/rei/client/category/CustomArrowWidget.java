@@ -69,7 +69,8 @@ public class CustomArrowWidget extends Arrow {
         if (this.animationDuration > 0) {
             int quotient = this.bounds.getWidth() + 2;
             int width = Mth.ceil((System.currentTimeMillis() / (this.animationDuration / quotient) % (double) quotient));
-            graphics.blit(this.texture, this.getX() - 1, this.getY(), this.progressU - 1, this.progressV, width, this.bounds.getHeight());
+            width = Mth.clamp(width - 1, 0, this.bounds.getWidth());
+            graphics.blit(this.texture, this.getX(), this.getY(), this.progressU, this.progressV, width, this.bounds.getHeight());
         }
     }
 

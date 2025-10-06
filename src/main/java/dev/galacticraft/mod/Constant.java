@@ -666,7 +666,7 @@ public interface Constant {
 
         int PROGRESS_X = 82;
         int PROGRESS_Y = 26;
-        int PROGRESS_U = 203;
+        int PROGRESS_U = 204;
         int PROGRESS_V = 0;
         int PROGRESS_WIDTH = 52;
         int PROGRESS_HEIGHT = 24;
@@ -699,9 +699,9 @@ public interface Constant {
         int OUTPUT_X_2 = 148;
         int OUTPUT_Y_2 = 48;
 
-        int PROGRESS_X = 88;
+        int PROGRESS_X = 87;
         int PROGRESS_Y = 27;
-        int PROGRESS_U = 203;
+        int PROGRESS_U = 204;
         int PROGRESS_V = 0;
         int PROGRESS_WIDTH = 52;
         int PROGRESS_HEIGHT = 25;
