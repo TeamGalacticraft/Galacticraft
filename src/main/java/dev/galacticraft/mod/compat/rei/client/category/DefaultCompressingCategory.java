@@ -80,7 +80,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         List<Slot> slots = Lists.newArrayList();
 
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
-        widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + COMPRESSOR_PROGRESS_X, startPoint.y + COMPRESSOR_PROGRESS_Y, COMPRESSOR_PROGRESS_WIDTH, COMPRESSOR_PROGRESS_HEIGHT), COMPRESSOR_PROGRESS_U, COMPRESSOR_PROGRESS_V, processingTime));
+        widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
                 Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
 
@@ -142,8 +142,8 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
+    public int getDisplayWidth(DefaultCompressingDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
@@ -152,7 +152,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     @Override
-    public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
+    public int getMaximumDisplaysPerPage() {
+        return 99;
     }
 }

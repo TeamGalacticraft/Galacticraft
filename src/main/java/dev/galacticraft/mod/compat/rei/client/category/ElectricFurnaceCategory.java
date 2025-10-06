@@ -43,7 +43,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
 import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_FURNACE;
 
 @Environment(EnvType.CLIENT)
@@ -67,24 +67,27 @@ public class ElectricFurnaceCategory implements DisplayCategory<ElectricFurnaceD
 
     @Override
     public @NotNull List<Widget> setupDisplay(ElectricFurnaceDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - ELECTRIC_FURNACE_WIDTH / 2, bounds.y + 14);
+        final Point startPoint = new Point(bounds.x + (bounds.width - RECIPE_VIEWER_WIDTH) / 2 - RECIPE_VIEWER_X, bounds.y - RECIPE_VIEWER_Y + 5);
 
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ELECTRIC_FURNACE_U, ELECTRIC_FURNACE_V, ELECTRIC_FURNACE_WIDTH, ELECTRIC_FURNACE_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
-        widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_FURNACE_PROGRESS_X, startPoint.y + ELECTRIC_FURNACE_PROGRESS_Y, ELECTRIC_FURNACE_PROGRESS_WIDTH, ELECTRIC_FURNACE_PROGRESS_HEIGHT), ELECTRIC_FURNACE_PROGRESS_U, ELECTRIC_FURNACE_PROGRESS_V, processingTime));
-        widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.REI_TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_FURNACE_INPUT_X, startPoint.y + ELECTRIC_FURNACE_INPUT_Y)).entries(recipeDisplay.getInputEntries().get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_FURNACE_OUTPUT_X, startPoint.y + ELECTRIC_FURNACE_OUTPUT_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
+                Component.translatable(Translations.RecipeCategory.REI_TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).entries(recipeDisplay.getInputEntries().get(0)));
+
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
+        widgets.add(Widgets.createResultSlotBackground(outputPoint));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
     @Override
     public int getDisplayHeight() {
-        return 49;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override

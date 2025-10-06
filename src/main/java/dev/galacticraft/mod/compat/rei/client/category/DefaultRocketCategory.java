@@ -120,8 +120,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     }
 
     @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
+    public int getDisplayWidth(DefaultRocketDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
@@ -130,7 +130,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     }
 
     @Override
-    public int getDisplayWidth(DefaultRocketDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
+    public int getMaximumDisplaysPerPage() {
+        return 99;
     }
 }

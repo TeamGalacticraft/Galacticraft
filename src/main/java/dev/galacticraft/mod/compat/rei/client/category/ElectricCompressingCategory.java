@@ -46,7 +46,7 @@ import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.ElectricCompressor.*;
 import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_COMPRESSOR;
 
 @Environment(EnvType.CLIENT)
@@ -69,18 +69,18 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
     }
 
     public @NotNull List<Widget> setupDisplay(ElectricCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - ELECTRIC_COMPRESSOR_WIDTH / 2, bounds.getCenterY() - ELECTRIC_COMPRESSOR_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, ELECTRIC_COMPRESSOR_U, ELECTRIC_COMPRESSOR_V, ELECTRIC_COMPRESSOR_WIDTH, ELECTRIC_COMPRESSOR_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
-        widgets.add(new CustomArrowWidget(new Rectangle(startPoint.x + ELECTRIC_COMPRESSOR_PROGRESS_X, startPoint.y + ELECTRIC_COMPRESSOR_PROGRESS_Y, ELECTRIC_COMPRESSOR_PROGRESS_WIDTH, ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT),
-                ELECTRIC_COMPRESSOR_PROGRESS_U, ELECTRIC_COMPRESSOR_PROGRESS_V, processingTime));
-        widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 12),
+        widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT),
+                PROGRESS_U, PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 13),
                 Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
@@ -88,7 +88,7 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1)).markInput());
+                slots.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + (x * 18), startPoint.y + GRID_Y + (i * 18))).markInput());
             }
         }
         for (i = 0; i < input.size(); ++i) {
@@ -98,7 +98,11 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
         }
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + ELECTRIC_COMPRESSED_X, startPoint.y + ELECTRIC_COMPRESSED_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X_1, startPoint.y + OUTPUT_Y_1);
+        widgets.add(Widgets.createResultSlotBackground(outputPoint));
+        widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + OUTPUT_X_2, startPoint.x + OUTPUT_Y_2)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
@@ -135,18 +139,18 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
     }
 
     @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
+    public int getDisplayWidth(ElectricCompressingDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
     public int getDisplayHeight() {
-        return ELECTRIC_COMPRESSOR_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
-    public int getDisplayWidth(ElectricCompressingDisplay display) {
-        return ELECTRIC_COMPRESSOR_WIDTH + 8;
+    public int getMaximumDisplaysPerPage() {
+        return 99;
     }
 
 }

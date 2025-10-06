@@ -57,6 +57,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.galacticraft.mod.Constant.ElectricCompressor.*;
+
 public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
@@ -72,12 +74,12 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY))
                     )
-                    .add3x3Grid(TransferType.INPUT, 30, 17)
+                    .add3x3Grid(TransferType.INPUT, GRID_X, GRID_Y)
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(148, 22)
+                            .pos(OUTPUT_X_1, OUTPUT_Y_1)
                     )
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(148, 48)
+                            .pos(OUTPUT_X_2, OUTPUT_Y_2)
                     ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

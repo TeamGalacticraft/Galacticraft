@@ -606,9 +606,6 @@ public interface Constant {
         ResourceLocation COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
         ResourceLocation SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
         ResourceLocation REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
-        ResourceLocation ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
-        ResourceLocation ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
-        ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
@@ -669,7 +666,7 @@ public interface Constant {
 
         int PROGRESS_X = 82;
         int PROGRESS_Y = 26;
-        int PROGRESS_U = 204;
+        int PROGRESS_U = 203;
         int PROGRESS_V = 0;
         int PROGRESS_WIDTH = 52;
         int PROGRESS_HEIGHT = 24;
@@ -690,6 +687,79 @@ public interface Constant {
         int RECIPE_VIEWER_Y = 16;
         int RECIPE_VIEWER_WIDTH = 148;
         int RECIPE_VIEWER_HEIGHT = 54;
+    }
+
+    interface ElectricCompressor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_compressor_screen.png");
+
+        int GRID_X = 30;
+        int GRID_Y = 17;
+        int OUTPUT_X_1 = 148;
+        int OUTPUT_Y_1 = 22;
+        int OUTPUT_X_2 = 148;
+        int OUTPUT_Y_2 = 48;
+
+        int PROGRESS_X = 88;
+        int PROGRESS_Y = 27;
+        int PROGRESS_U = 203;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 52;
+        int PROGRESS_HEIGHT = 25;
+        int PROGRESS_BACKGROUND_U = PROGRESS_U;
+        int PROGRESS_BACKGROUND_V = PROGRESS_HEIGHT + 1;
+
+        int RECIPE_VIEWER_X = 29;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 140;
+        int RECIPE_VIEWER_HEIGHT = 54;
+    }
+
+    interface ElectricFurnace {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_furnace_screen.png");
+
+        int INPUT_X = 52;
+        int INPUT_Y = 35;
+        int OUTPUT_X = 113;
+        int OUTPUT_Y = 35;
+
+        int PROGRESS_X = 74;
+        int PROGRESS_Y = 34;
+        int PROGRESS_U = 177;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 30;
+        int PROGRESS_HEIGHT = 16;
+        int PROGRESS_BACKGROUND_U = 208;
+        int PROGRESS_BACKGROUND_V = 0;
+
+        int RECIPE_VIEWER_X = 51;
+        int RECIPE_VIEWER_Y = 21;
+        int RECIPE_VIEWER_WIDTH = 83;
+        int RECIPE_VIEWER_HEIGHT = 39;
+    }
+
+    interface ElectricArcFurnace {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_arc_furnace_screen.png");
+
+        int INPUT_X = 44;
+        int INPUT_Y = 35;
+        int OUTPUT_X_1 = 108;
+        int OUTPUT_Y_1 = 35;
+        int OUTPUT_X_2 = 134;
+        int OUTPUT_Y_2 = 35;
+
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 34;
+        int PROGRESS_U = 177;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 26;
+        int PROGRESS_HEIGHT = 16;
+        int PROGRESS_BACKGROUND_U = 204;
+        int PROGRESS_BACKGROUND_V = 0;
+
+        int RECIPE_VIEWER_X = 43;
+        int RECIPE_VIEWER_Y = 21;
+        int RECIPE_VIEWER_WIDTH = 112;
+        int RECIPE_VIEWER_HEIGHT = 39;
     }
 
     interface RocketWorkbench {
@@ -883,100 +953,6 @@ public interface Constant {
         ResourceLocation EARTH = id("textures/environment/earth.png");
         ResourceLocation CLOUDS = id("textures/environment/clouds.png");
         ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
-    }
-
-    interface RecipeViewer {
-        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
-        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
-
-        int CIRCUIT_FABRICATOR_U = 0;
-        int CIRCUIT_FABRICATOR_V = 0;
-        int CIRCUIT_FABRICATOR_WIDTH = 139;
-        int CIRCUIT_FABRICATOR_HEIGHT = 73;
-
-        int DIAMOND_X = 1;
-        int DIAMOND_Y = 1;
-        int SILICON_X_1 = 32;
-        int SILICON_Y_1 = 31;
-        int SILICON_X_2 = 32;
-        int SILICON_Y_2 = 49;
-        int REDSTONE_X = 77;
-        int REDSTONE_Y = 56;
-        int INGREDIENT_X = 104;
-        int INGREDIENT_Y = 1;
-        int WAFER_X = 122;
-        int WAFER_Y = 56;
-        int CIRCUIT_FABRICATOR_PROGRESS_X = 18;
-        int CIRCUIT_FABRICATOR_PROGRESS_Y = 7;
-
-        int COMPRESSOR_U = 0;
-        int COMPRESSOR_V = 74;
-        int COMPRESSOR_WIDTH = 148;
-        int COMPRESSOR_HEIGHT = 54;
-
-        int FIRE_X = 67;
-        int FIRE_Y = 9;
-        int FUEL_X = 67;
-        int FUEL_Y = 31;
-        int COMPRESSED_X = 127;
-        int COMPRESSED_Y = 20;
-
-        int COMPRESSOR_PROGRESS_X = 66;
-        int COMPRESSOR_PROGRESS_Y = 10;
-        int COMPRESSOR_PROGRESS_U = 203;
-        int COMPRESSOR_PROGRESS_V = 74;
-        int COMPRESSOR_PROGRESS_WIDTH = 52;
-        int COMPRESSOR_PROGRESS_HEIGHT = 24;
-
-        int ELECTRIC_COMPRESSOR_U = 0;
-        int ELECTRIC_COMPRESSOR_V = 129;
-        int ELECTRIC_COMPRESSOR_WIDTH = 140;
-        int ELECTRIC_COMPRESSOR_HEIGHT = 54;
-
-        int ELECTRIC_COMPRESSED_X = 119;
-        int ELECTRIC_COMPRESSED_Y = 6;
-
-        int ELECTRIC_COMPRESSOR_PROGRESS_X = 58;
-        int ELECTRIC_COMPRESSOR_PROGRESS_Y = 11;
-        int ELECTRIC_COMPRESSOR_PROGRESS_U = 203;
-        int ELECTRIC_COMPRESSOR_PROGRESS_V = 129;
-        int ELECTRIC_COMPRESSOR_PROGRESS_WIDTH = 52;
-        int ELECTRIC_COMPRESSOR_PROGRESS_HEIGHT = 25;
-
-        int ELECTRIC_FURNACE_U = 0;
-        int ELECTRIC_FURNACE_V = 184;
-        int ELECTRIC_ARC_FURNACE_U = 116;
-        int ELECTRIC_FURNACE_WIDTH = 83;
-        int ELECTRIC_FURNACE_HEIGHT = 26;
-        int ELECTRIC_ARC_FURNACE_WIDTH = 112;
-
-        int ELECTRIC_FURNACE_INPUT_X = 1;
-        int ELECTRIC_FURNACE_INPUT_Y = 5;
-        int ELECTRIC_FURNACE_OUTPUT_X = 62;
-        int ELECTRIC_FURNACE_OUTPUT_Y = 5;
-        int ELECTRIC_ARC_FURNACE_OUTPUT_X = 65;
-
-        int ELECTRIC_FURNACE_PROGRESS_X = 23;
-        int ELECTRIC_FURNACE_PROGRESS_Y = 4;
-        int ELECTRIC_ARC_FURNACE_PROGRESS_X = 25;
-        int ELECTRIC_FURNACE_PROGRESS_U = 84;
-        int ELECTRIC_FURNACE_PROGRESS_V = 188;
-        int ELECTRIC_ARC_FURNACE_PROGRESS_U = 229;
-        int ELECTRIC_FURNACE_PROGRESS_WIDTH = 30;
-        int ELECTRIC_FURNACE_PROGRESS_HEIGHT = 16;
-        int ELECTRIC_ARC_FURNACE_PROGRESS_WIDTH = 26;
-
-        int ROCKET_WORKBENCH_U = 6;
-        int ROCKET_WORKBENCH_V = 20;
-        int ROCKET_WORKBENCH_WIDTH = 162;
-        int ROCKET_WORKBENCH_HEIGHT = 145;
-        int CHEST_SLOT_U = 177;
-        int CHEST_SLOT_V = 0;
-
-        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
-        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
-        int ROCKET_OUTPUT_X = 119;
-        int ROCKET_OUTPUT_Y = 115;
     }
 
     interface SlotSprite {
