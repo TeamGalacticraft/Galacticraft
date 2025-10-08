@@ -30,6 +30,7 @@ import dev.galacticraft.mod.structure.GCStructureTemplatePools;
 import dev.galacticraft.mod.structure.dungeon.DungeonConfiguration;
 import dev.galacticraft.mod.structure.dungeon.DungeonStructure;
 import dev.galacticraft.mod.tag.GCBiomeTags;
+import dev.galacticraft.mod.world.gen.dungeon.DungeonConfig;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.HolderOwner;
 import net.minecraft.core.HolderSet;
@@ -62,6 +63,7 @@ public class GCStructures {
         public static final ResourceKey<Structure> PILLAGER_BASE = key("moon_pillager_base");
         public static final ResourceKey<Structure> VILLAGE = key("moon_village");
         public static final ResourceKey<Structure> BOSS = key("moon_boss");
+        public static final ResourceKey<Structure> DUNGEON = key("dungeon");
     }
 
     private static ResourceKey<Structure> key(String id) {
@@ -97,6 +99,7 @@ public class GCStructures {
         ));
         context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCBiomeTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));
+        context.register(Moon.DUNGEON, new dev.galacticraft.mod.world.gen.dungeon.DungeonStructure(new DungeonConfig(50, 100, 10, 100, 3, 3, true)));
     }
 
     @Contract("_ -> new")

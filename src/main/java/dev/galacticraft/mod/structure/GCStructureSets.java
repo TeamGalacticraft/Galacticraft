@@ -43,6 +43,7 @@ public class GCStructureSets {
         public static final ResourceKey<StructureSet> PILLAGER_BASE = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_pillager_bases"));
         public static final ResourceKey<StructureSet> RUINS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_ruins"));
         public static final ResourceKey<StructureSet> BOSS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_boss"));
+        public static final ResourceKey<StructureSet> DUNGEON = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("dungeon"));
     }
 
     public static void bootstrapRegistries(BootstrapContext<StructureSet> context) {
@@ -67,5 +68,9 @@ public class GCStructureSets {
                 8,
                 RandomSpreadType.LINEAR
         )));
+        context.register(Moon.DUNGEON, new StructureSet(
+                structureLookup.getOrThrow(GCStructures.Moon.DUNGEON),
+                new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 52532672)
+        ));
     }
 }

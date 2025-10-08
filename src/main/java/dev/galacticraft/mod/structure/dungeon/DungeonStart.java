@@ -72,8 +72,6 @@ public class DungeonStart extends EntranceCrater {
             attempts++;
         }
 
-        Constant.LOGGER.debug("Dungeon generation took " + attempts + " attempt(s)");
-
         if (!validAttempt) {
             int xPos = this.boundingBox.minX() + (this.boundingBox.maxX() - this.boundingBox.minX()) / 2;
             int zPos = this.boundingBox.minZ() + (this.boundingBox.maxZ() - this.boundingBox.minZ()) / 2;

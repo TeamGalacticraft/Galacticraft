@@ -1,0 +1,12 @@
+{
+  "type": "galacticraft:dungeon",
+  "config": {
+    "carve_entrance_shaft": true,
+    "corridor_step": 3,
+    "corridors_max_turns": 3,
+    "max_points": 100,
+    "min_points": 50,
+    "sphere_radius_max": 100,
+    "sphere_radius_min": 10
+  }
+}
