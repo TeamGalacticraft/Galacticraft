@@ -182,12 +182,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
             this.dropSelf(pipe);
         }
 
-        this.dropSelf(GCBlocks.SQUARE_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.LINEAR_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.DASHED_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.DIAGONAL_LIGHT_PANEL);
-
         this.dropSelf(GCBlocks.VACUUM_GLASS);
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);
         this.dropSelf(GCBlocks.STRONG_VACUUM_GLASS);
