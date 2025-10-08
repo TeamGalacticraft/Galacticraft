@@ -41,60 +41,55 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 public class EvolvedSpiderMaskRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/spider_gear.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.SPIDER_GEAR);
+    private final @Nullable ModelPart head;
     private final @Nullable ModelPart mask;
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart pipe;
 
     public EvolvedSpiderMaskRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, head, body;
         if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            head = root.getChild(PartNames.HEAD);
-            body = root.getChild("body1");
+            this.head = model.root().getChild(PartNames.HEAD);
+            this.body = model.root().getChild("body1");
         } else {
+            this.head = null;
             this.mask = null;
+            this.body = null;
             this.pipe = null;
             return;
         }
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        if (head != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.offset(head.x, head.y, head.z));
+
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        if (this.head != null) {
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_MASK, CubeListBuilder.create().texOffs(0, 0).addBox(-5.0F, -9.0F, -5.0F, 10, 10, 10, CubeDeformation.NONE), PartPose.ZERO);
         }
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+        if (this.body != null) {
+            partDefinition.addOrReplaceChild(Constant.ModelPartName.OXYGEN_PIPE, CubeListBuilder.create().texOffs(40, 3).addBox(-2.0F, -14.0F, 4.0F, 4, 11, 6, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        root = modelPartData.bake(64, 32);
-
-        if (head != null) {
-            this.mask = root.getChild(Constant.ModelPartName.OXYGEN_MASK);
-        } else {
-            this.mask = null;
-        }
-
-        if (body != null) {
-            this.pipe = root.getChild(Constant.ModelPartName.OXYGEN_PIPE);
-            this.pipe.xRot = (float) (Math.PI / 2.0);
-        } else {
-            this.pipe = null;
-        }
+        ModelPart modelRoot = partDefinition.bake(64, 32);
+        this.mask = this.head != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_MASK) : null;
+        this.pipe = this.body != null ? modelRoot.getChild(Constant.ModelPartName.OXYGEN_PIPE) : null;
     }
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
 
-        if (this.mask != null) {
-            this.mask.yRot = headYaw * (float) (Math.PI / 180.0);
-            this.mask.xRot = (headPitch + 90.0F) * (float) (Math.PI / 180.0);
+        if (this.mask != null && entity.galacticraft$hasMask()) {
+            this.mask.copyFrom(this.head);
+            this.mask.xRot += Mth.HALF_PI;
             this.mask.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.pipe != null) {
+        if (this.pipe != null && entity.galacticraft$hasGear()) {
+            this.pipe.copyFrom(this.body);
+            this.pipe.xRot += Mth.HALF_PI;
             this.pipe.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
     }

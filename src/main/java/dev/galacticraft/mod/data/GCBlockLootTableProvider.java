@@ -66,9 +66,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.GLOWSTONE_TORCH);
         this.dropSelf(GCBlocks.UNLIT_TORCH);
+        this.dropSelf(GCBlocks.UNLIT_SOUL_TORCH);
 
         this.dropSelf(GCBlocks.GLOWSTONE_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_LANTERN);
+        this.dropSelf(GCBlocks.UNLIT_SOUL_LANTERN);
 
         this.dropSelf(GCBlocks.PLATED_ALUMINUM_BLOCK);
         this.dropSelf(GCBlocks.PLATED_BRONZE_BLOCK);
@@ -175,7 +177,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
-        this.dropSelf(GCBlocks.GLASS_FLUID_PIPE);
+
+        for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
+            this.dropSelf(pipe);
+        }
 
         this.dropSelf(GCBlocks.SQUARE_LIGHT_PANEL);
         this.dropSelf(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
@@ -229,6 +234,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.OLIVINE_BASALT, this.createOreDrop(GCBlocks.OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 1.0F, 2.0F));
         this.add(GCBlocks.RICH_OLIVINE_BASALT, this.createOreDrop(GCBlocks.RICH_OLIVINE_BASALT, GCItems.OLIVINE_SHARD, 3.0F, 4.0F));
 
+        this.add(GCBlocks.FALLEN_METEOR, this.createOreDrop(GCBlocks.FALLEN_METEOR, GCItems.RAW_METEORIC_IRON, 1.0f, 2.0f));
+
         this.dropSelf(GCBlocks.SILICON_BLOCK);
         this.dropSelf(GCBlocks.METEORIC_IRON_BLOCK);
         this.dropSelf(GCBlocks.DESH_BLOCK);
@@ -244,9 +251,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.RAW_TIN_BLOCK);
         this.dropSelf(GCBlocks.RAW_TITANIUM_BLOCK);
         this.dropSelf(GCBlocks.RAW_LEAD_BLOCK);
-
-        this.add(GCBlocks.FALLEN_METEOR, block -> createSilkTouchDispatchTable(block, this.applyExplosionDecay(block, LootItem.lootTableItem(GCItems.RAW_METEORIC_IRON)
-                .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0f, 2.0f))))));
 
         this.dropSelf(GCBlocks.MOON_CHEESE_BLOCK);
         this.dropSelf(GCBlocks.MOON_CHEESE_LOG);

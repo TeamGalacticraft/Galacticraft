@@ -1,9 +1,9 @@
 {
   "type": "minecraft:crafting_shaped",
-  "category": "building",
+  "category": "misc",
   "key": {
     "T": {
-      "item": "galacticraft:tin_ingot"
+      "tag": "c:ingots/tin"
     }
   },
   "pattern": [

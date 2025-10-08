@@ -3,16 +3,19 @@
   "category": "misc",
   "ingredients": [
     {
-      "item": "minecraft:wheat"
+      "tag": "c:crops/wheat"
     },
     {
-      "item": "minecraft:wheat"
+      "tag": "c:crops/wheat"
     },
     {
-      "item": "minecraft:egg"
+      "tag": "c:eggs"
     },
     {
-      "item": "minecraft:milk_bucket"
+      "tag": "c:buckets/milk"
+    },
+    {
+      "tag": "galacticraft:burger_bun_seeds"
     }
   ],
   "result": {

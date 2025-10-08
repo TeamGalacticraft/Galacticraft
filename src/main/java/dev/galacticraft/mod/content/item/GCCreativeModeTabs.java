@@ -23,19 +23,13 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
-import dev.galacticraft.mod.content.item.OxygenTankItem;
-import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
-import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -208,10 +202,12 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
+                output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
+                output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
                 // MISC DECOR
                 output.accept(WALKWAY);
@@ -224,9 +220,12 @@ public class GCCreativeModeTabs {
                 output.accept(ALUMINUM_WIRE);
                 output.accept(SEALABLE_ALUMINUM_WIRE);
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
-                output.accept(GLASS_FLUID_PIPE);
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(GLASS_FLUID_PIPES.get(color));
+                }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
+                output.accept(ROCKET_WORKBENCH);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);
@@ -285,9 +284,12 @@ public class GCCreativeModeTabs {
             .builder()
             .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> {                
+            .displayItems((parameters, output) -> {
                 // BATTERIES
                 output.accept(BATTERY);
+                ItemStack chargedBattery = new ItemStack(BATTERY);
+                BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
+                output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
 
                 output.accept(SMALL_OXYGEN_TANK);
@@ -304,8 +306,9 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
 
+                output.accept(PARACHUTE);
                 for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
-                    output.accept(PARACHUTE.get(color));
+                    output.accept(DYED_PARACHUTES.get(color));
                 }
 
                 output.accept(EMERGENCY_KIT);
@@ -383,6 +386,8 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_CHEESE_CURD);
                 output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(MOON_CHEESE_SLICE);
+                output.accept(CRACKER);
+                output.accept(CHEESE_CRACKER);
                 output.accept(GROUND_BEEF);
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);
@@ -409,10 +414,6 @@ public class GCCreativeModeTabs {
                 var tier1 = new ItemStack(ROCKET);
                 tier1.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
                 output.accept(tier1);
-
-                var tier1Storage = new ItemStack(ROCKET);
-                tier1Storage.set(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1_STORAGE_UPGRADE);
-                output.accept(tier1Storage);
 
                 var creativeRocket = new ItemStack(ROCKET);
                 creativeRocket.set(GCDataComponents.CREATIVE, true);
@@ -500,15 +501,13 @@ public class GCCreativeModeTabs {
                 output.accept(EMPTY_CAN);
                 // For every edible food create a creative item of that canned food type
                 for (Item item : BuiltInRegistries.ITEM) {
-                    if (item.components().has(DataComponents.FOOD)) {
-                        if (!(item instanceof CannedFoodItem)) {
-                            // Create new canned food item with empty components
-                            ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
-                            // Add the default itemstack of the edible item into the canned foods components
-                            CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
-                            // Add the item to the creative tab
-                            output.accept(cannedFoodItem);
-                        }
+                    if (CannedFoodItem.canAddToCan(item)) {
+                        // Create new canned food item with empty components
+                        ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
+                        // Add the default itemstack of the edible item into the canned foods components
+                        CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                        // Add the item to the creative tab
+                        output.accept(cannedFoodItem);
                     }
                 }
             }).build();

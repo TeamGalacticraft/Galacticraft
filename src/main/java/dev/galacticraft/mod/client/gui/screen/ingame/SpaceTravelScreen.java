@@ -30,7 +30,6 @@ import net.minecraft.client.GameNarrator;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.client.resources.language.I18n;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
@@ -45,10 +44,10 @@ public class SpaceTravelScreen extends Screen {
     };
     private final int text;
     private String dots = ".";
-    private final String planet;
+    private final Component planet;
     private final ResourceKey<Level> target;
 
-    public SpaceTravelScreen(String planet, ResourceKey<Level> target) {
+    public SpaceTravelScreen(Component planet, ResourceKey<Level> target) {
         super(GameNarrator.NO_TITLE);
         this.planet = planet;
         this.target = target;

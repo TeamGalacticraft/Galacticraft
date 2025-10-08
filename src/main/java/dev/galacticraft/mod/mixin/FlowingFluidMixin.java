@@ -22,36 +22,38 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(FlowingFluid.class)
 public abstract class FlowingFluidMixin {
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
-    private boolean onScheduledTickFill_gc(Level level, BlockPos blockPos, BlockState blockState, int flags) {
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
+    private boolean onScheduledTickFill_gc(Level level, BlockPos blockPos, BlockState blockState, int flags, Operation<Boolean> original) {
         var blockState1 = level.getBlockState(blockPos);
         if (blockState1.getBlock() instanceof FluidLoggable fillable) {
             fillable.placeLiquid(level, blockPos, blockState1, blockState.getFluidState());
             return true;
         }
-        return level.setBlock(blockPos, blockState, flags);
+        return original.call(level, blockPos, blockState, flags);
     }
 
-    @Redirect(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 0))
-    private boolean onScheduledTickDrain_gc(Level level, BlockPos blockPos, BlockState blockState, int flags) {
+    @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 0))
+    private boolean onScheduledTickDrain_gc(Level level, BlockPos blockPos, BlockState blockState, int flags, Operation<Boolean> original) {
         var blockState1 = level.getBlockState(blockPos);
         if (blockState1.getBlock() instanceof FluidLoggable drainable) {
             drainable.pickupBlock(null, level, blockPos, blockState1);
-            level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), 3);
+            level.setBlock(blockPos, blockState1.setValue(FluidLoggable.FLUID, Constant.Misc.EMPTY).setValue(FlowingFluid.LEVEL, 1).setValue(FlowingFluid.FALLING, false), Block.UPDATE_ALL);
             return true;
         }
-        return level.setBlock(blockPos, blockState, flags);
+        return original.call(level, blockPos, blockState, flags);
     }
 }

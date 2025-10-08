@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
@@ -32,7 +31,6 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import org.jetbrains.annotations.Nullable;
 
@@ -68,12 +66,11 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {
         if (recipe == null) return Collections.emptyList();
-        List<EntryIngredient> list = new ArrayList<>(5);
-        list.add(EntryIngredients.of(Items.DIAMOND));
-        list.add(EntryIngredients.of(GCItems.SILICON));
-        list.add(EntryIngredients.of(GCItems.SILICON));
-        list.add(EntryIngredients.of(Items.REDSTONE));
-        list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(0)));
+        int n = recipe.value().getIngredients().size();
+        List<EntryIngredient> list = new ArrayList<>(n);
+        for (int i = 0; i < n; i++) {
+            list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(i)));
+        }
         return list;
     }
 

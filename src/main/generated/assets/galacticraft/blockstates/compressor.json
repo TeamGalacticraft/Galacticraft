@@ -1,9 +1,15 @@
 {
   "variants": {
-    "active=false": {
+    "active=false,lit=false": {
       "model": "galacticraft:machine/compressor"
     },
-    "active=true": {
+    "active=false,lit=true": {
+      "model": "galacticraft:machine/compressor_lit"
+    },
+    "active=true,lit=false": {
+      "model": "galacticraft:machine/compressor"
+    },
+    "active=true,lit=true": {
       "model": "galacticraft:machine/compressor_active"
     }
   }

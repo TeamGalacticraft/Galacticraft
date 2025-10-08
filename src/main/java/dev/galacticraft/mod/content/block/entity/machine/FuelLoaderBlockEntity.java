@@ -26,6 +26,7 @@ import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineFluidStorage;
@@ -61,6 +62,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -75,6 +77,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public static final int FUEL_TANK = 0;
     public static final int NUM_BUCKETS = 50;
     public static final long MAX_FUEL = FluidUtil.bucketsToDroplets(NUM_BUCKETS);
+    public static final int MAX_PROGRESS = 81 * 2;
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -91,7 +94,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
-                    150 * 2, // fixme
+                    Galacticraft.CONFIG.fuelLoaderEnergyConsumptionRate() * 2,
                     0
             ),
             MachineFluidStorage.spec(
@@ -107,6 +110,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
     private BlockPos connectionPos = BlockPos.ZERO;
     private int amount = 0;
+    private int progress = 0;
     public Dockable linkedRocket = null;
     private List<Direction> check = new ArrayList<Direction>();
 
@@ -120,6 +124,18 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         return this.connectionPos;
     }
 
+    private void incrementProgress(boolean active) {
+        if (active) {
+            this.progress = Math.min(this.progress + 1, MAX_PROGRESS);
+        } else {
+            this.progress = Math.max(this.progress - 1, 0);
+        }
+    }
+
+    public int getProgress() {
+        return this.progress;
+    }
+
     protected int calculateAmount() {
         return Mth.clamp((int) (this.fluidStorage().slot(FUEL_TANK).getAmount() * 10 / MAX_FUEL), 0, 9);
     }
@@ -131,15 +147,24 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         int newAmount = this.calculateAmount();
         if (this.amount != newAmount && this.level != null && !this.level.isClientSide) {
             this.amount = newAmount;
-            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(FuelLoaderBlock.AMOUNT, this.amount), 2);
+            this.level.setBlock(this.worldPosition, this.level.getBlockState(this.worldPosition).setValue(FuelLoaderBlock.AMOUNT, this.amount), Block.UPDATE_CLIENTS);
         }
     }
 
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        if (this.fluidStorage().isEmpty()) return GCMachineStatuses.NOT_ENOUGH_FUEL;
+        if (this.fluidStorage().isEmpty()) {
+            this.incrementProgress(false);
+            return GCMachineStatuses.NOT_ENOUGH_FUEL;
+        }
+
+        if (this.noEnergy()) {
+            this.incrementProgress(false);
+            return MachineStatuses.NOT_ENOUGH_ENERGY;
+        }
 
         if (this.linkedRocket == null) {
+            this.incrementProgress(false);
             return GCMachineStatuses.NO_ROCKET;
         }
 
@@ -148,10 +173,16 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         try (Transaction transaction = Transaction.openOuter()) {
             long insert = this.linkedRocket.getFuelTank().insert(FluidVariant.of(slot.getResource(), slot.getComponents()), Math.min(TRANSFER_RATE, slot.getAmount()), transaction);
             if (insert > 0) {
+                this.incrementProgress(true);
+                this.energyStorage().extract(Galacticraft.CONFIG.fuelLoaderEnergyConsumptionRate());
+                if (this.progress < MAX_PROGRESS) {
+                    return GCMachineStatuses.PREPARING;
+                }
                 slot.extract(insert);
                 transaction.commit();
                 return GCMachineStatuses.LOADING;
             }
+            this.incrementProgress(false);
             return GCMachineStatuses.FUEL_TANK_FULL;
         }
     }
@@ -184,12 +215,18 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
+    public void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        this.incrementProgress(false);
+    }
+
+    @Override
     protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
         super.saveAdditional(tag, lookup);
 
         if (this.connectionPos != BlockPos.ZERO) {
             tag.putLong("connection_pos", this.connectionPos.asLong());
         }
+        tag.putInt("progress", this.progress);
     }
 
     @Override
@@ -201,6 +238,11 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         } else {
             this.connectionPos = BlockPos.ZERO;
         }
+        this.progress = tag.getInt("progress");
+    }
+
+    private boolean noEnergy() {
+        return !this.energyStorage().canExtract(Galacticraft.CONFIG.fuelLoaderEnergyConsumptionRate());
     }
 
     public void updateConnections(Direction direction) {

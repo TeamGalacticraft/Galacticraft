@@ -48,12 +48,10 @@ import dev.galacticraft.impl.universe.position.config.OrbitalCelestialPositionCo
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.render.dimension.AsteroidSkyRenderer;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
@@ -127,7 +125,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                 0, // minY
                 256, // height
                 256, // logicalHeight
-                GCTags.INFINIBURN_SATELLITE, // infiniburn
+                GCBlockTags.INFINIBURN_SATELLITE, // infiniburn
                 Constant.id("satellite"), // effectsLocation
                 0, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
@@ -153,14 +151,12 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
 
         CelestialBody<?, ?> parent = celestialBodyRegistry.get(parentResourceKey);
 
-        // DimensionRenderingRegistry.registerSkyRenderer(key, AsteroidSkyRenderer.INSTANCE);
-
         assert parent != null;
         SatelliteConfig config = new SatelliteConfig(id, name, Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
         ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
-        ((DynamicDimensionRegistry) server).createDynamicDimension(id, generator, type);
+        DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type);
 
         for (ServerPlayer player : server.getPlayerList().getPlayers()) {
             ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));

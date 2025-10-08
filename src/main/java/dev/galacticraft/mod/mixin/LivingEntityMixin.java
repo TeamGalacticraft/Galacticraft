@@ -24,21 +24,27 @@ package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -48,6 +54,8 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.List;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
@@ -153,7 +161,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
     private boolean gc$canStartFallFlying(boolean original) {
-        return this.level().galacticraft$hasDimensionTypeTag(GCTags.VACUUM) ? false : original;
+        return this.level().galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM) ? false : original;
     }
 
     @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 6), index = 0)
@@ -164,5 +172,20 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             return original.multiply(1.0F - drag, 1.0F - drag * 2.0F, 1.0F - drag);
         }
         return original;
+    }
+
+    @WrapOperation(method = "triggerItemUseEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;spawnItemParticles(Lnet/minecraft/world/item/ItemStack;I)V"))
+    private void gc$cannedFoodParticles(LivingEntity entity, ItemStack itemStack, int n, Operation<Void> original) {
+        if (CannedFoodItem.isCannedFoodItem(itemStack) && entity instanceof Player player) {
+            List<ItemStack> items = CannedFoodItem.getItemsToBeConsumed(itemStack, player);
+            if (!items.isEmpty()) {
+                double scale = n * Mth.invSqrt(items.stream().mapToInt(stack -> stack.getCount()).sum());
+                for (ItemStack stack : items) {
+                    original.call(entity, stack, (int) Math.ceil(scale * stack.getCount()));
+                }
+                return;
+            }
+        }
+        original.call(entity, itemStack, n);
     }
 }

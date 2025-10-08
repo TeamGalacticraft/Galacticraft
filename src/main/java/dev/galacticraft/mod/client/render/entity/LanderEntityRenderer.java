@@ -27,25 +27,22 @@ import com.mojang.math.Axis;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.LanderModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.entity.EntityRenderer;
 import net.minecraft.client.renderer.entity.EntityRendererProvider;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.LANDER);
     protected final LanderModel model;
 
     public LanderEntityRenderer(EntityRendererProvider.Context context) {
         super(context);
         this.shadowRadius = 2F;
         this.model = new LanderModel(context.bakeLayer(GCEntityModelLayer.LANDER));
-    }
-
-    @Override
-    public ResourceLocation getTextureLocation(LanderEntity entity) {
-        return Constant.id(Constant.EntityTexture.LANDER);
     }
 
     @Override
@@ -63,12 +60,17 @@ public class LanderEntityRenderer extends EntityRenderer<LanderEntity> {
         }
 
         if (hurtTime > 0.0F) {
-            poseStack.mulPose(Axis.XP.rotationDegrees((float) Math.sin(hurtTime) * 0.2F * hurtTime * damage / 25.0F));
+            poseStack.mulPose(Axis.XP.rotationDegrees(Mth.sin(hurtTime) * 0.2F * hurtTime * damage / 25.0F));
         }
 
         poseStack.mulPose(Axis.YN.rotationDegrees(180.0F - entityYaw));
         poseStack.mulPose(Axis.ZN.rotationDegrees(pitch));
-        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY);
+        this.model.renderToBuffer(poseStack, multiBufferSource.getBuffer(this.model.renderType(this.getTextureLocation(lander))), light, OverlayTexture.NO_OVERLAY);
         poseStack.popPose();
+    }
+
+    @Override
+    public ResourceLocation getTextureLocation(LanderEntity entity) {
+        return TEXTURE;
     }
 }

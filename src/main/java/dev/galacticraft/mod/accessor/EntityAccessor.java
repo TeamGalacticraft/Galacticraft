@@ -35,7 +35,7 @@ public interface EntityAccessor {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void galacticraft$setLastStep(int lastStep) {
+    default void galacticraft$swapLastStep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }

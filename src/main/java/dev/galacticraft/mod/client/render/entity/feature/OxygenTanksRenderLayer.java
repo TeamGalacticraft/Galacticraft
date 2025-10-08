@@ -26,7 +26,6 @@ import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.mixin.client.AnimalModelAgeableListModel;
-import dev.galacticraft.mod.tag.GCTags;
 import net.minecraft.client.model.EndermanModel;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.IllagerModel;
@@ -47,100 +46,86 @@ import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.layers.RenderLayer;
 import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.Container;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.monster.AbstractIllager;
-import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.entity.monster.Zombie;
-import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.Nullable;
 
 public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_TANKS);
+    private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
+    private float xRot = 0.0F;
 
     public OxygenTanksRenderLayer(RenderLayerParent<T, M> context) {
         super(context);
-        ModelPart root, body;
-        boolean rotate = false;
         float x = 0.0F;
         float y = context.getModel() instanceof EndermanModel ? 2.0F : 1.0F;
         float z = context.getModel() instanceof IllagerModel || context.getModel() instanceof WitchModel ? 3.01F : 2.01F;
         if (context.getModel() instanceof SpiderModel model) {
-            root = model.root();
-            body = root.getChild("body1");
-            rotate = true;
+            this.body = model.root().getChild("body1");
+            this.xRot = Mth.HALF_PI;
             y = -5.0F;
             z = 4.01F;
         } else if (context.getModel() instanceof HierarchicalModel<?> model) {
-            root = model.root();
-            body = root.getChild(PartNames.BODY);
+            this.body = model.root().getChild(PartNames.BODY);
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
-            body = model.body;
+            this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            body = model.callGetBodyParts().iterator().next();
-            rotate = true;
+            this.body = model.callGetBodyParts().iterator().next();
+            this.xRot = Mth.HALF_PI;
         } else {
+            this.body = null;
             this.tanks = null;
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
-        if (body != null) {
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.offset(body.x, body.y, body.z));
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
+        if (this.body != null) {
+            partDefinition.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+
         }
 
-        this.tanks = modelPartData.bake(32, 32);
-
-        if (rotate) {
-            float angle = (float) (Math.PI / 2.0);
-            this.tanks.getChild(Constant.Item.SMALL_OXYGEN_TANK).xRot = angle;
-            this.tanks.getChild(Constant.Item.MEDIUM_OXYGEN_TANK).xRot = angle;
-            this.tanks.getChild(Constant.Item.LARGE_OXYGEN_TANK).xRot = angle;
-            this.tanks.getChild(Constant.Item.INFINITE_OXYGEN_TANK).xRot = angle;
-        }
+        this.tanks = partDefinition.bake(32, 32);
     }
 
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
+        if (this.tanks == null) return;
+
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        LivingEntity livingEntity = (LivingEntity) entity;
-        boolean hasTank1 = true;
-        boolean hasTank2 = true;
-        String tankSize1 = Constant.Item.MEDIUM_OXYGEN_TANK;
-        String tankSize2 = Constant.Item.MEDIUM_OXYGEN_TANK;
 
-        if (livingEntity instanceof Player player) {
-            Container inv = livingEntity.galacticraft$getOxygenTanks();
-            hasTank1 = inv.getItem(0).is(GCTags.OXYGEN_TANKS);
-            hasTank2 = inv.getItem(1).is(GCTags.OXYGEN_TANKS);
-            if (hasTank1) {
-                tankSize1 = inv.getItem(0).getDescriptionId().replace("item.galacticraft.", "");
-            }
-            if (hasTank2) {
-                tankSize2 = inv.getItem(1).getDescriptionId().replace("item.galacticraft.", "");
-            }
-        } else if (livingEntity instanceof Zombie) {
-            Zombie zombie = (Zombie) entity;
-            if (zombie.isBaby()) {
-                matrices.scale(0.75F, 0.75F, 0.75F);
-            }
-        } else if (livingEntity instanceof AbstractIllager || livingEntity instanceof Witch) {
-            tankSize1 = Constant.Item.LARGE_OXYGEN_TANK;
-            tankSize2 = Constant.Item.LARGE_OXYGEN_TANK;
+        String tankSize1 = entity.galacticraft$tankSize(0);
+        String tankSize2 = entity.galacticraft$tankSize(1);
+        ModelPart tank1 = this.tanks.hasChild(tankSize1) ? this.tanks.getChild(tankSize1) : null;
+        ModelPart tank2 = this.tanks.hasChild(tankSize2) ? this.tanks.getChild(tankSize2) : null;
+
+        matrices.pushPose();
+        if (entity instanceof Zombie zombie && zombie.isBaby()) {
+            matrices.scale(0.75F, 0.75F, 0.75F);
+            matrices.translate(0.0F, 1.0F, 0.0F);
         }
 
-        if (this.tanks != null && hasTank1) {
-            this.tanks.getChild(tankSize1).render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+        if (tank1 != null) {
+            tank1.copyFrom(this.body);
+            if (this.xRot != 0.0F) {
+                tank1.xRot = this.xRot;
+            }
+            tank1.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
-        if (this.tanks != null && hasTank2) {
+        if (tank2 != null) {
             matrices.translate(-0.25F, 0.0F, 0.0F);
-            this.tanks.getChild(tankSize2).render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
+            tank2.copyFrom(this.body);
+            if (this.xRot != 0.0F) {
+                tank1.xRot = this.xRot;
+            }
+            tank2.render(matrices, vertexConsumer, light, OverlayTexture.NO_OVERLAY);
         }
+        matrices.popPose();
     }
 
     @Override

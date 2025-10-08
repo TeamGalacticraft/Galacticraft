@@ -9,6 +9,7 @@
     "gear.LivingEntityMixin",
     "gear.PlayerListMixin",
     "gear.ServerPlayerMixin",
+    "gear.TamableAnimalMixin",
     "gravity.EntityGravityMixin",
     "oxygen.ChunkHolderMixin",
     "oxygen.ChunkSerializerMixin",

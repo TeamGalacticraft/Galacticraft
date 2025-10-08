@@ -3,7 +3,7 @@
   "category": "misc",
   "key": {
     "F": {
-      "item": "galacticraft:fuel_bucket"
+      "tag": "c:buckets/fuel"
     },
     "M": {
       "item": "galacticraft:compressed_meteoric_iron"

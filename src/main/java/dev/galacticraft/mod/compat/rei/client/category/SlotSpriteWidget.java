@@ -43,16 +43,16 @@ public class SlotSpriteWidget extends Slot {
 
     public SlotSpriteWidget(Point startPoint, ResourceLocation sprite) {
         this.startPoint = startPoint;
-        this.target = Widgets.createSlot(startPoint).disableBackground();
+        this.target = Widgets.createSlot(startPoint);
         this.sprite = sprite;
     }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        this.target.render(graphics, mouseX, mouseY, delta);
         if (this.target.getCurrentEntry().isEmpty()) {
             graphics.blit(this.sprite, this.startPoint.x, this.startPoint.y, 0, 0.0F, 0.0F, 16, 16, 16, 16);
         }
-        this.target.render(graphics, mouseX, mouseY, delta);
     }
 
     @Override
@@ -100,7 +100,7 @@ public class SlotSpriteWidget extends Slot {
     public void setInteractableFavorites(boolean interactableFavorites) {
         this.target.setInteractableFavorites(interactableFavorites);
     }
-    
+
     public boolean isInteractableFavorites() {
         return this.target.isInteractableFavorites();
     }

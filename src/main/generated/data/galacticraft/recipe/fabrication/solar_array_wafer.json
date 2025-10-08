@@ -1,7 +1,7 @@
 {
   "type": "galacticraft:fabrication",
   "ingredient": {
-    "item": "galacticraft:solar_dust"
+    "tag": "c:dusts/solar"
   },
   "result": {
     "count": 3,

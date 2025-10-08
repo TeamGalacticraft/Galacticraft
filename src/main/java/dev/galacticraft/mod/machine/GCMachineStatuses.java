@@ -27,49 +27,55 @@ import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 
 public final class GCMachineStatuses {
-    public static final MachineStatus COLLECTING = MachineStatus.create(Translations.MachineStatus.COLLECTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus CANNING = MachineStatus.create(Translations.MachineStatus.CANNING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus TRANSFERRING_CAN = MachineStatus.create(Translations.MachineStatus.TRANSFERRING_CAN, ChatFormatting.GREEN, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus NO_FOOD = MachineStatus.create(Translations.MachineStatus.NO_FOOD, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
-    public static final MachineStatus PARTIALLY_BLOCKED = MachineStatus.create(Translations.MachineStatus.PARTIALLY_BLOCKED, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus BLOCKED = MachineStatus.create(Translations.MachineStatus.BLOCKED, ChatFormatting.RED, MachineStatus.Type.OTHER);
-    public static final MachineStatus MISSING_EMPTY_CAN = MachineStatus.create(Translations.MachineStatus.MISSING_EMPTY_CAN, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
-    public static final MachineStatus NIGHT = MachineStatus.create(Translations.MachineStatus.NIGHT, ChatFormatting.DARK_BLUE, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus RAIN = MachineStatus.create(Translations.MachineStatus.RAIN, ChatFormatting.BLUE, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus THUNDER = MachineStatus.create(Translations.MachineStatus.THUNDER, ChatFormatting.GRAY, MachineStatus.Type.PARTIALLY_WORKING);
-    public static final MachineStatus FABRICATING = MachineStatus.create(Translations.MachineStatus.FABRICATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus NO_FUEL = MachineStatus.create(Translations.MachineStatus.NO_FUEL, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
+    // Energy Generation
     public static final MachineStatus GENERATING = MachineStatus.create(Translations.MachineStatus.GENERATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    // Energy Generation - Coal Generator
+    public static final MachineStatus NO_FUEL = MachineStatus.create(Translations.MachineStatus.NO_FUEL, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus WARMING_UP = MachineStatus.create(Translations.MachineStatus.WARMING_UP, ChatFormatting.GOLD, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus COOLING_DOWN = MachineStatus.create(Translations.MachineStatus.COOLING_DOWN, ChatFormatting.AQUA, MachineStatus.Type.PARTIALLY_WORKING);
+    // Energy Generation - Solar Panels
+    public static final MachineStatus PARTIALLY_GENERATING = MachineStatus.create(Translations.MachineStatus.PARTIALLY_GENERATING, ChatFormatting.YELLOW, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus NOT_GENERATING = MachineStatus.create(Translations.MachineStatus.NOT_GENERATING, ChatFormatting.DARK_GRAY, MachineStatus.Type.MISSING_RESOURCE);
+    public static final MachineStatus BLOCKED = MachineStatus.create(Translations.MachineStatus.BLOCKED, ChatFormatting.DARK_RED, MachineStatus.Type.OTHER);
+
+    public static final MachineStatus FABRICATING = MachineStatus.create(Translations.MachineStatus.FABRICATING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus COMPRESSING = MachineStatus.create(Translations.MachineStatus.COMPRESSING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus SMELTING = MachineStatus.create(Translations.MachineStatus.SMELTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+
+    // Oxygen
     public static final MachineStatus NOT_ENOUGH_OXYGEN = MachineStatus.create(Translations.MachineStatus.NOT_ENOUGH_OXYGEN, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
-    public static final MachineStatus MISSING_OIL = MachineStatus.create(Translations.MachineStatus.MISSING_OIL, ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
-    public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create(Translations.MachineStatus.FUEL_TANK_FULL, ChatFormatting.GOLD, MachineStatus.Type.OTHER);
+    // Oxygen - Collector
+    public static final MachineStatus COLLECTING = MachineStatus.create(Translations.MachineStatus.COLLECTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    // Oxygen - (De)compressor
+    public static final MachineStatus COMPRESSING_OXYGEN = MachineStatus.create(Translations.MachineStatus.COMPRESSING_OXYGEN, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus DECOMPRESSING = MachineStatus.create(Translations.MachineStatus.DECOMPRESSING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus MISSING_OXYGEN_TANK = MachineStatus.create(Translations.MachineStatus.MISSING_OXYGEN_TANK, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
     public static final MachineStatus OXYGEN_TANK_FULL = MachineStatus.create(Translations.MachineStatus.OXYGEN_TANK_FULL, ChatFormatting.GOLD, MachineStatus.Type.OTHER);
-    public static final MachineStatus DECOMPRESSING = MachineStatus.create(Translations.MachineStatus.DECOMPRESSING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     public static final MachineStatus EMPTY_OXYGEN_TANK = MachineStatus.create(Translations.MachineStatus.EMPTY_OXYGEN_TANK, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
+    // Oxygen - Sealer
     public static final MachineStatus ALREADY_SEALED = MachineStatus.create(Translations.MachineStatus.ALREADY_SEALED, ChatFormatting.RED, MachineStatus.Type.OTHER);
     public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus SEALED = MachineStatus.create(Translations.MachineStatus.SEALED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    // Oxygen - Bubble Distributor
     public static final MachineStatus DISTRIBUTING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
-    public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
 
-    /**
-     * The fuel loader doesn't have any fuel.
-     */
-    public static final MachineStatus NOT_ENOUGH_FUEL = MachineStatus.create(Translations.MachineStatus.NOT_ENOUGH_FUEL, ChatFormatting.GOLD, MachineStatus.Type.MISSING_FLUIDS);
+    // Refinery
+    public static final MachineStatus REFINING = MachineStatus.create(Translations.MachineStatus.REFINING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus MISSING_OIL = MachineStatus.create(Translations.MachineStatus.MISSING_OIL, ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
+    public static final MachineStatus FUEL_TANK_FULL = MachineStatus.create(Translations.MachineStatus.FUEL_TANK_FULL, ChatFormatting.GOLD, MachineStatus.Type.OTHER);
 
-    /**
-     * The fuel loader doesn't have a rocket
-     */
+    // Fuel Loader
+    public static final MachineStatus PREPARING = MachineStatus.create(Translations.MachineStatus.PREPARING, ChatFormatting.YELLOW, MachineStatus.Type.OTHER);
+    public static final MachineStatus LOADING = MachineStatus.create(Translations.MachineStatus.LOADING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus NOT_ENOUGH_FUEL = MachineStatus.create(Translations.MachineStatus.NOT_ENOUGH_FUEL, ChatFormatting.RED, MachineStatus.Type.MISSING_FLUIDS);
     public static final MachineStatus NO_ROCKET = MachineStatus.create(Translations.MachineStatus.NO_ROCKET, ChatFormatting.RED, MachineStatus.Type.MISSING_RESOURCE);
-
-    /**
-     * The sun is not visible.
-     */
     public static final MachineStatus ROCKET_IS_FULL = MachineStatus.create(Translations.MachineStatus.ROCKET_IS_FULL, ChatFormatting.GOLD, MachineStatus.Type.OUTPUT_FULL);
+
+    // Food Canner
+    public static final MachineStatus CANNING = MachineStatus.create(Translations.MachineStatus.CANNING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus TRANSFERRING_CAN = MachineStatus.create(Translations.MachineStatus.TRANSFERRING_CAN, ChatFormatting.GREEN, MachineStatus.Type.PARTIALLY_WORKING);
+    public static final MachineStatus NO_FOOD = MachineStatus.create(Translations.MachineStatus.NO_FOOD, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
+    public static final MachineStatus MISSING_EMPTY_CAN = MachineStatus.create(Translations.MachineStatus.MISSING_EMPTY_CAN, ChatFormatting.RED, MachineStatus.Type.MISSING_ITEMS);
 
     public static void register() {
     }

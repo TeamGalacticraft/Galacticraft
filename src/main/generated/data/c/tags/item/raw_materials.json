@@ -1,0 +1,10 @@
+{
+  "values": [
+    "#c:raw_materials/tin",
+    "#c:raw_materials/aluminum",
+    "#c:raw_materials/meteoric_iron",
+    "#c:raw_materials/desh",
+    "#c:raw_materials/titanium",
+    "#c:raw_materials/lead"
+  ]
+}

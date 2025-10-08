@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.entity.layers.EyesLayer;
 
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
-    private static final RenderType LAYER = RenderType.eyes(Constant.id("textures/entity/evolved/spider_eyes.png"));
+    private static final RenderType LAYER = RenderType.eyes(Constant.id(Constant.EntityTexture.EVOLVED_SPIDER_EYES));
 
     public EvolvedSpiderEyesRenderLayer(RenderLayerParent<T, M> featureRendererContext) {
         super(featureRendererContext);

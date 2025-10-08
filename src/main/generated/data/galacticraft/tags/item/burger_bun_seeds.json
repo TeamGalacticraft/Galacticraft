@@ -1,0 +1,25 @@
+{
+  "values": [
+    "#c:seeds/pumpkin",
+    {
+      "id": "#c:seeds/sesame",
+      "required": false
+    },
+    {
+      "id": "#c:seeds/poppy",
+      "required": false
+    },
+    {
+      "id": "#c:seeds/sunflower",
+      "required": false
+    },
+    {
+      "id": "#c:seeds/chia",
+      "required": false
+    },
+    {
+      "id": "#c:seeds/flax",
+      "required": false
+    }
+  ]
+}

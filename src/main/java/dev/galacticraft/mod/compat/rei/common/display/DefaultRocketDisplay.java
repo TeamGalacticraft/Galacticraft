@@ -24,7 +24,6 @@ package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.recipe.RocketRecipe;
-import dev.galacticraft.mod.tag.GCTags;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -41,12 +40,24 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultRocketDisplay extends BasicDisplay {
+    public final int bodyHeight;
+    public final boolean hasBoosters;
+
     protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         super(inputs, outputs, location);
+        this.bodyHeight = 0;
+        this.hasBoosters = false;
     }
 
     public DefaultRocketDisplay(@Nullable RecipeHolder<RocketRecipe> recipe) {
         super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
+        if (recipe != null) {
+            this.bodyHeight = recipe.value().bodyHeight();
+            this.hasBoosters = !recipe.value().boosters().isEmpty();
+        } else {
+            this.bodyHeight = 0;
+            this.hasBoosters = false;
+        }
     }
 
     public static DefaultRocketDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
@@ -61,10 +72,15 @@ public class DefaultRocketDisplay extends BasicDisplay {
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<RocketRecipe> recipe) {
         if (recipe == null) return Collections.emptyList();
         RocketRecipe rocketRecipe = recipe.value();
-        List<EntryIngredient> list = new ArrayList<>(14);
+        List<EntryIngredient> list = new ArrayList<>();
         list.add(EntryIngredients.ofIngredient(rocketRecipe.cone()));
         for (int i = 0; i < 2 * rocketRecipe.bodyHeight(); i++) {
             list.add(EntryIngredients.ofIngredient(rocketRecipe.body()));
+        }
+        if (!rocketRecipe.boosters().isEmpty()) {
+            for (int i = 0; i < 2; i++) {
+                list.add(EntryIngredients.ofIngredient(rocketRecipe.boosters()));
+            }
         }
         for (int i = 0; i < 4; i++) {
             list.add(EntryIngredients.ofIngredient(rocketRecipe.fins()));

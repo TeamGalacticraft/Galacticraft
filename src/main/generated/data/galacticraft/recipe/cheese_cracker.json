@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:cracker"
+    },
+    {
+      "item": "galacticraft:moon_cheese_slice"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:cheese_cracker"
+  }
+}

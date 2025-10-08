@@ -22,18 +22,31 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import com.google.common.collect.Lists;
 import com.mojang.blaze3d.systems.RenderSystem;
+import dev.galacticraft.machinelib.client.api.util.DisplayUtil;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.player.Inventory;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
     private static ResourceLocation[] parachestTexture = new ResourceLocation[4];
+
+    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
+    }
 
     static {
         for (int i = 0; i < 4; i++) {
@@ -54,24 +67,46 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
     }
 
     @Override
-    protected void renderBg(GuiGraphics guiGraphics, float f, int i, int j) {
+    protected void renderBg(GuiGraphics graphics, float f, int mouseX, int mouseY) {
         ResourceLocation texture = parachestTexture[(this.inventorySlots - 3) / 18];
         RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        int k = (this.width - this.imageWidth) / 2;
-        int l = (this.height - this.imageHeight) / 2;
-        guiGraphics.blit(texture, k, l, 0, 0, this.imageWidth, this.imageHeight);
+        int i = (this.width - this.imageWidth) / 2;
+        int j = (this.height - this.imageHeight) / 2;
+        graphics.blit(texture, i, j, 0, 0, this.imageWidth, this.imageHeight);
 
         var container = getMenu().getContainer();
 
         if (container instanceof ScalableFuelLevel scalable) {
-            int fuelLevel = (int) scalable.getScaledFuelLevel(28);
-            guiGraphics.blit(texture, k + 17, l + (this.inventorySlots == 3 ? 40 : 42) - fuelLevel + this.inventorySlots * 2, 176, 28 - fuelLevel, 34, fuelLevel);
+            final int width = 34;
+            final int height = 28;
+            final int X = i + 17;
+            final int Y = j + (this.inventorySlots == 3 ? 40 : 42) - height + this.inventorySlots * 2;
+            final long capacity = FluidConstants.BUCKET * 5;
+            final long amount = (long) scalable.getScaledFuelLevel(capacity);
+
+            GraphicsUtil.drawFluid(graphics, X, Y, width, height, capacity, FluidVariant.of(GCFluids.FUEL), amount);
+
+            boolean primary = true;
+            for (int y = Y + height - 3; y > Y; y -= 3) {
+                graphics.hLine(X, X + (primary ? 9 : 7), y, 0xFFB31212);
+                primary = !primary;
+            }
+
+            if (mouseIn(mouseX, mouseY, X, Y, width, height)) {
+                RenderSystem.disableDepthTest();
+                graphics.fill(X, Y, X + width, Y + height, 0x80ffffff);
+                RenderSystem.enableDepthTest();
+
+                List<Component> list = new ArrayList<>();
+                DisplayUtil.createFluidTooltip(list, GCFluids.FUEL, null, amount, capacity);
+                this.setTooltipForNextRenderPass(Lists.transform(list, Component::getVisualOrderText));
+            }
         }
     }
 
     @Override
-    public void render(GuiGraphics guiGraphics, int mouseX, int mouseY, float partialTick) {
-        super.render(guiGraphics, mouseX, mouseY, partialTick);
-        renderTooltip(guiGraphics, mouseX, mouseY);
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTick) {
+        super.render(graphics, mouseX, mouseY, partialTick);
+        renderTooltip(graphics, mouseX, mouseY);
     }
 }

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.world.gen.carver.config;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
-import dev.galacticraft.mod.tag.GCTags;
+import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.util.valueproviders.FloatProvider;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
@@ -48,7 +48,7 @@ public class CraterCarverConfig extends CarverConfiguration {
     public final int idealRangeOffset;
 
     public CraterCarverConfig(float probability, HeightProvider y, FloatProvider yScale, CarverDebugSettings carverDebugConfig, int maxRadius, int minRadius, int idealRangeOffset) {
-        super(probability, y, yScale, VerticalAnchor.bottom(), carverDebugConfig, BuiltInRegistries.BLOCK.getOrCreateTag(GCTags.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
+        super(probability, y, yScale, VerticalAnchor.bottom(), carverDebugConfig, BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)); // TODO: Crater replaceables
         this.maxRadius = maxRadius;
         this.minRadius = minRadius;
         this.idealRangeOffset = idealRangeOffset;

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.entity;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.monster.Zombie;
@@ -33,7 +34,32 @@ public class EvolvedZombieEntity extends Zombie {
     }
 
     @Override
+    public boolean isUnderWaterConverting() {
+        return false;
+    }
+
+    @Override
+    protected boolean convertsInWater() {
+        return false;
+    }
+
+    @Override
     protected boolean isSunBurnTick() {
         return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return true;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return Constant.Item.MEDIUM_OXYGEN_TANK;
     }
 }

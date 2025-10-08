@@ -22,164 +22,102 @@
 
 package dev.galacticraft.mod.content.block.special.walkway;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.api.block.FluidLoggable;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
+import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
-import dev.galacticraft.mod.util.ConnectingBlockUtil;
-import dev.galacticraft.mod.util.DirectionUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.EntityBlock;
-import net.minecraft.world.level.block.entity.BlockEntity;
+import net.minecraft.world.level.block.Mirror;
+import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
-import net.minecraft.world.level.material.FlowingFluid;
+import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Objects;
+public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements AbstractWalkwayBlock, FluidLoggable {
+    public WalkwayBlock(Properties properties) {
+        super(0.125f, properties);
 
-public class WalkwayBlock extends Block implements FluidLoggable, EntityBlock {
-    private static final int OFFSET = 2;
-    private static final VoxelShape NORTH = box(8 - OFFSET, 8 - OFFSET, 0, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape EAST = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 16, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape SOUTH = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 16);
-    private static final VoxelShape WEST = box(0, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape UP = box(8 - OFFSET, 8 - OFFSET, 8 - OFFSET, 8 + OFFSET, 16, 8 + OFFSET);
-    private static final VoxelShape DOWN = box(8 - OFFSET, 0, 8 - OFFSET, 8 + OFFSET, 8 + OFFSET, 8 + OFFSET);
-    private static final VoxelShape[] SHAPES = new VoxelShape[64];
-
-    public WalkwayBlock(Properties settings) {
-        super(settings);
-        this.registerDefaultState(this.getStateDefinition().any()
-                .setValue(FLUID, INVALID)
-                .setValue(FlowingFluid.LEVEL, 8)
-                .setValue(FlowingFluid.FALLING, false));
-    }
-
-    private static int getFacingMask(Direction direction) {
-        return 1 << direction.get3DDataValue();
+        BlockState defaultState = this.getStateDefinition().any();
+        defaultState = FluidLoggable.applyDefaultState(defaultState);
+        defaultState = AbstractWalkwayBlock.applyDefaultState(defaultState);
+        this.registerDefaultState(defaultState);
     }
 
     @Override
-    public VoxelShape getShape(BlockState blockState, BlockGetter level, BlockPos blockPos, CollisionContext context) {
-        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-            var index = getFacingMask(walkway.getDirection());
-            var shapes = Lists.newArrayList(ConnectingBlockUtil.WALKWAY_TOP);
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> compositeStateBuilder) {
+        FluidLoggable.addStateDefinitions(compositeStateBuilder);
+        AbstractWalkwayBlock.addStateDefinitions(compositeStateBuilder);
+    }
 
-            if (walkway.getConnections()[2]) {
-                shapes.add(NORTH);
-            }
-            if (walkway.getConnections()[3]) {
-                shapes.add(SOUTH);
-            }
-            if (walkway.getConnections()[5]) {
-                shapes.add(EAST);
-            }
-            if (walkway.getConnections()[4]) {
-                shapes.add(WEST);
-            }
-            if (walkway.getConnections()[1]) {
-                shapes.add(UP);
-            }
-            if (walkway.getConnections()[0]) {
-                shapes.add(DOWN);
-            }
-            if (SHAPES[index] != null) {
-                return Shapes.or(SHAPES[index], shapes.toArray(VoxelShape[]::new));
-            }
-            return Shapes.or(SHAPES[index] = ConnectingBlockUtil.createWalkwayShape(walkway.getDirection()), shapes.toArray(VoxelShape[]::new));
+    @Override
+    protected BlockState rotate(BlockState blockState, Rotation rotation) {
+        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState blockState, Mirror mirror) {
+        return blockState.rotate(mirror.getRotation(blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    @Override
+    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        if (world.getBlockEntity(pos) instanceof Connected connected) {
+            return AbstractWalkwayBlock.getShape(connected, state);
         }
-        return ConnectingBlockUtil.WALKWAY_TOP;
+        return AbstractWalkwayBlock.getShape(state);
+    }
+
+    @Override
+    protected @NotNull VoxelShape getOcclusionShape(BlockState state, BlockGetter world, BlockPos pos) {
+        return Shapes.empty();
     }
 
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext context) {
-        var fluidState = context.getLevel().getFluidState(context.getClickedPos());
-        return this.defaultBlockState()
-                .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
-                .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
-                .setValue(FlowingFluid.FALLING, fluidState.hasProperty(FlowingFluid.FALLING) ? fluidState.getValue(FlowingFluid.FALLING) : false);
+        BlockState state = super.getStateForPlacement(context);
+        state = FluidLoggable.applyFluidState(context.getLevel(), state, context.getClickedPos());
+        state = AbstractWalkwayBlock.applyStateForPlacement(state, context);
+        return state;
     }
 
     @Override
-    public void setPlacedBy(Level level, BlockPos blockPos, BlockState blockState, @Nullable LivingEntity livingEntity, ItemStack itemStack) {
-        super.setPlacedBy(level, blockPos, blockState, livingEntity, itemStack);
-        if (level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-            walkway.setDirection(Direction.orderedByNearest(livingEntity)[0].getOpposite());
-            level.updateNeighborsAt(blockPos, blockState.getBlock());
-        }
+    protected @NotNull FluidState getFluidState(BlockState state) {
+        return FluidLoggable.createFluidState(state);
     }
 
     @Override
-    public BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos blockPos, BlockPos neighborPos) {
-        if (!this.isEmpty(blockState)) {
-            level.scheduleTick(blockPos, BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)), BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getTickDelay(level));
-        }
-        return blockState;
+    protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
+        FluidLoggable.tryScheduleFluidTick(levelAccessor, state, pos);
+        return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
     }
 
     @Override
-    public void neighborChanged(BlockState blockState, Level level, BlockPos blockPos, Block block, BlockPos fromPos, boolean notify) {
-        super.neighborChanged(blockState, level, blockPos, block, fromPos, notify);
-        var distance = fromPos.subtract(blockPos);
-
-        if (Math.abs(distance.getX() + distance.getY() + distance.getZ()) == 1 && level.getBlockEntity(blockPos) instanceof WalkwayBlockEntity walkway) {
-//            walkway.updateConnection(DirectionUtil.fromNormal(distance));
-            var direction = DirectionUtil.fromNormal(distance);
-
-            if (level.getBlockEntity(fromPos) instanceof WalkwayBlockEntity walkway2 && walkway2.getDirection() != null) {
-                if (!fromPos.relative(walkway2.getDirection()).equals(blockPos)) {
-                    if (!blockPos.relative(walkway.getDirection()).equals(fromPos)) {
-                        if (walkway.getConnections()[direction.ordinal()] != (walkway.getConnections()[direction.ordinal()] = true)) {
-                            level.neighborChanged(blockPos.relative(direction), blockState.getBlock(), blockPos);
-                            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-                        }
-                        return;
-                    }
-                }
-            }
-            walkway.getConnections()[Objects.requireNonNull(direction).ordinal()] = false;
-            level.sendBlockUpdated(blockPos, blockState, blockState, Block.UPDATE_IMMEDIATE);
-        }
+    public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
+        BlockState neighborState = level.getBlockState(neighborPos);
+        return neighborState.is(GCBlocks.WALKWAY) || neighborState.isFaceSturdy(level, neighborPos, direction.getOpposite(), SupportType.CENTER);
     }
 
     @Override
-    public FluidState getFluidState(BlockState blockState) {
-        if (this.isEmpty(blockState)) {
-            return EMPTY_STATE;
-        }
+    protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
 
-        var state1 = BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).defaultFluidState();
-
-        if (state1.getValues().containsKey(FlowingFluid.LEVEL)) {
-            state1 = state1.setValue(FlowingFluid.LEVEL, blockState.getValue(FlowingFluid.LEVEL));
-        }
-        if (state1.getValues().containsKey(FlowingFluid.FALLING)) {
-            state1 = state1.setValue(FlowingFluid.FALLING, blockState.getValue(FlowingFluid.FALLING));
-        }
-        return state1;
     }
 
     @Override
-    public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FLUID, FlowingFluid.LEVEL, FlowingFluid.FALLING);
-    }
-
-    @Override
-    @Nullable
-    public BlockEntity newBlockEntity(BlockPos blockPos, BlockState blockState) {
-        return new WalkwayBlockEntity(blockPos, blockState);
+    public @Nullable WalkwayBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        return new WalkwayBlockEntity(pos, state);
     }
 }

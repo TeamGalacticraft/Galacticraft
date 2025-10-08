@@ -24,29 +24,33 @@ package dev.galacticraft.mod.compat.rei.client.filler;
 
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.item.ParachuteItem;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
+import dev.galacticraft.mod.tag.GCItemTags;
 import me.shedaniel.rei.api.common.display.Display;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapelessDisplay;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.Collection;
-import java.util.stream.Collectors;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class EmergencyKitRecipeFiller implements CraftingRecipeFiller<EmergencyKitRecipe> {
     @Override
     public Collection<Display> apply(RecipeHolder<EmergencyKitRecipe> recipe) {
         return List.of(new DefaultCustomShapelessDisplay(recipe,
-                EmergencyKitItem.getContents().stream()
-                        .map(itemStack -> EntryIngredients.of(itemStack))
+                EmergencyKitItem.getContents(DyeColor.RED).stream()
+                        .map(itemStack -> itemStack.getItem() instanceof ParachuteItem
+                                ? EntryIngredients.ofItemTag(GCItemTags.PARACHUTES)
+                                : EntryIngredients.of(itemStack))
                         .collect(Collectors.toList()),
                 List.of(EntryIngredients.of(GCItems.EMERGENCY_KIT)))
         );
     }
-    
+
     @Override
     public Class<EmergencyKitRecipe> getRecipeClass() {
         return EmergencyKitRecipe.class;

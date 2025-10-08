@@ -67,6 +67,9 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCBlockLootTableProvider::new);
         pack.addProvider(GCLootTableProvider::create);
 
+        // advancements
+        pack.addProvider(GCAdvancementProvider::new);
+
         // recipes
         pack.addProvider(GCDecorationRecipeProvider::new);
         pack.addProvider(GCGearRecipeProvider::new);
@@ -76,14 +79,14 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCRocketRecipes::new);
 
         // tags
+        GCBlockTagProvider blockTags = pack.addProvider(GCBlockTagProvider::new);
+        pack.addProvider((output, wrapperLookup) -> new GCItemTagProvider(output, wrapperLookup, blockTags));
         pack.addProvider(GCBannerTagProvider::new);
         pack.addProvider(GCBiomeTagProvider::new);
-        pack.addProvider(GCBlockTagProvider::new);
         pack.addProvider(GCDamageTypeTagProvider::new);
         pack.addProvider(GCDimensionTagProvider::new);
         pack.addProvider(GCEntityTypeTagProvider::new);
         pack.addProvider(GCFluidTagProvider::new);
-        pack.addProvider(GCItemTagProvider::new);
         pack.addProvider(GCStructureTagProvider::new);
 
         // world generation

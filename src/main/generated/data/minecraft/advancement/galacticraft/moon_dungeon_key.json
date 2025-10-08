@@ -1,0 +1,34 @@
+{
+  "parent": "minecraft:galacticraft/moon_dungeon",
+  "criteria": {
+    "moon_dungeon_key": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:boss_spawner"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.moon_dungeon_key.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "minecraft:trial_key"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.moon_dungeon_key.title"
+    }
+  },
+  "requirements": [
+    [
+      "moon_dungeon_key"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

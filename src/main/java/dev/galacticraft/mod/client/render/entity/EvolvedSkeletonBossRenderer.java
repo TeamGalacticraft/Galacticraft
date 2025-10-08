@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.render.entity;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Constant.EntityTexture;
 import dev.galacticraft.mod.client.model.entity.EvolvedSkeletonBossModel;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
@@ -33,7 +32,7 @@ import net.minecraft.client.renderer.entity.layers.ItemInHandLayer;
 import net.minecraft.resources.ResourceLocation;
 
 public class EvolvedSkeletonBossRenderer extends MobRenderer<SkeletonBoss, EvolvedSkeletonBossModel> {
-    public static final ResourceLocation BOSS_TEXTURE = Constant.id(EntityTexture.SKELETON_BOSS);
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.SKELETON_BOSS);
 
     public EvolvedSkeletonBossRenderer(EntityRendererProvider.Context context) {
         super(context, new EvolvedSkeletonBossModel(context.bakeLayer(GCEntityModelLayer.SKELETON_BOSS)), 0.9F);
@@ -42,6 +41,6 @@ public class EvolvedSkeletonBossRenderer extends MobRenderer<SkeletonBoss, Evolv
 
     @Override
     public ResourceLocation getTextureLocation(SkeletonBoss entity) {
-        return BOSS_TEXTURE;
+        return TEXTURE;
     }
 }

@@ -25,22 +25,33 @@ package dev.galacticraft.mod.client.render.entity.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
 import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 
 public class GCEntityModelLayer {
-    public static final ModelLayerLocation GAZER = new ModelLayerLocation(Constant.id("gazer"), "main");
-    public static final ModelLayerLocation RUMBLER = new ModelLayerLocation(Constant.id("rumbler"), "main");
-    public static final ModelLayerLocation COMET_CUBE = new ModelLayerLocation(Constant.id("comet_cube"), "main");
-    public static final ModelLayerLocation OLI_GRUB = new ModelLayerLocation(Constant.id("oli_grub"), "main");
-    public static final ModelLayerLocation GREY = new ModelLayerLocation(Constant.id("grey"), "main");
-    public static final ModelLayerLocation ARCH_GREY = new ModelLayerLocation(Constant.id("arch_grey"), "main");
-    public static final ModelLayerLocation SOLAR_PANEL = new ModelLayerLocation(Constant.id("solar_panel"), "main");
-    public static final ModelLayerLocation LANDER = new ModelLayerLocation(Constant.id("lander"), "main");
-    public static final ModelLayerLocation PARACHEST = new ModelLayerLocation(Constant.id("parachest"), "main");
-    public static final ModelLayerLocation MOON_VILLAGER = new ModelLayerLocation(Constant.id("moon_villager"), "main");
+    private static final String DEFAULT_LAYER = "main";
+
+    public static final ModelLayerLocation GAZER = registerModelLayer("gazer");
+    public static final ModelLayerLocation RUMBLER = registerModelLayer("rumbler");
+    public static final ModelLayerLocation COMET_CUBE = registerModelLayer("comet_cube");
+    public static final ModelLayerLocation OLI_GRUB = registerModelLayer("oli_grub");
+    public static final ModelLayerLocation GREY = registerModelLayer("grey");
+    public static final ModelLayerLocation ARCH_GREY = registerModelLayer("arch_grey");
+    public static final ModelLayerLocation LANDER = registerModelLayer("lander");
+    public static final ModelLayerLocation PARACHEST = registerModelLayer("parachest");
+    public static final ModelLayerLocation MOON_VILLAGER = registerModelLayer("moon_villager");
+
     // Bosses
-    public static final ModelLayerLocation SKELETON_BOSS = new ModelLayerLocation(Constant.id("skeleton_boss"), "main");
+    public static final ModelLayerLocation SKELETON_BOSS = registerModelLayer("skeleton_boss");
+
+    // Block Entity Renderers
+    public static final ModelLayerLocation SOLAR_PANEL = registerModelLayer("solar_panel");
+    public static final ModelLayerLocation ROCKET_WORKBENCH = registerModelLayer("rocket_workbench");
+
+    private static ModelLayerLocation registerModelLayer(String id) {
+        return new ModelLayerLocation(Constant.id(id), DEFAULT_LAYER);
+    }
 
     public static void register() {
         EntityModelLayerRegistry.registerModelLayer(GAZER, GazerEntityModel::createBodyLayer);
@@ -56,5 +67,6 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, SolarPanelBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::getTexturedModelData);
     }
 }

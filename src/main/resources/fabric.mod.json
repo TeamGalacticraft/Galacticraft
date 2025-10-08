@@ -1,13 +1,11 @@
 {
   "schemaVersion": 1,
-  
   "id": "galacticraft",
   "version": "$version",
   "name": "Galacticraft",
   "icon": "assets/galacticraft/icon.png",
   "description": "FabricMC port of Galacticraft, written from the ground up by a new team.",
   "license": "MIT",
-
   "contact": {
     "homepage": "https://galacticraft.team/",
     "sources": "https://github.com/TeamGalacticraft/Galacticraft/",
@@ -30,9 +28,9 @@
       }
     },
     {
-      "name": "Blayyke",
+      "name": "Roelymole",
       "contact": {
-        "homepage": "https://github.com/Blayyke"
+        "homepage": "https://github.com/Roelymole"
       }
     },
     {
@@ -42,9 +40,21 @@
       }
     },
     {
-      "name": "JoeZwet",
+      "name": "Blayyke",
       "contact": {
-        "homepage": "https://github.com/JoeZwet"
+        "homepage": "https://github.com/Blayyke"
+      }
+    },
+    {
+      "name": "JustPyrrha",
+      "contact": {
+        "homepage": "https://github.com/JustPyrrha"
+      }
+    },
+    {
+      "name": "AlphaMode",
+      "contact": {
+        "homepage": "https://github.com/AlphaMode"
       }
     },
     {
@@ -54,21 +64,9 @@
       }
     },
     {
-      "name": "Boundarybreaker",
+      "name": "DMgaming100",
       "contact": {
-        "homepage": "https://github.com/Boundarybreaker"
-      }
-    },
-    {
-      "name": "vos6434",
-      "contact": {
-        "homepage": "https://github.com/vos6434"
-      }
-    },
-    {
-      "name": "hYdos",
-      "contact": {
-        "homepage": "https://github.com/hYdos"
+        "homepage": "https://github.com/DMgaming100"
       }
     },
     {
@@ -78,9 +76,57 @@
       }
     },
     {
+      "name": "SteveKunG",
+      "contact": {
+        "homepage": "https://github.com/SteveKunG"
+      }
+    },
+    {
+      "name": "JustAPotota",
+      "contact": {
+        "homepage": "https://github.com/JustAPotota"
+      }
+    },
+    {
+      "name": "LemmaEOF",
+      "contact": {
+        "homepage": "https://github.com/LemmaEOF"
+      }
+    },
+    {
+      "name": "vos6434",
+      "contact": {
+        "homepage": "https://github.com/vos6434"
+      }
+    },
+    {
+      "name": "supersimple33",
+      "contact": {
+        "homepage": "https://github.com/supersimple33"
+      }
+    },
+    {
+      "name": "DuckyProgrammer",
+      "contact": {
+        "homepage": "https://github.com/DuckyProgrammer"
+      }
+    },
+    {
       "name": "Littledog1229",
       "contact": {
         "homepage": "https://github.com/Littledog1229"
+      }
+    },
+    {
+      "name": "maxryan008",
+      "contact": {
+        "homepage": "https://github.com/maxryan008"
+      }
+    },
+    {
+      "name": "Jamiscus",
+      "contact": {
+        "homepage": "https://github.com/Jamiscus"
       }
     },
     {
@@ -96,12 +142,6 @@
       }
     },
     {
-      "name": "SteveKunG",
-      "contact": {
-        "homepage": "https://github.com/SteveKunG"
-      }
-    },
-    {
       "name": "ChipWolf",
       "contact": {
         "homepage": "https://github.com/ChipWolf"
@@ -112,9 +152,116 @@
       "contact": {
         "homepage": "https://github.com/BeetMacol"
       }
+    },
+    {
+      "name": "ROMVoid95",
+      "contact": {
+        "homepage": "https://github.com/ROMVoid95"
+      }
+    },
+    {
+      "name": "davo899",
+      "contact": {
+        "homepage": "https://github.com/davo899"
+      }
+    },
+    {
+      "name": "sebasphereda",
+      "contact": {
+        "homepage": "https://github.com/sebasphereda"
+      }
+    },
+    {
+      "name": "LeMayday",
+      "contact": {
+        "homepage": "https://github.com/LeMayday"
+      }
+    },
+    {
+      "name": "Dragon-Seeker",
+      "contact": {
+        "homepage": "https://github.com/Dragon-Seeker"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
+      }
+    },
+    {
+      "name": "GalacticraftDev",
+      "contact": {
+        "homepage": "https://github.com/GalacticraftDev"
+      }
+    },
+    {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
+      }
+    },
+    {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
+      }
+    },
+    {
+      "name": "benreid24",
+      "contact": {
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "marquito73",
+      "contact": {
+        "homepage": "https://github.com/marquito73"
+      }
+    },
+    {
+      "name": "thackerdynasty",
+      "contact": {
+        "homepage": "https://github.com/thackerdynasty"
+      }
+    },
+    {
+      "name": "CoderFroty",
+      "contact": {
+        "homepage": "https://github.com/CoderFroty"
+      }
+    },
+    {
+      "name": "Codetoil",
+      "contact": {
+        "homepage": "https://github.com/Codetoil"
+      }
+    },
+    {
+      "name": "ScottRox",
+      "contact": {
+        "homepage": "https://github.com/ScottRox"
+      }
+    },
+    {
+      "name": "danilwhale",
+      "contact": {
+        "homepage": "https://github.com/danilwhale"
+      }
     }
   ],
-
   "environment": "*",
   "entrypoints": {
     "main": [
@@ -155,7 +302,9 @@
         "dev/galacticraft/api/accessor/GearInventoryProvider",
         "dev/galacticraft/mod/accessor/ServerPlayerAccessor"
       ],
-      "net/minecraft/class_742": ["dev/galacticraft/api/accessor/GearInventoryProvider"],
+      "net/minecraft/class_742": [
+        "dev/galacticraft/api/accessor/GearInventoryProvider"
+      ],
       "net/minecraft/class_1309": [
         "dev/galacticraft/api/accessor/GearInventoryProvider",
         "dev/galacticraft/mod/accessor/CryogenicAccessor"
@@ -165,8 +314,12 @@
         "dev/galacticraft/api/accessor/LevelOxygenAccessor",
         "dev/galacticraft/mod/accessor/GCLevelAccessor"
       ],
-      "net/minecraft/class_1657": ["dev/galacticraft/mod/accessor/CryogenicAccessor"],
-      "net/minecraft/class_1297": ["dev/galacticraft/mod/accessor/EntityAccessor"]
+      "net/minecraft/class_1657": [
+        "dev/galacticraft/mod/accessor/CryogenicAccessor"
+      ],
+      "net/minecraft/class_1297": [
+        "dev/galacticraft/mod/accessor/EntityAccessor"
+      ]
     }
   },
   "depends": {

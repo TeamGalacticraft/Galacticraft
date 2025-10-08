@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -90,7 +91,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     @Override
     protected @NotNull MachineStatus workingStatus(RecipeHolder<SmeltingRecipe> recipe) {
-        return MachineStatuses.ACTIVE;
+        return GCMachineStatuses.SMELTING;
     }
 
     @Override
@@ -104,8 +105,13 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     }
 
     @Override
+    public int decreaseProgressAmount() {
+        return 2;
+    }
+
+    @Override
     public int getProcessingTime(@NotNull RecipeHolder<SmeltingRecipe> recipe) {
-        return recipe.value().getCookingTime();
+        return (int) (recipe.value().getCookingTime() / 1.5F);
     }
 
     @Override

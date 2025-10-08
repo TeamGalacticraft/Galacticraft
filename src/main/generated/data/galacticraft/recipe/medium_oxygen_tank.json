@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_tin"
     },
     "T": {
-      "item": "galacticraft:tin_canister"
+      "tag": "c:canisters/tin"
     },
     "W": {
       "item": "minecraft:orange_wool"

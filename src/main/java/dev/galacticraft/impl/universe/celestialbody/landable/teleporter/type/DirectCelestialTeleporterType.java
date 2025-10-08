@@ -26,7 +26,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.type.CelestialTeleporterType;
 import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.DefaultCelestialTeleporterConfig;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.levelgen.Heightmap;
 
 public class DirectCelestialTeleporterType extends CelestialTeleporterType<DefaultCelestialTeleporterConfig> {
@@ -37,17 +37,17 @@ public class DirectCelestialTeleporterType extends CelestialTeleporterType<Defau
     }
 
     @Override
-    public void onEnterAtmosphere(ServerLevel level, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, DefaultCelestialTeleporterConfig config) {
+    public void onEnterAtmosphere(ServerLevel level, Entity entity, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody, DefaultCelestialTeleporterConfig config) {
         if (body.isSatellite()) {
-            player.teleportTo(level, 10.5F, 62.0F, 3.5F, 90.0F, 0.0F);
+            entity.teleportTo(level, 10.5F, 62.0F, 3.5F, NO_RELATIVE_MOVEMENT, 90.0F, 0.0F);
             return;
         }
-        
-        int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, player.getBlockX(), player.getBlockZ());
+
+        int height = level.getHeight(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, entity.getBlockX(), entity.getBlockZ());
         if (height == level.getMinBuildHeight()) {
             height = level.getMaxBuildHeight() * 2;
         }
 
-        player.teleportTo(level, player.getX(), height, player.getZ(), player.getYRot(), player.getXRot());
+        entity.teleportTo(level, entity.getX(), height, entity.getZ(), NO_RELATIVE_MOVEMENT, entity.getYRot(), entity.getXRot());
     }
 }

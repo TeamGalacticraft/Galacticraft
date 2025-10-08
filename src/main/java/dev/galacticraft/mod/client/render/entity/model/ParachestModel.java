@@ -33,67 +33,75 @@ import net.minecraft.client.model.geom.builders.PartDefinition;
 import net.minecraft.util.Mth;
 
 public class ParachestModel extends HierarchicalModel<ParachestEntity> {
-
+    private static final String PARACHUTE_0 = "parachute_0";
+    private static final String PARACHUTE_1 = "parachute_1";
+    private static final String PARACHUTE_2 = "parachute_2";
+    private static final String PARACHUTE_STRING_0 = "parachute_string_0";
+    private static final String PARACHUTE_STRING_1 = "parachute_string_1";
+    private static final String PARACHUTE_STRING_2 = "parachute_string_2";
+    private static final String PARACHUTE_STRING_3 = "parachute_string_3";
     private final ModelPart root;
     public ModelPart[] parachute = new ModelPart[3];
     public ModelPart[] parachuteStrings = new ModelPart[4];
 
     public ParachestModel(ModelPart parachute) {
         this.root = parachute;
-        this.parachute[0] = parachute.getChild("parachute_0");
-        this.parachute[1] = parachute.getChild("parachute_1");
-        this.parachute[2] = parachute.getChild("parachute_2");
-        this.parachuteStrings[0] = parachute.getChild("parachute_string_0");
-        this.parachuteStrings[1] = parachute.getChild("parachute_string_1");
-        this.parachuteStrings[2] = parachute.getChild("parachute_string_2");
-        this.parachuteStrings[3] = parachute.getChild("parachute_string_3");
+        this.parachute[0] = parachute.getChild(PARACHUTE_0);
+        this.parachute[1] = parachute.getChild(PARACHUTE_1);
+        this.parachute[2] = parachute.getChild(PARACHUTE_2);
+        this.parachuteStrings[0] = parachute.getChild(PARACHUTE_STRING_0);
+        this.parachuteStrings[1] = parachute.getChild(PARACHUTE_STRING_1);
+        this.parachuteStrings[2] = parachute.getChild(PARACHUTE_STRING_2);
+        this.parachuteStrings[3] = parachute.getChild(PARACHUTE_STRING_3);
     }
 
     public static LayerDefinition createParachuteLayer() {
         MeshDefinition meshDefinition = new MeshDefinition();
         PartDefinition partDefinition = meshDefinition.getRoot();
-        PartDefinition[] parachute = new PartDefinition[3];
-        PartDefinition[] parachuteStrings = new PartDefinition[4];
-        parachute[0] = partDefinition.addOrReplaceChild("parachute_0", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(15.0F, 4.0F, 0.0F));
-        parachute[1] = partDefinition.addOrReplaceChild("parachute_1", CubeListBuilder.create().texOffs(0, 42).addBox(-20.0F, -45.0F, -20.0F, 40, 2, 40), PartPose.offset(0.0F, 0.0F, 0.0F));
-        parachute[2] = partDefinition.addOrReplaceChild("parachute_2", CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(11F, -11, 0.0F));
 
-        parachuteStrings[0] = partDefinition.addOrReplaceChild("parachute_string_0", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.offset(0.0F, 0.0F, 0.0F));
-        parachuteStrings[1] = partDefinition.addOrReplaceChild("parachute_string_1", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.offset(0.0F, 0.0F, 0.0F));
-        parachuteStrings[2] = partDefinition.addOrReplaceChild("parachute_string_2", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.offset(0.0F, 0.0F, 0.0F));
-        parachuteStrings[3] = partDefinition.addOrReplaceChild("parachute_string_3", CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.offset(0.0F, 0.0F, 0.0F));
+        partDefinition.addOrReplaceChild(PARACHUTE_0, CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(15.0F, 4.0F, 0.0F));
+        partDefinition.addOrReplaceChild(PARACHUTE_1, CubeListBuilder.create().texOffs(0, 42).addBox(-20.0F, -45.0F, -20.0F, 40, 2, 40), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_2, CubeListBuilder.create().texOffs(0, 0).addBox(-20.0F, -45.0F, -20.0F, 10, 2, 40), PartPose.offset(11.0F, -11.0F, 0.0F));
+
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_0, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_1, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_2, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
+        partDefinition.addOrReplaceChild(PARACHUTE_STRING_3, CubeListBuilder.create().texOffs(100, 0).addBox(-0.5F, 0.0F, -0.5F, 1, 40, 1), PartPose.ZERO);
 
         return LayerDefinition.create(meshDefinition, 256, 256);
     }
 
     @Override
     public void setupAnim(ParachestEntity entity, float limbSwing, float limbSwingAmount, float ageInTicks, float netHeadYaw, float headPitch) {
-        this.parachute[0].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachute[2].yRot = (float) -(0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[1].yRot = (float) (0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[2].yRot = (float) -(0 / Mth.RAD_TO_DEG);
-        this.parachuteStrings[3].yRot = (float) -(0 / Mth.RAD_TO_DEG);
+        this.parachute[0].yRot = 0.0F;
+        this.parachute[2].yRot = 0.0F;
+        this.parachuteStrings[0].yRot = 0.0F;
+        this.parachuteStrings[1].yRot = 0.0F;
+        this.parachuteStrings[2].yRot = 0.0F;
+        this.parachuteStrings[3].yRot = 0.0F;
 
         this.parachute[0].setPos(-5.85F, -11.0F, 2.0F);
-        this.parachute[1].setPos(9F, -7F, 2.0F);
+        this.parachute[1].setPos(9.0F, -7.0F, 2.0F);
         this.parachute[2].setPos(-2.15F, 4.0F, 2.0F);
-        this.parachute[0].zRot = (float) (210F / Mth.RAD_TO_DEG);
-        this.parachute[1].zRot = (float) (180F / Mth.RAD_TO_DEG);
-        this.parachute[2].zRot = (float) -(210F / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].zRot = (float) ((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[0].xRot = (float) (23F / Mth.RAD_TO_DEG);
         this.parachuteStrings[0].setPos(9.0F, 3.0F, 2.0F);
-        this.parachuteStrings[1].zRot = (float) ((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[1].xRot = (float) -(23F / Mth.RAD_TO_DEG);
         this.parachuteStrings[1].setPos(9.0F, 3.0F, 2.0F);
-
-        this.parachuteStrings[2].zRot = (float) -((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[2].xRot = (float) (23F / Mth.RAD_TO_DEG);
         this.parachuteStrings[2].setPos(9.0F, 3.0F, 2.0F);
-        this.parachuteStrings[3].zRot = (float) -((155F + 180F) / Mth.RAD_TO_DEG);
-        this.parachuteStrings[3].xRot = (float) -(23F / Mth.RAD_TO_DEG);
         this.parachuteStrings[3].setPos(9.0F, 3.0F, 2.0F);
+
+        this.parachute[0].zRot = 210F * Mth.DEG_TO_RAD;
+        this.parachute[1].zRot = Mth.PI;
+        this.parachute[2].zRot = -210F * Mth.DEG_TO_RAD;
+
+        final float zRot = (155F + 180F) * Mth.DEG_TO_RAD;
+        final float xRot = 23F * Mth.DEG_TO_RAD;
+        this.parachuteStrings[0].xRot = xRot;
+        this.parachuteStrings[0].zRot = zRot;
+        this.parachuteStrings[1].xRot = -xRot;
+        this.parachuteStrings[1].zRot = zRot;
+        this.parachuteStrings[2].xRot = xRot;
+        this.parachuteStrings[2].zRot = -zRot;
+        this.parachuteStrings[3].xRot = -xRot;
+        this.parachuteStrings[3].zRot = -zRot;
     }
 
     @Override

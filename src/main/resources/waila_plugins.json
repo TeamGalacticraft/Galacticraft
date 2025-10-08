@@ -1,6 +1,9 @@
 {
   "galacticraft:plugin": {
-    "initializer": "dev.galacticraft.mod.compat.GalacticraftWailaPlugin",
+    "entrypoints": {
+      "common": "dev.galacticraft.mod.compat.waila.GalacticraftWailaCommonPlugin",
+      "client": "dev.galacticraft.mod.compat.waila.GalacticraftWailaClientPlugin"
+    },
     "side": "*"
   }
 }

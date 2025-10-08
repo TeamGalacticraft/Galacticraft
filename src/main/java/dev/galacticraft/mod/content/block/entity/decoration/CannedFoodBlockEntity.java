@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.block.entity.decoration;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -41,6 +42,8 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+
+import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
 public class CannedFoodBlockEntity extends BlockEntity {
     private final List<ItemStack> canContents = new ArrayList<>();
@@ -75,7 +78,11 @@ public class CannedFoodBlockEntity extends BlockEntity {
 
     public void dropStoredCans(Level level, BlockPos pos) {
         for (ItemStack stack : canContents) {
-            Block.popResource(level, pos, stack);
+            if (CannedFoodItem.getSize(stack) > 0) {
+                Block.popResource(level, pos, stack);
+            } else {
+                Block.popResource(level, pos, EMPTY_CAN.getDefaultInstance());
+            }
         }
     }
 
