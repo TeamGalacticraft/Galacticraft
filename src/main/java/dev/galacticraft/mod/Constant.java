@@ -215,16 +215,16 @@ public interface Constant {
         String RAW_TITANIUM_BLOCK = "raw_titanium_block";
         String RAW_LEAD_BLOCK = "raw_lead_block";
 
-        // Decorative BLocks
-        String ALUMINUM_DECORATION = "aluminum_decoration";
-        String BRONZE_DECORATION = "bronze_decoration";
-        String COPPER_DECORATION = "copper_decoration";
-        String IRON_DECORATION = "iron_decoration";
-        String METEORIC_IRON_DECORATION = "meteoric_iron_decoration";
-        String STEEL_DECORATION = "steel_decoration";
-        String TIN_DECORATION = "tin_decoration";
-        String TITANIUM_DECORATION = "titanium_decoration";
-        String DARK_DECORATION = "dark_decoration";
+        // Decorative Blocks
+        String PLATED_ALUMINUM_BLOCK = "plated_aluminum_block";
+        String PLATED_BRONZE_BLOCK = "plated_bronze_block";
+        String PLATED_COPPER_BLOCK = "plated_copper_block";
+        String PLATED_DESH_BLOCK = "plated_desh_block";
+        String PLATED_IRON_BLOCK = "plated_iron_block";
+        String PLATED_METEORIC_IRON_BLOCK = "plated_meteoric_iron_block";
+        String PLATED_STEEL_BLOCK = "plated_steel_block";
+        String PLATED_TIN_BLOCK = "plated_tin_block";
+        String PLATED_TITANIUM_BLOCK = "plated_titanium_block";
 
         String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";

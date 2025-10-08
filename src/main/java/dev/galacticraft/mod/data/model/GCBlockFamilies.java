@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
-import dev.galacticraft.mod.content.GCBlockRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
@@ -37,17 +36,6 @@ import static dev.galacticraft.mod.content.GCBlocks.*;
 @SuppressWarnings("unused")
 public class GCBlockFamilies {
     private static final Map<Block, BlockFamily> MAP = Maps.newHashMap();
-
-    // DECORATIONS
-    public static final DecorationFamily ALUMINUM_DECORATIONS = decoration(ALUMINUM_DECORATION);
-    public static final DecorationFamily BRONZE_DECORATIONS = decoration(BRONZE_DECORATION);
-    public static final DecorationFamily COPPER_DECORATIONS = decoration(COPPER_DECORATION);
-    public static final DecorationFamily IRON_DECORATIONS = decoration(IRON_DECORATION);
-    public static final DecorationFamily METEORIC_IRON_DECORATIONS = decoration(METEORIC_IRON_DECORATION);
-    public static final DecorationFamily STEEL_DECORATIONS = decoration(STEEL_DECORATION);
-    public static final DecorationFamily TIN_DECORATIONS = decoration(TIN_DECORATION);
-    public static final DecorationFamily TITANIUM_DECORATIONS = decoration(TITANIUM_DECORATION);
-    public static final DecorationFamily DARK_DECORATIONS = decoration(DARK_DECORATION);
 
     // STONES
     public static final BlockFamily MOON_ROCKS = builder(MOON_ROCK)
@@ -125,23 +113,7 @@ public class GCBlockFamilies {
         }
     }
 
-    private static DecorationFamily decoration(GCBlockRegistry.DecorationSet decorationSet) {
-        BlockFamily original = builder(decorationSet.block())
-                .stairs(decorationSet.stairs())
-                .slab(decorationSet.slab())
-                .wall(decorationSet.wall())
-                .getFamily();
-        BlockFamily detailed = builder(decorationSet.detailedBlock())
-                .stairs(decorationSet.detailedStairs())
-                .slab(decorationSet.detailedSlab())
-                .getFamily();
-        return new DecorationFamily(original, detailed);
-    }
-
     public static Stream<BlockFamily> getAllFamilies() {
         return MAP.values().stream();
-    }
-
-    public record DecorationFamily(BlockFamily original, BlockFamily detailed) {
     }
 }

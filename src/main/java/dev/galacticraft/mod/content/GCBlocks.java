@@ -25,7 +25,6 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.block.boss.BossSpawner;
 import dev.galacticraft.mod.content.block.decoration.*;
 import dev.galacticraft.mod.content.block.environment.*;
@@ -81,15 +80,15 @@ public class GCBlocks {
                     .strength(50.0F, 50.0F).noLootTable()));
 
     // DECORATION BLOCKS
-    public static final DecorationSet ALUMINUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.ALUMINUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet BRONZE_DECORATION = BLOCKS.registerDecoration(Constant.Block.BRONZE_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet COPPER_DECORATION = BLOCKS.registerDecoration(Constant.Block.COPPER_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet IRON_DECORATION = BLOCKS.registerDecoration(Constant.Block.IRON_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet METEORIC_IRON_DECORATION = BLOCKS.registerDecoration(Constant.Block.METEORIC_IRON_DECORATION, BlockBehaviour.Properties.ofFullCopy(IRON_DECORATION.block()).mapColor(MapColor.RAW_IRON), 2.5F, 3.0F);
-    public static final DecorationSet STEEL_DECORATION = BLOCKS.registerDecoration(Constant.Block.STEEL_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet TIN_DECORATION = BLOCKS.registerDecoration(Constant.Block.TIN_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.GLOW_LICHEN).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet TITANIUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.TITANIUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.CLAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
-    public static final DecorationSet DARK_DECORATION = BLOCKS.registerDecoration(Constant.Block.DARK_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
+    public static final Block PLATED_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_IRON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.QUARTZ).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_COPPER_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_COPPER_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_RED).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_TIN_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_TIN_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.GLOW_LICHEN).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_ALUMINUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_ALUMINUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_STEEL_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_STEEL_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_BRONZE_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_BRONZE_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_METEORIC_IRON_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_METEORIC_IRON_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(PLATED_IRON_BLOCK).mapColor(MapColor.RAW_IRON)));
+    public static final Block PLATED_DESH_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_DESH_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
+    public static final Block PLATED_TITANIUM_BLOCK = BLOCKS.registerWithItem(Constant.Block.PLATED_TITANIUM_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.CLAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops()));
 
     public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.METAL).noOcclusion().forceSolidOn()));
 
@@ -267,8 +266,8 @@ public class GCBlocks {
     public static final Block ROCKET_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.ROCKET_WORKBENCH, new RocketWorkbench(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block PARACHEST = BLOCKS.registerWithItem(Constant.Block.PARACHEST, new ParachestBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CHEST)));
     public static final Block ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.ALUMINUM_WIRE, new AluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
-    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
-    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+    public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(PLATED_ALUMINUM_BLOCK)));
+    public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(PLATED_ALUMINUM_BLOCK)));
 
     // GLASS FLUID PIPES
     public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn(), PipeColor.CLEAR));

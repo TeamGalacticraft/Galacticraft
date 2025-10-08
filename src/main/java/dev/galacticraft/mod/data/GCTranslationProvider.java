@@ -25,7 +25,6 @@ package dev.galacticraft.mod.data;
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -127,15 +126,15 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.SULFURIC_ACID, "Sulfuric Acid");
 
         // DECORATION BLOCKS
-        this.decorationSet(GCBlocks.ALUMINUM_DECORATION, "Aluminum Decoration");
-        this.decorationSet(GCBlocks.BRONZE_DECORATION, "Bronze Decoration");
-        this.decorationSet(GCBlocks.COPPER_DECORATION, "Copper Decoration");
-        this.decorationSet(GCBlocks.IRON_DECORATION, "Iron Decoration");
-        this.decorationSet(GCBlocks.METEORIC_IRON_DECORATION, "Meteoric Iron Decoration");
-        this.decorationSet(GCBlocks.STEEL_DECORATION, "Steel Decoration");
-        this.decorationSet(GCBlocks.TIN_DECORATION, "Tin Decoration");
-        this.decorationSet(GCBlocks.TITANIUM_DECORATION, "Titanium Decoration");
-        this.decorationSet(GCBlocks.DARK_DECORATION, "Dark Decoration");
+        this.block(GCBlocks.PLATED_ALUMINUM_BLOCK, "Plated Aluminum Block");
+        this.block(GCBlocks.PLATED_BRONZE_BLOCK, "Plated Bronze Block");
+        this.block(GCBlocks.PLATED_COPPER_BLOCK, "Plated Copper Block");
+        this.block(GCBlocks.PLATED_IRON_BLOCK, "Plated Iron Block");
+        this.block(GCBlocks.PLATED_METEORIC_IRON_BLOCK, "Plated Meteoric Iron Block");
+        this.block(GCBlocks.PLATED_STEEL_BLOCK, "Plated Steel Block");
+        this.block(GCBlocks.PLATED_TIN_BLOCK, "Plated Tin Block");
+        this.block(GCBlocks.PLATED_TITANIUM_BLOCK, "Plated Titanium Block");
+        this.block(GCBlocks.PLATED_DESH_BLOCK, "Plated Desh Block");
 
         // MOON NATURAL
         this.block(GCBlocks.MOON_TURF, "Moon Turf");
@@ -743,17 +742,6 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.ASTEROID_ROCKS, "Asteroid Rocks");
 
-        this.tag(GCItemTags.DECORATION_BLOCKS, "Decoration Blocks");
-        this.tag(GCItemTags.ALUMINUM_DECORATION_BLOCKS, "Aluminum Decoration Blocks");
-        this.tag(GCItemTags.BRONZE_DECORATION_BLOCKS, "Bronze Decoration Blocks");
-        this.tag(GCItemTags.COPPER_DECORATION_BLOCKS, "Copper Decoration Blocks");
-        this.tag(GCItemTags.DARK_DECORATION_BLOCKS, "Dark Decoration Blocks");
-        this.tag(GCItemTags.IRON_DECORATION_BLOCKS, "Iron Decoration Blocks");
-        this.tag(GCItemTags.METEORIC_IRON_DECORATION_BLOCKS, "Meteoric Iron Decoration Blocks");
-        this.tag(GCItemTags.STEEL_DECORATION_BLOCKS, "Steel Decoration Blocks");
-        this.tag(GCItemTags.TIN_DECORATION_BLOCKS, "Tin Decoration Blocks");
-        this.tag(GCItemTags.TITANIUM_DECORATION_BLOCKS, "Titanium Decoration Blocks");
-
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
@@ -1234,17 +1222,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the Moon Dungeon, and steal its key");
         this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a Moon Buggy Schematic");
         this.advancement(Advancements.BUGGY, "Buggy", "Weld a Moon Buggy together");
-    }
-
-    protected void decorationSet(DecorationSet decoSet, String translation) {
-        this.block(decoSet.block(), translation);
-        this.block(decoSet.stairs(), translation + " Stairs");
-        this.block(decoSet.slab(), translation + " Slab");
-        this.block(decoSet.wall(), translation + " Wall");
-        this.block(decoSet.detailedBlock(), "Detailed " + translation);
-        this.block(decoSet.detailedStairs(), "Detailed " + translation + " Stairs");
-        this.block(decoSet.detailedSlab(), "Detailed " + translation + " Slab");
-        this.block(decoSet.detailedWall(), "Detailed " + translation + " Wall");
     }
 
     protected void blockDesc(Block block, String translation) {

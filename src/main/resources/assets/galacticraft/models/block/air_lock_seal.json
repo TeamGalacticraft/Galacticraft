@@ -1,10 +1,10 @@
 {
   "parent": "block/block",
   "textures": {
-    "particle": "galacticraft:block/tin_decoration",
-    "top": "galacticraft:block/tin_decoration",
-    "side": "galacticraft:block/tin_decoration",
-    "bottom": "galacticraft:block/tin_decoration"
+    "particle": "galacticraft:block/tin_block",
+    "top": "galacticraft:block/tin_block",
+    "side": "galacticraft:block/tin_block",
+    "bottom": "galacticraft:block/tin_block"
   },
   "elements": [
     {

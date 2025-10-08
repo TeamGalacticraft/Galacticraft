@@ -342,7 +342,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
-                .define('T', GCBlocks.TIN_DECORATION)
+                .define('T', GCBlocks.PLATED_ALUMINUM_BLOCK)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("TWT")
                 .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))

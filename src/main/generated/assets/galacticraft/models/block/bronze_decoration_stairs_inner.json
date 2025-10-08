@@ -1,8 +1,0 @@
-{
-  "parent": "minecraft:block/inner_stairs",
-  "textures": {
-    "bottom": "galacticraft:block/bronze_decoration",
-    "side": "galacticraft:block/bronze_decoration",
-    "top": "galacticraft:block/bronze_decoration"
-  }
-}

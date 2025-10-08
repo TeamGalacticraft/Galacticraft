@@ -24,7 +24,6 @@ package dev.galacticraft.mod.data.tag;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -42,8 +41,6 @@ import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Arrays;
-import java.util.HashMap;
-import java.util.List;
 import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
@@ -487,51 +484,13 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.MARS_COBBLESTONE_WALL
         };
 
-        List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
-
-        Map<String, TagKey<Block>> decoTags = new HashMap<>();
-
-        decoTags.put("aluminum_decoration", GCBlockTags.ALUMINUM_DECORATION_BLOCKS);
-        decoTags.put("bronze_decoration", GCBlockTags.BRONZE_DECORATION_BLOCKS);
-        decoTags.put("copper_decoration", GCBlockTags.COPPER_DECORATION_BLOCKS);
-        decoTags.put("iron_decoration", GCBlockTags.IRON_DECORATION_BLOCKS);
-        decoTags.put("meteoric_iron_decoration", GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS);
-        decoTags.put("steel_decoration", GCBlockTags.STEEL_DECORATION_BLOCKS);
-        decoTags.put("tin_decoration", GCBlockTags.TIN_DECORATION_BLOCKS);
-        decoTags.put("titanium_decoration", GCBlockTags.TITANIUM_DECORATION_BLOCKS);
-        decoTags.put("dark_decoration", GCBlockTags.DARK_DECORATION_BLOCKS);
-
-        var stairsBuilder = this.tag(GCBlockTags.STAIRS).add(stairs);
-        var slabBuilder = this.tag(GCBlockTags.SLABS).add(slabs);
-        var wallBuilder = this.tag(GCBlockTags.WALLS).add(walls);
-
-        String decoSetId;
-        for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
-            stairsBuilder.add(decorationSet.stairs(), decorationSet.detailedStairs());
-            slabBuilder.add(decorationSet.slab(), decorationSet.detailedSlab());
-            wallBuilder.add(decorationSet.wall(), decorationSet.detailedWall());
-
-            decoSetId = decorationSet.block().getDescriptionId();
-            decoSetId = decoSetId.substring(decoSetId.lastIndexOf(".") + 1);
-            this.tag(decoTags.get(decoSetId))
-                    .add(decorationSet.block(), decorationSet.stairs(), decorationSet.slab(), decorationSet.wall())
-                    .add(decorationSet.detailedBlock(), decorationSet.detailedStairs(), decorationSet.detailedSlab(), decorationSet.detailedWall());
-        }
+        this.tag(GCBlockTags.STAIRS).add(stairs);
+        this.tag(GCBlockTags.SLABS).add(slabs);
+        this.tag(GCBlockTags.WALLS).add(walls);
 
         this.tag(BlockTags.STAIRS).addTag(GCBlockTags.STAIRS);
         this.tag(BlockTags.SLABS).addTag(GCBlockTags.SLABS);
         this.tag(BlockTags.WALLS).addTag(GCBlockTags.WALLS);
-
-        this.tag(GCBlockTags.DECORATION_BLOCKS)
-                .addTag(GCBlockTags.ALUMINUM_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.BRONZE_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.COPPER_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.IRON_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.STEEL_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.TIN_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
-                .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCBlockTags.MACHINES)
@@ -621,24 +580,15 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ASTEROID_ROCK_2,
                         GCBlocks.DENSE_ICE,
 
-                        GCBlocks.TIN_DECORATION.block(),
-                        GCBlocks.COPPER_DECORATION.block(),
-                        GCBlocks.BRONZE_DECORATION.block(),
-                        GCBlocks.STEEL_DECORATION.block(),
-                        GCBlocks.TITANIUM_DECORATION.block(),
-                        GCBlocks.IRON_DECORATION.block(),
-                        GCBlocks.ALUMINUM_DECORATION.block(),
-                        GCBlocks.DARK_DECORATION.block(),
-                        GCBlocks.METEORIC_IRON_DECORATION.block(),
-                        GCBlocks.TIN_DECORATION.detailedBlock(),
-                        GCBlocks.COPPER_DECORATION.detailedBlock(),
-                        GCBlocks.BRONZE_DECORATION.detailedBlock(),
-                        GCBlocks.STEEL_DECORATION.detailedBlock(),
-                        GCBlocks.TITANIUM_DECORATION.detailedBlock(),
-                        GCBlocks.IRON_DECORATION.detailedBlock(),
-                        GCBlocks.ALUMINUM_DECORATION.detailedBlock(),
-                        GCBlocks.METEORIC_IRON_DECORATION.detailedBlock(),
-                        GCBlocks.DARK_DECORATION.detailedBlock(),
+                        GCBlocks.PLATED_TIN_BLOCK,
+                        GCBlocks.PLATED_COPPER_BLOCK,
+                        GCBlocks.PLATED_BRONZE_BLOCK,
+                        GCBlocks.PLATED_STEEL_BLOCK,
+                        GCBlocks.PLATED_TITANIUM_BLOCK,
+                        GCBlocks.PLATED_IRON_BLOCK,
+                        GCBlocks.PLATED_ALUMINUM_BLOCK,
+                        GCBlocks.PLATED_DESH_BLOCK,
+                        GCBlocks.PLATED_METEORIC_IRON_BLOCK,
                         GCBlocks.MOON_ROCK,
                         GCBlocks.MOON_ROCK_BRICK,
                         GCBlocks.CRACKED_MOON_ROCK_BRICK,
