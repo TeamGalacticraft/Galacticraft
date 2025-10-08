@@ -36,9 +36,9 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.List;
 
-public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
+public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
     default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.COMPRESSING;
+        return GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING;
     }
 
     default int getWidth() {
@@ -50,15 +50,15 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
     }
 
     default int getProcessingTime() {
-        return 200;
+        return (int) (200 / 1.5F);
     }
 
-    enum Serializer implements DisplaySerializer<DefaultCompressingDisplay> {
+    enum Serializer implements DisplaySerializer<ElectricCompressingDisplay> {
         INSTANCE;
 
         @Override
-        public CompoundTag save(CompoundTag tag, DefaultCompressingDisplay display) {
-            tag.putBoolean(Constant.Nbt.SHAPED, display instanceof DefaultShapedCompressingDisplay);
+        public CompoundTag save(CompoundTag tag, ElectricCompressingDisplay display) {
+            tag.putBoolean(Constant.Nbt.SHAPED, display instanceof ElectricShapedCompressingDisplay);
             ListTag list = new ListTag();
             for (EntryIngredient inputEntry : display.getInputEntries()) {
                 list.add(inputEntry.saveIngredient());
@@ -74,7 +74,7 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
         }
 
         @Override
-        public DefaultCompressingDisplay read(CompoundTag tag) {
+        public ElectricCompressingDisplay read(CompoundTag tag) {
             ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             List<EntryIngredient> inputs = new ArrayList<>();
             List<EntryIngredient> outputs = new ArrayList<>();
@@ -86,9 +86,9 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
                 outputs.add(EntryIngredient.read((ListTag) element));
             }
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new DefaultShapedCompressingDisplay(inputs, outputs);
+                return new ElectricShapedCompressingDisplay(inputs, outputs);
             } else {
-                return new DefaultShapelessCompressingDisplay(inputs, outputs);
+                return new ElectricShapelessCompressingDisplay(inputs, outputs);
             }
         }
     }
