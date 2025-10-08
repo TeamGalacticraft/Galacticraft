@@ -10,6 +10,7 @@ final class FreeGraph {
     private final VoxelMask3D free;
     private final int stride;
     private final int edgeCount;
+
     private FreeGraph(VoxelMask3D free, int stride, List<Node> ns, List<Edge>[] adj) {
         this.free = Objects.requireNonNull(free, "free");
         if (stride <= 0) throw new IllegalArgumentException("stride must be > 0");

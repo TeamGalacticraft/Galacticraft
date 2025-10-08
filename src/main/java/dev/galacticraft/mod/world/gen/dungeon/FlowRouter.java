@@ -103,11 +103,14 @@ final class FlowRouter {
     }
 
     static List<RoutedPair> pickKDisjoint(List<PNode> P, List<EdgeCand> E, RoomPlacer.Placed startRoom, RoomPlacer.Placed endRoom, int K) {
+        record QN(int v, float k) {
+        }
+
         class Edge {
             final int u;
             final int v;
-            int cap;
             final float cost;
+            int cap;
             Edge rev;
 
             Edge(int u, int v, int cap, float cost) {
@@ -115,22 +118,6 @@ final class FlowRouter {
                 this.v = v;
                 this.cap = cap;
                 this.cost = cost;
-            }
-        }
-        class Net {
-            final ArrayList<ArrayList<Edge>> g = new ArrayList<>();
-
-            int addNode() {
-                g.add(new ArrayList<>());
-                return g.size() - 1;
-            }
-
-            void addEdge(int u, int v, int cap, float cost) {
-                Edge a = new Edge(u, v, cap, cost), b = new Edge(v, u, 0, -cost);
-                a.rev = b;
-                b.rev = a;
-                g.get(u).add(a);
-                g.get(v).add(b);
             }
         }
 
@@ -169,7 +156,21 @@ final class FlowRouter {
         float[] pot = new float[N]; // potentials for reduced costs
         Edge[] prev = new Edge[N];
 
-        record QN(int v, float k) {
+        class Net {
+            final ArrayList<ArrayList<Edge>> g = new ArrayList<>();
+
+            int addNode() {
+                g.add(new ArrayList<>());
+                return g.size() - 1;
+            }
+
+            void addEdge(int u, int v, int cap, float cost) {
+                Edge a = new Edge(u, v, cap, cost), b = new Edge(v, u, 0, -cost);
+                a.rev = b;
+                b.rev = a;
+                g.get(u).add(a);
+                g.get(v).add(b);
+            }
         }
         Comparator<QN> cmp = Comparator.comparingDouble(a -> a.k);
 

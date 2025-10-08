@@ -61,36 +61,40 @@ public final class DungeonWorldBuilder {
             List<FlowRouter.RoutedPair> already,
             List<RoomPlacer.Placed> placed,
             ProcConfig pc,
-            Random rnd
+            Random rnd,
+            int maxForksTotal
     ) {
         ArrayList<FlowRouter.RoutedPair> extra = new ArrayList<>();
 
-        // Adjacency keyed by node (reference equality on PNode)
+        // adjacency
         Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs = new HashMap<>();
         for (FlowRouter.EdgeCand e : CE) {
-            FlowRouter.PNode a = P.get(e.a());
-            FlowRouter.PNode b = P.get(e.b());
+            FlowRouter.PNode a = P.get(e.a()), b = P.get(e.b());
             nbrs.computeIfAbsent(a, k -> new ArrayList<>()).add(b);
             nbrs.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
         }
 
-        // Rooms already wired by existing routes
+        // rooms already wired
         HashSet<RoomPlacer.Placed> wired = new HashSet<>();
         for (FlowRouter.RoutedPair rp : already) {
             wired.add(rp.A().room());
             wired.add(rp.B().room());
         }
 
-        // Branch points are any ports on already-wired rooms
+        // branch points = any portals on wired rooms
         ArrayList<FlowRouter.PNode> branchFrom = new ArrayList<>();
         for (FlowRouter.PNode pn : P) if (wired.contains(pn.room())) branchFrom.add(pn);
 
+        int forksUsed = 0;
         for (FlowRouter.PNode base : branchFrom) {
-            if (rnd.nextDouble() < 0.50) {            // first split chance (50%)
-                extra.addAll(growBranch(nbrs, wired, base, 4, rnd));
-                if (rnd.nextDouble() < 0.25) {        // fork-in-fork chance (25%)
-                    extra.addAll(growBranch(nbrs, wired, base, 3, rnd));
-                }
+            if (forksUsed >= maxForksTotal) break;
+            if (rnd.nextFloat() > pc.forkChance) continue;
+
+            // grow one fork
+            List<FlowRouter.RoutedPair> fork = growBranch(nbrs, wired, base, rnd, pc);
+            if (!fork.isEmpty()) {
+                extra.addAll(fork);
+                forksUsed++;
             }
         }
         return extra;
@@ -100,24 +104,53 @@ public final class DungeonWorldBuilder {
             Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs,
             Set<RoomPlacer.Placed> wired,
             FlowRouter.PNode seed,
-            int maxLen,
-            Random rnd
+            Random rnd,
+            ProcConfig pc
     ) {
         ArrayList<FlowRouter.RoutedPair> out = new ArrayList<>();
+        FlowRouter.PNode prev = null;
         FlowRouter.PNode cur = seed;
-        int len = 1 + rnd.nextInt(Math.max(1, maxLen));
 
-        for (int i = 0; i < len; i++) {
+        int maxLen = 2 + rnd.nextInt(4); // 2..5 hops
+
+        for (int i = 0; i < maxLen; i++) {
             List<FlowRouter.PNode> cand = nbrs.getOrDefault(cur, Collections.emptyList());
             FlowRouter.PNode pick = null;
             double best = Double.NEGATIVE_INFINITY;
 
             for (FlowRouter.PNode nx : cand) {
                 if (nx.room() == cur.room()) continue;
-                if (wired.contains(nx.room())) continue;          // prefer unexplored rooms
-                double dy = cur.worldPos().getY() - nx.worldPos().getY(); // >0 if going down
-                double jiggle = (rnd.nextDouble() - 0.5) * 0.2;       // slight lateral wobble
-                double score = dy + jiggle;
+                if (wired.contains(nx.room())) continue; // grow into new rooms
+
+                // base score = prefer closer spacing (just small jitter to vary)
+                double score = -cur.worldPos().distSqr(nx.worldPos()) * 0.0005 + (rnd.nextDouble() - 0.5) * 0.05;
+
+                // turn hardness: prefer orthogonal first step vs. prev->cur
+                if (prev != null) {
+                    int vx1 = cur.worldPos().getX() - prev.worldPos().getX();
+                    int vy1 = cur.worldPos().getY() - prev.worldPos().getY();
+                    int vz1 = cur.worldPos().getZ() - prev.worldPos().getZ();
+                    int vx2 = nx.worldPos().getX() - cur.worldPos().getX();
+                    int vy2 = nx.worldPos().getY() - cur.worldPos().getY();
+                    int vz2 = nx.worldPos().getZ() - cur.worldPos().getZ();
+                    double dot = vx1 * vx2 + vy1 * vy2 + vz1 * vz2;
+                    double n1 = Math.sqrt((double) vx1 * vx1 + vy1 * vy1 + vz1 * vz1);
+                    double n2 = Math.sqrt((double) vx2 * vx2 + vy2 * vy2 + vz2 * vz2);
+                    if (n1 > 0 && n2 > 0) {
+                        double cos = Math.abs(dot / (n1 * n2)); // 1=straight, 0=orthogonal
+                        score += (1.0 - cos) * (0.75 * pc.forkTurnHardness); // push to right angles if hard
+                    }
+                } else {
+                    // first step: compare seed facing if available, nudge to orthogonal
+                    score += 0.15 * pc.forkTurnHardness;
+                }
+
+                // If this is likely the last step, prefer BRANCH_END rooms as the tip
+                boolean likelyTip = (i >= maxLen - 2);
+                if (likelyTip && nx.room().def().type() == RoomTemplateDef.RoomType.BRANCH_END) {
+                    score += 0.6; // strong nudge to end forks in a treasure/branch_end room
+                }
+
                 if (score > best) {
                     best = score;
                     pick = nx;
@@ -127,29 +160,23 @@ public final class DungeonWorldBuilder {
 
             out.add(new FlowRouter.RoutedPair(cur, pick));
             wired.add(pick.room());
+            prev = cur;
             cur = pick;
-        }
-
-        // Tip type hint: 80% basic, 20% treasure (no-op if swapping isn't supported)
-        if (!out.isEmpty()) {
-            RoomPlacer.trySwapRoomTemplate(
-                    cur.room(),
-                    (rnd.nextDouble() < 0.20) ? RoomDefs.BRANCH_END : RoomDefs.BASIC,
-                    rnd
-            );
         }
         return out;
     }
 
     /**
-     * Builds ~3 disjoint-ish routes from the entrance to 3 end ports that:
-     * - together consume ≈40% of total placed rooms,
-     * - bias downward (Terraria-like descent),
-     * - ensure the last room before the end is a QUEEN room.
+     * Build exactly 3 unique critical paths:
+     * entrance -> ... -> queen
+     * and then link each queen to the end room with one hop:
+     * queen -> end
      * <p>
-     * Returns RoutedPairs to be corridor-routed in order.
+     * - No room is reused across the three entrance->queen chains
+     * - Queens chosen are the ones nearest to the end (and unique rooms)
+     * - Greedy selection is purely "closer-to-queen" (no vertical bias)
      */
-    private static List<FlowRouter.RoutedPair> planCriticalRoutes(
+    private static CriticalPlan planCriticalRoutes(
             List<FlowRouter.PNode> P,
             List<FlowRouter.EdgeCand> CE,
             List<FlowRouter.PNode> entrancePorts,
@@ -158,131 +185,128 @@ public final class DungeonWorldBuilder {
             ProcConfig pc,
             Random rnd
     ) {
-        ArrayList<FlowRouter.RoutedPair> outPairs = new ArrayList<>();
+        ArrayList<FlowRouter.RoutedPair> chainPairs = new ArrayList<>();
+        ArrayList<FlowRouter.RoutedPair> qToEndPairs = new ArrayList<>();
+
         if (entrancePorts == null || entrancePorts.isEmpty() || endPorts == null || endPorts.isEmpty()) {
-            return outPairs;
+            return new CriticalPlan(chainPairs, qToEndPairs);
         }
 
-        // Target: ~40% of rooms across up to 3 routes
-        int N = Math.max(placed.size(), 1);
-        int totalCritical = Math.max(3, (int) Math.floor(0.40 * N));   // ensure at least a few hops overall
-        int k = Math.min(3, Math.max(1, endPorts.size()));             // up to 3 distinct routes
-        int perRoute = Math.max(2, totalCritical / k);                  // steps before the queen/end
+        // one entrance to start from (the generator only places one entrance template)
+        final FlowRouter.PNode start = entrancePorts.get(0);
 
-        // Start from the first entrance port
-        FlowRouter.PNode start = entrancePorts.get(0);
+        // end ports (use all of them, but we only need 3 queens near the end-room)
+        final ArrayList<FlowRouter.PNode> ends = new ArrayList<>(endPorts);
 
-        // Prefer lower end ports first (descending feel)
-        ArrayList<FlowRouter.PNode> ends = new ArrayList<>(endPorts);
-        ends.sort(Comparator.comparingInt(pn -> pn.worldPos().getY())); // low Y first
-        if (ends.size() > k) ends.subList(k, ends.size()).clear();
-
-        // Build adjacency once (node -> neighbors)
+        // adjacency (portal-graph neighbors)
         Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs = new HashMap<>();
         for (FlowRouter.EdgeCand e : CE) {
-            FlowRouter.PNode a = P.get(e.a());
-            FlowRouter.PNode b = P.get(e.b());
-            nbrs.computeIfAbsent(a, t -> new ArrayList<>()).add(b);
-            nbrs.computeIfAbsent(b, t -> new ArrayList<>()).add(a);
+            FlowRouter.PNode a = P.get(e.a()), b = P.get(e.b());
+            nbrs.computeIfAbsent(a, k -> new ArrayList<>()).add(b);
+            nbrs.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
         }
 
-        // Track which rooms we've already consumed
+        // gather queen ports
+        java.util.Set<ResourceLocation> queenIds =
+                RoomDefs.QUEEN.stream().map(RoomTemplateDef::id).collect(java.util.stream.Collectors.toSet());
+        ArrayList<FlowRouter.PNode> queenPorts = new ArrayList<>();
+        for (FlowRouter.PNode pn : P) if (queenIds.contains(pn.room().def().id())) queenPorts.add(pn);
+
+        // pick/end reference (use the lowest end port as the end anchor)
+        FlowRouter.PNode endAnchor = ends.stream()
+                .min(Comparator.comparingInt(pn -> pn.worldPos().getY()))
+                .orElse(ends.get(0));
+
+        // ensure we have 3 queens (unique rooms), nearest to the end anchor
+        HashSet<RoomPlacer.Placed> usedQueenRooms = new HashSet<>();
+        queenPorts.sort(Comparator.comparingDouble(q -> q.worldPos().distSqr(endAnchor.worldPos())));
+        ArrayList<FlowRouter.PNode> pickedQueens = new ArrayList<>(3);
+        for (FlowRouter.PNode q : queenPorts) {
+            if (usedQueenRooms.add(q.room())) pickedQueens.add(q);
+            if (pickedQueens.size() == 3) break;
+        }
+        if (pickedQueens.size() < 3) {
+            // fallback: choose any non-queen ports close to end as "pseudo-queens"
+            ArrayList<FlowRouter.PNode> extras = new ArrayList<>(P);
+            extras.sort(Comparator.comparingDouble(pn -> pn.worldPos().distSqr(endAnchor.worldPos())));
+            for (FlowRouter.PNode pn : extras) {
+                if (queenIds.contains(pn.room().def().id())) continue;
+                if (usedQueenRooms.add(pn.room())) pickedQueens.add(pn);
+                if (pickedQueens.size() == 3) break;
+            }
+        }
+        if (pickedQueens.isEmpty()) return new CriticalPlan(chainPairs, qToEndPairs);
+
+        // used rooms across ALL three critical paths (no overlap allowed)
         HashSet<RoomPlacer.Placed> usedRooms = new HashSet<>();
         usedRooms.add(start.room());
 
-        // Detect queen rooms by ID
-        java.util.Set<ResourceLocation> queenIds =
-                RoomDefs.QUEEN.stream().map(RoomTemplateDef::id).collect(java.util.stream.Collectors.toSet());
-
-        ArrayList<FlowRouter.PNode> queenPorts = new ArrayList<>();
-        for (FlowRouter.PNode pn : P) {
-            if (queenIds.contains(pn.room().def().id())) queenPorts.add(pn);
-        }
-
-        // If not enough queens among P, prefer the queens nearest to ends from existing ports
-        if (queenPorts.size() < k) {
-            List<FlowRouter.PNode> ensuredQueens =
-                    RoomPlacer.ensureQueensNearEnds(placed, P, ends, k - queenPorts.size(), rnd);
-            queenPorts.addAll(ensuredQueens);
-        }
-
-        for (int i = 0; i < ends.size(); i++) {
-            FlowRouter.PNode end = ends.get(i);
-
-            // Pick nearest queen that uses an unused room; else fall back to any unused node near end; else end itself.
-            FlowRouter.PNode queen = pickNearestUnusedPort(queenPorts, end, usedRooms);
-            if (queen == null) queen = pickNearestUnusedPort(P, end, usedRooms);
-            if (queen == null) queen = end;
-
-            // Build downward-biased chain: entrance -> ...hops... -> queen -> end
-            List<FlowRouter.PNode> chain = greedyDownwardChain(P, CE, start, queen, perRoute - 1, usedRooms, rnd);
-            chain.add(queen);
-            chain.add(end);
-
-            for (int a = 0; a + 1 < chain.size(); a++) {
-                outPairs.add(new FlowRouter.RoutedPair(chain.get(a), chain.get(a + 1)));
-                usedRooms.add(chain.get(a).room());
-                usedRooms.add(chain.get(a + 1).room());
+        for (FlowRouter.PNode queen : pickedQueens) {
+            // greedily walk toward queen, maximizing closeness to queen (no up/down preference)
+            List<FlowRouter.PNode> chain = greedyNearestChain(P, CE, nbrs, start, queen, /*max hops*/ pc.maxRouteLen, usedRooms, rnd);
+            if (chain.isEmpty() || chain.get(chain.size() - 1).room() != queen.room()) {
+                // if we couldn't reach this queen uniquely, skip it
+                continue;
             }
+            // stitch chain into pairs (critical)
+            for (int i = 0; i + 1 < chain.size(); i++) {
+                chainPairs.add(new FlowRouter.RoutedPair(chain.get(i), chain.get(i + 1)));
+                usedRooms.add(chain.get(i).room());
+                usedRooms.add(chain.get(i + 1).room());
+            }
+
+            // add one hop from this queen to the nearest end port (non-critical)
+            FlowRouter.PNode bestEnd = ends.stream()
+                    .min(Comparator.comparingDouble(ep -> ep.worldPos().distSqr(queen.worldPos())))
+                    .orElse(endAnchor);
+            qToEndPairs.add(new FlowRouter.RoutedPair(queen, bestEnd));
         }
 
-        return outPairs;
+        return new CriticalPlan(chainPairs, qToEndPairs);
     }
 
     /**
-     * Greedy chain that prefers steps that go down in Y and zig-zag a bit.
+     * Greedy chain that minimizes distance-to-goal only (no vertical bias).
+     * Stops early when stuck or when rooms would repeat.
      */
-    private static List<FlowRouter.PNode> greedyDownwardChain(
+    private static List<FlowRouter.PNode> greedyNearestChain(
             List<FlowRouter.PNode> P,
             List<FlowRouter.EdgeCand> CE,
+            Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs,
             FlowRouter.PNode start,
-            FlowRouter.PNode goalNear,
-            int hops,
+            FlowRouter.PNode goal,
+            int maxHops,
             Set<RoomPlacer.Placed> used,
             Random rnd
     ) {
         ArrayList<FlowRouter.PNode> chain = new ArrayList<>();
         FlowRouter.PNode cur = start;
 
-        // Adjacency keyed by node
-        Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs = new HashMap<>();
-        for (FlowRouter.EdgeCand e : CE) {
-            FlowRouter.PNode a = P.get(e.a());
-            FlowRouter.PNode b = P.get(e.b());
-            nbrs.computeIfAbsent(a, k -> new ArrayList<>()).add(b);
-            nbrs.computeIfAbsent(b, k -> new ArrayList<>()).add(a);
-        }
-
-        for (int i = 0; i < hops; i++) {
+        for (int i = 0; i < maxHops; i++) {
             List<FlowRouter.PNode> cand = nbrs.getOrDefault(cur, Collections.emptyList());
             if (cand.isEmpty()) break;
 
             FlowRouter.PNode best = null;
-            double bestScore = Double.NEGATIVE_INFINITY;
+            double bestScore = Double.POSITIVE_INFINITY;
 
+            // distance-based choice; avoid already-used rooms
             for (FlowRouter.PNode nx : cand) {
                 if (nx.room() == cur.room()) continue;
-
-                double dy = cur.worldPos().getY() - nx.worldPos().getY();     // prefer going down
-                double dGoal = cur.worldPos().distSqr(goalNear.worldPos());
-                double dGoal2 = nx.worldPos().distSqr(goalNear.worldPos());
-                double toGoalGain = (dGoal - dGoal2) * 0.001;             // gentle pull toward queen
-                double jitter = (rnd.nextDouble() - 0.5) * 0.10;          // serpentine feel
-                double unusedBonus = used.contains(nx.room()) ? -2.0 : 0.0; // avoid reusing rooms
-
-                double score = 2.0 * dy + toGoalGain + jitter + unusedBonus;
-                if (score > bestScore) {
-                    bestScore = score;
+                if (used.contains(nx.room())) continue; // uniqueness across all critical paths
+                double dist = nx.worldPos().distSqr(goal.worldPos());
+                // tiny jitter to break ties
+                dist *= (0.98 + 0.04 * rnd.nextDouble());
+                if (dist < bestScore) {
+                    bestScore = dist;
                     best = nx;
                 }
             }
-
             if (best == null) break;
+
             chain.add(best);
             cur = best;
-            used.add(best.room());
+            if (cur.room() == goal.room()) break;
         }
-
         return chain;
     }
 
@@ -611,17 +635,22 @@ public final class DungeonWorldBuilder {
                 Random jrand = new Random(rnd.nextLong());
                 int emittedCorr = 0;
 
-// Build the 3 critical routes first (includes Queen->End rule)
-                List<FlowRouter.RoutedPair> criticalPairs = planCriticalRoutes(
-                        P, CE, entrancePortList, endPortList, placed, pc, jrand
-                );
+// Plan: entrance->...->queen (critical), then queen->end (non-critical)
+                CriticalPlan cplan = planCriticalRoutes(P, CE, entrancePortList, endPortList, placed, pc, jrand);
 
-// Then grow minimal extra links so every room is reachable
-                List<FlowRouter.RoutedPair> pairs = new ArrayList<>(criticalPairs);
-                pairs.addAll(FlowRouter.connectAllRooms(P, CE, criticalPairs));
-                pairs.addAll(spawnForks(P, CE, pairs, placed, pc, jrand));
+// Route set order: critical chains first, then queen->end links
+                List<FlowRouter.RoutedPair> pairs = new ArrayList<>(cplan.chainPairs);
+                pairs.addAll(cplan.qToEndPairs);
 
-                java.util.Set<FlowRouter.RoutedPair> criticalSet = new java.util.HashSet<>(criticalPairs);
+// Grow minimal extra links so every room is reachable
+                pairs.addAll(FlowRouter.connectAllRooms(P, CE, cplan.chainPairs));
+
+// Spawn forks (configurable) with a global budget derived from the number of critical paths
+                int maxForksTotal = Math.max(0, pc.forkMaxPerPath * Math.max(1, cplan.chainPairs.isEmpty() ? 1 : 3));
+                pairs.addAll(spawnForks(P, CE, pairs, placed, pc, jrand, maxForksTotal));
+
+// Mark *only* entrance->queen pairs as critical
+                java.util.Set<FlowRouter.RoutedPair> criticalSet = new java.util.HashSet<>(cplan.chainPairs);
 
                 for (FlowRouter.RoutedPair pair : pairs) {
                     int ap = corridorApertureFor(pair, pc);
@@ -647,11 +676,10 @@ public final class DungeonWorldBuilder {
                             path, ap, box,
                             path.get(0), path.get(path.size() - 1),
                             startDir, endDir,
-                            isCritical     // <-- NEW
+                            isCritical
                     ));
                     emittedCorr++;
                 }
-
                 LOGGER.info("[Proc] Done: rooms={} corridors={}", placed.size(), emittedCorr);
                 return true; // success on this pass
 
@@ -684,5 +712,12 @@ public final class DungeonWorldBuilder {
     private boolean fail(String msg) {
         LOGGER.info("[Proc] FAIL: {}", msg);
         return false;
+    }
+
+    /**
+     * @param chainPairs  entrance -> ... -> queen (critical)
+     * @param qToEndPairs queen -> end (non-critical)
+     */
+    private record CriticalPlan(List<FlowRouter.RoutedPair> chainPairs, List<FlowRouter.RoutedPair> qToEndPairs) {
     }
 }

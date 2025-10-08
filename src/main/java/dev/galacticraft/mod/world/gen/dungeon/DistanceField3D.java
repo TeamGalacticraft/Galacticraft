@@ -3,13 +3,12 @@ package dev.galacticraft.mod.world.gen.dungeon;
 import java.util.ArrayDeque;
 
 final class DistanceField3D {
-    // Returns Manhattan distance to nearest false cell (i.e., distance-to-walls when called with free mask).
+    // Returns Manhattan distance to nearest false cell (i.e., distance-to-walls when called with free mask)
     static int[][][] manhattanDist(VoxelMask3D free) {
         int nx = free.nx, ny = free.ny, nz = free.nz;
         int[][][] D = new int[nx][ny][nz];
         ArrayDeque<int[]> q = new ArrayDeque<>();
 
-        // init: walls (free==false) push; free cells set INF
         final int INF = 1 << 28;
         for (int x = 0; x < nx; x++)
             for (int y = 0; y < ny; y++)

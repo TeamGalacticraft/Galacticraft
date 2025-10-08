@@ -24,7 +24,7 @@ public class CorridorPiece extends StructurePiece {
     private final net.minecraft.core.Direction aFacing;
     private final net.minecraft.core.Direction bFacing;
 
-    private final boolean critical; // <-- NEW
+    private final boolean critical;
 
     public CorridorPiece(List<BlockPos> path, int aperture, BoundingBox box,
                          BlockPos aPort, BlockPos bPort,
@@ -51,7 +51,7 @@ public class CorridorPiece extends StructurePiece {
         this.bPort = new BlockPos(tag.getInt("bx"), tag.getInt("by"), tag.getInt("bz"));
         this.aFacing = net.minecraft.core.Direction.values()[tag.getInt("af")];
         this.bFacing = net.minecraft.core.Direction.values()[tag.getInt("bf")];
-        this.critical = tag.getBoolean("crit"); // <-- NEW
+        this.critical = tag.getBoolean("crit");
     }
 
     private static void punchPortWith(WorldGenLevel level, BlockPos center, net.minecraft.core.Direction facing, int aperture, int depth, net.minecraft.world.level.block.Block block) {
@@ -89,7 +89,7 @@ public class CorridorPiece extends StructurePiece {
         tag.putInt("bz", bPort.getZ());
         tag.putInt("af", aFacing.ordinal());
         tag.putInt("bf", bFacing.ordinal());
-        tag.putBoolean("crit", critical); // <-- NEW
+        tag.putBoolean("crit", critical);
     }
 
     @Override

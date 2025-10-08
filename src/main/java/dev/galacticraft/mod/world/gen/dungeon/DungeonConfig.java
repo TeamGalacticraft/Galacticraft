@@ -9,7 +9,8 @@ public record DungeonConfig(
         int sphereRadiusMin,
         int sphereRadiusMax,
         int corridorsMaxTurns,
-        int corridorStep,       // blocks per step for corridor carving (1-3 is fine)
+        int corridorStep,
+        // blocks per step for corridor carving (1-3 is fine but higher values might speed up generation)
         boolean carveEntranceShaft
 ) {
     public static final Codec<DungeonConfig> CODEC = RecordCodecBuilder.create(i -> i.group(

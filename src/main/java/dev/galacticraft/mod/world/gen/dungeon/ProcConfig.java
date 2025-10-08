@@ -99,6 +99,11 @@ public final class ProcConfig {
     // (use a small value because distSqr can be large, e.g., 40^2 = 1600)
     public float proxPenalty = 0.0015f;
 
+    // -------- Fork controls (NEW) --------
+    public float forkChance = 0.20f;  // chance to sprout a fork at a viable node
+    public int forkMaxPerPath = 3;      // budget per critical path
+    public float forkTurnHardness = 0.70f;  // 0..1: high = prefer 90° turns
+
     // -------- Derived helpers --------
 
     public static ProcConfig fromDungeonConfig(DungeonConfig cfg, RandomSource rnd) {

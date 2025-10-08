@@ -66,7 +66,29 @@ public class TemplatePiece extends StructurePiece {
                 .setKnownShape(true)
                 .setIgnoreEntities(true);
 
-        // Place the template so local (0,0,0) lands at 'origin'
         tpl.placeInWorld(level, this.origin, pivot, place, randomSource, 2);
+
+
+        var entranceId = dev.galacticraft.mod.Constant.id("dungeon_entrance_block");
+        var exitId = dev.galacticraft.mod.Constant.id("dungeon_exit_block");
+
+        var entranceBlock = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(entranceId);
+        var exitBlock = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(exitId);
+
+        var idSettings = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings();
+        java.util.List<StructureTemplate.StructureBlockInfo> eInfos = tpl.filterBlocks(BlockPos.ZERO, idSettings, entranceBlock);
+        java.util.List<StructureTemplate.StructureBlockInfo> xInfos = tpl.filterBlocks(BlockPos.ZERO, idSettings, exitBlock);
+
+        net.minecraft.world.level.block.Block purple = net.minecraft.world.level.block.Blocks.PURPLE_CONCRETE;
+        var size = tpl.getSize();
+
+        for (var bi : eInfos) {
+            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
+            level.setBlock(wp, purple.defaultBlockState(), 2);
+        }
+        for (var bi : xInfos) {
+            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
+            level.setBlock(wp, purple.defaultBlockState(), 2);
+        }
     }
 }
