@@ -28,7 +28,6 @@ import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
 import dev.galacticraft.machinelib.client.api.model.TextureProvider;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
@@ -58,7 +57,6 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 
-import java.util.List;
 
 public class GCModelProvider extends FabricModelProvider {
     public GCModelProvider(FabricDataOutput output) {

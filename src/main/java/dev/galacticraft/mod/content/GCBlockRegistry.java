@@ -22,19 +22,11 @@
 
 package dev.galacticraft.mod.content;
 
-import net.fabricmc.fabric.impl.datagen.FabricDataGenHelper;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.SlabBlock;
-import net.minecraft.world.level.block.StairBlock;
-import net.minecraft.world.level.block.WallBlock;
-import net.minecraft.world.level.block.state.BlockBehaviour;
 
-import java.util.ArrayList;
-import java.util.List;
 
 public class GCBlockRegistry extends GCRegistry<Block> {
     private final GCRegistry<Item> ITEMS = new GCRegistry<>(BuiltInRegistries.ITEM);

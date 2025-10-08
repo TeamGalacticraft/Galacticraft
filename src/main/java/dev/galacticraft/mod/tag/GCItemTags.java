@@ -161,17 +161,6 @@ public class GCItemTags {
 
     public static final TagKey<Item> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
 
-    public static final TagKey<Item> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
-    public static final TagKey<Item> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
-    public static final TagKey<Item> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");
-    public static final TagKey<Item> COPPER_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/copper");
-    public static final TagKey<Item> DARK_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/dark");
-    public static final TagKey<Item> IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/iron");
-    public static final TagKey<Item> METEORIC_IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/meteoric_iron");
-    public static final TagKey<Item> STEEL_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/steel");
-    public static final TagKey<Item> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
-    public static final TagKey<Item> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
-
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
     }

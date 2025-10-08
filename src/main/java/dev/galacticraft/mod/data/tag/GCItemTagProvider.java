@@ -500,17 +500,6 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
 
         this.copy(GCBlockTags.ASTEROID_ROCKS, GCItemTags.ASTEROID_ROCKS);
 
-        this.copy(GCBlockTags.DECORATION_BLOCKS, GCItemTags.DECORATION_BLOCKS);
-        this.copy(GCBlockTags.ALUMINUM_DECORATION_BLOCKS, GCItemTags.ALUMINUM_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.BRONZE_DECORATION_BLOCKS, GCItemTags.BRONZE_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.COPPER_DECORATION_BLOCKS, GCItemTags.COPPER_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.DARK_DECORATION_BLOCKS, GCItemTags.DARK_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.IRON_DECORATION_BLOCKS, GCItemTags.IRON_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS, GCItemTags.METEORIC_IRON_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.STEEL_DECORATION_BLOCKS, GCItemTags.STEEL_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.TIN_DECORATION_BLOCKS, GCItemTags.TIN_DECORATION_BLOCKS);
-        this.copy(GCBlockTags.TITANIUM_DECORATION_BLOCKS, GCItemTags.TITANIUM_DECORATION_BLOCKS);
-
         this.tag(ItemTags.STONE_TOOL_MATERIALS)
                 .add(GCBlocks.COBBLED_MOON_ROCK.asItem())
                 .add(GCBlocks.COBBLED_LUNASLATE.asItem())
