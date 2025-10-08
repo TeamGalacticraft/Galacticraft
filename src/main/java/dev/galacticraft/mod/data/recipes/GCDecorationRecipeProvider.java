@@ -94,56 +94,6 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
                 .save(output);
 
-        // Light panels
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DASHED_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("SGS")
-                .pattern(" T ")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern(" S")
-                .pattern("SG")
-                .pattern(" T")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("S S")
-                .pattern(" G ")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SQUARE_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("SSS")
-                .pattern("SGS")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.LINEAR_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("S S")
-                .pattern("SGS")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
         // Misc decoration blocks
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.IRON_GRATING, 4)
                 .define('I', Items.IRON_BARS)
