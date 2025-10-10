@@ -10,6 +10,7 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -46,139 +47,11 @@ public final class DungeonWorldBuilder {
         return Math.max(base, Math.max(aAp, bAp));
     }
 
-    /**
-     * Fork spawning is disabled: corridors never create path forks.
-     */
-    private static List<FlowRouter.RoutedPair> spawnForks(
-            List<FlowRouter.PNode> P,
-            List<FlowRouter.EdgeCand> CE,
-            List<FlowRouter.RoutedPair> already,
-            List<RoomPlacer.Placed> placed,
-            ProcConfig pc,
-            Random rnd,
-            int maxForksTotal,
-            RoomPlacer.Placed endRoom
-    ) {
-        return java.util.Collections.emptyList();
-    }
-
-    private static List<FlowRouter.RoutedPair> growBranch(
-            Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs,
-            Set<RoomPlacer.Placed> wired,
-            FlowRouter.PNode seed,
-            Random rnd,
-            ProcConfig pc
-    ) {
-        ArrayList<FlowRouter.RoutedPair> out = new ArrayList<>();
-        FlowRouter.PNode prev = null;
-        FlowRouter.PNode cur = seed;
-
-        int maxLen = 2 + rnd.nextInt(4); // 2..5 hops
-
-        for (int i = 0; i < maxLen; i++) {
-            List<FlowRouter.PNode> cand = nbrs.getOrDefault(cur, Collections.emptyList());
-            FlowRouter.PNode pick = null;
-            double best = Double.NEGATIVE_INFINITY;
-
-            for (FlowRouter.PNode nx : cand) {
-                if (nx.room() == cur.room()) continue;
-                if (wired.contains(nx.room())) continue; // grow into new rooms
-
-                double score = -cur.worldPos().distSqr(nx.worldPos()) * 0.0005 + (rnd.nextDouble() - 0.5) * 0.05;
-
-                if (prev != null) {
-                    int vx1 = cur.worldPos().getX() - prev.worldPos().getX();
-                    int vy1 = cur.worldPos().getY() - prev.worldPos().getY();
-                    int vz1 = cur.worldPos().getZ() - prev.worldPos().getZ();
-                    int vx2 = nx.worldPos().getX() - cur.worldPos().getX();
-                    int vy2 = nx.worldPos().getY() - cur.worldPos().getY();
-                    int vz2 = nx.worldPos().getZ() - cur.worldPos().getZ();
-                    double dot = vx1 * vx2 + vy1 * vy2 + vz1 * vz2;
-                    double n1 = Math.sqrt((double) vx1 * vx1 + vy1 * vy1 + vz1 * vz1);
-                    double n2 = Math.sqrt((double) vx2 * vx2 + vy2 * vy2 + vz2 * vz2);
-                    if (n1 > 0 && n2 > 0) {
-                        double cos = Math.abs(dot / (n1 * n2)); // 1=straight, 0=orthogonal
-                        score += (1.0 - cos) * (0.75 * pc.forkTurnHardness);
-                    }
-                } else {
-                    score += 0.15 * pc.forkTurnHardness;
-                }
-
-                boolean likelyTip = (i >= maxLen - 2);
-                if (likelyTip && nx.room().def().type() == RoomTemplateDef.RoomType.BRANCH_END) {
-                    score += 0.6;
-                }
-
-                if (score > best) {
-                    best = score;
-                    pick = nx;
-                }
-            }
-            if (pick == null) break;
-
-            out.add(new FlowRouter.RoutedPair(cur, pick));
-            wired.add(pick.room());
-            prev = cur;
-            cur = pick;
-        }
-        return out;
-    }
-
-    private static List<FlowRouter.PNode> greedyNearestChain(
-            List<FlowRouter.PNode> P,
-            List<FlowRouter.EdgeCand> CE,
-            Map<FlowRouter.PNode, List<FlowRouter.PNode>> nbrs,
-            FlowRouter.PNode start,
-            FlowRouter.PNode goal,
-            int maxHops,
-            Set<RoomPlacer.Placed> used,
-            Random rnd
-    ) {
-        ArrayList<FlowRouter.PNode> chain = new ArrayList<>();
-        FlowRouter.PNode cur = start;
-
-        for (int i = 0; i < maxHops; i++) {
-            List<FlowRouter.PNode> cand = nbrs.getOrDefault(cur, Collections.emptyList());
-            if (cand.isEmpty()) break;
-
-            FlowRouter.PNode best = null;
-            double bestScore = Double.POSITIVE_INFINITY;
-
-            for (FlowRouter.PNode nx : cand) {
-                if (nx.room() == cur.room()) continue;
-                if (used.contains(nx.room())) continue;
-                double dist = nx.worldPos().distSqr(goal.worldPos());
-                dist *= (0.98 + 0.04 * rnd.nextDouble());
-                if (dist < bestScore) {
-                    bestScore = dist;
-                    best = nx;
-                }
-            }
-            if (best == null) break;
-
-            chain.add(best);
-            cur = best;
-            if (cur.room() == goal.room()) break;
-        }
-        return chain;
-    }
-
     private static float clampShell(float min, float max, BlockPos surface, net.minecraft.world.level.LevelHeightAccessor h) {
         int worldSpan = surface.getY() - h.getMinBuildHeight();
         float verticalRoom = Math.max(24f, worldSpan - 12f);
         float s = Math.min(max, Math.max(min, verticalRoom * 0.60f));
         return s;
-    }
-
-    private static Direction dirFrom(List<BlockPos> path, int i) {
-        if (path.isEmpty()) return Direction.NORTH;
-        int j = Math.max(0, Math.min(path.size() - 1, i));
-        BlockPos a = path.get(j), b = path.get(Math.min(j + 1, path.size() - 1));
-        int dx = b.getX() - a.getX(), dy = b.getY() - a.getY(), dz = b.getZ() - a.getZ();
-        int ax = Math.abs(dx), ay = Math.abs(dy), az = Math.abs(dz);
-        if (ax >= ay && ax >= az) return dx > 0 ? Direction.EAST : Direction.WEST;
-        if (az >= ax && az >= ay) return dz > 0 ? Direction.SOUTH : Direction.NORTH;
-        return dy > 0 ? Direction.UP : Direction.DOWN;
     }
 
     private static BoundingBox corridorBox(List<BlockPos> path, int aperture) {
@@ -202,7 +75,9 @@ public final class DungeonWorldBuilder {
             int preKickOut,
             int preStraight,
             int goalKickOut,
-            int goalStraightIn
+            int goalStraightIn,
+            VoxelMask3D avoidMask,  // NEW
+            int avoidStride         // pass pc.backboneStride
     ) {
         Direction aFace = pair.A().facing();
         Direction bFace = pair.B().facing();
@@ -217,11 +92,16 @@ public final class DungeonWorldBuilder {
 
         List<BlockPos> mid;
         try {
-            mid = G.route(a4, b4);
+            // pass the avoid mask so corridors won't overlap
+            mid = G.route(a4, b4, avoidMask, avoidStride, null);
         } catch (Throwable t) {
             mid = Collections.emptyList();
         }
-        if (mid == null || mid.isEmpty() || mid.size() < 2) return Collections.emptyList();
+        if (mid.isEmpty() || mid.size() < 2) {
+            LOGGER.info("(DockedRoute) mid-route empty  aFace={} bFace={} a2={} a4={} b4={}",
+                    aFace, bFace, a2, a4, b4);
+            return Collections.emptyList();
+        }
 
         ArrayList<BlockPos> path = new ArrayList<>(mid.size() + preStraight + goalStraightIn);
 
@@ -262,17 +142,6 @@ public final class DungeonWorldBuilder {
         return path;
     }
 
-    private static Map<RoomPlacer.Placed, Set<RoomPlacer.Placed>> buildRoomAdj(List<FlowRouter.PNode> P, List<FlowRouter.EdgeCand> CE) {
-        Map<RoomPlacer.Placed, Set<RoomPlacer.Placed>> adj = new HashMap<>();
-        for (FlowRouter.EdgeCand ec : CE) {
-            FlowRouter.PNode a = P.get(ec.a()), b = P.get(ec.b());
-            if (a.room() == b.room()) continue;
-            adj.computeIfAbsent(a.room(), k -> new HashSet<>()).add(b.room());
-            adj.computeIfAbsent(b.room(), k -> new HashSet<>()).add(a.room());
-        }
-        return adj;
-    }
-
     private static FlowRouter.RoutedPair pickPortalPairForRooms(
             RoomPlacer.Placed from, RoomPlacer.Placed to,
             List<FlowRouter.PNode> P, List<FlowRouter.EdgeCand> CE) {
@@ -282,10 +151,19 @@ public final class DungeonWorldBuilder {
         for (FlowRouter.EdgeCand ec : CE) {
             FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
             if (A.room() != from || B.room() != to) continue;
-            if (!isExitNode(A) || !isEntranceNode(B)) continue;      // <-- enforce direction
+            if (!isExitNode(A) || !isEntranceNode(B)) continue;
             if (ec.w() < bestW) { bestW = ec.w(); best = ec; }
         }
-        if (best == null) return null;
+        if (best == null) {
+            // TEMP DEBUG
+            // Count how many candidate edges exist for (from,to) ignoring direction,
+            // and how many would pass if B had an entrance PNode.
+            long any = CE.stream().filter(ec -> P.get(ec.a()).room()==from && P.get(ec.b()).room()==to).count();
+            boolean toHasEntranceNode = P.stream().anyMatch(pn -> pn.room()==to && pn.port().isEntrance());
+            LOGGER.info("(pickPair) no directed match from={} to={}, edgesAny={} toHasEntranceNode={}",
+                    from.def().id(), to.def().id(), any, toHasEntranceNode);
+            return null;
+        }
         return new FlowRouter.RoutedPair(P.get(best.a()), P.get(best.b()));
     }
 
@@ -306,109 +184,24 @@ public final class DungeonWorldBuilder {
         return new FlowRouter.RoutedPair(P.get(best.a()), P.get(best.b()));
     }
 
-    private static Map<RoomPlacer.Placed, Integer> bfsDist(
-            Map<RoomPlacer.Placed, Set<RoomPlacer.Placed>> adj,
-            RoomPlacer.Placed src,
-            Set<RoomPlacer.Placed> blocked,
-            RoomPlacer.Placed allow) {
-        ArrayDeque<RoomPlacer.Placed> q = new ArrayDeque<>();
-        Map<RoomPlacer.Placed, Integer> dist = new HashMap<>();
-        q.add(src);
-        dist.put(src, 0);
-        while (!q.isEmpty()) {
-            var u = q.removeFirst();
-            int du = dist.get(u);
-            for (var v : adj.getOrDefault(u, Collections.emptySet())) {
-                if (v != allow && blocked.contains(v)) continue;
-                if (dist.containsKey(v)) continue;
-                dist.put(v, du + 1);
-                q.addLast(v);
+    private static void reserveCorridor(VoxelMask3D mask, List<BlockPos> path, int aperture) {
+        int r = Math.max(0, (aperture - 1) / 2);
+        for (BlockPos p : path) {
+            for (int dx=-r; dx<=r; dx++) for (int dy=-r; dy<=r; dy++) for (int dz=-r; dz<=r; dz++) {
+                int gx = mask.gx(p.getX()+dx), gy = mask.gy(p.getY()+dy), gz = mask.gz(p.getZ()+dz);
+                if (mask.in(gx,gy,gz)) mask.set(gx,gy,gz, true);
             }
         }
-        return dist;
-    }
-
-    private static Map<RoomPlacer.Placed, RoomPlacer.Placed> bfsParents(
-            Map<RoomPlacer.Placed, Set<RoomPlacer.Placed>> adj,
-            RoomPlacer.Placed src,
-            Set<RoomPlacer.Placed> blocked,
-            RoomPlacer.Placed goal,
-            RoomPlacer.Placed allow) {
-        ArrayDeque<RoomPlacer.Placed> q = new ArrayDeque<>();
-        Map<RoomPlacer.Placed, RoomPlacer.Placed> par = new HashMap<>();
-        q.add(src);
-        par.put(src, null);
-        while (!q.isEmpty()) {
-            var u = q.removeFirst();
-            if (u == goal) break;
-            for (var v : adj.getOrDefault(u, Collections.emptySet())) {
-                if (v != allow && blocked.contains(v)) continue;
-                if (par.containsKey(v)) continue;
-                par.put(v, u);
-                q.addLast(v);
-            }
-        }
-        return par;
-    }
-
-    private static List<RoomPlacer.Placed> rebuildPath(
-            Map<RoomPlacer.Placed, RoomPlacer.Placed> par,
-            RoomPlacer.Placed dst) {
-        ArrayList<RoomPlacer.Placed> path = new ArrayList<>();
-        if (!par.containsKey(dst)) return path;
-        for (RoomPlacer.Placed v = dst; v != null; v = par.get(v)) path.add(v);
-        Collections.reverse(path);
-        return path;
-    }
-
-    private static List<RoomPlacer.Placed> joinPaths(List<RoomPlacer.Placed> a, List<RoomPlacer.Placed> b) {
-        if (!a.isEmpty() && !b.isEmpty() && a.get(a.size() - 1) == b.get(0)) {
-            ArrayList<RoomPlacer.Placed> out = new ArrayList<>(a.size() + b.size() - 1);
-            out.addAll(a);
-            out.addAll(b.subList(1, b.size()));
-            return out;
-        }
-        ArrayList<RoomPlacer.Placed> out = new ArrayList<>(a.size() + b.size());
-        out.addAll(a);
-        out.addAll(b);
-        return out;
-    }
-
-    private static RoomPlacer.Placed pickWaypoint(
-            Map<RoomPlacer.Placed, Integer> dE,
-            Map<RoomPlacer.Placed, Integer> dQ,
-            Set<RoomPlacer.Placed> used,
-            int targetLen,
-            Random rnd) {
-        RoomPlacer.Placed best = null;
-        int bestLen = -1;
-        int overBest = Integer.MAX_VALUE;
-        RoomPlacer.Placed overPick = null;
-
-        for (var v : dE.keySet()) {
-            if (!dQ.containsKey(v)) continue;
-            if (used.contains(v)) continue;
-            int L = dE.get(v) + dQ.get(v);
-            if (L <= targetLen) {
-                if (L > bestLen || (L == bestLen && rnd.nextBoolean())) {
-                    bestLen = L;
-                    best = v;
-                }
-            } else {
-                int over = L - targetLen;
-                if (over < overBest || (over == overBest && rnd.nextBoolean())) {
-                    overBest = over;
-                    overPick = v;
-                }
-            }
-        }
-        return (best != null) ? best : overPick;
     }
 
     /**
-     * Build 3 disjoint critical room-paths with a fixed entrance portal per path set.
-     * Adds pass-through safety: if OUT!=IN cannot be enforced for a hop, falls back
-     * to any portal pair between rooms to avoid collapsing the whole chain.
+     * Build up to 3 room-disjoint critical paths, one per queen:
+     *   Entrance --(BASIC-only intermediates)--> Queen_i --(prefer direct)--> End
+     *
+     * - Uses shortest paths on the directed room graph induced by CE (EXIT->ENTRANCE).
+     * - Enforces room disjointness across paths (except Entrance/End).
+     * - Ensures each queen reaches End (falls back to BASIC intermediates if direct hop is missing).
+     * - Prefers distinct End entrances across queens.
      */
     private static List<FlowRouter.RoutedPair> buildCriticalRoomPaths(
             List<RoomPlacer.Placed> placed,
@@ -416,187 +209,236 @@ public final class DungeonWorldBuilder {
             List<FlowRouter.EdgeCand> CE,
             RoomPlacer.Placed entranceRoom,
             RoomPlacer.Placed endRoom,
-            List<RoomPlacer.Placed> queenRooms, // expect up to 3
+            List<RoomPlacer.Placed> queenRooms,
             ProcConfig pc,
             Random rnd
     ) {
-        ArrayList<FlowRouter.RoutedPair> criticalPairs = new ArrayList<>();
-
+        ArrayList<FlowRouter.RoutedPair> result = new ArrayList<>();
         if (entranceRoom == null || endRoom == null || queenRooms == null || queenRooms.isEmpty()) {
-            return criticalPairs;
+            return result;
         }
 
-        // ---- Compute budgets: (pc.criticalBasicFraction) of all rooms, split evenly across paths (clamped to available BASICs) ----
-        java.util.function.Predicate<RoomPlacer.Placed> isBasic =
-                r -> r.def().type() == RoomTemplateDef.RoomType.BASIC;
-        int total = placed.size();
-        int totalBasicAvailable = 0;
-        for (RoomPlacer.Placed r : placed) if (isBasic.test(r)) totalBasicAvailable++;
+        // Limit to 3 queens max; shuffle for variety but stable enough
+        ArrayList<RoomPlacer.Placed> queens = new ArrayList<>(queenRooms);
+        if (queens.size() > 3) queens = new ArrayList<>(queens.subList(0, 3));
+        Collections.shuffle(queens, rnd);
 
-        float f = Math.max(0f, Math.min(1f, pc.criticalBasicFraction));
-        int totalBasicBudget = Math.max(0, Math.round(total * f));
-        totalBasicBudget = Math.min(totalBasicBudget, totalBasicAvailable);
+        // Build directed, weighted room graph from CE (EXIT -> ENTRANCE only)
+        Map<RoomPlacer.Placed, List<RoomHop>> G = new HashMap<>();
+        // Also cache best portal pair for each (fromRoom,toRoom)
+        record EdgeKey(RoomPlacer.Placed a, RoomPlacer.Placed b) {}
+        Map<EdgeKey, FlowRouter.EdgeCand> bestEdge = new HashMap<>();
 
-        int paths = Math.min(3, queenRooms.size());
-        if (paths == 0 || totalBasicBudget == 0) return criticalPairs;
-
-        int base = totalBasicBudget / paths, rem = totalBasicBudget % paths;
-        int[] budget = new int[paths];
-        for (int i = 0; i < paths; i++) budget[i] = base + (i < rem ? 1 : 0);
-
-        // ---- Directed room-level adjacency from candidate edges ----
-        Map<RoomPlacer.Placed, List<RoomPlacer.Placed>> dirAdj = new HashMap<>();
         for (FlowRouter.EdgeCand ec : CE) {
-            FlowRouter.PNode a = P.get(ec.a());
-            FlowRouter.PNode b = P.get(ec.b());
-            if (a.room() == b.room()) continue;
-            dirAdj.computeIfAbsent(a.room(), k -> new ArrayList<>()).add(b.room());
+            FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+            if (!isExitNode(A) || !isEntranceNode(B)) continue;
+            RoomPlacer.Placed ra = A.room(), rb = B.room();
+            if (ra == rb) continue;
+            // store best (lowest weight) edge per ordered room pair
+            EdgeKey key = new EdgeKey(ra, rb);
+            FlowRouter.EdgeCand cur = bestEdge.get(key);
+            if (cur == null || ec.w() < cur.w()) {
+                bestEdge.put(key, ec);
+            }
+        }
+        for (var e : bestEdge.entrySet()) {
+            RoomPlacer.Placed a = e.getKey().a();
+            RoomPlacer.Placed b = e.getKey().b();
+            float w = e.getValue().w();
+            G.computeIfAbsent(a, k -> new ArrayList<>()).add(new RoomHop(b, w));
         }
 
-        // ---- Index portals; collect entrance portals ----
-        Map<FlowRouter.PNode, Integer> idxOf = new HashMap<>();
-        for (int i = 0; i < P.size(); i++) idxOf.put(P.get(i), i);
+        // Global disjointness set (don’t reuse rooms across different queen paths)
+        HashSet<RoomPlacer.Placed> usedRooms = new HashSet<>();
+        usedRooms.add(entranceRoom);
+        usedRooms.add(endRoom);
 
-        ArrayList<FlowRouter.PNode> entrancePorts = new ArrayList<>();
-        for (FlowRouter.PNode pn : P) if (pn.room() == entranceRoom) entrancePorts.add(pn);
-        if (entrancePorts.isEmpty()) return criticalPairs;
+        // Track End entrances already used so each queen prefers a different End PNode
+        HashSet<FlowRouter.PNode> usedEndEntrances = new HashSet<>();
 
-        Map<FlowRouter.PNode, Integer> fanoutBasic = new HashMap<>();
-        for (FlowRouter.PNode ep : entrancePorts) {
-            int ei = idxOf.get(ep);
-            HashSet<RoomPlacer.Placed> uniq = new HashSet<>();
-            for (FlowRouter.EdgeCand ec : CE) {
-                if (ec.a() != ei) continue;
-                FlowRouter.PNode tb = P.get(ec.b());
-                if (tb.room() != entranceRoom && tb.room() != endRoom && isBasic.test(tb.room())) {
-                    uniq.add(tb.room());
-                }
+        // For each queen, build Entrance→Queen then Queen→End, respecting disjointness
+        for (RoomPlacer.Placed queen : queens) {
+            // 1) Entrance -> Queen (BASIC-only intermediates, disjoint from usedRooms)
+            List<RoomPlacer.Placed> pathEQ = shortestPathRooms(
+                    G,
+                    entranceRoom,
+                    queen,
+                    node -> node == entranceRoom || node == queen || node.def().type() == RoomTemplateDef.RoomType.BASIC,
+                    usedRooms
+            );
+
+            // If we can’t find a BASIC-only chain, allow a minimal path: Entrance -> Queen directly if exists
+            if (pathEQ.isEmpty()) {
+                FlowRouter.EdgeCand dir = bestEdge.get(new EdgeKey(entranceRoom, queen));
+                if (dir != null) pathEQ = Arrays.asList(entranceRoom, queen);
             }
-            fanoutBasic.put(ep, uniq.size());
-        }
-        entrancePorts.sort((a, b) -> Integer.compare(fanoutBasic.getOrDefault(b, 0), fanoutBasic.getOrDefault(a, 0)));
-
-        HashSet<RoomPlacer.Placed> used = new HashSet<>();
-        used.add(entranceRoom);
-        used.add(endRoom);
-
-        java.util.function.BiConsumer<RoomPlacer.Placed, RoomPlacer.Placed> emitPair = (from, to) -> {
-            FlowRouter.RoutedPair rp = pickPortalPairForRooms(from, to, P, CE);
-            if (rp != null) criticalPairs.add(rp);
-        };
-
-        for (FlowRouter.PNode entrancePort : entrancePorts) {
-            ArrayList<FlowRouter.RoutedPair> savepoint = new ArrayList<>(criticalPairs);
-            HashSet<RoomPlacer.Placed> usedThisPort = new HashSet<>(used);
-
-            boolean allOk = true;
-
-            int ei = idxOf.get(entrancePort);
-            ArrayList<RoomPlacer.Placed> firstHopBasicsAll = new ArrayList<>();
-            {
-                HashSet<RoomPlacer.Placed> uniq = new HashSet<>();
-                for (FlowRouter.EdgeCand ec : CE) {
-                    if (ec.a() != ei) continue;
-                    RoomPlacer.Placed tgtRoom = P.get(ec.b()).room();
-                    if (tgtRoom != entranceRoom && tgtRoom != endRoom && isBasic.test(tgtRoom)) {
-                        uniq.add(tgtRoom);
-                    }
-                }
-                firstHopBasicsAll.addAll(uniq);
+            if (pathEQ.isEmpty()) {
+                // Skip this queen; try others
+                continue;
             }
 
-            for (int pth = 0; pth < Math.min(3, queenRooms.size()); pth++) {
-                RoomPlacer.Placed queen = queenRooms.get(pth);
-
-                ArrayList<RoomPlacer.Placed> firstHopBasics = new ArrayList<>();
-                for (RoomPlacer.Placed r : firstHopBasicsAll) if (!usedThisPort.contains(r)) firstHopBasics.add(r);
-                Collections.shuffle(firstHopBasics, rnd);
-
-                List<RoomPlacer.Placed> chosenChain = Collections.emptyList();
-                RoomPlacer.Placed chosenFirst = null;
-                FlowRouter.PNode chosenFirstPortalB = null;
-
-                attemptFirst:
-                for (RoomPlacer.Placed first : firstHopBasics) {
-                    FlowRouter.PNode bestB = null;
-                    float bestW = Float.POSITIVE_INFINITY;
-                    for (FlowRouter.EdgeCand ec : CE) {
-                        if (ec.a() != ei) continue;
-                        FlowRouter.PNode bpn = P.get(ec.b());
-                        if (bpn.room() == first && ec.w() < bestW) {
-                            bestW = ec.w();
-                            bestB = bpn;
-                        }
-                    }
-                    if (bestB == null) continue;
-
-                    int basicStepsAfterFirst = Math.max(0, budget[pth] - 1);
-
-                    List<RoomPlacer.Placed> chain = findExactChain(dirAdj, first, queen, usedThisPort, basicStepsAfterFirst, rnd);
-                    if (!chain.isEmpty()) {
-                        chosenChain = chain;
-                        chosenFirst = first;
-                        chosenFirstPortalB = bestB;
-                        break attemptFirst;
-                    }
-                }
-
-                if (chosenChain.isEmpty() || chosenFirst == null || chosenFirstPortalB == null) {
-                    allOk = false;
-                    break;
-                }
-
-                FlowRouter.RoutedPair firstIn = new FlowRouter.RoutedPair(entrancePort, chosenFirstPortalB);
-                criticalPairs.add(firstIn);
-                FlowRouter.PNode lastInOnCurrent = chosenFirstPortalB;
-
-                for (int k = 0; k + 1 < chosenChain.size(); k++) {
-                    RoomPlacer.Placed fromRoom = chosenChain.get(k);
-                    RoomPlacer.Placed toRoom   = chosenChain.get(k + 1);
-
-                    FlowRouter.RoutedPair outPair =
-                            pickEdgeFromRoomToRoomAvoidingA(fromRoom, toRoom, lastInOnCurrent, P, CE);
-                    // NEW: pass-through fallback (allow OUT==IN if geometry forces it)
-                    if (outPair == null) outPair = pickPortalPairForRooms(fromRoom, toRoom, P, CE);
-
-                    if (outPair == null) { allOk = false; break; }
-                    criticalPairs.add(outPair);
-                    lastInOnCurrent = outPair.B();
-                }
-
-                if (allOk) {
-                    FlowRouter.RoutedPair q2e =
-                            pickEdgeFromRoomToRoomAvoidingA(queen, endRoom, lastInOnCurrent, P, CE);
-                    // NEW: fallback
-                    if (q2e == null) q2e = pickPortalPairForRooms(queen, endRoom, P, CE);
-
-                    if (q2e == null) { allOk = false; }
-                    else criticalPairs.add(q2e);
-                }
-
-                for (RoomPlacer.Placed r : chosenChain) {
-                    if (r != queen) usedThisPort.add(r);
-                }
-                usedThisPort.add(queen);
-
-                try {
-                    String s = chosenChain.stream().map(r -> r.def().id().toString())
-                            .reduce((a, b) -> a + " -> " + b).orElse("<empty>");
-                    LOGGER.info("[Critical] Path #{} (budget BASICs={}): EntrancePort -> {}  -> End",
-                            (pth + 1), budget[pth], s);
-                } catch (Throwable ignored) {}
-            }
-
-            if (allOk) {
-                used.addAll(usedThisPort);
-                return criticalPairs;
+            // 2) Queen -> End (prefer direct; otherwise allow BASIC intermediates)
+            List<RoomPlacer.Placed> pathQE = new ArrayList<>();
+            FlowRouter.EdgeCand bestQueenToEnd = bestEdge.get(new EdgeKey(queen, endRoom));
+            if (bestQueenToEnd != null) {
+                pathQE = Arrays.asList(queen, endRoom);
             } else {
-                criticalPairs.clear();
-                criticalPairs.addAll(savepoint);
+                pathQE = shortestPathRooms(
+                        G,
+                        queen,
+                        endRoom,
+                        node -> node == queen || node == endRoom || node.def().type() == RoomTemplateDef.RoomType.BASIC,
+                        usedRooms
+                );
+            }
+            if (pathQE.isEmpty()) {
+                // If we can’t reach End at all, skip this queen path entirely
+                continue;
+            }
+
+            // Convert room paths into RoutedPairs (portal-level hops)
+            ArrayList<FlowRouter.RoutedPair> pairs = new ArrayList<>();
+
+            // Entrance -> Queen hops
+            for (int i = 0; i + 1 < pathEQ.size(); i++) {
+                RoomPlacer.Placed a = pathEQ.get(i), b = pathEQ.get(i + 1);
+                FlowRouter.EdgeCand ec = bestEdge.get(new EdgeKey(a, b));
+                if (ec == null) { pairs.clear(); break; }
+                pairs.add(new FlowRouter.RoutedPair(P.get(ec.a()), P.get(ec.b())));
+            }
+            if (pairs.isEmpty() && !(pathEQ.size() == 2 && pathEQ.get(0) == entranceRoom && pathEQ.get(1) == queen)) {
+                // Failed to convert; try next queen
+                continue;
+            }
+
+            // Queen -> End hops
+            ArrayList<FlowRouter.RoutedPair> qePairs = new ArrayList<>();
+            for (int i = 0; i + 1 < pathQE.size(); i++) {
+                RoomPlacer.Placed a = pathQE.get(i), b = pathQE.get(i + 1);
+                // Prefer a specific End entrance not used yet
+                FlowRouter.RoutedPair rp = null;
+                if (b == endRoom) {
+                    // choose the best edge into an UNUSED End entrance
+                    float bestW = Float.POSITIVE_INFINITY;
+                    FlowRouter.EdgeCand pick = null;
+                    for (FlowRouter.EdgeCand ec : CE) {
+                        FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+                        if (A.room() != a || B.room() != b) continue;
+                        if (!isExitNode(A) || !isEntranceNode(B)) continue;
+                        if (usedEndEntrances.contains(B)) continue; // prefer free entrance
+                        if (ec.w() < bestW) { bestW = ec.w(); pick = ec; }
+                    }
+                    // fallback: any best edge if all end entrances are already used
+                    if (pick == null) pick = bestEdge.get(new EdgeKey(a, b));
+                    if (pick != null) {
+                        rp = new FlowRouter.RoutedPair(P.get(pick.a()), P.get(pick.b()));
+                        if (b == endRoom) usedEndEntrances.add(rp.B());
+                    }
+                } else {
+                    FlowRouter.EdgeCand ec = bestEdge.get(new EdgeKey(a, b));
+                    if (ec != null) rp = new FlowRouter.RoutedPair(P.get(ec.a()), P.get(ec.b()));
+                }
+                if (rp == null) { qePairs.clear(); break; }
+                qePairs.add(rp);
+            }
+            if (qePairs.isEmpty()) continue;
+
+            // Accept this queen path: add pairs and lock rooms to keep disjointness
+            result.addAll(pairs);
+            result.addAll(qePairs);
+            for (RoomPlacer.Placed r : pathEQ) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
+            for (RoomPlacer.Placed r : pathQE) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
+        }
+
+        // Safety: ensure we return something (at least one corridor) so cobwebs can trigger
+        return dedupePairs(result);
+    }
+
+    private static record RoomHop(RoomPlacer.Placed to, float w) {}
+
+    /**
+     * Dijkstra over rooms with:
+     *  - Directed edges from G (EXIT->ENTRANCE)
+     *  - 'allowed' filter for intermediates
+     *  - 'forbidden' set for global disjointness (Entrance/End may appear even if in 'forbidden')
+     * Returns a list of rooms [src ... dst], or empty if no route.
+     */
+    private static List<RoomPlacer.Placed> shortestPathRooms(
+            Map<RoomPlacer.Placed, List<RoomHop>> G,
+            RoomPlacer.Placed src,
+            RoomPlacer.Placed dst,
+            java.util.function.Predicate<RoomPlacer.Placed> allowed,
+            Set<RoomPlacer.Placed> forbidden
+    ) {
+        if (src == null || dst == null) return Collections.emptyList();
+        if (src == dst) return List.of(src);
+
+        // Dijkstra
+        Map<RoomPlacer.Placed, Float> dist = new HashMap<>();
+        Map<RoomPlacer.Placed, RoomPlacer.Placed> prev = new HashMap<>();
+        PriorityQueue<RoomPlacer.Placed> pq = new PriorityQueue<>(Comparator.comparing(dist::get));
+
+        for (RoomPlacer.Placed r : G.keySet()) dist.put(r, Float.POSITIVE_INFINITY);
+        dist.put(src, 0f);
+        pq.add(src);
+
+        while (!pq.isEmpty()) {
+            RoomPlacer.Placed u = pq.poll();
+            if (u == dst) break;
+
+            List<RoomHop> outs = G.getOrDefault(u, Collections.emptyList());
+            for (RoomHop h : outs) {
+                RoomPlacer.Placed v = h.to();
+
+                // Filter intermediates:
+                // - Always allow src and dst
+                // - Otherwise require 'allowed', and not in 'forbidden'
+                if (v != dst && v != src) {
+                    if (!allowed.test(v)) continue;
+                    if (forbidden.contains(v)) continue;
+                }
+
+                float alt = dist.getOrDefault(u, Float.POSITIVE_INFINITY) + h.w();
+                if (alt < dist.getOrDefault(v, Float.POSITIVE_INFINITY)) {
+                    dist.put(v, alt);
+                    prev.put(v, u);
+                    pq.remove(v);
+                    pq.add(v);
+                }
             }
         }
 
-        return criticalPairs;
+        if (!prev.containsKey(dst) && src != dst) return Collections.emptyList();
+
+        ArrayList<RoomPlacer.Placed> path = new ArrayList<>();
+        RoomPlacer.Placed t = dst;
+        path.add(t);
+        while (t != null && t != src) {
+            t = prev.get(t);
+            if (t == null) return Collections.emptyList();
+            path.add(t);
+        }
+        Collections.reverse(path);
+        return path;
+    }
+
+
+    /** Tiny helper: best directed EXIT(from) -> ENTRANCE(to) pair, with a light fallback. Returns null if none. */
+    private static FlowRouter.RoutedPair bestRoomToRoom(
+            RoomPlacer.Placed from,
+            RoomPlacer.Placed to,
+            List<FlowRouter.PNode> P,
+            List<FlowRouter.EdgeCand> CE
+    ) {
+        FlowRouter.RoutedPair rp = pickPortalPairForRooms(from, to, P, CE);
+        if (rp != null) return rp;
+        // Light fallback: allow reusing the same 'A' if unavoidable (avoidA=null)
+        return pickEdgeFromRoomToRoomAvoidingA(from, to, null, P, CE);
+    }
+
+    private static boolean isBasicRoom(RoomPlacer.Placed r, RoomPlacer.Placed ent, RoomPlacer.Placed end) {
+        if (r==ent || r==end) return false;
+        return r.def().type()==RoomTemplateDef.RoomType.BASIC;
     }
 
     /**
@@ -825,8 +667,6 @@ public final class DungeonWorldBuilder {
             pc.gridPad = base.gridPad;
 
             float shell = (float)(baseShell * Math.pow(pc.relaxShellScale, pass));
-            LOGGER.info("[Proc] === PASS {}/{}  rCorr={}  cPad={}  cRoom={}  shell={} ===",
-                    pass + 1, passes, pc.rCorr, pc.cPad, pc.cRoom, String.format("%.1f", shell));
 
             // grid bounds around entrance/end
             int pad = Math.max(pc.gridPad, Math.round(shell) + 8);
@@ -841,15 +681,11 @@ public final class DungeonWorldBuilder {
             int ny = Math.max(32, maxY - minY + 1);
             int nz = Math.max(32, maxZ - minZ + 1);
 
-            LOGGER.info("[Proc/Grid] world bounds min=({}, {}, {})  max=({}, {}, {})  size=({}, {}, {})  pad={}",
-                    minX, minY, minZ, maxX, maxY, maxZ, nx, ny, nz, pad);
-
             VoxelMask3D mRoom = new VoxelMask3D(nx, ny, nz, minX, minY, minZ);
 
             // --- plan exact room count, degree-balanced mix ---
             int fixedRooms = 5; // entrance + end + 3 queens
             int roomsExact = Math.max(fixedRooms, rnd.nextIntBetweenInclusive(pc.minRooms, pc.maxRooms));
-            LOGGER.info("[Proc/Plan] roomsExact={} (min={} max={})", roomsExact, pc.minRooms, pc.maxRooms);
 
             DegreePlan plan = planDegreeMix(new java.util.Random(rnd.nextLong()), roomsExact, RoomDefs.BASIC, RoomDefs.BRANCH_END, pc);
             ArrayList<RoomTemplateDef> exactPool = new ArrayList<>(plan.basicsExact);
@@ -864,10 +700,6 @@ public final class DungeonWorldBuilder {
                     mRoom
             );
 
-            LOGGER.info("[Proc/Place] pass={}  placed={}  (min={} target={} max={})",
-                    pass + 1, placed.size(), pc.minRooms, pc.targetRooms, pc.maxRooms);
-            LOGGER.info("[Proc/Place] pass={} placed={} (need roomsExact={})", pass + 1, placed.size(), roomsExact);
-
             if (placed.size() < roomsExact) {
                 LOGGER.info("[Proc] Not enough rooms this pass ({} < {}). Relaxing and retrying...", placed.size(), roomsExact);
                 continue; // try next relaxed pass
@@ -876,10 +708,9 @@ public final class DungeonWorldBuilder {
             // --- free-space backbone for routing ---
             int R = pc.effectiveRadius();
             VoxelMask3D mFree = Morph3D.freeMaskFromRooms(mRoom, R);
-            LOGGER.info("[Proc/Free] effectiveRadius={} (free-mask built)", R);
-            int[][][] Dfree = DistanceField3D.manhattanDist(mFree);
             FreeGraph G = FreeGraph.build(mFree, pc.backboneStride);
-            LOGGER.info("[Proc/Free] backbone stride={} (graph built)", pc.backboneStride);
+
+            VoxelMask3D reserved = new VoxelMask3D(mFree.nx, mFree.ny, mFree.nz, mFree.ox, mFree.oy, mFree.oz);
 
             try {
                 // --- portals/candidates ---
@@ -899,22 +730,26 @@ public final class DungeonWorldBuilder {
                     if (pn.room() == entPlaced) entrancePortList.add(pn);
                     if (pn.room() == endPlaced) endPortList.add(pn);
                 }
-                LOGGER.info("(FlowRouter) [Portal] entrancePorts={} endPorts={}", entrancePortList.size(), endPortList.size());
 
                 List<FlowRouter.EdgeCand> CE = FlowRouter.candidateEdges(P, G, pc);
-                int exitEntrance = 0, wrongDir = 0;
+
+                int stepOut = Math.max(1, pc.effectiveRadius() + 1);
+                int sClipped=0, gClipped=0, sFree=0, gFree=0;
                 for (var ec : CE) {
                     var A = P.get(ec.a());
                     var B = P.get(ec.b());
-                    boolean ok = isExitNode(A) && isEntranceNode(B);
-                    if (ok) exitEntrance++; else wrongDir++;
-                }
-                LOGGER.info("(FlowRouter) exit->entrance ok={} rejectedByDir={}", exitEntrance, wrongDir);
+                    BlockPos aStart = A.worldPos().relative(A.facing(), stepOut);
+                    BlockPos bStart = B.worldPos().relative(B.facing(), stepOut);
 
-                long outFromEntrance = CE.stream().filter(ec -> P.get(ec.a()).room() == entPlaced).count();
-                long intoEnd = CE.stream().filter(ec -> P.get(ec.b()).room() == endPlaced).count();
-                LOGGER.info("(FlowRouter) [Cand] edges from entrance={}  into end={}", outFromEntrance, intoEnd);
-                LOGGER.info("(DungeonWorldBuilder) [Proc/Portal] portals={}  candidateEdges={}", P.size(), CE.size());
+                    int ax = G.mask().gx(aStart.getX()), ay = G.mask().gy(aStart.getY()), az = G.mask().gz(aStart.getZ());
+                    int bx = G.mask().gx(bStart.getX()), by = G.mask().gy(bStart.getY()), bz = G.mask().gz(bStart.getZ());
+
+                    boolean asIn = G.mask().in(ax,ay,az), bsIn = G.mask().in(bx,by,bz);
+                    if (!asIn) sClipped++; else if (G.mask().get(ax,ay,az)) sFree++; else sClipped++;
+                    if (!bsIn) gClipped++; else if (G.mask().get(bx,by,bz)) gFree++; else gClipped++;
+                }
+                LOGGER.info("(RoutePrep) endpoints: aFree={} bFree={} aClipped={} bClipped={} stepOut={}",
+                        sFree, gFree, sClipped, gClipped, stepOut);
 
                 // --- emit rooms first ---
                 for (RoomPlacer.Placed p : placed) {
@@ -930,7 +765,6 @@ public final class DungeonWorldBuilder {
                     );
 
                     out.addPiece(new TemplatePiece(p.def(), p.origin(), p.rot(), bb));
-                    LOGGER.info("[Proc/Layout] Room {} at {} size(rot)={} rot={}", p.def().id(), p.origin(), rs, p.rot());
                 }
 
                 // --- critical chains: Entrance -> BASICs -> Queen -> End ---
@@ -946,6 +780,14 @@ public final class DungeonWorldBuilder {
 
                 List<FlowRouter.RoutedPair> pairs = new ArrayList<>(criticalPairs);
                 pairs = dedupePairs(pairs);
+
+                LOGGER.info("(RoutePlan) criticalPairs={} allPairs(after dedupe)={}", criticalPairs.size(), pairs.size());
+                int vertical=0, horizontal=0;
+                for (var rp : pairs) {
+                    boolean hv = rp.A().facing().getAxis() == Direction.Axis.Y || rp.B().facing().getAxis() == Direction.Axis.Y;
+                    if (hv) vertical++; else horizontal++;
+                }
+                LOGGER.info("(RoutePlan) pair orientation: horizontal={} vertical={}", horizontal, vertical);
 
                 // record-critical for tagging pieces
                 HashSet<Long> criticalKey = new HashSet<>();
@@ -993,8 +835,6 @@ public final class DungeonWorldBuilder {
                         over -= reduceBy;
                     }
                 }
-                LOGGER.info("[Balance] basics(non-critical)={} minDead={} surplusBasics={} deadEndsPicked={}",
-                        basicsNonCritical.size(), minDead, S, deadEnds.size());
 
                 // filter CE -> no edges OUT of dead-end rooms
                 ArrayList<FlowRouter.EdgeCand> CE_filtered = new ArrayList<>();
@@ -1008,29 +848,49 @@ public final class DungeonWorldBuilder {
                 pairs.addAll(more);
                 pairs = dedupePairs(pairs);
 
+                List<FlowRouter.RoutedPair> forest = FlowRouter.connectAllRooms(P, CE_filtered, pairs, /*blocked*/ null);
+                if (!forest.isEmpty()) {
+                    pairs.addAll(forest);
+                    pairs = dedupePairs(pairs);
+                    LOGGER.info("(RoutePlan) forest-connected {} leftover links", forest.size());
+                }
+
                 // --- route + emit corridors ---
-                int corridors = 0;
+                int corridors = 0, routeEmpty=0, bboxOut=0;
                 for (FlowRouter.RoutedPair rp : pairs) {
-                    // gradient endpoints (ports can now be different sizes)
                     int aAp = Math.max(3, rp.A().port().aperture());
                     int bAp = Math.max(3, rp.B().port().aperture());
 
-                    // compute a route
-                    List<BlockPos> path = dockedRoute(G, rp,
-                            /*preKickOut*/2, /*preStraight*/2,
-                            /*goalKickOut*/4, /*goalStraightIn*/3);
-                    if (path == null || path.isEmpty()) continue;
+                    // Log the pair we’re attempting
+                    LOGGER.info("(RouteTry) A={} {} -> B={} {}  aAp={} bAp={}",
+                            rp.A().worldPos(), rp.A().facing(), rp.B().worldPos(), rp.B().facing(), aAp, bAp);
 
-                    // bbox must enclose the largest aperture used anywhere along the path
-                    int apBox = Math.max(corridorApertureFor(rp, pc), Math.max(aAp, bAp));
+                    List<BlockPos> path = dockedRoute(
+                            G, rp,
+                            /*preKickOut*/2, /*preStraight*/2, /*goalKickOut*/4, /*goalStraightIn*/3,
+                            reserved, pc.backboneStride // NEW
+                    );
+                    if (path == null || path.isEmpty()) { /* log+continue */ }
+
+                    // compute aperture as you already do
+                    int apBox = Math.max(corridorApertureFor(rp, pc),
+                            Math.max(aAp, bAp));
+
+                    // Reserve volume BEFORE emitting the piece so future routes avoid it
+                    reserveCorridor(reserved, path, apBox);
+
+                    // Emit corridor piece as you do now...
                     BoundingBox cbox = corridorBox(path, apBox);
 
+                    // Emit + log
                     long keyA = rp.A().worldPos().asLong();
                     long keyB = rp.B().worldPos().asLong();
                     long key = (keyA * 1469598103934665603L) ^ keyB;
                     boolean isCritical = criticalKey.contains(key);
 
-                    // NEW: pass both end apertures (we still store "aperture" as max for bbox/compat)
+                    LOGGER.info("(RouteOK) len={} apBox={} bbox=[({}, {}, {}) -> ({}, {}, {})] critical={}",
+                            path.size(), apBox, cbox.minX(), cbox.minY(), cbox.minZ(), cbox.maxX(), cbox.maxY(), cbox.maxZ(), isCritical);
+
                     out.addPiece(new CorridorPiece(
                             path, apBox, cbox,
                             rp.A().worldPos(), rp.B().worldPos(),
@@ -1040,8 +900,7 @@ public final class DungeonWorldBuilder {
                     ));
                     corridors++;
                 }
-                LOGGER.info("[Proc/Route] pairs={}  critical={}  corridorsEmitted={}",
-                        pairs.size(), criticalPairs.size(), corridors);
+                LOGGER.info("(Emit) pairsTried={} critical={} emitted={} routeEmpty={}", pairs.size(), criticalPairs.size(), corridors, routeEmpty);
 
                 return true;
 
@@ -1064,23 +923,16 @@ public final class DungeonWorldBuilder {
         return wp.equals(pn.worldPos()) && faceR == pn.facing();
     }
 
-    private static boolean isEntranceNode(FlowRouter.PNode pn) {
+    public static boolean isEntranceNode(FlowRouter.PNode pn) {
         RoomPlacer.Placed room = pn.room();
         for (Port port : room.scan().entrances()) if (pnodeMatchesPort(pn, room, port)) return true;
         return false;
     }
 
-    private static boolean isExitNode(FlowRouter.PNode pn) {
+    public static boolean isExitNode(FlowRouter.PNode pn) {
         RoomPlacer.Placed room = pn.room();
         for (Port port : room.scan().exits()) if (pnodeMatchesPort(pn, room, port)) return true;
         return false;
-    }
-
-    private static boolean isEntrance(FlowRouter.PNode pn) {
-        return pn.port().isEntrance(); // or pn.port().isEntrance()
-    }
-    private static boolean isExit(FlowRouter.PNode pn) {
-        return pn.port().isExit(); // or pn.port().isExit()
     }
 
     private boolean fail(String msg) {
@@ -1166,6 +1018,25 @@ public final class DungeonWorldBuilder {
                     if (to == from) continue;
                     if (deg.get(to).in >= capIn.getOrDefault(to, 0)) continue;
                     if (deg.get(to).out >= capOut.getOrDefault(to, 0)) continue;
+
+                    // NEW: never make Queen -> Queen
+                    if (from.def().type() == RoomTemplateDef.RoomType.QUEEN
+                            && to.def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
+
+                    // NEW: if from is QUEEN, strongly prefer END when available
+                    if (from.def().type() == RoomTemplateDef.RoomType.QUEEN
+                            && to.def().type() != RoomTemplateDef.RoomType.END) {
+                        // We’ll still allow BASIC as a fallback, but only if no END edge exists.
+                        boolean queenHasEndEdge = false;
+                        for (FlowRouter.EdgeCand cand : CE) {
+                            FlowRouter.PNode A = P.get(cand.a()), B = P.get(cand.b());
+                            if (A.room() == from && B.room().def().type() == RoomTemplateDef.RoomType.END
+                                    && isExitNode(A) && isEntranceNode(B)) {
+                                queenHasEndEdge = true; break;
+                            }
+                        }
+                        if (queenHasEndEdge) continue; // skip non-END candidates first
+                    }
 
                     FlowRouter.EdgeCand ec = best.get(new EdgeKey(from, to));
                     if (ec == null) continue;

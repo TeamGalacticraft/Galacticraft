@@ -3,7 +3,6 @@ package dev.galacticraft.mod.world.gen.dungeon;
 import com.mojang.logging.LogUtils;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
-import net.minecraft.core.Vec3i;
 import net.minecraft.world.level.block.Rotation;
 import org.slf4j.Logger;
 
@@ -12,41 +11,19 @@ import java.util.*;
 final class FlowRouter {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    /**
-     * Build portal set (all portals on each placed room, transformed to world).
-     */
     static List<PNode> collectPortals(List<RoomPlacer.Placed> rooms) {
         ArrayList<PNode> out = new ArrayList<>();
         for (RoomPlacer.Placed p : rooms) {
-            // prefer exits (if any), else entrances; fall back to entrances again if both empty
-            List<Port> ports = p.scan().exits().isEmpty() ? p.scan().entrances() : p.scan().exits();
-            if (ports.isEmpty()) ports = p.scan().entrances();
-
-            Vec3i rs = Transforms.rotatedSize(p.scan().size(), p.rot());
-            int minX = p.origin().getX(), maxX = p.origin().getX() + rs.getX() - 1;
-            int minY = p.origin().getY(), maxY = p.origin().getY() + rs.getY() - 1;
-            int minZ = p.origin().getZ(), maxZ = p.origin().getZ() + rs.getZ() - 1;
-
-            for (Port port : ports) {
+            // add EXITS first…
+            for (Port port : p.scan().exits()) {
                 BlockPos wp = Transforms.worldOfLocalMin(port.localPos(), p.origin(), p.scan().size(), p.rot());
                 Direction f = Transforms.rotateFacingYaw(port.facing(), p.rot());
-
-                boolean onFace =
-                        (f == Direction.WEST  && wp.getX() == minX) ||
-                                (f == Direction.EAST  && wp.getX() == maxX) ||
-                                (f == Direction.NORTH && wp.getZ() == minZ) ||
-                                (f == Direction.SOUTH && wp.getZ() == maxZ) ||
-                                (f == Direction.DOWN  && wp.getY() == minY) ||
-                                (f == Direction.UP    && wp.getY() == maxY);
-
-                if (!onFace) {
-                    LOGGER.warn("(PortalXform) MISMATCH room={} rot={} origin={} size(rot)={} local={} face={} world={} AABB[min={},max={}]",
-                            p.def().id(), p.rot(), p.origin(), rs, port.localPos(), f, wp,
-                            new BlockPos(minX, minY, minZ), new BlockPos(maxX, maxY, maxZ));
-                }
-
-                LOGGER.info("(FlowRouter)[PortalXform] room={} rot={} origin={} size={} local={} face={} -> world={} faceR={}",
-                        p.def().id(), p.rot(), p.origin(), p.scan().size(), port.localPos(), port.facing(), wp, f);
+                out.add(new PNode(p, port, p.rot(), wp, f));
+            }
+            // …then ENTRANCES
+            for (Port port : p.scan().entrances()) {
+                BlockPos wp = Transforms.worldOfLocalMin(port.localPos(), p.origin(), p.scan().size(), p.rot());
+                Direction f = Transforms.rotateFacingYaw(port.facing(), p.rot());
                 out.add(new PNode(p, port, p.rot(), wp, f));
             }
         }
@@ -63,24 +40,47 @@ final class FlowRouter {
 
         final int stepOut = Math.max(1, cfg.effectiveRadius() + 1);
 
+        int rejSameRoom = 0, rejDir = 0, rejRouteThrow = 0, rejRouteEmpty = 0, rejPolarity = 0;
+
         for (int i = 0; i < P.size(); i++) {
             for (int j = 0; j < P.size(); j++) {
                 if (i == j) continue;
 
-                PNode a = P.get(i), b = P.get(j);
-                if (a.room == b.room) continue; // never connect a room to itself
+                PNode a0 = P.get(i), b0 = P.get(j);
+                if (a0.room == b0.room) { rejSameRoom++; continue; }
 
+                // ---- Normalize polarity so we always store EXIT(A) -> ENTRANCE(B) ----
+                boolean a0Exit = DungeonWorldBuilder.isExitNode(a0);
+                boolean b0Entr = DungeonWorldBuilder.isEntranceNode(b0);
+                boolean a0Entr = DungeonWorldBuilder.isEntranceNode(a0);
+                boolean b0Exit = DungeonWorldBuilder.isExitNode(b0);
+
+                PNode a = a0, b = b0;
+                int ai = i, bj = j;
+
+                if (a0Exit && b0Entr) {
+                    // keep as-is
+                } else if (a0Entr && b0Exit) {
+                    // flip to keep graph semantics consistent: EXIT -> ENTRANCE
+                    a = b0;  b = a0;
+                    ai = j;  bj = i;
+                } else {
+                    // entrance->entrance or exit->exit is useless for routing
+                    rejPolarity++;
+                    continue;
+                }
+
+                // ---- Basic facing sanity (horizontal pairs must oppose) ----
                 boolean horizA = a.facing.getAxis().isHorizontal();
                 boolean horizB = b.facing.getAxis().isHorizontal();
-
-                // If both horizontal, require opposite-ish
                 if (horizA && horizB) {
                     int dot = a.facing.getStepX() * -b.facing.getStepX()
                             + a.facing.getStepZ() * -b.facing.getStepZ();
-                    if (dot <= 0) continue; // reject orthogonal/same-facing
+                    if (dot <= 0) { rejDir++; continue; } // reject orthogonal/same-facing
                 }
-                // If vertical involved, allow (shafts/ramps)
+                // (Vertical/diagonal mixes are allowed; the router/weights will filter)
 
+                // ---- Route between outward step points ----
                 BlockPos aStart = a.worldPos.relative(a.facing, stepOut);
                 BlockPos bStart = b.worldPos.relative(b.facing, stepOut);
 
@@ -88,21 +88,29 @@ final class FlowRouter {
                 try {
                     coarse = G.route(aStart, bStart, null, 0, r);
                 } catch (Throwable t) {
-                    LOGGER.warn("(FlowRouter) [Cand] route threw: {}  a={} b={} aStart={} bStart={}",
-                            t, a.worldPos, b.worldPos, aStart, bStart);
+                    rejRouteThrow++;
+                    if (LOGGER.isDebugEnabled()) {
+                        LOGGER.debug("(FlowRouter)[Cand.throw] a={}{} -> b={}{}  stepOut={}  ex={}",
+                                a.worldPos, a.facing, b.worldPos, b.facing, stepOut, t.toString());
+                    }
                     continue;
                 }
-                if (coarse == null || coarse.isEmpty()) continue;
+                if (coarse == null || coarse.isEmpty()) { rejRouteEmpty++; continue; }
 
                 float w = (float) coarse.size()
                         + cfg.proxPenalty * (float) Math.sqrt(a.worldPos.distSqr(b.worldPos));
 
-                // directed candidate (both directions will be considered across i/j loop)
-                E.add(new EdgeCand(i, j, w));
+                if (LOGGER.isDebugEnabled()) {
+                    LOGGER.debug("(FlowRouter)[Cand.OK] EXIT a={}{} -> ENTR b={}{}  stepOut={}  len={}  w={}",
+                            a.worldPos, a.facing, b.worldPos, b.facing, stepOut, coarse.size(), String.format("%.2f", w));
+                }
+                E.add(new EdgeCand(ai, bj, w));
             }
         }
 
-        LOGGER.info("(FlowRouter) [Cand] portals={} edges={}", P.size(), E.size());
+        LOGGER.info("(FlowRouter)[Cand] portals={} edges={}  rej[sameRoom={}] rej[faceDir={}] rej[polarity={}] rej[routeThrow={}] rej[routeEmpty={}]",
+                P.size(), E.size(), rejSameRoom, rejDir, rejPolarity, rejRouteThrow, rejRouteEmpty);
+
         return E;
     }
 
@@ -110,17 +118,10 @@ final class FlowRouter {
                                             List<EdgeCand> E,
                                             List<RoutedPair> seedPairs,
                                             Set<RoomPlacer.Placed> blockedRooms) {
-        // Hard-block Entrance, all Queens, and End from receiving extra edges.
+
+        // REMOVE the old hardBlocked entrance/queen/end logic.
         HashSet<RoomPlacer.Placed> hardBlocked = new HashSet<>();
         if (blockedRooms != null) hardBlocked.addAll(blockedRooms);
-        for (PNode pn : P) {
-            RoomTemplateDef.RoomType t = pn.room().def().type();
-            if (t == RoomTemplateDef.RoomType.ENTRANCE
-                    || t == RoomTemplateDef.RoomType.QUEEN
-                    || t == RoomTemplateDef.RoomType.END) {
-                hardBlocked.add(pn.room());
-            }
-        }
 
         HashSet<RoomPlacer.Placed> connected = new HashSet<>();
         for (RoutedPair rp : seedPairs) {
@@ -138,6 +139,11 @@ final class FlowRouter {
             PNode a = P.get(ec.a), b = P.get(ec.b);
             if (a.room == b.room) continue;
             if (hardBlocked.contains(a.room) || hardBlocked.contains(b.room)) continue;
+
+            // NEW: don’t connect Queen ↔ Queen in the forest stitch
+            var ta = a.room().def().type();
+            var tb = b.room().def().type();
+            if (ta == RoomTemplateDef.RoomType.QUEEN && tb == RoomTemplateDef.RoomType.QUEEN) continue;
 
             boolean aConn = connected.contains(a.room);
             boolean bConn = connected.contains(b.room);

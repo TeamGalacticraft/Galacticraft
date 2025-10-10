@@ -41,63 +41,25 @@ final class RoomPlacer {
         return pool.get(pool.size() - 1);
     }
 
-    public static List<FlowRouter.PNode> ensureQueensNearEnds(
-            List<Placed> placed,
-            List<FlowRouter.PNode> allPorts,
-            List<FlowRouter.PNode> endPorts,
-            int need,
-            Random rnd
+    public static FlowRouter.RoutedPair pickEdgeFromRoomToRoomAvoidingAAndUsedB(
+            RoomPlacer.Placed fromRoom,
+            RoomPlacer.Placed toRoom,
+            FlowRouter.PNode avoidA,
+            Set<FlowRouter.PNode> disallowB,
+            List<FlowRouter.PNode> P,
+            List<FlowRouter.EdgeCand> CE
     ) {
-        ArrayList<FlowRouter.PNode> picked = new ArrayList<>();
-        if (need <= 0 || endPorts == null || endPorts.isEmpty() || allPorts == null || allPorts.isEmpty()) {
-            return picked;
+        FlowRouter.EdgeCand best = null;
+        float bestW = Float.POSITIVE_INFINITY;
+        for (FlowRouter.EdgeCand ec : CE) {
+            FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+            if (A.room() != fromRoom || B.room() != toRoom) continue;
+            if (avoidA != null && A == avoidA) continue;
+            if (!DungeonWorldBuilder.isExitNode(A) || !DungeonWorldBuilder.isEntranceNode(B)) continue;
+            if (disallowB != null && disallowB.contains(B)) continue;
+            if (ec.w() < bestW) { bestW = ec.w(); best = ec; }
         }
-
-        // Gather all queen ports from the known portal set
-        java.util.Set<ResourceLocation> queenIds =
-                RoomDefs.QUEEN.stream().map(RoomTemplateDef::id).collect(java.util.stream.Collectors.toSet());
-
-        ArrayList<FlowRouter.PNode> queenPorts = new ArrayList<>();
-        for (FlowRouter.PNode pn : allPorts) {
-            if (queenIds.contains(pn.room().def.id())) {
-                queenPorts.add(pn);
-            }
-        }
-        if (queenPorts.isEmpty()) return picked;
-
-        // Prefer unique rooms and the queens nearest to each end
-        HashSet<RoomPlacer.Placed> usedQueenRooms = new HashSet<>();
-        ArrayList<FlowRouter.PNode> ends = new ArrayList<>(endPorts);
-        ends.sort(Comparator.comparingInt(pn -> pn.worldPos().getY())); // prefer lower ends first
-
-        for (FlowRouter.PNode end : ends) {
-            if (picked.size() >= need) break;
-
-            FlowRouter.PNode best = null;
-            double bestD = Double.MAX_VALUE;
-            for (FlowRouter.PNode q : queenPorts) {
-                if (usedQueenRooms.contains(q.room())) continue; // keep queens unique per path
-                double d = q.worldPos().distSqr(end.worldPos());
-                if (d < bestD) {
-                    bestD = d;
-                    best = q;
-                }
-            }
-            if (best != null) {
-                picked.add(best);
-                usedQueenRooms.add(best.room());
-            }
-        }
-
-        // If we still need more, fill with any remaining queens (random order, unique rooms)
-        if (picked.size() < need) {
-            Collections.shuffle(queenPorts, rnd);
-            for (FlowRouter.PNode q : queenPorts) {
-                if (picked.size() >= need) break;
-                if (usedQueenRooms.add(q.room())) picked.add(q);
-            }
-        }
-        return picked;
+        return (best == null) ? null : new FlowRouter.RoutedPair(P.get(best.a()), P.get(best.b()));
     }
 
     /**

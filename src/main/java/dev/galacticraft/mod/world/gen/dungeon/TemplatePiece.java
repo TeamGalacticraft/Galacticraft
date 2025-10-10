@@ -57,16 +57,17 @@ public class TemplatePiece extends StructurePiece {
         var templateManager = level.getLevel().getServer().getStructureManager();
         StructureTemplate tpl = templateManager.getOrCreate(templateId);
 
-        // Rotate around template min-corner, not piece AABB center
+        // Rotate around template center
+        var pivot = boundingBox.getCenter().subtract(origin);
+
         var place = new StructurePlaceSettings()
                 .setRotation(this.yRot)
-                .setRotationPivot(BlockPos.ZERO)   // ✅ correct pivot
+                .setRotationPivot(pivot)  // pivot at template center
                 .setBoundingBox(box)
                 .setKnownShape(true)
                 .setIgnoreEntities(true);
 
-        tpl.placeInWorld(level, this.origin, BlockPos.ZERO, place, randomSource, 2);
-
+        tpl.placeInWorld(level, this.origin, pivot, place, randomSource, 2);
 
         var entranceId = dev.galacticraft.mod.Constant.id("dungeon_entrance_block");
         var exitId = dev.galacticraft.mod.Constant.id("dungeon_exit_block");

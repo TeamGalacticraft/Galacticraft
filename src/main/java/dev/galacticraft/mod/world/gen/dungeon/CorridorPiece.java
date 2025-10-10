@@ -27,6 +27,8 @@ public class CorridorPiece extends StructurePiece {
     private final int bAperture; // NEW: actual port B aperture
     private final boolean critical;
 
+    private static final org.slf4j.Logger LOGGER = com.mojang.logging.LogUtils.getLogger();
+
     public CorridorPiece(List<BlockPos> path, int aperture, BoundingBox box,
                          BlockPos aPort, BlockPos bPort,
                          net.minecraft.core.Direction aFacing, net.minecraft.core.Direction bFacing,
@@ -107,24 +109,29 @@ public class CorridorPiece extends StructurePiece {
 
     // REPLACE postProcess
     @Override
-    public void postProcess(
-            WorldGenLevel level,
-            net.minecraft.world.level.StructureManager ignored,
-            ChunkGenerator chunkGenerator,
-            RandomSource randomSource,
-            BoundingBox box,
-            ChunkPos chunkPos,
-            BlockPos pivot
-    ) {
-        // Critical corridors are filled with cobwebs so they're visible
+    public void postProcess(WorldGenLevel level,
+                            net.minecraft.world.level.StructureManager ignored,
+                            ChunkGenerator chunkGenerator,
+                            RandomSource randomSource,
+                            BoundingBox box,
+                            ChunkPos chunkPos,
+                            BlockPos pivot) {
+
         var fill = this.critical ? net.minecraft.world.level.block.Blocks.COBWEB
                 : net.minecraft.world.level.block.Blocks.AIR;
 
-        // NEW: carve with a size gradient from aAperture → bAperture
+        int n = (this.path == null ? 0 : this.path.size());
+        LOGGER.info("(Carve) start  nodes={} aAp={} bAp={} critical={} bbox=[({}, {}, {}) -> ({}, {}, {})]",
+                n, aAperture, bAperture, critical,
+                this.boundingBox.minX(), this.boundingBox.minY(), this.boundingBox.minZ(),
+                this.boundingBox.maxX(), this.boundingBox.maxY(), this.boundingBox.maxZ());
+
         CorridorRouter.carveGradientWith(level, this.path, this.aAperture, this.bAperture, fill);
 
-        // Punch exact port sizes into each room so joins are clean
         punchPortWith(level, aPort, aFacing, aAperture, /*depth*/3, fill);
         punchPortWith(level, bPort, bFacing, bAperture, /*depth*/3, fill);
+
+        LOGGER.info("(Carve) done   nodes={} aPort={}{} bPort={}{}",
+                n, aPort, aFacing, bPort, bFacing);
     }
 }

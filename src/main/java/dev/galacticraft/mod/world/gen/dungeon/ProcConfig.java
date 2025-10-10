@@ -4,7 +4,7 @@ import net.minecraft.util.RandomSource;
 
 public final class ProcConfig {
     // -------- Room counts --------
-    public int minRooms = 16;   // hard minimum before routing
+    public int minRooms = 16;
     public int targetRooms = 32;   // preferred target
     public int maxRooms = 64;
 
@@ -30,15 +30,15 @@ public final class ProcConfig {
     /**
      * Extra safety padding added around corridors for routing.
      */
-    public int cPad = 1;
+    public int cPad = 3;
     /**
      * Minimum gap between neighboring rooms (baked during placement).
      */
-    public int cRoom = 4;
+    public int cRoom = 6;
 
     // Floors for adaptive relaxation
     public int minRCorr = 2;
-    public int minCPad = 1;
+    public int minCPad = 3;
     public int minCRoom = 3;
 
     // -------- Attempts & sampling --------
@@ -84,7 +84,7 @@ public final class ProcConfig {
     /**
      * Penalty applied to straight segments (set >0 to discourage long straights).
      */
-    public float straightPenalty = 0.35f;
+    public float straightPenalty = 0.30f;
 
     /**
      * Random jitter factor (0..1) used by router to break ties / vary paths.
@@ -106,20 +106,14 @@ public final class ProcConfig {
      */
     public int gridPad = 28;
 
-    // Penalize connecting portals that face the same way (we prefer opposite-facing)
-    public float bendPenalty = 4.0f;
-
     // Small weight on squared Euclidean distance between portals
     // (use a small value because distSqr can be large, e.g., 40^2 = 1600)
     public float proxPenalty = 0.0015f;
 
     // -------- Fork controls (kept off by default) --------
-    public float forkChance = 0.20f;     // chance to sprout a fork at a viable node
-    public int forkMaxPerPath = 3;       // budget per critical path
     public float forkTurnHardness = 0.70f;  // 0..1: high = prefer 90° turns
 
     public float deadEndMinFraction = 0.10f;     // e.g., 10% of BASICs become dead-ends (minimum)
-    public boolean enforceExitEntranceFlow = true; // force corridors: EXIT -> ENTRANCE
     // -------- Derived helpers --------
 
     public static ProcConfig fromDungeonConfig(DungeonConfig cfg, RandomSource rnd) {

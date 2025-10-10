@@ -190,16 +190,18 @@ final class FreeGraph {
      * Convenience
      */
     List<BlockPos> route(BlockPos startWorld, BlockPos goalWorld) {
+        // keep signature; delegate to the full router (no avoid-mask)
         return route(startWorld, goalWorld, null, 0, null);
     }
 
     /**
      * A* on coarse graph; returns a dense polyline (unit steps) in world coords, anchored to the exact endpoints.
+     * When 'ignoredFree' is provided, those voxels are treated as NON-free so paths will try to go around them.
      */
     List<BlockPos> route(BlockPos startWorld, BlockPos goalWorld, VoxelMask3D ignoredFree, int ignoredStride, Random ignoredRnd) {
         if (nodes.isEmpty()) return List.of();
 
-        // world -> local
+        // world -> local grid coords (snapped to stride)
         int sx = clampToStride(startWorld.getX() - free.ox, stride, free.nx);
         int sy = clampToStride(startWorld.getY() - free.oy, stride, free.ny);
         int sz = clampToStride(startWorld.getZ() - free.oz, stride, free.nz);
@@ -207,16 +209,20 @@ final class FreeGraph {
         int gy = clampToStride(goalWorld.getY() - free.oy, stride, free.ny);
         int gz = clampToStride(goalWorld.getZ() - free.oz, stride, free.nz);
 
-        int sIdx = findClosestNode(sx, sy, sz);
-        int gIdx = findClosestNode(gx, gy, gz);
-        if (sIdx < 0 || gIdx < 0) return List.of();
+        // Prefer start/goal nodes that are "usable" under the avoid mask; fall back to closest if none.
+        int sIdx = findClosestUsableNode(sx, sy, sz, ignoredFree);
+        if (sIdx < 0) sIdx = findClosestNode(sx, sy, sz);
 
+        int gIdx = findClosestUsableNode(gx, gy, gz, ignoredFree);
+        if (gIdx < 0) gIdx = findClosestNode(gx, gy, gz);
+
+        if (sIdx < 0 || gIdx < 0) return List.of();
         if (sIdx == gIdx) {
             // trivial: still return anchored endpoints
             return List.of(startWorld, goalWorld);
         }
 
-        // A*
+        // --- A* over prebuilt adjacency, but **filter each edge** against the avoid mask ---
         float[] gScore = new float[nodes.size()];
         float[] fScore = new float[nodes.size()];
         int[] prev = new int[nodes.size()];
@@ -226,8 +232,7 @@ final class FreeGraph {
 
         final Node goal = nodes.get(gIdx);
 
-        record QN(int id, float f) {
-        }
+        record QN(int id, float f) {}
         PriorityQueue<QN> open = new PriorityQueue<>(Comparator.comparingDouble(q -> q.f));
         boolean[] closed = new boolean[nodes.size()];
 
@@ -242,21 +247,30 @@ final class FreeGraph {
             if (u == gIdx) break;
             closed[u] = true;
 
+            Node nu = nodes.get(u);
+
             for (Edge e : adj[u]) {
                 int v = e.b;
                 if (closed[v]) continue;
+
+                Node nv = nodes.get(v);
+
+                // IMPORTANT: re-check this edge’s voxel line against the avoid mask
+                // so we don't "slide through" reserved corridor voxels.
+                if (!lineFree(free, ignoredFree, nu.x, nu.y, nu.z, nv.x, nv.y, nv.z)) continue;
+
                 float alt = gScore[u] + e.w;
                 if (alt < gScore[v]) {
                     prev[v] = u;
                     gScore[v] = alt;
-                    fScore[v] = alt + heuristic(nodes.get(v), goal);
+                    fScore[v] = alt + heuristic(nv, goal);
                     open.add(new QN(v, fScore[v]));
                 }
             }
         }
         if (prev[gIdx] == -1) return List.of();
 
-        // reconstruct in local coords (coarse)
+        // reconstruct in local coords (coarse path of sampled nodes)
         ArrayList<int[]> coarse = new ArrayList<>();
         for (int t = gIdx; t != -1; t = prev[t]) {
             Node n = nodes.get(t);
@@ -266,12 +280,12 @@ final class FreeGraph {
 
         // densify to unit steps (local), then map to world and anchor endpoints
         ArrayList<BlockPos> dense = new ArrayList<>();
-        dense.add(startWorld); // ensure we start exactly at the portal
+        dense.add(startWorld); // start exactly at the portal
 
         int[] cur = coarse.get(0);
         for (int i = 1; i < coarse.size(); i++) {
             int[] nxt = coarse.get(i);
-            // step from cur -> nxt at unit voxels, *excluding* cur to avoid dup
+            // step from cur -> nxt at unit voxels, excluding 'cur' to avoid dup
             for (int[] p : voxelLine(cur[0], cur[1], cur[2], nxt[0], nxt[1], nxt[2], /*includeStart*/false)) {
                 dense.add(new BlockPos(p[0] + free.ox, p[1] + free.oy, p[2] + free.oz));
             }
@@ -282,7 +296,8 @@ final class FreeGraph {
         if (dense.isEmpty() || !dense.get(dense.size() - 1).equals(goalWorld)) {
             dense.add(goalWorld);
         }
-        // de-dup consecutive equal points just in case
+
+        // de-dup consecutive equal points
         if (dense.size() >= 2) {
             ArrayList<BlockPos> tmp = new ArrayList<>(dense.size());
             BlockPos last = null;
@@ -293,6 +308,36 @@ final class FreeGraph {
             dense = tmp;
         }
         return dense;
+    }
+
+    /**
+     * Closest sampled node to (x,y,z) that is free under the avoid-mask.
+     * Returns -1 if none qualifies.
+     */
+    private int findClosestUsableNode(int x, int y, int z, VoxelMask3D blocked) {
+        double best = Double.POSITIVE_INFINITY;
+        int bi = -1;
+        for (Node n : nodes) {
+            if (!combinedFree(free, blocked, n.x, n.y, n.z)) continue;
+            double dx = n.x - x, dy = n.y - y, dz = n.z - z;
+            double d = dx * dx + dy * dy + dz * dz;
+            if (d < best) { best = d; bi = n.id; }
+        }
+        return bi;
+    }
+
+    private static boolean combinedFree(VoxelMask3D base, VoxelMask3D blocked, int x, int y, int z) {
+        if (!base.in(x, y, z)) return false;
+        if (!base.get(x, y, z)) return false;
+        if (blocked != null && blocked.in(x, y, z) && blocked.get(x, y, z)) return false;
+        return true;
+    }
+
+    private static boolean lineFree(VoxelMask3D base, VoxelMask3D blocked, int x0, int y0, int z0, int x1, int y1, int z1) {
+        for (int[] p : voxelLine(x0, y0, z0, x1, y1, z1, true)) {
+            if (!combinedFree(base, blocked, p[0], p[1], p[2])) return false;
+        }
+        return true;
     }
 
     private int findClosestNode(int x, int y, int z) {
@@ -307,6 +352,10 @@ final class FreeGraph {
             }
         }
         return bi;
+    }
+
+    public VoxelMask3D mask() {
+        return this.free;
     }
 
     record Node(int x, int y, int z, int id) {
