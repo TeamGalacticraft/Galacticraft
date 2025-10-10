@@ -8,6 +8,20 @@ public final class ProcConfig {
     public int targetRooms = 32;   // preferred target
     public int maxRooms = 64;
 
+    // -------- Composition knobs (NEW) --------
+    /**
+     * Fraction (0..1) of total placed rooms to budget as BASIC rooms used
+     * along the 3 critical paths (Entrance -> BASICs -> Queen -> End).
+     * Default: 0.40 (40%).
+     */
+    public float criticalBasicFraction = 0.40f;
+
+    /**
+     * Fraction (0..1) of non-fixed rooms (i.e., after Entrance/End/Queens) to convert
+     * into treasure/branch_end rooms. Default: 0.20 (20%).
+     */
+    public float treasureFraction = 0.10f;
+
     // -------- Corridor & clearances (voxels) --------
     /**
      * Corridor half-width (radius). Tube aperture will be (2*rCorr+1).
@@ -99,17 +113,24 @@ public final class ProcConfig {
     // (use a small value because distSqr can be large, e.g., 40^2 = 1600)
     public float proxPenalty = 0.0015f;
 
-    // -------- Fork controls (NEW) --------
-    public float forkChance = 0.20f;  // chance to sprout a fork at a viable node
-    public int forkMaxPerPath = 3;      // budget per critical path
+    // -------- Fork controls (kept off by default) --------
+    public float forkChance = 0.20f;     // chance to sprout a fork at a viable node
+    public int forkMaxPerPath = 3;       // budget per critical path
     public float forkTurnHardness = 0.70f;  // 0..1: high = prefer 90° turns
 
+    public float deadEndMinFraction = 0.10f;     // e.g., 10% of BASICs become dead-ends (minimum)
+    public boolean enforceExitEntranceFlow = true; // force corridors: EXIT -> ENTRANCE
     // -------- Derived helpers --------
 
     public static ProcConfig fromDungeonConfig(DungeonConfig cfg, RandomSource rnd) {
         ProcConfig pc = new ProcConfig();
+
         // Map anything you’d like from cfg here; defaults above are safe.
         // Example: pc.targetRooms = Math.max(12, Math.min(22, cfg.maxPoints()/4));
+        //
+        // If you add these to DungeonConfig, wire them here:
+        // pc.criticalBasicFraction = Mth.clamp(cfg.criticalBasicFraction(), 0.0f, 1.0f);
+        // pc.treasureFraction      = Mth.clamp(cfg.treasureFraction(), 0.0f, 1.0f);
         return pc;
     }
 

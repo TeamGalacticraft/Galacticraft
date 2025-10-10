@@ -41,12 +41,12 @@ public final class TemplatePortScanner {
         List<BlockPos> entrances = entranceInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
         List<BlockPos> exits = exitInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
 
-        LOGGER.info("[PortScan] id={} size={} markers: entrances={} exits={}", templateId, size, entrances.size(), exits.size());
+        //LOGGER.info("[PortScan] id={} size={} markers: entrances={} exits={}", templateId, size, entrances.size(), exits.size());
 
         var entrancePorts = clusterToPorts(entrances, size, "entrance", templateId);
         var exitPorts = clusterToPorts(exits, size, "exit", templateId);
 
-        LOGGER.info("[PortScan] id={} ports: entrances={} exits={}", templateId, entrancePorts.size(), exitPorts.size());
+        //LOGGER.info("[PortScan] id={} ports: entrances={} exits={}", templateId, entrancePorts.size(), exitPorts.size());
         return new ScannedTemplate(size, entrancePorts, exitPorts);
     }
 
@@ -88,10 +88,10 @@ public final class TemplatePortScanner {
             BlockPos cmax = max(cluster);
             BlockPos center = new BlockPos((cmin.getX() + cmax.getX()) / 2, (cmin.getY() + cmax.getY()) / 2, (cmin.getZ() + cmax.getZ()) / 2);
 
-            LOGGER.info("[PortScan] id={} [{} #{}] face={} bboxMin={} bboxMax={} center={} spanA={} spanB={} aperture={}",
-                    id, kind, idx, facing, cmin, cmax, center, spanA, spanB, aperture);
+            //LOGGER.info("[PortScan] id={} [{} #{}] face={} bboxMin={} bboxMax={} center={} spanA={} spanB={} aperture={}",
+            //        id, kind, idx, facing, cmin, cmax, center, spanA, spanB, aperture);
 
-            out.add(new Port(center, facing, aperture));
+            out.add(new Port(center, facing, aperture, (kind.equals("entrance"))));
             idx++;
         }
         if (out.isEmpty() && !points.isEmpty()) {

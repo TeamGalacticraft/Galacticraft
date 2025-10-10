@@ -2,7 +2,7 @@ package dev.galacticraft.mod.world.gen.dungeon;
 
 import net.minecraft.core.BlockPos;
 
-public record Port(BlockPos localPos, net.minecraft.core.Direction facing, int aperture) {
+public record Port(BlockPos localPos, net.minecraft.core.Direction facing, int aperture, boolean entrance) {
     public BlockPos worldPos() {
         return localPos;
     } // after rotatePortsToWorld we treat it as world
@@ -13,5 +13,13 @@ public record Port(BlockPos localPos, net.minecraft.core.Direction facing, int a
 
     public boolean apertureMatches(Port other) {
         return this.aperture == other.aperture;
+    }
+
+    public boolean isEntrance() {
+        return this.entrance;
+    }
+
+    public boolean isExit() {
+        return !this.entrance;
     }
 }

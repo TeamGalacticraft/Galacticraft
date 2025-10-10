@@ -5,7 +5,6 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePiece;
@@ -17,26 +16,31 @@ import java.util.List;
 
 public class CorridorPiece extends StructurePiece {
     private final List<BlockPos> path = new ArrayList<>();
-    private final int aperture;
+    private final int aperture; // kept as max(aAp, bAp) for bbox/compat
 
     private final BlockPos aPort;
     private final BlockPos bPort;
     private final net.minecraft.core.Direction aFacing;
     private final net.minecraft.core.Direction bFacing;
 
+    private final int aAperture; // NEW: actual port A aperture
+    private final int bAperture; // NEW: actual port B aperture
     private final boolean critical;
 
     public CorridorPiece(List<BlockPos> path, int aperture, BoundingBox box,
                          BlockPos aPort, BlockPos bPort,
                          net.minecraft.core.Direction aFacing, net.minecraft.core.Direction bFacing,
+                         int aAperture, int bAperture,
                          boolean critical) {
         super(StructurePieceType.JIGSAW, 0, box);
         this.path.addAll(path);
-        this.aperture = aperture;
+        this.aperture = Math.max(aperture, Math.max(aAperture, bAperture)); // bbox safety
         this.aPort = aPort;
         this.bPort = bPort;
         this.aFacing = aFacing;
         this.bFacing = bFacing;
+        this.aAperture = Math.max(3, aAperture);
+        this.bAperture = Math.max(3, bAperture);
         this.critical = critical;
     }
 
@@ -52,6 +56,10 @@ public class CorridorPiece extends StructurePiece {
         this.aFacing = net.minecraft.core.Direction.values()[tag.getInt("af")];
         this.bFacing = net.minecraft.core.Direction.values()[tag.getInt("bf")];
         this.critical = tag.getBoolean("crit");
+
+        // NEW (default to 'aperture' if older saves don't have these keys)
+        this.aAperture = tag.contains("aap") ? Math.max(3, tag.getInt("aap")) : this.aperture;
+        this.bAperture = tag.contains("bap") ? Math.max(3, tag.getInt("bap")) : this.aperture;
     }
 
     private static void punchPortWith(WorldGenLevel level, BlockPos center, net.minecraft.core.Direction facing, int aperture, int depth, net.minecraft.world.level.block.Block block) {
@@ -71,6 +79,7 @@ public class CorridorPiece extends StructurePiece {
         }
     }
 
+    // REPLACE addAdditionalSaveData
     @Override
     protected void addAdditionalSaveData(StructurePieceSerializationContext ctx, CompoundTag tag) {
         tag.putInt("aperture", aperture);
@@ -90,8 +99,13 @@ public class CorridorPiece extends StructurePiece {
         tag.putInt("af", aFacing.ordinal());
         tag.putInt("bf", bFacing.ordinal());
         tag.putBoolean("crit", critical);
+
+        // NEW
+        tag.putInt("aap", aAperture);
+        tag.putInt("bap", bAperture);
     }
 
+    // REPLACE postProcess
     @Override
     public void postProcess(
             WorldGenLevel level,
@@ -102,12 +116,15 @@ public class CorridorPiece extends StructurePiece {
             ChunkPos chunkPos,
             BlockPos pivot
     ) {
-        var fill = this.critical ? Blocks.COBWEB : net.minecraft.world.level.block.Blocks.AIR;
+        // Critical corridors are filled with cobwebs so they're visible
+        var fill = this.critical ? net.minecraft.world.level.block.Blocks.COBWEB
+                : net.minecraft.world.level.block.Blocks.AIR;
 
-        CorridorRouter.carveWith(level, this.path, this.aperture, fill);
+        // NEW: carve with a size gradient from aAperture → bAperture
+        CorridorRouter.carveGradientWith(level, this.path, this.aAperture, this.bAperture, fill);
 
-        // punch a short aperture-sized slice into each room for a clean join (match corridor material)
-        punchPortWith(level, aPort, aFacing, aperture, 2, fill);
-        punchPortWith(level, bPort, bFacing, aperture, 2, fill);
+        // Punch exact port sizes into each room so joins are clean
+        punchPortWith(level, aPort, aFacing, aAperture, /*depth*/3, fill);
+        punchPortWith(level, bPort, bFacing, bAperture, /*depth*/3, fill);
     }
 }

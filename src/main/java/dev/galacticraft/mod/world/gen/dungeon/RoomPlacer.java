@@ -41,31 +41,6 @@ final class RoomPlacer {
         return pool.get(pool.size() - 1);
     }
 
-    private static Vec3i rotSize(Vec3i s, Rotation r) {
-        return switch (r) {
-            case NONE, CLOCKWISE_180 -> s;
-            default -> new Vec3i(s.getZ(), s.getY(), s.getX());
-        };
-    }
-
-    // same helpers as elsewhere
-    private static BlockPos localToWorldMinCorner(BlockPos local, BlockPos origin, Vec3i size, Rotation rot) {
-        int ox = origin.getX(), oy = origin.getY(), oz = origin.getZ();
-        int lx = local.getX(), ly = local.getY(), lz = local.getZ();
-        int sx = size.getX(), sz = size.getZ();
-
-        // Yaw-only rotation around MIN corner (origin)
-        return switch (rot) {
-            case NONE -> new BlockPos(ox + lx, oy + ly, oz + lz);
-            case CLOCKWISE_90 ->      // (x,z) = (sz-1 - lz, lx)
-                    new BlockPos(ox + (sz - 1 - lz), oy + ly, oz + lx);
-            case CLOCKWISE_180 ->     // (x,z) = (sx-1 - lx, sz-1 - lz)
-                    new BlockPos(ox + (sx - 1 - lx), oy + ly, oz + (sz - 1 - lz));
-            case COUNTERCLOCKWISE_90 -> // (x,z) = (lz, sx-1 - lx)
-                    new BlockPos(ox + lz, oy + ly, oz + (sx - 1 - lx));
-        };
-    }
-
     public static List<FlowRouter.PNode> ensureQueensNearEnds(
             List<Placed> placed,
             List<FlowRouter.PNode> allPorts,
@@ -162,7 +137,7 @@ final class RoomPlacer {
             if (s == null) continue;
 
             Rotation r = Rotation.values()[rnd.nextInt(4)];
-            Vec3i rs = rotSize(s.size(), r);
+            Vec3i rs = Transforms.rotatedSize(s.size(), r);
 
             // --- truncated cone: radius grows with depth from surface ---
             int yTop = surface.getY();
@@ -203,59 +178,111 @@ final class RoomPlacer {
     }
 
     /**
-     * Try to place up to {@code need} queen rooms clustered around the end center.
+     * NEW: Place an exact multiset of rooms (consumes each def at most once).
+     * The list should contain only BASIC and BRANCH_END templates; Entrance, End,
+     * and three Queens are still placed by this placer.
      */
-    private int placeQueensNearEnd(List<Placed> out, VoxelMask3D mRoomOut,
-                                   BlockPos endCenter, int worldMinY, int worldMaxY, int need) {
-        int placed = 0;
-        if (need <= 0) return 0;
+    List<Placed> placeAllExact(List<RoomTemplateDef> exactPool, ScannedTemplate entrance, ScannedTemplate end,
+                               BlockPos surface, BlockPos targetEndCenter,
+                               int worldMinY, int worldMaxY, VoxelMask3D mRoomOut) {
 
-        ArrayList<RoomTemplateDef> qdefs = new ArrayList<>(RoomDefs.QUEEN);
-        Collections.shuffle(qdefs, rnd);
+        ArrayList<Placed> out = new ArrayList<>();
 
-        // small rings around the end center
-        int[] radii = {6, 10, 14, 18};
-        int attempts = 0;
+        // 1) Entrance (fixed)
+        BlockPos entOrigin = surface.offset(-entrance.size().getX() / 2, -30, -entrance.size().getZ() / 2);
+        Placed ent = placeFixed(entrance, RoomDefs.ENTRANCE, Rotation.NONE, entOrigin);
+        out.add(ent);
+        writeRoomToMask(mRoomOut, ent);
+        LOGGER.info("(RoomPlacerExact) [Proc/Place] ENTRANCE placed at {} rot={}", ent.origin, ent.rot);
 
-        for (RoomTemplateDef qdef : qdefs) {
-            if (placed >= need) break;
+        // 2) End room (near hint)
+        Placed endPlaced = tryPlaceEnd(end, targetEndCenter, worldMinY, worldMaxY, out, mRoomOut);
+        if (endPlaced == null) {
+            LOGGER.info("(RoomPlacerExact) [Proc/Place] END placement failed (all tries)");
+            return out;
+        }
+        out.add(endPlaced);
+        writeRoomToMask(mRoomOut, endPlaced);
 
-            ScannedTemplate s = TemplatePortScanner.scan(ServerHolder.get().getStructureManager(), qdef.id());
+        // 3) Three QUEEN rooms near the end
+        int queensPlaced = placeQueensNearEnd(out, mRoomOut, targetEndCenter, worldMinY, worldMaxY, /*need*/3);
+        LOGGER.info("(RoomPlacerExact) [Proc/Place] Queens placed near end: {}", queensPlaced);
+
+        // 4) Consume the exact pool in random order with bounded retries per def
+        ArrayDeque<RoomTemplateDef> queue = new ArrayDeque<>(exactPool);
+        ArrayList<RoomTemplateDef> shuffled = new ArrayList<>(queue);
+        Collections.shuffle(shuffled, rnd);
+        queue.clear();
+        queue.addAll(shuffled);
+
+        Map<ResourceLocation, Integer> attempts = new HashMap<>();
+        int maxAttemptsPerDef = Math.max(8, cfg.perRoomTries / 3);
+
+        while (!queue.isEmpty() && out.size() < cfg.maxRooms) {
+            RoomTemplateDef d = queue.removeFirst();
+            ScannedTemplate s = TemplatePortScanner.scan(ServerHolder.get().getStructureManager(), d.id());
             if (s == null) continue;
 
-            // try several rings and rotations
-            outer:
-            for (int ring : radii) {
-                for (int a = 0; a < 12; a++) { // 30-degree steps
-                    if (placed >= need) break outer;
-                    attempts++;
-
-                    double theta = (Math.PI * 2.0 / 12.0) * a + rnd.nextDouble() * 0.15;
-                    int cx = endCenter.getX() + (int) Math.round(ring * Math.cos(theta));
-                    int cz = endCenter.getZ() + (int) Math.round(ring * Math.sin(theta));
-                    int cy = Math.max(worldMinY + 4, Math.min(endCenter.getY() + rnd.nextInt(-2, 3), worldMaxY - s.size().getY() - 2));
-
-                    Rotation r = Rotation.values()[rnd.nextInt(4)];
-                    Vec3i rs = rotSize(s.size(), r);
-                    BlockPos origin = new BlockPos(cx - rs.getX() / 2, cy - rs.getY() / 2, cz - rs.getZ() / 2);
-
-                    Placed cand = placeFixed(s, qdef, r, origin);
-                    if (!passesClearance(out, cand, cfg.cRoom)) continue;
-
-                    VoxelMask3D mTmp = mRoomOut.copy();
-                    writeRoomToMask(mTmp, cand);
-                    VoxelMask3D mFreePrime = Morph3D.freeMaskFromRooms(mTmp, cfg.effectiveRadius());
-                    if (!portalsViable(cand, mFreePrime, /*minGood*/1, /*stepOut*/cfg.effectiveRadius() + 1)) continue;
-
-                    out.add(cand);
-                    writeRoomToMask(mRoomOut, cand);
-                    placed++;
-                    LOGGER.info("(RoomPlacer) [QueenNearEnd] {} placed at {} rot={} (attempts={})",
-                            qdef.id(), cand.origin, cand.rot, attempts);
-                }
+            int tried = attempts.getOrDefault(d.id(), 0);
+            if (tried >= maxAttemptsPerDef) {
+                LOGGER.info("(RoomPlacerExact) drop {} after {} attempts", d.id(), tried);
+                continue;
             }
+
+            // biased cone around lower depths close-ish to endPlaced
+            Rotation r = Rotation.values()[rnd.nextInt(4)];
+            Vec3i rs = Transforms.rotatedSize(s.size(), r);
+
+            int yTop = surface.getY();
+            int yBot = Math.max(worldMinY + 8, endPlaced.origin.getY());
+            int ry = rnd.nextInt(yBot, Math.min(yTop - 2, yBot + 48));
+            float depthT = (float) Math.max(0.0, Math.min(1.0, (yTop - ry) / (double) (yTop - (worldMinY + 8))));
+            double coneR = cfg.shellMax * (0.35 + 0.65 * depthT);
+
+            // small lateral bias toward the end center
+            int bx = targetEndCenter.getX();
+            int bz = targetEndCenter.getZ();
+            int rx = (int) Math.round(bx + rnd.nextGaussian() * coneR * 0.65);
+            int rz = (int) Math.round(bz + rnd.nextGaussian() * coneR * 0.65);
+
+            BlockPos o = new BlockPos(
+                    rx - rs.getX() / 2,
+                    Math.max(worldMinY + 4, Math.min(ry, worldMaxY - rs.getY() - 2)),
+                    rz - rs.getZ() / 2
+            );
+            Placed p = placeFixed(s, d, r, o);
+
+            // "rare lower" bias for BRANCH_END
+            boolean rare = (d.type() == RoomTemplateDef.RoomType.BRANCH_END);
+            float rareKeep = rare ? (0.15f + 0.85f * depthT) : 1.0f;
+            if (rnd.nextFloat() > rareKeep) {
+                // retry later
+                attempts.put(d.id(), tried + 1);
+                queue.addLast(d);
+                continue;
+            }
+
+            if (!passesClearance(out, p, cfg.cRoom)) {
+                attempts.put(d.id(), tried + 1);
+                queue.addLast(d);
+                continue;
+            }
+
+            VoxelMask3D mRoomTmp = mRoomOut.copy();
+            writeRoomToMask(mRoomTmp, p);
+            VoxelMask3D mFreePrime = Morph3D.freeMaskFromRooms(mRoomTmp, cfg.effectiveRadius());
+            if (!portalsViable(p, mFreePrime, /*minGood*/1, /*stepOut*/cfg.effectiveRadius() + 1)) {
+                attempts.put(d.id(), tried + 1);
+                queue.addLast(d);
+                continue;
+            }
+
+            out.add(p);
+            writeRoomToMask(mRoomOut, p);
+            LOGGER.info("(RoomPlacerExact) [Proc/Place] {} placed at {} rot={}", p.def.id(), p.origin, p.rot);
         }
-        return placed;
+
+        return out;
     }
 
     /**
@@ -273,7 +300,7 @@ final class RoomPlacer {
         int attempts = Math.max(32, cfg.orientTries * 2);
         for (int a = 0; a < attempts; a++) {
             Rotation r = rots[rnd.nextInt(rots.length)];
-            Vec3i rs = rotSize(endScan.size(), r);
+            Vec3i rs = Transforms.rotatedSize(endScan.size(), r);
 
             // small jitter around target center (±6 blocks), slight bias downward
             int jx = rnd.nextInt(-6, 6);
@@ -322,7 +349,7 @@ final class RoomPlacer {
     }
 
     private boolean withinMaskBounds(VoxelMask3D mask, Placed p) {
-        Vec3i sz = rotSize(p.scan.size(), p.rot);
+        Vec3i sz = Transforms.rotatedSize(p.scan.size(), p.rot);
         int x0 = mask.gx(p.origin.getX());
         int y0 = mask.gy(p.origin.getY());
         int z0 = mask.gz(p.origin.getZ());
@@ -337,7 +364,7 @@ final class RoomPlacer {
     }
 
     private Placed placeFixed(ScannedTemplate s, RoomTemplateDef def, Rotation r, BlockPos origin) {
-        Vec3i rs = rotSize(s.size(), r);
+        Vec3i rs = Transforms.rotatedSize(s.size(), r);
         AABB box = new AABB(origin.getX(), origin.getY(), origin.getZ(),
                 origin.getX() + rs.getX(), origin.getY() + rs.getY(), origin.getZ() + rs.getZ());
         return new Placed(s, def, r, origin, box);
@@ -365,7 +392,7 @@ final class RoomPlacer {
         if (ports.isEmpty()) ports = p.scan.entrances();
         int good = 0;
         for (Port port : ports) {
-            BlockPos wp = localToWorldMinCorner(port.localPos(), p.origin, p.scan.size(), p.rot);
+            BlockPos wp = Transforms.worldOfLocalMin(port.localPos(), p.origin, p.scan.size(), p.rot);
             Direction face = Transforms.rotateFacingYaw(port.facing(), p.rot);
             BlockPos outward = wp.relative(face, Math.max(1, stepOut));
 
@@ -388,7 +415,7 @@ final class RoomPlacer {
     }
 
     private void writeRoomToMask(VoxelMask3D mask, Placed p) {
-        Vec3i sz = rotSize(p.scan.size(), p.rot);
+        Vec3i sz = Transforms.rotatedSize(p.scan.size(), p.rot);
         int x0 = mask.gx(p.origin.getX());
         int y0 = mask.gy(p.origin.getY());
         int z0 = mask.gz(p.origin.getZ());
@@ -400,5 +427,61 @@ final class RoomPlacer {
      * @param aabb   axis-aligned (yaw only)
      */
     record Placed(ScannedTemplate scan, RoomTemplateDef def, Rotation rot, BlockPos origin, AABB aabb) {
+    }
+
+    /**
+     * Try to place up to {@code need} queen rooms clustered around the end center.
+     */
+    private int placeQueensNearEnd(List<Placed> out, VoxelMask3D mRoomOut,
+                                   BlockPos endCenter, int worldMinY, int worldMaxY, int need) {
+        int placed = 0;
+        if (need <= 0) return 0;
+
+        ArrayList<RoomTemplateDef> qdefs = new ArrayList<>(RoomDefs.QUEEN);
+        Collections.shuffle(qdefs, rnd);
+
+        // small rings around the end center
+        int[] radii = {6, 10, 14, 18, 22};
+        int attempts = 0;
+
+        for (RoomTemplateDef qdef : qdefs) {
+            if (placed >= need) break;
+
+            ScannedTemplate s = TemplatePortScanner.scan(ServerHolder.get().getStructureManager(), qdef.id());
+            if (s == null) continue;
+
+            // try several rings and rotations
+            outer:
+            for (int ring : radii) {
+                for (int a = 0; a < 12; a++) { // 30-degree steps
+                    if (placed >= need) break outer;
+                    attempts++;
+
+                    double theta = (Math.PI * 2.0 / 12.0) * a + rnd.nextDouble() * 0.15;
+                    int cx = endCenter.getX() + (int) Math.round(ring * Math.cos(theta));
+                    int cz = endCenter.getZ() + (int) Math.round(ring * Math.sin(theta));
+                    int cy = Math.max(worldMinY + 4, Math.min(endCenter.getY() + rnd.nextInt(-2, 3), worldMaxY - s.size().getY() - 2));
+
+                    Rotation r = Rotation.values()[rnd.nextInt(4)];
+                    Vec3i rs = Transforms.rotatedSize(s.size(), r);
+                    BlockPos origin = new BlockPos(cx - rs.getX() / 2, cy - rs.getY() / 2, cz - rs.getZ() / 2);
+
+                    Placed cand = placeFixed(s, qdef, r, origin);
+                    if (!passesClearance(out, cand, cfg.cRoom)) continue;
+
+                    VoxelMask3D mTmp = mRoomOut.copy();
+                    writeRoomToMask(mTmp, cand);
+                    VoxelMask3D mFreePrime = Morph3D.freeMaskFromRooms(mTmp, cfg.effectiveRadius());
+                    if (!portalsViable(cand, mFreePrime, /*minGood*/1, /*stepOut*/cfg.effectiveRadius() + 1)) continue;
+
+                    out.add(cand);
+                    writeRoomToMask(mRoomOut, cand);
+                    placed++;
+                    LOGGER.info("(RoomPlacer) [QueenNearEnd] {} placed at {} rot={} (attempts={})",
+                            qdef.id(), cand.origin, cand.rot, attempts);
+                }
+            }
+        }
+        return placed;
     }
 }
