@@ -247,6 +247,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 GCBlocks.POLISHED_MOON_ROCK_STAIRS,
                 GCBlocks.POLISHED_MOON_ROCK_WALL
         );
+        decorationBlockVariants(output, GCBlocks.COBBLED_MOON_ROCK,
+                GCBlocks.COBBLED_MOON_ROCK_SLAB,
+                GCBlocks.COBBLED_MOON_ROCK_STAIRS,
+                GCBlocks.COBBLED_MOON_ROCK_WALL
+        );
         smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
         smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
         squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
