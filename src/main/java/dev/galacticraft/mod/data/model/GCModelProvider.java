@@ -58,7 +58,9 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
@@ -73,16 +75,24 @@ public class GCModelProvider extends FabricModelProvider {
         generator.texturedModels = Maps.newHashMap(generator.texturedModels);
         generator.fullBlockModelCustomGenerators = Maps.newHashMap(generator.fullBlockModelCustomGenerators);
 
+        generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
         generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
+        Set<Block> detailedWalls = new HashSet<Block>();
 
-        decorations.forEach(decorationSet -> putDetailedTextured(generator, decorationSet.detailedBlock()));
-        generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
+        decorations.forEach(decorationSet -> {
+                generator.texturedModels.put(decorationSet.detailedBlock(), DETAILED_DECORATION.get(decorationSet.detailedBlock()));
+                detailedWalls.add(decorationSet.detailedWall());
+        });
 
         GCBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateModel)
-                .forEach(blockFamily -> generator.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
+                .forEach(blockFamily -> {
+                        var provider = generator.family(blockFamily.getBaseBlock());
+                        provider.skipGeneratingModelsFor.addAll(detailedWalls);
+                        provider.generateFor(blockFamily);
+                });
 
         // DETAILED WALL - Special case!
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
@@ -574,6 +584,7 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void detailedWall(BlockModelGenerators generator, Block base, Block wall) {
+        // TODO: unique textures for the top and bottom of walls rather than using the base block textures?
         var mapping = GCModelProvider.detailedTexture(base);
         var wallPost = GCModelTemplates.DETAILED_WALL_POST.create(wall, mapping, generator.modelOutput);
         var wallLowSide = GCModelTemplates.DETAILED_WALL_LOW_SIDE.create(wall, mapping, generator.modelOutput);
@@ -581,10 +592,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(BlockModelGenerators.createWall(wall, wallPost, wallLowSide, wallTallSide));
         var wallInventory = GCModelTemplates.DETAILED_WALL_INVENTORY.create(wall, mapping, generator.modelOutput);
         generator.delegateItemModel(wall, wallInventory);
-    }
-
-    private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
-        generator.texturedModels.put(detailedBlock, DETAILED_DECORATION.get(detailedBlock));
     }
 
     private static void createRotatedDelegate(BlockModelGenerators generator, Block block) {
@@ -828,10 +835,8 @@ public class GCModelProvider extends FabricModelProvider {
 
     @Contract("_ -> new")
     private static TextureMapping detailedTexture(Block block) {
-        var resourceLocation = TextureMapping.getBlockTexture(block, "_side");
         return new TextureMapping()
-                .put(TextureSlot.WALL, resourceLocation)
-                .put(TextureSlot.SIDE, resourceLocation)
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
                 .put(TextureSlot.BOTTOM, ResourceLocation.parse(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
