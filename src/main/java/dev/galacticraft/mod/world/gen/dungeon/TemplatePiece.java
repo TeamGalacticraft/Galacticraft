@@ -58,10 +58,10 @@ public class TemplatePiece extends StructurePiece {
         StructureTemplate tpl = templateManager.getOrCreate(templateId);
 
         // Rotate around template center
-        var pivot = boundingBox.getCenter().subtract(origin);
+        var pivot = BlockPos.ZERO;
 
         var place = new StructurePlaceSettings()
-                .setRotation(this.yRot)
+                .setRotation(Rotation.NONE)
                 .setRotationPivot(pivot)  // pivot at template center
                 .setBoundingBox(box)
                 .setKnownShape(true)
@@ -78,17 +78,17 @@ public class TemplatePiece extends StructurePiece {
         var idSettings = new net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings();
         java.util.List<StructureTemplate.StructureBlockInfo> eInfos = tpl.filterBlocks(BlockPos.ZERO, idSettings, entranceBlock);
         java.util.List<StructureTemplate.StructureBlockInfo> xInfos = tpl.filterBlocks(BlockPos.ZERO, idSettings, exitBlock);
-
-        net.minecraft.world.level.block.Block purple = net.minecraft.world.level.block.Blocks.PURPLE_CONCRETE;
-        var size = tpl.getSize();
-
-        for (var bi : eInfos) {
-            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
-            level.setBlock(wp, purple.defaultBlockState(), 2);
-        }
-        for (var bi : xInfos) {
-            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
-            level.setBlock(wp, purple.defaultBlockState(), 2);
-        }
+//
+//        net.minecraft.world.level.block.Block purple = net.minecraft.world.level.block.Blocks.PURPLE_CONCRETE;
+//        var size = tpl.getSize();
+//
+//        for (var bi : eInfos) {
+//            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
+//            level.setBlock(wp, purple.defaultBlockState(), 2);
+//        }
+//        for (var bi : xInfos) {
+//            BlockPos wp = Transforms.worldOfLocalMin(bi.pos(), this.origin, size, this.yRot);
+//            level.setBlock(wp, purple.defaultBlockState(), 2);
+//        }
     }
 }

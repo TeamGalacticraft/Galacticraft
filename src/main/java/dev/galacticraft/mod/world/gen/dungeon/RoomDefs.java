@@ -11,8 +11,8 @@ public final class RoomDefs {
             Constant.id("dungeon/end_room_1")
     );
     public static final List<RoomTemplateDef> QUEEN = List.of(
-            new RoomTemplateDef(Constant.id("dungeon/queen_room_1"), RoomTemplateDef.RoomType.BRANCH_END, 6, 1),
-            new RoomTemplateDef(Constant.id("dungeon/queen_room_2"), RoomTemplateDef.RoomType.BRANCH_END, 6, 1)
+            new RoomTemplateDef(Constant.id("dungeon/queen_room_1"), RoomTemplateDef.RoomType.QUEEN, 6, 1),
+            new RoomTemplateDef(Constant.id("dungeon/queen_room_2"), RoomTemplateDef.RoomType.QUEEN, 6, 1)
     );
     public static final RoomTemplateDef ENTRANCE = new RoomTemplateDef(
             Constant.id("dungeon/entrance_shaft"),

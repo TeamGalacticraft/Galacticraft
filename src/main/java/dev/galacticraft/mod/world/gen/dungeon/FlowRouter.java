@@ -33,14 +33,19 @@ final class FlowRouter {
 
     /**
      * Candidate edges: portals are connectable if facing opposite-ish and within geodesic reach on G_free.
+     * Now with: (1) quick distance cull, (2) limit routing to top-K closest pairs to avoid O(N^2) routes.
      */
-    static List<EdgeCand> candidateEdges(List<PNode> P, FreeGraph G, ProcConfig cfg) {
+    static List<EdgeCand> candidateEdges(List<PNode> P, FreeGraph unusedGraph, ProcConfig cfg) {
         ArrayList<EdgeCand> E = new ArrayList<>();
-        Random r = new Random();
 
         final int stepOut = Math.max(1, cfg.effectiveRadius() + 1);
+        final int MAX_MD  = Math.max(96, cfg.effectiveRadius() * 16);
+        final int TOP_K   = 12;
 
-        int rejSameRoom = 0, rejDir = 0, rejRouteThrow = 0, rejRouteEmpty = 0, rejPolarity = 0;
+        int rejSameRoom = 0, rejPolarity = 0, rejDist = 0;
+
+        record Quick(int ai, int bj, int md, float dirPenalty) {}
+        ArrayList<Quick> quick = new ArrayList<>();
 
         for (int i = 0; i < P.size(); i++) {
             for (int j = 0; j < P.size(); j++) {
@@ -49,113 +54,50 @@ final class FlowRouter {
                 PNode a0 = P.get(i), b0 = P.get(j);
                 if (a0.room == b0.room) { rejSameRoom++; continue; }
 
-                // ---- Normalize polarity so we always store EXIT(A) -> ENTRANCE(B) ----
-                boolean a0Exit = DungeonWorldBuilder.isExitNode(a0);
-                boolean b0Entr = DungeonWorldBuilder.isEntranceNode(b0);
-                boolean a0Entr = DungeonWorldBuilder.isEntranceNode(a0);
-                boolean b0Exit = DungeonWorldBuilder.isExitNode(b0);
-
-                PNode a = a0, b = b0;
-                int ai = i, bj = j;
-
-                if (a0Exit && b0Entr) {
-                    // keep as-is
-                } else if (a0Entr && b0Exit) {
-                    // flip to keep graph semantics consistent: EXIT -> ENTRANCE
-                    a = b0;  b = a0;
-                    ai = j;  bj = i;
-                } else {
-                    // entrance->entrance or exit->exit is useless for routing
-                    rejPolarity++;
-                    continue;
+                // STRICT: EXIT(A) -> ENTR(B) only
+                if (!DungeonWorldBuilder.isExitNode(a0) || !DungeonWorldBuilder.isEntranceNode(b0)) {
+                    rejPolarity++; continue;
                 }
 
-                // ---- Basic facing sanity (horizontal pairs must oppose) ----
-                boolean horizA = a.facing.getAxis().isHorizontal();
-                boolean horizB = b.facing.getAxis().isHorizontal();
+                BlockPos aStart = a0.worldPos.relative(a0.facing, stepOut);
+                BlockPos bStart = b0.worldPos.relative(b0.facing, stepOut);
+
+                int md = Math.abs(aStart.getX() - bStart.getX())
+                        + Math.abs(aStart.getY() - bStart.getY())
+                        + Math.abs(aStart.getZ() - bStart.getZ());
+                if (md > MAX_MD) { rejDist++; continue; }
+
+                // Soft facing penalty (prefer opposing)
+                float dirPenalty = 0f;
+                boolean horizA = a0.facing.getAxis().isHorizontal();
+                boolean horizB = b0.facing.getAxis().isHorizontal();
                 if (horizA && horizB) {
-                    int dot = a.facing.getStepX() * -b.facing.getStepX()
-                            + a.facing.getStepZ() * -b.facing.getStepZ();
-                    if (dot <= 0) { rejDir++; continue; } // reject orthogonal/same-facing
+                    int dot = a0.facing.getStepX() * -b0.facing.getStepX()
+                            + a0.facing.getStepZ() * -b0.facing.getStepZ(); // +2 best (opposite), -2 worst (same)
+                    if (dot < 2) dirPenalty = (2 - dot) * 8f; // 0,8,16,24
+                } else {
+                    dirPenalty = 12f;
                 }
-                // (Vertical/diagonal mixes are allowed; the router/weights will filter)
 
-                // ---- Route between outward step points ----
-                BlockPos aStart = a.worldPos.relative(a.facing, stepOut);
-                BlockPos bStart = b.worldPos.relative(b.facing, stepOut);
-
-                List<BlockPos> coarse;
-                try {
-                    coarse = G.route(aStart, bStart, null, 0, r);
-                } catch (Throwable t) {
-                    rejRouteThrow++;
-                    if (LOGGER.isDebugEnabled()) {
-                        LOGGER.debug("(FlowRouter)[Cand.throw] a={}{} -> b={}{}  stepOut={}  ex={}",
-                                a.worldPos, a.facing, b.worldPos, b.facing, stepOut, t.toString());
-                    }
-                    continue;
-                }
-                if (coarse == null || coarse.isEmpty()) { rejRouteEmpty++; continue; }
-
-                float w = (float) coarse.size()
-                        + cfg.proxPenalty * (float) Math.sqrt(a.worldPos.distSqr(b.worldPos));
-
-                if (LOGGER.isDebugEnabled()) {
-                    LOGGER.debug("(FlowRouter)[Cand.OK] EXIT a={}{} -> ENTR b={}{}  stepOut={}  len={}  w={}",
-                            a.worldPos, a.facing, b.worldPos, b.facing, stepOut, coarse.size(), String.format("%.2f", w));
-                }
-                E.add(new EdgeCand(ai, bj, w));
+                quick.add(new Quick(i, j, md, dirPenalty));
             }
         }
 
-        LOGGER.info("(FlowRouter)[Cand] portals={} edges={}  rej[sameRoom={}] rej[faceDir={}] rej[polarity={}] rej[routeThrow={}] rej[routeEmpty={}]",
-                P.size(), E.size(), rejSameRoom, rejDir, rejPolarity, rejRouteThrow, rejRouteEmpty);
+        // Route only the TOP_K closest by Manhattan distance
+        quick.sort(Comparator.comparingInt(q -> q.md));
+        int routed = 0;
+        for (Quick q : quick) {
+            if (routed >= TOP_K) break;
+            // weight is just a heuristic for later tie-breaks
+            float w = q.dirPenalty + (float) q.md;
+            E.add(new EdgeCand(q.ai, q.bj, w));
+            routed++;
+        }
 
+        LOGGER.info("(FlowRouter)[Cand] portals={} edges={} rej[sameRoom={}] rej[polarity={}] rej[distMD>{}={}]",
+                P.size(), E.size(), rejSameRoom, rejPolarity, MAX_MD, rejDist);
         return E;
     }
-
-    static List<RoutedPair> connectAllRooms(List<PNode> P,
-                                            List<EdgeCand> E,
-                                            List<RoutedPair> seedPairs,
-                                            Set<RoomPlacer.Placed> blockedRooms) {
-
-        // REMOVE the old hardBlocked entrance/queen/end logic.
-        HashSet<RoomPlacer.Placed> hardBlocked = new HashSet<>();
-        if (blockedRooms != null) hardBlocked.addAll(blockedRooms);
-
-        HashSet<RoomPlacer.Placed> connected = new HashSet<>();
-        for (RoutedPair rp : seedPairs) {
-            connected.add(rp.A.room());
-            connected.add(rp.B.room());
-        }
-        if (connected.isEmpty() && !P.isEmpty()) connected.add(P.get(0).room());
-
-        ArrayList<EdgeCand> edges = new ArrayList<>(E);
-        edges.sort(Comparator.comparingDouble(ec -> ec.w));
-
-        ArrayList<RoutedPair> extra = new ArrayList<>();
-
-        for (EdgeCand ec : edges) {
-            PNode a = P.get(ec.a), b = P.get(ec.b);
-            if (a.room == b.room) continue;
-            if (hardBlocked.contains(a.room) || hardBlocked.contains(b.room)) continue;
-
-            // NEW: don’t connect Queen ↔ Queen in the forest stitch
-            var ta = a.room().def().type();
-            var tb = b.room().def().type();
-            if (ta == RoomTemplateDef.RoomType.QUEEN && tb == RoomTemplateDef.RoomType.QUEEN) continue;
-
-            boolean aConn = connected.contains(a.room);
-            boolean bConn = connected.contains(b.room);
-            if (aConn ^ bConn) {
-                extra.add(new RoutedPair(aConn ? a : b, aConn ? b : a));
-                connected.add(a.room);
-                connected.add(b.room);
-            }
-        }
-        return extra;
-    }
-
 
     record PNode(RoomPlacer.Placed room, Port port, Rotation rot, BlockPos worldPos, Direction facing) {
     }

@@ -107,7 +107,6 @@ public class CorridorPiece extends StructurePiece {
         tag.putInt("bap", bAperture);
     }
 
-    // REPLACE postProcess
     @Override
     public void postProcess(WorldGenLevel level,
                             net.minecraft.world.level.StructureManager ignored,
@@ -126,12 +125,28 @@ public class CorridorPiece extends StructurePiece {
                 this.boundingBox.minX(), this.boundingBox.minY(), this.boundingBox.minZ(),
                 this.boundingBox.maxX(), this.boundingBox.maxY(), this.boundingBox.maxZ());
 
+        // carve the corridor proper (includes densification between samples)
         CorridorRouter.carveGradientWith(level, this.path, this.aAperture, this.bAperture, fill);
 
-        punchPortWith(level, aPort, aFacing, aAperture, /*depth*/3, fill);
-        punchPortWith(level, bPort, bFacing, bAperture, /*depth*/3, fill);
+        // --- NEW: compute exact gaps from each port to the nearest path point along its facing ---
+        int aDepth = Math.max(1, distanceAlongAxis(aPort, (n > 0 ? path.get(0) : aPort), aFacing));
+        int bDepth = Math.max(1, distanceAlongAxis(bPort, (n > 0 ? path.get(n - 1) : bPort), bFacing));
 
-        LOGGER.info("(Carve) done   nodes={} aPort={}{} bPort={}{}",
-                n, aPort, aFacing, bPort, bFacing);
+        // punch exactly that far so there are no gaps (and no extra cavities)
+        punchPortWith(level, aPort, aFacing, aAperture, aDepth, fill);
+        punchPortWith(level, bPort, bFacing, bAperture, bDepth, fill);
+
+        LOGGER.info("(Carve) done   nodes={} aPort={}{} bPort={}{} depthA={} depthB={}",
+                n, aPort, aFacing, bPort, bFacing, aDepth, bDepth);
+    }
+
+    // helper inside CorridorPiece
+    private static int distanceAlongAxis(BlockPos from, BlockPos to, net.minecraft.core.Direction facing) {
+        // “how far do we need to go from `from` toward `to` along `facing` to touch/overlap the corridor?”
+        return switch (facing.getAxis()) {
+            case X -> Math.max(0, (to.getX() - from.getX()) * facing.getStepX());
+            case Y -> Math.max(0, (to.getY() - from.getY()) * facing.getStepY());
+            case Z -> Math.max(0, (to.getZ() - from.getZ()) * facing.getStepZ());
+        };
     }
 }

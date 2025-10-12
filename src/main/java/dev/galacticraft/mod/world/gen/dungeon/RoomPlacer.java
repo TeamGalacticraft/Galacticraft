@@ -250,7 +250,7 @@ final class RoomPlacer {
     /**
      * End room placement with retries: rotations + jitter; detailed failure stats.
      */
-    private Placed tryPlaceEnd(ScannedTemplate endScan,
+    public Placed tryPlaceEnd(ScannedTemplate endScan,
                                BlockPos targetCenter,
                                int worldMinY, int worldMaxY,
                                List<Placed> existing, VoxelMask3D mRoomOut) {
@@ -325,7 +325,7 @@ final class RoomPlacer {
         return ok;
     }
 
-    private Placed placeFixed(ScannedTemplate s, RoomTemplateDef def, Rotation r, BlockPos origin) {
+    public Placed placeFixed(ScannedTemplate s, RoomTemplateDef def, Rotation r, BlockPos origin) {
         Vec3i rs = Transforms.rotatedSize(s.size(), r);
         AABB box = new AABB(origin.getX(), origin.getY(), origin.getZ(),
                 origin.getX() + rs.getX(), origin.getY() + rs.getY(), origin.getZ() + rs.getZ());

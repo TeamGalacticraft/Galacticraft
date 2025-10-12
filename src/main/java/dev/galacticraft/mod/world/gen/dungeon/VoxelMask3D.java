@@ -67,4 +67,28 @@ final class VoxelMask3D {
         m.bits.or(this.bits);
         return m;
     }
+
+    public double ox() {
+        return this.ox;
+    }
+
+    public double oy() {
+        return this.oy;
+    }
+
+    public double oz() {
+        return this.oz;
+    }
+
+    public double nx() {
+        return this.nx;
+    }
+
+    public double ny() {
+        return this.ny;
+    }
+
+    public double nz() {
+        return this.nz;
+    }
 }
