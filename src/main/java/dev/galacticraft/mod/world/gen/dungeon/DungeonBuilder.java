@@ -207,6 +207,35 @@ public class DungeonBuilder {
             throw new RuntimeException(e);
         }
 
+        // Pathfind and carve from queen rooms to end room
+        try {
+            for (Room queenRoom : queenRooms) {
+                PortDef exitPort = Arrays.stream(queenRoom.def.exits()).findFirst().get();
+
+                // Find the entrance port that matches the queen rooms exit port
+                Optional<PortDef> entrancePort = Arrays.stream(endRoom.def().entrances())
+                        .filter(p -> endRoom.rotation().rotate(p.facing()) == queenRoom.rotation().rotate(exitPort.facing()).getOpposite())
+                        .findFirst();
+
+                if (entrancePort.isPresent()) {
+                    // Get the center position of the entrance and exit port
+                    BlockPos exitPortPosition = PortGeom.localToWorld(exitPort.localCenterBlock(), queenRoom.def().sizeX(), queenRoom.def().sizeY(), queenRoom.def().sizeZ(), queenRoom.aabb(), queenRoom.rotation());
+                    BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.get().localCenterBlock(), endRoom.def().sizeX(), endRoom.def().sizeY(), endRoom.def().sizeZ(), endRoom.aabb(), endRoom.rotation());
+
+                    // Move 2 blocks outwards from port before carving
+                    exitPortPosition = exitPortPosition.offset(queenRoom.rotation().rotate(exitPort.facing()).getNormal().multiply(2));
+                    entrancePortPosition = entrancePortPosition.offset(endRoom.rotation().rotate(entrancePort.get().facing()).getNormal().multiply(2));
+
+                    // Carve straight line
+                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
+                } else {
+                    LOGGER.error("Could not find entrance port");
+                }
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
         // Pathfind and carve all critical paths
         try {
             for (int i = 0; i < orderedCriticalPaths.size(); i++) {
@@ -225,11 +254,11 @@ public class DungeonBuilder {
                     BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.localCenterBlock(), room2.def().sizeX(), room2.def().sizeY(), room2.def().sizeZ(), room2.aabb(), room2.rotation());
 
                     // Move 2 blocks outwards from port before carving
-                    exitPortPosition = exitPortPosition.offset(exitPort.facing().getNormal().multiply(2));
-                    entrancePortPosition = entrancePortPosition.offset(entrancePort.facing().getNormal().multiply(2));
+                    exitPortPosition = exitPortPosition.offset(room1.rotation().rotate(exitPort.facing()).getNormal().multiply(2));
+                    entrancePortPosition = entrancePortPosition.offset(room2.rotation().rotate(entrancePort.facing()).getNormal().multiply(2));
 
                     // Carve straight line
-                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, Math.max(exitPort.area(),  entrancePort.area())));
+                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
                 }
             }
         } catch (Exception e) {
