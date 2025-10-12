@@ -97,6 +97,7 @@ public final class TemplateScanner {
             dq.add(seed);
             unvisited.remove(seed);
 
+            // 6-neighbor flood fill to get one rectangular portal cluster
             while (!dq.isEmpty()) {
                 BlockPos p = dq.pollFirst();
                 cluster.add(p);
@@ -114,23 +115,41 @@ public final class TemplateScanner {
                 continue;
             }
 
-            // (Optional) keep center/aperture for logs/diagnostics
+            BlockPos cmin = min(cluster);
+            BlockPos cmax = max(cluster);
+
+            // (Optional) validate it’s a flat plane on the inferred face
+            boolean flat = switch (facing.getAxis()) {
+                case X -> cmin.getX() == cmax.getX();
+                case Y -> cmin.getY() == cmax.getY();
+                case Z -> cmin.getZ() == cmax.getZ();
+            };
+            if (!flat) {
+                LOGGER.warn("[TemplateScanner] {} [{} #{}] cluster not flat on face {}", id,
+                        entrance ? "entr" : "exit", idx, facing);
+            }
+
+            String name = (entrance ? "entr_" : "exit_") + idx;
+            out.add(new PortDef(
+                    name,
+                    entrance,
+                    !entrance,
+                    facing,
+                    cmin,
+                    cmax
+            ));
+
+            // (Optional) diagnostics
             int spanA = span(cluster, inPlaneAxisA(facing));
             int spanB = span(cluster, inPlaneAxisB(facing));
             int aperture = Math.max(1, Math.min(spanA, spanB));
-            BlockPos cmin = min(cluster), cmax = max(cluster);
             BlockPos center = new BlockPos(
                     (cmin.getX() + cmax.getX()) / 2,
                     (cmin.getY() + cmax.getY()) / 2,
                     (cmin.getZ() + cmax.getZ()) / 2
             );
-
-            // Build PortDef that matches your record signature.
-            String name = (entrance ? "entr_" : "exit_") + idx;
-            out.add(new PortDef(name, entrance, !entrance, facing));
-
-            LOGGER.debug("[TemplateScanner] {} [{} #{}] face={} center={} aperture={}",
-                    id, entrance ? "entr" : "exit", idx, facing, center, aperture);
+            LOGGER.debug("[TemplateScanner] {} [{} #{}] face={} min={} max={} center={} aperture={}",
+                    id, entrance ? "entr" : "exit", idx, facing, cmin, cmax, center, aperture);
 
             idx++;
         }

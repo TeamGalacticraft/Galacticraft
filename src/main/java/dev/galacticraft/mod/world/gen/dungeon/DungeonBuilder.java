@@ -8,6 +8,7 @@ import dev.galacticraft.mod.world.gen.dungeon.records.PortDef;
 import dev.galacticraft.mod.world.gen.dungeon.records.RoomDef;
 import dev.galacticraft.mod.world.gen.dungeon.util.BoxSampling;
 import dev.galacticraft.mod.world.gen.dungeon.util.DeferredCarvePiece;
+import dev.galacticraft.mod.world.gen.dungeon.util.PortGeom;
 import dev.galacticraft.mod.world.gen.dungeon.util.RoomHamiltonianPath;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -197,7 +198,7 @@ public class DungeonBuilder {
                         orderedRooms.add(roomsInPath.get(solved.get().order.get(k)));
                     }
                     orderedCriticalPaths.add(orderedRooms);
-                    solved.get();
+                    criticalPathResults.add(solved.get());
                 } else {
                     LOGGER.error("Could not solve path");
                 }
@@ -210,14 +211,25 @@ public class DungeonBuilder {
         try {
             for (int i = 0; i < orderedCriticalPaths.size(); i++) {
                 for (int j = 0; j < orderedCriticalPaths.get(i).size() - 1; j++) {
-//                    RoomHamiltonianPath.PathResult pathResult = criticalPathResults.get(i);
-//                    PortDef port1 = Arrays.stream(orderedCriticalPaths.get(i).get(j).def().entrances()).toList().get(pathResult.portPairs.get(j)[0]);
-//                    PortDef port2 = Arrays.stream(orderedCriticalPaths.get(i).get(j).def().exits()).toList().get(pathResult.portPairs.get(j)[1]);
-
-                    Room room = orderedCriticalPaths.get(i).get(j);
+                    RoomHamiltonianPath.PathResult pathResult = criticalPathResults.get(i);
+                    // Get the rooms we are carving between
+                    Room room1 = orderedCriticalPaths.get(i).get(j);
                     Room room2 = orderedCriticalPaths.get(i).get(j + 1);
 
-                    piecesBuilder.addPiece(new DeferredCarvePiece(new BlockPos((int) room.aabb().getCenter().x, (int) room.aabb().getCenter().y, (int) room.aabb().getCenter().z), new BlockPos((int) room2.aabb().getCenter().x, (int) room2.aabb().getCenter().y, (int) room2.aabb().getCenter().z), /*radius=*/1));
+                    // Get the exit port from room 1 and entrance port of room 2
+                    PortDef exitPort = Arrays.stream(room1.def().exits()).toList().get(pathResult.portPairs.get(j)[0]);
+                    PortDef entrancePort = Arrays.stream(room2.def().entrances()).toList().get(pathResult.portPairs.get(j)[1]);
+
+                    // Get the center position of the entrance and exit port
+                    BlockPos exitPortPosition = PortGeom.localToWorld(exitPort.localCenterBlock(), room1.def().sizeX(), room1.def().sizeY(), room1.def().sizeZ(), room1.aabb(), room1.rotation());
+                    BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.localCenterBlock(), room2.def().sizeX(), room2.def().sizeY(), room2.def().sizeZ(), room2.aabb(), room2.rotation());
+
+                    // Move 2 blocks outwards from port before carving
+                    exitPortPosition = exitPortPosition.offset(exitPort.facing().getNormal().multiply(2));
+                    entrancePortPosition = entrancePortPosition.offset(entrancePort.facing().getNormal().multiply(2));
+
+                    // Carve straight line
+                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, Math.max(exitPort.area(),  entrancePort.area())));
                 }
             }
         } catch (Exception e) {
