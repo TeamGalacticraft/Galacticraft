@@ -195,13 +195,16 @@ public final class DungeonWorldBuilder {
     }
 
     /**
-     * Build up to 3 room-disjoint critical paths, one per queen:
-     *   Entrance --(BASIC-only intermediates)--> Queen_i --(prefer direct)--> End
+     * Build exactly up to 3 room-disjoint critical paths, one per queen:
+     *   Entrance -> BASIC x K_i -> Queen_i -> End
      *
-     * - Uses shortest paths on the directed room graph induced by CE (EXIT->ENTRANCE).
-     * - Enforces room disjointness across paths (except Entrance/End).
-     * - Ensures each queen reaches End (falls back to BASIC intermediates if direct hop is missing).
-     * - Prefers distinct End entrances across queens.
+     * Where sum(K_i) == round(criticalBasicFraction * BASIC_COUNT)
+     * and K_i are split as evenly as possible across the chosen queens.
+     *
+     * - Enforces EXACT K_i BASICs before the queen (no Entrance->Queen direct).
+     * - Uses directed room graph (EXIT->ENTRANCE).
+     * - Keeps paths room-disjoint (except Entrance/End).
+     * - Prefers distinct End entrances for different queens.
      */
     private static List<FlowRouter.RoutedPair> buildCriticalRoomPaths(
             List<RoomPlacer.Placed> placed,
@@ -218,28 +221,35 @@ public final class DungeonWorldBuilder {
             return result;
         }
 
-        // Limit to 3 queens max; shuffle for variety but stable enough
+        // Choose up to 3 queens; shuffle for variety
         ArrayList<RoomPlacer.Placed> queens = new ArrayList<>(queenRooms);
         if (queens.size() > 3) queens = new ArrayList<>(queens.subList(0, 3));
         Collections.shuffle(queens, rnd);
+        int paths = queens.size();
 
-        // Build directed, weighted room graph from CE (EXIT -> ENTRANCE only)
-        Map<RoomPlacer.Placed, List<RoomHop>> G = new HashMap<>();
-        // Also cache best portal pair for each (fromRoom,toRoom)
+        // ----- Compute the EXACT BASIC budget from the actual BASIC count -----
+        int basicCount = 0;
+        for (RoomPlacer.Placed r : placed) if (r.def().type() == RoomTemplateDef.RoomType.BASIC) basicCount++;
+        int totalCriticalBasics = Math.max(0, Math.round(basicCount * Math.max(0f, Math.min(1f, pc.criticalBasicFraction))));
+        // Split evenly across paths: base + distribute remainder to first few
+        int[] K = new int[paths];
+        int base = (paths == 0) ? 0 : totalCriticalBasics / paths;
+        int rem  = (paths == 0) ? 0 : totalCriticalBasics % paths;
+        for (int i = 0; i < paths; i++) K[i] = base + (i < rem ? 1 : 0);
+
+        // ----- Build directed room graph from CE (EXIT -> ENTRANCE only), keep best edge per (room,room) -----
         record EdgeKey(RoomPlacer.Placed a, RoomPlacer.Placed b) {}
         Map<EdgeKey, FlowRouter.EdgeCand> bestEdge = new HashMap<>();
+        Map<RoomPlacer.Placed, List<RoomHop>> G = new HashMap<>();
 
         for (FlowRouter.EdgeCand ec : CE) {
             FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
             if (!isExitNode(A) || !isEntranceNode(B)) continue;
             RoomPlacer.Placed ra = A.room(), rb = B.room();
             if (ra == rb) continue;
-            // store best (lowest weight) edge per ordered room pair
             EdgeKey key = new EdgeKey(ra, rb);
             FlowRouter.EdgeCand cur = bestEdge.get(key);
-            if (cur == null || ec.w() < cur.w()) {
-                bestEdge.put(key, ec);
-            }
+            if (cur == null || ec.w() < cur.w()) bestEdge.put(key, ec);
         }
         for (var e : bestEdge.entrySet()) {
             RoomPlacer.Placed a = e.getKey().a();
@@ -248,91 +258,78 @@ public final class DungeonWorldBuilder {
             G.computeIfAbsent(a, k -> new ArrayList<>()).add(new RoomHop(b, w));
         }
 
-        // Global disjointness set (don’t reuse rooms across different queen paths)
+        // Disjointness: don't reuse rooms across different paths (except Entrance/End)
         HashSet<RoomPlacer.Placed> usedRooms = new HashSet<>();
         usedRooms.add(entranceRoom);
         usedRooms.add(endRoom);
 
-        // Track End entrances already used so each queen prefers a different End PNode
+        // Prefer different End entrances for each queen
         HashSet<FlowRouter.PNode> usedEndEntrances = new HashSet<>();
 
-        // For each queen, build Entrance→Queen then Queen→End, respecting disjointness
-        for (RoomPlacer.Placed queen : queens) {
-            // 1) Entrance -> Queen (BASIC-only intermediates, disjoint from usedRooms)
-            List<RoomPlacer.Placed> pathEQ = shortestPathRooms(
-                    G,
-                    entranceRoom,
-                    queen,
-                    node -> node == entranceRoom || node == queen || node.def().type() == RoomTemplateDef.RoomType.BASIC,
-                    usedRooms
-            );
+        // Build each queen path with EXACT K[i] BASICs before the queen
+        for (int i = 0; i < paths; i++) {
+            RoomPlacer.Placed queen = queens.get(i);
+            int needBasics = K[i];
 
-            // If we can’t find a BASIC-only chain, allow a minimal path: Entrance -> Queen directly if exists
-            if (pathEQ.isEmpty()) {
-                FlowRouter.EdgeCand dir = bestEdge.get(new EdgeKey(entranceRoom, queen));
-                if (dir != null) pathEQ = Arrays.asList(entranceRoom, queen);
-            }
-            if (pathEQ.isEmpty()) {
-                // Skip this queen; try others
-                continue;
+            // Force: (Entrance) -> BASIC x needBasics -> (Queen)
+            List<RoomPlacer.Placed> eq = exactBasicsPath(G, entranceRoom, queen, needBasics, usedRooms);
+            if (eq.isEmpty()) {
+                // If impossible, try a tiny relaxation: borrow from remainder around this queen only.
+                // (Try lowering by 1, then 2) — keeps total close, but avoids total failure on rare graphs.
+                boolean found = false;
+                for (int relax = 1; relax <= Math.min(2, needBasics); relax++) {
+                    eq = exactBasicsPath(G, entranceRoom, queen, needBasics - relax, usedRooms);
+                    if (!eq.isEmpty()) { found = true; break; }
+                }
+                if (!found) continue; // skip this queen if we truly cannot route
             }
 
-            // 2) Queen -> End (prefer direct; otherwise allow BASIC intermediates)
-            List<RoomPlacer.Placed> pathQE = new ArrayList<>();
-            FlowRouter.EdgeCand bestQueenToEnd = bestEdge.get(new EdgeKey(queen, endRoom));
-            if (bestQueenToEnd != null) {
-                pathQE = Arrays.asList(queen, endRoom);
+            // Queen -> End: prefer direct; if absent, allow BASIC intermediates (not counted toward K[i])
+            List<RoomPlacer.Placed> qe;
+            FlowRouter.EdgeCand directQE = bestEdge.get(new EdgeKey(queen, endRoom));
+            if (directQE != null) {
+                qe = Arrays.asList(queen, endRoom);
             } else {
-                pathQE = shortestPathRooms(
+                qe = shortestPathRooms(
                         G,
                         queen,
                         endRoom,
                         node -> node == queen || node == endRoom || node.def().type() == RoomTemplateDef.RoomType.BASIC,
                         usedRooms
                 );
-            }
-            if (pathQE.isEmpty()) {
-                // If we can’t reach End at all, skip this queen path entirely
-                continue;
+                if (qe.isEmpty()) continue; // must reach End
             }
 
-            // Convert room paths into RoutedPairs (portal-level hops)
+            // Convert room path lists to portal-level pairs
             ArrayList<FlowRouter.RoutedPair> pairs = new ArrayList<>();
-
-            // Entrance -> Queen hops
-            for (int i = 0; i + 1 < pathEQ.size(); i++) {
-                RoomPlacer.Placed a = pathEQ.get(i), b = pathEQ.get(i + 1);
+            // Entrance -> Queen (through K basics)
+            for (int k = 0; k + 1 < eq.size(); k++) {
+                RoomPlacer.Placed a = eq.get(k), b = eq.get(k + 1);
                 FlowRouter.EdgeCand ec = bestEdge.get(new EdgeKey(a, b));
                 if (ec == null) { pairs.clear(); break; }
                 pairs.add(new FlowRouter.RoutedPair(P.get(ec.a()), P.get(ec.b())));
             }
-            if (pairs.isEmpty() && !(pathEQ.size() == 2 && pathEQ.get(0) == entranceRoom && pathEQ.get(1) == queen)) {
-                // Failed to convert; try next queen
-                continue;
-            }
+            if (pairs.isEmpty()) continue;
 
-            // Queen -> End hops
+            // Queen -> End (prefer unused End entrance)
             ArrayList<FlowRouter.RoutedPair> qePairs = new ArrayList<>();
-            for (int i = 0; i + 1 < pathQE.size(); i++) {
-                RoomPlacer.Placed a = pathQE.get(i), b = pathQE.get(i + 1);
-                // Prefer a specific End entrance not used yet
+            for (int k = 0; k + 1 < qe.size(); k++) {
+                RoomPlacer.Placed a = qe.get(k), b = qe.get(k + 1);
                 FlowRouter.RoutedPair rp = null;
                 if (b == endRoom) {
-                    // choose the best edge into an UNUSED End entrance
                     float bestW = Float.POSITIVE_INFINITY;
                     FlowRouter.EdgeCand pick = null;
-                    for (FlowRouter.EdgeCand ec : CE) {
-                        FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+                    for (FlowRouter.EdgeCand cand : CE) {
+                        FlowRouter.PNode A = P.get(cand.a()), B = P.get(cand.b());
                         if (A.room() != a || B.room() != b) continue;
                         if (!isExitNode(A) || !isEntranceNode(B)) continue;
-                        if (usedEndEntrances.contains(B)) continue; // prefer free entrance
-                        if (ec.w() < bestW) { bestW = ec.w(); pick = ec; }
+                        if (usedEndEntrances.contains(B)) continue;
+                        if (cand.w() < bestW) { bestW = cand.w(); pick = cand; }
                     }
-                    // fallback: any best edge if all end entrances are already used
                     if (pick == null) pick = bestEdge.get(new EdgeKey(a, b));
                     if (pick != null) {
                         rp = new FlowRouter.RoutedPair(P.get(pick.a()), P.get(pick.b()));
-                        if (b == endRoom) usedEndEntrances.add(rp.B());
+                        usedEndEntrances.add(rp.B());
                     }
                 } else {
                     FlowRouter.EdgeCand ec = bestEdge.get(new EdgeKey(a, b));
@@ -343,18 +340,96 @@ public final class DungeonWorldBuilder {
             }
             if (qePairs.isEmpty()) continue;
 
-            // Accept this queen path: add pairs and lock rooms to keep disjointness
+            // Accept and lock rooms (keep paths disjoint)
             result.addAll(pairs);
             result.addAll(qePairs);
-            for (RoomPlacer.Placed r : pathEQ) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
-            for (RoomPlacer.Placed r : pathQE) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
+            for (RoomPlacer.Placed r : eq) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
+            for (RoomPlacer.Placed r : qe) if (r != entranceRoom && r != endRoom) usedRooms.add(r);
         }
 
-        // Safety: ensure we return something (at least one corridor) so cobwebs can trigger
         return dedupePairs(result);
     }
 
     private static record RoomHop(RoomPlacer.Placed to, float w) {}
+
+    /**
+     * Find a path with EXACTLY 'kBasics' BASIC rooms between src(Entrance) and dst(Queen):
+     *   src -> BASIC x kBasics -> dst
+     *
+     * - No direct src->dst allowed.
+     * - Respects 'forbidden' to keep paths room-disjoint.
+     * - Uses the directed room graph 'G' (EXIT->ENTRANCE).
+     * Returns [src, b1, b2, ..., bK, dst] or empty if impossible.
+     */
+    private static List<RoomPlacer.Placed> exactBasicsPath(
+            Map<RoomPlacer.Placed, List<RoomHop>> G,
+            RoomPlacer.Placed src,
+            RoomPlacer.Placed dst,
+            int kBasics,
+            Set<RoomPlacer.Placed> forbidden
+    ) {
+        if (kBasics < 0) return Collections.emptyList();
+        // State is (room, usedBasics). We do a small BFS/DFS hybrid.
+        record State(RoomPlacer.Placed r, int k) {}
+
+        // For reconstruction
+        Map<State, State> prev = new HashMap<>();
+        Deque<State> dq = new ArrayDeque<>();
+        dq.add(new State(src, 0));
+
+        // Disallow using forbidden rooms as intermediates
+        java.util.function.Predicate<RoomPlacer.Placed> allowBasic =
+                r -> r.def().type() == RoomTemplateDef.RoomType.BASIC && !forbidden.contains(r);
+
+        HashSet<State> seen = new HashSet<>();
+        seen.add(new State(src, 0));
+
+        while (!dq.isEmpty()) {
+            State s = dq.pollFirst();
+            RoomPlacer.Placed u = s.r;
+            int used = s.k;
+
+            for (RoomHop hop : G.getOrDefault(u, Collections.emptyList())) {
+                RoomPlacer.Placed v = hop.to();
+
+                // Never allow Entrance -> Queen direct
+                if (u == src && v == dst) continue;
+
+                if (v == dst) {
+                    // We can finish only if we've used EXACTLY kBasics
+                    if (used == kBasics) {
+                        // reconstruct [src ... dst]
+                        ArrayList<RoomPlacer.Placed> path = new ArrayList<>();
+                        State t = s;
+                        // t.r is the node before dst
+                        while (t != null) {
+                            path.add(t.r);
+                            t = prev.get(t);
+                        }
+                        Collections.reverse(path);
+                        path.add(dst);
+                        return path;
+                    }
+                    // else can’t step into dst yet
+                    continue;
+                }
+
+                // Intermediate must be BASIC and available
+                if (!allowBasic.test(v)) continue;
+
+                int nxtUsed = used + 1;
+                if (nxtUsed > kBasics) continue;
+
+                State ns = new State(v, nxtUsed);
+                if (seen.add(ns)) {
+                    prev.put(ns, s);
+                    dq.addLast(ns);
+                }
+            }
+        }
+        return Collections.emptyList();
+    }
+
 
     /**
      * Dijkstra over rooms with:
@@ -953,7 +1028,7 @@ public final class DungeonWorldBuilder {
             List<RoomPlacer.Placed> queens,
             RoomPlacer.Placed end) {
 
-        // Degree caps per type
+        // ---------- Degree caps per type (unchanged) ----------
         final Map<RoomPlacer.Placed, Integer> capIn  = new HashMap<>();
         final Map<RoomPlacer.Placed, Integer> capOut = new HashMap<>();
         for (RoomPlacer.Placed r : placed) {
@@ -966,7 +1041,8 @@ public final class DungeonWorldBuilder {
             }
         }
 
-        // Current degrees
+        // ---------- Current degrees from 'already' ----------
+        final class DegIO { int in=0, out=0; }
         final Map<RoomPlacer.Placed, DegIO> deg = new HashMap<>();
         for (RoomPlacer.Placed r : placed) deg.put(r, new DegIO());
         for (FlowRouter.RoutedPair rp : already) {
@@ -974,96 +1050,188 @@ public final class DungeonWorldBuilder {
             deg.get(rp.B().room()).in++;
         }
 
-        // cheapest Exit->Entrance edge per (fromRoom,toRoom)
+        // ---------- Backbone set (rooms touched by critical/seed pairs) ----------
+        final Set<RoomPlacer.Placed> backbone = new HashSet<>();
+        for (FlowRouter.RoutedPair rp : already) {
+            backbone.add(rp.A().room());
+            backbone.add(rp.B().room());
+        }
+
+        // ---------- Port usage: each PNode can be used at most once ----------
+        final Set<FlowRouter.PNode> usedPorts = new HashSet<>();
+        for (FlowRouter.RoutedPair rp : already) {
+            usedPorts.add(rp.A());
+            usedPorts.add(rp.B());
+        }
+
+        // Convenience: quickly get cheapest valid EdgeCand for a given (fromRoom -> toRoom)
+        // while checking caps AND port usage.
         record EdgeKey(RoomPlacer.Placed a, RoomPlacer.Placed b) {}
-        final Map<EdgeKey, FlowRouter.EdgeCand> best = new HashMap<>();
+        List<FlowRouter.RoutedPair> added = new ArrayList<>();
+
+        java.util.function.Function<EdgeKey, FlowRouter.EdgeCand> pickBestValid = key -> {
+            FlowRouter.EdgeCand best = null;
+            float bestW = Float.POSITIVE_INFINITY;
+            for (FlowRouter.EdgeCand ec : CE) {
+                FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+                if (A.room() != key.a() || B.room() != key.b()) continue;
+                if (!isExitNode(A) || !isEntranceNode(B)) continue;
+
+                // Degree caps
+                if (deg.get(A.room()).out >= capOut.getOrDefault(A.room(), 0)) continue;
+                if (deg.get(B.room()).in  >= capIn.getOrDefault(B.room(), 0)) continue;
+
+                // Port availability
+                if (usedPorts.contains(A)) continue;
+                if (usedPorts.contains(B)) continue;
+
+                // Queen -> Queen forbidden
+                if (A.room().def().type() == RoomTemplateDef.RoomType.QUEEN &&
+                        B.room().def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
+
+                // If from is a QUEEN and End is reachable, prefer End (Phase 2 loop already biases cheapest edges; here we just allow)
+                if (ec.w() < bestW) { bestW = ec.w(); best = ec; }
+            }
+            return best;
+        };
+
+        // Helper: commit an EdgeCand
+        java.util.function.Function<FlowRouter.EdgeCand, FlowRouter.RoutedPair> commit = ec -> {
+            FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+            usedPorts.add(A);
+            usedPorts.add(B);
+            deg.get(A.room()).out++;
+            deg.get(B.room()).in++;
+            FlowRouter.RoutedPair rp = new FlowRouter.RoutedPair(A, B);
+            added.add(rp);
+            return rp;
+        };
+
+        // ---------- Union-Find over rooms to avoid cycles & prefer connecting components ----------
+        class DSU {
+            final Map<RoomPlacer.Placed, RoomPlacer.Placed> p = new HashMap<>();
+            DSU(Collection<RoomPlacer.Placed> nodes) { for (var r : nodes) p.put(r, r); }
+            RoomPlacer.Placed find(RoomPlacer.Placed x) {
+                RoomPlacer.Placed px = p.get(x);
+                if (px != x) p.put(x, px = find(px));
+                return px;
+            }
+            boolean unite(RoomPlacer.Placed a, RoomPlacer.Placed b) {
+                RoomPlacer.Placed ra = find(a), rb = find(b);
+                if (ra == rb) return false;
+                p.put(ra, rb);
+                return true;
+            }
+            boolean connected(RoomPlacer.Placed a, RoomPlacer.Placed b) {
+                return find(a) == find(b);
+            }
+        }
+        DSU dsu = new DSU(placed);
+        for (FlowRouter.RoutedPair rp : already) dsu.unite(rp.A().room(), rp.B().room());
+
+        // -------------------------------------------------
+        // PHASE 1: Fork ONLY from backbone leaves/rooms
+        // -------------------------------------------------
+        // Build a priority list of candidate edges that attach non-backbone rooms to the backbone,
+        // respecting caps and ports, cheapest first.
+        PriorityQueue<FlowRouter.EdgeCand> pq1 = new PriorityQueue<>(Comparator.comparingDouble(FlowRouter.EdgeCand::w));
+
+        // Consider edges where FROM is in backbone, TO is not (and TO can receive)
         for (FlowRouter.EdgeCand ec : CE) {
             FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
-            if (!isExitNode(A) || !isEntranceNode(B)) continue; // enforce direction
-            EdgeKey key = new EdgeKey(A.room(), B.room());
-            FlowRouter.EdgeCand cur = best.get(key);
-            if (cur == null || ec.w() < cur.w()) best.put(key, ec);
+            if (!isExitNode(A) || !isEntranceNode(B)) continue;
+            RoomPlacer.Placed ra = A.room(), rb = B.room();
+            if (!backbone.contains(ra) || backbone.contains(rb)) continue;
+
+            // degree & port constraints
+            if (deg.get(ra).out >= capOut.getOrDefault(ra, 0)) continue;
+            if (deg.get(rb).in  >= capIn.getOrDefault(rb, 0)) continue;
+            if (usedPorts.contains(A) || usedPorts.contains(B)) continue;
+
+            // Queen -> Queen forbidden
+            if (ra.def().type() == RoomTemplateDef.RoomType.QUEEN &&
+                    rb.def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
+
+            pq1.add(ec);
         }
 
-        // Rooms touched by any corridor so far
-        final Set<RoomPlacer.Placed> seen = new HashSet<>();
-        for (FlowRouter.RoutedPair rp : already) {
-            seen.add(rp.A().room());
-            seen.add(rp.B().room());
+        while (!pq1.isEmpty()) {
+            FlowRouter.EdgeCand ec = pq1.poll();
+            FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+            RoomPlacer.Placed ra = A.room(), rb = B.room();
+
+            // Re-check in case caps/ports changed
+            if (deg.get(ra).out >= capOut.getOrDefault(ra, 0)) continue;
+            if (deg.get(rb).in  >= capIn.getOrDefault(rb, 0)) continue;
+            if (usedPorts.contains(A) || usedPorts.contains(B)) continue;
+
+            // Don’t form intra-backbone cycles in phase 1: we only add if it helps attach a non-backbone
+            if (backbone.contains(rb)) continue;
+
+            // Commit
+            commit.apply(ec);
+            backbone.add(rb);
+            dsu.unite(ra, rb);
+
+            // New edges may become available from this newly added room (as a new fork source)
+            for (FlowRouter.EdgeCand nxt : CE) {
+                FlowRouter.PNode nA = P.get(nxt.a()), nB = P.get(nxt.b());
+                if (!isExitNode(nA) || !isEntranceNode(nB)) continue;
+                if (nA.room() != rb) continue;               // fork from the just-attached rb
+                if (backbone.contains(nB.room())) continue;  // only attach new outsiders in phase 1
+                if (deg.get(rb).out >= capOut.getOrDefault(rb, 0)) break;
+
+                if (deg.get(nB.room()).in >= capIn.getOrDefault(nB.room(), 0)) continue;
+                if (usedPorts.contains(nA) || usedPorts.contains(nB)) continue;
+
+                // Queen -> Queen forbidden
+                if (rb.def().type() == RoomTemplateDef.RoomType.QUEEN &&
+                        nB.room().def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
+
+                pq1.add(nxt);
+            }
         }
 
-        ArrayList<FlowRouter.RoutedPair> added = new ArrayList<>();
+        // -------------------------------------------------
+        // PHASE 2: Global completion (minimum-forest, port-aware)
+        // -------------------------------------------------
+        // Greedy over ALL candidate edges, cheapest first; only add edges that:
+        //  - do not violate degree caps
+        //  - do not reuse ports
+        //  - preferably connect different DSU components (avoid cycles)
+        //  - otherwise, if caps allow and you still want extra intra-component corridors, you can skip.
+        PriorityQueue<FlowRouter.EdgeCand> pq2 = new PriorityQueue<>(Comparator.comparingDouble(FlowRouter.EdgeCand::w));
+        pq2.addAll(CE);
 
-        boolean progress;
-        do {
-            progress = false;
+        while (!pq2.isEmpty()) {
+            FlowRouter.EdgeCand ec = pq2.poll();
+            FlowRouter.PNode A = P.get(ec.a()), B = P.get(ec.b());
+            if (!isExitNode(A) || !isEntranceNode(B)) continue;
 
-            // leaves we can extend (no branching; entrance may have multiple outs up to its cap)
-            ArrayList<RoomPlacer.Placed> leaves = new ArrayList<>();
-            for (RoomPlacer.Placed r : placed) {
-                int out = deg.get(r).out;
-                int co = capOut.getOrDefault(r, 0);
-                boolean canExtend = out < co && r.def().type() != RoomTemplateDef.RoomType.END && r.def().type() != RoomTemplateDef.RoomType.BRANCH_END;
-                if (!canExtend) continue;
-                // only entrance may extend when already has outgoing edges; others must be pristine on out-degree
-                if (r == entrance || out == 0) leaves.add(r);
+            RoomPlacer.Placed ra = A.room(), rb = B.room();
+
+            // Degree caps
+            if (deg.get(ra).out >= capOut.getOrDefault(ra, 0)) continue;
+            if (deg.get(rb).in  >= capIn.getOrDefault(rb, 0)) continue;
+
+            // Port usage
+            if (usedPorts.contains(A) || usedPorts.contains(B)) continue;
+
+            // Queen -> Queen forbidden
+            if (ra.def().type() == RoomTemplateDef.RoomType.QUEEN &&
+                    rb.def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
+
+            // Prefer edges that connect different components
+            if (!dsu.connected(ra, rb)) {
+                commit.apply(ec);
+                dsu.unite(ra, rb);
+            } else {
+                // If you want a STRICT forest, skip this else branch entirely.
+                // If you want to allow some extra loops when caps allow, you can add them.
+                // Here we skip to keep a simple, loop-free network.
+                continue;
             }
-
-            for (RoomPlacer.Placed from : leaves) {
-                FlowRouter.EdgeCand pick = null;
-                RoomPlacer.Placed toPick = null;
-
-                // prefer rooms that (a) can receive; (b) are unseen; (c) have lowest weight
-                for (RoomPlacer.Placed to : placed) {
-                    if (to == from) continue;
-                    if (deg.get(to).in >= capIn.getOrDefault(to, 0)) continue;
-                    if (deg.get(to).out >= capOut.getOrDefault(to, 0)) continue;
-
-                    // NEW: never make Queen -> Queen
-                    if (from.def().type() == RoomTemplateDef.RoomType.QUEEN
-                            && to.def().type() == RoomTemplateDef.RoomType.QUEEN) continue;
-
-                    // NEW: if from is QUEEN, strongly prefer END when available
-                    if (from.def().type() == RoomTemplateDef.RoomType.QUEEN
-                            && to.def().type() != RoomTemplateDef.RoomType.END) {
-                        // We’ll still allow BASIC as a fallback, but only if no END edge exists.
-                        boolean queenHasEndEdge = false;
-                        for (FlowRouter.EdgeCand cand : CE) {
-                            FlowRouter.PNode A = P.get(cand.a()), B = P.get(cand.b());
-                            if (A.room() == from && B.room().def().type() == RoomTemplateDef.RoomType.END
-                                    && isExitNode(A) && isEntranceNode(B)) {
-                                queenHasEndEdge = true; break;
-                            }
-                        }
-                        if (queenHasEndEdge) continue; // skip non-END candidates first
-                    }
-
-                    FlowRouter.EdgeCand ec = best.get(new EdgeKey(from, to));
-                    if (ec == null) continue;
-
-                    if (pick == null) {
-                        pick = ec; toPick = to;
-                    } else {
-                        boolean preferUnseen = (!seen.contains(to) && seen.contains(toPick));
-                        boolean cheaper = ec.w() < pick.w();
-                        if (preferUnseen || cheaper) {
-                            pick = ec; toPick = to;
-                        }
-                    }
-                }
-
-                if (pick != null) {
-                    FlowRouter.PNode A = P.get(pick.a()), B = P.get(pick.b());
-                    FlowRouter.RoutedPair rp = new FlowRouter.RoutedPair(A, B);
-                    added.add(rp);
-                    deg.get(A.room()).out++;
-                    deg.get(B.room()).in++;
-                    seen.add(A.room());
-                    seen.add(B.room());
-                    progress = true;
-                }
-            }
-        } while (progress);
+        }
 
         return added;
     }
