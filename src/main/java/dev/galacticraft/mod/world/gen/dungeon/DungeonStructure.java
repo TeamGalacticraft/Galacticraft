@@ -3,6 +3,7 @@ package dev.galacticraft.mod.world.gen.dungeon;
 import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.mod.world.gen.dungeon.config.DungeonConfig;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
@@ -11,70 +12,65 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.levelgen.Heightmap;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureType;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Optional;
 
-/**
- * Ant-dungeon structure entrypoint.
- * - Finds a surface anchor at chunk center (WORLD_SURFACE_WG).
- * - Picks a reasonable underground center hint.
- * - Invokes DungeonGraphBuilder to emit room pieces + corridor pieces.
- * <p>
- * NOTE: Do not carve/place blocks here. Each StructurePiece handles block placement
- * in its own postProcess(...). Corridor “door punches” happen in CorridorPiece.
- */
 public class DungeonStructure extends Structure {
+    // Codec
     public static final MapCodec<DungeonStructure> CODEC = RecordCodecBuilder.mapCodec(i ->
             i.group(DungeonConfig.CODEC.fieldOf("config").forGetter(s -> s.config))
                     .apply(i, DungeonStructure::new)
     );
+    // Logger
     private static final Logger LOGGER = LogUtils.getLogger();
+    // Dungeon Config
     private final DungeonConfig config;
 
+    // Constructor
     public DungeonStructure(DungeonConfig config) {
         super(new StructureSettings(HolderSet.empty()));
         this.config = config;
     }
 
-    private static int clamp(int v, int lo, int hi) {
-        return Math.max(lo, Math.min(hi, v));
-    }
-
+    // Type return
     @Override
     public StructureType<?> type() {
         return GCStructureTypes.DUNGEON;
     }
 
+    // Generator
     @Override
+    @NotNull
     protected Optional<GenerationStub> findGenerationPoint(GenerationContext ctx) {
-        RandomSource rnd = ctx.random();
-        ChunkPos cp = ctx.chunkPos();
-        BlockPos seed = new BlockPos(cp.getMiddleBlockX(), 0, cp.getMiddleBlockZ());
+        // Initiate values
+        RandomSource random = ctx.random();
+        ChunkPos chunkPos = ctx.chunkPos();
+        BlockPos center = new BlockPos(chunkPos.getMiddleBlockX(), 0, chunkPos.getMiddleBlockZ());
 
+        // Get surface block pos
         int surfaceY = ctx.chunkGenerator().getFirstFreeHeight(
-                seed.getX(), seed.getZ(),
+                center.getX(), center.getZ(),
                 Heightmap.Types.WORLD_SURFACE_WG,
                 ctx.heightAccessor(),
                 ctx.randomState()
         );
-        BlockPos surface = new BlockPos(seed.getX(), surfaceY, seed.getZ());
+        BlockPos surface = new BlockPos(center.getX(), surfaceY, center.getZ());
 
-        // Pick a target radius just to compute a center
-        int targetRadius = rnd.nextIntBetweenInclusive(config.sphereRadiusMin(), config.sphereRadiusMax());
-        BlockPos centerHint = surface.offset(0, -Math.max(20, targetRadius - 6), 0);
-
-        LOGGER.info("[Dungeon] findGenerationPoint: chunk={} surface={} targetRadius={} centerHint={}",
-                cp, surface, targetRadius, centerHint);
-
+        // Start dungeon generation
         return Optional.of(new GenerationStub(
                 surface,
                 piecesBuilder -> {
-                    LOGGER.info("[Dungeon] GenerationStub: build start at surface={} ...", surface);
-                    DungeonWorldBuilder builder = new DungeonWorldBuilder(config, rnd);
-                    boolean ok = builder.build(ctx, piecesBuilder, surface, centerHint);
+                    LOGGER.info("Dungeon generating in chunk {} at position {}", chunkPos, surface);
+                    DungeonBuilder builder = new DungeonBuilder(config, random);
+                    boolean ok = builder.build(ctx, piecesBuilder, surface);
 
-                    LOGGER.info("[Dungeon] GenerationStub: build result={}", ok);
+                    if (ok) {
+                        LOGGER.info("Dungeon finished generating at {}", surface);
+                    } else {
+                        LOGGER.error("Dungeon generation failed at {}", surface);
+                    }
                 }
         ));
     }

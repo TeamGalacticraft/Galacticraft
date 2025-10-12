@@ -1,12 +1,10 @@
 {
   "type": "galacticraft:dungeon",
   "config": {
-    "carve_entrance_shaft": true,
-    "corridor_step": 3,
-    "corridors_max_turns": 3,
-    "max_points": 100,
-    "min_points": 50,
-    "sphere_radius_max": 100,
-    "sphere_radius_min": 10
+    "critical_path_rooms": 0.4,
+    "critical_paths": 3,
+    "max_rooms": 100,
+    "min_rooms": 50,
+    "treasure_rooms": 0.1
   }
 }

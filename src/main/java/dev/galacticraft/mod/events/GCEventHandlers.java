@@ -35,6 +35,9 @@ import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.world.gen.dungeon.RoomDefsBootstrap;
+import dev.galacticraft.mod.world.gen.dungeon.util.TemplateScanner;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -62,6 +65,12 @@ public class GCEventHandlers {
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
         ServerTickEvents.START_SERVER_TICK.register(GCEventHandlers::onPlayerTick);
+        ServerLifecycleEvents.SERVER_STARTED.register(GCEventHandlers::serverStarted);
+    }
+
+    private static void serverStarted(MinecraftServer minecraftServer) {
+        Galacticraft.SCANNER = new TemplateScanner(minecraftServer.getStructureManager());
+        Galacticraft.ROOM_REGISTRY.loadFromCode(Galacticraft.SCANNER, RoomDefsBootstrap::define);
     }
 
     private static void onPlayerTick(MinecraftServer minecraftServer) {
