@@ -285,10 +285,66 @@ public class DungeonBuilder {
             }
 
             // Start branching randomly
-            for (PortRoomMapping availableExitPort : availableExitPorts) {
+            while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < targetRooms) {
+                PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
                 BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
-                RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
-                Direction entranceDirection = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
+                RoomDef newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
+                Direction forward = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
+                boolean placed = false;
+                for (int attempt = 0; attempt < MAX_TRIES_PER_ROOM && !placed; attempt++) {
+                    int dist = random.nextInt(15, 35);
+                    Direction left  = forward.getCounterClockWise();
+                    Direction right = forward.getClockWise();
+                    int mode = random.nextInt(8);
+                    double vx = 0, vy = 0, vz = 0;
+                    int fx = forward.getStepX(), fz = forward.getStepZ();
+                    int lx = left.getStepX(),    lz = left.getStepZ();
+                    int rx = right.getStepX(),   rz = right.getStepZ();
+                    switch (mode) {
+                        case 0 -> { vx = fx;            vy = 0; vz = fz; }               // straight
+                        case 1 -> { vx = fx + lx;       vy = 0; vz = fz + lz; }           // 45° left
+                        case 2 -> { vx = fx + rx;       vy = 0; vz = fz + rz; }           // 45° right
+                        case 3 -> { vx = fx;            vy = 1; vz = fz; }                // slope up
+                        case 4 -> { vx = fx;            vy = -1; vz = fz; }               // slope down
+                        case 5 -> { vx = fx + lx;       vy = 1; vz = fz + lz; }           // 45° left + up
+                        case 6 -> { vx = fx + rx;       vy = 1; vz = fz + rz; }           // 45° right + up
+                        default -> { vx = fx + rx;      vy = -1; vz = fz + rz; }          // 45° right + down
+                    }
+                    double vlen = Math.sqrt(vx*vx + vy*vy + vz*vz);
+                    if (vlen < 1e-6) { vx = fx; vy = 0; vz = fz; vlen = Math.sqrt(vx*vx + vz*vz); }
+                    vx /= vlen; vy /= vlen; vz /= vlen;
+                    BlockPos targetRoomPos = new BlockPos((int) (exitPortPosition.getX() + vx * dist), (int) (exitPortPosition.getY() + vy * dist), (int) (exitPortPosition.getZ() + vz * dist));
+                    Direction requiredEntranceFacing = forward.getOpposite();
+                    Rotation newRoomRotation = rotationNeededToMatch(Arrays.stream(newRoomDef.entrances()).findFirst().get().facing(), requiredEntranceFacing);
+                    Vec3i size = new Vec3i(newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ());
+                    AABB roomAabb = rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
+                    AABB expanded = roomAabb.inflate(ROOM_MARGIN);
+                    boolean intersects = false;
+                    if (roomAabb.maxY > dungeonBox.maxY) continue; // dont go too high in dungeon
+                    if (roomAabb.minY < (ctx.heightAccessor().getMinBuildHeight() + 10)) continue; // Dont go too close to bedrock
+                    for (AABB prior : placedRoomBoxes) {
+                        if (expanded.intersects(prior)) {
+                            intersects = true;
+                            break;
+                        }
+                    }
+                    if (intersects) continue;
+                    piecesBuilder.addPiece(new TemplatePiece(newRoomDef, targetRoomPos, newRoomRotation));
+                    placedRoomBoxes.add(roomAabb);
+                    dungeonRooms.add(new Room(roomAabb, newRoomRotation, newRoomDef));
+                    placed = true;
+                    // Add new room exits to available port exits
+                    for (PortDef exitPort : newRoomDef.exits()) {
+                        availableExitPorts.add(new PortRoomMapping(exitPort, new Room(roomAabb, newRoomRotation, newRoomDef)));
+                    }
+                    // carve corridor with pathfinder
+                    BlockPos entrancePortPosition = PortGeom.localToWorld(Arrays.stream(newRoomDef.entrances()).findFirst().get().localCenterBlock(), newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ(), roomAabb, newRoomRotation);
+                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
+                }
+
+                if (!placed) {
+                    LOGGER.error("Could not place branch room. Used {} tries", MAX_TRIES_PER_ROOM);
+                }
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
