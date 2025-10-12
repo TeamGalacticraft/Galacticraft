@@ -288,7 +288,16 @@ public class DungeonBuilder {
             while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < targetRooms) {
                 PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
                 BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
-                RoomDef newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
+                boolean treasure = false;
+                if (random.nextFloat() < config.treasureRooms()) {
+                    treasure = true;
+                }
+                RoomDef newRoomDef;
+                if (treasure) {
+                    newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.TREASURE, roomDef -> true);
+                } else {
+                    newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
+                }
                 Direction forward = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
                 boolean placed = false;
                 for (int attempt = 0; attempt < MAX_TRIES_PER_ROOM && !placed; attempt++) {
@@ -334,8 +343,10 @@ public class DungeonBuilder {
                     dungeonRooms.add(new Room(roomAabb, newRoomRotation, newRoomDef));
                     placed = true;
                     // Add new room exits to available port exits
-                    for (PortDef exitPort : newRoomDef.exits()) {
-                        availableExitPorts.add(new PortRoomMapping(exitPort, new Room(roomAabb, newRoomRotation, newRoomDef)));
+                    if (!treasure) {
+                        for (PortDef exitPort : newRoomDef.exits()) {
+                            availableExitPorts.add(new PortRoomMapping(exitPort, new Room(roomAabb, newRoomRotation, newRoomDef)));
+                        }
                     }
                     // carve corridor with pathfinder
                     BlockPos entrancePortPosition = PortGeom.localToWorld(Arrays.stream(newRoomDef.entrances()).findFirst().get().localCenterBlock(), newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ(), roomAabb, newRoomRotation);
@@ -350,19 +361,16 @@ public class DungeonBuilder {
             throw new RuntimeException(e);
         }
 
-//        for (PortRoomMapping availableExitPort : availableExitPorts) {
-//            BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
-//            exitPortPosition = exitPortPosition.offset(availableExitPort.room().rotation().rotate(availableExitPort.port().facing()).getNormal().multiply(3));
-//            piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, exitPortPosition, 2));
-//        }
-
-
         return true;
     }
 
     private Rotation rotationNeededToMatch(Direction originalDirection, Direction desiredDirection) {
         if (originalDirection == null || desiredDirection == null) {
             throw new IllegalArgumentException("Directions must not be null.");
+        }
+
+        if (originalDirection == Direction.UP || originalDirection == Direction.DOWN) {
+            return Rotation.NONE;
         }
 
         // No change needed
