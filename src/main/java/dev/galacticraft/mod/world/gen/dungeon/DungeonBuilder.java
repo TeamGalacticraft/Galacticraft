@@ -265,6 +265,41 @@ public class DungeonBuilder {
             throw new RuntimeException(e);
         }
 
+        // Find all unused exits and branch off until we reach room limit
+        record PortRoomMapping(PortDef port, Room room) {};
+        List<PortRoomMapping> availableExitPorts = new ArrayList<>();
+        try {
+            // Find all unused exits on the critical paths
+            for (int i = 0; i < orderedCriticalPaths.size(); i++) {
+                List<Room> rooms = orderedCriticalPaths.get(i);
+                for (int j = 0; j < rooms.size() - 1; j++) {
+                    if (rooms.get(j).def.hasMoreThanOneExit()) {
+                        RoomHamiltonianPath.PathResult pathResult = criticalPathResults.get(i);
+                        List<PortDef> exits = new ArrayList<>(Arrays.stream(rooms.get(j).def.exits()).toList());
+                        exits.remove(pathResult.portPairs.get(j)[0]);
+                        for (PortDef exit : exits) {
+                            availableExitPorts.add(new PortRoomMapping(exit, rooms.get(j)));
+                        }
+                    }
+                }
+            }
+
+            // Start branching randomly
+            for (PortRoomMapping availableExitPort : availableExitPorts) {
+                BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
+                RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
+                Direction entranceDirection = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
+            }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+//        for (PortRoomMapping availableExitPort : availableExitPorts) {
+//            BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
+//            exitPortPosition = exitPortPosition.offset(availableExitPort.room().rotation().rotate(availableExitPort.port().facing()).getNormal().multiply(3));
+//            piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, exitPortPosition, 2));
+//        }
+
 
         return true;
     }
