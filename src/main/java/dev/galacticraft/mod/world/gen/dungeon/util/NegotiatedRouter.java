@@ -32,7 +32,6 @@ public final class NegotiatedRouter {
 
     // ---- public entry point --------------------------------------------------
 
-    // NegotiatedRouter.java
     public static Result routeAll(
             List<Net> nets,
             Bitmask staticMask,
@@ -55,13 +54,14 @@ public final class NegotiatedRouter {
         List<List<BlockPos>> paths = new ArrayList<>(nets.size());
         for (int i = 0; i < nets.size(); i++) paths.add(Collections.emptyList());
 
+        // IMPORTANT: keys are individual voxels now (NOT just path centers)
         Long2IntOpenHashMap presentUse = new Long2IntOpenHashMap();
         Long2IntOpenHashMap history    = new Long2IntOpenHashMap();
         double presentK = PRESENT_START;
 
         Clearance clearance = new Clearance(staticMask, radius, minY, maxY);
 
-        // initial plan
+        // Initial plan
         for (int i = 0; i < nets.size(); i++) {
             Net net = nets.get(i);
             List<BlockPos> seedsA = buildLaunchBundle(net.a, net.aFacing, net.preflight, clearance);
@@ -69,7 +69,9 @@ public final class NegotiatedRouter {
             List<BlockPos> path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R1, W, 800);
             if (path.isEmpty()) path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R2, W, 1200);
             paths.set(i, path);
-            incrPresent(presentUse, path);
+
+            // volume-aware: count path + preflights into presentUse
+            incrPresentForNet(presentUse, net, path, radius, minY, maxY);
         }
 
         int iter = 0;
@@ -95,21 +97,21 @@ public final class NegotiatedRouter {
                 if (path.isEmpty()) path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R2, W, 1600);
 
                 paths.set(idx, path);
-                incrPresent(presentUse, path);
+                // volume-aware: path + preflights affect subsequent nets
+                incrPresentForNet(presentUse, net, path, radius, minY, maxY);
             }
 
             presentK *= PRESENT_GROW;
             iter++;
         } while (iter < MAX_ITERS);
 
-        // ------- FIX: include preflight caps in the union -------
+        // Build final union (still includes preflight caps)
         Bitmask union = new Bitmask();
         for (int i = 0; i < nets.size(); i++) {
             Net net = nets.get(i);
             List<BlockPos> p = paths.get(i);
             rasterizePreflightAndPathToBitmask(net, p, radius, minY, maxY, union);
         }
-        // --------------------------------------------------------
 
         return new Result(paths, union, iter, overuse);
     }
@@ -492,12 +494,13 @@ public final class NegotiatedRouter {
                 long np = BlockPos.asLong(nx,ny,nz);
                 if (closed.contains(np)) continue;
 
-                // congestion cost on node np
-                int use = present.getOrDefault(np, 0);
-                int hist = history.getOrDefault(np, 0);
-                double stepCost = 1.0 + (use > 0 ? presentK * use : 0.0) + hist;
+                // VOLUMETRIC congestion around the node's (2r+1)^3 cube
+                int useMax = cubeMaxUseAt(nx, ny, nz, c.r, present);
+                int histMax = cubeMaxUseAt(nx, ny, nz, c.r, history);
+                // Cost: 1 + presentK * useMax + histMax (useMax is 0 when free)
+                double stepCost = 1.0 + (useMax > 0 ? presentK * useMax : 0.0) + histMax;
 
-                int ng = g + (int)Math.ceil(stepCost); // small integerization keeps maps compact
+                int ng = g + (int)Math.ceil(stepCost);
                 int old = gScore.getOrDefault(np, Integer.MAX_VALUE);
                 if (ng >= old) continue;
 
@@ -511,6 +514,73 @@ public final class NegotiatedRouter {
 
         if (found == 0L) return Collections.emptyList();
         return reconstruct(parent, found);
+    }
+
+    // Count *volume* usage for this net: preflight A->first, path, preflight last->B
+    private static void incrPresentForNet(Long2IntOpenHashMap present,
+                                          Net net,
+                                          List<BlockPos> path,
+                                          int r, int minY, int maxY) {
+        if (path == null || path.isEmpty()) {
+            rasterizeLineToPresent(net.a, net.b, r, minY, maxY, present);
+            return;
+        }
+        rasterizeLineToPresent(net.a, path.get(0), r, minY, maxY, present);
+        rasterizePathToPresent(path, r, minY, maxY, present);
+        rasterizeLineToPresent(path.get(path.size() - 1), net.b, r, minY, maxY, present);
+    }
+
+    // Same cube fill as your Bitmask rasterization, but increments a counter map
+    private static void rasterizePathToPresent(List<BlockPos> path, int r, int minY, int maxY, Long2IntOpenHashMap present) {
+        if (path == null || path.isEmpty()) return;
+        for (BlockPos p : path) {
+            int px = p.getX(), py = p.getY(), pz = p.getZ();
+            for (int dy = -r; dy <= r; dy++) {
+                int yy = py + dy; if (yy < minY || yy > maxY) continue;
+                for (int dx = -r; dx <= r; dx++) {
+                    int xx = px + dx;
+                    for (int dz = -r; dz <= r; dz++) {
+                        int zz = pz + dz;
+                        present.addTo(BlockPos.asLong(xx, yy, zz), 1);
+                    }
+                }
+            }
+        }
+    }
+
+    private static void rasterizeLineToPresent(BlockPos a, BlockPos b, int r, int minY, int maxY, Long2IntOpenHashMap present) {
+        int dx = b.getX() - a.getX();
+        int dy = b.getY() - a.getY();
+        int dz = b.getZ() - a.getZ();
+        int steps = Math.max(Math.abs(dx), Math.max(Math.abs(dy), Math.abs(dz)));
+        if (steps == 0) {
+            rasterizePathToPresent(Collections.singletonList(a), r, minY, maxY, present);
+            return;
+        }
+        double sx = dx / (double) steps;
+        double sy = dy / (double) steps;
+        double sz = dz / (double) steps;
+
+        double x = a.getX(), y = a.getY(), z = a.getZ();
+        for (int i = 0; i <= steps; i++) {
+            BlockPos p = BlockPos.containing(Math.round(x), Math.round(y), Math.round(z));
+            rasterizePathToPresent(Collections.singletonList(p), r, minY, maxY, present);
+            x += sx; y += sy; z += sz;
+        }
+    }
+
+    // Max “use” inside the corridor cube centered at (x,y,z)
+    private static int cubeMaxUseAt(int x, int y, int z, int r, Long2IntOpenHashMap counts) {
+        int best = 0;
+        for (int dy = -r; dy <= r; dy++) {
+            for (int dx = -r; dx <= r; dx++) {
+                for (int dz = -r; dz <= r; dz++) {
+                    int v = counts.getOrDefault(BlockPos.asLong(x + dx, y + dy, z + dz), 0);
+                    if (v > best) best = v;
+                }
+            }
+        }
+        return best;
     }
 
     private static ArrayList<BlockPos> reconstruct(Long2LongOpenHashMap parent, long found) {
