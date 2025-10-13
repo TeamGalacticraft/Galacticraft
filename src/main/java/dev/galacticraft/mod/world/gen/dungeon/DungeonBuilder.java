@@ -6,10 +6,7 @@ import dev.galacticraft.mod.world.gen.dungeon.config.DungeonConfig;
 import dev.galacticraft.mod.world.gen.dungeon.enums.RoomType;
 import dev.galacticraft.mod.world.gen.dungeon.records.PortDef;
 import dev.galacticraft.mod.world.gen.dungeon.records.RoomDef;
-import dev.galacticraft.mod.world.gen.dungeon.util.BoxSampling;
-import dev.galacticraft.mod.world.gen.dungeon.util.DeferredCarvePiece;
-import dev.galacticraft.mod.world.gen.dungeon.util.PortGeom;
-import dev.galacticraft.mod.world.gen.dungeon.util.RoomHamiltonianPath;
+import dev.galacticraft.mod.world.gen.dungeon.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Vec3i;
@@ -33,6 +30,10 @@ public class DungeonBuilder {
     private static final Logger LOGGER = LogUtils.getLogger();
     final double ROOM_MARGIN = 8.0;
     final int MAX_TRIES_PER_ROOM = 200;
+    final int CORRIDOR_PLACEMENT_OFFSET = 1;
+    final int CORRIDOR_RADIUS = 1;
+    final int CORRIDOR_PREFLIGHT = 2;
+    final int DILATION = 1;
 
     public record Room(AABB aabb, Rotation rotation, RoomDef def) {}
 
@@ -55,6 +56,8 @@ public class DungeonBuilder {
             criticalPaths.add(roomsInPath);
         }
         List<Room> dungeonRooms = new ArrayList<>();
+        Bitmask mask = new Bitmask();
+        List<NegotiatedRouter.Net> nets = new ArrayList<>();
 
         // Place entrance room
         List<AABB> placedRoomBoxes = new ArrayList<>();
@@ -70,6 +73,7 @@ public class DungeonBuilder {
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
             AABB aabb = rotatedRoomAabb(entrancePosition, size, Rotation.NONE);
             placedRoomBoxes.add(aabb);
+            mask.add(aabb);
             entranceRoom = new Room(aabb, Rotation.NONE, def);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -94,6 +98,7 @@ public class DungeonBuilder {
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
             AABB aabb = rotatedRoomAabb(endPosition, size, endRotation);
             placedRoomBoxes.add(aabb);
+            mask.add(aabb);
             endRoom = new Room(aabb, endRotation, def);
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -113,6 +118,7 @@ public class DungeonBuilder {
                 Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
                 AABB aabb = rotatedRoomAabb(roomPosition, size, rotation);
                 placedRoomBoxes.add(aabb);
+                mask.add(aabb);
                 Room room = new Room(aabb, rotation, def);
                 queenRooms.add(room);
             }
@@ -153,18 +159,14 @@ public class DungeonBuilder {
 
                     // 4) Margin check vs any already-placed room
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
-                    boolean intersects = false;
-                    for (AABB prior : placedRoomBoxes) {
-                        if (expanded.intersects(prior)) { // candidate keeps margin from prior
-                            intersects = true;
-                            break;
-                        }
-                    }
+                    boolean intersects = mask.contains(expanded);
                     if (intersects) continue;
+                    // candidate keeps margin from prior
 
                     // 5) Accept: save AABB and add piece
                     piecesBuilder.addPiece(new TemplatePiece(def, roomPos, rot));
                     placedRoomBoxes.add(roomAabb);
+                    mask.add(roomAabb);
                     dungeonRooms.add(new Room(roomAabb, rot, def));
                     placed = true;
                 }
@@ -213,8 +215,9 @@ public class DungeonBuilder {
                 PortDef exitPort = Arrays.stream(queenRoom.def.exits()).findFirst().get();
 
                 // Find the entrance port that matches the queen rooms exit port
+                Direction exitPortRotation = queenRoom.rotation().rotate(exitPort.facing());
                 Optional<PortDef> entrancePort = Arrays.stream(endRoom.def().entrances())
-                        .filter(p -> endRoom.rotation().rotate(p.facing()) == queenRoom.rotation().rotate(exitPort.facing()).getOpposite())
+                        .filter(p -> endRoom.rotation().rotate(p.facing()) == exitPortRotation.getOpposite())
                         .findFirst();
 
                 if (entrancePort.isPresent()) {
@@ -223,11 +226,16 @@ public class DungeonBuilder {
                     BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.get().localCenterBlock(), endRoom.def().sizeX(), endRoom.def().sizeY(), endRoom.def().sizeZ(), endRoom.aabb(), endRoom.rotation());
 
                     // Move 2 blocks outwards from port before carving
-                    exitPortPosition = exitPortPosition.offset(queenRoom.rotation().rotate(exitPort.facing()).getNormal().multiply(2));
-                    entrancePortPosition = entrancePortPosition.offset(endRoom.rotation().rotate(entrancePort.get().facing()).getNormal().multiply(2));
+                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    Direction entrancePortRotation = endRoom.rotation().rotate(entrancePort.get().facing());
+                    entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
 
-                    // Carve straight line
-                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
+                    // Add to shared carver
+                    nets.add(new NegotiatedRouter.Net(
+                            exitPortPosition, exitPortRotation,
+                            entrancePortPosition, entrancePortRotation,
+                            CORRIDOR_PREFLIGHT
+                    ));
                 } else {
                     LOGGER.error("Could not find entrance port");
                 }
@@ -254,11 +262,17 @@ public class DungeonBuilder {
                     BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.localCenterBlock(), room2.def().sizeX(), room2.def().sizeY(), room2.def().sizeZ(), room2.aabb(), room2.rotation());
 
                     // Move 2 blocks outwards from port before carving
-                    exitPortPosition = exitPortPosition.offset(room1.rotation().rotate(exitPort.facing()).getNormal().multiply(2));
-                    entrancePortPosition = entrancePortPosition.offset(room2.rotation().rotate(entrancePort.facing()).getNormal().multiply(2));
+                    Direction exitPortRotation = room1.rotation().rotate(exitPort.facing());
+                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    Direction entrancePortRotation = room2.rotation().rotate(entrancePort.facing());
+                    entrancePortPosition = entrancePortPosition.offset(room2.rotation().rotate(entrancePort.facing()).getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
 
-                    // Carve straight line
-                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
+                    // Add to shared carver
+                    nets.add(new NegotiatedRouter.Net(
+                            exitPortPosition, exitPortRotation,
+                            entrancePortPosition, entrancePortRotation,
+                            CORRIDOR_PREFLIGHT
+                    ));
                 }
             }
         } catch (Exception e) {
@@ -287,6 +301,7 @@ public class DungeonBuilder {
             // Start branching randomly
             while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < targetRooms) {
                 PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
+                Direction exitPortRotation = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
                 BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
                 boolean treasure = false;
                 if (random.nextFloat() < config.treasureRooms()) {
@@ -328,18 +343,13 @@ public class DungeonBuilder {
                     Vec3i size = new Vec3i(newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ());
                     AABB roomAabb = rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
-                    boolean intersects = false;
                     if (roomAabb.maxY > dungeonBox.maxY) continue; // dont go too high in dungeon
                     if (roomAabb.minY < (ctx.heightAccessor().getMinBuildHeight() + 10)) continue; // Dont go too close to bedrock
-                    for (AABB prior : placedRoomBoxes) {
-                        if (expanded.intersects(prior)) {
-                            intersects = true;
-                            break;
-                        }
-                    }
+                    boolean intersects = mask.contains(expanded);
                     if (intersects) continue;
                     piecesBuilder.addPiece(new TemplatePiece(newRoomDef, targetRoomPos, newRoomRotation));
                     placedRoomBoxes.add(roomAabb);
+                    mask.add(roomAabb);
                     dungeonRooms.add(new Room(roomAabb, newRoomRotation, newRoomDef));
                     placed = true;
                     // Add new room exits to available port exits
@@ -349,14 +359,40 @@ public class DungeonBuilder {
                         }
                     }
                     // carve corridor with pathfinder
+                    Direction entrancePortRotation = newRoomRotation.rotate(Arrays.stream(newRoomDef.entrances()).findFirst().get().facing());
                     BlockPos entrancePortPosition = PortGeom.localToWorld(Arrays.stream(newRoomDef.entrances()).findFirst().get().localCenterBlock(), newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ(), roomAabb, newRoomRotation);
-                    piecesBuilder.addPiece(new DeferredCarvePiece(exitPortPosition, entrancePortPosition, 1));
+                    nets.add(new NegotiatedRouter.Net(
+                            exitPortPosition, exitPortRotation,
+                            entrancePortPosition, entrancePortRotation,
+                            CORRIDOR_PREFLIGHT
+                    ));
                 }
 
                 if (!placed) {
                     LOGGER.error("Could not place branch room. Used {} tries", MAX_TRIES_PER_ROOM);
                 }
             }
+        } catch (Exception e) {
+            throw new RuntimeException(e);
+        }
+
+        try {
+            Bitmask staticMask = mask.dilated(DILATION);
+            int minY = ctx.heightAccessor().getMinBuildHeight();
+            int maxY = ctx.heightAccessor().getMaxBuildHeight() - 1;
+
+            NegotiatedRouter.Result routed = NegotiatedRouter.routeAll(
+                    nets,
+                    staticMask,
+                    CORRIDOR_RADIUS,
+                    minY, maxY
+            );
+
+            // Keep global avoidance up-to-date
+            mask.add(routed.unionMask());
+
+            // Carve everything at once
+            piecesBuilder.addPiece(new MaskCarvePiece(routed.unionMask()));
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
