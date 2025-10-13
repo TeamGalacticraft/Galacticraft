@@ -30,9 +30,9 @@ public class DungeonBuilder {
     private static final Logger LOGGER = LogUtils.getLogger();
     final double ROOM_MARGIN = 8.0;
     final int MAX_TRIES_PER_ROOM = 200;
-    final int CORRIDOR_PLACEMENT_OFFSET = 1;
+    final int CORRIDOR_PLACEMENT_OFFSET = 1 ;
     final int CORRIDOR_RADIUS = 1;
-    final int CORRIDOR_PREFLIGHT = 2;
+    final int CORRIDOR_PREFLIGHT = 1;
     final int DILATION = 1;
 
     public record Room(AABB aabb, Rotation rotation, RoomDef def) {}
