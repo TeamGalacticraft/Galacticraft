@@ -17,6 +17,7 @@ import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSeriali
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceType;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructurePlaceSettings;
 import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplate;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.slf4j.Logger;
 
 import java.util.Objects;
@@ -98,16 +99,16 @@ public final class TemplatePiece extends StructurePiece {
 
     @Override
     public void postProcess(WorldGenLevel level,
-                            net.minecraft.world.level.StructureManager ignored,
+                            StructureManager structureManager,
                             ChunkGenerator chunkGenerator,
                             RandomSource randomSource,
-                            BoundingBox box,
+                            BoundingBox chunkBox,
                             ChunkPos chunkPos,
                             BlockPos pivotIgnored) {
 
-        net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager tm =
-                level.getLevel().getServer().getStructureManager();
-
+        // Use the StructureManager provided by worldgen (server may be null here!)
+        StructureTemplateManager tm =
+                Objects.requireNonNull(level.getServer()).getStructureManager();
         StructureTemplate tpl = tm.getOrCreate(this.templateId);
 
         BlockPos pivot = new BlockPos(sizeX / 2, sizeY / 2, sizeZ / 2);
@@ -115,10 +116,11 @@ public final class TemplatePiece extends StructurePiece {
 
         BlockPos origin = this.worldMinAfterRotation.subtract(rotLocal.min());
 
+        // IMPORTANT: clip strictly to the currently generating chunk
         StructurePlaceSettings place = new StructurePlaceSettings()
                 .setRotation(this.rotation)
                 .setRotationPivot(pivot)
-                .setBoundingBox(this.boundingBox)
+                .setBoundingBox(chunkBox)  // clip to this chunk
                 .setKnownShape(true)
                 .setIgnoreEntities(true);
 

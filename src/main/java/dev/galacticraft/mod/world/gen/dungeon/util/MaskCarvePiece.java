@@ -4,6 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -112,21 +113,6 @@ public class MaskCarvePiece extends StructurePiece {
         return s;
     }
 
-    private Spans measureSpans(WorldGenLevel level, BoundingBox box, BlockPos at) {
-        Spans s = new Spans();
-        s.xL = spanToWall(level, box, at, Direction.WEST,  STRAIGHT_SPAN_LIMIT);
-        s.xR = spanToWall(level, box, at, Direction.EAST,  STRAIGHT_SPAN_LIMIT);
-        s.zL = spanToWall(level, box, at, Direction.NORTH, STRAIGHT_SPAN_LIMIT);
-        s.zR = spanToWall(level, box, at, Direction.SOUTH, STRAIGHT_SPAN_LIMIT);
-        s.yD = spanToWall(level, box, at, Direction.DOWN,  STRAIGHT_SPAN_LIMIT);
-        s.yU = spanToWall(level, box, at, Direction.UP,    STRAIGHT_SPAN_LIMIT);
-        if (s.xL < 0 || s.xR < 0 || s.zL < 0 || s.zR < 0 || s.yD < 0 || s.yU < 0) return null;
-        s.wX = Math.max(0, s.xR - s.xL - 1);
-        s.wZ = Math.max(0, s.zR - s.zL - 1);
-        s.hY = Math.max(0, s.yU - s.yD - 1);
-        return s;
-    }
-
     /** Is the tunnel locally straight along the given axis? We compare cross-sections ahead/behind. */
     private boolean isStraightAlongAxis(WorldGenLevel level, BoundingBox box, BlockPos anchor, Direction.Axis axis) {
         XSec c0 = measureCrossSection(level, box, anchor, axis);
@@ -207,7 +193,7 @@ public class MaskCarvePiece extends StructurePiece {
         final int minY = level.getMinBuildHeight();
         final int maxY = level.getMaxBuildHeight() - 1;
 
-        // Deterministic noise for this piece
+        // Deterministic noise for this CHUNK call
         PerlinNoise noise = makeNoiseForPiece(random, box, chunkPos);
 
         // Phase 0: carve exactly the mask
@@ -218,38 +204,42 @@ public class MaskCarvePiece extends StructurePiece {
             int z = BlockPos.getZ(packed);
             if (y < minY || y > maxY) continue;
             BlockPos p = new BlockPos(x, y, z);
-            if (!this.boundingBox.isInside(p)) continue;
+
+            // BUG: was `this.boundingBox.isInside(p)` — hits unloaded chunks
+            if (!box.isInside(p)) continue;
+
             if (!level.getBlockState(p).isAir()) {
                 level.setBlock(p, Blocks.AIR.defaultBlockState(), 2);
             }
             airMask.add(packed);
         }
 
-        // Phase 1: noise-driven +-1 push/pull
-        applyNoisePushPull(level, this.boundingBox, random, noise, airMask, voxels, minY, maxY);
+        // Phase 1: noise-driven +-1 push/pull (CLIPPED)
+        applyNoisePushPull(level, box, chunkPos, random, noise, airMask, voxels, minY, maxY);
 
-        // Phase 2: coat all exposed surfaces (no original blocks visible)
-        coatAllExposedSurfaces(level, this.boundingBox, random, airMask);
+        // Phase 2: coat exposed surfaces (CLIPPED)
+        coatAllExposedSurfaces(level, box, chunkPos, random, airMask);
 
-        // Phase 2.5: rare, safe acid blobs (noise gated)
-        placeAcidPockets(level, this.boundingBox, random, airMask);
+        // Phase 2.5: acid pockets (CLIPPED)
+        placeAcidPockets(level, box, chunkPos, random, airMask);
 
-        // Phase 3: webs
-        placeWebs(level, this.boundingBox, random, voxels);
+        // Phase 3: webs (CLIPPED)
+        placeWebs(level, box, chunkPos, random, voxels);
     }
 
 // ---------- helpers ----------
 
     private void applyNoisePushPull(WorldGenLevel level,
                                     BoundingBox box,
+                                    net.minecraft.world.level.ChunkPos chunkPos,
                                     RandomSource rnd,
                                     PerlinNoise noise,
                                     java.util.Set<Long> airMask,
                                     List<Long> centers,
                                     int minY, int maxY) {
-        final double scale = 1.0 / 6.0;    // spatial scale of variation
-        final double pushThresh =  0.35;   // carve one cell outward if n > 0.35
-        final double pullThresh = -0.35;   // fill one cell inward  if n < -0.35
+        final double scale = 1.0 / 6.0;
+        final double pushThresh =  0.35;
+        final double pullThresh = -0.35;
 
         final Direction[] laterals = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
         final Direction[] allDirs  = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.UP, Direction.DOWN};
@@ -262,6 +252,7 @@ public class MaskCarvePiece extends StructurePiece {
             int y = BlockPos.getY(packed);
             int z = BlockPos.getZ(packed);
             if (y < minY || y > maxY) continue;
+            if ((x >> 4) != chunkPos.x || (z >> 4) != chunkPos.z) continue;
 
             BlockPos center = new BlockPos(x, y, z);
             if (!box.isInside(center)) continue;
@@ -273,10 +264,14 @@ public class MaskCarvePiece extends StructurePiece {
                 Direction[] order = rnd.nextFloat() < 0.85f ? laterals : allDirs;
                 for (Direction d : order) {
                     BlockPos tgt = center.relative(d);
-                    if (!isWithin(box, tgt.getX(), tgt.getY(), tgt.getZ())) continue;
+                    if (!box.isInside(tgt)) continue;
+                    if ((tgt.getX() >> 4) != chunkPos.x || (tgt.getZ() >> 4) != chunkPos.z) continue;
                     if (tgt.getY() < minY || tgt.getY() > maxY) continue;
 
                     BlockPos behind = tgt.relative(d);
+                    if (!box.isInside(behind)) continue;
+                    if ((behind.getX() >> 4) != chunkPos.x || (behind.getZ() >> 4) != chunkPos.z) continue;
+
                     if (!isSolidWall(level, tgt) || !isSolidWall(level, behind)) continue;
                     if (isLikelyRoomVoid(level, behind)) continue;
 
@@ -287,15 +282,18 @@ public class MaskCarvePiece extends StructurePiece {
                 Direction[] order = rnd.nextFloat() < 0.85f ? laterals : allDirs;
                 for (Direction d : order) {
                     BlockPos a = center.relative(d);
-                    if (!isWithin(box, a.getX(), a.getY(), a.getZ())) continue;
+                    if (!box.isInside(a)) continue;
+                    if ((a.getX() >> 4) != chunkPos.x || (a.getZ() >> 4) != chunkPos.z) continue;
+
                     if (!level.getBlockState(a).isAir()) continue;
                     long al = a.asLong();
                     if (airMask.contains(al)) continue;
 
                     BlockPos back = a.relative(d);
-                    if (!isWithin(box, back.getX(), back.getY(), back.getZ())) continue;
-                    if (!isSolidWall(level, back)) continue;
+                    if (!box.isInside(back)) continue;
+                    if ((back.getX() >> 4) != chunkPos.x || (back.getZ() >> 4) != chunkPos.z) continue;
 
+                    if (!isSolidWall(level, back)) continue;
                     if (!wouldChokeIfFilled(level, a)) {
                         addWall.add(a);
                         break;
@@ -321,12 +319,13 @@ public class MaskCarvePiece extends StructurePiece {
      * and set the blocks beneath to dissolved nest. This prevents leaks even on irregular floors.
      */
     private void placeAcidPockets(WorldGenLevel level,
-                                   BoundingBox box,
-                                   RandomSource rnd,
-                                   java.util.Set<Long> airMask) {
+                                  BoundingBox box,
+                                  ChunkPos chunkPos,
+                                  RandomSource rnd,
+                                  java.util.Set<Long> airMask) {
         if (airMask == null || airMask.isEmpty()) return;
 
-        final int MAX_SIZE = 9; // “< 10 blocks”
+        final int MAX_SIZE = 9;
 
         java.util.HashSet<Long> globalVisited = new java.util.HashSet<>();
         java.util.ArrayDeque<BlockPos> q = new java.util.ArrayDeque<>();
@@ -335,12 +334,14 @@ public class MaskCarvePiece extends StructurePiece {
             if (globalVisited.contains(al)) continue;
 
             BlockPos start = BlockPos.of(al);
-            if (!inBox(box, start)) { globalVisited.add(al); continue; }
+            if (!box.isInside(start)) { globalVisited.add(al); continue; }
+            if ((start.getX() >> 4) != chunkPos.x || (start.getZ() >> 4) != chunkPos.z) { globalVisited.add(al); continue; }
             if (!level.getBlockState(start).isAir()) { globalVisited.add(al); continue; }
 
             BlockPos startBelow = start.below();
-            // must be a “floor” cell: air here, solid immediately below
-            if (!inBox(box, startBelow) || !isSolidWall(level, startBelow)) { globalVisited.add(al); continue; }
+            if (!box.isInside(startBelow)) { globalVisited.add(al); continue; }
+            if ((startBelow.getX() >> 4) != chunkPos.x || (startBelow.getZ() >> 4) != chunkPos.z) { globalVisited.add(al); continue; }
+            if (!isSolidWall(level, startBelow)) { globalVisited.add(al); continue; }
 
             java.util.ArrayList<BlockPos> comp = new java.util.ArrayList<>(8);
             java.util.HashSet<Long> compSet = new java.util.HashSet<>();
@@ -360,15 +361,17 @@ public class MaskCarvePiece extends StructurePiece {
 
                 for (Direction d : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST}) {
                     BlockPos n = p.relative(d);
-                    if (!inBox(box, n)) continue;
+                    if (!box.isInside(n)) continue;
+                    if ((n.getX() >> 4) != chunkPos.x || (n.getZ() >> 4) != chunkPos.z) continue;
                     if (n.getY() != y0) continue;
 
                     var st = level.getBlockState(n);
                     if (!st.isAir()) continue;
 
-                    // only walk into “floor” air (solid immediately below)
                     BlockPos nb = n.below();
-                    if (!inBox(box, nb) || !isSolidWall(level, nb)) continue;
+                    if (!box.isInside(nb)) continue;
+                    if ((nb.getX() >> 4) != chunkPos.x || (nb.getZ() >> 4) != chunkPos.z) continue;
+                    if (!isSolidWall(level, nb)) continue;
 
                     long nl = n.asLong();
                     if (compSet.add(nl)) {
@@ -378,19 +381,17 @@ public class MaskCarvePiece extends StructurePiece {
                 }
             }
 
-            // If it overflowed size, skip this component (not a “small pocket”)
             if (overflow || comp.isEmpty()) continue;
 
-            // Strict perimeter seal check: every 4-neighbor around the component at same Y
-            // must be non-air OR part of the component; also reject if any neighbor contains fluid.
             boolean leaks = false;
             for (BlockPos p : comp) {
                 for (Direction d : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST}) {
                     BlockPos n = p.relative(d);
-                    if (!inBox(box, n)) { leaks = true; break; } // open to boundary
+                    if (!box.isInside(n)) { leaks = true; break; }
+                    if ((n.getX() >> 4) != chunkPos.x || (n.getZ() >> 4) != chunkPos.z) { leaks = true; break; }
                     var st = level.getBlockState(n);
-                    if (!st.getFluidState().isEmpty()) { leaks = true; break; } // touches fluid outside
-                    if (st.isAir() && !compSet.contains(n.asLong())) { leaks = true; break; } // open air next to pocket
+                    if (!st.getFluidState().isEmpty()) { leaks = true; break; }
+                    if (st.isAir() && !compSet.contains(n.asLong())) { leaks = true; break; }
                 }
                 if (leaks) break;
             }
@@ -468,7 +469,7 @@ public class MaskCarvePiece extends StructurePiece {
         return out;
     }
 
-    private void placeWebs(WorldGenLevel level, BoundingBox box, RandomSource rnd, List<Long> centers) {
+    private void placeWebs(WorldGenLevel level, BoundingBox box, ChunkPos chunkPos, RandomSource rnd, List<Long> centers) {
         if (centers.isEmpty()) return;
 
         final float singleP   = 0.020f;
@@ -481,7 +482,9 @@ public class MaskCarvePiece extends StructurePiece {
         for (int i = 0; i < centers.size(); i += stride) {
             long packed = centers.get(i);
             BlockPos anchor = BlockPos.of(packed);
-            if (!box.isInside(anchor) || !isAir(level, anchor)) continue;
+            if (!box.isInside(anchor)) continue;
+            if ((anchor.getX() >> 4) != chunkPos.x || (anchor.getZ() >> 4) != chunkPos.z) continue;
+            if (!isAir(level, anchor)) continue;
 
             boolean straightX = isStraightAlongAxis(level, box, anchor, Direction.Axis.X);
             boolean straightY = isStraightAlongAxis(level, box, anchor, Direction.Axis.Y);
@@ -648,7 +651,7 @@ public class MaskCarvePiece extends StructurePiece {
 
 
 
-    private void coatAllExposedSurfaces(WorldGenLevel level, BoundingBox box, RandomSource rnd, java.util.Set<Long> airMask) {
+    private void coatAllExposedSurfaces(WorldGenLevel level, BoundingBox box, ChunkPos chunkPos, RandomSource rnd, java.util.Set<Long> airMask) {
         final float floorFertileP = 0.18f;
         final float floorDissolvedP = 0.12f;
         final float wallFertileP  = 0.12f;
@@ -658,12 +661,15 @@ public class MaskCarvePiece extends StructurePiece {
         BlockPos.MutableBlockPos nb  = new BlockPos.MutableBlockPos();
 
         for (long a : airMask) {
-            air.set(BlockPos.getX(a), BlockPos.getY(a), BlockPos.getZ(a));
-            if (!inBox(box, air) || !level.getBlockState(air).isAir()) continue;
+            int ax = BlockPos.getX(a), ay = BlockPos.getY(a), az = BlockPos.getZ(a);
+            if ((ax >> 4) != chunkPos.x || (az >> 4) != chunkPos.z) continue;
+
+            air.set(ax, ay, az);
+            if (!box.isInside(air) || !level.getBlockState(air).isAir()) continue;
 
             // Floor
             nb.set(air).move(Direction.DOWN);
-            if (inBox(box, nb) && isSolidWall(level, nb)) {
+            if (box.isInside(nb) && (nb.getX() >> 4) == chunkPos.x && (nb.getZ() >> 4) == chunkPos.z && isSolidWall(level, nb)) {
                 var floorPick = OLIANT_NEST_BLOCK;
                 float r = rnd.nextFloat();
                 if (r < floorDissolvedP) floorPick = OLIANT_DISSOLVED_NEST_BLOCK;
@@ -673,7 +679,7 @@ public class MaskCarvePiece extends StructurePiece {
 
             // Roof
             nb.set(air).move(Direction.UP);
-            if (inBox(box, nb) && isSolidWall(level, nb)) {
+            if (box.isInside(nb) && (nb.getX() >> 4) == chunkPos.x && (nb.getZ() >> 4) == chunkPos.z && isSolidWall(level, nb)) {
                 var roofPick = (rnd.nextFloat() < roofFertileP) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
                 level.setBlock(nb, roofPick.defaultBlockState(), 2);
             }
@@ -681,7 +687,7 @@ public class MaskCarvePiece extends StructurePiece {
             // Walls
             for (Direction d : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST}) {
                 nb.set(air).move(d);
-                if (inBox(box, nb) && isSolidWall(level, nb)) {
+                if (box.isInside(nb) && (nb.getX() >> 4) == chunkPos.x && (nb.getZ() >> 4) == chunkPos.z && isSolidWall(level, nb)) {
                     var wallPick = (rnd.nextFloat() < wallFertileP) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
                     level.setBlock(nb, wallPick.defaultBlockState(), 2);
                 }

@@ -11,16 +11,6 @@ import java.util.*;
 
 /**
  * Multi-corridor negotiated router (rip-up & reroute).
- * - Nodes are grid centers; a node is valid iff its full (2r+1)^3 cube is mask-clear.
- * - A* inside a line-aligned "tube" keeps searches fast.
- * - Costs = base(1) + present(overuse*k) + history(accumulated penalties).
- * - Iterates until no overlaps or iteration cap.
- *
- * Usage:
- *   List<NegotiatedRouter.Net> nets = ... // collect all corridors you want to route
- *   NegotiatedRouter.Result R = NegotiatedRouter.routeAll(level, nets, staticMask, radius, minY, maxY);
- *   // R.perNetPaths.get(i) => List<BlockPos> path for nets.get(i)
- *   // R.unionMask => union of all corridor voxels; add to your global mask or carve once.
  */
 public final class NegotiatedRouter {
 
