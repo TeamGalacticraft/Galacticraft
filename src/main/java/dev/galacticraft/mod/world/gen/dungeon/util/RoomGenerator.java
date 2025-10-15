@@ -1,6 +1,7 @@
 package dev.galacticraft.mod.world.gen.dungeon.util;
 
 import com.mojang.logging.LogUtils;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.gen.dungeon.records.BlockData;
 import dev.galacticraft.mod.world.gen.dungeon.records.RoomDef;
 import net.minecraft.core.BlockPos;
@@ -74,7 +75,7 @@ public final class RoomGenerator {
     public HashMap<SectionPos, List<BlockData>> getBlocks(TemplateScanner scanner) {
         var result = new HashMap<SectionPos, List<BlockData>>();
 
-        // Load cached raw blocks for this template (you’ve added this to TemplateScanner)
+        // Load cached raw blocks for this template
         var tb = scanner.loadBlocks(this.templateId);
 
         // Rotation pivot & origin must match the old postProcess() math
@@ -82,7 +83,7 @@ public final class RoomGenerator {
         LocalAabb rotLocal = rotatedLocalAabb(sizeX, sizeY, sizeZ, this.rotation, pivot);
         BlockPos origin = this.worldMinAfterRotation.subtract(rotLocal.min());
 
-        Mirror mirror = Mirror.NONE;      // adjust if you add mirroring later
+        Mirror mirror = Mirror.NONE;
         Rotation rot  = this.rotation;
 
         for (StructureTemplate.StructureBlockInfo info : tb.rawBlocks()) {
@@ -92,6 +93,9 @@ public final class RoomGenerator {
 
             // rotate/mirror state so facings match
             BlockState state = info.state();
+            if (state.is(GCBlocks.DUNGEON_ENTRANCE_BLOCK) || state.is(GCBlocks.DUNGEON_EXIT_BLOCK)) {
+                state = GCBlocks.OLIANT_NEST_BLOCK.defaultBlockState();
+            }
             if (mirror != Mirror.NONE) state = state.mirror(mirror);
             if (rot    != Rotation.NONE) state = state.rotate(rot);
 

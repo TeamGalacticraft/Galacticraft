@@ -80,6 +80,11 @@ public class GCBlocks {
                     .noCollission().pushReaction(PushReaction.DESTROY).replaceable().liquid()
                     .strength(50.0F, 50.0F).noLootTable()));
 
+    public static final LiquidBlock OLIANT_ACID = BLOCKS.register(Constant.Block.OLIANT_ACID,
+            new LiquidBlock(GCFluids.OLIANT_ACID, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_MAGENTA)
+                    .noCollission().pushReaction(PushReaction.DESTROY).replaceable().liquid()
+                    .strength(50.0F, 50.0F).noLootTable()));
+
     // DECORATION BLOCKS
     public static final DecorationSet ALUMINUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.ALUMINUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_WHITE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet BRONZE_DECORATION = BLOCKS.registerDecoration(Constant.Block.BRONZE_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
@@ -223,6 +228,11 @@ public class GCBlocks {
     public static final Block OLIVINE_CLUSTER = BLOCKS.registerWithItem(Constant.Block.OLIVINE_CLUSTER, new OlivineClusterBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.AMETHYST_CLUSTER).mapColor(MapColor.COLOR_LIGHT_GREEN)));
     public static final Block OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(MOON_BASALT).strength(3.5F, 6.0F)));
     public static final Block RICH_OLIVINE_BASALT = BLOCKS.registerWithItem(Constant.Block.RICH_OLIVINE_BASALT, new Block(BlockBehaviour.Properties.ofFullCopy(OLIVINE_BASALT)));
+
+    public static final Block OLIANT_NEST_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIANT_NEST_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.DIRT)));
+    public static final Block OLIANT_FERTILE_NEST_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIANT_FERTILE_NEST_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(OLIANT_NEST_BLOCK)));
+    public static final Block OLIANT_DISSOLVED_NEST_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIANT_DISSOLVED_NEST_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(OLIANT_NEST_BLOCK)));
+    public static final Block OLIANT_WEB = BLOCKS.registerWithItem(Constant.Block.OLIANT_WEB, new WebBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB)));
 
     // COMPACT MINERAL BLOCKS
     public static final Block SILICON_BLOCK = BLOCKS.registerWithItem(Constant.Block.SILICON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLUE).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));

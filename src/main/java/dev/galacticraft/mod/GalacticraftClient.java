@@ -177,7 +177,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_CHEESE_LEAVES, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE, GCBlocks.OLIANT_WEB);
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());
@@ -214,12 +214,19 @@ public class GalacticraftClient implements ClientModInitializer {
                 Constant.Fluid.fluidId(Constant.Fluid.SULFURIC_ACID_FLOWING)
         );
 
+        FluidRenderHandler oliantAcid = new SimpleFluidRenderHandler(
+                Constant.Fluid.fluidId(Constant.Fluid.OLIANT_ACID_STILL),
+                Constant.Fluid.fluidId(Constant.Fluid.OLIANT_ACID_FLOWING)
+        );
+
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.CRUDE_OIL, GCFluids.FLOWING_CRUDE_OIL, oil);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.FUEL, GCFluids.FLOWING_FUEL, fuel);
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID, sulfuricAcid);
+        FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.OLIANT_ACID, GCFluids.FlOWING_OLIANT_ACID, oliantAcid);
 
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.FUEL, GCFluids.FLOWING_FUEL);
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID);
+        BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.OLIANT_ACID, GCFluids.FlOWING_OLIANT_ACID);
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);

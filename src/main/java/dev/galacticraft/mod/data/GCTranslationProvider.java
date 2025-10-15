@@ -308,6 +308,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.OLIVINE_BASALT, "Olivine Basalt");
         this.block(GCBlocks.RICH_OLIVINE_BASALT, "Rich Olivine Basalt");
 
+        this.block(GCBlocks.OLIANT_NEST_BLOCK, "Oliant Nest Block");
+        this.block(GCBlocks.OLIANT_FERTILE_NEST_BLOCK, "Oliant Fertile Nest Block");
+        this.block(GCBlocks.OLIANT_DISSOLVED_NEST_BLOCK, "Oliant Dissolved Nest Block");
+        this.block(GCBlocks.OLIANT_WEB, "Oliant Web");
+        this.block(GCBlocks.OLIANT_ACID, "Oliant Acid");
+
         // COMPACT MINERAL BLOCKS
         this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
         this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");

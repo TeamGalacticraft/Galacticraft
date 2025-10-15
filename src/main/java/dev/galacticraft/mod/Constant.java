@@ -394,6 +394,11 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
         String CANNED_FOOD = "canned_food";
+        String OLIANT_NEST_BLOCK = "oliant_nest_block";
+        String OLIANT_FERTILE_NEST_BLOCK = "oliant_fertile_nest_block";
+        String OLIANT_DISSOLVED_NEST_BLOCK = "oliant_dissolved_nest_block";
+        String OLIANT_WEB = "oliant_web";
+        String OLIANT_ACID = "oliant_acid";
     }
 
     interface Fluid {
@@ -407,6 +412,8 @@ public interface Constant {
         String SULFURIC_ACID_STILL = "sulfuric_acid_still";
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
+        String OLIANT_ACID_FLOWING = "oliant_acid_flowing";
+        String OLIANT_ACID_STILL = "oliant_acid_still";
 
         static ResourceLocation fluidId(String s) {
             return Constant.id("block/fluid/" + s);
@@ -537,6 +544,7 @@ public interface Constant {
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
         String FUEL_BUCKET = "fuel_bucket";
         String SULFURIC_ACID_BUCKET = "sulfuric_acid_bucket";
+        String OLIANT_ACID_BUCKET = "oliant_acid_bucket";
 
         //GC INVENTORY
         String PARACHUTE = "parachute";

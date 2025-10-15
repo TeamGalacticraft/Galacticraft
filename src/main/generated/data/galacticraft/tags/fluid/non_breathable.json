@@ -3,6 +3,7 @@
     "#galacticraft:oil",
     "#galacticraft:fuel",
     "#galacticraft:sulfuric_acid",
+    "#galacticraft:oliant_acid",
     {
       "id": "#minecraft:water",
       "required": false

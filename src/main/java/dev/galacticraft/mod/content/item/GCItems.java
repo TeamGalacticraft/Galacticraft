@@ -280,6 +280,7 @@ public class GCItems {
     public static final Item CRUDE_OIL_BUCKET = ITEMS.register(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
+    public static final Item OLIANT_ACID_BUCKET = ITEMS.register(Constant.Item.OLIANT_ACID_BUCKET, new BucketItem(GCFluids.OLIANT_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     // CANNED FOOD
     public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));

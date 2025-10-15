@@ -110,6 +110,11 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createAxisAlignedPillarBlock(GCBlocks.OLIVINE_BLOCK, TexturedModel.COLUMN);
         generator.createTrivialCube(GCBlocks.BUDDING_OLIVINE);
 
+        generator.createTrivialCube(GCBlocks.OLIANT_NEST_BLOCK);
+        generator.createTrivialCube(GCBlocks.OLIANT_FERTILE_NEST_BLOCK);
+        generator.createTrivialCube(GCBlocks.OLIANT_DISSOLVED_NEST_BLOCK);
+        generator.createCrossBlockWithDefaultItem(GCBlocks.OLIANT_WEB, BlockModelGenerators.TintState.NOT_TINTED);
+
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.MARS_SUB_SURFACE_ROCK);
@@ -380,6 +385,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
+        generator.createNonTemplateModelBlock(GCBlocks.OLIANT_ACID);
 
         generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
         this.createAirLockController(generator);

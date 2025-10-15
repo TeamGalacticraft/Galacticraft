@@ -39,6 +39,8 @@ public class GCFluids {
     public static final FlowingFluid FLOWING_FUEL = new FuelFluid.Flowing();
     public static final FlowingFluid SULFURIC_ACID = new SulfuricAcidFluid.Still();
     public static final FlowingFluid FLOWING_SULFURIC_ACID = new SulfuricAcidFluid.Flowing();
+    public static final FlowingFluid OLIANT_ACID = new SulfuricAcidFluid.Still();
+    public static final FlowingFluid FlOWING_OLIANT_ACID = new SulfuricAcidFluid.Flowing();
 
     public static final Fluid LIQUID_OXYGEN = new OxygenFluid();
 
@@ -50,6 +52,8 @@ public class GCFluids {
         register(Constant.Fluid.SULFURIC_ACID_STILL, SULFURIC_ACID);
         register(Constant.Fluid.SULFURIC_ACID_FLOWING, FLOWING_SULFURIC_ACID);
         register(Constant.Fluid.LIQUID_OXYGEN, LIQUID_OXYGEN);
+        register(Constant.Fluid.OLIANT_ACID_STILL, OLIANT_ACID);
+        register(Constant.Fluid.OLIANT_ACID_FLOWING, FlOWING_OLIANT_ACID);
     }
 
     public static void registerFluidVariantAttributes() {
@@ -68,6 +72,12 @@ public class GCFluids {
         FluidVariantAttributes.register(SULFURIC_ACID, new GCFluidAttribute(
                 Component.translatable(GCBlocks.SULFURIC_ACID.getDescriptionId())
                         .setStyle(Constant.Text.GREEN_STYLE),
+                FluidConstants.WATER_VISCOSITY,
+                false
+        ));
+        FluidVariantAttributes.register(OLIANT_ACID, new GCFluidAttribute(
+                Component.translatable(GCBlocks.OLIANT_ACID.getDescriptionId())
+                        .setStyle(Constant.Text.LIGHT_PURPLE_STYLE),
                 FluidConstants.WATER_VISCOSITY,
                 false
         ));
