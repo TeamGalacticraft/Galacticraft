@@ -28,6 +28,7 @@ accessible field net/minecraft/data/models/BlockModelGenerators texturedModels L
 mutable field net/minecraft/data/models/BlockModelGenerators    texturedModels Ljava/util/Map;
 accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
 mutable field net/minecraft/data/models/BlockModelGenerators    fullBlockModelCustomGenerators Ljava/util/Map;
+accessible field  net/minecraft/world/level/levelgen/structure/templatesystem/StructureTemplate palettes Ljava/util/List;
 
 # private static fields
 accessible field net/minecraft/data/loot/EntityLootSubProvider SPECIAL_LOOT_TABLE_TYPES Ljava/util/Set;

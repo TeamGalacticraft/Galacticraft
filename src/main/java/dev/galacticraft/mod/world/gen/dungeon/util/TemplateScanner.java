@@ -31,6 +31,34 @@ public final class TemplateScanner {
 
     private final Map<ResourceLocation, TemplateMeta> cache = new HashMap<>();
 
+    /** Raw, unprocessed blocks (palette 0) + size */
+    public record TemplateBlocks(int sx, int sy, int sz, List<StructureTemplate.StructureBlockInfo> rawBlocks) {}
+
+    /** Cache of template → raw blocks */
+    private final Map<ResourceLocation, TemplateBlocks> blocksCache = new HashMap<>();
+
+    /** Ensure raw blocks for this template are loaded & cached. */
+    public TemplateBlocks loadBlocks(ResourceLocation templateId) {
+        TemplateBlocks hit = blocksCache.get(templateId);
+        if (hit != null) return hit;
+
+        StructureTemplate tpl = templateManager.getOrCreate(templateId);
+        var size = tpl.getSize();
+        // NOTE: palette(0).blocks() is in LOCAL template coords; states are UN-processed
+        List<StructureTemplate.StructureBlockInfo> raw = List.copyOf(tpl.palettes.getFirst().blocks());
+
+        TemplateBlocks tb = new TemplateBlocks(size.getX(), size.getY(), size.getZ(), raw);
+        blocksCache.put(templateId, tb);
+        return tb;
+    }
+
+    /** Optional convenience: load both ports & raw blocks in one call. */
+    public TemplateMeta scanAndWarm(ResourceLocation templateId) {
+        TemplateMeta meta = scan(templateId);   // your existing scan() fills port cache
+        loadBlocks(templateId);                 // warm block cache too
+        return meta;
+    }
+
     public TemplateScanner(StructureTemplateManager templateManager) {
         this(templateManager, Constant.id("dungeon_entrance_block"), Constant.id("dungeon_exit_block"));
     }

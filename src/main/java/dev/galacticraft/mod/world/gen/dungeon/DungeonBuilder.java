@@ -4,11 +4,11 @@ import com.mojang.logging.LogUtils;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.world.gen.dungeon.config.DungeonConfig;
 import dev.galacticraft.mod.world.gen.dungeon.enums.RoomType;
-import dev.galacticraft.mod.world.gen.dungeon.records.PortDef;
-import dev.galacticraft.mod.world.gen.dungeon.records.RoomDef;
+import dev.galacticraft.mod.world.gen.dungeon.records.*;
 import dev.galacticraft.mod.world.gen.dungeon.util.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Rotation;
@@ -18,10 +18,8 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.slf4j.Logger;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
+import java.util.concurrent.CompletableFuture;
 
 public class DungeonBuilder {
     private final DungeonConfig config;
@@ -42,34 +40,25 @@ public class DungeonBuilder {
         this.random = random;
     }
 
-    public boolean build(Structure.GenerationContext ctx, StructurePiecesBuilder piecesBuilder, BlockPos surface) {
-        // Initiate per dungeon values
-        int targetRooms = random.nextInt(config.minRooms(), config.maxRooms());
-        int criticalPathRooms = Math.round(targetRooms * config.criticalPathRooms());
-        List<Integer> criticalPaths = new ArrayList<>();
-        int roomsLeft = criticalPathRooms;
-        int pathsleft = config.criticalPaths();
-        for (int i = 0; i < config.criticalPaths(); i++) {
-            int roomsInPath = Math.ceilDiv(roomsLeft, pathsleft);
-            roomsLeft -= roomsInPath;
-            pathsleft -= 1;
-            criticalPaths.add(roomsInPath);
-        }
+    private DungeonResult generateDungeon(DungeonInput input) {
         List<Room> dungeonRooms = new ArrayList<>();
         Bitmask mask = new Bitmask();
         List<NegotiatedRouter.Net> nets = new ArrayList<>();
-
-        // Place entrance room
         List<AABB> placedRoomBoxes = new ArrayList<>();
+        HashMap<SectionPos, List<BlockData>> blockData = new HashMap<SectionPos, List<BlockData>>();
+
+        // Calculate entrance room
         BlockPos entrancePosition;
         Room entranceRoom;
         try {
             RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.ENTRANCE, roomDef -> true);
-            int entranceY = surface.getY() - (10 + def.sizeY());
-            int entranceX = surface.getX() + random.nextInt(-5, 5);
-            int entranceZ = surface.getZ() + random.nextInt(-5, 5);
+            int entranceY = input.surface().getY() - (10 + def.sizeY());
+            int entranceX = input.surface().getX() + random.nextInt(-5, 5);
+            int entranceZ = input.surface().getZ() + random.nextInt(-5, 5);
             entrancePosition = new BlockPos(entranceX, entranceY, entranceZ);
-            piecesBuilder.addPiece(new TemplatePiece(def, entrancePosition, Rotation.NONE));
+
+            addData(blockData, new RoomGenerator(def, entrancePosition, Rotation.NONE).getBlocks(Galacticraft.SCANNER));
+
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
             AABB aabb = rotatedRoomAabb(entrancePosition, size, Rotation.NONE);
             placedRoomBoxes.add(aabb);
@@ -88,13 +77,15 @@ public class DungeonBuilder {
         try {
             RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.END, roomDef -> true);
             endRoomEntrances = def.entrances();
-            int endY = ctx.heightAccessor().getMinBuildHeight() + random.nextInt(20, 30);
-            int endX = surface.getX() + random.nextInt(-20, 20);
-            int endZ = surface.getZ() + random.nextInt(-20, 20);
+            int endY = input.minBuildHeight() + random.nextInt(20, 30);
+            int endX = input.surface().getX() + random.nextInt(-20, 20);
+            int endZ = input.surface().getZ() + random.nextInt(-20, 20);
             endPosition = new BlockPos(endX, endY, endZ);
             endRotation = Rotation.getRandom(random);
-            piecesBuilder.addPiece(new TemplatePiece(def, endPosition, endRotation));
-            dungeonCenter = new BlockPos(surface.getX(), Math.ceilDiv((entrancePosition.getY() - endPosition.getY()), 2) + endPosition.getY(), surface.getZ());
+
+            addData(blockData, new RoomGenerator(def, endPosition, endRotation).getBlocks(Galacticraft.SCANNER));
+
+            dungeonCenter = new BlockPos(input.surface().getX(), Math.ceilDiv((entrancePosition.getY() - endPosition.getY()), 2) + endPosition.getY(), input.surface().getZ());
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
             AABB aabb = rotatedRoomAabb(endPosition, size, endRotation);
             placedRoomBoxes.add(aabb);
@@ -114,7 +105,9 @@ public class DungeonBuilder {
                 roomPosition = roomPosition.offset(random.nextInt(-10, 10), random.nextInt(-10, 10), random.nextInt(-10, 10));
                 Direction roomExitFacing = Arrays.stream(def.exits()).findFirst().get().facing();
                 Rotation rotation = rotationNeededToMatch(roomExitFacing, entranceDirection.getOpposite());
-                piecesBuilder.addPiece(new TemplatePiece(def, roomPosition, rotation));
+
+                addData(blockData, new RoomGenerator(def, roomPosition, rotation).getBlocks(Galacticraft.SCANNER));
+
                 Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
                 AABB aabb = rotatedRoomAabb(roomPosition, size, rotation);
                 placedRoomBoxes.add(aabb);
@@ -132,7 +125,7 @@ public class DungeonBuilder {
 
         // Place critical path rooms
         try {
-            for (int i = 0; i < criticalPathRooms; i++) {
+            for (int i = 0; i < input.criticalPathRooms(); i++) {
                 boolean placed = false;
 
                 for (int tries = 0; tries < MAX_TRIES_PER_ROOM && !placed; tries++) {
@@ -164,7 +157,9 @@ public class DungeonBuilder {
                     // candidate keeps margin from prior
 
                     // 5) Accept: save AABB and add piece
-                    piecesBuilder.addPiece(new TemplatePiece(def, roomPos, rot));
+
+                    addData(blockData, new RoomGenerator(def, roomPos, rot).getBlocks(Galacticraft.SCANNER));
+
                     placedRoomBoxes.add(roomAabb);
                     mask.add(roomAabb);
                     dungeonRooms.add(new Room(roomAabb, rot, def));
@@ -188,7 +183,7 @@ public class DungeonBuilder {
             for (int i = 0; i < config.criticalPaths(); i++) {
                 List<Room> roomsInPath = new ArrayList<>();
                 roomsInPath.add(entranceRoom); //index 0
-                for (int j = 0; j < criticalPaths.get(i); j++) {
+                for (int j = 0; j < input.criticalPaths().get(i); j++) {
                     roomsInPath.add(dungeonRoomsCopy.remove(random.nextInt(0, dungeonRoomsCopy.size())));
                 }
                 // last index
@@ -299,7 +294,7 @@ public class DungeonBuilder {
             }
 
             // Start branching randomly
-            while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < targetRooms) {
+            while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < input.targetRooms()) {
                 PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
                 Direction exitPortRotation = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
                 BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
@@ -344,10 +339,12 @@ public class DungeonBuilder {
                     AABB roomAabb = rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
                     if (roomAabb.maxY > dungeonBox.maxY) continue; // dont go too high in dungeon
-                    if (roomAabb.minY < (ctx.heightAccessor().getMinBuildHeight() + 10)) continue; // Dont go too close to bedrock
+                    if (roomAabb.minY < (input.minBuildHeight() + 10)) continue; // Dont go too close to bedrock
                     boolean intersects = mask.contains(expanded);
                     if (intersects) continue;
-                    piecesBuilder.addPiece(new TemplatePiece(newRoomDef, targetRoomPos, newRoomRotation));
+
+                    addData(blockData, new RoomGenerator(newRoomDef, targetRoomPos, newRoomRotation).getBlocks(Galacticraft.SCANNER));
+
                     placedRoomBoxes.add(roomAabb);
                     mask.add(roomAabb);
                     dungeonRooms.add(new Room(roomAabb, newRoomRotation, newRoomDef));
@@ -378,8 +375,8 @@ public class DungeonBuilder {
 
         try {
             Bitmask staticMask = mask.dilated(DILATION);
-            int minY = ctx.heightAccessor().getMinBuildHeight();
-            int maxY = ctx.heightAccessor().getMaxBuildHeight() - 1;
+            int minY = input.minBuildHeight();
+            int maxY = input.maxBuildHeight() - 1;
 
             NegotiatedRouter.Result routed = NegotiatedRouter.routeAll(
                     nets,
@@ -392,10 +389,55 @@ public class DungeonBuilder {
             mask.add(routed.unionMask());
 
             // Carve everything at once
-            piecesBuilder.addPiece(new MaskCarvePiece(routed.unionMask()));
+
+            addData(blockData, new MaskCarvePiece(routed.unionMask()).getBlocks(random, input.minBuildHeight(), input.maxBuildHeight()));
+
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        return new DungeonResult(blockData);
+    }
+
+    private void addData(HashMap<SectionPos, List<BlockData>> original, HashMap<SectionPos, List<BlockData>> additional) {
+        for (SectionPos sectionPos : additional.keySet()) {
+            List<BlockData> data = original.getOrDefault(sectionPos, new ArrayList<>());
+            data.addAll(additional.get(sectionPos));
+            original.put(sectionPos, data);
+        }
+    }
+
+    private void placeDungeon(DungeonResult result) {
+        LOGGER.info("Dungeon algorithm run. PLACING DUNGEON!");
+    }
+
+    public boolean build(Structure.GenerationContext ctx, StructurePiecesBuilder piecesBuilder, BlockPos surface) {
+        // Initiate per dungeon values
+        int targetRooms = random.nextInt(config.minRooms(), config.maxRooms());
+        int criticalPathRooms = Math.round(targetRooms * config.criticalPathRooms());
+        List<Integer> criticalPaths = new ArrayList<>();
+        int roomsLeft = criticalPathRooms;
+        int pathsleft = config.criticalPaths();
+        for (int i = 0; i < config.criticalPaths(); i++) {
+            int roomsInPath = Math.ceilDiv(roomsLeft, pathsleft);
+            roomsLeft -= roomsInPath;
+            pathsleft -= 1;
+            criticalPaths.add(roomsInPath);
+        }
+
+        // Run asynchronous
+        DungeonInput input = new DungeonInput(
+                surface,
+                ctx.heightAccessor().getMinBuildHeight(),
+                criticalPathRooms,
+                criticalPaths,
+                targetRooms,
+                ctx.heightAccessor().getMaxBuildHeight()
+        );
+        CompletableFuture
+                .supplyAsync(() -> generateDungeon(input))
+                .thenAccept(this::placeDungeon)
+                .exceptionally(e -> {throw new RuntimeException(e);});
 
         return true;
     }

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.structure;
 
 import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.structure.dungeon.*;
+import dev.galacticraft.mod.world.gen.dungeon.pieces.EntranceAnchorPiece;
 import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -41,6 +42,7 @@ public class GCStructurePieceTypes {
     public static final StructurePieceType ROOM_ENTRANCE = setPieceId(RoomEntrance::new, "MoonDungeonEntranceRoom");
     public static final StructurePieceType CORRIDOR = setPieceId(Corridor::new, "MoonDungeonCorridor");
     public static final StructurePieceType EMPTY = setPieceId(RoomEmpty::new, "MoonDungeonEmptyRoom");
+    public static final StructurePieceType DUNGEON_ANCHOR = setPieceId(EntranceAnchorPiece::new, "EntranceAnchorPiece");
     public static final StructurePieceType ROOM_SPAWNER = setPieceId(RoomSpawner::new, "MoonDungeonSpawnerRoom");
     public static final StructurePieceType ROOM_BOSS = setGCPieceId(RoomBoss::new, RoomBoss::new, RoomBoss::new, "MoonDungeonBossRoom");
     public static final StructurePieceType ROOM_CHEST = setPieceId(RoomChest::new, "MoonDungeonChestRoom");

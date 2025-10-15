@@ -4,6 +4,7 @@ import com.mojang.logging.LogUtils;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.world.gen.dungeon.config.DungeonConfig;
+import dev.galacticraft.mod.world.gen.dungeon.pieces.EntranceAnchorPiece;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderSet;
@@ -64,6 +65,13 @@ public class DungeonStructure extends Structure {
                 piecesBuilder -> {
                     LOGGER.info("Dungeon generating in chunk {} at position {}", chunkPos, surface);
                     DungeonBuilder builder = new DungeonBuilder(config, random);
+                    piecesBuilder.addPiece(new EntranceAnchorPiece(
+                            surface,
+                            10,
+                            22,
+                            2.2,
+                            2.0
+                    ));
                     boolean ok = builder.build(ctx, piecesBuilder, surface);
 
                     if (ok) {
