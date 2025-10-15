@@ -10,7 +10,10 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.Vec3i;
+import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
@@ -20,6 +23,7 @@ import org.slf4j.Logger;
 
 import java.util.*;
 import java.util.concurrent.CompletableFuture;
+import java.util.function.BiConsumer;
 
 public class DungeonBuilder {
     private final DungeonConfig config;
@@ -28,16 +32,16 @@ public class DungeonBuilder {
     private static final Logger LOGGER = LogUtils.getLogger();
     final double ROOM_MARGIN = 8.0;
     final int MAX_TRIES_PER_ROOM = 200;
-    final int CORRIDOR_PLACEMENT_OFFSET = 1 ;
+    final int CORRIDOR_PLACEMENT_OFFSET = 1;
     final int CORRIDOR_RADIUS = 1;
     final int CORRIDOR_PREFLIGHT = 1;
-    final int DILATION = 1;
+    final int DILATION = 2;
 
     public record Room(AABB aabb, Rotation rotation, RoomDef def) {}
 
     public DungeonBuilder(DungeonConfig config, RandomSource random) {
         this.config = config;
-        this.random = random;
+        this.random = random.fork();
     }
 
     private DungeonResult generateDungeon(DungeonInput input) {
@@ -53,8 +57,8 @@ public class DungeonBuilder {
         try {
             RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.ENTRANCE, roomDef -> true);
             int entranceY = input.surface().getY() - (10 + def.sizeY());
-            int entranceX = input.surface().getX() + random.nextInt(-5, 5);
-            int entranceZ = input.surface().getZ() + random.nextInt(-5, 5);
+            int entranceX = input.surface().getX() - 2;
+            int entranceZ = input.surface().getZ() - 2;
             entrancePosition = new BlockPos(entranceX, entranceY, entranceZ);
 
             addData(blockData, new RoomGenerator(def, entrancePosition, Rotation.NONE).getBlocks(Galacticraft.SCANNER));
@@ -155,8 +159,6 @@ public class DungeonBuilder {
                     boolean intersects = mask.contains(expanded);
                     if (intersects) continue;
                     // candidate keeps margin from prior
-
-                    // 5) Accept: save AABB and add piece
 
                     addData(blockData, new RoomGenerator(def, roomPos, rot).getBlocks(Galacticraft.SCANNER));
 
@@ -388,10 +390,56 @@ public class DungeonBuilder {
             // Keep global avoidance up-to-date
             mask.add(routed.unionMask());
 
-            // Carve everything at once
+            // Build a precise room protection mask (fast: Bitmask supports AABB)
+            Bitmask roomsMask = new Bitmask();
+            for (AABB roomBox : placedRoomBoxes) {
+                roomsMask.add(roomBox); // protects all room interiors from carver writes
+            }
 
-            addData(blockData, new MaskCarvePiece(routed.unionMask()).getBlocks(random, input.minBuildHeight(), input.maxBuildHeight()));
+            // Build a whitelist of doorway cells (aperture + 1..N cells outward)
+            Set<Long> doorwayWhitelist = new HashSet<>();
 
+            // Helper to add all doorway cells for a room/port
+            BiConsumer<Room, PortDef> addDoor = (room, port) -> {
+                Direction facingW = room.rotation().rotate(port.facing());
+                // iterate the local rectangle cmin..cmax on the face and map to world
+                BlockPos cmin = port.min();
+                BlockPos cmax = port.max();
+                for (int x = cmin.getX(); x <= cmax.getX(); x++) {
+                    for (int y = cmin.getY(); y <= cmax.getY(); y++) {
+                        for (int z = cmin.getZ(); z <= cmax.getZ(); z++) {
+                            BlockPos local = new BlockPos(x, y, z);
+                            BlockPos world = PortGeom.localToWorld(local,
+                                    room.def().sizeX(), room.def().sizeY(), room.def().sizeZ(),
+                                    room.aabb(), room.rotation());
+                            // aperture itself
+                            doorwayWhitelist.add(world.asLong());
+                            // also whitelist first few cells outside (match your CORRIDOR_PLACEMENT_OFFSET)
+                            for (int s = 1; s <= CORRIDOR_PLACEMENT_OFFSET; s++) {
+                                BlockPos out = world.offset(facingW.getNormal().multiply(s));
+                                doorwayWhitelist.add(out.asLong());
+                            }
+                        }
+                    }
+                }
+            };
+
+            // Add doorways for all rooms you’ve placed
+            addDoor.accept(entranceRoom, Arrays.stream(entranceRoom.def().exits()).findFirst().orElse(null));
+            for (PortDef p : endRoom.def().entrances()) addDoor.accept(endRoom, p);
+            for (Room r : queenRooms) {
+                for (PortDef p : r.def().entrances()) addDoor.accept(r, p);
+                for (PortDef p : r.def().exits())     addDoor.accept(r, p);
+            }
+            for (Room r : dungeonRooms) {
+                for (PortDef p : r.def().entrances()) addDoor.accept(r, p);
+                for (PortDef p : r.def().exits())     addDoor.accept(r, p);
+            }
+
+            addData(blockData,
+                    new MaskCarvePiece(routed.unionMask())
+                            .getBlocks(random, input.minBuildHeight(), input.maxBuildHeight(), roomsMask, doorwayWhitelist)
+            );
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
@@ -407,11 +455,13 @@ public class DungeonBuilder {
         }
     }
 
-    private void placeDungeon(DungeonResult result) {
-        LOGGER.info("Dungeon algorithm run. PLACING DUNGEON!");
+    private void placeDungeon(ResourceKey<Level> dimension, DungeonResult result) {
+        LOGGER.info("Dungeon building complete. Enqueuing dungeon placement");
+        DungeonPlacementManager.enqueue(dimension, result);
     }
 
-    public boolean build(Structure.GenerationContext ctx, StructurePiecesBuilder piecesBuilder, BlockPos surface) {
+    public boolean build(WorldGenLevel gen, BlockPos surface) {
+        LOGGER.info("Building Dungeon");
         // Initiate per dungeon values
         int targetRooms = random.nextInt(config.minRooms(), config.maxRooms());
         int criticalPathRooms = Math.round(targetRooms * config.criticalPathRooms());
@@ -428,15 +478,15 @@ public class DungeonBuilder {
         // Run asynchronous
         DungeonInput input = new DungeonInput(
                 surface,
-                ctx.heightAccessor().getMinBuildHeight(),
+                gen.getMinBuildHeight(),
                 criticalPathRooms,
                 criticalPaths,
                 targetRooms,
-                ctx.heightAccessor().getMaxBuildHeight()
+                gen.getMaxBuildHeight()
         );
         CompletableFuture
                 .supplyAsync(() -> generateDungeon(input))
-                .thenAccept(this::placeDungeon)
+                .thenAccept(result -> placeDungeon(gen.getLevel().dimension(), result))
                 .exceptionally(e -> {throw new RuntimeException(e);});
 
         return true;

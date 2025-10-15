@@ -18,20 +18,17 @@ import java.util.*;
  * Everything outside the mask is treated as "solid stone" by default.
  * Pipeline: mask carve -> noise push/pull -> coat surfaces -> acid pockets -> webs.
  *
- * Use:
- *   MaskCarvePiece carver = new MaskCarvePiece(mask);
- *   HashMap<SectionPos, List<MaskCarvePiece.BlockData>> blocks =
- *       carver.getBlocks(random, minY, maxY);
+ * Supports protection:
+ *  - protectedMask: a Bitmask of cells the carver must NOT modify (e.g., rooms)
+ *  - doorwayWhitelist: specific cells that are allowed to be modified even if inside protectedMask
+ *
+ * Usage:
+ *   HashMap<SectionPos, List<BlockData>> blocks =
+ *       new MaskCarvePiece(corridorMask).getBlocks(random, minY, maxY, roomsMask, doorwayWhitelist);
  */
-public class MaskCarvePiece {
+public final class MaskCarvePiece {
 
-    // ====== Config knobs (kept for parity) ======
-    private float meanRadius = 1.25f;
-    private float radiusJitter = 0.6f;
-    private float roughness = 0.25f;
-    private float bulgeChance = 0.07f;
-    private float maxBulgeExtra = 1.75f;
-    private int coatThickness = 1;
+    // ====== Config knobs ======
 
     // Input
     private final List<Long> voxels;          // centerline voxels (BlockPos.asLong)
@@ -55,22 +52,22 @@ public class MaskCarvePiece {
         this.boundingBox = computeBoundingBox(mask);
     }
 
-    public MaskCarvePiece(Bitmask mask,
-                          float meanRadius, float radiusJitter, float roughness,
-                          float bulgeChance, float maxBulgeExtra,
-                          int coatThickness) {
-        this(mask);
-        this.meanRadius = meanRadius;
-        this.radiusJitter = radiusJitter;
-        this.roughness = roughness;
-        this.bulgeChance = bulgeChance;
-        this.maxBulgeExtra = maxBulgeExtra;
-        this.coatThickness = coatThickness;
-    }
-
     public BoundingBox getBoundingBox() { return this.boundingBox; }
 
     // ====== Public API (no Level, no ChunkPos) ======
+
+    /** Back-compat overload (no protections). */
+    public HashMap<SectionPos, List<BlockData>> getBlocks(RandomSource random, int minY, int maxY) {
+        return getBlocks(random, minY, maxY, List.of(), null, Set.of());
+    }
+
+    /** Preferred: protect via mask + doorway whitelist. */
+    public HashMap<SectionPos, List<BlockData>> getBlocks(RandomSource random, int minY, int maxY,
+                                                          Bitmask protectedMask,
+                                                          Set<Long> doorwayWhitelist) {
+        return getBlocks(random, minY, maxY, List.of(), protectedMask, doorwayWhitelist);
+    }
+
     /**
      * Simulate carving within this piece's bounding box.
      * No Level access; initial state is "solid" everywhere except along the mask voxels (air).
@@ -78,9 +75,14 @@ public class MaskCarvePiece {
      * @param random RNG for stochastic choices (webs/coat). Noise field is seeded deterministically from the Box.
      * @param minY   min build height (inclusive)
      * @param maxY   max build height (inclusive)
-     * @return SectionPos -> list of BlockData (packed coords + BlockState)
+     * @param protectedRoomsAabbs optional coarse guards (room boxes)
+     * @param protectedMask       precise per-cell guard (recommended)
+     * @param doorwayWhitelist    cells allowed to modify even if protected (door apertures)
      */
-    public HashMap<SectionPos, List<BlockData>> getBlocks(RandomSource random, int minY, int maxY) {
+    public HashMap<SectionPos, List<BlockData>> getBlocks(RandomSource random, int minY, int maxY,
+                                                          Collection<BoundingBox> protectedRoomsAabbs,
+                                                          Bitmask protectedMask,
+                                                          Set<Long> doorwayWhitelist) {
         var box = this.boundingBox;
         var out = new HashMap<SectionPos, List<BlockData>>();
         if (voxels == null || voxels.isEmpty()) return out;
@@ -101,22 +103,33 @@ public class MaskCarvePiece {
             if (y < minY || y > maxY) continue;
             BlockPos p = new BlockPos(x, y, z);
             if (!box.isInside(p)) continue;
+
+            // Skip protected cells unless whitelisted
+            if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+
             baseAir.add(p.asLong());
             ops.put(p.asLong(), Blocks.AIR.defaultBlockState());
             airMask.add(packed);
         }
 
-        // Phase 1: noise-driven +-1 push/pull (clipped to box & build height)
-        applyNoisePushPull_VIRTUAL(box, random, noise, airMask, voxels, minY, maxY, baseAir, ops);
+        // Phase 1: noise-driven +-1 push/pull (clipped)
+        applyNoisePushPull_VIRTUAL(box, random, noise, airMask, voxels, minY, maxY,
+                baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+
+        openSinkHoles_VIRTUAL(box, random, voxels, minY, maxY,
+                baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
         // Phase 2: coat exposed surfaces (clipped)
-        coatAllExposedSurfaces_VIRTUAL(box, random, airMask, baseAir, ops);
+        coatAllExposedSurfaces_VIRTUAL(box, random, airMask, baseAir, ops,
+                protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
         // Phase 2.5: acid pockets (clipped)
-        placeAcidPockets_VIRTUAL(box, random, airMask, baseAir, ops);
+        placeAcidPockets_VIRTUAL(box, random, airMask, baseAir, ops,
+                protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
         // Phase 3: webs (clipped)
-        placeWebs_VIRTUAL(box, random, voxels, baseAir, ops);
+        placeWebs_VIRTUAL(box, random, voxels, baseAir, ops,
+                protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
         // Bucket ops -> sections with packed local coords
         for (var e : ops.entrySet()) {
@@ -128,24 +141,58 @@ public class MaskCarvePiece {
         return out;
     }
 
-    // ====== Virtual world helpers (NO Level) ======
-    private BlockState viewAt(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p) {
+    // ====== Protection helpers ======
+    private boolean isProtectedCell(BlockPos p,
+                                    Collection<BoundingBox> protectedRoomsAabbs,
+                                    Bitmask protectedMask,
+                                    Set<Long> doorwayWhitelist) {
+        long pl = p.asLong();
+        if (doorwayWhitelist != null && doorwayWhitelist.contains(pl)) return false; // allow openings
+        if (protectedMask != null && protectedMask.contains(pl)) return true;        // fast exact check
+        if (protectedRoomsAabbs != null) {
+            for (BoundingBox room : protectedRoomsAabbs) if (room.isInside(p)) return true;
+        }
+        return false;
+    }
+
+    private BlockState viewAt(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p,
+                              Collection<BoundingBox> protectedRoomsAabbs,
+                              Bitmask protectedMask,
+                              Set<Long> doorwayWhitelist) {
+        if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) return DEFAULT_SOLID;
         BlockState v = ops.get(p.asLong());
         if (v != null) return v;
         return baseAir.contains(p.asLong()) ? Blocks.AIR.defaultBlockState() : DEFAULT_SOLID;
     }
-    private boolean vIsAir(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p) {
-        return viewAt(baseAir, ops, p).isAir();
+    private boolean vIsAir(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p,
+                           Collection<BoundingBox> protectedRoomsAabbs,
+                           Bitmask protectedMask,
+                           Set<Long> doorwayWhitelist) {
+        return viewAt(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist).isAir();
     }
-    private boolean vIsSolidWall(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p) {
-        var st = viewAt(baseAir, ops, p);
+    private boolean vIsSolidWall(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p,
+                                 Collection<BoundingBox> protectedRoomsAabbs,
+                                 Bitmask protectedMask,
+                                 Set<Long> doorwayWhitelist) {
+        var st = viewAt(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         return !st.isAir() && st.getFluidState().isEmpty();
     }
-    private boolean vPlaceIfAir(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p, BlockState st) {
-        if (vIsAir(baseAir, ops, p)) { ops.put(p.asLong(), st); return true; }
+    private boolean vPlaceIfAir(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p, BlockState st,
+                                Collection<BoundingBox> protectedRoomsAabbs,
+                                Bitmask protectedMask,
+                                Set<Long> doorwayWhitelist) {
+        if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) return false;
+        if (vIsAir(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
+            ops.put(p.asLong(), st);
+            return true;
+        }
         return false;
     }
-    private void vSet(Map<Long, BlockState> ops, BlockPos p, BlockState st) {
+    private void vSet(Map<Long, BlockState> ops, BlockPos p, BlockState st,
+                      Collection<BoundingBox> protectedRoomsAabbs,
+                      Bitmask protectedMask,
+                      Set<Long> doorwayWhitelist) {
+        if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) return;
         ops.put(p.asLong(), st);
     }
 
@@ -157,7 +204,10 @@ public class MaskCarvePiece {
                                             List<Long> centers,
                                             int minY, int maxY,
                                             Set<Long> baseAir,
-                                            Map<Long, BlockState> ops) {
+                                            Map<Long, BlockState> ops,
+                                            Collection<BoundingBox> protectedRoomsAabbs,
+                                            Bitmask protectedMask,
+                                            Set<Long> doorwayWhitelist) {
 
         final double scale = 1.0 / 6.0;
         final double pushThresh =  0.35;
@@ -175,7 +225,7 @@ public class MaskCarvePiece {
 
             BlockPos center = new BlockPos(x, y, z);
             if (!box.isInside(center)) continue;
-            if (!vIsAir(baseAir, ops, center)) continue;
+            if (!vIsAir(baseAir, ops, center, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
             double n = sampleNoise3D(noise, x, y, z, scale);
 
@@ -189,8 +239,12 @@ public class MaskCarvePiece {
                     BlockPos behind = tgt.relative(d);
                     if (!box.isInside(behind)) continue;
 
-                    if (!vIsSolidWall(baseAir, ops, tgt) || !vIsSolidWall(baseAir, ops, behind)) continue;
-                    if (isLikelyRoomVoid_VIRTUAL(baseAir, ops, behind)) continue;
+                    if (isProtectedCell(tgt, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (isProtectedCell(behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+
+                    if (!vIsSolidWall(baseAir, ops, tgt, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (!vIsSolidWall(baseAir, ops, behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (isLikelyRoomVoid_VIRTUAL(baseAir, ops, behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
                     addAir.add(tgt);
                     break;
@@ -201,29 +255,152 @@ public class MaskCarvePiece {
                     BlockPos a = center.relative(d);
                     if (!box.isInside(a)) continue;
 
-                    if (!vIsAir(baseAir, ops, a)) continue;
+                    if (!vIsAir(baseAir, ops, a, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
                     long al = a.asLong();
                     if (airMask.contains(al)) continue;
 
                     BlockPos back = a.relative(d);
                     if (!box.isInside(back)) continue;
 
-                    if (!vIsSolidWall(baseAir, ops, back)) continue;
-                    if (!wouldChokeIfFilled_VIRTUAL(baseAir, ops, a)) {
-                        addWall.add(a);
-                        break;
+                    if (!vIsSolidWall(baseAir, ops, back, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (!wouldChokeIfFilled_VIRTUAL(baseAir, ops, a, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
+                        if (!isProtectedCell(a, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
+                            addWall.add(a);
+                            break;
+                        }
                     }
                 }
             }
         }
 
         for (BlockPos p : addAir) {
-            vSet(ops, p, Blocks.AIR.defaultBlockState());
+            vSet(ops, p, Blocks.AIR.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             baseAir.add(p.asLong());
         }
         for (BlockPos p : addWall) {
-            vSet(ops, p, OLIANT_NEST_BLOCK.defaultBlockState());
+            vSet(ops, p, OLIANT_NEST_BLOCK.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             baseAir.remove(p.asLong());
+        }
+    }
+
+    /**
+     * Randomly lowers tiny patches (1–3 adjacent cells) of corridor floor by 1 block.
+     * Each hole area <= 5 blocks. Respects protections and bounding box.
+     */
+    private void openSinkHoles_VIRTUAL(BoundingBox box,
+                                       RandomSource rnd,
+                                       List<Long> centers,
+                                       int minY, int maxY,
+                                       Set<Long> baseAir,
+                                       Map<Long, BlockState> ops,
+                                       Collection<BoundingBox> protectedRoomsAabbs,
+                                       Bitmask protectedMask,
+                                       Set<Long> doorwayWhitelist) {
+
+        if (centers.isEmpty()) return;
+
+        // Tuning knobs
+        final float attemptP = 0.065f;               // chance per sampled anchor to try a hole
+        final int   stride   = 4 + rnd.nextInt(4);   // sample every 4–7 center voxels
+        final int   maxPatch = 3;                    // 1–3 tiles per hole (<= 5 requirement)
+        final int   depth    = 1;                    // EXACT hole depth (in blocks)
+
+        final Direction[] laterals = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+
+        for (int i = 0; i < centers.size(); i += stride) {
+            if (rnd.nextFloat() >= attemptP) continue;
+
+            BlockPos anchor = BlockPos.of(centers.get(i));
+            if (!inBox(box, anchor)) continue;
+            if (!vIsAir(baseAir, ops, anchor, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+
+            BlockPos floor = anchor.below(); // current corridor floor block
+            if (!inBox(box, floor)) continue;
+            if (floor.getY() < minY || floor.getY() > maxY) continue;
+
+            // Verify we have 'depth' solid blocks to carve and one solid support below them
+            boolean ok = true;
+            for (int k = 0; k < depth; k++) {
+                BlockPos p = floor.below(k);
+                if (!inBox(box, p) || p.getY() < minY || p.getY() > maxY) { ok = false; break; }
+                if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { ok = false; break; }
+                if (!vIsSolidWall(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { ok = false; break; }
+            }
+            BlockPos support = floor.below(depth);
+            if (ok) {
+                if (!inBox(box, support) || support.getY() < minY) ok = false;
+                else if (isProtectedCell(support, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) ok = false;
+                else if (!vIsSolidWall(baseAir, ops, support, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) ok = false;
+            }
+            if (!ok) continue;
+
+            // Grow tiny lateral patch (1–3) meeting the same constraints
+            int targetSize = 1 + rnd.nextInt(maxPatch); // 1..3
+            ArrayDeque<BlockPos> q = new ArrayDeque<>();
+            HashSet<Long> seen = new HashSet<>();
+            ArrayList<BlockPos> patchFloors = new ArrayList<>(targetSize);
+
+            q.add(floor);
+            seen.add(floor.asLong());
+
+            while (!q.isEmpty() && patchFloors.size() < targetSize) {
+                BlockPos f = q.pollFirst();
+
+                // Above must be corridor air
+                BlockPos cellAbove = f.above();
+                if (!inBox(box, f) || !vIsAir(baseAir, ops, cellAbove, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                if (isProtectedCell(f, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+
+                // Check vertical column: depth solids + supporting solid at bottom
+                boolean columnOK = true;
+                for (int k = 0; k < depth; k++) {
+                    BlockPos p = f.below(k);
+                    if (!inBox(box, p) || p.getY() < minY || p.getY() > maxY) { columnOK = false; break; }
+                    if (isProtectedCell(p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { columnOK = false; break; }
+                    if (!vIsSolidWall(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { columnOK = false; break; }
+                }
+                BlockPos s = f.below(depth);
+                if (columnOK) {
+                    if (!inBox(box, s) || s.getY() < minY) columnOK = false;
+                    else if (isProtectedCell(s, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) columnOK = false;
+                    else if (!vIsSolidWall(baseAir, ops, s, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) columnOK = false;
+                }
+                if (!columnOK) continue;
+
+                patchFloors.add(f);
+
+                // spread a little
+                for (Direction d : laterals) {
+                    if (rnd.nextFloat() < 0.6f) {
+                        BlockPos nf = f.relative(d);
+                        if (seen.add(nf.asLong())) q.add(nf);
+                    }
+                }
+            }
+
+            if (patchFloors.isEmpty()) continue;
+
+            // Carve: make exactly 'depth' blocks below current floor into air
+            for (BlockPos f : patchFloors) {
+                for (int k = 0; k < depth; k++) {
+                    BlockPos carve = f.below(k);
+                    vSet(ops, carve, Blocks.AIR.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+                    baseAir.add(carve.asLong());
+                }
+
+                // (Optional) "toughen" the support block under the new hole bottom for visual contrast
+                BlockPos supp = f.below(depth);
+                if (inBox(box, supp)) {
+                    // keep support solid, but sometimes swap its material for variation
+                    if (vIsSolidWall(baseAir, ops, supp, protectedRoomsAabbs, protectedMask, doorwayWhitelist)
+                            && rnd.nextFloat() < 0.35f) {
+                        BlockState pick = (rnd.nextFloat() < 0.5f)
+                                ? OLIANT_DISSOLVED_NEST_BLOCK.defaultBlockState()
+                                : OLIANT_NEST_BLOCK.defaultBlockState();
+                        vSet(ops, supp, pick, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+                    }
+                }
+            }
         }
     }
 
@@ -232,7 +409,10 @@ public class MaskCarvePiece {
                                                 RandomSource rnd,
                                                 Set<Long> airMask,
                                                 Set<Long> baseAir,
-                                                Map<Long, BlockState> ops) {
+                                                Map<Long, BlockState> ops,
+                                                Collection<BoundingBox> protectedRoomsAabbs,
+                                                Bitmask protectedMask,
+                                                Set<Long> doorwayWhitelist) {
         final float floorFertileP = 0.18f;
         final float floorDissolvedP = 0.12f;
         final float wallFertileP  = 0.12f;
@@ -245,31 +425,31 @@ public class MaskCarvePiece {
             int ax = BlockPos.getX(a), ay = BlockPos.getY(a), az = BlockPos.getZ(a);
 
             air.set(ax, ay, az);
-            if (!box.isInside(air) || !vIsAir(baseAir, ops, air)) continue;
+            if (!box.isInside(air) || !vIsAir(baseAir, ops, air, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
             // Floor
             nb.set(air).move(Direction.DOWN);
-            if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb)) {
+            if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
                 Block pick = OLIANT_NEST_BLOCK;
                 float r = rnd.nextFloat();
                 if (r < floorDissolvedP) pick = OLIANT_DISSOLVED_NEST_BLOCK;
                 else if (r < floorDissolvedP + floorFertileP) pick = OLIANT_FERTILE_NEST_BLOCK;
-                vSet(ops, nb, pick.defaultBlockState());
+                vSet(ops, nb, pick.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             }
 
             // Roof
             nb.set(air).move(Direction.UP);
-            if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb)) {
+            if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
                 Block pick = (rnd.nextFloat() < roofFertileP) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
-                vSet(ops, nb, pick.defaultBlockState());
+                vSet(ops, nb, pick.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             }
 
             // Walls
             for (Direction d : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST}) {
                 nb.set(air).move(d);
-                if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb)) {
+                if (box.isInside(nb) && vIsSolidWall(baseAir, ops, nb, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
                     Block pick = (rnd.nextFloat() < wallFertileP) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
-                    vSet(ops, nb, pick.defaultBlockState());
+                    vSet(ops, nb, pick.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 }
             }
         }
@@ -280,10 +460,14 @@ public class MaskCarvePiece {
                                           RandomSource rnd,
                                           Set<Long> airMask,
                                           Set<Long> baseAir,
-                                          Map<Long, BlockState> ops) {
+                                          Map<Long, BlockState> ops,
+                                          Collection<BoundingBox> protectedRoomsAabbs,
+                                          Bitmask protectedMask,
+                                          Set<Long> doorwayWhitelist) {
         if (airMask == null || airMask.isEmpty()) return;
 
-        final int MAX_SIZE = 9;
+        final int MAX_SIZE = 5;
+        final int MAX_OPEN_SIDES = 1; // <= 1 “open” side is okay; more is considered a leak
 
         HashSet<Long> globalVisited = new HashSet<>();
         ArrayDeque<BlockPos> q = new ArrayDeque<>();
@@ -293,11 +477,11 @@ public class MaskCarvePiece {
 
             BlockPos start = BlockPos.of(al);
             if (!box.isInside(start)) { globalVisited.add(al); continue; }
-            if (!vIsAir(baseAir, ops, start)) { globalVisited.add(al); continue; }
+            if (!vIsAir(baseAir, ops, start, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { globalVisited.add(al); continue; }
 
             BlockPos startBelow = start.below();
             if (!box.isInside(startBelow)) { globalVisited.add(al); continue; }
-            if (!vIsSolidWall(baseAir, ops, startBelow)) { globalVisited.add(al); continue; }
+            if (!vIsSolidWall(baseAir, ops, startBelow, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) { globalVisited.add(al); continue; }
 
             ArrayList<BlockPos> comp = new ArrayList<>(8);
             HashSet<Long> compSet = new HashSet<>();
@@ -320,11 +504,11 @@ public class MaskCarvePiece {
                     if (!box.isInside(n)) continue;
                     if (n.getY() != y0) continue;
 
-                    if (!vIsAir(baseAir, ops, n)) continue;
+                    if (!vIsAir(baseAir, ops, n, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
                     BlockPos nb = n.below();
                     if (!box.isInside(nb)) continue;
-                    if (!vIsSolidWall(baseAir, ops, nb)) continue;
+                    if (!vIsSolidWall(baseAir, ops, nb, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
                     long nl = n.asLong();
                     if (compSet.add(nl)) {
@@ -336,39 +520,54 @@ public class MaskCarvePiece {
 
             if (overflow || comp.isEmpty()) continue;
 
+            // Relaxed "leak" test: allow up to MAX_OPEN_SIDES air neighbors; reject on any fluid neighbor
             boolean leaks = false;
+            int openSides = 0;
+            outer:
             for (BlockPos p : comp) {
                 for (Direction d : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST}) {
                     BlockPos n = p.relative(d);
-                    if (!box.isInside(n)) { leaks = true; break; }
-                    var st = viewAt(baseAir, ops, n);
-                    if (!st.getFluidState().isEmpty()) { leaks = true; break; }
-                    if (st.isAir() && !compSet.contains(n.asLong())) { leaks = true; break; }
+                    if (!box.isInside(n)) { leaks = true; break outer; }
+                    var st = viewAt(baseAir, ops, n, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+                    if (!st.getFluidState().isEmpty()) { leaks = true; break outer; }
+                    if (st.isAir() && !compSet.contains(n.asLong())) {
+                        openSides++;
+                        if (openSides > MAX_OPEN_SIDES) { leaks = true; break outer; }
+                    }
                 }
-                if (leaks) break;
             }
             if (leaks) continue;
 
-            for (BlockPos p : comp) vSet(ops, p.below(), OLIANT_DISSOLVED_NEST_BLOCK.defaultBlockState());
-            for (BlockPos p : comp) vSet(ops, p, OLIANT_ACID_BLOCK.defaultBlockState());
+            // Lay the “slimey” floor, then fill with acid
+            for (BlockPos p : comp) {
+                vSet(ops, p.below(), OLIANT_DISSOLVED_NEST_BLOCK.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            }
+            for (BlockPos p : comp) {
+                vSet(ops, p, OLIANT_ACID_BLOCK.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            }
 
-            coatRingAround_VIRTUAL(box, comp, rnd, baseAir, ops);
+            // Cosmetic rim coating around the pocket
+            coatRingAround_VIRTUAL(box, comp, rnd, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         }
     }
 
     private void coatRingAround_VIRTUAL(BoundingBox box, List<BlockPos> cells, RandomSource rnd,
-                                        Set<Long> baseAir, Map<Long, BlockState> ops) {
+                                        Set<Long> baseAir, Map<Long, BlockState> ops,
+                                        Collection<BoundingBox> protectedRoomsAabbs,
+                                        Bitmask protectedMask,
+                                        Set<Long> doorwayWhitelist) {
         for (BlockPos w : cells) {
             for (Direction d : Direction.values()) {
                 BlockPos n = w.relative(d);
                 if (!inBox(box, n)) continue;
-                var st = viewAt(baseAir, ops, n);
+                if (isProtectedCell(n, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                var st = viewAt(baseAir, ops, n, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 if (!st.isAir() && st.getFluidState().isEmpty()) {
                     Block pick;
                     if (d == Direction.DOWN) pick = OLIANT_DISSOLVED_NEST_BLOCK;
                     else if (d == Direction.UP) pick = (rnd.nextFloat() < 0.10f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
                     else pick = (rnd.nextFloat() < 0.12f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
-                    vSet(ops, n, pick.defaultBlockState());
+                    vSet(ops, n, pick.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 }
             }
         }
@@ -377,7 +576,10 @@ public class MaskCarvePiece {
     // ====== Phase 3: webs (virtual) ======
     private void placeWebs_VIRTUAL(BoundingBox box, RandomSource rnd,
                                    List<Long> centers,
-                                   Set<Long> baseAir, Map<Long, BlockState> ops) {
+                                   Set<Long> baseAir, Map<Long, BlockState> ops,
+                                   Collection<BoundingBox> protectedRoomsAabbs,
+                                   Bitmask protectedMask,
+                                   Set<Long> doorwayWhitelist) {
         if (centers.isEmpty()) return;
 
         final float singleP   = 0.020f;
@@ -391,17 +593,17 @@ public class MaskCarvePiece {
             long packed = centers.get(i);
             BlockPos anchor = BlockPos.of(packed);
             if (!box.isInside(anchor)) continue;
-            if (!vIsAir(baseAir, ops, anchor)) continue;
+            if (!vIsAir(baseAir, ops, anchor, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
-            boolean straightX = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.X, baseAir, ops);
-            boolean straightY = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.Y, baseAir, ops);
-            boolean straightZ = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.Z, baseAir, ops);
+            boolean straightX = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.X, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            boolean straightY = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.Y, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            boolean straightZ = isStraightAlongAxis_VIRTUAL(box, anchor, Direction.Axis.Z, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
             float r = rnd.nextFloat();
 
             if (!(straightX || straightY || straightZ)) {
-                if (rnd.nextFloat() < cornerP) tryWebCornerClump_VIRTUAL(box, rnd, anchor, baseAir, ops);
-                if (rnd.nextFloat() < singleP) vPlaceIfAir(baseAir, ops, anchor, OLIANT_WEB.defaultBlockState());
+                if (rnd.nextFloat() < cornerP) tryWebCornerClump_VIRTUAL(box, rnd, anchor, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+                if (rnd.nextFloat() < singleP) vPlaceIfAir(baseAir, ops, anchor, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 continue;
             }
 
@@ -410,19 +612,21 @@ public class MaskCarvePiece {
                 if (straightX) axes.add(Direction.Axis.X);
                 if (straightY) axes.add(Direction.Axis.Y);
                 if (straightZ) axes.add(Direction.Axis.Z);
-                if (tryWebMembraneAcross_VIRTUAL(box, rnd, anchor, axes.get(rnd.nextInt(axes.size())), baseAir, ops)) continue;
+                if (!axes.isEmpty() && tryWebMembraneAcross_VIRTUAL(box, rnd, anchor, axes.get(rnd.nextInt(axes.size())),
+                        baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
             } else if (r < membraneP + diagonalP) {
                 ArrayList<Direction.Axis> axes = new ArrayList<>(3);
                 if (straightX) axes.add(Direction.Axis.X);
                 if (straightY) axes.add(Direction.Axis.Y);
                 if (straightZ) axes.add(Direction.Axis.Z);
-                if (tryWebDiagonalAcross_VIRTUAL(box, rnd, anchor, axes.get(rnd.nextInt(axes.size())), baseAir, ops)) continue;
+                if (!axes.isEmpty() && tryWebDiagonalAcross_VIRTUAL(box, rnd, anchor, axes.get(rnd.nextInt(axes.size())),
+                        baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
             } else if (r < membraneP + diagonalP + cornerP) {
-                if (tryWebCornerClump_VIRTUAL(box, rnd, anchor, baseAir, ops)) continue;
+                if (tryWebCornerClump_VIRTUAL(box, rnd, anchor, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
             }
 
             if (rnd.nextFloat() < singleP) {
-                vPlaceIfAir(baseAir, ops, anchor, OLIANT_WEB.defaultBlockState());
+                vPlaceIfAir(baseAir, ops, anchor, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             }
         }
     }
@@ -436,23 +640,26 @@ public class MaskCarvePiece {
     }
 
     private XSec measureCrossSection_VIRTUAL(BoundingBox box, BlockPos at, Direction.Axis axis,
-                                             Set<Long> baseAir, Map<Long, BlockState> ops) {
+                                             Set<Long> baseAir, Map<Long, BlockState> ops,
+                                             Collection<BoundingBox> protectedRoomsAabbs,
+                                             Bitmask protectedMask,
+                                             Set<Long> doorwayWhitelist) {
         XSec s = new XSec();
         if (axis == Direction.Axis.X) {
-            s.aL = spanToWall_VIRTUAL(box, at, Direction.NORTH, STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.aR = spanToWall_VIRTUAL(box, at, Direction.SOUTH, STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bL = spanToWall_VIRTUAL(box, at, Direction.DOWN,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bR = spanToWall_VIRTUAL(box, at, Direction.UP,    STRAIGHT_SPAN_LIMIT, baseAir, ops);
+            s.aL = spanToWall_VIRTUAL(box, at, Direction.NORTH, STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.aR = spanToWall_VIRTUAL(box, at, Direction.SOUTH, STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bL = spanToWall_VIRTUAL(box, at, Direction.DOWN,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bR = spanToWall_VIRTUAL(box, at, Direction.UP,    STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         } else if (axis == Direction.Axis.Z) {
-            s.aL = spanToWall_VIRTUAL(box, at, Direction.WEST,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.aR = spanToWall_VIRTUAL(box, at, Direction.EAST,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bL = spanToWall_VIRTUAL(box, at, Direction.DOWN,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bR = spanToWall_VIRTUAL(box, at, Direction.UP,    STRAIGHT_SPAN_LIMIT, baseAir, ops);
+            s.aL = spanToWall_VIRTUAL(box, at, Direction.WEST,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.aR = spanToWall_VIRTUAL(box, at, Direction.EAST,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bL = spanToWall_VIRTUAL(box, at, Direction.DOWN,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bR = spanToWall_VIRTUAL(box, at, Direction.UP,    STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         } else {
-            s.aL = spanToWall_VIRTUAL(box, at, Direction.WEST,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.aR = spanToWall_VIRTUAL(box, at, Direction.EAST,  STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bL = spanToWall_VIRTUAL(box, at, Direction.NORTH, STRAIGHT_SPAN_LIMIT, baseAir, ops);
-            s.bR = spanToWall_VIRTUAL(box, at, Direction.SOUTH, STRAIGHT_SPAN_LIMIT, baseAir, ops);
+            s.aL = spanToWall_VIRTUAL(box, at, Direction.WEST,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.aR = spanToWall_VIRTUAL(box, at, Direction.EAST,  STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bL = spanToWall_VIRTUAL(box, at, Direction.NORTH, STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+            s.bR = spanToWall_VIRTUAL(box, at, Direction.SOUTH, STRAIGHT_SPAN_LIMIT, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         }
         if (s.aL < 0 || s.aR < 0 || s.bL < 0 || s.bR < 0) return null;
         s.wA = Math.max(0, s.aR - s.aL - 1);
@@ -463,8 +670,11 @@ public class MaskCarvePiece {
     }
 
     private boolean isStraightAlongAxis_VIRTUAL(BoundingBox box, BlockPos anchor, Direction.Axis axis,
-                                                Set<Long> baseAir, Map<Long, BlockState> ops) {
-        XSec c0 = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops);
+                                                Set<Long> baseAir, Map<Long, BlockState> ops,
+                                                Collection<BoundingBox> protectedRoomsAabbs,
+                                                Bitmask protectedMask,
+                                                Set<Long> doorwayWhitelist) {
+        XSec c0 = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         if (c0 == null) return false;
 
         BlockPos fwd = switch (axis) {
@@ -472,7 +682,7 @@ public class MaskCarvePiece {
             case Y -> anchor.above();
             case Z -> anchor.south();
         };
-        XSec cF = measureCrossSection_VIRTUAL(box, fwd, axis, baseAir, ops);
+        XSec cF = measureCrossSection_VIRTUAL(box, fwd, axis, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         if (cF == null) return false;
 
         if (Math.abs(c0.wA - cF.wA) > 2) return false;
@@ -484,11 +694,14 @@ public class MaskCarvePiece {
     }
 
     private int spanToWall_VIRTUAL(BoundingBox box, BlockPos origin, Direction dir, int limit,
-                                   Set<Long> baseAir, Map<Long, BlockState> ops) {
+                                   Set<Long> baseAir, Map<Long, BlockState> ops,
+                                   Collection<BoundingBox> protectedRoomsAabbs,
+                                   Bitmask protectedMask,
+                                   Set<Long> doorwayWhitelist) {
         BlockPos p = origin;
         for (int i = 0; i <= limit; i++) {
             if (!inBox(box, p)) return -1;
-            if (vIsSolidWall(baseAir, ops, p)) {
+            if (vIsSolidWall(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
                 return switch (dir.getAxis()) {
                     case X -> p.getX();
                     case Y -> p.getY();
@@ -502,8 +715,11 @@ public class MaskCarvePiece {
 
     // ====== Web helpers (virtual) ======
     private boolean tryWebMembraneAcross_VIRTUAL(BoundingBox box, RandomSource rnd, BlockPos anchor, Direction.Axis axis,
-                                                 Set<Long> baseAir, Map<Long, BlockState> ops) {
-        XSec s = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops);
+                                                 Set<Long> baseAir, Map<Long, BlockState> ops,
+                                                 Collection<BoundingBox> protectedRoomsAabbs,
+                                                 Bitmask protectedMask,
+                                                 Set<Long> doorwayWhitelist) {
+        XSec s = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         if (s == null) return false;
 
         int filled = 0, attempted = 0;
@@ -517,7 +733,7 @@ public class MaskCarvePiece {
                     BlockPos p = new BlockPos(xMid, y, z);
                     if (!inBox(box, p)) continue;
                     attempted++;
-                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState())) filled++;
+                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) filled++;
                 }
             }
         } else if (axis == Direction.Axis.Z) {
@@ -529,7 +745,7 @@ public class MaskCarvePiece {
                     BlockPos p = new BlockPos(x, y, zMid);
                     if (!inBox(box, p)) continue;
                     attempted++;
-                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState())) filled++;
+                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) filled++;
                 }
             }
         } else {
@@ -539,7 +755,7 @@ public class MaskCarvePiece {
                     BlockPos p = new BlockPos(x, yMid, z);
                     if (!inBox(box, p)) continue;
                     attempted++;
-                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState())) filled++;
+                    if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) filled++;
                 }
             }
         }
@@ -547,8 +763,11 @@ public class MaskCarvePiece {
     }
 
     private boolean tryWebDiagonalAcross_VIRTUAL(BoundingBox box, RandomSource rnd, BlockPos anchor, Direction.Axis axis,
-                                                 Set<Long> baseAir, Map<Long, BlockState> ops) {
-        XSec s = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops);
+                                                 Set<Long> baseAir, Map<Long, BlockState> ops,
+                                                 Collection<BoundingBox> protectedRoomsAabbs,
+                                                 Bitmask protectedMask,
+                                                 Set<Long> doorwayWhitelist) {
+        XSec s = measureCrossSection_VIRTUAL(box, anchor, axis, baseAir, ops, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         if (s == null) return false;
 
         ArrayList<BlockPos> line = new ArrayList<>();
@@ -571,10 +790,10 @@ public class MaskCarvePiece {
         for (BlockPos p : line) {
             if (!inBox(box, p)) continue;
             if (rnd.nextFloat() < 0.9f) {
-                if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState())) placed++;
+                if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) placed++;
                 if (rnd.nextFloat() < 0.25f) {
                     BlockPos q = p.relative(rnd.nextBoolean() ? Direction.UP : Direction.DOWN);
-                    if (inBox(box, q)) vPlaceIfAir(baseAir, ops, q, OLIANT_WEB.defaultBlockState());
+                    if (inBox(box, q)) vPlaceIfAir(baseAir, ops, q, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 }
             }
         }
@@ -582,7 +801,10 @@ public class MaskCarvePiece {
     }
 
     private boolean tryWebCornerClump_VIRTUAL(BoundingBox box, RandomSource rnd, BlockPos anchor,
-                                              Set<Long> baseAir, Map<Long, BlockState> ops) {
+                                              Set<Long> baseAir, Map<Long, BlockState> ops,
+                                              Collection<BoundingBox> protectedRoomsAabbs,
+                                              Bitmask protectedMask,
+                                              Set<Long> doorwayWhitelist) {
         Direction[][] pairs = new Direction[][]{
                 {Direction.NORTH, Direction.WEST},
                 {Direction.NORTH, Direction.EAST},
@@ -595,21 +817,24 @@ public class MaskCarvePiece {
             BlockPos w1 = anchor.relative(pair[0]);
             BlockPos w2 = anchor.relative(pair[1]);
             if (!inBox(box, w1) || !inBox(box, w2)) continue;
-            if (!vIsSolidWall(baseAir, ops, w1) || !vIsSolidWall(baseAir, ops, w2)) continue;
+            if (!vIsSolidWall(baseAir, ops, w1, protectedRoomsAabbs, protectedMask, doorwayWhitelist)
+                    || !vIsSolidWall(baseAir, ops, w2, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
 
             int placed = 0;
             for (int dx = 0; dx <= 1; dx++) {
                 for (int dy = 0; dy <= 1; dy++) {
-                    BlockPos p = anchor.above(dy).relative(pair[0].getOpposite(), dx).relative(pair[1].getOpposite(), dx);
+                    BlockPos p = anchor.above(dy)
+                            .relative(pair[0].getOpposite(), dx)
+                            .relative(pair[1].getOpposite(), dx);
                     if (!inBox(box, p)) continue;
                     if (rnd.nextFloat() < 0.85f) {
-                        if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState())) placed++;
+                        if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) placed++;
                     }
                 }
             }
             for (Direction d : new Direction[]{pair[0].getOpposite(), pair[1].getOpposite(), Direction.UP}) {
                 BlockPos q = anchor.relative(d);
-                if (inBox(box, q)) vPlaceIfAir(baseAir, ops, q, OLIANT_WEB.defaultBlockState());
+                if (inBox(box, q)) vPlaceIfAir(baseAir, ops, q, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
             }
             return placed >= 2;
         }
@@ -620,11 +845,14 @@ public class MaskCarvePiece {
     private static final Direction[] LATERALS = new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
 
     /** True if filling this air cell would choke the corridor (needs >=2 lateral air neighbors to avoid choking). */
-    private boolean wouldChokeIfFilled_VIRTUAL(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos airCell) {
+    private boolean wouldChokeIfFilled_VIRTUAL(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos airCell,
+                                               Collection<BoundingBox> protectedRoomsAabbs,
+                                               Bitmask protectedMask,
+                                               Set<Long> doorwayWhitelist) {
         int lateralAir = 0;
         for (Direction d : LATERALS) {
             BlockPos n = airCell.relative(d);
-            if (viewAt(baseAir, ops, n).isAir()) {
+            if (viewAt(baseAir, ops, n, protectedRoomsAabbs, protectedMask, doorwayWhitelist).isAir()) {
                 lateralAir++;
                 if (lateralAir > 1) return false; // fast path: won’t choke
             }
@@ -632,14 +860,17 @@ public class MaskCarvePiece {
         return lateralAir <= 1;
     }
 
-    private boolean isLikelyRoomVoid_VIRTUAL(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p) {
+    private boolean isLikelyRoomVoid_VIRTUAL(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p,
+                                             Collection<BoundingBox> protectedRoomsAabbs,
+                                             Bitmask protectedMask,
+                                             Set<Long> doorwayWhitelist) {
         int airCount = 0;
         BlockPos.MutableBlockPos m = new BlockPos.MutableBlockPos();
         for (int dx = -1; dx <= 1; dx++) {
             for (int dy = -1; dy <= 1; dy++) {
                 for (int dz = -1; dz <= 1; dz++) {
                     m.set(p.getX() + dx, p.getY() + dy, p.getZ() + dz);
-                    if (viewAt(baseAir, ops, m).isAir()) airCount++;
+                    if (viewAt(baseAir, ops, m, protectedRoomsAabbs, protectedMask, doorwayWhitelist).isAir()) airCount++;
                 }
             }
         }
@@ -720,7 +951,7 @@ public class MaskCarvePiece {
     }
 
     private static List<Long> toList(Bitmask mask) {
-        ArrayList<Long> out = new ArrayList<>(mask.size());
+        ArrayList<Long> out = new ArrayList<>();
         mask.forEachLong(out::add);
         return out;
     }

@@ -35,6 +35,7 @@ import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.world.gen.dungeon.DungeonPlacementManager;
 import dev.galacticraft.mod.world.gen.dungeon.RoomDefsBootstrap;
 import dev.galacticraft.mod.world.gen.dungeon.util.TemplateScanner;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
@@ -106,6 +107,7 @@ public class GCEventHandlers {
     }
 
     public static void onServerTick(MinecraftServer server) {
+        DungeonPlacementManager.tick(server);
         // throw meteors around players
         PlayerLookup.all(server).forEach(player -> {
             ServerLevel level = player.serverLevel();
