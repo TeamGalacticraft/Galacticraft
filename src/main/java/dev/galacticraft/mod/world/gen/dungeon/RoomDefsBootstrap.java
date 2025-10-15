@@ -7,7 +7,11 @@ public final class RoomDefsBootstrap {
 
     public static void define(RoomRegistry.Registrar r) {
         // ENTRANCES
-        r.entrance(id("entrance_1"), templateId("entrance_shaft"))
+        r.entrance(id("entrance_1"), templateId("entrance_1"))
+                .tags("start")
+                .weight(1)
+                .register();
+        r.entrance(id("entrance_2"), templateId("entrance_2"))
                 .tags("start")
                 .weight(1)
                 .register();
@@ -27,27 +31,12 @@ public final class RoomDefsBootstrap {
         r.basic(id("room_3"), templateId("room_3"))
                 .weight(1).tags("small").register();
 
-        r.basic(id("room_4"), templateId("room_4"))
-                .weight(1).tags("small").register();
-
-        r.basic(id("room_5"), templateId("room_5"))
-                .weight(1).tags("small").register();
-
-        r.basic(id("room_6"), templateId("room_6"))
-                .weight(1).tags("small").register();
-
         // QUEENS
         r.queen(id("queen_1"), templateId("queen_room_1"))
                 .weight(1).tags("queen").register();
 
-        r.queen(id("queen_2"), templateId("queen_room_2"))
-                .weight(1).tags("queen").register();
-
         // TREASURE (entrances only)
         r.treasure(id("treasure_1"), templateId("treasure_room_1"))
-                .weight(1).tags("loot").register();
-
-        r.treasure(id("treasure_2"), templateId("treasure_room_2"))
                 .weight(1).tags("loot").register();
     }
 

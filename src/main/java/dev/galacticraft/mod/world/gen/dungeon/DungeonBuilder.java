@@ -15,10 +15,9 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.pieces.StructurePiecesBuilder;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.*;
@@ -30,12 +29,16 @@ public class DungeonBuilder {
     private final RandomSource random;
 
     private static final Logger LOGGER = LogUtils.getLogger();
-    final double ROOM_MARGIN = 8.0;
-    final int MAX_TRIES_PER_ROOM = 200;
+    final double ROOM_MARGIN = 8;
+    final int MAX_TRIES_PER_ROOM = 500;
     final int CORRIDOR_PLACEMENT_OFFSET = 1;
     final int CORRIDOR_RADIUS = 1;
     final int CORRIDOR_PREFLIGHT = 1;
-    final int DILATION = 2;
+    final int DILATION = 3;
+
+    private static final BlockPos FORBIDDEN_ORIGIN = BlockPos.ZERO;
+    private static final int MAX_NET_MANHATTAN = 4096;  // tune to dungeon size
+    private static final int MAX_BRANCH_DIST = 35;
 
     public record Room(AABB aabb, Rotation rotation, RoomDef def) {}
 
@@ -57,8 +60,8 @@ public class DungeonBuilder {
         try {
             RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.ENTRANCE, roomDef -> true);
             int entranceY = input.surface().getY() - (10 + def.sizeY());
-            int entranceX = input.surface().getX() - 2;
-            int entranceZ = input.surface().getZ() - 2;
+            int entranceX = input.surface().getX() - Math.floorDiv(def.sizeX(), 2);
+            int entranceZ = input.surface().getZ() - Math.floorDiv(def.sizeZ(), 2);
             entrancePosition = new BlockPos(entranceX, entranceY, entranceZ);
 
             addData(blockData, new RoomGenerator(def, entrancePosition, Rotation.NONE).getBlocks(Galacticraft.SCANNER));
@@ -103,21 +106,53 @@ public class DungeonBuilder {
         List<Room> queenRooms = new ArrayList<>();
         try {
             for (PortDef entrance : endRoomEntrances) {
+                // Pick a queen room template
                 RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.QUEEN, roomDef -> true);
-                Direction entranceDirection = endRotation.rotate(entrance.facing());
-                BlockPos roomPosition = endPosition.offset(entranceDirection.getNormal().multiply(random.nextInt(20, 40)));
-                roomPosition = roomPosition.offset(random.nextInt(-10, 10), random.nextInt(-10, 10), random.nextInt(-10, 10));
-                Direction roomExitFacing = Arrays.stream(def.exits()).findFirst().get().facing();
-                Rotation rotation = rotationNeededToMatch(roomExitFacing, entranceDirection.getOpposite());
 
-                addData(blockData, new RoomGenerator(def, roomPosition, rotation).getBlocks(Galacticraft.SCANNER));
+                // End-room entrance port world pose
+                Direction entranceFacingWorld = endRotation.rotate(entrance.facing());
+                BlockPos entranceWorldPos = PortGeom.localToWorld(
+                        entrance.localCenterBlock(),
+                        endRoom.def().sizeX(), endRoom.def().sizeY(), endRoom.def().sizeZ(),
+                        endRoom.aabb(), endRotation
+                );
 
+                // The queen EXIT port must be 20 blocks out along the entrance direction
+                BlockPos targetExitWorld = entranceWorldPos.offset(entranceFacingWorld.getNormal().multiply(random.nextInt(20, 40)));
+                targetExitWorld = targetExitWorld.offset(random.nextInt(-10, 10), random.nextInt(-10, 10), random.nextInt(-10, 10));
+
+                // Choose which queen-room EXIT port you want to mate (first exit here, adjust as needed)
+                PortDef queenExit = Arrays.stream(def.exits()).findFirst().orElse(null);
+                if (queenExit == null) {
+                    LOGGER.warn("Queen template {} has no exits; skipping.", def.template());
+                    continue;
+                }
+
+                // Rotate queen so its EXIT faces back toward the entrance (ports face each other)
+                Direction queenExitFacingLocal = queenExit.facing();
+                Rotation rotation = rotationNeededToMatch(queenExitFacingLocal, entranceFacingWorld.getOpposite());
+
+                // Solve min-corner so that queenExit maps to targetExitWorld
+                BlockPos queenMin = solveMinForPortTarget(def, rotation, queenExit, targetExitWorld);
+
+                // Build final AABB and place
                 Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-                AABB aabb = rotatedRoomAabb(roomPosition, size, rotation);
+                AABB aabb = rotatedRoomAabb(queenMin, size, rotation);
+
+                // (Optional) quick sanity: verify the exit port really landed at targetExitWorld
+                BlockPos checkWorld = PortGeom.localToWorld(
+                        queenExit.localCenterBlock(), def.sizeX(), def.sizeY(), def.sizeZ(), aabb, rotation
+                );
+                if (!checkWorld.equals(targetExitWorld)) {
+                    LOGGER.warn("Queen exit mismatch ({} vs {}). Minor rounding may occur; proceeding.",
+                            checkWorld, targetExitWorld);
+                }
+
+                // Emit blocks & register room
+                addData(blockData, new RoomGenerator(def, queenMin, rotation).getBlocks(Galacticraft.SCANNER));
                 placedRoomBoxes.add(aabb);
                 mask.add(aabb);
-                Room room = new Room(aabb, rotation, def);
-                queenRooms.add(room);
+                queenRooms.add(new Room(aabb, rotation, def));
             }
         } catch (Exception e) {
             throw new RuntimeException(e);
@@ -125,14 +160,18 @@ public class DungeonBuilder {
 
         // Build bounding box of dungeon
         AABB dungeonBox = new AABB(entrancePosition.getCenter(), endPosition.getCenter());
-        dungeonBox = dungeonBox.inflate(random.nextInt(30, 50), 1, random.nextInt(30, 50));
+        //TODO make this take the max room basic room size, and the amount of rooms it wants to place to determine how big the box needs to be
+        //Or just make it a soft box that inflates if it fails to place too many times
+        dungeonBox = dungeonBox.inflate(random.nextInt(50, 80), 1, random.nextInt(50, 80)); //might need to increase this for more rooms or bigger rooms
 
         // Place critical path rooms
         try {
             for (int i = 0; i < input.criticalPathRooms(); i++) {
                 boolean placed = false;
 
-                for (int tries = 0; tries < MAX_TRIES_PER_ROOM && !placed; tries++) {
+                int tries = 0;
+                while (!placed) {
+                    tries++;
                     RoomDef def = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, roomDef -> true);
                     // 1) Biased random position inside dungeonBox
                     Vec3 position = BoxSampling.randomPointInAabbBiasedY(
@@ -167,12 +206,10 @@ public class DungeonBuilder {
                     dungeonRooms.add(new Room(roomAabb, rot, def));
                     placed = true;
                 }
-
-                if (!placed) {
-                    LOGGER.error("Could not place room. Used {} tries", MAX_TRIES_PER_ROOM);
-                }
+                LOGGER.info("Tried {} times to place critical path room", tries);
             }
         } catch (Exception e) {
+            LOGGER.info("Failed with {}", e.getMessage());
             throw new RuntimeException(e);
         }
 
@@ -207,64 +244,100 @@ public class DungeonBuilder {
         }
 
         // Pathfind and carve from queen rooms to end room
-        try {
+        {
             for (Room queenRoom : queenRooms) {
-                PortDef exitPort = Arrays.stream(queenRoom.def.exits()).findFirst().get();
+                PortDef exitPort = Arrays.stream(queenRoom.def().exits()).findFirst().orElse(null);
+                if (exitPort == null) {
+                    LOGGER.warn("Queen room has no exit port, skipping.");
+                    continue;
+                }
 
-                // Find the entrance port that matches the queen rooms exit port
                 Direction exitPortRotation = queenRoom.rotation().rotate(exitPort.facing());
                 Optional<PortDef> entrancePort = Arrays.stream(endRoom.def().entrances())
                         .filter(p -> endRoom.rotation().rotate(p.facing()) == exitPortRotation.getOpposite())
                         .findFirst();
-
-                if (entrancePort.isPresent()) {
-                    // Get the center position of the entrance and exit port
-                    BlockPos exitPortPosition = PortGeom.localToWorld(exitPort.localCenterBlock(), queenRoom.def().sizeX(), queenRoom.def().sizeY(), queenRoom.def().sizeZ(), queenRoom.aabb(), queenRoom.rotation());
-                    BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.get().localCenterBlock(), endRoom.def().sizeX(), endRoom.def().sizeY(), endRoom.def().sizeZ(), endRoom.aabb(), endRoom.rotation());
-
-                    // Move 2 blocks outwards from port before carving
-                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
-                    Direction entrancePortRotation = endRoom.rotation().rotate(entrancePort.get().facing());
-                    entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
-
-                    // Add to shared carver
-                    nets.add(new NegotiatedRouter.Net(
-                            exitPortPosition, exitPortRotation,
-                            entrancePortPosition, entrancePortRotation,
-                            CORRIDOR_PREFLIGHT
-                    ));
-                } else {
-                    LOGGER.error("Could not find entrance port");
+                if (entrancePort.isEmpty()) {
+                    LOGGER.warn("Could not find matching entrance on end room for queen->end, skipping.");
+                    continue;
                 }
+
+                BlockPos exitPortPosition;
+                BlockPos entrancePortPosition;
+                try {
+                    exitPortPosition = safeLocalToWorld(
+                            exitPort.localCenterBlock(),
+                            queenRoom.def().sizeX(), queenRoom.def().sizeY(), queenRoom.def().sizeZ(),
+                            queenRoom.aabb(), queenRoom.rotation(), dungeonBox, "queen->end exit"
+                    );
+                    entrancePortPosition = safeLocalToWorld(
+                            entrancePort.get().localCenterBlock(),
+                            endRoom.def().sizeX(), endRoom.def().sizeY(), endRoom.def().sizeZ(),
+                            endRoom.aabb(), endRoom.rotation(), dungeonBox, "queen->end entrance"
+                    );
+                } catch (Exception ex) {
+                    LOGGER.warn("Skipping queen->end net due to transform error: {}", ex.getMessage());
+                    continue;
+                }
+
+                // Nudge outward
+                exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                Direction entrancePortRotation = endRoom.rotation().rotate(entrancePort.get().facing());
+                entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+
+                if (netLooksInsane(exitPortPosition, entrancePortPosition)) {
+                    LOGGER.warn("Skipping queen->end net: insane distance ({}).", manhattan(exitPortPosition, entrancePortPosition));
+                    continue;
+                }
+
+                nets.add(new NegotiatedRouter.Net(
+                        exitPortPosition, exitPortRotation,
+                        entrancePortPosition, entrancePortRotation,
+                        CORRIDOR_PREFLIGHT
+                ));
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
         // Pathfind and carve all critical paths
-        try {
+        {
             for (int i = 0; i < orderedCriticalPaths.size(); i++) {
                 for (int j = 0; j < orderedCriticalPaths.get(i).size() - 1; j++) {
                     RoomHamiltonianPath.PathResult pathResult = criticalPathResults.get(i);
-                    // Get the rooms we are carving between
                     Room room1 = orderedCriticalPaths.get(i).get(j);
                     Room room2 = orderedCriticalPaths.get(i).get(j + 1);
 
-                    // Get the exit port from room 1 and entrance port of room 2
-                    PortDef exitPort = Arrays.stream(room1.def().exits()).toList().get(pathResult.portPairs.get(j)[0]);
-                    PortDef entrancePort = Arrays.stream(room2.def().entrances()).toList().get(pathResult.portPairs.get(j)[1]);
+                    PortDef exitPort = Arrays.stream(room1.def().exits()).toList()
+                            .get(pathResult.portPairs.get(j)[0]);
+                    PortDef entrancePort = Arrays.stream(room2.def().entrances()).toList()
+                            .get(pathResult.portPairs.get(j)[1]);
 
-                    // Get the center position of the entrance and exit port
-                    BlockPos exitPortPosition = PortGeom.localToWorld(exitPort.localCenterBlock(), room1.def().sizeX(), room1.def().sizeY(), room1.def().sizeZ(), room1.aabb(), room1.rotation());
-                    BlockPos entrancePortPosition = PortGeom.localToWorld(entrancePort.localCenterBlock(), room2.def().sizeX(), room2.def().sizeY(), room2.def().sizeZ(), room2.aabb(), room2.rotation());
+                    BlockPos exitPortPosition, entrancePortPosition;
+                    try {
+                        exitPortPosition = safeLocalToWorld(
+                                exitPort.localCenterBlock(),
+                                room1.def().sizeX(), room1.def().sizeY(), room1.def().sizeZ(),
+                                room1.aabb(), room1.rotation(), dungeonBox, "crit exit"
+                        );
+                        entrancePortPosition = safeLocalToWorld(
+                                entrancePort.localCenterBlock(),
+                                room2.def().sizeX(), room2.def().sizeY(), room2.def().sizeZ(),
+                                room2.aabb(), room2.rotation(), dungeonBox, "crit entrance"
+                        );
+                    } catch (Exception ex) {
+                        LOGGER.warn("Skipping critical-path net due to transform error: {}", ex.getMessage());
+                        continue;
+                    }
 
-                    // Move 2 blocks outwards from port before carving
                     Direction exitPortRotation = room1.rotation().rotate(exitPort.facing());
-                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
                     Direction entrancePortRotation = room2.rotation().rotate(entrancePort.facing());
-                    entrancePortPosition = entrancePortPosition.offset(room2.rotation().rotate(entrancePort.facing()).getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
 
-                    // Add to shared carver
+                    if (netLooksInsane(exitPortPosition, entrancePortPosition)) {
+                        LOGGER.warn("Skipping critical-path net: insane distance ({}).",
+                                manhattan(exitPortPosition, entrancePortPosition));
+                        continue;
+                    }
+
                     nets.add(new NegotiatedRouter.Net(
                             exitPortPosition, exitPortRotation,
                             entrancePortPosition, entrancePortRotation,
@@ -272,55 +345,71 @@ public class DungeonBuilder {
                     ));
                 }
             }
-        } catch (Exception e) {
-            throw new RuntimeException(e);
         }
 
         // Find all unused exits and branch off until we reach room limit
-        record PortRoomMapping(PortDef port, Room room) {};
+        record PortRoomMapping(PortDef port, Room room) {}
         List<PortRoomMapping> availableExitPorts = new ArrayList<>();
+
         try {
-            // Find all unused exits on the critical paths
+            // Collect unused exits from the critical paths
             for (int i = 0; i < orderedCriticalPaths.size(); i++) {
                 List<Room> rooms = orderedCriticalPaths.get(i);
                 for (int j = 0; j < rooms.size() - 1; j++) {
-                    if (rooms.get(j).def.hasMoreThanOneExit()) {
+                    if (rooms.get(j).def().hasMoreThanOneExit()) {
                         RoomHamiltonianPath.PathResult pathResult = criticalPathResults.get(i);
-                        List<PortDef> exits = new ArrayList<>(Arrays.stream(rooms.get(j).def.exits()).toList());
-                        exits.remove(pathResult.portPairs.get(j)[0]);
-                        for (PortDef exit : exits) {
-                            availableExitPorts.add(new PortRoomMapping(exit, rooms.get(j)));
-                        }
+                        List<PortDef> exits = new ArrayList<>(Arrays.stream(rooms.get(j).def().exits()).toList());
+                        exits.remove(pathResult.portPairs.get(j)[0]); // remove the one used by crit path
+                        for (PortDef exit : exits) availableExitPorts.add(new PortRoomMapping(exit, rooms.get(j)));
                     }
                 }
             }
 
-            // Start branching randomly
+// Start branching randomly
+            Direction lastYaw = Direction.NORTH;
             while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < input.targetRooms()) {
                 PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
-                Direction exitPortRotation = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
-                BlockPos exitPortPosition = PortGeom.localToWorld(availableExitPort.port().localCenterBlock(), availableExitPort.room().def().sizeX(), availableExitPort.room().def().sizeY(), availableExitPort.room().def().sizeZ(), availableExitPort.room().aabb(), availableExitPort.room().rotation());
-                boolean treasure = false;
-                if (random.nextFloat() < config.treasureRooms()) {
-                    treasure = true;
+
+                // Parent room + exit info
+                Room parentRoom = availableExitPort.room();
+                Direction exitPortRotation = parentRoom.rotation().rotate(availableExitPort.port().facing());
+
+                // Compute world exit port position (safe)
+                BlockPos exitPortPosition;
+                try {
+                    exitPortPosition = safeLocalToWorld(
+                            availableExitPort.port().localCenterBlock(),
+                            parentRoom.def().sizeX(), parentRoom.def().sizeY(), parentRoom.def().sizeZ(),
+                            parentRoom.aabb(), parentRoom.rotation(), dungeonBox, "branch exit"
+                    );
+                } catch (Exception ex) {
+                    LOGGER.warn("Skipping branch (bad exit transform): {}", ex.getMessage());
+                    continue;
                 }
-                RoomDef newRoomDef;
-                if (treasure) {
-                    newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.TREASURE, roomDef -> true);
-                } else {
-                    newRoomDef = Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
-                }
-                Direction forward = availableExitPort.room().rotation().rotate(availableExitPort.port().facing());
+
+                boolean treasure = random.nextFloat() < config.treasureRooms();
+                RoomDef newRoomDef = treasure
+                        ? Galacticraft.ROOM_REGISTRY.pick(random, RoomType.TREASURE, roomDef -> true)
+                        : Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
+
+                Direction forward = exitPortRotation;
+                if (forward.getAxis().isHorizontal()) lastYaw = forward;
+
                 boolean placed = false;
                 for (int attempt = 0; attempt < MAX_TRIES_PER_ROOM && !placed; attempt++) {
-                    int dist = random.nextInt(15, 35);
-                    Direction left  = forward.getCounterClockWise();
-                    Direction right = forward.getClockWise();
+                    Direction[] lr = lateralBasis(forward, lastYaw);
+                    Direction left  = lr[0];
+                    Direction right = lr[1];
+
+                    // strictly ≤ 35 away from the parent
+                    int dist = random.nextInt(15, Math.min(35, 35)); // min 15, max 35
                     int mode = random.nextInt(8);
+
                     double vx = 0, vy = 0, vz = 0;
                     int fx = forward.getStepX(), fz = forward.getStepZ();
                     int lx = left.getStepX(),    lz = left.getStepZ();
                     int rx = right.getStepX(),   rz = right.getStepZ();
+
                     switch (mode) {
                         case 0 -> { vx = fx;            vy = 0; vz = fz; }               // straight
                         case 1 -> { vx = fx + lx;       vy = 0; vz = fz + lz; }           // 45° left
@@ -331,35 +420,87 @@ public class DungeonBuilder {
                         case 6 -> { vx = fx + rx;       vy = 1; vz = fz + rz; }           // 45° right + up
                         default -> { vx = fx + rx;      vy = -1; vz = fz + rz; }          // 45° right + down
                     }
+
                     double vlen = Math.sqrt(vx*vx + vy*vy + vz*vz);
-                    if (vlen < 1e-6) { vx = fx; vy = 0; vz = fz; vlen = Math.sqrt(vx*vx + vz*vz); }
+                    if (!(vlen > 1e-6)) { vx = fx; vy = 0; vz = fz; vlen = Math.sqrt(vx*vx + vz*vz); }
                     vx /= vlen; vy /= vlen; vz /= vlen;
-                    BlockPos targetRoomPos = new BlockPos((int) (exitPortPosition.getX() + vx * dist), (int) (exitPortPosition.getY() + vy * dist), (int) (exitPortPosition.getZ() + vz * dist));
+
+                    // candidate min-corner
+                    double tx = exitPortPosition.getX() + vx * dist;
+                    double ty = exitPortPosition.getY() + vy * dist;
+                    double tz = exitPortPosition.getZ() + vz * dist;
+                    if (Double.isNaN(tx) || Double.isNaN(ty) || Double.isNaN(tz)) {
+                        LOGGER.warn("Branch candidate produced NaN target (vx,vy,vz)=({},{},{}), dist={}", vx, vy, vz, dist);
+                        continue;
+                    }
+                    BlockPos targetRoomPos = new BlockPos((int)tx, (int)ty, (int)tz);
+                    if (looksLikeSentinel(targetRoomPos, dungeonBox)) {
+                        LOGGER.warn("Branch candidate hit origin—skipping.");
+                        continue;
+                    }
+
                     Direction requiredEntranceFacing = forward.getOpposite();
-                    Rotation newRoomRotation = rotationNeededToMatch(Arrays.stream(newRoomDef.entrances()).findFirst().get().facing(), requiredEntranceFacing);
+                    EntranceMatch match = pickEntranceFor(requiredEntranceFacing, newRoomDef);
+                    if (match == null) continue; // cannot orient entrances for this approach
+
+                    PortDef chosenEntrance = match.entrance();
+                    Rotation newRoomRotation = match.rotation();
+
                     Vec3i size = new Vec3i(newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ());
                     AABB roomAabb = rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
-                    if (roomAabb.maxY > dungeonBox.maxY) continue; // dont go too high in dungeon
-                    if (roomAabb.minY < (input.minBuildHeight() + 10)) continue; // Dont go too close to bedrock
-                    boolean intersects = mask.contains(expanded);
-                    if (intersects) continue;
 
+                    // Y-bounds + collision
+                    if (roomAabb.maxY > dungeonBox.maxY) continue;
+                    if (roomAabb.minY < (input.minBuildHeight() + 10)) continue;
+                    if (mask.contains(expanded)) continue;
+
+                    // **Hard rule**: must be within 35 blocks of the parent room center
+                    double d2 = centerDist2(roomAabb, parentRoom.aabb());
+                    if (d2 > (double)MAX_BRANCH_DIST * MAX_BRANCH_DIST) {
+                        // too far from parent; try another attempt
+                        continue;
+                    }
+
+                    // Accept placement
                     addData(blockData, new RoomGenerator(newRoomDef, targetRoomPos, newRoomRotation).getBlocks(Galacticraft.SCANNER));
-
                     placedRoomBoxes.add(roomAabb);
                     mask.add(roomAabb);
-                    dungeonRooms.add(new Room(roomAabb, newRoomRotation, newRoomDef));
+                    Room newRoom = new Room(roomAabb, newRoomRotation, newRoomDef);
+                    dungeonRooms.add(newRoom);
                     placed = true;
-                    // Add new room exits to available port exits
+
+                    // Add new room exits to available ports (unless treasure)
                     if (!treasure) {
-                        for (PortDef exitPort : newRoomDef.exits()) {
-                            availableExitPorts.add(new PortRoomMapping(exitPort, new Room(roomAabb, newRoomRotation, newRoomDef)));
+                        for (PortDef exit : newRoomDef.exits()) {
+                            availableExitPorts.add(new PortRoomMapping(exit, newRoom));
                         }
                     }
-                    // carve corridor with pathfinder
-                    Direction entrancePortRotation = newRoomRotation.rotate(Arrays.stream(newRoomDef.entrances()).findFirst().get().facing());
-                    BlockPos entrancePortPosition = PortGeom.localToWorld(Arrays.stream(newRoomDef.entrances()).findFirst().get().localCenterBlock(), newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ(), roomAabb, newRoomRotation);
+
+                    // Build the net from parent port to this new room's chosen entrance
+                    BlockPos entrancePortPosition;
+                    Direction entrancePortRotation = newRoomRotation.rotate(chosenEntrance.facing());
+                    try {
+                        entrancePortPosition = safeLocalToWorld(
+                                chosenEntrance.localCenterBlock(),
+                                newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ(),
+                                roomAabb, newRoomRotation, dungeonBox, "branch entrance"
+                        );
+                    } catch (Exception ex) {
+                        LOGGER.warn("Placed branch room, but entrance transform failed; skipping corridor: {}", ex.getMessage());
+                        continue;
+                    }
+
+                    // Nudge both ends outward
+                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+
+                    if (netLooksInsane(exitPortPosition, entrancePortPosition)) {
+                        LOGGER.warn("Skipping branch net (insane distance {}), but keeping room.",
+                                manhattan(exitPortPosition, entrancePortPosition));
+                        continue;
+                    }
+
                     nets.add(new NegotiatedRouter.Net(
                             exitPortPosition, exitPortRotation,
                             entrancePortPosition, entrancePortRotation,
@@ -374,6 +515,8 @@ public class DungeonBuilder {
         } catch (Exception e) {
             throw new RuntimeException(e);
         }
+
+        LOGGER.info("FINISHED GENERATING BRANCHES");
 
         try {
             Bitmask staticMask = mask.dilated(DILATION);
@@ -549,6 +692,123 @@ public class DungeonBuilder {
         return new AABB(
                 c.x - hx, c.y - hy, c.z - hz,
                 c.x + hx, c.y + hy, c.z + hz
+        );
+    }
+
+    // Returns a Y-rotation that turns `from` into `to`, or null if either is non-horizontal.
+    @Nullable
+    private static Rotation yRotationBetween(Direction from, Direction to) {
+        if (!from.getAxis().isHorizontal() || !to.getAxis().isHorizontal()) return null;
+        // 0..3 clockwise quarter-turns
+        int turns = (to.get2DDataValue() - from.get2DDataValue()) & 3;
+        return switch (turns) {
+            case 0 -> Rotation.NONE;
+            case 1 -> Rotation.CLOCKWISE_90;
+            case 2 -> Rotation.CLOCKWISE_180;
+            case 3 -> Rotation.COUNTERCLOCKWISE_90;
+            default -> Rotation.NONE; // unreachable
+        };
+    }
+
+    // Choose an entrance that can face `requiredFacing` using only Y-rotations.
+    // - horizontal required: pick a horizontal entrance and return its rotation
+    // - vertical required: only valid if entrance is the same vertical dir (no rotation possible)
+    private static @Nullable EntranceMatch pickEntranceFor(Direction requiredFacing, RoomDef def) {
+        PortDef[] entrances = def.entrances();
+        PortDef best = null;
+        Rotation rot = Rotation.NONE;
+
+        if (requiredFacing.getAxis().isHorizontal()) {
+            for (PortDef e : entrances) {
+                if (!e.facing().getAxis().isHorizontal()) continue;
+                Rotation r = yRotationBetween(e.facing(), requiredFacing);
+                if (r != null) { best = e; rot = r; break; }
+            }
+        } else {
+            // UP/DOWN required: must have the same vertical entrance; rotation is NONE
+            for (PortDef e : entrances) {
+                if (e.facing() == requiredFacing) { best = e; rot = Rotation.NONE; break; }
+            }
+        }
+
+        return (best == null) ? null : new EntranceMatch(best, rot);
+    }
+
+    private record EntranceMatch(PortDef entrance, Rotation rotation) {}
+
+    private static Direction[] lateralBasis(Direction forward, Direction fallbackYaw) {
+        // Ensure fallbackYaw is horizontal
+        Direction yaw = fallbackYaw.getAxis().isHorizontal() ? fallbackYaw : Direction.NORTH;
+
+        if (forward.getAxis().isHorizontal()) {
+            return new Direction[]{ forward.getCounterClockWise(), forward.getClockWise() };
+        } else if (forward == Direction.UP) {
+            // Looking up: standard handedness
+            return new Direction[]{ yaw.getCounterClockWise(), yaw.getClockWise() };
+        } else { // DOWN
+            // Looking down: flip handedness so "left/right" remain intuitive
+            return new Direction[]{ yaw.getClockWise(), yaw.getCounterClockWise() };
+        }
+    }
+
+    private static boolean dungeonTouchesOrigin(AABB box) {
+        return box.minX <= 0 && box.maxX >= 0
+                && box.minY <= 0 && box.maxY >= 0
+                && box.minZ <= 0 && box.maxZ >= 0;
+    }
+
+    private static boolean looksLikeSentinel(BlockPos p, AABB dungeonBox) {
+        return !dungeonTouchesOrigin(dungeonBox) && p.equals(FORBIDDEN_ORIGIN);
+    }
+
+    private static int manhattan(BlockPos a, BlockPos b) {
+        return Math.abs(a.getX()-b.getX()) + Math.abs(a.getY()-b.getY()) + Math.abs(a.getZ()-b.getZ());
+    }
+
+    private static boolean netLooksInsane(BlockPos a, BlockPos b) {
+        return manhattan(a, b) > MAX_NET_MANHATTAN;
+    }
+
+    private static double centerDist2(AABB a, AABB b) {
+        var ca = a.getCenter();
+        var cb = b.getCenter();
+        double dx = ca.x - cb.x, dy = ca.y - cb.y, dz = ca.z - cb.z;
+        return dx*dx + dy*dy + dz*dz;
+    }
+
+    // Wrapper that explodes early if a transform is bogus.
+    private static BlockPos safeLocalToWorld(
+            BlockPos local, int sx, int sy, int sz,
+            AABB roomAabb, Rotation rot, AABB dungeonBox, String ctx) {
+        BlockPos w = PortGeom.localToWorld(local, sx, sy, sz, roomAabb, rot);
+        if (w == null) throw new IllegalStateException(ctx + ": localToWorld returned null");
+        if (looksLikeSentinel(w, dungeonBox)) {
+            throw new IllegalStateException(ctx + ": localToWorld produced (0,0,0) (bad template/rotation/AABB?)");
+        }
+        return w;
+    }
+
+    /** Compute a queen room min-corner so that its `exitPort` world position equals `targetExitWorld`. */
+    private static BlockPos solveMinForPortTarget(RoomDef def, Rotation rot, PortDef exitPort, BlockPos targetExitWorld) {
+        Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
+
+        // Provisional AABB at min=(0,0,0) with the desired rotation.
+        AABB provisional = rotatedRoomAabb(new BlockPos(0, 0, 0), size, rot);
+
+        // Where would the exit port land if min=(0,0,0)?
+        BlockPos p0 = PortGeom.localToWorld(
+                exitPort.localCenterBlock(),
+                def.sizeX(), def.sizeY(), def.sizeZ(),
+                provisional, rot
+        );
+
+        // Because the transform is affine (pure Y-rotation + translation),
+        // translating the min-corner by Δ translates world positions by Δ.
+        // So choose minCorner = target - p0.
+        return new BlockPos(
+                targetExitWorld.getX() - p0.getX(),
+                targetExitWorld.getY() - p0.getY(),
+                targetExitWorld.getZ() - p0.getZ()
         );
     }
 }

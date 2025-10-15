@@ -96,7 +96,6 @@ public final class RoomGenerator {
             if (state.is(GCBlocks.DUNGEON_ENTRANCE_BLOCK) || state.is(GCBlocks.DUNGEON_EXIT_BLOCK)) {
                 state = GCBlocks.OLIANT_NEST_BLOCK.defaultBlockState();
             }
-            if (mirror != Mirror.NONE) state = state.mirror(mirror);
             if (rot    != Rotation.NONE) state = state.rotate(rot);
 
             SectionPos sec = SectionPos.of(worldPos);
