@@ -31,7 +31,7 @@ public final class NegotiatedRouter {
             int minY, int maxY
     ) {
         // Tunables
-        final int MAX_ITERS = 10;
+        final int MAX_ITERS = 20;
         final double PRESENT_START = 3.0;
         final double PRESENT_GROW = 1.35;
         final int HISTORY_ADD = 2;
@@ -70,8 +70,8 @@ public final class NegotiatedRouter {
             List<BlockPos> seedsA = buildLaunchBundle(net.a, net.aFacing, net.preflight, clearance);
             List<BlockPos> seedsB = buildLaunchBundle(net.b, net.bFacing, net.preflight, clearance);
 
-            List<BlockPos> path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R1, W, 800);
-            if (path.isEmpty()) path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R2, W, 1200);
+            List<BlockPos> path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R1, W, 1200);
+            if (path.isEmpty()) path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R2, W, 1600);
             paths.set(i, path);
 
             // Count volume once per net and incrementally update dilated present
@@ -103,7 +103,7 @@ public final class NegotiatedRouter {
 
                 List<BlockPos> path = aStarTubeWithCosts(
                         clearance, seedsA, seedsB, net.a, net.b,
-                        TUBE_R2, W, 1200,
+                        TUBE_R2, W, 1600,
                         dilatedPresent, dilatedHistory, presentK
                 );
                 if (path.isEmpty()) path = aStarTube(clearance, seedsA, seedsB, net.a, net.b, TUBE_R2, W, 1600);

@@ -472,16 +472,15 @@ public class DungeonBuilder {
                 }
             }
 
-// Start branching randomly
+            // Start branching randomly
             Direction lastYaw = Direction.NORTH;
             while (!availableExitPorts.isEmpty() && placedRoomBoxes.size() < input.targetRooms()) {
                 PortRoomMapping availableExitPort = availableExitPorts.removeFirst();
 
-                // Parent room + exit info
                 Room parentRoom = availableExitPort.room();
                 Direction exitPortRotation = parentRoom.rotation().rotate(availableExitPort.port().facing());
 
-                // Compute world exit port position (safe)
+                // World pos of the parent exit port
                 BlockPos exitPortPosition;
                 try {
                     exitPortPosition = safeLocalToWorld(
@@ -496,117 +495,70 @@ public class DungeonBuilder {
 
                 boolean treasure = random.nextFloat() < config.treasureRooms();
                 RoomDef newRoomDef = treasure
-                        ? Galacticraft.ROOM_REGISTRY.pick(random, RoomType.TREASURE, roomDef -> true)
+                        ? Galacticraft.ROOM_REGISTRY.pick(random, RoomType.TREASURE, r -> true)
                         : Galacticraft.ROOM_REGISTRY.pick(random, RoomType.BASIC, RoomDef::hasMoreThanOneExit);
 
-                Direction forward = exitPortRotation;
-                if (forward.getAxis().isHorizontal()) lastYaw = forward;
-
+                // We'll try a bunch of candidate directions/distances
                 boolean placed = false;
                 for (int attempt = 0; attempt < MAX_TRIES_PER_ROOM && !placed; attempt++) {
-                    Direction[] lr = lateralBasis(forward, lastYaw);
-                    Direction left = lr[0];
-                    Direction right = lr[1];
+                    // distance in [35..50]
+                    int dist = 35 + random.nextInt(16);
 
-                    // strictly ≤ 35 away from the parent
-                    int dist = random.nextInt(15, Math.min(35, 35)); // min 15, max 35
-                    int mode = random.nextInt(8);
+                    // Base direction: the exit facing
+                    Vec3 base = new Vec3(exitPortRotation.getStepX(), exitPortRotation.getStepY(), exitPortRotation.getStepZ());
 
-                    double vx = 0, vy = 0, vz = 0;
-                    int fx = forward.getStepX(), fz = forward.getStepZ();
-                    int lx = left.getStepX(), lz = left.getStepZ();
-                    int rx = right.getStepX(), rz = right.getStepZ();
-
-                    switch (mode) {
-                        case 0 -> {
-                            vx = fx;
-                            vy = 0;
-                            vz = fz;
-                        }               // straight
-                        case 1 -> {
-                            vx = fx + lx;
-                            vy = 0;
-                            vz = fz + lz;
-                        }           // 45° left
-                        case 2 -> {
-                            vx = fx + rx;
-                            vy = 0;
-                            vz = fz + rz;
-                        }           // 45° right
-                        case 3 -> {
-                            vx = fx;
-                            vy = 1;
-                            vz = fz;
-                        }                // slope up
-                        case 4 -> {
-                            vx = fx;
-                            vy = -1;
-                            vz = fz;
-                        }               // slope down
-                        case 5 -> {
-                            vx = fx + lx;
-                            vy = 1;
-                            vz = fz + lz;
-                        }           // 45° left + up
-                        case 6 -> {
-                            vx = fx + rx;
-                            vy = 1;
-                            vz = fz + rz;
-                        }           // 45° right + up
-                        default -> {
-                            vx = fx + rx;
-                            vy = -1;
-                            vz = fz + rz;
-                        }          // 45° right + down
+                    // If vertical exit, mix in the lastYaw so we get horizontal travel
+                    if (!exitPortRotation.getAxis().isHorizontal()) {
+                        base = base.add(lastYaw.getStepX(), 0, lastYaw.getStepZ());
                     }
 
-                    double vlen = Math.sqrt(vx * vx + vy * vy + vz * vz);
-                    if (!(vlen > 1e-6)) {
-                        vx = fx;
-                        vy = 0;
-                        vz = fz;
-                        vlen = Math.sqrt(vx * vx + vz * vz);
-                    }
-                    vx /= vlen;
-                    vy /= vlen;
-                    vz /= vlen;
+                    // Add a bit of noise so we don't only shoot straight lines
+                    Vec3 jitter = new Vec3(
+                            random.nextGaussian() * 0.35,
+                            random.nextGaussian() * 0.20,
+                            random.nextGaussian() * 0.35
+                    );
 
-                    // candidate min-corner
-                    double tx = exitPortPosition.getX() + vx * dist;
-                    double ty = exitPortPosition.getY() + vy * dist;
-                    double tz = exitPortPosition.getZ() + vz * dist;
-                    if (Double.isNaN(tx) || Double.isNaN(ty) || Double.isNaN(tz)) {
-                        LOGGER.warn("Branch candidate produced NaN target (vx,vy,vz)=({},{},{}), dist={}", vx, vy, vz, dist);
-                        continue;
-                    }
-                    BlockPos targetRoomPos = new BlockPos((int) tx, (int) ty, (int) tz);
+                    // Final unit direction (never NaN)
+                    Vec3 dir = PortGeom.safeUnit(base.add(jitter),
+                            new Vec3(lastYaw.getStepX(), 0, lastYaw.getStepZ()));
+                    if (dir.lengthSqr() < 1e-12) dir = new Vec3(1, 0, 0); // double safety
+
+                    // Compute integer target MIN corner
+                    BlockPos targetRoomPos = new BlockPos(
+                            (int)Math.floor(exitPortPosition.getX() + dir.x * dist),
+                            (int)Math.floor(exitPortPosition.getY() + dir.y * dist),
+                            (int)Math.floor(exitPortPosition.getZ() + dir.z * dist)
+                    );
                     if (looksLikeSentinel(targetRoomPos, dungeonBox)) {
                         LOGGER.warn("Branch candidate hit origin—skipping.");
                         continue;
                     }
 
-                    Direction requiredEntranceFacing = forward.getOpposite();
+                    // Approach facing for the corridor: project to horizontal if needed
+                    Direction approachFacing = PortGeom.facingFromXZ(dir, lastYaw);
+                    if (approachFacing.getAxis().isHorizontal()) lastYaw = approachFacing;
+
+                    Direction requiredEntranceFacing = approachFacing.getOpposite();
                     EntranceMatch match = pickEntranceFor(requiredEntranceFacing, newRoomDef);
-                    if (match == null) continue; // cannot orient entrances for this approach
+                    if (match == null) {
+                        // Try a different approach; many rooms only have horizontal entrances
+                        continue;
+                    }
 
                     PortDef chosenEntrance = match.entrance();
                     Rotation newRoomRotation = match.rotation();
 
+                    // Place the room and check collisions
                     Vec3i size = new Vec3i(newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ());
                     AABB roomAabb = PortGeom.rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
 
-                    // Y-bounds + collision
-                    if (roomAabb.maxY > dungeonBox.maxY) continue;
+                    // Allow outside the dungeon box; only clamp against world floor
                     if (roomAabb.minY < (input.minBuildHeight() + 10)) continue;
                     if (mask.contains(expanded)) continue;
 
-                    // **Hard rule**: must be within 35 blocks of the parent room center
-                    double d2 = centerDist2(roomAabb, parentRoom.aabb());
-                    if (d2 > (double) MAX_BRANCH_DIST * MAX_BRANCH_DIST) {
-                        // too far from parent; try another attempt
-                        continue;
-                    }
+                    // We already chose dist in [35..50] from the parent port, so no extra range check needed.
 
                     // Accept placement
                     addData(blockData, new RoomGenerator(newRoomDef, targetRoomPos, newRoomRotation).getBlocks(Galacticraft.SCANNER));
@@ -616,14 +568,14 @@ public class DungeonBuilder {
                     dungeonRooms.add(newRoom);
                     placed = true;
 
-                    // Add new room exits to available ports (unless treasure)
+                    // Add new room exits to future candidates (unless treasure)
                     if (!treasure) {
                         for (PortDef exit : newRoomDef.exits()) {
                             availableExitPorts.add(new PortRoomMapping(exit, newRoom));
                         }
                     }
 
-                    // Build the net from parent port to this new room's chosen entrance
+                    // Corridor endpoints (nudge outward)
                     BlockPos entrancePortPosition;
                     Direction entrancePortRotation = newRoomRotation.rotate(chosenEntrance.facing());
                     try {
@@ -634,24 +586,22 @@ public class DungeonBuilder {
                         );
                     } catch (Exception ex) {
                         LOGGER.warn("Placed branch room, but entrance transform failed; skipping corridor: {}", ex.getMessage());
-                        continue;
+                        break;
                     }
 
-                    // Nudge both ends outward
-                    exitPortPosition = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
-                    entrancePortPosition = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    BlockPos exitN = exitPortPosition.offset(exitPortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
+                    BlockPos entrN = entrancePortPosition.offset(entrancePortRotation.getNormal().multiply(CORRIDOR_PLACEMENT_OFFSET));
 
-                    if (netLooksInsane(exitPortPosition, entrancePortPosition)) {
+                    if (!netLooksInsane(exitN, entrN)) {
+                        nets.add(new NegotiatedRouter.Net(
+                                exitN, exitPortRotation,
+                                entrN, entrancePortRotation,
+                                CORRIDOR_PREFLIGHT
+                        ));
+                    } else {
                         LOGGER.warn("Skipping branch net (insane distance {}), but keeping room.",
-                                manhattan(exitPortPosition, entrancePortPosition));
-                        continue;
+                                manhattan(exitN, entrN));
                     }
-
-                    nets.add(new NegotiatedRouter.Net(
-                            exitPortPosition, exitPortRotation,
-                            entrancePortPosition, entrancePortRotation,
-                            CORRIDOR_PREFLIGHT
-                    ));
                 }
 
                 if (!placed) {

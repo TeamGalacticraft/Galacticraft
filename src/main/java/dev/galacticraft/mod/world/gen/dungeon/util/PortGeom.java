@@ -37,8 +37,23 @@ public final class PortGeom {
         return rotatedLocalAabb(sx, sy, sz, rot, p);
     }
 
+    public static Vec3 safeUnit(Vec3 v, Vec3 fallback) {
+        double len2 = v.lengthSqr();
+        if (len2 < 1e-12) return fallback.normalize();  // never NaN
+        return v.scale(1.0 / Math.sqrt(len2));
+    }
+
+    public static Direction facingFromXZ(Vec3 v, Direction fallback) {
+        // pick major axis in XZ plane; if near-zero, use fallback
+        double ax = Math.abs(v.x);
+        double az = Math.abs(v.z);
+        if (ax < 1e-9 && az < 1e-9) return fallback;
+        if (ax >= az) return (v.x >= 0) ? Direction.EAST : Direction.WEST;
+        return (v.z >= 0) ? Direction.SOUTH : Direction.NORTH;
+    }
+
     // AABB of a rotated template placed with world MIN corner = minAfterRot.
-// Uses the same pivot logic as RoomGenerator (pivot = floor(size/2)).
+    // Uses the same pivot logic as RoomGenerator (pivot = floor(size/2)).
     public static AABB rotatedRoomAabb(BlockPos minAfterRot, Vec3i size, Rotation rot) {
         int sx = size.getX(), sy = size.getY(), sz = size.getZ();
         BlockPos pivot = new BlockPos(sx / 2, sy / 2, sz / 2);
