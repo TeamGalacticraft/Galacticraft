@@ -43,50 +43,6 @@ public class DungeonBuilder {
         this.random = random.fork();
     }
 
-    /**
-     * Compute a world-space AABB for a room placed with its MIN-corner at `minCorner`,
-     * rotated about the box center by the given Y-rotation.
-     * <p>
-     * For Y-rotations (NONE/90/180/270), rotating an axis-aligned box about its center
-     * simply swaps X/Z extents on 90/270; center stays the same.
-     */
-    private static AABB rotatedRoomAabb(BlockPos minCorner, Vec3i size, Rotation rot) {
-        // Unrotated box from min-corner
-        BlockPos maxCorner = minCorner.offset(size); // or: minCorner.offset(size.getX(), size.getY(), size.getZ())
-        AABB base = new AABB(minCorner.getCenter(), maxCorner.getCenter());
-
-        // Center of the unrotated box
-        Vec3 c = base.getCenter();
-
-        // Half extents; swap X/Z on 90° or 270° (COUNTERCLOCKWISE_90)
-        double hx, hy, hz;
-        boolean swapXZ = (rot == Rotation.CLOCKWISE_90) || (rot == Rotation.COUNTERCLOCKWISE_90);
-        hx = (swapXZ ? size.getZ() : size.getX()) / 2.0;
-        hy = size.getY() / 2.0;
-        hz = (swapXZ ? size.getX() : size.getZ()) / 2.0;
-
-        // Rebuild AABB from center ± half extents
-        return new AABB(
-                c.x - hx, c.y - hy, c.z - hz,
-                c.x + hx, c.y + hy, c.z + hz
-        );
-    }
-
-    // Returns a Y-rotation that turns `from` into `to`, or null if either is non-horizontal.
-    @Nullable
-    private static Rotation yRotationBetween(Direction from, Direction to) {
-        if (!from.getAxis().isHorizontal() || !to.getAxis().isHorizontal()) return null;
-        // 0..3 clockwise quarter-turns
-        int turns = (to.get2DDataValue() - from.get2DDataValue()) & 3;
-        return switch (turns) {
-            case 0 -> Rotation.NONE;
-            case 1 -> Rotation.CLOCKWISE_90;
-            case 2 -> Rotation.CLOCKWISE_180;
-            case 3 -> Rotation.COUNTERCLOCKWISE_90;
-            default -> Rotation.NONE; // unreachable
-        };
-    }
-
     // Choose an entrance that can face `requiredFacing` using only Y-rotations.
     // - horizontal required: pick a horizontal entrance and return its rotation
     // - vertical required: only valid if entrance is the same vertical dir (no rotation possible)
@@ -98,7 +54,7 @@ public class DungeonBuilder {
         if (requiredFacing.getAxis().isHorizontal()) {
             for (PortDef e : entrances) {
                 if (!e.facing().getAxis().isHorizontal()) continue;
-                Rotation r = yRotationBetween(e.facing(), requiredFacing);
+                Rotation r = PortGeom.yRotationBetween(e.facing(), requiredFacing);
                 if (r != null) {
                     best = e;
                     rot = r;
@@ -178,7 +134,7 @@ public class DungeonBuilder {
         Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
 
         // Provisional AABB at min=(0,0,0) with the desired rotation.
-        AABB provisional = rotatedRoomAabb(new BlockPos(0, 0, 0), size, rot);
+        AABB provisional = PortGeom.rotatedRoomAabb(new BlockPos(0, 0, 0), size, rot);
 
         // Where would the exit port land if min=(0,0,0)?
         BlockPos p0 = PortGeom.localToWorld(
@@ -217,7 +173,7 @@ public class DungeonBuilder {
             addData(blockData, new RoomGenerator(def, entrancePosition, Rotation.NONE).getBlocks(Galacticraft.SCANNER));
 
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-            AABB aabb = rotatedRoomAabb(entrancePosition, size, Rotation.NONE);
+            AABB aabb = PortGeom.rotatedRoomAabb(entrancePosition, size, Rotation.NONE);
             placedRoomBoxes.add(aabb);
             mask.add(aabb);
             entranceRoom = new Room(aabb, Rotation.NONE, def);
@@ -244,7 +200,7 @@ public class DungeonBuilder {
 
             dungeonCenter = new BlockPos(input.surface().getX(), Math.ceilDiv((entrancePosition.getY() - endPosition.getY()), 2) + endPosition.getY(), input.surface().getZ());
             Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-            AABB aabb = rotatedRoomAabb(endPosition, size, endRotation);
+            AABB aabb = PortGeom.rotatedRoomAabb(endPosition, size, endRotation);
             placedRoomBoxes.add(aabb);
             mask.add(aabb);
             endRoom = new Room(aabb, endRotation, def);
@@ -280,14 +236,14 @@ public class DungeonBuilder {
 
                 // Rotate queen so its EXIT faces back toward the entrance (ports face each other)
                 Direction queenExitFacingLocal = queenExit.facing();
-                Rotation rotation = rotationNeededToMatch(queenExitFacingLocal, entranceFacingWorld.getOpposite());
+                Rotation rotation = PortGeom.rotationNeededToMatch(queenExitFacingLocal, entranceFacingWorld.getOpposite());
 
                 // Solve min-corner so that queenExit maps to targetExitWorld
                 BlockPos queenMin = solveMinForPortTarget(def, rotation, queenExit, targetExitWorld);
 
                 // Build final AABB and place
                 Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-                AABB aabb = rotatedRoomAabb(queenMin, size, rotation);
+                AABB aabb = PortGeom.rotatedRoomAabb(queenMin, size, rotation);
 
                 // (Optional) quick sanity: verify the exit port really landed at targetExitWorld
                 BlockPos checkWorld = PortGeom.localToWorld(
@@ -341,7 +297,7 @@ public class DungeonBuilder {
 
                     // 3) Build rotated AABB around its center
                     Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-                    AABB roomAabb = rotatedRoomAabb(roomPos, size, rot);
+                    AABB roomAabb = PortGeom.rotatedRoomAabb(roomPos, size, rot);
 
                     // 4) Margin check vs any already-placed room
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
@@ -637,7 +593,7 @@ public class DungeonBuilder {
                     Rotation newRoomRotation = match.rotation();
 
                     Vec3i size = new Vec3i(newRoomDef.sizeX(), newRoomDef.sizeY(), newRoomDef.sizeZ());
-                    AABB roomAabb = rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
+                    AABB roomAabb = PortGeom.rotatedRoomAabb(targetRoomPos, size, newRoomRotation);
                     AABB expanded = roomAabb.inflate(ROOM_MARGIN);
 
                     // Y-bounds + collision
@@ -825,37 +781,6 @@ public class DungeonBuilder {
                 });
 
         return true;
-    }
-
-    private Rotation rotationNeededToMatch(Direction originalDirection, Direction desiredDirection) {
-        if (originalDirection == null || desiredDirection == null) {
-            throw new IllegalArgumentException("Directions must not be null.");
-        }
-
-        if (originalDirection == Direction.UP || originalDirection == Direction.DOWN) {
-            return Rotation.NONE;
-        }
-
-        // No change needed
-        if (originalDirection == desiredDirection) {
-            return Rotation.NONE;
-        }
-
-        // Try the three non-trivial Y-rotations in any order
-        Rotation[] candidates = {
-                Rotation.CLOCKWISE_90,
-                Rotation.CLOCKWISE_180,
-                Rotation.COUNTERCLOCKWISE_90
-        };
-
-        for (Rotation rot : candidates) {
-            if (rot.rotate(originalDirection) == desiredDirection) {
-                return rot;
-            }
-        }
-
-        // If we get here, the mapping isn't possible with Y-rotation (e.g., UP/DOWN to horizontal, or vice versa)
-        throw new IllegalArgumentException("Cannot rotate " + originalDirection + " to " + desiredDirection + " with Y-axis rotations.");
     }
 
     public record Room(AABB aabb, Rotation rotation, RoomDef def) {

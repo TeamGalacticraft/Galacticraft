@@ -2,9 +2,7 @@ package dev.galacticraft.mod.world.gen.dungeon.util;
 
 import dev.galacticraft.mod.world.gen.dungeon.DungeonBuilder;
 import dev.galacticraft.mod.world.gen.dungeon.records.PortDef;
-import net.minecraft.core.Direction;
-import net.minecraft.world.level.block.Rotation;
-import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.Vec3;
 
 import java.util.*;
 
@@ -185,40 +183,20 @@ public final class RoomHamiltonianPath {
      * Center point of the AABB face corresponding to the port's (rotated) facing.
      */
     private static double[] portCenterWorld(DungeonBuilder.Room room, PortDef port) {
-        Direction face = rotate(port.facing(), room.rotation());
-        AABB box = room.aabb();
-
-        double cx = 0.5 * (box.minX + box.maxX);
-        double cy = 0.5 * (box.minY + box.maxY);
-        double cz = 0.5 * (box.minZ + box.maxZ);
-
-        return switch (face) {
-            case NORTH -> new double[]{cx, cy, box.minZ}; // -Z
-            case SOUTH -> new double[]{cx, cy, box.maxZ}; // +Z
-            case WEST -> new double[]{box.minX, cy, cz}; // -X
-            case EAST -> new double[]{box.maxX, cy, cz}; // +X
-            case DOWN -> new double[]{cx, box.minY, cz}; // -Y
-            case UP -> new double[]{cx, box.maxY, cz}; // +Y
-        };
+        // Get the world-space center of this port using the unified transform:
+        Vec3 c = PortGeom.worldCenter(
+                room,
+                port,
+                room.def().sizeX(),
+                room.def().sizeY(),
+                room.def().sizeZ()
+        );
+        return new double[]{c.x, c.y, c.z};
     }
 
     private static double euclid(double[] a, double[] b) {
         double dx = a[0] - b[0], dy = a[1] - b[1], dz = a[2] - b[2];
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
-    }
-
-    /**
-     * Rotate a Direction by a Block Rotation (Minecraft semantics).
-     */
-    private static Direction rotate(Direction d, Rotation r) {
-        // Rotation only affects horizontal in Minecraft; UP/DOWN unchanged.
-        if (d.getAxis().isVertical()) return d;
-        return switch (r) {
-            case NONE -> d;
-            case CLOCKWISE_90 -> d.getClockWise();
-            case CLOCKWISE_180 -> d.getClockWise().getClockWise();
-            case COUNTERCLOCKWISE_90 -> d.getCounterClockWise();
-        };
     }
 
     // ---- Result container ----

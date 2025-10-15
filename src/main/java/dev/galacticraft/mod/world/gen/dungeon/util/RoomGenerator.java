@@ -20,16 +20,14 @@ import java.util.Objects;
 
 /**
  * Pure data/logic holder for a single template placement.
- * - Rotates around the template center (not the lower corner).
- * - Bounding box is computed from RoomDef.size* and the requested rotation.
- * <p>
  * Contract:
  * position = desired world MIN corner of the ROTATED template’s AABB.
+ * <p>
+ * All rotation/translation math is delegated to PortGeom to keep it consistent.
  */
 public final class RoomGenerator {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    // --- immutable placement info ---
     private final ResourceLocation templateId;
     private final Rotation rotation;
     private final int sizeX, sizeY, sizeZ;
@@ -39,17 +37,12 @@ public final class RoomGenerator {
      */
     private final BlockPos worldMinAfterRotation;
 
-    /**
-     * Optional (debug/trace): the logical room id.
-     */
     private final String roomId;
 
     /**
-     * Cached world-space bounding box for this placement.
+     * Cached world-space bounding box for this placement (computed via PortGeom).
      */
     private final BoundingBox boundingBox;
-
-    // ====== Constructors ======
 
     public RoomGenerator(RoomDef def, BlockPos position, Rotation rotation) {
         Objects.requireNonNull(def, "def");
@@ -60,57 +53,8 @@ public final class RoomGenerator {
         this.sizeZ = def.sizeZ();
         this.worldMinAfterRotation = Objects.requireNonNull(position, "position");
         this.roomId = def.id();
-        this.boundingBox = computeBoundingBox(sizeX, sizeY, sizeZ, worldMinAfterRotation, rotation);
-    }
-
-    // ====== API ======
-
-    private static BoundingBox computeBoundingBox(int sx, int sy, int sz, BlockPos worldMinAfterRotation, Rotation rot) {
-        BlockPos pivot = new BlockPos(sx / 2, sy / 2, sz / 2);
-        LocalAabb rotLocal = rotatedLocalAabb(sx, sy, sz, rot, pivot);
-
-        BlockPos minW = worldMinAfterRotation;
-        BlockPos maxW = worldMinAfterRotation.offset(
-                rotLocal.sizeX() - 1,
-                rotLocal.sizeY() - 1,
-                rotLocal.sizeZ() - 1
-        );
-        return BoundingBox.fromCorners(minW, maxW);
-    }
-
-    /**
-     * Local-space AABB of template [0..sx-1,0..sy-1,0..sz-1] rotated around 'pivot'.
-     */
-    private static LocalAabb rotatedLocalAabb(int sx, int sy, int sz, Rotation rot, BlockPos pivot) {
-        // corners of the unrotated template volume
-        BlockPos[] corners = new BlockPos[]{
-                new BlockPos(0, 0, 0),
-                new BlockPos(sx - 1, 0, 0),
-                new BlockPos(0, sy - 1, 0),
-                new BlockPos(0, 0, sz - 1),
-                new BlockPos(sx - 1, sy - 1, 0),
-                new BlockPos(sx - 1, 0, sz - 1),
-                new BlockPos(0, sy - 1, sz - 1),
-                new BlockPos(sx - 1, sy - 1, sz - 1)
-        };
-
-        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
-        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
-
-        for (BlockPos c : corners) {
-            BlockPos rc = StructureTemplate.transform(c, Mirror.NONE, rot, pivot);
-            if (rc.getX() < minX) minX = rc.getX();
-            if (rc.getY() < minY) minY = rc.getY();
-            if (rc.getZ() < minZ) minZ = rc.getZ();
-            if (rc.getX() > maxX) maxX = rc.getX();
-            if (rc.getY() > maxY) maxY = rc.getY();
-            if (rc.getZ() > maxZ) maxZ = rc.getZ();
-        }
-
-        BlockPos min = new BlockPos(minX, minY, minZ);
-        BlockPos max = new BlockPos(maxX, maxY, maxZ);
-        BlockPos size = max.subtract(min).offset(1, 1, 1);
-        return new LocalAabb(min, size);
+        // unified bounding box computation
+        this.boundingBox = PortGeom.computeBoundingBox(sizeX, sizeY, sizeZ, worldMinAfterRotation, rotation);
     }
 
     public ResourceLocation templateId() {
@@ -141,36 +85,32 @@ public final class RoomGenerator {
         return roomId;
     }
 
-    // ====== Bounding box math (center rotation) ======
-
     public BoundingBox boundingBox() {
         return boundingBox;
     }
 
     /**
-     * Returns the blocks this placement would emit, grouped by SectionPos, with 12-bit packed local coords.
-     * Uses {@link TemplateScanner#loadBlocks(ResourceLocation)} to get cached raw blocks/palette.
+     * Returns blocks this placement would emit, grouped by SectionPos.
+     * Rotation & translation use the same pivot/origin as PortGeom.
      */
     public HashMap<SectionPos, List<BlockData>> getBlocks(TemplateScanner scanner) {
         var result = new HashMap<SectionPos, List<BlockData>>();
 
-        // Load cached raw blocks for this template
         var tb = scanner.loadBlocks(this.templateId);
 
-        // Rotation pivot & origin must match the old postProcess() math
-        BlockPos pivot = new BlockPos(sizeX / 2, sizeY / 2, sizeZ / 2);
-        LocalAabb rotLocal = rotatedLocalAabb(sizeX, sizeY, sizeZ, this.rotation, pivot);
-        BlockPos origin = this.worldMinAfterRotation.subtract(rotLocal.min());
+        // Precompute pivot & origin using unified helper
+        var po = PortGeom.originForPlacedMin(sizeX, sizeY, sizeZ, rotation, worldMinAfterRotation);
+        BlockPos pivot = po.pivot();
+        BlockPos origin = po.origin();
 
         Mirror mirror = Mirror.NONE;
         Rotation rot = this.rotation;
 
         for (StructureTemplate.StructureBlockInfo info : tb.rawBlocks()) {
-            // local -> rotated/mirrored -> world
+            // local -> rotated/mirrored -> world, with unified pivot/origin
             BlockPos rotatedLocal = StructureTemplate.transform(info.pos(), mirror, rot, pivot);
             BlockPos worldPos = rotatedLocal.offset(origin);
 
-            // rotate/mirror state so facings match
             BlockState state = info.state();
             if (state.is(GCBlocks.DUNGEON_ENTRANCE_BLOCK) || state.is(GCBlocks.DUNGEON_EXIT_BLOCK)) {
                 state = GCBlocks.OLIANT_NEST_BLOCK.defaultBlockState();
@@ -182,20 +122,5 @@ public final class RoomGenerator {
             result.computeIfAbsent(sec, k -> new java.util.ArrayList<>()).add(data);
         }
         return result;
-    }
-
-    // ====== tiny value class ======
-    private record LocalAabb(BlockPos min, BlockPos size) {
-        int sizeX() {
-            return size.getX();
-        }
-
-        int sizeY() {
-            return size.getY();
-        }
-
-        int sizeZ() {
-            return size.getZ();
-        }
     }
 }
