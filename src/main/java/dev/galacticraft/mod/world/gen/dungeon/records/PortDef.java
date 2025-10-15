@@ -15,7 +15,9 @@ public record PortDef(
         BlockPos min,           // local min corner (inclusive)
         BlockPos max            // local max corner (inclusive)
 ) {
-    /** Integer center in local coords (block center). */
+    /**
+     * Integer center in local coords (block center).
+     */
     public BlockPos localCenterBlock() {
         return new BlockPos(
                 (min.getX() + max.getX()) >> 1,
@@ -24,7 +26,9 @@ public record PortDef(
         );
     }
 
-    /** Sub-block center in local coords (cube center of the plane area). */
+    /**
+     * Sub-block center in local coords (cube center of the plane area).
+     */
     public net.minecraft.world.phys.Vec3 localCenter() {
         return new net.minecraft.world.phys.Vec3(
                 (min.getX() + max.getX()) * 0.5 + 0.5,
@@ -33,7 +37,9 @@ public record PortDef(
         );
     }
 
-    /** Width × height of the port rectangle (in blocks). */
+    /**
+     * Width × height of the port rectangle (in blocks).
+     */
     public int area() {
         int dx = (max.getX() - min.getX()) + 1;
         int dy = (max.getY() - min.getY()) + 1;

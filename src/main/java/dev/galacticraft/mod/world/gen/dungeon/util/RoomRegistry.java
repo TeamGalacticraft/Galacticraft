@@ -19,7 +19,37 @@ public final class RoomRegistry {
         for (RoomType t : RoomType.values()) pools.put(t, new Pool());
     }
 
-    /** Bootstrap entirely from code. Call this once at server/datapack init. */
+    private static void validate(RoomDef d) {
+        if (d.id() == null || d.id().isBlank()) throw new IllegalArgumentException("room id missing");
+        if (d.template() == null || d.template().isBlank())
+            throw new IllegalArgumentException("template missing for " + d.id());
+        switch (d.type()) {
+            case ENTRANCE -> {
+                if (!d.hasAtLeastOneExit())
+                    throw new IllegalArgumentException("Entrance must have an EXIT port: " + d.id());
+            }
+            case END -> {
+                if (!d.hasAtLeastOneEntrance())
+                    throw new IllegalArgumentException("End must have ENTRANCE port(s): " + d.id());
+                if (d.hasAtLeastOneExit())
+                    throw new IllegalArgumentException("End must not have EXIT ports: " + d.id());
+            }
+            case TREASURE -> {
+                if (d.hasAtLeastOneExit())
+                    throw new IllegalArgumentException("Treasure must not have EXIT ports: " + d.id());
+                if (!d.hasAtLeastOneEntrance())
+                    throw new IllegalArgumentException("Treasure needs at least one ENTRANCE: " + d.id());
+            }
+            default -> {
+                if (!d.hasAtLeastOneEntrance() || !d.hasAtLeastOneExit())
+                    throw new IllegalArgumentException("Room must have both ENTRANCE and EXIT: " + d.id());
+            }
+        }
+    }
+
+    /**
+     * Bootstrap entirely from code. Call this once at server/datapack init.
+     */
     public void loadFromCode(TemplateScanner scanner, java.util.function.Consumer<Registrar> bootstrapper) {
         byId.clear();
         pools.values().forEach(Pool::clear);
@@ -40,7 +70,9 @@ public final class RoomRegistry {
         return def;
     }
 
-    public RoomDef get(String id) { return byId.get(id); }
+    public RoomDef get(String id) {
+        return byId.get(id);
+    }
 
     public RoomDef require(String id) {
         RoomDef d = byId.get(id);
@@ -52,28 +84,6 @@ public final class RoomRegistry {
         return pools.get(type).pick(r, filter);
     }
 
-    private static void validate(RoomDef d) {
-        if (d.id() == null || d.id().isBlank()) throw new IllegalArgumentException("room id missing");
-        if (d.template() == null || d.template().isBlank()) throw new IllegalArgumentException("template missing for " + d.id());
-        switch (d.type()) {
-            case ENTRANCE -> {
-                if (!d.hasAtLeastOneExit()) throw new IllegalArgumentException("Entrance must have an EXIT port: " + d.id());
-            }
-            case END -> {
-                if (!d.hasAtLeastOneEntrance()) throw new IllegalArgumentException("End must have ENTRANCE port(s): " + d.id());
-                if (d.hasAtLeastOneExit()) throw new IllegalArgumentException("End must not have EXIT ports: " + d.id());
-            }
-            case TREASURE -> {
-                if (d.hasAtLeastOneExit()) throw new IllegalArgumentException("Treasure must not have EXIT ports: " + d.id());
-                if (!d.hasAtLeastOneEntrance()) throw new IllegalArgumentException("Treasure needs at least one ENTRANCE: " + d.id());
-            }
-            default -> {
-                if (!d.hasAtLeastOneEntrance() || !d.hasAtLeastOneExit())
-                    throw new IllegalArgumentException("Room must have both ENTRANCE and EXIT: " + d.id());
-            }
-        }
-    }
-
     // ---- Registrar & Builder -------------------------------------------------
 
     public static final class Registrar {
@@ -81,7 +91,8 @@ public final class RoomRegistry {
         private final TemplateScanner scanner;
 
         Registrar(RoomRegistry reg, TemplateScanner scanner) {
-            this.reg = reg; this.scanner = scanner;
+            this.reg = reg;
+            this.scanner = scanner;
         }
 
         public Builder room(String id, RoomType type, String template) {
@@ -89,11 +100,26 @@ public final class RoomRegistry {
         }
 
         // Convenience factories
-        public Builder entrance(String id, String template)   { return room(id, RoomType.ENTRANCE, template); }
-        public Builder end(String id, String template)        { return room(id, RoomType.END, template); }
-        public Builder queen(String id, String template)      { return room(id, RoomType.QUEEN, template); }
-        public Builder basic(String id, String template)      { return room(id, RoomType.BASIC, template); }
-        public Builder treasure(String id, String template)   { return room(id, RoomType.TREASURE, template); }}
+        public Builder entrance(String id, String template) {
+            return room(id, RoomType.ENTRANCE, template);
+        }
+
+        public Builder end(String id, String template) {
+            return room(id, RoomType.END, template);
+        }
+
+        public Builder queen(String id, String template) {
+            return room(id, RoomType.QUEEN, template);
+        }
+
+        public Builder basic(String id, String template) {
+            return room(id, RoomType.BASIC, template);
+        }
+
+        public Builder treasure(String id, String template) {
+            return room(id, RoomType.TREASURE, template);
+        }
+    }
 
     public static final class Builder {
         private final RoomRegistry reg;
@@ -102,27 +128,45 @@ public final class RoomRegistry {
         private final String id;
         private final RoomType type;
         private final String template;
-        private int weight = 1;
         private final List<String> tags = new ArrayList<>();
+        private int weight = 1;
         private Constraints constraints = Constraints.any();
 
         Builder(RoomRegistry reg, TemplateScanner scanner, String id, RoomType type, String template) {
-            this.reg = reg; this.scanner = scanner;
+            this.reg = reg;
+            this.scanner = scanner;
             this.id = Objects.requireNonNull(id);
             this.type = Objects.requireNonNull(type);
             this.template = Objects.requireNonNull(template);
         }
 
-        public Builder weight(int w) { this.weight = Math.max(1, w); return this; }
-        public Builder tag(String t) { if (t != null && !t.isBlank()) tags.add(t); return this; }
-        public Builder tags(String... ts) { if (ts != null) for (String t : ts) tag(t); return this; }
-        public Builder constraints(Constraints c) { if (c != null) this.constraints = c; return this; }
+        public Builder weight(int w) {
+            this.weight = Math.max(1, w);
+            return this;
+        }
 
-        /** Scans template once; produces a canonical RoomDef and registers it. */
+        public Builder tag(String t) {
+            if (t != null && !t.isBlank()) tags.add(t);
+            return this;
+        }
+
+        public Builder tags(String... ts) {
+            if (ts != null) for (String t : ts) tag(t);
+            return this;
+        }
+
+        public Builder constraints(Constraints c) {
+            if (c != null) this.constraints = c;
+            return this;
+        }
+
+        /**
+         * Scans template once; produces a canonical RoomDef and registers it.
+         */
         public RoomDef register() {
             TemplateMeta meta = scanner.scan(template);
             PortDef[] entrances = meta.entrances();
-            PortDef[] exits     = meta.exits();
+            PortDef[] exits = meta.exits();
             RoomDef def = new RoomDef(
                     id, type, weight, template,
                     tags.toArray(String[]::new), constraints,
@@ -141,7 +185,12 @@ public final class RoomRegistry {
         private int total = 0;
         private boolean sealed = false;
 
-        void clear() { items = new RoomDef[0]; cum = new int[0]; total = 0; sealed = false; }
+        void clear() {
+            items = new RoomDef[0];
+            cum = new int[0];
+            total = 0;
+            sealed = false;
+        }
 
         void add(RoomDef d) {
             if (sealed) throw new IllegalStateException("pool sealed");

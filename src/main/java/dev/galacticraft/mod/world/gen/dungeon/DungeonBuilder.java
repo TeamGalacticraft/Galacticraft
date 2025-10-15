@@ -25,26 +25,176 @@ import java.util.concurrent.CompletableFuture;
 import java.util.function.BiConsumer;
 
 public class DungeonBuilder {
-    private final DungeonConfig config;
-    private final RandomSource random;
-
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final BlockPos FORBIDDEN_ORIGIN = BlockPos.ZERO;
+    private static final int MAX_NET_MANHATTAN = 4096;  // tune to dungeon size
+    private static final int MAX_BRANCH_DIST = 35;
     final double ROOM_MARGIN = 8;
     final int MAX_TRIES_PER_ROOM = 500;
     final int CORRIDOR_PLACEMENT_OFFSET = 1;
     final int CORRIDOR_RADIUS = 1;
     final int CORRIDOR_PREFLIGHT = 1;
     final int DILATION = 3;
-
-    private static final BlockPos FORBIDDEN_ORIGIN = BlockPos.ZERO;
-    private static final int MAX_NET_MANHATTAN = 4096;  // tune to dungeon size
-    private static final int MAX_BRANCH_DIST = 35;
-
-    public record Room(AABB aabb, Rotation rotation, RoomDef def) {}
+    private final DungeonConfig config;
+    private final RandomSource random;
 
     public DungeonBuilder(DungeonConfig config, RandomSource random) {
         this.config = config;
         this.random = random.fork();
+    }
+
+    /**
+     * Compute a world-space AABB for a room placed with its MIN-corner at `minCorner`,
+     * rotated about the box center by the given Y-rotation.
+     * <p>
+     * For Y-rotations (NONE/90/180/270), rotating an axis-aligned box about its center
+     * simply swaps X/Z extents on 90/270; center stays the same.
+     */
+    private static AABB rotatedRoomAabb(BlockPos minCorner, Vec3i size, Rotation rot) {
+        // Unrotated box from min-corner
+        BlockPos maxCorner = minCorner.offset(size); // or: minCorner.offset(size.getX(), size.getY(), size.getZ())
+        AABB base = new AABB(minCorner.getCenter(), maxCorner.getCenter());
+
+        // Center of the unrotated box
+        Vec3 c = base.getCenter();
+
+        // Half extents; swap X/Z on 90° or 270° (COUNTERCLOCKWISE_90)
+        double hx, hy, hz;
+        boolean swapXZ = (rot == Rotation.CLOCKWISE_90) || (rot == Rotation.COUNTERCLOCKWISE_90);
+        hx = (swapXZ ? size.getZ() : size.getX()) / 2.0;
+        hy = size.getY() / 2.0;
+        hz = (swapXZ ? size.getX() : size.getZ()) / 2.0;
+
+        // Rebuild AABB from center ± half extents
+        return new AABB(
+                c.x - hx, c.y - hy, c.z - hz,
+                c.x + hx, c.y + hy, c.z + hz
+        );
+    }
+
+    // Returns a Y-rotation that turns `from` into `to`, or null if either is non-horizontal.
+    @Nullable
+    private static Rotation yRotationBetween(Direction from, Direction to) {
+        if (!from.getAxis().isHorizontal() || !to.getAxis().isHorizontal()) return null;
+        // 0..3 clockwise quarter-turns
+        int turns = (to.get2DDataValue() - from.get2DDataValue()) & 3;
+        return switch (turns) {
+            case 0 -> Rotation.NONE;
+            case 1 -> Rotation.CLOCKWISE_90;
+            case 2 -> Rotation.CLOCKWISE_180;
+            case 3 -> Rotation.COUNTERCLOCKWISE_90;
+            default -> Rotation.NONE; // unreachable
+        };
+    }
+
+    // Choose an entrance that can face `requiredFacing` using only Y-rotations.
+    // - horizontal required: pick a horizontal entrance and return its rotation
+    // - vertical required: only valid if entrance is the same vertical dir (no rotation possible)
+    private static @Nullable EntranceMatch pickEntranceFor(Direction requiredFacing, RoomDef def) {
+        PortDef[] entrances = def.entrances();
+        PortDef best = null;
+        Rotation rot = Rotation.NONE;
+
+        if (requiredFacing.getAxis().isHorizontal()) {
+            for (PortDef e : entrances) {
+                if (!e.facing().getAxis().isHorizontal()) continue;
+                Rotation r = yRotationBetween(e.facing(), requiredFacing);
+                if (r != null) {
+                    best = e;
+                    rot = r;
+                    break;
+                }
+            }
+        } else {
+            // UP/DOWN required: must have the same vertical entrance; rotation is NONE
+            for (PortDef e : entrances) {
+                if (e.facing() == requiredFacing) {
+                    best = e;
+                    rot = Rotation.NONE;
+                    break;
+                }
+            }
+        }
+
+        return (best == null) ? null : new EntranceMatch(best, rot);
+    }
+
+    private static Direction[] lateralBasis(Direction forward, Direction fallbackYaw) {
+        // Ensure fallbackYaw is horizontal
+        Direction yaw = fallbackYaw.getAxis().isHorizontal() ? fallbackYaw : Direction.NORTH;
+
+        if (forward.getAxis().isHorizontal()) {
+            return new Direction[]{forward.getCounterClockWise(), forward.getClockWise()};
+        } else if (forward == Direction.UP) {
+            // Looking up: standard handedness
+            return new Direction[]{yaw.getCounterClockWise(), yaw.getClockWise()};
+        } else { // DOWN
+            // Looking down: flip handedness so "left/right" remain intuitive
+            return new Direction[]{yaw.getClockWise(), yaw.getCounterClockWise()};
+        }
+    }
+
+    private static boolean dungeonTouchesOrigin(AABB box) {
+        return box.minX <= 0 && box.maxX >= 0
+                && box.minY <= 0 && box.maxY >= 0
+                && box.minZ <= 0 && box.maxZ >= 0;
+    }
+
+    private static boolean looksLikeSentinel(BlockPos p, AABB dungeonBox) {
+        return !dungeonTouchesOrigin(dungeonBox) && p.equals(FORBIDDEN_ORIGIN);
+    }
+
+    private static int manhattan(BlockPos a, BlockPos b) {
+        return Math.abs(a.getX() - b.getX()) + Math.abs(a.getY() - b.getY()) + Math.abs(a.getZ() - b.getZ());
+    }
+
+    private static boolean netLooksInsane(BlockPos a, BlockPos b) {
+        return manhattan(a, b) > MAX_NET_MANHATTAN;
+    }
+
+    private static double centerDist2(AABB a, AABB b) {
+        var ca = a.getCenter();
+        var cb = b.getCenter();
+        double dx = ca.x - cb.x, dy = ca.y - cb.y, dz = ca.z - cb.z;
+        return dx * dx + dy * dy + dz * dz;
+    }
+
+    // Wrapper that explodes early if a transform is bogus.
+    private static BlockPos safeLocalToWorld(
+            BlockPos local, int sx, int sy, int sz,
+            AABB roomAabb, Rotation rot, AABB dungeonBox, String ctx) {
+        BlockPos w = PortGeom.localToWorld(local, sx, sy, sz, roomAabb, rot);
+        if (w == null) throw new IllegalStateException(ctx + ": localToWorld returned null");
+        if (looksLikeSentinel(w, dungeonBox)) {
+            throw new IllegalStateException(ctx + ": localToWorld produced (0,0,0) (bad template/rotation/AABB?)");
+        }
+        return w;
+    }
+
+    /**
+     * Compute a queen room min-corner so that its `exitPort` world position equals `targetExitWorld`.
+     */
+    private static BlockPos solveMinForPortTarget(RoomDef def, Rotation rot, PortDef exitPort, BlockPos targetExitWorld) {
+        Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
+
+        // Provisional AABB at min=(0,0,0) with the desired rotation.
+        AABB provisional = rotatedRoomAabb(new BlockPos(0, 0, 0), size, rot);
+
+        // Where would the exit port land if min=(0,0,0)?
+        BlockPos p0 = PortGeom.localToWorld(
+                exitPort.localCenterBlock(),
+                def.sizeX(), def.sizeY(), def.sizeZ(),
+                provisional, rot
+        );
+
+        // Because the transform is affine (pure Y-rotation + translation),
+        // translating the min-corner by Δ translates world positions by Δ.
+        // So choose minCorner = target - p0.
+        return new BlockPos(
+                targetExitWorld.getX() - p0.getX(),
+                targetExitWorld.getY() - p0.getY(),
+                targetExitWorld.getZ() - p0.getZ()
+        );
     }
 
     private DungeonResult generateDungeon(DungeonInput input) {
@@ -229,7 +379,7 @@ public class DungeonBuilder {
                 roomsInPath.add(queenRoomsCopy.remove(random.nextInt(0, queenRoomsCopy.size())));
                 Optional<RoomHamiltonianPath.PathResult> solved = RoomHamiltonianPath.solve(roomsInPath, 0, roomsInPath.size() - 1);
                 if (solved.isPresent()) {
-                    List<Room> orderedRooms =  new ArrayList<>();
+                    List<Room> orderedRooms = new ArrayList<>();
                     for (int k = 0; k < roomsInPath.toArray().length; k++) {
                         orderedRooms.add(roomsInPath.get(solved.get().order.get(k)));
                     }
@@ -348,7 +498,8 @@ public class DungeonBuilder {
         }
 
         // Find all unused exits and branch off until we reach room limit
-        record PortRoomMapping(PortDef port, Room room) {}
+        record PortRoomMapping(PortDef port, Room room) {
+        }
         List<PortRoomMapping> availableExitPorts = new ArrayList<>();
 
         try {
@@ -398,7 +549,7 @@ public class DungeonBuilder {
                 boolean placed = false;
                 for (int attempt = 0; attempt < MAX_TRIES_PER_ROOM && !placed; attempt++) {
                     Direction[] lr = lateralBasis(forward, lastYaw);
-                    Direction left  = lr[0];
+                    Direction left = lr[0];
                     Direction right = lr[1];
 
                     // strictly ≤ 35 away from the parent
@@ -407,23 +558,62 @@ public class DungeonBuilder {
 
                     double vx = 0, vy = 0, vz = 0;
                     int fx = forward.getStepX(), fz = forward.getStepZ();
-                    int lx = left.getStepX(),    lz = left.getStepZ();
-                    int rx = right.getStepX(),   rz = right.getStepZ();
+                    int lx = left.getStepX(), lz = left.getStepZ();
+                    int rx = right.getStepX(), rz = right.getStepZ();
 
                     switch (mode) {
-                        case 0 -> { vx = fx;            vy = 0; vz = fz; }               // straight
-                        case 1 -> { vx = fx + lx;       vy = 0; vz = fz + lz; }           // 45° left
-                        case 2 -> { vx = fx + rx;       vy = 0; vz = fz + rz; }           // 45° right
-                        case 3 -> { vx = fx;            vy = 1; vz = fz; }                // slope up
-                        case 4 -> { vx = fx;            vy = -1; vz = fz; }               // slope down
-                        case 5 -> { vx = fx + lx;       vy = 1; vz = fz + lz; }           // 45° left + up
-                        case 6 -> { vx = fx + rx;       vy = 1; vz = fz + rz; }           // 45° right + up
-                        default -> { vx = fx + rx;      vy = -1; vz = fz + rz; }          // 45° right + down
+                        case 0 -> {
+                            vx = fx;
+                            vy = 0;
+                            vz = fz;
+                        }               // straight
+                        case 1 -> {
+                            vx = fx + lx;
+                            vy = 0;
+                            vz = fz + lz;
+                        }           // 45° left
+                        case 2 -> {
+                            vx = fx + rx;
+                            vy = 0;
+                            vz = fz + rz;
+                        }           // 45° right
+                        case 3 -> {
+                            vx = fx;
+                            vy = 1;
+                            vz = fz;
+                        }                // slope up
+                        case 4 -> {
+                            vx = fx;
+                            vy = -1;
+                            vz = fz;
+                        }               // slope down
+                        case 5 -> {
+                            vx = fx + lx;
+                            vy = 1;
+                            vz = fz + lz;
+                        }           // 45° left + up
+                        case 6 -> {
+                            vx = fx + rx;
+                            vy = 1;
+                            vz = fz + rz;
+                        }           // 45° right + up
+                        default -> {
+                            vx = fx + rx;
+                            vy = -1;
+                            vz = fz + rz;
+                        }          // 45° right + down
                     }
 
-                    double vlen = Math.sqrt(vx*vx + vy*vy + vz*vz);
-                    if (!(vlen > 1e-6)) { vx = fx; vy = 0; vz = fz; vlen = Math.sqrt(vx*vx + vz*vz); }
-                    vx /= vlen; vy /= vlen; vz /= vlen;
+                    double vlen = Math.sqrt(vx * vx + vy * vy + vz * vz);
+                    if (!(vlen > 1e-6)) {
+                        vx = fx;
+                        vy = 0;
+                        vz = fz;
+                        vlen = Math.sqrt(vx * vx + vz * vz);
+                    }
+                    vx /= vlen;
+                    vy /= vlen;
+                    vz /= vlen;
 
                     // candidate min-corner
                     double tx = exitPortPosition.getX() + vx * dist;
@@ -433,7 +623,7 @@ public class DungeonBuilder {
                         LOGGER.warn("Branch candidate produced NaN target (vx,vy,vz)=({},{},{}), dist={}", vx, vy, vz, dist);
                         continue;
                     }
-                    BlockPos targetRoomPos = new BlockPos((int)tx, (int)ty, (int)tz);
+                    BlockPos targetRoomPos = new BlockPos((int) tx, (int) ty, (int) tz);
                     if (looksLikeSentinel(targetRoomPos, dungeonBox)) {
                         LOGGER.warn("Branch candidate hit origin—skipping.");
                         continue;
@@ -457,7 +647,7 @@ public class DungeonBuilder {
 
                     // **Hard rule**: must be within 35 blocks of the parent room center
                     double d2 = centerDist2(roomAabb, parentRoom.aabb());
-                    if (d2 > (double)MAX_BRANCH_DIST * MAX_BRANCH_DIST) {
+                    if (d2 > (double) MAX_BRANCH_DIST * MAX_BRANCH_DIST) {
                         // too far from parent; try another attempt
                         continue;
                     }
@@ -572,11 +762,11 @@ public class DungeonBuilder {
             for (PortDef p : endRoom.def().entrances()) addDoor.accept(endRoom, p);
             for (Room r : queenRooms) {
                 for (PortDef p : r.def().entrances()) addDoor.accept(r, p);
-                for (PortDef p : r.def().exits())     addDoor.accept(r, p);
+                for (PortDef p : r.def().exits()) addDoor.accept(r, p);
             }
             for (Room r : dungeonRooms) {
                 for (PortDef p : r.def().entrances()) addDoor.accept(r, p);
-                for (PortDef p : r.def().exits())     addDoor.accept(r, p);
+                for (PortDef p : r.def().exits()) addDoor.accept(r, p);
             }
 
             addData(blockData,
@@ -630,7 +820,9 @@ public class DungeonBuilder {
         CompletableFuture
                 .supplyAsync(() -> generateDungeon(input))
                 .thenAccept(result -> placeDungeon(gen.getLevel().dimension(), result))
-                .exceptionally(e -> {throw new RuntimeException(e);});
+                .exceptionally(e -> {
+                    throw new RuntimeException(e);
+                });
 
         return true;
     }
@@ -666,149 +858,9 @@ public class DungeonBuilder {
         throw new IllegalArgumentException("Cannot rotate " + originalDirection + " to " + desiredDirection + " with Y-axis rotations.");
     }
 
-    /**
-     * Compute a world-space AABB for a room placed with its MIN-corner at `minCorner`,
-     * rotated about the box center by the given Y-rotation.
-     *
-     * For Y-rotations (NONE/90/180/270), rotating an axis-aligned box about its center
-     * simply swaps X/Z extents on 90/270; center stays the same.
-     */
-    private static AABB rotatedRoomAabb(BlockPos minCorner, Vec3i size, Rotation rot) {
-        // Unrotated box from min-corner
-        BlockPos maxCorner = minCorner.offset(size); // or: minCorner.offset(size.getX(), size.getY(), size.getZ())
-        AABB base = new AABB(minCorner.getCenter(), maxCorner.getCenter());
-
-        // Center of the unrotated box
-        Vec3 c = base.getCenter();
-
-        // Half extents; swap X/Z on 90° or 270° (COUNTERCLOCKWISE_90)
-        double hx, hy, hz;
-        boolean swapXZ = (rot == Rotation.CLOCKWISE_90) || (rot == Rotation.COUNTERCLOCKWISE_90);
-        hx = (swapXZ ? size.getZ() : size.getX()) / 2.0;
-        hy = size.getY() / 2.0;
-        hz = (swapXZ ? size.getX() : size.getZ()) / 2.0;
-
-        // Rebuild AABB from center ± half extents
-        return new AABB(
-                c.x - hx, c.y - hy, c.z - hz,
-                c.x + hx, c.y + hy, c.z + hz
-        );
+    public record Room(AABB aabb, Rotation rotation, RoomDef def) {
     }
 
-    // Returns a Y-rotation that turns `from` into `to`, or null if either is non-horizontal.
-    @Nullable
-    private static Rotation yRotationBetween(Direction from, Direction to) {
-        if (!from.getAxis().isHorizontal() || !to.getAxis().isHorizontal()) return null;
-        // 0..3 clockwise quarter-turns
-        int turns = (to.get2DDataValue() - from.get2DDataValue()) & 3;
-        return switch (turns) {
-            case 0 -> Rotation.NONE;
-            case 1 -> Rotation.CLOCKWISE_90;
-            case 2 -> Rotation.CLOCKWISE_180;
-            case 3 -> Rotation.COUNTERCLOCKWISE_90;
-            default -> Rotation.NONE; // unreachable
-        };
-    }
-
-    // Choose an entrance that can face `requiredFacing` using only Y-rotations.
-    // - horizontal required: pick a horizontal entrance and return its rotation
-    // - vertical required: only valid if entrance is the same vertical dir (no rotation possible)
-    private static @Nullable EntranceMatch pickEntranceFor(Direction requiredFacing, RoomDef def) {
-        PortDef[] entrances = def.entrances();
-        PortDef best = null;
-        Rotation rot = Rotation.NONE;
-
-        if (requiredFacing.getAxis().isHorizontal()) {
-            for (PortDef e : entrances) {
-                if (!e.facing().getAxis().isHorizontal()) continue;
-                Rotation r = yRotationBetween(e.facing(), requiredFacing);
-                if (r != null) { best = e; rot = r; break; }
-            }
-        } else {
-            // UP/DOWN required: must have the same vertical entrance; rotation is NONE
-            for (PortDef e : entrances) {
-                if (e.facing() == requiredFacing) { best = e; rot = Rotation.NONE; break; }
-            }
-        }
-
-        return (best == null) ? null : new EntranceMatch(best, rot);
-    }
-
-    private record EntranceMatch(PortDef entrance, Rotation rotation) {}
-
-    private static Direction[] lateralBasis(Direction forward, Direction fallbackYaw) {
-        // Ensure fallbackYaw is horizontal
-        Direction yaw = fallbackYaw.getAxis().isHorizontal() ? fallbackYaw : Direction.NORTH;
-
-        if (forward.getAxis().isHorizontal()) {
-            return new Direction[]{ forward.getCounterClockWise(), forward.getClockWise() };
-        } else if (forward == Direction.UP) {
-            // Looking up: standard handedness
-            return new Direction[]{ yaw.getCounterClockWise(), yaw.getClockWise() };
-        } else { // DOWN
-            // Looking down: flip handedness so "left/right" remain intuitive
-            return new Direction[]{ yaw.getClockWise(), yaw.getCounterClockWise() };
-        }
-    }
-
-    private static boolean dungeonTouchesOrigin(AABB box) {
-        return box.minX <= 0 && box.maxX >= 0
-                && box.minY <= 0 && box.maxY >= 0
-                && box.minZ <= 0 && box.maxZ >= 0;
-    }
-
-    private static boolean looksLikeSentinel(BlockPos p, AABB dungeonBox) {
-        return !dungeonTouchesOrigin(dungeonBox) && p.equals(FORBIDDEN_ORIGIN);
-    }
-
-    private static int manhattan(BlockPos a, BlockPos b) {
-        return Math.abs(a.getX()-b.getX()) + Math.abs(a.getY()-b.getY()) + Math.abs(a.getZ()-b.getZ());
-    }
-
-    private static boolean netLooksInsane(BlockPos a, BlockPos b) {
-        return manhattan(a, b) > MAX_NET_MANHATTAN;
-    }
-
-    private static double centerDist2(AABB a, AABB b) {
-        var ca = a.getCenter();
-        var cb = b.getCenter();
-        double dx = ca.x - cb.x, dy = ca.y - cb.y, dz = ca.z - cb.z;
-        return dx*dx + dy*dy + dz*dz;
-    }
-
-    // Wrapper that explodes early if a transform is bogus.
-    private static BlockPos safeLocalToWorld(
-            BlockPos local, int sx, int sy, int sz,
-            AABB roomAabb, Rotation rot, AABB dungeonBox, String ctx) {
-        BlockPos w = PortGeom.localToWorld(local, sx, sy, sz, roomAabb, rot);
-        if (w == null) throw new IllegalStateException(ctx + ": localToWorld returned null");
-        if (looksLikeSentinel(w, dungeonBox)) {
-            throw new IllegalStateException(ctx + ": localToWorld produced (0,0,0) (bad template/rotation/AABB?)");
-        }
-        return w;
-    }
-
-    /** Compute a queen room min-corner so that its `exitPort` world position equals `targetExitWorld`. */
-    private static BlockPos solveMinForPortTarget(RoomDef def, Rotation rot, PortDef exitPort, BlockPos targetExitWorld) {
-        Vec3i size = new Vec3i(def.sizeX(), def.sizeY(), def.sizeZ());
-
-        // Provisional AABB at min=(0,0,0) with the desired rotation.
-        AABB provisional = rotatedRoomAabb(new BlockPos(0, 0, 0), size, rot);
-
-        // Where would the exit port land if min=(0,0,0)?
-        BlockPos p0 = PortGeom.localToWorld(
-                exitPort.localCenterBlock(),
-                def.sizeX(), def.sizeY(), def.sizeZ(),
-                provisional, rot
-        );
-
-        // Because the transform is affine (pure Y-rotation + translation),
-        // translating the min-corner by Δ translates world positions by Δ.
-        // So choose minCorner = target - p0.
-        return new BlockPos(
-                targetExitWorld.getX() - p0.getX(),
-                targetExitWorld.getY() - p0.getY(),
-                targetExitWorld.getZ() - p0.getZ()
-        );
+    private record EntranceMatch(PortDef entrance, Rotation rotation) {
     }
 }

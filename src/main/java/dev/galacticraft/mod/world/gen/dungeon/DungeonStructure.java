@@ -7,30 +7,21 @@ import dev.galacticraft.mod.world.gen.dungeon.config.DungeonConfig;
 import dev.galacticraft.mod.world.gen.dungeon.pieces.EntranceAnchorPiece;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.core.HolderSet;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.StructureManager;
 import net.minecraft.world.level.WorldGenLevel;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.Heightmap;
-import net.minecraft.world.level.levelgen.RandomState;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.Structure;
-import net.minecraft.world.level.levelgen.structure.StructureStart;
 import net.minecraft.world.level.levelgen.structure.StructureType;
 import net.minecraft.world.level.levelgen.structure.pieces.PiecesContainer;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Optional;
-import java.util.function.Predicate;
 
 public class DungeonStructure extends Structure {
     // Codec
@@ -40,6 +31,7 @@ public class DungeonStructure extends Structure {
     );
     // Logger
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static ChunkPos originChunk;
     // Dungeon Config
     private final DungeonConfig config;
 
@@ -54,8 +46,6 @@ public class DungeonStructure extends Structure {
     public StructureType<?> type() {
         return GCStructureTypes.DUNGEON;
     }
-
-    private static ChunkPos originChunk;
 
     // Generator
     @Override

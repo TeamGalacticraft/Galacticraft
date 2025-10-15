@@ -15,14 +15,14 @@ import java.util.*;
 public final class NegotiatedRouter {
 
     private static final Logger LOGGER = LogUtils.getLogger();
-
-    public record Net(BlockPos a, Direction aFacing,
-                      BlockPos b, Direction bFacing,
-                      int preflight) {}
-
-    public record Result(List<List<BlockPos>> perNetPaths, Bitmask unionMask, int iterations, int unresolvedOveruse) {}
-
-    // ---- public entry point --------------------------------------------------
+    private static final int[][] DIRS26 = {
+            {1, 0, 0}, {-1, 0, 0}, {0, 1, 0}, {0, -1, 0}, {0, 0, 1}, {0, 0, -1},
+            {1, 1, 0}, {1, -1, 0}, {-1, 1, 0}, {-1, -1, 0},
+            {1, 0, 1}, {1, 0, -1}, {-1, 0, 1}, {-1, 0, -1},
+            {0, 1, 1}, {0, 1, -1}, {0, -1, 1}, {0, -1, -1},
+            {1, 1, 1}, {1, 1, -1}, {1, -1, 1}, {1, -1, -1},
+            {-1, 1, 1}, {-1, 1, -1}, {-1, -1, 1}, {-1, -1, -1}
+    };
 
     public static Result routeAll(
             List<Net> nets,
@@ -31,15 +31,15 @@ public final class NegotiatedRouter {
             int minY, int maxY
     ) {
         // Tunables
-        final int MAX_ITERS      = 10;
+        final int MAX_ITERS = 10;
         final double PRESENT_START = 3.0;
-        final double PRESENT_GROW  = 1.35;
-        final int HISTORY_ADD      = 2;
+        final double PRESENT_GROW = 1.35;
+        final int HISTORY_ADD = 2;
         final int TUBE_R1 = 28;
         final int TUBE_R2 = 40;
-        final double W     = 2.8;
-        final int MARGIN   = 4;
-        final int LOOK_R   = radius + MARGIN;
+        final double W = 2.8;
+        final int MARGIN = 4;
+        final int LOOK_R = radius + MARGIN;
 
         Objects.requireNonNull(nets, "nets");
         Objects.requireNonNull(staticMask, "staticMask");
@@ -49,8 +49,8 @@ public final class NegotiatedRouter {
         for (int i = 0; i < nets.size(); i++) paths.add(Collections.emptyList());
 
         // Raw volumetric use and history
-        Long2IntOpenHashMap presentUse    = new Long2IntOpenHashMap();
-        Long2IntOpenHashMap history       = new Long2IntOpenHashMap();
+        Long2IntOpenHashMap presentUse = new Long2IntOpenHashMap();
+        Long2IntOpenHashMap history = new Long2IntOpenHashMap();
         // Dilated max views for O(1) lookups in A*
         Long2IntOpenHashMap dilatedPresent = new Long2IntOpenHashMap();
         Long2IntOpenHashMap dilatedHistory = new Long2IntOpenHashMap();
@@ -131,7 +131,7 @@ public final class NegotiatedRouter {
         return new Result(paths, union, iter, overuse);
     }
 
-    // ---- clearance & helpers -------------------------------------------------
+    // ---- public entry point --------------------------------------------------
 
     private static void rasterizePreflightAndPathToBitmask(
             Net net,
@@ -153,6 +153,8 @@ public final class NegotiatedRouter {
         rasterizeLineToBitmask(path.get(path.size() - 1), net.b, r, minY, maxY, out);
     }
 
+    // ---- clearance & helpers -------------------------------------------------
+
     private static void rasterizeLineToBitmask(BlockPos a, BlockPos b, int r, int minY, int maxY, Bitmask out) {
         int x = a.getX(), y = a.getY(), z = a.getZ();
         int dx = b.getX() - x, dy = b.getY() - y, dz = b.getZ() - z;
@@ -166,7 +168,8 @@ public final class NegotiatedRouter {
         for (int i = 0; i <= m; i++) {
             // fill cube around (x,y,z)
             for (int oy = -r; oy <= r; oy++) {
-                int yy = y + oy; if (yy < minY || yy > maxY) continue;
+                int yy = y + oy;
+                if (yy < minY || yy > maxY) continue;
                 for (int ox = -r; ox <= r; ox++) {
                     int xx = x + ox;
                     for (int oz = -r; oz <= r; oz++) {
@@ -175,34 +178,22 @@ public final class NegotiatedRouter {
                     }
                 }
             }
-            ex -= ax; if (ex < 0) { ex += m; x += sx; }
-            ey -= ay; if (ey < 0) { ey += m; y += sy; }
-            ez -= az; if (ez < 0) { ez += m; z += sz; }
-        }
-    }
-
-    /** Cheap adapter around your existing logic (cubeClearAt). */
-    private static final class Clearance {
-        final Bitmask avoid;
-        final int r, minY, maxY;
-        Clearance(Bitmask avoid, int r, int minY, int maxY) {
-            this.avoid = avoid; this.r = r; this.minY = minY; this.maxY = maxY;
-        }
-        boolean centerClear(int x, int y, int z) {
-            if (y - r < minY || y + r > maxY) return false;
-            for (int dy = -r; dy <= r; dy++) {
-                int yy = y + dy;
-                for (int dx = -r; dx <= r; dx++) {
-                    int xx = x + dx;
-                    for (int dz = -r; dz <= r; dz++) {
-                        int zz = z + dz;
-                        if (avoid.contains(BlockPos.asLong(xx, yy, zz))) return false;
-                    }
-                }
+            ex -= ax;
+            if (ex < 0) {
+                ex += m;
+                x += sx;
             }
-            return true;
+            ey -= ay;
+            if (ey < 0) {
+                ey += m;
+                y += sy;
+            }
+            ez -= az;
+            if (ez < 0) {
+                ez += m;
+                z += sz;
+            }
         }
-        boolean centerClear(BlockPos p) { return centerClear(p.getX(), p.getY(), p.getZ()); }
     }
 
     private static List<Integer> hardestFirstOrder(List<Net> nets) {
@@ -231,7 +222,7 @@ public final class NegotiatedRouter {
 
     private static int totalOveruse(Long2IntOpenHashMap present) {
         int sum = 0;
-        for (Long2IntMap.Entry e : ((Long2IntMap.FastEntrySet) present.long2IntEntrySet())) {
+        for (Long2IntMap.Entry e : present.long2IntEntrySet()) {
             int use = e.getIntValue();
             if (use > 1) sum += (use - 1);
         }
@@ -239,7 +230,7 @@ public final class NegotiatedRouter {
     }
 
     private static void addHistory(Long2IntOpenHashMap history, Long2IntOpenHashMap present, int add) {
-        for (Long2IntMap.Entry e : ((Long2IntMap.FastEntrySet) present.long2IntEntrySet())) {
+        for (Long2IntMap.Entry e : present.long2IntEntrySet()) {
             if (e.getIntValue() > 1) history.addTo(e.getLongKey(), add);
         }
     }
@@ -312,44 +303,13 @@ public final class NegotiatedRouter {
         return start;
     }
 
-    // ---- A* cores ------------------------------------------------------------
-
-    private static final int[][] DIRS26 = {
-            { 1, 0, 0},{-1, 0, 0},{ 0, 1, 0},{ 0,-1, 0},{ 0, 0, 1},{ 0, 0,-1},
-            { 1, 1, 0},{ 1,-1, 0},{-1, 1, 0},{-1,-1, 0},
-            { 1, 0, 1},{ 1, 0,-1},{-1, 0, 1},{-1, 0,-1},
-            { 0, 1, 1},{ 0, 1,-1},{ 0,-1, 1},{ 0,-1,-1},
-            { 1, 1, 1},{ 1, 1,-1},{ 1,-1, 1},{ 1,-1,-1},
-            {-1, 1, 1},{-1, 1,-1},{-1,-1, 1},{-1,-1,-1}
-    };
-
-    private static final class Node { final long pos; final int g; final double f;
-        Node(long p,int g,double f){this.pos=p;this.g=g;this.f=f;} }
-
-    private static final class Tube {
-        final int ax, ay, az, bx, by, bz; final double abLen2;
-        Tube(BlockPos a, BlockPos b) {
-            this.ax=a.getX(); this.ay=a.getY(); this.az=a.getZ();
-            this.bx=b.getX(); this.by=b.getY(); this.bz=b.getZ();
-            long dx=(long)bx-ax, dy=(long)by-ay, dz=(long)bz-az;
-            this.abLen2 = (double)dx*dx + (double)dy*dy + (double)dz*dz;
-        }
-        double dist2ToSeg(int px,int py,int pz){
-            long apx=(long)px-ax, apy=(long)py-ay, apz=(long)pz-az;
-            long abx=(long)bx-ax, aby=(long)by-ay, abz=(long)bz-az;
-            double t = abLen2 <= 1e-9 ? 0.0 : (apx*abx + apy*aby + apz*abz) / abLen2;
-            if (t<0) t=0; else if (t>1) t=1;
-            double cx = ax + t*abx, cy = ay + t*aby, cz = az + t*abz;
-            double dx = px - cx, dy = py - cy, dz = pz - cz;
-            return dx*dx + dy*dy + dz*dz;
-        }
+    private static int manhattan(int x, int y, int z, int gx, int gy, int gz) {
+        return Math.abs(x - gx) + Math.abs(y - gy) + Math.abs(z - gz);
     }
 
-    private static int manhattan(int x,int y,int z,int gx,int gy,int gz) {
-        return Math.abs(x-gx) + Math.abs(y-gy) + Math.abs(z-gz);
-    }
-
-    /** Plain tube A* without congestion costs (used for first plan / fallback). */
+    /**
+     * Plain tube A* without congestion costs (used for first plan / fallback).
+     */
     private static List<BlockPos> aStarTube(Clearance c,
                                             List<BlockPos> seedsA, List<BlockPos> seedsB,
                                             BlockPos A, BlockPos B, int tubeR, double W, int budgetScale) {
@@ -395,7 +355,10 @@ public final class NegotiatedRouter {
         while (!open.isEmpty() && expanded < BUDGET) {
             Node cur = open.poll();
             if (closed.contains(cur.pos)) continue;
-            if (targets.contains(cur.pos)) { found = cur.pos; break; }
+            if (targets.contains(cur.pos)) {
+                found = cur.pos;
+                break;
+            }
             closed.add(cur.pos);
             expanded++;
 
@@ -424,7 +387,11 @@ public final class NegotiatedRouter {
         return reconstruct(parent, found);
     }
 
-    /** Congestion-aware tube A*. Costs: 1 + presentK*useMax + histMax, with O(1) lookups. */
+    // ---- A* cores ------------------------------------------------------------
+
+    /**
+     * Congestion-aware tube A*. Costs: 1 + presentK*useMax + histMax, with O(1) lookups.
+     */
     private static List<BlockPos> aStarTubeWithCosts(Clearance c,
                                                      List<BlockPos> seedsA, List<BlockPos> seedsB,
                                                      BlockPos A, BlockPos B, int tubeR,
@@ -434,19 +401,19 @@ public final class NegotiatedRouter {
                                                      double presentK) {
 
         Tube tube = new Tube(A, B);
-        double tubeR2 = (double)tubeR * tubeR;
-        int gx=B.getX(), gy=B.getY(), gz=B.getZ();
+        double tubeR2 = (double) tubeR * tubeR;
+        int gx = B.getX(), gy = B.getY(), gz = B.getZ();
         int baseD = manhattan(A, B);
         final int BUDGET = Math.min(1_000_000, Math.max(20_000, baseD * budgetScale));
 
         LongOpenHashSet targets = new LongOpenHashSet(seedsB.size() * 8);
         for (BlockPos t : seedsB) {
-            if (c.centerClear(t) && tube.dist2ToSeg(t.getX(),t.getY(),t.getZ()) <= tubeR2) targets.add(t.asLong());
-            for (int[] d: DIRS26) {
-                int nx=t.getX()+d[0], ny=t.getY()+d[1], nz=t.getZ()+d[2];
-                if (ny<c.minY || ny>c.maxY) continue;
-                if (tube.dist2ToSeg(nx,ny,nz) > tubeR2) continue;
-                if (c.centerClear(nx,ny,nz)) targets.add(BlockPos.asLong(nx,ny,nz));
+            if (c.centerClear(t) && tube.dist2ToSeg(t.getX(), t.getY(), t.getZ()) <= tubeR2) targets.add(t.asLong());
+            for (int[] d : DIRS26) {
+                int nx = t.getX() + d[0], ny = t.getY() + d[1], nz = t.getZ() + d[2];
+                if (ny < c.minY || ny > c.maxY) continue;
+                if (tube.dist2ToSeg(nx, ny, nz) > tubeR2) continue;
+                if (c.centerClear(nx, ny, nz)) targets.add(BlockPos.asLong(nx, ny, nz));
             }
         }
         if (targets.isEmpty()) return Collections.emptyList();
@@ -459,12 +426,12 @@ public final class NegotiatedRouter {
         gScore.defaultReturnValue(Integer.MAX_VALUE);
 
         for (BlockPos s : seedsA) {
-            int x=s.getX(), y=s.getY(), z=s.getZ();
-            if (!c.centerClear(x,y,z)) continue;
-            if (tube.dist2ToSeg(x,y,z) > tubeR2) continue;
+            int x = s.getX(), y = s.getY(), z = s.getZ();
+            if (!c.centerClear(x, y, z)) continue;
+            if (tube.dist2ToSeg(x, y, z) > tubeR2) continue;
             long key = s.asLong();
-            int h = manhattan(x,y,z, gx,gy,gz);
-            open.add(new Node(key, 0, W*h));
+            int h = manhattan(x, y, z, gx, gy, gz);
+            open.add(new Node(key, 0, W * h));
             gScore.put(key, 0);
         }
         if (open.isEmpty()) return Collections.emptyList();
@@ -475,34 +442,37 @@ public final class NegotiatedRouter {
         while (!open.isEmpty() && expanded < BUDGET) {
             Node cur = open.poll();
             if (closed.contains(cur.pos)) continue;
-            if (targets.contains(cur.pos)) { found = cur.pos; break; }
+            if (targets.contains(cur.pos)) {
+                found = cur.pos;
+                break;
+            }
             closed.add(cur.pos);
             expanded++;
 
-            int cx=BlockPos.getX(cur.pos), cy=BlockPos.getY(cur.pos), cz=BlockPos.getZ(cur.pos);
+            int cx = BlockPos.getX(cur.pos), cy = BlockPos.getY(cur.pos), cz = BlockPos.getZ(cur.pos);
             int g = gScore.get(cur.pos);
 
-            for (int[] d: DIRS26) {
-                int nx=cx+d[0], ny=cy+d[1], nz=cz+d[2];
-                if (ny<c.minY || ny>c.maxY) continue;
-                if (tube.dist2ToSeg(nx,ny,nz) > tubeR2) continue;
-                if (!c.centerClear(nx,ny,nz)) continue;
-                long np = BlockPos.asLong(nx,ny,nz);
+            for (int[] d : DIRS26) {
+                int nx = cx + d[0], ny = cy + d[1], nz = cz + d[2];
+                if (ny < c.minY || ny > c.maxY) continue;
+                if (tube.dist2ToSeg(nx, ny, nz) > tubeR2) continue;
+                if (!c.centerClear(nx, ny, nz)) continue;
+                long np = BlockPos.asLong(nx, ny, nz);
                 if (closed.contains(np)) continue;
 
                 // O(1) congestion & history via dilated maps
-                int useMax  = dilatedPresent.getOrDefault(np, 0);
+                int useMax = dilatedPresent.getOrDefault(np, 0);
                 int histMax = dilatedHistory.getOrDefault(np, 0);
                 double stepCost = 1.0 + (useMax > 0 ? presentK * useMax : 0.0) + histMax;
 
-                int ng = g + (int)Math.ceil(stepCost);
+                int ng = g + (int) Math.ceil(stepCost);
                 int old = gScore.getOrDefault(np, Integer.MAX_VALUE);
                 if (ng >= old) continue;
 
                 gScore.put(np, ng);
                 parent.put(np, cur.pos);
-                int h = manhattan(nx,ny,nz, gx,gy,gz);
-                double f = ng + W*h;
+                int h = manhattan(nx, ny, nz, gx, gy, gz);
+                double f = ng + W * h;
                 open.add(new Node(np, ng, f));
             }
         }
@@ -546,10 +516,10 @@ public final class NegotiatedRouter {
             int cx = BlockPos.getX(k), cy = BlockPos.getY(k), cz = BlockPos.getZ(k);
             int val = sourceRaw.get(k);
             // Push 'val' to all neighbors; keep max
-            for (int dy=-r; dy<=r; dy++) {
-                for (int dx=-r; dx<=r; dx++) {
-                    for (int dz=-r; dz<=r; dz++) {
-                        long nk = BlockPos.asLong(cx+dx, cy+dy, cz+dz);
+            for (int dy = -r; dy <= r; dy++) {
+                for (int dx = -r; dx <= r; dx++) {
+                    for (int dz = -r; dz <= r; dz++) {
+                        long nk = BlockPos.asLong(cx + dx, cy + dy, cz + dz);
                         int old = targetDilated.getOrDefault(nk, 0);
                         if (val > old) targetDilated.put(nk, val);
                     }
@@ -568,10 +538,10 @@ public final class NegotiatedRouter {
             long k = it.nextLong();
             int cx = BlockPos.getX(k), cy = BlockPos.getY(k), cz = BlockPos.getZ(k);
             int val = sourceRaw.get(k);
-            for (int dy=-r; dy<=r; dy++) {
-                for (int dx=-r; dx<=r; dx++) {
-                    for (int dz=-r; dz<=r; dz++) {
-                        long nk = BlockPos.asLong(cx+dx, cy+dy, cz+dz);
+            for (int dy = -r; dy <= r; dy++) {
+                for (int dx = -r; dx <= r; dx++) {
+                    for (int dz = -r; dz <= r; dz++) {
+                        long nk = BlockPos.asLong(cx + dx, cy + dy, cz + dz);
                         int old = outDilated.getOrDefault(nk, 0);
                         if (val > old) outDilated.put(nk, val);
                     }
@@ -585,11 +555,12 @@ public final class NegotiatedRouter {
         if (path == null || path.isEmpty()) return;
         for (BlockPos p : path) {
             int px = p.getX(), py = p.getY(), pz = p.getZ();
-            for (int dy=-r; dy<=r; dy++) {
-                int yy = py + dy; if (yy < minY || yy > maxY) continue;
-                for (int dx=-r; dx<=r; dx++) {
+            for (int dy = -r; dy <= r; dy++) {
+                int yy = py + dy;
+                if (yy < minY || yy > maxY) continue;
+                for (int dx = -r; dx <= r; dx++) {
                     int xx = px + dx;
-                    for (int dz=-r; dz<=r; dz++) {
+                    for (int dz = -r; dz <= r; dz++) {
                         int zz = pz + dz;
                         out.add(BlockPos.asLong(xx, yy, zz));
                     }
@@ -610,7 +581,8 @@ public final class NegotiatedRouter {
 
         for (int i = 0; i <= m; i++) {
             for (int oy = -r; oy <= r; oy++) {
-                int yy = y + oy; if (yy < minY || yy > maxY) continue;
+                int yy = y + oy;
+                if (yy < minY || yy > maxY) continue;
                 for (int ox = -r; ox <= r; ox++) {
                     int xx = x + ox;
                     for (int oz = -r; oz <= r; oz++) {
@@ -619,37 +591,119 @@ public final class NegotiatedRouter {
                     }
                 }
             }
-            ex -= ax; if (ex < 0) { ex += m; x += sx; }
-            ey -= ay; if (ey < 0) { ey += m; y += sy; }
-            ez -= az; if (ez < 0) { ez += m; z += sz; }
+            ex -= ax;
+            if (ex < 0) {
+                ex += m;
+                x += sx;
+            }
+            ey -= ay;
+            if (ey < 0) {
+                ey += m;
+                y += sy;
+            }
+            ez -= az;
+            if (ez < 0) {
+                ez += m;
+                z += sz;
+            }
         }
     }
 
     private static ArrayList<BlockPos> reconstruct(Long2LongOpenHashMap parent, long found) {
         ArrayList<BlockPos> rev = new ArrayList<>();
-        long cur = found; rev.add(BlockPos.of(cur));
-        while (parent.containsKey(cur)) { cur = parent.get(cur); rev.add(BlockPos.of(cur)); }
+        long cur = found;
+        rev.add(BlockPos.of(cur));
+        while (parent.containsKey(cur)) {
+            cur = parent.get(cur);
+            rev.add(BlockPos.of(cur));
+        }
         Collections.reverse(rev);
         return rev;
     }
 
-    // ---- rasterization -------------------------------------------------------
-
-    /** Add (2r+1)^3 voxels around each path center to 'out'. */
+    /**
+     * Add (2r+1)^3 voxels around each path center to 'out'.
+     */
     public static void rasterizePathToBitmask(List<BlockPos> path, int r, int minY, int maxY, Bitmask out) {
         if (path == null || path.isEmpty()) return;
         for (BlockPos p : path) {
             int px = p.getX(), py = p.getY(), pz = p.getZ();
-            for (int dy=-r; dy<=r; dy++) {
-                int yy = py + dy; if (yy < minY || yy > maxY) continue;
-                for (int dx=-r; dx<=r; dx++) {
+            for (int dy = -r; dy <= r; dy++) {
+                int yy = py + dy;
+                if (yy < minY || yy > maxY) continue;
+                for (int dx = -r; dx <= r; dx++) {
                     int xx = px + dx;
-                    for (int dz=-r; dz<=r; dz++) {
+                    for (int dz = -r; dz <= r; dz++) {
                         int zz = pz + dz;
                         out.add(BlockPos.asLong(xx, yy, zz));
                     }
                 }
             }
+        }
+    }
+
+    public record Net(BlockPos a, Direction aFacing,
+                      BlockPos b, Direction bFacing,
+                      int preflight) {
+    }
+
+    public record Result(List<List<BlockPos>> perNetPaths, Bitmask unionMask, int iterations, int unresolvedOveruse) {
+    }
+
+    /**
+         * Cheap adapter around your existing logic (cubeClearAt).
+         */
+        private record Clearance(Bitmask avoid, int r, int minY, int maxY) {
+
+        boolean centerClear(int x, int y, int z) {
+                if (y - r < minY || y + r > maxY) return false;
+                for (int dy = -r; dy <= r; dy++) {
+                    int yy = y + dy;
+                    for (int dx = -r; dx <= r; dx++) {
+                        int xx = x + dx;
+                        for (int dz = -r; dz <= r; dz++) {
+                            int zz = z + dz;
+                            if (avoid.contains(BlockPos.asLong(xx, yy, zz))) return false;
+                        }
+                    }
+                }
+                return true;
+            }
+
+            boolean centerClear(BlockPos p) {
+                return centerClear(p.getX(), p.getY(), p.getZ());
+            }
+        }
+
+    private record Node(long pos, int g, double f) {
+    }
+
+    // ---- rasterization -------------------------------------------------------
+
+    private static final class Tube {
+        final int ax, ay, az, bx, by, bz;
+        final double abLen2;
+
+        Tube(BlockPos a, BlockPos b) {
+            this.ax = a.getX();
+            this.ay = a.getY();
+            this.az = a.getZ();
+            this.bx = b.getX();
+            this.by = b.getY();
+            this.bz = b.getZ();
+            long dx = (long) bx - ax, dy = (long) by - ay, dz = (long) bz - az;
+            this.abLen2 = (double) dx * dx + (double) dy * dy + (double) dz * dz;
+        }
+
+        double dist2ToSeg(int px, int py, int pz) {
+            long apx = (long) px - ax, apy = (long) py - ay, apz = (long) pz - az;
+            long abx = (long) bx - ax, aby = (long) by - ay, abz = (long) bz - az;
+            double t = abLen2 <= 1e-9 ? 0.0 : (apx * abx + apy * aby + apz * abz) / abLen2;
+            if (t < 0) t = 0;
+            else if (t > 1) t = 1;
+            double cx = ax + t * abx, cy = ay + t * aby, cz = az + t * abz;
+            double dx = px - cx, dy = py - cy, dz = pz - cz;
+            return dx * dx + dy * dy + dz * dz;
         }
     }
 }

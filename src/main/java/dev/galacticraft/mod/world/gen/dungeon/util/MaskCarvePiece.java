@@ -5,7 +5,6 @@ import dev.galacticraft.mod.world.gen.dungeon.records.BlockData;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.SectionPos;
-import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
@@ -17,74 +16,120 @@ import java.util.*;
 
 /**
  * Corridor carver/finisher that works entirely in-memory (no Level).
- *
+ * <p>
  * Pipeline:
- *   0) seed air using centerline mask
- *   1) Perlin push/pull shell by ±1 (roof/walls/floor), with anti-choke & room respect
- *   1.5) random 1-deep sink holes (1–3 tiles)
- *   2) full coating pass on ALL exposed surfaces touching corridor air
- *   2.5) acid pockets (1–5 tiles) with relaxed sealing rules + slimy rim
- *   3) webs across LOCAL corridor normal (membranes/diagonals/singletons)
- *
+ * 0) seed air using centerline mask
+ * 1) Perlin push/pull shell by ±1 (roof/walls/floor), with anti-choke & room respect
+ * 1.5) random 1-deep sink holes (1–3 tiles)
+ * 2) full coating pass on ALL exposed surfaces touching corridor air
+ * 2.5) acid pockets (1–5 tiles) with relaxed sealing rules + slimy rim
+ * 3) webs across LOCAL corridor normal (membranes/diagonals/singletons)
+ * <p>
  * Protection:
- *   - protectedMask: exact cells that must not modify (rooms)
- *   - doorwayWhitelist: cells allowed even if protected (door apertures)
+ * - protectedMask: exact cells that must not modify (rooms)
+ * - doorwayWhitelist: cells allowed even if protected (door apertures)
  */
 public final class MaskCarvePiece {
     // ===== materials =====
-    private static final Block OLIANT_NEST_BLOCK           = GCBlocks.OLIANT_NEST_BLOCK;
-    private static final Block OLIANT_FERTILE_NEST_BLOCK   = GCBlocks.OLIANT_FERTILE_NEST_BLOCK;
+    private static final Block OLIANT_NEST_BLOCK = GCBlocks.OLIANT_NEST_BLOCK;
+    private static final Block OLIANT_FERTILE_NEST_BLOCK = GCBlocks.OLIANT_FERTILE_NEST_BLOCK;
     private static final Block OLIANT_DISSOLVED_NEST_BLOCK = GCBlocks.OLIANT_DISSOLVED_NEST_BLOCK;
-    private static final Block OLIANT_ACID_BLOCK           = GCBlocks.OLIANT_ACID;
-    private static final Block OLIANT_WEB                  = GCBlocks.OLIANT_WEB;
+    private static final Block OLIANT_ACID_BLOCK = GCBlocks.OLIANT_ACID;
+    private static final Block OLIANT_WEB = GCBlocks.OLIANT_WEB;
 
-    private static final BlockState DEFAULT_SOLID          = Blocks.STONE.defaultBlockState();
-
+    private static final BlockState DEFAULT_SOLID = Blocks.STONE.defaultBlockState();
+    // ===== constants / tuning =====
+    private static final int STRAIGHT_SPAN_LIMIT = 12; // for cross-section probes
+    // push/pull
+    private static final double NOISE_SCALE = 1.0 / 6.0;
+    private static final double PUSH_THRESH = 0.35;   // grow outwards if > thresh
+    private static final double PULL_THRESH = -0.35;  // nibble inwards if < thresh
+    // coatings
+    private static final float P_FLOOR_FERTILE = 0.18f;
+    private static final float P_FLOOR_DISSOLVE = 0.12f;
+    private static final float P_WALL_FERTILE = 0.12f;
+    private static final float P_ROOF_FERTILE = 0.10f;
+    // sink holes
+    private static final float SINK_ATTEMPT_P = 0.045f;
+    private static final int SINK_STRIDE_MIN = 4;
+    private static final int SINK_STRIDE_VAR = 4;      // 4..7
+    private static final int SINK_DEPTH = 1;      // exactly 1 deep
+    private static final int SINK_PATCH_MAX = 3;      // 1..3 tiles
+    // acid pockets
+    private static final int ACID_MAX_SIZE = 6;
+    private static final int ACID_MAX_OPEN = 0;      //1 makes leaks but relaxes a little.
+    // webs
+    private static final float WEB_SINGLE_P = 0.020f;
+    private static final float WEB_MEMBRANE_P = 0.010f;
+    private static final float WEB_DIAGONAL_P = 0.015f;
+    private static final float WEB_CORNER_P = 0.025f;
+    private static final int WEB_STRIDE_MIN = 3;
+    private static final int WEB_STRIDE_VAR = 3;      // 3..5
+    private static final Direction[] LATS = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
     // ===== inputs =====
     private final List<Long> voxels;   // mask centerline (order matters to estimate local tangent)
     private final BoundingBox box;
 
-    // ===== constants / tuning =====
-    private static final int STRAIGHT_SPAN_LIMIT = 12; // for cross-section probes
-
-    // push/pull
-    private static final double NOISE_SCALE     = 1.0 / 6.0;
-    private static final double PUSH_THRESH     = 0.35;   // grow outwards if > thresh
-    private static final double PULL_THRESH     = -0.35;  // nibble inwards if < thresh
-
-    // coatings
-    private static final float P_FLOOR_FERTILE  = 0.18f;
-    private static final float P_FLOOR_DISSOLVE = 0.12f;
-    private static final float P_WALL_FERTILE   = 0.12f;
-    private static final float P_ROOF_FERTILE   = 0.10f;
-
-    // sink holes
-    private static final float SINK_ATTEMPT_P   = 0.045f;
-    private static final int   SINK_STRIDE_MIN  = 4;
-    private static final int   SINK_STRIDE_VAR  = 4;      // 4..7
-    private static final int   SINK_DEPTH       = 1;      // exactly 1 deep
-    private static final int   SINK_PATCH_MAX   = 3;      // 1..3 tiles
-
-    // acid pockets
-    private static final int   ACID_MAX_SIZE    = 6;
-    private static final int   ACID_MAX_OPEN    = 0;      //1 makes leaks but relaxes a little.
-
-    // webs
-    private static final float WEB_SINGLE_P     = 0.020f;
-    private static final float WEB_MEMBRANE_P   = 0.010f;
-    private static final float WEB_DIAGONAL_P   = 0.015f;
-    private static final float WEB_CORNER_P     = 0.025f;
-    private static final int   WEB_STRIDE_MIN   = 3;
-    private static final int   WEB_STRIDE_VAR   = 3;      // 3..5
-
     public MaskCarvePiece(Bitmask mask) {
         this.voxels = toList(mask);            // keep order
-        this.box    = computeBoundingBox(mask);
+        this.box = computeBoundingBox(mask);
     }
 
-    public BoundingBox getBoundingBox() { return box; }
-
     // ----------------------------- public API --------------------------------
+
+    private static boolean inRange(int y, int lo, int hi) {
+        return y >= lo && y <= hi;
+    }
+
+    private static int round(double v) {
+        return (int) Math.round(v);
+    }
+
+    /**
+     * any vector perpendicular to n (gridish)
+     */
+    private static Vec3f anyPerp(Vec3f n) {
+        // pick the smallest component axis to cross with for numeric stability
+        float ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
+        Vec3f k = (ax <= ay && ax <= az) ? new Vec3f(1, 0, 0) : (ay <= ax && ay <= az) ? new Vec3f(0, 1, 0) : new Vec3f(0, 0, 1);
+        Vec3f u = n.cross(k);
+        if (u.len2() < 1e-6f) u = new Vec3f(0, 1, 0); // fallback
+        return u.normalize();
+    }
+
+    // ----------------------------- protection/view ----------------------------
+
+    private static BoundingBox computeBoundingBox(Bitmask mask) {
+        final int[] minX = {Integer.MAX_VALUE};
+        final int[] minY = {Integer.MAX_VALUE};
+        final int[] minZ = {Integer.MAX_VALUE};
+        final int[] maxX = {Integer.MIN_VALUE};
+        final int[] maxY = {Integer.MIN_VALUE};
+        final int[] maxZ = {Integer.MIN_VALUE};
+        final int[] empty = new int[1];
+        mask.forEachLong(p -> {
+            empty[0] = 1;
+            int x = BlockPos.getX(p), y = BlockPos.getY(p), z = BlockPos.getZ(p);
+            if (x < minX[0]) minX[0] = x;
+            if (y < minY[0]) minY[0] = y;
+            if (z < minZ[0]) minZ[0] = z;
+            if (x > maxX[0]) maxX[0] = x;
+            if (y > maxY[0]) maxY[0] = y;
+            if (z > maxZ[0]) maxZ[0] = z;
+        });
+        if (empty[0] == 0) return new BoundingBox(0, 0, 0, 0, 0, 0);
+        return new BoundingBox(minX[0], minY[0], minZ[0], maxX[0], maxY[0], maxZ[0]);
+    }
+
+    private static List<Long> toList(Bitmask mask) {
+        ArrayList<Long> out = new ArrayList<>(mask.size());
+        mask.forEachLong(out::add);
+        return out;
+    }
+
+    public BoundingBox getBoundingBox() {
+        return box;
+    }
 
     public HashMap<SectionPos, List<BlockData>> getBlocks(RandomSource random, int minY, int maxY) {
         return getBlocks(random, minY, maxY, List.of(), null, Set.of());
@@ -148,7 +193,7 @@ public final class MaskCarvePiece {
         return out;
     }
 
-    // ----------------------------- protection/view ----------------------------
+    // ----------------------------- phase 1: push/pull -------------------------
 
     private boolean isProtectedCell(BlockPos p,
                                     Collection<BoundingBox> protectedRoomsAabbs,
@@ -180,6 +225,8 @@ public final class MaskCarvePiece {
         return viewAt(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist).isAir();
     }
 
+    // ----------------------------- 1.5: sink holes ----------------------------
+
     private boolean vIsSolidWall(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos p,
                                  Collection<BoundingBox> protectedRoomsAabbs,
                                  Bitmask protectedMask,
@@ -187,6 +234,8 @@ public final class MaskCarvePiece {
         var st = viewAt(baseAir, ops, p, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
         return !st.isAir() && st.getFluidState().isEmpty();
     }
+
+    // ----------------------------- phase 2: coating ---------------------------
 
     private void vSet(Map<Long, BlockState> ops, BlockPos p, BlockState st,
                       Collection<BoundingBox> protectedRoomsAabbs,
@@ -208,8 +257,6 @@ public final class MaskCarvePiece {
         return false;
     }
 
-    // ----------------------------- phase 1: push/pull -------------------------
-
     private void applyNoisePushPull(RandomSource rnd, PerlinNoise noise,
                                     List<Long> centers, int minY, int maxY,
                                     Set<Long> baseAir, Map<Long, BlockState> ops,
@@ -217,7 +264,7 @@ public final class MaskCarvePiece {
                                     Bitmask protectedMask, Set<Long> doorwayWhitelist) {
 
         final Direction[] laterals = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
-        final Direction[] allDirs  = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.UP, Direction.DOWN};
+        final Direction[] allDirs = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST, Direction.UP, Direction.DOWN};
 
         ArrayList<BlockPos> addAir = new ArrayList<>();
         ArrayList<BlockPos> addWall = new ArrayList<>();
@@ -242,8 +289,10 @@ public final class MaskCarvePiece {
                     // cannot carve into rooms; also avoid obvious corridor collisions by requiring double solid
                     if (isProtectedCell(tgt, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
                     if (isProtectedCell(behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
-                    if (!vIsSolidWall(baseAir, ops, tgt, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
-                    if (!vIsSolidWall(baseAir, ops, behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (!vIsSolidWall(baseAir, ops, tgt, protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                        continue;
+                    if (!vIsSolidWall(baseAir, ops, behind, protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                        continue;
 
                     addAir.add(tgt);
                     break;
@@ -257,7 +306,8 @@ public final class MaskCarvePiece {
 
                     BlockPos back = a.relative(d);
                     if (!box.isInside(back)) continue;
-                    if (!vIsSolidWall(baseAir, ops, back, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                    if (!vIsSolidWall(baseAir, ops, back, protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                        continue;
 
                     if (!wouldChokeIfFilled(baseAir, ops, a, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
                         addWall.add(a);
@@ -277,7 +327,7 @@ public final class MaskCarvePiece {
         }
     }
 
-    private static final Direction[] LATS = {Direction.NORTH, Direction.SOUTH, Direction.WEST, Direction.EAST};
+    // ----------------------------- phase 3: webs (local normal) ---------------
 
     private boolean wouldChokeIfFilled(Set<Long> baseAir, Map<Long, BlockState> ops, BlockPos airCell,
                                        Collection<BoundingBox> protectedRoomsAabbs,
@@ -290,8 +340,6 @@ public final class MaskCarvePiece {
         }
         return true; // <=1 lateral air → would choke
     }
-
-    // ----------------------------- 1.5: sink holes ----------------------------
 
     private void openSinkHoles(RandomSource rnd, List<Long> centers, int minY, int maxY,
                                Set<Long> baseAir, Map<Long, BlockState> ops,
@@ -323,7 +371,8 @@ public final class MaskCarvePiece {
             HashSet<Long> seen = new HashSet<>();
             ArrayList<BlockPos> patch = new ArrayList<>(need);
 
-            q.add(floor); seen.add(floor.asLong());
+            q.add(floor);
+            seen.add(floor.asLong());
             while (!q.isEmpty() && patch.size() < need) {
                 BlockPos f = q.pollFirst();
                 if (!box.isInside(f)) continue;
@@ -333,7 +382,8 @@ public final class MaskCarvePiece {
                 if (!vIsAir(baseAir, ops, above, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
                 if (!vIsSolidWall(baseAir, ops, f, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
                 BlockPos sup = f.below(SINK_DEPTH);
-                if (!box.isInside(sup) || !vIsSolidWall(baseAir, ops, sup, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue;
+                if (!box.isInside(sup) || !vIsSolidWall(baseAir, ops, sup, protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                    continue;
 
                 patch.add(f);
 
@@ -364,8 +414,6 @@ public final class MaskCarvePiece {
         }
     }
 
-    // ----------------------------- phase 2: coating ---------------------------
-
     private void coatAllExposedSurfaces(RandomSource rnd,
                                         Set<Long> baseAir, Map<Long, BlockState> ops,
                                         Collection<BoundingBox> protectedRoomsAabbs,
@@ -373,7 +421,7 @@ public final class MaskCarvePiece {
         if (baseAir.isEmpty()) return;
 
         BlockPos.MutableBlockPos air = new BlockPos.MutableBlockPos();
-        BlockPos.MutableBlockPos nb  = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos nb = new BlockPos.MutableBlockPos();
 
         // IMPORTANT: iterate over a snapshot of ALL current air, not just seed voxels
         ArrayList<Long> snapshot = new ArrayList<>(baseAir);
@@ -449,7 +497,8 @@ public final class MaskCarvePiece {
             while (!q.isEmpty() && patchTop.size() < target) {
                 BlockPos t = q.pollFirst();
                 if (!box.isInside(t)) continue;
-                if (!vIsAir(baseAir, ops, t, protectedRoomsAabbs, protectedMask, doorwayWhitelist)) continue; // still corridor air?
+                if (!vIsAir(baseAir, ops, t, protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                    continue; // still corridor air?
 
                 BlockPos bsn = t.below();      // candidate basin cell (y-1)
                 BlockPos sup = t.below(2);     // support (y-2)
@@ -487,20 +536,30 @@ public final class MaskCarvePiece {
                 BlockPos bsn = t.below(); // y-1
                 for (Direction d : LATS) {
                     BlockPos nb = bsn.relative(d);
-                    if (!box.isInside(nb)) { leaks = true; break outer; }
+                    if (!box.isInside(nb)) {
+                        leaks = true;
+                        break outer;
+                    }
                     long nbl = nb.asLong();
                     if (patchBasin.contains(nbl)) continue; // interior neighbor
 
                     BlockState st = viewAt(baseAir, ops, nb, protectedRoomsAabbs, protectedMask, doorwayWhitelist);
-                    if (!st.getFluidState().isEmpty()) { leaks = true; break outer; } // next to another liquid → reject
+                    if (!st.getFluidState().isEmpty()) {
+                        leaks = true;
+                        break outer;
+                    } // next to another liquid → reject
                     if (st.isAir()) {
                         // basin would spill laterally into another void at same level
-                        if (++openSides > ACID_MAX_OPEN) { leaks = true; break outer; }
+                        if (++openSides > ACID_MAX_OPEN) {
+                            leaks = true;
+                            break outer;
+                        }
                     }
                 }
                 // also ensure basin cell itself won’t drain downwards
                 if (!vIsSolidWall(baseAir, ops, bsn.below(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) {
-                    leaks = true; break;
+                    leaks = true;
+                    break;
                 }
             }
             if (leaks) continue;
@@ -513,7 +572,7 @@ public final class MaskCarvePiece {
                 BlockPos sup = t.below(2);     // y-2
 
                 vSet(ops, sup, OLIANT_DISSOLVED_NEST_BLOCK.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
-                vSet(ops, bsn, OLIANT_ACID_BLOCK.defaultBlockState(),           protectedRoomsAabbs, protectedMask, doorwayWhitelist);
+                vSet(ops, bsn, OLIANT_ACID_BLOCK.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
 
                 // Important: do NOT add basin to baseAir; it’s liquid now.
                 // The corridor top cell (t at y) remains air → open pool.
@@ -529,6 +588,8 @@ public final class MaskCarvePiece {
         }
     }
 
+    // ----------------------------- helpers -----------------------------------
+
     private void coatRingAround(List<BlockPos> cells, RandomSource rnd,
                                 Set<Long> baseAir, Map<Long, BlockState> ops,
                                 Collection<BoundingBox> protectedRoomsAabbs,
@@ -542,16 +603,14 @@ public final class MaskCarvePiece {
                 if (!st.isAir() && st.getFluidState().isEmpty()) {
                     Block b = switch (d) {
                         case DOWN -> OLIANT_DISSOLVED_NEST_BLOCK;
-                        case UP   -> (rnd.nextFloat() < 0.10f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
-                        default   -> (rnd.nextFloat() < 0.12f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
+                        case UP -> (rnd.nextFloat() < 0.10f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
+                        default -> (rnd.nextFloat() < 0.12f) ? OLIANT_FERTILE_NEST_BLOCK : OLIANT_NEST_BLOCK;
                     };
                     vSet(ops, n, b.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist);
                 }
             }
         }
     }
-
-    // ----------------------------- phase 3: webs (local normal) ---------------
 
     private void placeWebsLocal(RandomSource rnd, List<Long> centers,
                                 Set<Long> baseAir, Map<Long, BlockState> ops,
@@ -665,7 +724,8 @@ public final class MaskCarvePiece {
                             .relative(pair[1].getOpposite(), dx);
                     if (!box.isInside(p)) continue;
                     if (rnd.nextFloat() < 0.85f) {
-                        if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist)) placed++;
+                        if (vPlaceIfAir(baseAir, ops, p, OLIANT_WEB.defaultBlockState(), protectedRoomsAabbs, protectedMask, doorwayWhitelist))
+                            placed++;
                     }
                 }
             }
@@ -678,13 +738,9 @@ public final class MaskCarvePiece {
         }
     }
 
-    // ----------------------------- helpers -----------------------------------
-
-    private static boolean inRange(int y, int lo, int hi) { return y >= lo && y <= hi; }
-
-    private static int round(double v) { return (int) Math.round(v); }
-
-    /** crude tangent from ordered mask (previous/next) */
+    /**
+     * crude tangent from ordered mask (previous/next)
+     */
     private Vec3f estimateTangent(int idx) {
         int i0 = Math.max(0, idx - 1);
         int i1 = Math.min(voxels.size() - 1, idx + 1);
@@ -693,58 +749,44 @@ public final class MaskCarvePiece {
         return new Vec3f(b.getX() - a.getX(), b.getY() - a.getY(), b.getZ() - a.getZ());
     }
 
-    /** any vector perpendicular to n (gridish) */
-    private static Vec3f anyPerp(Vec3f n) {
-        // pick the smallest component axis to cross with for numeric stability
-        float ax = Math.abs(n.x), ay = Math.abs(n.y), az = Math.abs(n.z);
-        Vec3f k = (ax <= ay && ax <= az) ? new Vec3f(1,0,0) : (ay <= ax && ay <= az) ? new Vec3f(0,1,0) : new Vec3f(0,0,1);
-        Vec3f u = n.cross(k);
-        if (u.len2() < 1e-6f) u = new Vec3f(0,1,0); // fallback
-        return u.normalize();
-    }
-
     private PerlinNoise makeNoiseForPiece(BoundingBox b) {
         long seed = 0x9E3779B97F4A7C15L;
-        seed ^= (long)b.minX() * 0xBF58476D1CE4E5B9L;
-        seed ^= (long)b.minY() * 0x94D049BB133111EBL;
-        seed ^= (long)b.minZ() * 0x632BE59BD9B4E019L;
-        seed ^= (long)b.maxX() * 0xAEF17502108EF2D9L;
-        seed ^= (long)b.maxY() * 0xD1B54A32D192ED03L;
-        seed ^= (long)b.maxZ() * 0x94D049BB133111EBL;
+        seed ^= (long) b.minX() * 0xBF58476D1CE4E5B9L;
+        seed ^= (long) b.minY() * 0x94D049BB133111EBL;
+        seed ^= (long) b.minZ() * 0x632BE59BD9B4E019L;
+        seed ^= (long) b.maxX() * 0xAEF17502108EF2D9L;
+        seed ^= (long) b.maxY() * 0xD1B54A32D192ED03L;
+        seed ^= (long) b.maxZ() * 0x94D049BB133111EBL;
         RandomSource rs = RandomSource.create(seed);
         return PerlinNoise.create(rs, List.of(-2, -1, 0));
-    }
-
-    private static BoundingBox computeBoundingBox(Bitmask mask) {
-        final int[] minX = {Integer.MAX_VALUE};
-        final int[] minY = { Integer.MAX_VALUE };
-        final int[] minZ = { Integer.MAX_VALUE };
-        final int[] maxX = {Integer.MIN_VALUE};
-        final int[] maxY = { Integer.MIN_VALUE };
-        final int[] maxZ = { Integer.MIN_VALUE };
-        final int[] empty = new int[1];
-        mask.forEachLong(p -> {
-            empty[0] = 1;
-            int x = BlockPos.getX(p), y = BlockPos.getY(p), z = BlockPos.getZ(p);
-            if (x < minX[0]) minX[0] = x; if (y < minY[0]) minY[0] = y; if (z < minZ[0]) minZ[0] = z;
-            if (x > maxX[0]) maxX[0] = x; if (y > maxY[0]) maxY[0] = y; if (z > maxZ[0]) maxZ[0] = z;
-        });
-        if (empty[0] == 0) return new BoundingBox(0,0,0,0,0,0);
-        return new BoundingBox(minX[0], minY[0], minZ[0], maxX[0], maxY[0], maxZ[0]);
-    }
-
-    private static List<Long> toList(Bitmask mask) {
-        ArrayList<Long> out = new ArrayList<>(mask.size());
-        mask.forEachLong(out::add);
-        return out;
     }
 
     // tiny float vec helper
     private static final class Vec3f {
         float x, y, z;
-        Vec3f(float x, float y, float z){ this.x=x; this.y=y; this.z=z; }
-        Vec3f cross(Vec3f o){ return new Vec3f(y*o.z - z*o.y, z*o.x - x*o.z, x*o.y - y*o.x); }
-        float len2(){ return x*x + y*y + z*z; }
-        Vec3f normalize(){ float l = (float)Math.sqrt(len2()); if (l>1e-6f){ x/=l; y/=l; z/=l; } return this; }
+
+        Vec3f(float x, float y, float z) {
+            this.x = x;
+            this.y = y;
+            this.z = z;
+        }
+
+        Vec3f cross(Vec3f o) {
+            return new Vec3f(y * o.z - z * o.y, z * o.x - x * o.z, x * o.y - y * o.x);
+        }
+
+        float len2() {
+            return x * x + y * y + z * z;
+        }
+
+        Vec3f normalize() {
+            float l = (float) Math.sqrt(len2());
+            if (l > 1e-6f) {
+                x /= l;
+                y /= l;
+                z /= l;
+            }
+            return this;
+        }
     }
 }

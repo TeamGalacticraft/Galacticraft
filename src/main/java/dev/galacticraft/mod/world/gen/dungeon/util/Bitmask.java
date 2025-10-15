@@ -1,7 +1,7 @@
 package dev.galacticraft.mod.world.gen.dungeon.util;
 
-import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import it.unimi.dsi.fastutil.longs.LongIterator;
+import it.unimi.dsi.fastutil.longs.LongOpenHashSet;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.AABB;
 
@@ -10,7 +10,7 @@ import java.util.Objects;
 /**
  * Sparse voxel bitmask for worldgen.
  * Backed by a LongOpenHashSet of BlockPos.asLong().
- *
+ * <p>
  * Features:
  * - add/contains/size/clear
  * - union/combine
@@ -28,6 +28,17 @@ public final class Bitmask {
         this.set = backing;
     }
 
+    /**
+     * Returns a NEW Bitmask that is the union of a and b.
+     */
+    public static Bitmask combine(Bitmask a, Bitmask b) {
+        Objects.requireNonNull(a, "a");
+        Objects.requireNonNull(b, "b");
+        LongOpenHashSet s = new LongOpenHashSet(a.set);
+        s.addAll(b.set);
+        return new Bitmask(s);
+    }
+
     public void add(BlockPos p) {
         set.add(p.asLong());
     }
@@ -37,12 +48,12 @@ public final class Bitmask {
     }
 
     public void add(AABB aabb) {
-        int minX = (int)Math.floor(aabb.minX);
-        int minY = (int)Math.floor(aabb.minY);
-        int minZ = (int)Math.floor(aabb.minZ);
-        int maxX = (int)Math.ceil(aabb.maxX) - 1;
-        int maxY = (int)Math.ceil(aabb.maxY) - 1;
-        int maxZ = (int)Math.ceil(aabb.maxZ) - 1;
+        int minX = (int) Math.floor(aabb.minX);
+        int minY = (int) Math.floor(aabb.minY);
+        int minZ = (int) Math.floor(aabb.minZ);
+        int maxX = (int) Math.ceil(aabb.maxX) - 1;
+        int maxY = (int) Math.ceil(aabb.maxY) - 1;
+        int maxZ = (int) Math.ceil(aabb.maxZ) - 1;
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
@@ -71,12 +82,12 @@ public final class Bitmask {
     }
 
     public boolean contains(AABB aabb) {
-        int minX = (int)Math.floor(aabb.minX);
-        int minY = (int)Math.floor(aabb.minY);
-        int minZ = (int)Math.floor(aabb.minZ);
-        int maxX = (int)Math.ceil(aabb.maxX) - 1;
-        int maxY = (int)Math.ceil(aabb.maxY) - 1;
-        int maxZ = (int)Math.ceil(aabb.maxZ) - 1;
+        int minX = (int) Math.floor(aabb.minX);
+        int minY = (int) Math.floor(aabb.minY);
+        int minZ = (int) Math.floor(aabb.minZ);
+        int maxX = (int) Math.ceil(aabb.maxX) - 1;
+        int maxY = (int) Math.ceil(aabb.maxY) - 1;
+        int maxZ = (int) Math.ceil(aabb.maxZ) - 1;
 
         for (int x = minX; x <= maxX; x++) {
             for (int y = minY; y <= maxY; y++) {
@@ -94,17 +105,6 @@ public final class Bitmask {
 
     public void clear() {
         set.clear();
-    }
-
-    /**
-     * Returns a NEW Bitmask that is the union of a and b.
-     */
-    public static Bitmask combine(Bitmask a, Bitmask b) {
-        Objects.requireNonNull(a, "a");
-        Objects.requireNonNull(b, "b");
-        LongOpenHashSet s = new LongOpenHashSet(a.set);
-        s.addAll(b.set);
-        return new Bitmask(s);
     }
 
     /**

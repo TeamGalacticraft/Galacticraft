@@ -13,7 +13,15 @@ public record RoomDef(
         PortDef[] exits,
         int sizeX, int sizeY, int sizeZ // from template scanner
 ) {
-    public boolean hasAtLeastOneEntrance() { return entrances != null && entrances.length > 0; }
-    public boolean hasAtLeastOneExit()     { return exits != null && exits.length > 0; }
-    public boolean hasMoreThanOneExit()     { return exits != null && exits.length > 1; }
+    public boolean hasAtLeastOneEntrance() {
+        return entrances != null && entrances.length > 0;
+    }
+
+    public boolean hasAtLeastOneExit() {
+        return exits != null && exits.length > 0;
+    }
+
+    public boolean hasMoreThanOneExit() {
+        return exits != null && exits.length > 1;
+    }
 }

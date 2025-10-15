@@ -6,8 +6,8 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.StructureManager;
+import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -17,11 +17,11 @@ import net.minecraft.world.level.levelgen.structure.StructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
 
 public class EntranceAnchorPiece extends StructurePiece {
-    private BlockPos surface;
-    private int centerDepth;  // == 10
-    private double entryRadius;   // e.g. 24.0 at surface
-    private double falloffK;      // e.g. 2.2
-    private double accel;         // e.g. 2.0
+    private final BlockPos surface;
+    private final int centerDepth;  // == 10
+    private final double entryRadius;   // e.g. 24.0 at surface
+    private final double falloffK;      // e.g. 2.2
+    private final double accel;         // e.g. 2.0
 
     // NBT ctor
     public EntranceAnchorPiece(CompoundTag tag) {
@@ -36,15 +36,15 @@ public class EntranceAnchorPiece extends StructurePiece {
 
     public EntranceAnchorPiece(BlockPos surface, int centerDepth, double entryRadius, double falloffK, double accel) {
         super(GCStructurePieceTypes.DUNGEON_ANCHOR, 0, makeBox(surface.offset(0, 30, 0), centerDepth + 30, entryRadius));
-        this.surface     = surface.offset(0, 30, 0);
+        this.surface = surface.offset(0, 30, 0);
         this.centerDepth = centerDepth + 30;
         this.entryRadius = entryRadius;
-        this.falloffK    = falloffK;
-        this.accel       = accel;
+        this.falloffK = falloffK;
+        this.accel = accel;
     }
 
     private static BoundingBox makeBox(BlockPos surface, int centerDepth, double entryRadius) {
-        int radius = (int)Math.ceil(entryRadius) + 1;
+        int radius = (int) Math.ceil(entryRadius) + 1;
         int minX = surface.getX() - radius;
         int maxX = surface.getX() + radius;
         int minZ = surface.getZ() - radius;
@@ -77,7 +77,7 @@ public class EntranceAnchorPiece extends StructurePiece {
         final int cx = surface.getX();
         final int cz = surface.getZ();
 
-        final double entryRadius   = this.entryRadius; // e.g., 18–30 (set in ctor)
+        final double entryRadius = this.entryRadius; // e.g., 18–30 (set in ctor)
         final int radius = (int) entryRadius;
 
         // -------- Pass 0: capture each column's "natural surface" block BEFORE carving --------
@@ -113,18 +113,18 @@ public class EntranceAnchorPiece extends StructurePiece {
             }
         }
 
-        final int    minHalfExtent = 1;    // 1 => 3x3 minimum
-        final double falloffK      = this.falloffK;    // e.g., 2.0–3.0
-        final double accel         = this.accel;       // e.g., 1.6–2.5 ( >1 accelerates collapse )
+        final int minHalfExtent = 1;    // 1 => 3x3 minimum
+        final double falloffK = this.falloffK;    // e.g., 2.0–3.0
+        final double accel = this.accel;       // e.g., 1.6–2.5 ( >1 accelerates collapse )
 
-        final int topY    = surface.getY();
+        final int topY = surface.getY();
         final int bottomY = topY - centerDepth;
 
         // Loop depth-first so radius shrinks with depth
         for (int y = topY; y > bottomY; y--) {
-            final double d      = (topY - y) / (double) centerDepth;        // 0..1
-            final double radY   = entryRadius * Math.exp(-falloffK * Math.pow(d, accel));
-            final int    rBlock = (int)Math.ceil(radY);
+            final double d = (topY - y) / (double) centerDepth;        // 0..1
+            final double radY = entryRadius * Math.exp(-falloffK * Math.pow(d, accel));
+            final int rBlock = (int) Math.ceil(radY);
 
             // Iterate only the square that can possibly be inside this radius
             for (int dx = -rBlock; dx <= rBlock; dx++) {
@@ -141,7 +141,7 @@ public class EntranceAnchorPiece extends StructurePiece {
                     }
 
                     // Otherwise carve within the (round) aperture for this depth:
-                    final double rEuclid = Math.sqrt((double)dx*dx + (double)dz*dz);
+                    final double rEuclid = Math.sqrt((double) dx * dx + (double) dz * dz);
                     if (rEuclid <= radY) {
                         level.setBlock(p, Blocks.AIR.defaultBlockState(), Block.UPDATE_CLIENTS);
                     }
@@ -173,7 +173,7 @@ public class EntranceAnchorPiece extends StructurePiece {
                                     level.getBlockState(p.below()).isAir() ||
                                     level.getBlockState(p.north()).isAir() ||
                                     level.getBlockState(p.south()).isAir() ||
-                                    level.getBlockState(p.east()).isAir()  ||
+                                    level.getBlockState(p.east()).isAir() ||
                                     level.getBlockState(p.west()).isAir();
 
                     if (touchesAir) {

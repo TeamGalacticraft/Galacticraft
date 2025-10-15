@@ -7,10 +7,13 @@ import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 
-/** Helpers for PortDef geometry transforms. */
+/**
+ * Helpers for PortDef geometry transforms.
+ */
 public final class PortGeom {
 
-    private PortGeom() {}
+    private PortGeom() {
+    }
 
     /**
      * Convert a local (template) BlockPos to world BlockPos after applying Rotation and translating to room AABB.
@@ -25,25 +28,36 @@ public final class PortGeom {
         int rx = lx, rz = lz;
         switch (rot) {
             case NONE -> { /* rx=lx, rz=lz */ }
-            case CLOCKWISE_90 -> { rx = sizeZ - 1 - lz; rz = lx; }
-            case CLOCKWISE_180 -> { rx = sizeX - 1 - lx; rz = sizeZ - 1 - lz; }
-            case COUNTERCLOCKWISE_90 -> { rx = lz; rz = sizeX - 1 - lx; }
+            case CLOCKWISE_90 -> {
+                rx = sizeZ - 1 - lz;
+                rz = lx;
+            }
+            case CLOCKWISE_180 -> {
+                rx = sizeX - 1 - lx;
+                rz = sizeZ - 1 - lz;
+            }
+            case COUNTERCLOCKWISE_90 -> {
+                rx = lz;
+                rz = sizeX - 1 - lx;
+            }
         }
         // AABB min corner is the world origin of the placed template
-        int wx = (int)Math.floor(placedAabb.minX) + rx;
-        int wy = (int)Math.floor(placedAabb.minY) + ly;
-        int wz = (int)Math.floor(placedAabb.minZ) + rz;
+        int wx = (int) Math.floor(placedAabb.minX) + rx;
+        int wy = (int) Math.floor(placedAabb.minY) + ly;
+        int wz = (int) Math.floor(placedAabb.minZ) + rz;
         return new BlockPos(wx, wy, wz);
     }
 
-    /** World center of the port rectangle (sub-block precision). */
+    /**
+     * World center of the port rectangle (sub-block precision).
+     */
     public static Vec3 worldCenter(DungeonBuilder.Room room, PortDef port, int sizeX, int sizeY, int sizeZ) {
         // local sub-block center
         Vec3 lc = port.localCenter();
         // rotate point (floor/ceil nuance doesn’t matter since we’re sub-block)
-        int lx = (int)Math.floor(lc.x);
-        int ly = (int)Math.floor(lc.y);
-        int lz = (int)Math.floor(lc.z);
+        int lx = (int) Math.floor(lc.x);
+        int ly = (int) Math.floor(lc.y);
+        int lz = (int) Math.floor(lc.z);
 
         // rotate corners min/max then average in world for better precision:
         BlockPos wMin = localToWorld(port.min(), sizeX, sizeY, sizeZ, room.aabb(), room.rotation());

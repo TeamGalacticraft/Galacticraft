@@ -19,10 +19,22 @@ public record BlockData(short packed, BlockState state) {
         return ofLocal(lx, ly, lz, state);
     }
 
+    public static short pack(int lx, int ly, int lz) {
+        return (short) ((lx & 0xF) | ((ly & 0xF) << 4) | ((lz & 0xF) << 8));
+    }
+
     // Unpack helpers
-    public int localX() { return  packed        & 0xF; }
-    public int localY() { return (packed >>> 4) & 0xF; }
-    public int localZ() { return (packed >>> 8) & 0xF; }
+    public int localX() {
+        return packed & 0xF;
+    }
+
+    public int localY() {
+        return (packed >>> 4) & 0xF;
+    }
+
+    public int localZ() {
+        return (packed >>> 8) & 0xF;
+    }
 
     // Rebuild absolute BlockPos when you have the section (map key)
     public BlockPos toBlockPos(SectionPos section) {
@@ -31,9 +43,5 @@ public record BlockData(short packed, BlockState state) {
                 section.minBlockY() + localY(),
                 section.minBlockZ() + localZ()
         );
-    }
-
-    public static short pack(int lx, int ly, int lz) {
-        return (short)((lx & 0xF) | ((ly & 0xF) << 4) | ((lz & 0xF) << 8));
     }
 }

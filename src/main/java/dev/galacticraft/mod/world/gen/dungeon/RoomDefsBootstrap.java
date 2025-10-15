@@ -3,7 +3,8 @@ package dev.galacticraft.mod.world.gen.dungeon;
 import dev.galacticraft.mod.world.gen.dungeon.util.RoomRegistry;
 
 public final class RoomDefsBootstrap {
-    private RoomDefsBootstrap() {}
+    private RoomDefsBootstrap() {
+    }
 
     public static void define(RoomRegistry.Registrar r) {
         // ENTRANCES
@@ -18,7 +19,7 @@ public final class RoomDefsBootstrap {
 
         // END
         r.end(id("end_1"), templateId("end_room_1"))
-                .tags("boss","goal")
+                .tags("boss", "goal")
                 .register();
 
         // BASICS

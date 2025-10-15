@@ -22,9 +22,9 @@ import java.util.Objects;
  * Pure data/logic holder for a single template placement.
  * - Rotates around the template center (not the lower corner).
  * - Bounding box is computed from RoomDef.size* and the requested rotation.
- *
+ * <p>
  * Contract:
- *   position = desired world MIN corner of the ROTATED template’s AABB.
+ * position = desired world MIN corner of the ROTATED template’s AABB.
  */
 public final class RoomGenerator {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -34,13 +34,19 @@ public final class RoomGenerator {
     private final Rotation rotation;
     private final int sizeX, sizeY, sizeZ;
 
-    /** Requested world MIN corner of the rotated template AABB. */
+    /**
+     * Requested world MIN corner of the rotated template AABB.
+     */
     private final BlockPos worldMinAfterRotation;
 
-    /** Optional (debug/trace): the logical room id. */
+    /**
+     * Optional (debug/trace): the logical room id.
+     */
     private final String roomId;
 
-    /** Cached world-space bounding box for this placement. */
+    /**
+     * Cached world-space bounding box for this placement.
+     */
     private final BoundingBox boundingBox;
 
     // ====== Constructors ======
@@ -59,14 +65,87 @@ public final class RoomGenerator {
 
     // ====== API ======
 
-    public ResourceLocation templateId() { return templateId; }
-    public Rotation rotation() { return rotation; }
-    public int sizeX() { return sizeX; }
-    public int sizeY() { return sizeY; }
-    public int sizeZ() { return sizeZ; }
-    public BlockPos worldMinAfterRotation() { return worldMinAfterRotation; }
-    public String roomId() { return roomId; }
-    public BoundingBox boundingBox() { return boundingBox; }
+    private static BoundingBox computeBoundingBox(int sx, int sy, int sz, BlockPos worldMinAfterRotation, Rotation rot) {
+        BlockPos pivot = new BlockPos(sx / 2, sy / 2, sz / 2);
+        LocalAabb rotLocal = rotatedLocalAabb(sx, sy, sz, rot, pivot);
+
+        BlockPos minW = worldMinAfterRotation;
+        BlockPos maxW = worldMinAfterRotation.offset(
+                rotLocal.sizeX() - 1,
+                rotLocal.sizeY() - 1,
+                rotLocal.sizeZ() - 1
+        );
+        return BoundingBox.fromCorners(minW, maxW);
+    }
+
+    /**
+     * Local-space AABB of template [0..sx-1,0..sy-1,0..sz-1] rotated around 'pivot'.
+     */
+    private static LocalAabb rotatedLocalAabb(int sx, int sy, int sz, Rotation rot, BlockPos pivot) {
+        // corners of the unrotated template volume
+        BlockPos[] corners = new BlockPos[]{
+                new BlockPos(0, 0, 0),
+                new BlockPos(sx - 1, 0, 0),
+                new BlockPos(0, sy - 1, 0),
+                new BlockPos(0, 0, sz - 1),
+                new BlockPos(sx - 1, sy - 1, 0),
+                new BlockPos(sx - 1, 0, sz - 1),
+                new BlockPos(0, sy - 1, sz - 1),
+                new BlockPos(sx - 1, sy - 1, sz - 1)
+        };
+
+        int minX = Integer.MAX_VALUE, minY = Integer.MAX_VALUE, minZ = Integer.MAX_VALUE;
+        int maxX = Integer.MIN_VALUE, maxY = Integer.MIN_VALUE, maxZ = Integer.MIN_VALUE;
+
+        for (BlockPos c : corners) {
+            BlockPos rc = StructureTemplate.transform(c, Mirror.NONE, rot, pivot);
+            if (rc.getX() < minX) minX = rc.getX();
+            if (rc.getY() < minY) minY = rc.getY();
+            if (rc.getZ() < minZ) minZ = rc.getZ();
+            if (rc.getX() > maxX) maxX = rc.getX();
+            if (rc.getY() > maxY) maxY = rc.getY();
+            if (rc.getZ() > maxZ) maxZ = rc.getZ();
+        }
+
+        BlockPos min = new BlockPos(minX, minY, minZ);
+        BlockPos max = new BlockPos(maxX, maxY, maxZ);
+        BlockPos size = max.subtract(min).offset(1, 1, 1);
+        return new LocalAabb(min, size);
+    }
+
+    public ResourceLocation templateId() {
+        return templateId;
+    }
+
+    public Rotation rotation() {
+        return rotation;
+    }
+
+    public int sizeX() {
+        return sizeX;
+    }
+
+    public int sizeY() {
+        return sizeY;
+    }
+
+    public int sizeZ() {
+        return sizeZ;
+    }
+
+    public BlockPos worldMinAfterRotation() {
+        return worldMinAfterRotation;
+    }
+
+    public String roomId() {
+        return roomId;
+    }
+
+    // ====== Bounding box math (center rotation) ======
+
+    public BoundingBox boundingBox() {
+        return boundingBox;
+    }
 
     /**
      * Returns the blocks this placement would emit, grouped by SectionPos, with 12-bit packed local coords.
@@ -84,7 +163,7 @@ public final class RoomGenerator {
         BlockPos origin = this.worldMinAfterRotation.subtract(rotLocal.min());
 
         Mirror mirror = Mirror.NONE;
-        Rotation rot  = this.rotation;
+        Rotation rot = this.rotation;
 
         for (StructureTemplate.StructureBlockInfo info : tb.rawBlocks()) {
             // local -> rotated/mirrored -> world
@@ -96,7 +175,7 @@ public final class RoomGenerator {
             if (state.is(GCBlocks.DUNGEON_ENTRANCE_BLOCK) || state.is(GCBlocks.DUNGEON_EXIT_BLOCK)) {
                 state = GCBlocks.OLIANT_NEST_BLOCK.defaultBlockState();
             }
-            if (rot    != Rotation.NONE) state = state.rotate(rot);
+            if (rot != Rotation.NONE) state = state.rotate(rot);
 
             SectionPos sec = SectionPos.of(worldPos);
             BlockData data = BlockData.ofWorld(sec, worldPos, state);
@@ -105,58 +184,18 @@ public final class RoomGenerator {
         return result;
     }
 
-    // ====== Bounding box math (center rotation) ======
-
-    private static BoundingBox computeBoundingBox(int sx, int sy, int sz, BlockPos worldMinAfterRotation, Rotation rot) {
-        BlockPos pivot = new BlockPos(sx / 2, sy / 2, sz / 2);
-        LocalAabb rotLocal = rotatedLocalAabb(sx, sy, sz, rot, pivot);
-
-        BlockPos minW = worldMinAfterRotation;
-        BlockPos maxW = worldMinAfterRotation.offset(
-                rotLocal.sizeX() - 1,
-                rotLocal.sizeY() - 1,
-                rotLocal.sizeZ() - 1
-        );
-        return BoundingBox.fromCorners(minW, maxW);
-    }
-
-    /** Local-space AABB of template [0..sx-1,0..sy-1,0..sz-1] rotated around 'pivot'. */
-    private static LocalAabb rotatedLocalAabb(int sx, int sy, int sz, Rotation rot, BlockPos pivot) {
-        // corners of the unrotated template volume
-        BlockPos[] corners = new BlockPos[] {
-                new BlockPos(0,     0,     0),
-                new BlockPos(sx-1,  0,     0),
-                new BlockPos(0,     sy-1,  0),
-                new BlockPos(0,     0,     sz-1),
-                new BlockPos(sx-1,  sy-1,  0),
-                new BlockPos(sx-1,  0,     sz-1),
-                new BlockPos(0,     sy-1,  sz-1),
-                new BlockPos(sx-1,  sy-1,  sz-1)
-        };
-
-        int minX=Integer.MAX_VALUE,minY=Integer.MAX_VALUE,minZ=Integer.MAX_VALUE;
-        int maxX=Integer.MIN_VALUE,maxY=Integer.MIN_VALUE,maxZ=Integer.MIN_VALUE;
-
-        for (BlockPos c : corners) {
-            BlockPos rc = StructureTemplate.transform(c, Mirror.NONE, rot, pivot);
-            if (rc.getX() < minX) minX = rc.getX();
-            if (rc.getY() < minY) minY = rc.getY();
-            if (rc.getZ() < minZ) minZ = rc.getZ();
-            if (rc.getX() > maxX) maxX = rc.getX();
-            if (rc.getY() > maxY) maxY = rc.getY();
-            if (rc.getZ() > maxZ) maxZ = rc.getZ();
-        }
-
-        BlockPos min = new BlockPos(minX, minY, minZ);
-        BlockPos max = new BlockPos(maxX, maxY, maxZ);
-        BlockPos size = max.subtract(min).offset(1,1,1);
-        return new LocalAabb(min, size);
-    }
-
     // ====== tiny value class ======
     private record LocalAabb(BlockPos min, BlockPos size) {
-        int sizeX() { return size.getX(); }
-        int sizeY() { return size.getY(); }
-        int sizeZ() { return size.getZ(); }
+        int sizeX() {
+            return size.getX();
+        }
+
+        int sizeY() {
+            return size.getY();
+        }
+
+        int sizeZ() {
+            return size.getZ();
+        }
     }
 }

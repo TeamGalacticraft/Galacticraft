@@ -11,7 +11,9 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
 import java.util.concurrent.ConcurrentHashMap;
 
 /**
@@ -20,14 +22,17 @@ import java.util.concurrent.ConcurrentHashMap;
  */
 public final class DungeonPlacementManager {
 
-    /** Default per-tick placement budget (total blocks across all dimensions). */
+    /**
+     * Default per-tick placement budget (total blocks across all dimensions).
+     */
     public static final int DEFAULT_BLOCK_BUDGET = 8192;
 
     // dim -> (chunk -> (pos -> state))  (all layers concurrent)
     private static final Map<ResourceKey<Level>,
             Map<ChunkPos, Map<BlockPos, BlockState>>> PENDING = new ConcurrentHashMap<>();
 
-    private DungeonPlacementManager() {}
+    private DungeonPlacementManager() {
+    }
 
     /**
      * Enqueue all blocks for the given dimension. No level reference needed.
@@ -60,7 +65,9 @@ public final class DungeonPlacementManager {
         }
     }
 
-    /** Server tick hook. Applies queued blocks up to a budget (to avoid spikes). */
+    /**
+     * Server tick hook. Applies queued blocks up to a budget (to avoid spikes).
+     */
     public static void tick(MinecraftServer server) {
         tick(server, DEFAULT_BLOCK_BUDGET);
     }
@@ -129,7 +136,9 @@ public final class DungeonPlacementManager {
         }
     }
 
-    /** True if there is no pending work. */
+    /**
+     * True if there is no pending work.
+     */
     public static boolean isIdle() {
         return PENDING.isEmpty();
     }

@@ -10,9 +10,6 @@ import java.util.List;
 
 public final class BoxSampling {
 
-    /** A bias knot at normalized height t in [0,1] with weight w (>0). */
-    public record Knot(double t, double w) {}
-
     /**
      * Sample a random point inside an AABB with Y distributed according to a piecewise-linear bias.
      * Knots define (t in [0,1], weight). The PDF is proportional to the linear interpolation between knots.
@@ -121,6 +118,17 @@ public final class BoxSampling {
         return new Vec3(x, y, z);
     }
 
-    private static double clamp01(double v) { return v < 0 ? 0 : (v > 1 ? 1 : v); }
-    private static double lerp(double a, double b, double t) { return a + (b - a) * t; }
+    private static double clamp01(double v) {
+        return v < 0 ? 0 : (v > 1 ? 1 : v);
+    }
+
+    private static double lerp(double a, double b, double t) {
+        return a + (b - a) * t;
+    }
+
+    /**
+     * A bias knot at normalized height t in [0,1] with weight w (>0).
+     */
+    public record Knot(double t, double w) {
+    }
 }

@@ -13,28 +13,12 @@ import java.util.*;
  * Exact solver using Held–Karp DP (O(n^2 * 2^n)), n<=20 practical; n=10 trivial.
  */
 public final class RoomHamiltonianPath {
-    // ---- Result container ----
-    public static final class PathResult {
-        /** Indices into the input rooms list, in visiting order (includes start and end). */
-        public final List<Integer> order;
-        /** For each hop k: portPairs[k] = {fromExitIndexInRoom, toEntranceIndexInRoom}; size = order.size()-1 */
-        public final List<int[]> portPairs;
-        /** Sum of hop distances using chosen ports. */
-        public final double totalDistance;
-
-        PathResult(List<Integer> order, List<int[]> portPairs, double totalDistance) {
-            this.order = order;
-            this.portPairs = portPairs;
-            this.totalDistance = totalDistance;
-        }
-    }
-
-    // ---- Public API ----
     /**
      * Solve shortest Hamiltonian path from startIndex to endIndex (inclusive), visiting every room exactly once.
-     * @param rooms list of rooms (size n ≥ 2)
+     *
+     * @param rooms      list of rooms (size n ≥ 2)
      * @param startIndex index of start room
-     * @param endIndex index of end room
+     * @param endIndex   index of end room
      * @return optimal path result, or empty if no feasible port chain exists
      */
     public static Optional<PathResult> solve(List<DungeonBuilder.Room> rooms, int startIndex, int endIndex) {
@@ -82,7 +66,9 @@ public final class RoomHamiltonianPath {
                     for (int a = 0; a < entrPos.length; a++) {
                         double d = euclid(exitPos[e], entrPos[a]);
                         if (d < best) {
-                            best = d; be = e; ba = a;
+                            best = d;
+                            be = e;
+                            ba = a;
                         }
                     }
                 }
@@ -175,7 +161,7 @@ public final class RoomHamiltonianPath {
         return Optional.of(new PathResult(order, portPairs, recomputed));
     }
 
-    // ---- Helpers ----
+    // ---- Public API ----
 
     private static List<PortDef> entrances(DungeonBuilder.Room r) {
         PortDef[] arr = r.def().entrances();
@@ -185,6 +171,8 @@ public final class RoomHamiltonianPath {
         return out;
     }
 
+    // ---- Helpers ----
+
     private static List<PortDef> exits(DungeonBuilder.Room r) {
         PortDef[] arr = r.def().exits();
         if (arr == null) return List.of();
@@ -193,7 +181,9 @@ public final class RoomHamiltonianPath {
         return out;
     }
 
-    /** Center point of the AABB face corresponding to the port's (rotated) facing. */
+    /**
+     * Center point of the AABB face corresponding to the port's (rotated) facing.
+     */
     private static double[] portCenterWorld(DungeonBuilder.Room room, PortDef port) {
         Direction face = rotate(port.facing(), room.rotation());
         AABB box = room.aabb();
@@ -205,10 +195,10 @@ public final class RoomHamiltonianPath {
         return switch (face) {
             case NORTH -> new double[]{cx, cy, box.minZ}; // -Z
             case SOUTH -> new double[]{cx, cy, box.maxZ}; // +Z
-            case WEST  -> new double[]{box.minX, cy, cz}; // -X
-            case EAST  -> new double[]{box.maxX, cy, cz}; // +X
-            case DOWN  -> new double[]{cx, box.minY, cz}; // -Y
-            case UP    -> new double[]{cx, box.maxY, cz}; // +Y
+            case WEST -> new double[]{box.minX, cy, cz}; // -X
+            case EAST -> new double[]{box.maxX, cy, cz}; // +X
+            case DOWN -> new double[]{cx, box.minY, cz}; // -Y
+            case UP -> new double[]{cx, box.maxY, cz}; // +Y
         };
     }
 
@@ -217,7 +207,9 @@ public final class RoomHamiltonianPath {
         return Math.sqrt(dx * dx + dy * dy + dz * dz);
     }
 
-    /** Rotate a Direction by a Block Rotation (Minecraft semantics). */
+    /**
+     * Rotate a Direction by a Block Rotation (Minecraft semantics).
+     */
     private static Direction rotate(Direction d, Rotation r) {
         // Rotation only affects horizontal in Minecraft; UP/DOWN unchanged.
         if (d.getAxis().isVertical()) return d;
@@ -227,5 +219,27 @@ public final class RoomHamiltonianPath {
             case CLOCKWISE_180 -> d.getClockWise().getClockWise();
             case COUNTERCLOCKWISE_90 -> d.getCounterClockWise();
         };
+    }
+
+    // ---- Result container ----
+    public static final class PathResult {
+        /**
+         * Indices into the input rooms list, in visiting order (includes start and end).
+         */
+        public final List<Integer> order;
+        /**
+         * For each hop k: portPairs[k] = {fromExitIndexInRoom, toEntranceIndexInRoom}; size = order.size()-1
+         */
+        public final List<int[]> portPairs;
+        /**
+         * Sum of hop distances using chosen ports.
+         */
+        public final double totalDistance;
+
+        PathResult(List<Integer> order, List<int[]> portPairs, double totalDistance) {
+            this.order = order;
+            this.portPairs = portPairs;
+            this.totalDistance = totalDistance;
+        }
     }
 }

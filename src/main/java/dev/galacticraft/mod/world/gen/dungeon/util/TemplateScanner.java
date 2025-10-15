@@ -30,34 +30,10 @@ public final class TemplateScanner {
     private final Block exitMarker;
 
     private final Map<ResourceLocation, TemplateMeta> cache = new HashMap<>();
-
-    /** Raw, unprocessed blocks (palette 0) + size */
-    public record TemplateBlocks(int sx, int sy, int sz, List<StructureTemplate.StructureBlockInfo> rawBlocks) {}
-
-    /** Cache of template → raw blocks */
+    /**
+     * Cache of template → raw blocks
+     */
     private final Map<ResourceLocation, TemplateBlocks> blocksCache = new HashMap<>();
-
-    /** Ensure raw blocks for this template are loaded & cached. */
-    public TemplateBlocks loadBlocks(ResourceLocation templateId) {
-        TemplateBlocks hit = blocksCache.get(templateId);
-        if (hit != null) return hit;
-
-        StructureTemplate tpl = templateManager.getOrCreate(templateId);
-        var size = tpl.getSize();
-        // NOTE: palette(0).blocks() is in LOCAL template coords; states are UN-processed
-        List<StructureTemplate.StructureBlockInfo> raw = List.copyOf(tpl.palettes.getFirst().blocks());
-
-        TemplateBlocks tb = new TemplateBlocks(size.getX(), size.getY(), size.getZ(), raw);
-        blocksCache.put(templateId, tb);
-        return tb;
-    }
-
-    /** Optional convenience: load both ports & raw blocks in one call. */
-    public TemplateMeta scanAndWarm(ResourceLocation templateId) {
-        TemplateMeta meta = scan(templateId);   // your existing scan() fills port cache
-        loadBlocks(templateId);                 // warm block cache too
-        return meta;
-    }
 
     public TemplateScanner(StructureTemplateManager templateManager) {
         this(templateManager, Constant.id("dungeon_entrance_block"), Constant.id("dungeon_exit_block"));
@@ -72,44 +48,6 @@ public final class TemplateScanner {
         this.entranceMarker = BuiltInRegistries.BLOCK.get(this.entranceMarkerId);
         this.exitMarker = BuiltInRegistries.BLOCK.get(this.exitMarkerId);
     }
-
-    public TemplateMeta scan(String templateId) {
-        return scan(ResourceLocation.parse(templateId));
-    }
-
-    public TemplateMeta scan(ResourceLocation templateId) {
-        TemplateMeta hit = cache.get(templateId);
-        if (hit != null) return hit;
-
-        StructureTemplate tpl = templateManager.getOrCreate(templateId);
-        Vec3i size = tpl.getSize();
-
-        var place = new StructurePlaceSettings();
-        List<StructureTemplate.StructureBlockInfo> eInfos = tpl.filterBlocks(BlockPos.ZERO, place, entranceMarker);
-        List<StructureTemplate.StructureBlockInfo> xInfos = tpl.filterBlocks(BlockPos.ZERO, place, exitMarker);
-
-        List<BlockPos> entrances = eInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
-        List<BlockPos> exits     = xInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
-
-        if (entrances.isEmpty() && exits.isEmpty()) {
-            LOGGER.warn("[TemplateScanner] {} has no entrance/exit markers. size={}", templateId, size);
-        }
-
-        PortDef[] ePorts = clusterToPorts(entrances, size, true,  templateId);
-        PortDef[] xPorts = clusterToPorts(exits,     size, false, templateId);
-
-        TemplateMeta meta = new TemplateMeta(
-                size.getX(), size.getY(), size.getZ(),
-                ePorts, xPorts
-        );
-
-        cache.put(templateId, meta);
-        LOGGER.info("[TemplateScanner] {} scanned: size={} entrances={} exits={}",
-                templateId, size, ePorts.length, xPorts.length);
-        return meta;
-    }
-
-    // ---- internals ----
 
     private static PortDef[] clusterToPorts(List<BlockPos> pts, Vec3i size, boolean entrance, ResourceLocation id) {
         if (pts.isEmpty()) return new PortDef[0];
@@ -209,15 +147,15 @@ public final class TemplateScanner {
     private static Direction.Axis inPlaneAxisA(Direction facing) {
         return switch (facing) {
             case NORTH, SOUTH -> Direction.Axis.X;
-            case EAST, WEST   -> Direction.Axis.Z;
-            case UP, DOWN     -> Direction.Axis.X;
+            case EAST, WEST -> Direction.Axis.Z;
+            case UP, DOWN -> Direction.Axis.X;
         };
     }
 
     private static Direction.Axis inPlaneAxisB(Direction facing) {
         return switch (facing) {
             case NORTH, SOUTH, EAST, WEST -> Direction.Axis.Y;
-            case UP, DOWN                  -> Direction.Axis.Z;
+            case UP, DOWN -> Direction.Axis.Z;
         };
     }
 
@@ -234,6 +172,8 @@ public final class TemplateScanner {
         }
         return (max - min) + 1;
     }
+
+    // ---- internals ----
 
     private static BlockPos min(List<BlockPos> pts) {
         int x = Integer.MAX_VALUE, y = Integer.MAX_VALUE, z = Integer.MAX_VALUE;
@@ -255,7 +195,75 @@ public final class TemplateScanner {
         return new BlockPos(x, y, z);
     }
 
+    /**
+     * Ensure raw blocks for this template are loaded & cached.
+     */
+    public TemplateBlocks loadBlocks(ResourceLocation templateId) {
+        TemplateBlocks hit = blocksCache.get(templateId);
+        if (hit != null) return hit;
+
+        StructureTemplate tpl = templateManager.getOrCreate(templateId);
+        var size = tpl.getSize();
+        // NOTE: palette(0).blocks() is in LOCAL template coords; states are UN-processed
+        List<StructureTemplate.StructureBlockInfo> raw = List.copyOf(tpl.palettes.getFirst().blocks());
+
+        TemplateBlocks tb = new TemplateBlocks(size.getX(), size.getY(), size.getZ(), raw);
+        blocksCache.put(templateId, tb);
+        return tb;
+    }
+
+    /**
+     * Optional convenience: load both ports & raw blocks in one call.
+     */
+    public TemplateMeta scanAndWarm(ResourceLocation templateId) {
+        TemplateMeta meta = scan(templateId);   // your existing scan() fills port cache
+        loadBlocks(templateId);                 // warm block cache too
+        return meta;
+    }
+
+    public TemplateMeta scan(String templateId) {
+        return scan(ResourceLocation.parse(templateId));
+    }
+
+    public TemplateMeta scan(ResourceLocation templateId) {
+        TemplateMeta hit = cache.get(templateId);
+        if (hit != null) return hit;
+
+        StructureTemplate tpl = templateManager.getOrCreate(templateId);
+        Vec3i size = tpl.getSize();
+
+        var place = new StructurePlaceSettings();
+        List<StructureTemplate.StructureBlockInfo> eInfos = tpl.filterBlocks(BlockPos.ZERO, place, entranceMarker);
+        List<StructureTemplate.StructureBlockInfo> xInfos = tpl.filterBlocks(BlockPos.ZERO, place, exitMarker);
+
+        List<BlockPos> entrances = eInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
+        List<BlockPos> exits = xInfos.stream().map(StructureTemplate.StructureBlockInfo::pos).toList();
+
+        if (entrances.isEmpty() && exits.isEmpty()) {
+            LOGGER.warn("[TemplateScanner] {} has no entrance/exit markers. size={}", templateId, size);
+        }
+
+        PortDef[] ePorts = clusterToPorts(entrances, size, true, templateId);
+        PortDef[] xPorts = clusterToPorts(exits, size, false, templateId);
+
+        TemplateMeta meta = new TemplateMeta(
+                size.getX(), size.getY(), size.getZ(),
+                ePorts, xPorts
+        );
+
+        cache.put(templateId, meta);
+        LOGGER.info("[TemplateScanner] {} scanned: size={} entrances={} exits={}",
+                templateId, size, ePorts.length, xPorts.length);
+        return meta;
+    }
+
     public StructureTemplateManager templateManager() {
         return this.templateManager;
+    }
+
+    /**
+     * Raw, unprocessed blocks (palette 0) + size
+     */
+    public record TemplateBlocks(int sx, int sy, int sz, List<StructureTemplate.StructureBlockInfo> rawBlocks) {
     }
 }
