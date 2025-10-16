@@ -360,6 +360,16 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
     }
 
+    private static void decorationBlockVariants(RecipeOutput output, ItemLike base, ItemLike slab, ItemLike stairs, ItemLike wall) {
+        slab(output, RecipeCategory.BUILDING_BLOCKS, slab, base);
+        stairs(output, stairs, base);
+        wall(output, RecipeCategory.DECORATIONS, wall, base);
+
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, slab, base, 2);
+        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, stairs, base);
+        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, wall, base);
+    }
+
     private static void generateBlockFamilyRecipes(RecipeOutput output, BlockFamily blockFamily) {
         Block base = blockFamily.getBaseBlock();
         blockFamily.getVariants().forEach((variant, block) -> {
@@ -433,6 +443,31 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern(" X")
                 .unlockedBy(getHasName(input), has(input))
                 .save(output);
+    }
+
+    public static void decorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
+                .define('#', Items.STONE)
+                .define('X', input)
+                .pattern("## ")
+                .pattern("##X")
+                .unlockedBy(getHasName(input), has(input))
+                .save(output);
+
+        decorationBlockVariants(output, block, slab, stairs, wall);
+    }
+
+    public static void detailedDecorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
+                .define('#', Items.STONE)
+                .define('X', input)
+                .pattern("##")
+                .pattern("##")
+                .pattern(" X")
+                .unlockedBy(getHasName(input), has(input))
+                .save(output);
+
+        decorationBlockVariants(output, block, slab, stairs, wall);
     }
 
     public static void stairs(RecipeOutput output, ItemLike stairs, ItemLike base) {
