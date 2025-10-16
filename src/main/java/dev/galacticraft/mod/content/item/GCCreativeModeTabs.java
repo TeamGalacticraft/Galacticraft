@@ -244,13 +244,6 @@ public class GCCreativeModeTabs {
                     output.accept(stack);
                 }
 
-                // LIGHT PANELS
-                output.accept(SQUARE_LIGHT_PANEL);
-                output.accept(SPOTLIGHT_LIGHT_PANEL);
-                output.accept(LINEAR_LIGHT_PANEL);
-                output.accept(DASHED_LIGHT_PANEL);
-                output.accept(DIAGONAL_LIGHT_PANEL);
-
                 // VACUUM GLASS
                 output.accept(VACUUM_GLASS);
                 output.accept(CLEAR_VACUUM_GLASS);

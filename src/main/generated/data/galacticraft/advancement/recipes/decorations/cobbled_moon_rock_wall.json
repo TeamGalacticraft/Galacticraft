@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_steel": {
+    "has_cobbled_moon_rock": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_steel"
+            "items": "galacticraft:cobbled_moon_rock"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:spotlight_light_panel"
+        "recipe": "galacticraft:cobbled_moon_rock_wall"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_steel"
+      "has_cobbled_moon_rock"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:spotlight_light_panel"
+      "galacticraft:cobbled_moon_rock_wall"
     ]
   }
 }
