@@ -261,13 +261,6 @@ public class GCTranslationProvider extends TranslationProvider {
             }
         }
 
-        // LIGHT PANELS
-        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
-        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
-        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
-        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
-        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
-
         // VACUUM GLASS
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");

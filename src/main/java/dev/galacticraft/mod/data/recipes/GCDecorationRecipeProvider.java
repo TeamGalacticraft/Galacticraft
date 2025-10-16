@@ -24,11 +24,13 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.model.GCBlockFamilies;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
@@ -36,6 +38,7 @@ import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -49,6 +52,33 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput output) {
+        GCBlockFamilies.getAllFamilies()
+                .filter(BlockFamily::shouldGenerateRecipe)
+                .forEach(blockFamily -> generateBlockFamilyRecipes(output, blockFamily));
+
+        baseDecorationBlocks(output, GCItems.COMPRESSED_ALUMINUM, GCBlockFamilies.ALUMINUM_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_BRONZE, GCBlockFamilies.BRONZE_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_COPPER, GCBlockFamilies.COPPER_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_IRON, GCBlockFamilies.IRON_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_METEORIC_IRON, GCBlockFamilies.METEORIC_IRON_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_STEEL, GCBlockFamilies.STEEL_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_TIN, GCBlockFamilies.TIN_DECORATIONS);
+        baseDecorationBlocks(output, GCItems.COMPRESSED_TITANIUM, GCBlockFamilies.TITANIUM_DECORATIONS);
+
+        smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
+        squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
+        squareStone(output, GCBlocks.POLISHED_MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        chiseledStone(output, GCBlocks.CHISELED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK_SLAB, GCBlocks.MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        pillar(output, GCBlocks.MOON_ROCK_PILLAR, GCBlocks.MOON_ROCK);
+
+        smeltBuildingBlock(output, GCBlocks.LUNASLATE, GCBlocks.COBBLED_LUNASLATE);
+
+        squareStone(output, GCBlocks.MOON_BASALT_BRICK, GCBlocks.MOON_BASALT);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_BASALT_BRICK, GCBlocks.MOON_BASALT_BRICK);
+
+        smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
+
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
                 .define('G', ConventionalItemTags.GLOWSTONE_DUSTS)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
@@ -92,56 +122,6 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("GGG")
                 .pattern("AGA")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_ALUMINUM), has(GCItems.COMPRESSED_ALUMINUM))
-                .save(output);
-
-        // Light panels
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DASHED_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("SGS")
-                .pattern(" T ")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.DIAGONAL_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern(" S")
-                .pattern("SG")
-                .pattern(" T")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SPOTLIGHT_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("S S")
-                .pattern(" G ")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.SQUARE_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("SSS")
-                .pattern("SGS")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .save(output);
-
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.LINEAR_LIGHT_PANEL)
-                .define('S', ConventionalItemTags.GLASS_PANES_COLORLESS)
-                .define('G', GCItems.GLOWSTONE_TORCH)
-                .define('T', GCItems.COMPRESSED_STEEL)
-                .pattern("S S")
-                .pattern("SGS")
-                .pattern("STS")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
 
         // Misc decoration blocks
@@ -363,14 +343,27 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
     }
 
-    private static void decorationBlockVariants(RecipeOutput output, ItemLike base, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        slab(output, RecipeCategory.BUILDING_BLOCKS, slab, base);
-        stairs(output, stairs, base);
-        wall(output, RecipeCategory.DECORATIONS, wall, base);
-
-        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, slab, base, 2);
-        stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, stairs, base);
-        stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, wall, base);
+    private static void generateBlockFamilyRecipes(RecipeOutput output, BlockFamily blockFamily) {
+        Block base = blockFamily.getBaseBlock();
+        blockFamily.getVariants().forEach((variant, block) -> {
+            switch (variant) {
+                case SLAB: {
+                    slab(output, RecipeCategory.BUILDING_BLOCKS, block, base);
+                    stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, block, base, 2);
+                    break;
+                }
+                case STAIRS: {
+                    stairs(output, block, base);
+                    stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, block, base);
+                    break;
+                }
+                case WALL: {
+                    wall(output, RecipeCategory.DECORATIONS, block, base);
+                    stonecutterResultFromBase(output, RecipeCategory.DECORATIONS, block, base);
+                    break;
+                }
+            }
+        });
     }
 
     public static void pillar(RecipeOutput output, ItemLike pillar, ItemLike base) {
@@ -414,8 +407,8 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brick);
     }
 
-    public static void decorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
+    public static void baseDecorationBlocks(RecipeOutput output, ItemLike input, GCBlockFamilies.DecorationFamily family) {
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, family.original().getBaseBlock(), 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("## ")
@@ -423,11 +416,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(input), has(input))
                 .save(output);
 
-        decorationBlockVariants(output, block, slab, stairs, wall);
-    }
-
-    public static void detailedDecorationBlock(RecipeOutput output, ItemLike input, ItemLike block, ItemLike slab, ItemLike stairs, ItemLike wall) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, block, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, family.detailed().getBaseBlock(), 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("##")
@@ -435,8 +424,6 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern(" X")
                 .unlockedBy(getHasName(input), has(input))
                 .save(output);
-
-        decorationBlockVariants(output, block, slab, stairs, wall);
     }
 
     public static void stairs(RecipeOutput output, ItemLike stairs, ItemLike base) {

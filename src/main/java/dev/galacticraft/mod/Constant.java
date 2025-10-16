@@ -237,11 +237,6 @@ public interface Constant {
 
         String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";
-        String SQUARE_LIGHT_PANEL = "square_light_panel";
-        String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
-        String LINEAR_LIGHT_PANEL = "linear_light_panel";
-        String DASHED_LIGHT_PANEL = "dashed_light_panel";
-        String DIAGONAL_LIGHT_PANEL = "diagonal_light_panel";
         String VACUUM_GLASS = "vacuum_glass";
         String CLEAR_VACUUM_GLASS = "vacuum_glass_clear";
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
