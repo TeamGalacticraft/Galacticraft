@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:moon_surface_rock"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:moon_surface_rock_stairs"
+  }
+}

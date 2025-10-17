@@ -87,8 +87,12 @@ public interface Constant {
 
         // Natural
         String MOON_TURF = "moon_turf";
-        String MOON_SURFACE_ROCK = "moon_surface_rock";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
+
+        String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_SURFACE_ROCK_SLAB = "moon_surface_rock_slab";
+        String MOON_SURFACE_ROCK_STAIRS = "moon_surface_rock_stairs";
+        String MOON_SURFACE_ROCK_WALL = "moon_surface_rock_wall";
 
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";

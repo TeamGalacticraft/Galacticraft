@@ -87,8 +87,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.MOON_TURF);
         this.dropSelf(GCBlocks.MOON_DIRT);
         this.dropOther(GCBlocks.MOON_DIRT_PATH, GCBlocks.MOON_DIRT);
-        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK);
         this.dropSelf(GCBlocks.MOON_DUNGEON_BRICK);
+
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_SLAB);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_STAIRS);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_WALL);
 
         this.add(GCBlocks.MOON_ROCK, this.createSingleItemTableWithSilkTouch(GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK));
         this.dropSelf(GCBlocks.MOON_ROCK_SLAB);

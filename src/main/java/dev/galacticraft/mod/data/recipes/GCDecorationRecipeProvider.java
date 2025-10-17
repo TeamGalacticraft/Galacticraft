@@ -277,6 +277,11 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         );
 
         // Rock decoration blocks
+        decorationBlockVariants(output, GCBlocks.MOON_SURFACE_ROCK,
+                GCBlocks.MOON_SURFACE_ROCK_SLAB,
+                GCBlocks.MOON_SURFACE_ROCK_STAIRS,
+                GCBlocks.MOON_SURFACE_ROCK_WALL
+        );
         decorationBlockVariants(output, GCBlocks.MOON_ROCK,
                 GCBlocks.MOON_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_STAIRS,

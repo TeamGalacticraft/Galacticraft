@@ -61,8 +61,12 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_TURF);
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
-                output.accept(MOON_SURFACE_ROCK);
                 output.accept(MOON_DUNGEON_BRICK);
+
+                output.accept(MOON_SURFACE_ROCK);
+                output.accept(MOON_SURFACE_ROCK_STAIRS);
+                output.accept(MOON_SURFACE_ROCK_SLAB);
+                output.accept(MOON_SURFACE_ROCK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
@@ -121,6 +125,13 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_SHRUBS);
                 output.accept(MOON_MOSS);
                 output.accept(MOON_TANGLE);
+
+                output.accept(OLI_FLY_EGG);
+                output.accept(OLIANT_NEST_BLOCK);
+                output.accept(OLIANT_FERTILE_NEST_BLOCK);
+                output.accept(OLIANT_DISSOLVED_NEST_BLOCK);
+                output.accept(OLIANT_ACID_BUCKET);
+                output.accept(OLIANT_WEB);
 
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);

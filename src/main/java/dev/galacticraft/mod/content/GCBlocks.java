@@ -102,8 +102,12 @@ public class GCBlocks {
     public static final Block MOON_TURF = BLOCKS.registerWithItem(Constant.Block.MOON_TURF, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F)));
     public static final Block MOON_DIRT = BLOCKS.registerWithItem(Constant.Block.MOON_DIRT, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.GRAVEL)));
     public static final Block MOON_DIRT_PATH = BLOCKS.registerWithItem(Constant.Block.MOON_DIRT_PATH, new MoonDirtPathBlock(BlockBehaviour.Properties.ofFullCopy(MOON_DIRT).strength(0.5F, 0.5F)));
-    public static final Block MOON_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block MOON_DUNGEON_BRICK = BLOCKS.registerWithItem(Constant.Block.MOON_DUNGEON_BRICK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 2.5F).requiresCorrectToolForDrops()));
+
+    public static final Block MOON_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
+    public static final Block MOON_SURFACE_ROCK_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK_STAIRS, new StairBlock(MOON_SURFACE_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_SURFACE_ROCK)));
+    public static final Block MOON_SURFACE_ROCK_SLAB = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK_SLAB, new SlabBlock(BlockBehaviour.Properties.ofFullCopy(MOON_SURFACE_ROCK)));
+    public static final Block MOON_SURFACE_ROCK_WALL = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK_WALL, new WallBlock(BlockBehaviour.Properties.ofFullCopy(MOON_SURFACE_ROCK)));
 
     public static final Block MOON_ROCK = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 6.0F).requiresCorrectToolForDrops()));
     public static final Block MOON_ROCK_STAIRS = BLOCKS.registerWithItem(Constant.Block.MOON_ROCK_STAIRS, new StairBlock(MOON_ROCK.defaultBlockState(), BlockBehaviour.Properties.ofFullCopy(MOON_ROCK)));
