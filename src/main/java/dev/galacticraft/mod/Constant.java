@@ -228,11 +228,6 @@ public interface Constant {
 
         String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";
-        String SQUARE_LIGHT_PANEL = "square_light_panel";
-        String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
-        String LINEAR_LIGHT_PANEL = "linear_light_panel";
-        String DASHED_LIGHT_PANEL = "dashed_light_panel";
-        String DIAGONAL_LIGHT_PANEL = "diagonal_light_panel";
         String VACUUM_GLASS = "vacuum_glass";
         String CLEAR_VACUUM_GLASS = "vacuum_glass_clear";
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
@@ -605,15 +600,12 @@ public interface Constant {
     interface ScreenTexture {
         ResourceLocation COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
         ResourceLocation SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
-        ResourceLocation CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
         ResourceLocation REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
         ResourceLocation ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
         ResourceLocation ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
-        ResourceLocation COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
         ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
-        ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
@@ -631,6 +623,115 @@ public interface Constant {
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+    }
+
+    interface CircuitFabricator {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/circuit_fabricator_screen.png");
+
+        int DIAMOND_X = 31;
+        int DIAMOND_Y = 17;
+        int SILICON_X_1 = 62;
+        int SILICON_Y_1 = 47;
+        int SILICON_X_2 = 62;
+        int SILICON_Y_2 = 65;
+        int REDSTONE_X = 107;
+        int REDSTONE_Y = 72;
+        int INGREDIENT_X = 134;
+        int INGREDIENT_Y = 17;
+        int OUTPUT_X = 152;
+        int OUTPUT_Y = 72;
+
+        int PROGRESS_X = 48;
+        int PROGRESS_Y = 23;
+        int PROGRESS_WIDTH = 113;
+        int PROGRESS_HEIGHT = 51;
+        int PROGRESS_BACKGROUND_U = 128;
+        int PROGRESS_BACKGROUND_V = 180;
+
+        int RECIPE_VIEWER_X = 30;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 139;
+        int RECIPE_VIEWER_HEIGHT = 73;
+    }
+
+    interface Compressor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/compressor_screen.png");
+
+        int GRID_X = 17;
+        int GRID_Y = 17;
+        int OUTPUT_X = 143;
+        int OUTPUT_Y = 36;
+
+        int PROGRESS_X = 82;
+        int PROGRESS_Y = 26;
+        int PROGRESS_U = 204;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 52;
+        int PROGRESS_HEIGHT = 24;
+        int PROGRESS_BACKGROUND_U = PROGRESS_U;
+        int PROGRESS_BACKGROUND_V = PROGRESS_HEIGHT + 1;
+
+        int FIRE_X = 83;
+        int FIRE_Y = 25;
+        int FIRE_U = 178;
+        int FIRE_V = 0;
+        int FIRE_WIDTH = 14;
+        int FIRE_HEIGHT = 14;
+
+        int FUEL_X = FIRE_X;
+        int FUEL_Y = FIRE_Y + 22;
+
+        int RECIPE_VIEWER_X = 16;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 148;
+        int RECIPE_VIEWER_HEIGHT = 54;
+    }
+
+    interface RocketWorkbench {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/rocket_workbench.png");
+
+        int CENTER_X = 53;
+
+        int SLOT_U = 200;
+        int SLOT_V = 0;
+        int SLOT_WIDTH = 18;
+        int SLOT_HEIGHT = 18;
+
+        int CHEST_X = 44;
+        int CHEST_Y = 140;
+        int CHEST_U = 178;
+        int CHEST_V = 0;
+        int CHEST_WIDTH = 20;
+        int CHEST_HEIGHT = 20;
+
+        int OUTPUT_X = 125;
+        int OUTPUT_Y = 135;
+        int OUTPUT_X_OFFSET = 9;
+        int OUTPUT_Y_OFFSET = 9;
+        int OUTPUT_U = 178;
+        int OUTPUT_V = 126;
+        int OUTPUT_WIDTH = 34;
+        int OUTPUT_HEIGHT = 34;
+        int OUTPUT_INNER_WIDTH = 24;
+        int OUTPUT_INNER_HEIGHT = 24;
+
+        int ROCKET_X = 133;
+        int ROCKET_Y = 104;
+
+        int PREVIEW_X = 100;
+        int PREVIEW_Y = 26;
+        int PREVIEW_U = 100;
+        int PREVIEW_V = 26;
+        int PREVIEW_WIDTH = 65;
+        int PREVIEW_HEIGHT = 94;
+
+        int PREVIEW_DARK_U = 178;
+        int PREVIEW_DARK_V = 26;
+
+        int RECIPE_VIEWER_X = 16;
+        int RECIPE_VIEWER_Y = 26;
+        int RECIPE_VIEWER_WIDTH = 149;
+        int RECIPE_VIEWER_HEIGHT = 134;
     }
 
     interface CelestialScreen {
@@ -777,57 +878,6 @@ public interface Constant {
         ResourceLocation EARTH = id("textures/environment/earth.png");
         ResourceLocation CLOUDS = id("textures/environment/clouds.png");
         ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
-    }
-
-    interface RecipeViewer {
-        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
-        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
-
-        int CIRCUIT_FABRICATOR_U = 0;
-        int CIRCUIT_FABRICATOR_V = 0;
-        int CIRCUIT_FABRICATOR_WIDTH = 139;
-        int CIRCUIT_FABRICATOR_HEIGHT = 73;
-
-        int DIAMOND_X = 1;
-        int DIAMOND_Y = 1;
-        int SILICON_X_1 = 32;
-        int SILICON_Y_1 = 31;
-        int SILICON_X_2 = 32;
-        int SILICON_Y_2 = 49;
-        int REDSTONE_X = 77;
-        int REDSTONE_Y = 56;
-        int INGREDIENT_X = 104;
-        int INGREDIENT_Y = 1;
-        int WAFER_X = 122;
-        int WAFER_Y = 56;
-        int CIRCUIT_FABRICATOR_PROGRESS_X = 18;
-        int CIRCUIT_FABRICATOR_PROGRESS_Y = 7;
-
-        int COMPRESSOR_U = 0;
-        int COMPRESSOR_V = 74;
-        int COMPRESSOR_WIDTH = 148;
-        int COMPRESSOR_HEIGHT = 54;
-
-        int FIRE_X = 67;
-        int FIRE_Y = 9;
-        int FUEL_X = 67;
-        int FUEL_Y = 31;
-        int COMPRESSED_X = 127;
-        int COMPRESSED_Y = 20;
-
-        int ROCKET_WORKBENCH_U = 6;
-        int ROCKET_WORKBENCH_V = 20;
-        int ROCKET_WORKBENCH_WIDTH = 162;
-        int ROCKET_WORKBENCH_HEIGHT = 145;
-        int CHEST_SLOT_U = 177;
-        int CHEST_SLOT_V = 0;
-
-        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
-        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
-        int ROCKET_PREVIEW_WIDTH = 63;
-        int ROCKET_PREVIEW_HEIGHT = 92;
-        int ROCKET_OUTPUT_X = 119;
-        int ROCKET_OUTPUT_Y = 115;
     }
 
     interface SlotSprite {

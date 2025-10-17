@@ -56,6 +56,11 @@ public class GCEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProv
         this.getOrCreateTagBuilder(EntityTypeTags.CAN_BREATHE_UNDER_WATER)
                 .addTag(GCEntityTypeTags.HAS_OXYGEN_SETUP);
 
+        this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_PET_INVENTORY)
+                .add(EntityType.WOLF)
+                .add(EntityType.CAT)
+                .add(EntityType.PARROT);
+
         this.getOrCreateTagBuilder(GCEntityTypeTags.IMMUNE_TO_ACID)
                 .add(EntityType.TRIDENT)
                 .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
