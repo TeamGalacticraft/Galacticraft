@@ -272,6 +272,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
+        // MOON GLASS
+        this.block(GCBlocks.OLIVINE_GLASS, "Olivine Glass");
+        this.block(GCBlocks.OLIVINE_GLASS_PANE, "Olivine Glass Pane");
+        this.block(GCBlocks.MOON_GLASS, "Moon Glass");
+        this.block(GCBlocks.MOON_GLASS_PANE, "Moon Glass Pane");
+
         // ORES
         this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
         this.block(GCBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");

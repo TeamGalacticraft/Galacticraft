@@ -210,6 +210,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);
         this.dropSelf(GCBlocks.STRONG_VACUUM_GLASS);
 
+        this.dropSelf(GCBlocks.OLIVINE_GLASS);
+        this.dropSelf(GCBlocks.OLIVINE_GLASS_PANE);
+        this.dropSelf(GCBlocks.MOON_GLASS);
+        this.dropSelf(GCBlocks.MOON_GLASS_PANE);
+
         // --ORES-- (alphabetical)
         //ALUMINUM
         this.add(GCBlocks.ALUMINUM_ORE, this.createOreDrop(GCBlocks.ALUMINUM_ORE, GCItems.RAW_ALUMINUM));

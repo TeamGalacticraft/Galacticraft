@@ -267,6 +267,11 @@ public class GCCreativeModeTabs {
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
 
+                output.accept(OLIVINE_GLASS);
+                output.accept(OLIVINE_GLASS_PANE);
+                output.accept(MOON_GLASS);
+                output.accept(MOON_GLASS_PANE);
+
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
             }).build();

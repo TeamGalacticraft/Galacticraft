@@ -405,6 +405,10 @@ public interface Constant {
         String OLIANT_ACID = "oliant_acid";
         String COCOON = "cocoon";
         String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String OLIVINE_GLASS = "olivine_glass";
+        String OLIVINE_GLASS_PANE = "olivine_glass_pane";
+        String MOON_GLASS = "moon_glass";
+        String MOON_GLASS_PANE = "moon_glass_pane";
     }
 
     interface Fluid {
