@@ -51,9 +51,9 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Simplified Icons
-    public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16);
-    public static final EmiRenderable FABRICATION_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 0, 16, 16);
-    public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 0, 16, 16);
+    public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable FABRICATION_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 0, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 0, 16, 16, 16, 16, 64, 64);
 
     // Categories
     public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR, COMPRESSING_ICON);
