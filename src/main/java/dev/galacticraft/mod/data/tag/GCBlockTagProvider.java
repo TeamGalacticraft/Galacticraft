@@ -543,6 +543,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
                 .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
+        this.tag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_DOOR);
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCBlockTags.MACHINES)
                 .add(stairs)

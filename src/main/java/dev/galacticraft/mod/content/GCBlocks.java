@@ -51,6 +51,7 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -168,6 +169,8 @@ public class GCBlocks {
     public static final Block MOON_SHRUBS = BLOCKS.registerWithItem(Constant.Block.MOON_SHRUBS, new MoonShrubsBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).replaceable().noCollission().instabreak().sound(SoundType.MOSS).offsetType(BlockBehaviour.OffsetType.XZ).pushReaction(PushReaction.DESTROY).emissiveRendering(Blocks::always).lightLevel((state) -> 3)));
     public static final Block MOON_MOSS = BLOCKS.registerWithItem(Constant.Block.MOON_MOSS, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).sound(SoundType.MOSS).emissiveRendering(Blocks::always)));
     public static final Block MOON_TANGLE = BLOCKS.registerWithItem(Constant.Block.MOON_TANGLE, new MoonTangleBlock(BlockBehaviour.Properties.of().mapColor(MapColor.PLANT).sound(SoundType.MOSS).emissiveRendering(Blocks::always).lightLevel((state) -> 3).pushReaction(PushReaction.DESTROY).noCollission().instabreak().replaceable().noCollission().randomTicks()));
+
+    public static final Block METEORIC_IRON_DOOR = BLOCKS.registerWithItem(Constant.Block.METEORIC_IRON_DOOR, new DoorBlock(BlockSetType.IRON, BlockBehaviour.Properties.of().strength(5.0F, 6.0F).noOcclusion().sound(SoundType.METAL).requiresCorrectToolForDrops()));
 
     // MARS NATURAL
     public static final Block MARS_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MARS_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_ORANGE).instrument(NoteBlockInstrument.BASEDRUM).destroyTime(2.2F).requiresCorrectToolForDrops()));

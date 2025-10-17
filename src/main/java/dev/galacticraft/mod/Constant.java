@@ -404,6 +404,7 @@ public interface Constant {
         String OLIANT_WEB = "oliant_web";
         String OLIANT_ACID = "oliant_acid";
         String COCOON = "cocoon";
+        String METEORIC_IRON_DOOR = "meteoric_iron_door";
     }
 
     interface Fluid {

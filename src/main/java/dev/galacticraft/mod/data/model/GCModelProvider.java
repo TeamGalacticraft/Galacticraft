@@ -265,6 +265,7 @@ public class GCModelProvider extends FabricModelProvider {
         this.createMoonWeed(generator);
         this.createMoonTangle(generator);
         generator.createTrivialCube(GCBlocks.MOON_MOSS);
+        generator.createDoor(GCBlocks.METEORIC_IRON_DOOR);
 
         generator.createTrivialCube(GCBlocks.DUNGEON_ENTRANCE_BLOCK);
         generator.createTrivialCube(GCBlocks.DUNGEON_EXIT_BLOCK);
