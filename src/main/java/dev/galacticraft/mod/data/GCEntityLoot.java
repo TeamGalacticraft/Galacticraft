@@ -231,6 +231,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
         add(GCEntityTypes.RUMBLER, noDrops());
         add(GCEntityTypes.COMET_CUBE, noDrops());
         add(GCEntityTypes.OLI_GRUB, noDrops());
+        add(GCEntityTypes.CHEESE_SLIME, noDrops());
         add(GCEntityTypes.GREY, noDrops());
         add(GCEntityTypes.ARCH_GREY, noDrops());
         add(GCEntityTypes.FALLING_METEOR, noDrops());
