@@ -35,12 +35,13 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
-
 public class GalacticraftEmiPlugin implements EmiPlugin {
+    private static final ResourceLocation SIMPLIFIED_ICONS = Constant.id("textures/gui/simplified_icons_emi.png");
+
     // Workstations
     public static final EmiStack COMPRESSOR = EmiStack.of(GCBlocks.COMPRESSOR);
     public static final EmiStack ELECTRIC_COMPRESSOR = EmiStack.of(GCBlocks.ELECTRIC_COMPRESSOR);
@@ -50,9 +51,9 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Simplified Icons
-    public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 152, 74, 16, 16);
-    public static final EmiRenderable FABRICATION_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 168, 74, 16, 16);
-    public static final EmiRenderable ROCKET_ICON = new EmiTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 184, 74, 16, 16);
+    public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16);
+    public static final EmiRenderable FABRICATION_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 0, 16, 16);
+    public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 0, 16, 16);
 
     // Categories
     public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR, COMPRESSING_ICON);

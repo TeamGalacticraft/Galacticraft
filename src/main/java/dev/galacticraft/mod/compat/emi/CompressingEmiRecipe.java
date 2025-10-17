@@ -36,17 +36,21 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.Compressor.*;
 import static dev.galacticraft.mod.util.Translations.RecipeCategory.EMI_TIME;
 
 public class CompressingEmiRecipe extends BasicEmiRecipe {
+    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+
     public final boolean shapeless;
     public final int width;
     public final int height;
     public final int time;
+    private static final EmiIngredient EMPTY = EmiIngredient.of(Ingredient.EMPTY);
 
     public CompressingEmiRecipe(RecipeHolder<CompressingRecipe> holder) {
-        super(GalacticraftEmiPlugin.COMPRESSING, holder.id(), COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT);
+        super(GalacticraftEmiPlugin.COMPRESSING, holder.id(), RECIPE_VIEWER_WIDTH, RECIPE_VIEWER_HEIGHT);
         CompressingRecipe recipe = holder.value();
         for (Ingredient ingredient : recipe.getIngredients()) {
             this.inputs.add(EmiIngredient.of(ingredient));
@@ -67,24 +71,28 @@ public class CompressingEmiRecipe extends BasicEmiRecipe {
     @Override
     public void addWidgets(WidgetHolder widgets) {
         // Add the background texture
-        widgets.addTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 0, 0, COMPRESSOR_WIDTH, COMPRESSOR_HEIGHT, COMPRESSOR_U, COMPRESSOR_V);
+        widgets.addTexture(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V);
 
         if (shapeless) {
-            widgets.addTexture(EmiTexture.SHAPELESS, COMPRESSED_X, 0);
+            widgets.addTexture(EmiTexture.SHAPELESS, OUTPUT_X - RECIPE_VIEWER_X, 0);
         }
 
-        widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, FIRE_X, FIRE_Y, 4000, false, true, true);
-        widgets.addAnimatedTexture(RECIPE_VIEWER_DISPLAY_TEXTURE, 66, 10, 52, 24, 204, 74, this.time * 50, true, false, false).tooltip((mx, my) -> {
+        widgets.addAnimatedTexture(EmiTexture.FULL_FLAME, FIRE_X - RECIPE_VIEWER_X, FIRE_Y - RECIPE_VIEWER_Y, 4000, false, true, true);
+        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false).tooltip((mx, my) -> {
             return List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText()));
         });
 
-        for (int i = 0; i < this.inputs.size(); i++) {
-            widgets.addSlot(this.inputs.get(i), (i % this.width) * 18, (i / this.width) * 18);
+        for (int y = 0; y < 3; y++) {
+            for (int x = 0; x < 3; x++) {
+                int i = x + this.width * y;
+                EmiIngredient ingredient = (x < this.width && y < this.height && i < this.inputs.size()) ? this.inputs.get(i) : EMPTY;
+                widgets.addSlot(ingredient, GRID_X - RECIPE_VIEWER_X - 1 + (x * 18), GRID_Y - RECIPE_VIEWER_Y - 1 + (y * 18));
+            }
         }
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), COMPRESSED_X - 5, COMPRESSED_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.get(0), OUTPUT_X - RECIPE_VIEWER_X - 5, OUTPUT_Y - RECIPE_VIEWER_Y - 5).large(true).recipeContext(this);
     }
 }

@@ -664,7 +664,7 @@ public interface Constant {
 
         int PROGRESS_X = 82;
         int PROGRESS_Y = 26;
-        int PROGRESS_U = 204;
+        int PROGRESS_U = 178;
         int PROGRESS_V = 0;
         int PROGRESS_WIDTH = 52;
         int PROGRESS_HEIGHT = 24;
@@ -673,7 +673,7 @@ public interface Constant {
 
         int FIRE_X = 83;
         int FIRE_Y = 25;
-        int FIRE_U = 178;
+        int FIRE_U = 242;
         int FIRE_V = 0;
         int FIRE_WIDTH = 14;
         int FIRE_HEIGHT = 14;

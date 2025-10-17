@@ -39,7 +39,7 @@ import net.minecraft.world.item.crafting.CraftingInput;
 
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> {
-    private static final int PROGRESS_U = 177;
+    private static final int PROGRESS_U = 178;
     private static final int PROGRESS_V = 0;
     private static final int PROGRESS_X = 87;
     private static final int PROGRESS_Y = 27;

@@ -32,7 +32,7 @@ import net.minecraft.network.chat.Component;
 import java.util.Collections;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 import static dev.galacticraft.mod.util.Translations.RecipeCategory.EMI_TIME;
 
 public class FabricationProgressEmiWidget extends Widget {
@@ -40,7 +40,7 @@ public class FabricationProgressEmiWidget extends Widget {
     private final int processingTime;
 
     public FabricationProgressEmiWidget(int x, int y, int processingTime) {
-        this.bounds = new Bounds(x, y - 1, 114, 53);
+        this.bounds = new Bounds(x, y - 1, PROGRESS_WIDTH + 1, PROGRESS_HEIGHT + 2);
         this.processingTime = processingTime * 50;
     }
 

@@ -34,10 +34,22 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
 public class RocketEmiRecipe extends BasicEmiRecipe {
+    private static final int CHEST_SLOT_X = CHEST_X - RECIPE_VIEWER_X - 1;
+    private static final int CHEST_SLOT_Y = CHEST_Y - RECIPE_VIEWER_Y - 1;
+    private static final int OUTPUT_SLOT_X = OUTPUT_X - RECIPE_VIEWER_X - 1;
+    private static final int OUTPUT_SLOT_Y = OUTPUT_Y - RECIPE_VIEWER_Y - 1;
+    private static final int OUTPUT_BORDER_X = OUTPUT_X - OUTPUT_X_OFFSET - RECIPE_VIEWER_X;
+    private static final int OUTPUT_BORDER_Y = OUTPUT_Y - OUTPUT_Y_OFFSET - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_BACKGROUND_X = PREVIEW_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_BACKGROUND_Y = PREVIEW_Y - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_ROCKET_X = ROCKET_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_ROCKET_Y = ROCKET_Y - RECIPE_VIEWER_Y;
+
     private final int bodyHeight;
+    private final boolean hasBoosters;
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
 
     static {
@@ -45,57 +57,38 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
     }
 
     public RocketEmiRecipe(RecipeHolder<RocketRecipe> holder) {
-        super(GalacticraftEmiPlugin.ROCKET, holder.id(), ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
+        super(GalacticraftEmiPlugin.ROCKET, holder.id(), RECIPE_VIEWER_WIDTH, RECIPE_VIEWER_HEIGHT);
         RocketRecipe recipe = holder.value();
         for (Ingredient ingredient : recipe.getIngredients()) {
             this.inputs.add(EmiIngredient.of(ingredient));
         }
         this.outputs.add(EmiStack.of(recipe.getResultItem(null)));
         this.bodyHeight = recipe.bodyHeight();
+        this.hasBoosters = !recipe.boosters().isEmpty();
     }
 
     @Override
     public void addWidgets(WidgetHolder widgets) {
-        // Add the background texture
-        widgets.addTexture(ROCKET_WORKBENCH_DISPLAY_TEXTURE, 0, 0, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V);
-
-        final int rocketHeight = 18 + this.bodyHeight * 18 + 18;
-        int y = 59 - rocketHeight / 2;
-        final int centerX = 45;
-
-        // Cone
         int slot = 0;
-        widgets.addSlot(this.inputs.get(slot++), centerX - 8, y);
-
-        // Body
-        for (int i = 0; i < this.bodyHeight; i++) {
-            y += 18;
-            widgets.addSlot(this.inputs.get(slot++), centerX - 17, y);
-            widgets.addSlot(this.inputs.get(slot++), centerX + 1, y);
+        for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(this.bodyHeight, this.hasBoosters)) {
+            widgets.addSlot(this.inputs.get(slot++), data.x() - RECIPE_VIEWER_X - 1, data.y() - RECIPE_VIEWER_Y - 1);
         }
-
-        // Fins
-        for (int i = 0; i < 2; i++) {
-            widgets.addSlot(this.inputs.get(slot++), centerX - 35, y + 18 * i);
-            widgets.add(new MirroredSlotWidget(this.inputs.get(slot++), centerX + 19, y + 18 * i));
-        }
-        y += 18;
-
-        // Engine
-        widgets.addSlot(this.inputs.get(slot++), centerX - 8, y);
 
         // Storage
+        widgets.addTexture(SCREEN_TEXTURE, CHEST_SLOT_X - 1, CHEST_SLOT_Y - 1, CHEST_WIDTH, CHEST_HEIGHT, CHEST_U, CHEST_V);
         if (slot < this.inputs.size()) {
-            widgets.addSlot(this.inputs.get(slot++), centerX - 8, y + 24);
+            widgets.addSlot(this.inputs.get(slot++), CHEST_SLOT_X, CHEST_SLOT_Y);
         } else {
-            widgets.addTexture(ROCKET_WORKBENCH_DISPLAY_TEXTURE, centerX - 8, y + 24, 16, 16, CHEST_SLOT_U, CHEST_SLOT_V);
+            widgets.addTexture(SCREEN_TEXTURE, CHEST_SLOT_X + 1, CHEST_SLOT_Y + 1, 16, 16, CHEST_U + 2, CHEST_V + 2);
         }
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), ROCKET_OUTPUT_X - 1, ROCKET_OUTPUT_Y - 1).drawBack(false).recipeContext(this);
+        widgets.addTexture(SCREEN_TEXTURE, OUTPUT_BORDER_X, OUTPUT_BORDER_Y, OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_U, OUTPUT_V);
+        widgets.addSlot(this.outputs.get(0), OUTPUT_SLOT_X, OUTPUT_SLOT_Y).drawBack(false).recipeContext(this);
 
-        widgets.add(new RocketPreviewEmiWidget(new Bounds(ROCKET_PREVIEW_X - 1, ROCKET_PREVIEW_Y - 1, ROCKET_PREVIEW_WIDTH, ROCKET_PREVIEW_HEIGHT), ROCKET_ENTITY));
+        widgets.addTexture(SCREEN_TEXTURE, PREVIEW_BACKGROUND_X, PREVIEW_BACKGROUND_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_U, PREVIEW_V);
+        widgets.add(new RocketPreviewEmiWidget(new Bounds(PREVIEW_ROCKET_X, PREVIEW_ROCKET_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT), ROCKET_ENTITY));
     }
 }
