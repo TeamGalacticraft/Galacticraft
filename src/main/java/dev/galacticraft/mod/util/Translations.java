@@ -392,6 +392,8 @@ public interface Translations {
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";
         String ALPHA_WARNING_HEADER = "ui.galacticraft.alpha_warning.header";
 
+        String COCOON_HEADER = "container.galacticraft.cocoon";
+
         String BUBBLE_CURRENT_SIZE = "ui.galacticraft.bubble_distributor.current_size";
         String BUBBLE_NOT_VISIBLE = "ui.galacticraft.bubble_distributor.not_visible";
         String BUBBLE_TARGET_SIZE = "ui.galacticraft.bubble_distributor.size";

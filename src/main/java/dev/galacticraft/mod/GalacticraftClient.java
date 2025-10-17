@@ -124,6 +124,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.ROCKET_WORKBENCH, RocketWorkbenchScreen::new);
         MenuScreens.register(GCMenuTypes.ROCKET, RocketInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.PARACHEST, ParachestScreen::new);
+        MenuScreens.register(GCMenuTypes.COCOON_MENU, CocoonScreen::new);
 
         EntityRendererRegistry.register(GCEntityTypes.MOON_VILLAGER, MoonVillagerRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.EVOLVED_ZOMBIE, EvolvedZombieEntityRenderer::new);
@@ -177,7 +178,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_CHEESE_LEAVES, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE, GCBlocks.OLIANT_WEB);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE, GCBlocks.OLIANT_WEB, GCBlocks.COCOON);
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());

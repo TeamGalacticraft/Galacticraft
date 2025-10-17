@@ -313,6 +313,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.OLIANT_DISSOLVED_NEST_BLOCK, "Oliant Dissolved Nest Block");
         this.block(GCBlocks.OLIANT_WEB, "Oliant Web");
         this.block(GCBlocks.OLIANT_ACID, "Oliant Acid");
+        this.block(GCBlocks.COCOON, "Cocoon");
 
         // COMPACT MINERAL BLOCKS
         this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
@@ -1142,6 +1143,7 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateUiTranslations() {
+        this.add(Ui.COCOON_HEADER, "Cocoon");
         this.add(Ui.CONE, "Cone");
         this.add(Ui.BODY, "Body");
         this.add(Ui.FINS, "Fins");

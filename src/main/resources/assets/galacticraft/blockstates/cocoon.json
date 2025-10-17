@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "facing=north": { "model": "galacticraft:block/cocoon", "x": 90 },
+    "facing=south": { "model": "galacticraft:block/cocoon", "x": 270 },
+    "facing=west":  { "model": "galacticraft:block/cocoon", "x": 90, "y": 270 },
+    "facing=east":  { "model": "galacticraft:block/cocoon", "x": 90, "y":  90 },
+    "facing=up":    { "model": "galacticraft:block/cocoon" },
+    "facing=down":  { "model": "galacticraft:block/cocoon", "x": 180 }
+  }
+}

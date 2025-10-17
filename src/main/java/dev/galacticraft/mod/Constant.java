@@ -399,6 +399,7 @@ public interface Constant {
         String OLIANT_DISSOLVED_NEST_BLOCK = "oliant_dissolved_nest_block";
         String OLIANT_WEB = "oliant_web";
         String OLIANT_ACID = "oliant_acid";
+        String COCOON = "cocoon";
     }
 
     interface Fluid {
@@ -1021,6 +1022,7 @@ public interface Constant {
         String PARACHEST = "parachest";
         String BUGGY_BENCH = "buggy_bench";
         String TIER_1_ROCKET = "tier_1_rocket";
+        String COCOON_MENU = "cocoono_menu";
     }
 
     interface LootTable {

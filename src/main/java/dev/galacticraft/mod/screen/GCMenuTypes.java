@@ -64,6 +64,7 @@ public class GCMenuTypes {
     public static final MenuType<FuelLoaderMenu> FUEL_LOADER = SynchronizedMenuType.create(FuelLoaderMenu::new);
 
     public static final MenuType<FoodCannerMenu> FOOD_CANNER = SynchronizedMenuType.create(FoodCannerMenu::new);
+    public static final MenuType<CocoonMenu> COCOON_MENU = new MenuType<>(CocoonMenu::new, FeatureFlags.VANILLA_SET);
 
     public static final MenuType<GCPlayerInventoryMenu> PLAYER_INV_GC = new MenuType<>(GCPlayerInventoryMenu::new, FeatureFlags.VANILLA_SET);
     public static final MenuType<GCPetInventoryMenu> PET_INV_GC = new ExtendedScreenHandlerType<>(GCPetInventoryMenu::new, ByteBufCodecs.INT);
@@ -100,6 +101,7 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FUEL_LOADER_MENU), FUEL_LOADER);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.FOOD_CANNER_MENU), FOOD_CANNER);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.COCOON_MENU), COCOON_MENU);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.AIR_LOCK_CONTROLLER_MENU), AIRLOCK_CONTROLLER_MENU);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.ROCKET_WORKBENCH_MENU), ROCKET_WORKBENCH);

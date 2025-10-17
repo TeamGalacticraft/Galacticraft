@@ -233,6 +233,7 @@ public class GCBlocks {
     public static final Block OLIANT_FERTILE_NEST_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIANT_FERTILE_NEST_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(OLIANT_NEST_BLOCK)));
     public static final Block OLIANT_DISSOLVED_NEST_BLOCK = BLOCKS.registerWithItem(Constant.Block.OLIANT_DISSOLVED_NEST_BLOCK, new Block(BlockBehaviour.Properties.ofFullCopy(OLIANT_NEST_BLOCK)));
     public static final Block OLIANT_WEB = BLOCKS.registerWithItem(Constant.Block.OLIANT_WEB, new WebBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.COBWEB)));
+    public static final Block COCOON = BLOCKS.registerWithItem(Constant.Block.COCOON, new CocoonBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.MOSS_BLOCK)));
 
     // COMPACT MINERAL BLOCKS
     public static final Block SILICON_BLOCK = BLOCKS.registerWithItem(Constant.Block.SILICON_BLOCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.TERRACOTTA_BLUE).strength(5.0F, 6.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));

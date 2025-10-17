@@ -153,6 +153,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.OLIANT_FERTILE_NEST_BLOCK);
         this.dropSelf(GCBlocks.OLIANT_DISSOLVED_NEST_BLOCK);
         this.dropOther(GCBlocks.OLIANT_WEB, Items.STRING);
+        this.add(GCBlocks.COCOON, noDrop());
 
         this.dropSelf(GCBlocks.MARS_SURFACE_ROCK);
         this.dropSelf(GCBlocks.MARS_SUB_SURFACE_ROCK);
