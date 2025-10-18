@@ -43,17 +43,18 @@ public class CheeseSlimeEntityRenderer  extends MobRenderer<CheeseSlimeEntity, C
         this.addLayer(new CheeseSlimeOuterLayer<>(this, context.getModelSet()));
     }
 
+    @Override
     public void render(CheeseSlimeEntity cheeseSlime, float f, float g, PoseStack poseStack, MultiBufferSource multiBufferSource, int i) {
         this.shadowRadius = 0.25F * cheeseSlime.getSize();
         super.render(cheeseSlime, f, g, poseStack, multiBufferSource, i);
     }
 
-    protected void scale(Slime slime, PoseStack poseStack, float f) {
-        float g = 0.999F;
+    @Override
+    protected void scale(CheeseSlimeEntity cheeseSlime, PoseStack poseStack, float f) {
         poseStack.scale(0.999F, 0.999F, 0.999F);
         poseStack.translate(0.0F, 0.001F, 0.0F);
-        float h = slime.getSize();
-        float i = Mth.lerp(f, slime.oSquish, slime.squish) / (h * 0.5F + 1.0F);
+        float h = cheeseSlime.getSize();
+        float i = Mth.lerp(f, cheeseSlime.oSquish, cheeseSlime.squish) / (h * 0.5F + 1.0F);
         float j = 1.0F / (i + 1.0F);
         poseStack.scale(j * h, 1.0F / j * h, j * h);
     }
