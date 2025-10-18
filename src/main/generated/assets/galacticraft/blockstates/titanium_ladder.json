@@ -1,0 +1,19 @@
+{
+  "variants": {
+    "facing=east": {
+      "model": "galacticraft:block/titanium_ladder",
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraft:block/titanium_ladder"
+    },
+    "facing=south": {
+      "model": "galacticraft:block/titanium_ladder",
+      "y": 180
+    },
+    "facing=west": {
+      "model": "galacticraft:block/titanium_ladder",
+      "y": 270
+    }
+  }
+}
