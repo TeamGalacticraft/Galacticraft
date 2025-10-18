@@ -1,0 +1,29 @@
+{
+  "ambientocclusion": false,
+  "textures": {
+    "cross": "galacticraft:block/web_string_bottom",
+    "particle": "galacticraft:block/web_string_bottom"
+  },
+  "elements": [
+    {
+      "from": [ 5, 3, 8 ],
+      "to": [ 11, 16, 8 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "north": { "uv": [ 5, 0, 11, 13 ], "texture": "cross" },
+        "south": { "uv": [ 5, 0, 11, 13 ], "texture": "cross" }
+      }
+    },
+    {
+      "from": [ 8, 3, 5 ],
+      "to": [ 8, 16, 11 ],
+      "rotation": { "origin": [ 8, 8, 8 ], "axis": "y", "angle": 45, "rescale": false },
+      "shade": false,
+      "faces": {
+        "west": { "uv": [ 5, 0, 11, 13 ], "texture": "cross" },
+        "east": { "uv": [ 5, 0, 11, 13 ], "texture": "cross" }
+      }
+    }
+  ]
+}
