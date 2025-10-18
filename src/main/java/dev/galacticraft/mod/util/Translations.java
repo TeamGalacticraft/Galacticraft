@@ -70,9 +70,13 @@ public interface Translations {
     interface RecipeCategory {
         String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
         String COMPRESSOR = "category.recipe_viewer.compressing";
+        String ELECTRIC_COMPRESSOR = "category.recipe_viewer.compressing.electric";
+        String ELECTRIC_FURNACE = "category.recipe_viewer.smelting.electric";
+        String ELECTRIC_ARC_FURNACE = "category.recipe_viewer.blasting.electric";
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
 
         String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
         String JEI_TIME = "gui.jei.category.smelting.time.seconds";
     }
 

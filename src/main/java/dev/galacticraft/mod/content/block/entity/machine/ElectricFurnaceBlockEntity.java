@@ -55,6 +55,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
+
 public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -68,9 +70,9 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(52, 35),
+                            .pos(INPUT_X, INPUT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(113, 35)
+                            .pos(OUTPUT_X, OUTPUT_Y)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

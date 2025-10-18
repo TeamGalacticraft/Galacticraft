@@ -23,12 +23,8 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
-import dev.galacticraft.mod.recipe.RocketRecipe;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -39,88 +35,111 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.Minecraft;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
+import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
-import static dev.galacticraft.mod.content.GCBlocks.ROCKET_WORKBENCH;
+import static dev.galacticraft.mod.Constant.ElectricCompressor.*;
+import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_COMPRESSOR;
 
 @Environment(EnvType.CLIENT)
-public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
-    // Do not replace with Constant.SlotSprite.CHEST or it will be displayed as a missing texture!
-    private static final ResourceLocation CHEST_SLOT_SPRITE = Constant.id("textures/gui/slot/chest.png");
-    public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
-
-    static {
-        ROCKET_ENTITY.setYRot(90.0F);
-    }
+public class ElectricCompressingCategory implements DisplayCategory<ElectricCompressingDisplay> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
-    public CategoryIdentifier<? extends DefaultRocketDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.ROCKET;
+    public CategoryIdentifier<? extends ElectricCompressingDisplay> getCategoryIdentifier() {
+        return GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING;
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(ROCKET_WORKBENCH));
+        return EntryStacks.of(new ItemStack(ELECTRIC_COMPRESSOR));
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.ROCKET_WORKBENCH);
+        return Component.translatable(Translations.RecipeCategory.ELECTRIC_COMPRESSOR);
     }
 
-    public @NotNull List<Widget> setupDisplay(DefaultRocketDisplay recipeDisplay, Rectangle bounds) {
+    public @NotNull List<Widget> setupDisplay(ElectricCompressingDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
+
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
-        for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipeDisplay.bodyHeight, recipeDisplay.hasBoosters)) {
-            slots.add(Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput());
+        double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
+        widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT),
+                PROGRESS_U, PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.x + 88, bounds.getMaxY() - 13),
+                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+
+        // 3x3 grid
+        // Output
+        int i;
+        for (i = 0; i < 3; ++i) {
+            for (int x = 0; x < 3; ++x) {
+                slots.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + (x * 18), startPoint.y + GRID_Y + (i * 18))).markInput());
+            }
         }
-
-        // Chest
-        final Point chestPoint = new Point(startPoint.x + CHEST_X, startPoint.y + CHEST_Y);
-        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, chestPoint.x - 2, chestPoint.y - 2, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT));
-        slots.add(new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput());
-
-        for (int i = 0; i < input.size(); ++i) {
+        for (i = 0; i < input.size(); ++i) {
             if (!input.get(i).isEmpty()) {
-                if (i == 11 || i == 12) {
-                    slots.get(i).entries(input.get(i).stream().map(
-                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
-                    ).toList());
-                } else {
-                    slots.get(i).entries(input.get(i));
-                }
+                slots.get(this.getSlotWithSize(recipeDisplay, i)).entries(input.get(i));
             }
         }
 
         widgets.addAll(slots);
 
-        final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
-        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, outputPoint.x - OUTPUT_X_OFFSET, outputPoint.y - OUTPUT_Y_OFFSET, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT));
-        widgets.add(Widgets.createSlotBase(new Rectangle(outputPoint.x - 4, outputPoint.y - 4, OUTPUT_INNER_WIDTH, OUTPUT_INNER_HEIGHT)));
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X_1, startPoint.y + OUTPUT_Y_1);
+        widgets.add(Widgets.createResultSlotBackground(outputPoint));
+        widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + OUTPUT_X_2, startPoint.x + OUTPUT_Y_2)));
         widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
-
-        widgets.add(new RocketPreviewWidget(startPoint, ROCKET_ENTITY));
         return widgets;
     }
 
+    private int getSlotWithSize(ElectricCompressingDisplay recipeDisplay, int num) {
+        if (recipeDisplay.getWidth() == 1) {
+            if (num == 1) {
+                return 3;
+            }
+
+            if (num == 2) {
+                return 6;
+            }
+        }
+
+        if (recipeDisplay.getWidth() == 2) {
+            if (num == 2) {
+                return 3;
+            }
+
+            if (num == 3) {
+                return 4;
+            }
+
+            if (num == 4) {
+                return 6;
+            }
+
+            if (num == 5) {
+                return 7;
+            }
+        }
+
+        return num;
+    }
+
     @Override
-    public int getDisplayWidth(DefaultRocketDisplay display) {
+    public int getDisplayWidth(ElectricCompressingDisplay display) {
         return RECIPE_VIEWER_WIDTH + 10;
     }
 
@@ -133,4 +152,5 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     public int getMaximumDisplaysPerPage() {
         return 99;
     }
+
 }
