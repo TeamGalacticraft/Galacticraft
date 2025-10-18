@@ -398,7 +398,7 @@ public class CheeseSlimeEntity extends Mob implements Enemy {
             if (livingEntity == null) {
                 return false;
             } else {
-                return !cheeseSlime.canAttack(livingEntity) ? false : cheeseSlime.getMoveControl() instanceof CheeseSlimeEntity.CheeseSlimeMoveControl;
+                return cheeseSlime.canAttack(livingEntity) && cheeseSlime.getMoveControl() instanceof CheeseSlimeMoveControl;
             }
         }
 
@@ -414,7 +414,7 @@ public class CheeseSlimeEntity extends Mob implements Enemy {
             if (livingEntity == null) {
                 return false;
             } else {
-                return !cheeseSlime.canAttack(livingEntity) ? false : --growTiredTimer > 0;
+                return cheeseSlime.canAttack(livingEntity) && --growTiredTimer > 0;
             }
         }
 
