@@ -73,7 +73,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
-    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         this.satellites.put(id, satellite);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Added satellite with id {}", id);
@@ -122,7 +122,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                         continue;
                     }
                     CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst());
-                    this.galacticraft$addSatellite(id, satellite);
+                    this.galacticraft$addSatellite(id, satellite, false);
 
                     LevelStem levelStem = satellite.config().getOptions();
                     dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());

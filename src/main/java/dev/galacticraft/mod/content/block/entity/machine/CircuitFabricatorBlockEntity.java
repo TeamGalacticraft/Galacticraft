@@ -57,6 +57,11 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
+import java.util.List;
+
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
+
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int DIAMOND_SLOT = 1;
@@ -74,25 +79,25 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(31, 17)
+                            .pos(DIAMOND_X, DIAMOND_Y)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.DIAMOND_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 47)
+                            .pos(SILICON_X_1, SILICON_Y_1)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_1_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 65)
+                            .pos(SILICON_X_2, SILICON_Y_2)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_2_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(107, 72)
+                            .pos(REDSTONE_X, REDSTONE_Y)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.REDSTONE_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 17),
+                            .pos(INGREDIENT_X, INGREDIENT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(152, 72)
+                            .pos(OUTPUT_X, OUTPUT_Y)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
@@ -133,6 +138,20 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
         ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
+    }
+
+    @Override
+    public List<ItemStack> inputItemStacks() {
+        List<ItemStack> items = new ArrayList<>();
+        for (int i = DIAMOND_SLOT; i <= INPUT_SLOT; i++) {
+            items.add(this.itemStorage().getItem(i));
+        }
+        return items;
+    }
+
+    @Override
+    public List<ItemStack> outputItemStacks() {
+        return List.of(this.itemStorage().getItem(OUTPUT_SLOT));
     }
 
     @Override

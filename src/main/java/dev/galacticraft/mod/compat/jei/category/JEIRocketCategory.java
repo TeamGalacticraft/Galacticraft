@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.util.Translations;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.builder.IRecipeSlotBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
@@ -44,16 +45,25 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
 public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
-    private final IDrawable icon, chestSprite;
+    private static final int CHEST_BORDER_X = CHEST_X - 2 - RECIPE_VIEWER_X;
+    private static final int CHEST_BORDER_Y = CHEST_Y - 2 - RECIPE_VIEWER_Y;
+    private static final int OUTPUT_BORDER_X = OUTPUT_X - OUTPUT_X_OFFSET - RECIPE_VIEWER_X;
+    private static final int OUTPUT_BORDER_Y = OUTPUT_Y - OUTPUT_Y_OFFSET - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_BACKGROUND_X = PREVIEW_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_BACKGROUND_Y = PREVIEW_Y - RECIPE_VIEWER_Y;
+    private static final int PREVIEW_ROCKET_X = ROCKET_X - RECIPE_VIEWER_X;
+    private static final int PREVIEW_ROCKET_Y = ROCKET_Y - RECIPE_VIEWER_Y;
 
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
 
+    private final IDrawable icon, chestSprite;
+
     public JEIRocketCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.ROCKET_WORKBENCH));
-        this.chestSprite = helper.createDrawable(ROCKET_WORKBENCH_DISPLAY_TEXTURE, CHEST_SLOT_U, CHEST_SLOT_V, 16, 16);
+        this.chestSprite = helper.createDrawable(SCREEN_TEXTURE, CHEST_U + 2, CHEST_V + 2, 16, 16);
         ROCKET_ENTITY.setYRot(90.0F);
     }
 
@@ -69,12 +79,12 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
 
     @Override
     public int getWidth() {
-        return ROCKET_WORKBENCH_WIDTH;
+        return RECIPE_VIEWER_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return ROCKET_WORKBENCH_HEIGHT;
+        return RECIPE_VIEWER_HEIGHT;
     }
 
     @Override
@@ -84,61 +94,47 @@ public class JEIRocketCategory implements IRecipeCategory<RocketRecipe> {
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, RocketRecipe recipe, IFocusGroup focuses) {
-        final int rocketHeight = 18 + recipe.bodyHeight() * 18 + 18;
-        int y = 60 - rocketHeight / 2;
-        final int centerX = 46;
+        for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipe.bodyHeight(), !recipe.boosters().isEmpty())) {
+            Ingredient ingredient = switch(data.partType()) {
+                case CONE -> recipe.cone();
+                case BODY -> recipe.body();
+                case BOOSTER -> recipe.boosters();
+                case FIN -> recipe.fins();
+                case ENGINE -> recipe.engine();
+                default -> Ingredient.EMPTY;
+            };
 
-        // Cone
-        builder.addInputSlot(centerX - 8, y)
-                .addIngredients(recipe.cone())
-                .setStandardSlotBackground();
+            IRecipeSlotBuilder slotBuilder = builder
+                    .addInputSlot(data.x() - RECIPE_VIEWER_X, data.y() - RECIPE_VIEWER_Y)
+                    .addIngredients(ingredient)
+                    .setStandardSlotBackground();
 
-        // Body
-        for (int i = 0; i < recipe.bodyHeight(); i++) {
-            y += 18;
-            builder.addInputSlot(centerX - 17, y)
-                    .addIngredients(recipe.body())
-                    .setStandardSlotBackground();
-            builder.addInputSlot(centerX + 1, y)
-                    .addIngredients(recipe.body())
-                    .setStandardSlotBackground();
+            if (data.mirror()) {
+                slotBuilder.setCustomRenderer(VanillaTypes.ITEM_STACK, MirroredIngredientRenderer.INSTANCE);
+            }
         }
-
-        // Fins
-        for (int i = 0; i < 2; i++) {
-            builder.addInputSlot(centerX - 35, y + 18 * i)
-                    .addIngredients(recipe.fins())
-                    .setStandardSlotBackground();
-            builder.addInputSlot(centerX + 19, y + 18 * i)
-                    .addIngredients(recipe.fins())
-                    .setStandardSlotBackground();
-        }
-        y += 18;
-
-        // Engine
-        builder.addInputSlot(centerX - 8, y)
-                .addIngredients(recipe.engine())
-                .setStandardSlotBackground();
 
         // Storage
-        IRecipeSlotBuilder storageSlot = builder.addInputSlot(centerX - 8, y + 24)
+        IRecipeSlotBuilder storageSlot = builder.addInputSlot(CHEST_X - RECIPE_VIEWER_X, CHEST_Y - RECIPE_VIEWER_Y)
                     .addIngredients(recipe.storage());
         if (recipe.storage() == Ingredient.EMPTY) {
-            storageSlot.setBackground(this.chestSprite, -1, -1);
+            storageSlot.setBackground(this.chestSprite, 0, 0);
         } else {
             storageSlot.setStandardSlotBackground();
         }
 
         // Output
-        builder.addOutputSlot(ROCKET_OUTPUT_X, ROCKET_OUTPUT_Y)
+        builder.addOutputSlot(OUTPUT_X - RECIPE_VIEWER_X, OUTPUT_Y - RECIPE_VIEWER_Y)
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
     @Override
     public void draw(RocketRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
-        graphics.blit(ROCKET_WORKBENCH_DISPLAY_TEXTURE, 0, 0, ROCKET_WORKBENCH_U, ROCKET_WORKBENCH_V, ROCKET_WORKBENCH_WIDTH, ROCKET_WORKBENCH_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, CHEST_BORDER_X, CHEST_BORDER_Y, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, OUTPUT_BORDER_X, OUTPUT_BORDER_Y, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, PREVIEW_BACKGROUND_X, PREVIEW_BACKGROUND_Y, PREVIEW_U, PREVIEW_V, PREVIEW_WIDTH, PREVIEW_HEIGHT);
 
         ROCKET_ENTITY.setYRot(ROCKET_ENTITY.getYRot() + 0.2F);
-        RocketWorkbenchScreen.renderEntityInInventory(graphics, ROCKET_PREVIEW_X, ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, ROCKET_ENTITY);
+        RocketWorkbenchScreen.renderEntityInInventory(graphics, PREVIEW_ROCKET_X, PREVIEW_ROCKET_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, ROCKET_ENTITY);
     }
 }

@@ -28,6 +28,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.tag.GCEntityTypeTags;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.player.UseEntityCallback;
 import net.fabricmc.fabric.api.event.player.UseItemCallback;
@@ -79,7 +80,7 @@ public class GCInteractionEventHandlers {
     }
 
     public static InteractionResult onPlayerUseEntity(Player player, Level level, InteractionHand hand, Entity entity, @Nullable EntityHitResult hitResult) {
-        if (entity instanceof TamableAnimal animal && animal.isTame() && animal.isOwnedBy(player)) {
+        if (entity instanceof TamableAnimal animal && animal.isTame() && animal.isOwnedBy(player) && animal.getType().is(GCEntityTypeTags.HAS_PET_INVENTORY)) {
             ItemStack itemStack = player.getItemInHand(hand);
             if (player.isSecondaryUseActive() || player.isSpectator()) {
                 ((PetInventoryOpener) player).galacticraft$sendOpenPetInventory(animal.getId());
