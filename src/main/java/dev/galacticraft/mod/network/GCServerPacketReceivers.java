@@ -41,6 +41,7 @@ public class GCServerPacketReceivers {
         registerPacket(OpenRocketPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(SatelliteCreationPayload.TYPE);
+        registerPacket(SatelliteUpdatePayload.TYPE);
         registerPacket(CapeSelectionPayload.TYPE);
     }
 

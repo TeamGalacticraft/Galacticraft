@@ -86,6 +86,14 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         Constant.LOGGER.info("Removed satellite with id {}", id);
     }
 
+    @Override
+    public void galacticraft$updateSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+        this.satellites.replace(id, satellite);
+        RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
+        RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
+        Constant.LOGGER.info("Updated satellite with id {}", id);
+    }
+
     @Inject(method = "saveEverything", at = @At("RETURN"))
     private void galacticraft_saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);

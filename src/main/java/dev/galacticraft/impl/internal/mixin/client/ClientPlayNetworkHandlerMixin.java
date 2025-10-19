@@ -77,6 +77,12 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
+    public void galacticraft$updateSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+        this.galacticraft$removeSatellite(id);
+        this.galacticraft$addSatellite(id, satellite, true);
+    }
+
+    @Override
     public void addListener(SatelliteListener listener) {
         this.listeners.add(listener);
     }
