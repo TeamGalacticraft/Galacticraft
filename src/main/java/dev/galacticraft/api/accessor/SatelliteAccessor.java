@@ -33,11 +33,11 @@ import java.util.Map;
 public interface SatelliteAccessor {
     Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites();
 
-    void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated);
+    void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated);
 
     void galacticraft$removeSatellite(ResourceLocation id);
 
-    void galacticraft$updateSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite);
+    void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite);
 
     void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader);
 }

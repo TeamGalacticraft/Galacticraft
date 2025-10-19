@@ -61,7 +61,7 @@ public abstract class PlayerListMixin {
 
         // Sync the list of satellites with new players
         ((SatelliteAccessor) player.server).galacticraft$getSatellites().forEach((id, satellite) -> {
-            connection.send(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(id, satellite.config(), false)));
+            connection.send(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), false)));
         });
     }
 }

@@ -57,7 +57,8 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
-    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
+    public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
+        ResourceLocation id = satellite.config().getId();
         this.satellites.put(id, satellite);
         if (newlyCreated) {
             RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
@@ -77,9 +78,9 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
-    public void galacticraft$updateSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
-        this.galacticraft$removeSatellite(id);
-        this.galacticraft$addSatellite(id, satellite, true);
+    public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+        this.galacticraft$removeSatellite(satellite.config().getId());
+        this.galacticraft$addSatellite(satellite, true);
     }
 
     @Override

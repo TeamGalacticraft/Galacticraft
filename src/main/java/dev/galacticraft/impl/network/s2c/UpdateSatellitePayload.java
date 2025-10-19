@@ -34,12 +34,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record UpdateSatellitePayload(ResourceLocation id, SatelliteConfig config) implements S2CPayload {
+public record UpdateSatellitePayload(SatelliteConfig config) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("update_satellite");
     public static final Type<UpdateSatellitePayload> TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, UpdateSatellitePayload> CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
-            p -> p.id,
             SatelliteConfig.STREAM_CODEC,
             p -> p.config,
             UpdateSatellitePayload::new);
@@ -51,6 +49,6 @@ public record UpdateSatellitePayload(ResourceLocation id, SatelliteConfig config
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$updateSatellite(this.id, new CelestialBody<>(SatelliteType.INSTANCE, this.config));
+        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$updateSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config));
     }
 }

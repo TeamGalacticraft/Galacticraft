@@ -342,7 +342,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         String strName = this.minecraft.player.getName().getString();
                         CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
                         selectedSatellite.type().setCustomName(this.renamingString, selectedSatellite.config());
-                        ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config().getId(), selectedSatellite.config()));
+                        ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config()));
                         this.renamingSpaceStation = false;
                     }
                     // Cancel
