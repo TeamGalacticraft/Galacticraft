@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.structure.dungeon;
 
 import com.google.common.collect.Lists;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.util.RandomSource;
