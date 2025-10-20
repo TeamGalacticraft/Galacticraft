@@ -36,4 +36,7 @@ public final class GCAttachments {
 
     public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
             .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
+
+    public static void init() {
+    }
 }
