@@ -430,6 +430,7 @@
   "commands.galacticraft.oxygen.set.single": "Set oxygen at block",
   "config.galacticraft.client": "Client",
   "config.galacticraft.client.skybox": "Skybox",
+  "config.galacticraft.client.square_canned_food": "Square Canned Food",
   "config.galacticraft.commands": "Commands",
   "config.galacticraft.commands.enable_gc_houston": "Enable /gchouston",
   "config.galacticraft.debug": "Debug",

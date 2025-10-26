@@ -34,10 +34,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -81,15 +83,27 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
-    public static final ResourceLocation CANNED_FOOD_MODEL = Constant.id("block/canned_food_model");
+    public static final ResourceLocation CANNED_FOOD_ROUND = Constant.id("block/canned_food_round");
+    public static final ResourceLocation CANNED_FOOD_SQUARE = Constant.id("block/canned_food_square");
 
     private Map<ResourceLocation, GCModel> models = ImmutableMap.of();
     private AtlasSet atlases;
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
+        pluginContext.modifyModelOnLoad().register(ModelModifier.OVERRIDE_PHASE, (model, context) -> {
+            if (context.resourceId() != null && context.resourceId().equals(Constant.BakedModel.CANNED_FOOD)) {
+                if (Galacticraft.CONFIG.squareCannedFood()) {
+                    return context.getOrLoadModel(CANNED_FOOD_SQUARE);
+                } else {
+                    return context.getOrLoadModel(CANNED_FOOD_ROUND);
+                }
+            }
+            return model;
+        });
+
         pluginContext.modifyModelAfterBake().register((model, context) -> {
-            if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
+            if (context.resourceId() != null && context.resourceId().equals(Constant.BakedModel.CANNED_FOOD)) {
                 return new CannedFoodBakedModel(model);
             }
             return model;

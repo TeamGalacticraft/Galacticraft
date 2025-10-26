@@ -78,6 +78,7 @@ public class ConfigImpl implements Config {
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private boolean squareCannedFood = false;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -299,6 +300,20 @@ public class ConfigImpl implements Config {
 
     public void setFoodCannerEnergyConsumptionRate(long amount) {
         this.foodCannerEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public boolean squareCannedFood() {
+        return this.squareCannedFood;
+    }
+
+    public void setSquareCannedFood(boolean squareCannedFood) {
+        boolean reload = this.squareCannedFood != squareCannedFood;
+        this.squareCannedFood = squareCannedFood;
+        if (reload) {
+            Constant.LOGGER.info("Reload resource packs");
+            Minecraft.getInstance().reloadResourcePacks();
+        }
     }
 
     @Override
@@ -738,6 +753,20 @@ public class ConfigImpl implements Config {
             );
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
+
+            // --- CLIENT CONFIG ---
+
+            ConfigCategory client = b.getOrCreateCategory(Component.translatable(Translations.Config.CLIENT));
+
+            client.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.SQUARE_CANNED_FOOD),
+                    config.squareCannedFood())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.SQUARE_CANNED_FOOD))
+                    .setSaveConsumer(config::setSquareCannedFood)
+                    .setDefaultValue(false)
+                    .build()
+            );
 
             // --- SKYBOX CONFIG ---
 
