@@ -23,10 +23,12 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
@@ -59,12 +61,15 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
 
         for (int i = 0; i < canCount; i++) {
             float[] position = POSITIONS[canCount - 1][i];
-            float x = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
+            float x0 = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
             float y = position[1] / 16.0f;
-            float z = (position[2] - 8) / 16.0f;
+            float z0 = (position[2] - 8) / 16.0f;
 
-            ItemStack stack = contents.get(i);
-            int canColor = stack.getOrDefault(GCDataComponents.COLOR, 0);
+            Direction direction = state.getValue(CannedFoodBlock.FACING);
+            final float x = direction.getStepX() * z0 + direction.getStepZ() * x0;
+            final float z = direction.getStepZ() * z0 - direction.getStepX() * x0;
+
+            final int canColor = contents.get(i).getOrDefault(GCDataComponents.COLOR, 0);
 
             context.pushTransform(quad -> {
                 quad.pos(0, quad.x(0) + x, quad.y(0) + y, quad.z(0) + z);
