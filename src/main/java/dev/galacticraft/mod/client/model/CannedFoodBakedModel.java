@@ -44,6 +44,7 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
 
     // Define relative positions for each can layout
     public static float[][][] POSITIONS = {
+            {}, // 0 cans
             {{8, 0, 8}}, // 1 can
             {{4, 0, 8}, {12, 0, 8}}, // 2 cans
             {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}}, // 3 cans
@@ -60,7 +61,7 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
         int canCount = contents.size();
 
         for (int i = 0; i < canCount; i++) {
-            float[] position = POSITIONS[canCount - 1][i];
+            float[] position = POSITIONS[canCount][i];
             float x0 = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
             float y = position[1] / 16.0f;
             float z0 = (position[2] - 8) / 16.0f;
