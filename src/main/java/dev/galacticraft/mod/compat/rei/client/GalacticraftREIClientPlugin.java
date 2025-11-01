@@ -24,6 +24,11 @@ package dev.galacticraft.mod.compat.rei.client;
 
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultRocketCategory;
@@ -47,11 +52,13 @@ import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
+import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
 import me.shedaniel.rei.api.client.registry.display.DisplayRegistry;
 import me.shedaniel.rei.api.client.registry.entry.CollapsibleEntryRegistry;
 import me.shedaniel.rei.api.client.registry.entry.EntryRegistry;
+import me.shedaniel.rei.api.client.registry.screen.ScreenRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.TransferHandlerRegistry;
 import me.shedaniel.rei.api.client.registry.transfer.simple.SimpleTransferHandler;
 import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
@@ -119,6 +126,55 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
                 stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
+    }
+
+    @Override
+    public void registerScreens(ScreenRegistry registry) {
+        registry.registerContainerClickArea(
+                new Rectangle(79, 50, 83, 20),
+                CircuitFabricatorScreen.class,
+                GalacticraftREIServerPlugin.CIRCUIT_FABRICATION
+        );
+        registry.registerContainerClickArea(
+                new Rectangle(
+                        Constant.Compressor.PROGRESS_X - 1,
+                        Constant.Compressor.PROGRESS_Y - 3,
+                        Constant.Compressor.PROGRESS_WIDTH + 2,
+                        3 + Math.min(Constant.Compressor.PROGRESS_HEIGHT, Constant.Compressor.FUEL_Y - Constant.Compressor.PROGRESS_Y - 2)
+                ),
+                CompressorScreen.class,
+                GalacticraftREIServerPlugin.COMPRESSING
+        );
+        registry.registerContainerClickArea(
+                new Rectangle(
+                        Constant.ElectricCompressor.PROGRESS_X - 1,
+                        Constant.ElectricCompressor.PROGRESS_Y - 3,
+                        Constant.ElectricCompressor.PROGRESS_WIDTH + 2,
+                        Constant.ElectricCompressor.PROGRESS_HEIGHT + 6
+                ),
+                ElectricCompressorScreen.class,
+                GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING
+        );
+        registry.registerContainerClickArea(
+                new Rectangle(
+                        Constant.ElectricFurnace.PROGRESS_X - 1,
+                        Constant.ElectricFurnace.PROGRESS_Y - 3,
+                        Constant.ElectricFurnace.PROGRESS_WIDTH + 2,
+                        Constant.ElectricFurnace.PROGRESS_HEIGHT + 6
+                ),
+                ElectricFurnaceScreen.class,
+                GalacticraftREIServerPlugin.ELECTRIC_SMELTING
+        );
+        registry.registerContainerClickArea(
+                new Rectangle(
+                        Constant.ElectricArcFurnace.PROGRESS_X - 1,
+                        Constant.ElectricArcFurnace.PROGRESS_Y - 3,
+                        Constant.ElectricArcFurnace.PROGRESS_WIDTH + 2,
+                        Constant.ElectricArcFurnace.PROGRESS_HEIGHT + 6
+                ),
+                ElectricArcFurnaceScreen.class,
+                GalacticraftREIServerPlugin.ELECTRIC_BLASTING
+        );
     }
 
     @Override
