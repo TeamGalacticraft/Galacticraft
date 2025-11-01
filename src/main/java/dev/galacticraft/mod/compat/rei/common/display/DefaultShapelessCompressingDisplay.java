@@ -57,16 +57,16 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
 
     @Override
     public @NotNull List<EntryIngredient> getInputEntries() {
-        return input;
+        return this.input;
     }
 
     @Override
     public @NotNull List<EntryIngredient> getOutputEntries() {
-        return output;
+        return this.output;
     }
 
     @Override
     public int getProcessingTime() {
-        return processingTime;
+        return this.processingTime;
     }
 }
