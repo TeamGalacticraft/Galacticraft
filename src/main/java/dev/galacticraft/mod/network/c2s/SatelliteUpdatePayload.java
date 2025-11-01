@@ -20,38 +20,39 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.network.s2c;
+package dev.galacticraft.mod.network.c2s;
 
-import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.impl.network.c2s.C2SPayload;
+import dev.galacticraft.impl.network.s2c.UpdateSatellitePayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AddSatellitePayload(SatelliteConfig config, boolean newlyCreated) implements S2CPayload {
-    public static final ResourceLocation ID = Constant.id("add_satellite");
-    public static final Type<AddSatellitePayload> TYPE = new Type<>(ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
+public record SatelliteUpdatePayload(SatelliteConfig config) implements C2SPayload {
+    public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteUpdatePayload> STREAM_CODEC = StreamCodec.composite(
             SatelliteConfig.STREAM_CODEC,
             p -> p.config,
-            ByteBufCodecs.BOOL,
-            p -> p.newlyCreated,
-            AddSatellitePayload::new);
+            SatelliteUpdatePayload::new);
+
+    public static final ResourceLocation ID = Constant.id("satellite_update");
+    public static final Type<SatelliteUpdatePayload> TYPE = new Type<>(ID);
+
+    @Override
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+        ((SatelliteAccessor) context.server()).galacticraft$updateSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config));
+        context.server().getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new UpdateSatellitePayload(this.config)));
+    }
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
         return TYPE;
-    }
-
-    @Override
-    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config), this.newlyCreated);
     }
 }

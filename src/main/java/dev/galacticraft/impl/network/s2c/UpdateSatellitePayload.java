@@ -29,21 +29,18 @@ import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.RegistryFriendlyByteBuf;
-import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AddSatellitePayload(SatelliteConfig config, boolean newlyCreated) implements S2CPayload {
-    public static final ResourceLocation ID = Constant.id("add_satellite");
-    public static final Type<AddSatellitePayload> TYPE = new Type<>(ID);
-    public static final StreamCodec<RegistryFriendlyByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
+public record UpdateSatellitePayload(SatelliteConfig config) implements S2CPayload {
+    public static final ResourceLocation ID = Constant.id("update_satellite");
+    public static final Type<UpdateSatellitePayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<RegistryFriendlyByteBuf, UpdateSatellitePayload> CODEC = StreamCodec.composite(
             SatelliteConfig.STREAM_CODEC,
             p -> p.config,
-            ByteBufCodecs.BOOL,
-            p -> p.newlyCreated,
-            AddSatellitePayload::new);
+            UpdateSatellitePayload::new);
 
     @Override
     public @NotNull Type<? extends CustomPacketPayload> type() {
@@ -52,6 +49,6 @@ public record AddSatellitePayload(SatelliteConfig config, boolean newlyCreated) 
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config), this.newlyCreated);
+        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$updateSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config));
     }
 }

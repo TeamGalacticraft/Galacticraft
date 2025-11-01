@@ -22,6 +22,8 @@
 
 package dev.galacticraft.impl.internal.mixin.gear;
 
+import dev.galacticraft.api.accessor.SatelliteAccessor;
+import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -41,7 +43,7 @@ import java.util.Collection;
 @Mixin(PlayerList.class)
 public abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
-    private void syncGearInventory(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
+    private void syncGalacticraftData(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         Container inventory = player.galacticraft$getGearInv();
         ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
         for (int i = 0; i < inventory.getContainerSize(); i++) {
@@ -56,5 +58,10 @@ public abstract class PlayerListMixin {
         for (ServerPlayer remote : tracking) {
             ServerPlayNetworking.send(remote, gearInvPayload);
         }
+
+        // Sync the list of satellites with new players
+        ((SatelliteAccessor) player.server).galacticraft$getSatellites().forEach((id, satellite) -> {
+            connection.send(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), false)));
+        });
     }
 }

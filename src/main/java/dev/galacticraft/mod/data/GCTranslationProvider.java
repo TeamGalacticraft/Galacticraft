@@ -971,6 +971,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.RESET, "Reset");
 
         this.add(Config.CLIENT, "Client");
+        this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.PLAYER, "Player");
 

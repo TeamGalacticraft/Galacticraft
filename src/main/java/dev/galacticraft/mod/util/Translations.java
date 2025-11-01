@@ -145,6 +145,7 @@ public interface Translations {
         String RESET = "config.galacticraft.reset";
 
         String CLIENT = "config.galacticraft.client";
+        String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 

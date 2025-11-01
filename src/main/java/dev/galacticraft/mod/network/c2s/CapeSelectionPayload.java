@@ -76,11 +76,8 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
                     a.mode == CapeMode.GC ? a.gcCapeId : null
             ));
         }
-        var payload = new CapeAssignmentsPacket(list);
 
-        for (var p : context.server().getPlayerList().getPlayers()) {
-            ServerPlayNetworking.send(p, payload);
-        }
+        context.server().getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new CapeAssignmentsPacket(list)));
     }
 
     @Override

@@ -73,15 +73,16 @@ public class CannedFoodBlock extends Block implements EntityBlock {
         VoxelShape shape = Shapes.empty();
         BlockEntity be = world.getBlockEntity(pos);
         if (be instanceof CannedFoodBlockEntity cannedFoodBlockEntity) {
-            int canCount = cannedFoodBlockEntity.getCanCount();
-            for (int i = 0; i < canCount; i++) {
-                float[] position = CannedFoodBakedModel.POSITIONS[canCount - 1][i];
+            Direction direction = state.getValue(FACING);
+            float a = direction.getStepX();
+            float b = direction.getStepZ();
 
-                float x = position[0];
+            for (float[] position : CannedFoodBakedModel.POSITIONS[cannedFoodBlockEntity.getCanCount() - 1]) {
+                float x = a * (position[2] - 8) + b * (position[0] - 8);
                 float y = position[1];
-                float z = position[2];
+                float z = b * (position[2] - 8) - a * (position[0] - 8);
 
-                shape = Shapes.join(shape, Block.box(x - 3, y, z - 3, x + 3, y + 8, z + 3), BooleanOp.OR);
+                shape = Shapes.join(shape, Block.box(x + 5, y, z + 5, x + 11, y + 8, z + 11), BooleanOp.OR);
             }
         }
         return shape;

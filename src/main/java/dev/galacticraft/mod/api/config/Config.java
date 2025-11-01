@@ -67,6 +67,8 @@ public interface Config {
 
     long foodCannerEnergyConsumptionRate();
 
+    boolean squareCannedFood();
+
     long smallOxygenTankCapacity();
 
     long mediumOxygenTankCapacity();
