@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.rei.client.category;
 
 import me.shedaniel.math.Rectangle;
-import me.shedaniel.rei.api.client.gui.widgets.Arrow;
+import me.shedaniel.rei.api.client.gui.widgets.WidgetWithBounds;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.events.GuiEventListener;
 import net.minecraft.resources.ResourceLocation;
@@ -32,7 +32,7 @@ import net.minecraft.util.Mth;
 import java.util.Collections;
 import java.util.List;
 
-public class CustomArrowWidget extends Arrow {
+public class CustomArrowWidget extends WidgetWithBounds {
     private final ResourceLocation texture;
     private Rectangle bounds;
     private int progressU;
@@ -47,12 +47,10 @@ public class CustomArrowWidget extends Arrow {
         this.animationDuration = animationDurationMS;
     }
 
-    @Override
     public double getAnimationDuration() {
         return this.animationDuration;
     }
 
-    @Override
     public void setAnimationDuration(double animationDurationMS) {
         this.animationDuration = animationDurationMS;
         if (this.animationDuration <= 0)
@@ -70,7 +68,7 @@ public class CustomArrowWidget extends Arrow {
             int quotient = this.bounds.getWidth() + 2;
             int width = Mth.ceil((System.currentTimeMillis() / (this.animationDuration / quotient) % (double) quotient));
             width = Mth.clamp(width - 1, 0, this.bounds.getWidth());
-            graphics.blit(this.texture, this.getX(), this.getY(), this.progressU, this.progressV, width, this.bounds.getHeight());
+            graphics.blit(this.texture, this.bounds.getX(), this.bounds.getY(), this.progressU, this.progressV, width, this.bounds.getHeight());
         }
     }
 
