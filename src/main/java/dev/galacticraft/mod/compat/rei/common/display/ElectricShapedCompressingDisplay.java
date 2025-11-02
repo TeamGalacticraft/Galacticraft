@@ -33,25 +33,26 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
+public class ElectricShapedCompressingDisplay implements ElectricCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = 200;
+    private int processingTime = (int) (200 / 1.5F);
 
-    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
+    public ElectricShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
         this.input = input;
         this.output = output;
     }
 
-    public DefaultShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
+    public ElectricShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
         this.input = new ArrayList<>();
         recipe.value().getIngredients().forEach((ingredient) -> {
             for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack));
+                input.add(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
             }
         });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
-        this.processingTime = recipe.value().getTime();
+        ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
+        this.output = Collections.singletonList(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
+        this.processingTime = (int) (recipe.value().getTime() / 1.5F);
     }
 
     @Override

@@ -22,128 +22,67 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
-import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
-import static dev.galacticraft.mod.Constant.Compressor.*;
-import static dev.galacticraft.mod.content.GCBlocks.COMPRESSOR;
+import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
+import static dev.galacticraft.mod.content.GCBlocks.ELECTRIC_FURNACE;
 
 @Environment(EnvType.CLIENT)
-public class DefaultCompressingCategory implements DisplayCategory<DefaultCompressingDisplay> {
+public class ElectricFurnaceCategory implements DisplayCategory<ElectricFurnaceDisplay> {
     private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
-    public CategoryIdentifier<? extends DefaultCompressingDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.COMPRESSING;
+    public CategoryIdentifier<? extends ElectricFurnaceDisplay> getCategoryIdentifier() {
+        return GalacticraftREIServerPlugin.ELECTRIC_SMELTING;
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(COMPRESSOR));
+        return EntryStacks.of(new ItemStack(ELECTRIC_FURNACE));
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.COMPRESSOR);
+        return Component.translatable(Translations.RecipeCategory.ELECTRIC_FURNACE);
     }
 
-    public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
+    @Override
+    public @NotNull List<Widget> setupDisplay(ElectricFurnaceDisplay recipeDisplay, Rectangle bounds) {
+        final Point startPoint = new Point(bounds.x + (bounds.width - RECIPE_VIEWER_WIDTH) / 2 - RECIPE_VIEWER_X, bounds.y - RECIPE_VIEWER_Y + 5);
+
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
-        List<EntryIngredient> input = recipeDisplay.getInputEntries();
-        List<Slot> slots = Lists.newArrayList();
-
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
         widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
-        widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
-
-        // 3x3 grid
-        // Output
-        int i;
-        for (i = 0; i < 3; ++i) {
-            for (int x = 0; x < 3; ++x) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + (x * 18), startPoint.y + GRID_Y + (i * 18))).markInput());
-            }
-        }
-        for (i = 0; i < input.size(); ++i) {
-            if (!input.get(i).isEmpty()) {
-                slots.get(this.getSlotWithSize(recipeDisplay, i)).entries(input.get(i));
-            }
-        }
-
-        widgets.addAll(slots);
+        widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
+                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).entries(recipeDisplay.getInputEntries().get(0)));
 
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
         widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
-
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
-        widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
         return widgets;
-    }
-
-    private int getSlotWithSize(DefaultCompressingDisplay recipeDisplay, int num) {
-        if (recipeDisplay.getWidth() == 1) {
-            if (num == 1) {
-                return 3;
-            }
-
-            if (num == 2) {
-                return 6;
-            }
-        }
-
-        if (recipeDisplay.getWidth() == 2) {
-            if (num == 2) {
-                return 3;
-            }
-
-            if (num == 3) {
-                return 4;
-            }
-
-            if (num == 4) {
-                return 6;
-            }
-
-            if (num == 5) {
-                return 7;
-            }
-        }
-
-        return num;
-    }
-
-    @Override
-    public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override

@@ -95,13 +95,13 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
     }
 
     @Override
-    public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 10;
+    public int getDisplayWidth(DefaultFabricationDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
-    public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
+    public int getDisplayHeight() {
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override

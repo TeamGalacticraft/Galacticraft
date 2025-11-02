@@ -71,9 +71,13 @@ public interface Translations {
         String PREFIX = "category.recipe_viewer.";
         String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
         String COMPRESSOR = PREFIX + "compressing";
+        String ELECTRIC_COMPRESSOR = "category.recipe_viewer.compressing.electric";
+        String ELECTRIC_FURNACE = "category.recipe_viewer.smelting.electric";
+        String ELECTRIC_ARC_FURNACE = "category.recipe_viewer.blasting.electric";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
 
         String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
         String JEI_TIME = "gui.jei.category.smelting.time.seconds";
         String EMI_TIME = "emi.cooking.time";
     }
