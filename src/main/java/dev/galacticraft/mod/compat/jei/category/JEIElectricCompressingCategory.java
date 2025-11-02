@@ -26,11 +26,16 @@ import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
-import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
+import mezz.jei.api.gui.placement.HorizontalAlignment;
+import mezz.jei.api.gui.placement.VerticalAlignment;
+import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
 import mezz.jei.api.recipe.RecipeType;
@@ -47,10 +52,14 @@ public class JEIElectricCompressingCategory implements IRecipeCategory<Compressi
 
     private final IDrawable icon;
     private final ICraftingGridHelper craftingGridHelper;
+    private final IDrawableStatic arrow;
+    private final IGuiHelper helper;
 
     public JEIElectricCompressingCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR));
         this.craftingGridHelper = helper.createCraftingGridHelper();
+        this.arrow = helper.createDrawable(SCREEN_TEXTURE, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
+        this.helper = helper;
     }
 
     @Override
@@ -60,7 +69,7 @@ public class JEIElectricCompressingCategory implements IRecipeCategory<Compressi
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.ELECTRIC_COMPRESSOR);
+        return Component.translatable(RecipeCategory.ELECTRIC_COMPRESSOR);
     }
 
     @Override
@@ -95,6 +104,22 @@ public class JEIElectricCompressingCategory implements IRecipeCategory<Compressi
                 .addItemStack(recipe.getResultItem(null)); //fixme
         builder.addOutputSlot(OUTPUT_X_2 - RECIPE_VIEWER_X, OUTPUT_Y_2 - RECIPE_VIEWER_Y)
                 .setOutputSlotBackground();
+    }
+
+    @Override
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
+        int time = recipe.getTime();
+        if (time > 0) {
+            Component timeString = Component.translatable(RecipeCategory.JEI_TIME, time / 20);
+            builder.addText(timeString, PROGRESS_WIDTH, 10)
+                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setTextAlignment(HorizontalAlignment.CENTER)
+                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setColor(0xFF808080);
+
+            builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, time, IDrawableAnimated.StartDirection.LEFT, false))
+                    .setPosition(PROGRESS_BAR_X, PROGRESS_BAR_Y);
+        }
     }
 
     @Override

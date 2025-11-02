@@ -27,6 +27,8 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
+import mezz.jei.api.gui.drawable.IDrawableAnimated;
+import mezz.jei.api.gui.drawable.IDrawableStatic;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.placement.HorizontalAlignment;
 import mezz.jei.api.gui.placement.VerticalAlignment;
@@ -47,9 +49,13 @@ public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecip
     private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
 
     private final IDrawable icon;
+    private final IDrawableStatic arrow;
+    private final IGuiHelper helper;
 
     public JEIElectricFurnaceCategory(IGuiHelper helper) {
         this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.ELECTRIC_FURNACE));
+        this.arrow = helper.createDrawable(SCREEN_TEXTURE, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
+        this.helper = helper;
     }
 
     @Override
@@ -97,6 +103,9 @@ public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecip
                     .setTextAlignment(HorizontalAlignment.CENTER)
                     .setTextAlignment(VerticalAlignment.TOP)
                     .setColor(0xFF808080);
+
+            builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, cookingTime, IDrawableAnimated.StartDirection.LEFT, false))
+                    .setPosition(PROGRESS_BAR_X, PROGRESS_BAR_Y);
         }
 
         float experience = recipe.getExperience();
