@@ -133,7 +133,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.registerContainerClickArea(
                 new Rectangle(79, 50, 83, 20),
                 CircuitFabricatorScreen.class,
-                GalacticraftREIServerPlugin.CIRCUIT_FABRICATION
+                GalacticraftREIServerPlugin.FABRICATION
         );
         registry.registerContainerClickArea(
                 new Rectangle(

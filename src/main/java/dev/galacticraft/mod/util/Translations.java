@@ -71,9 +71,9 @@ public interface Translations {
         String PREFIX = "category.recipe_viewer.";
         String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
         String COMPRESSOR = PREFIX + "compressing";
-        String ELECTRIC_COMPRESSOR = "category.recipe_viewer.compressing.electric";
-        String ELECTRIC_FURNACE = "category.recipe_viewer.smelting.electric";
-        String ELECTRIC_ARC_FURNACE = "category.recipe_viewer.blasting.electric";
+        String ELECTRIC_COMPRESSOR = PREFIX + "compressing.electric";
+        String ELECTRIC_FURNACE = PREFIX + "smelting.electric";
+        String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
 
         String REI_TIME = "category.rei.campfire.time";

@@ -1243,6 +1243,9 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ELECTRIC_COMPRESSING = "electric_compressing";
+        String ELECTRIC_SMELTING = "electric_smelting";
+        String ELECTRIC_BLASTING = "electric_blasting";
         String ROCKET = "rocket";
 
         interface Serializer {
