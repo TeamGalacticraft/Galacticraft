@@ -57,8 +57,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.SupportType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
@@ -101,20 +99,21 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             pos = pos.relative(face);
             BlockPos below = pos.below();
             BlockState belowState = level.getBlockState(below);
-
-            if (this.canInsertCan(level, below, belowState.getBlock() instanceof CannedFoodBlock)) {
-                return InteractionResult.FAIL;
-            } else if (!belowState.isFaceSturdy(level, below, Direction.UP, SupportType.FULL)) {
+            if (!belowState.isFaceSturdy(level, below, Direction.UP) && this.canInsertCan(level, below, true)) {
                 return InteractionResult.FAIL;
             }
 
             oldState = level.getBlockState(pos);
-            if (!this.canInsertCan(level, pos, true) && oldState.isAir() || oldState.is(GCBlocks.CANNED_FOOD)) {
+            if (!oldState.isAir() && !oldState.is(GCBlocks.CANNED_FOOD) || !this.canInsertCan(level, pos, true)) {
                 return InteractionResult.FAIL;
             }
         }
 
         BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
+        if (level.getBlockEntity(pos) instanceof CannedFoodBlockEntity canEntity) {
+            newState = newState.setValue(CannedFoodBlock.MAX, canEntity.getCanCount() + 1 == MAX_CANS);
+        }
+
         if (newState != oldState) {
             level.setBlock(pos, newState, Block.UPDATE_ALL);
         }
@@ -570,8 +569,7 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     private boolean canInsertCan(Level level, BlockPos blockPos, boolean canPlace) {
         if (canPlace) {
-            BlockEntity be = level.getBlockEntity(blockPos);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
+            if (level.getBlockEntity(blockPos) instanceof CannedFoodBlockEntity canEntity) {
                 return canEntity.getCanCount() < MAX_CANS;
             }
             return true;
