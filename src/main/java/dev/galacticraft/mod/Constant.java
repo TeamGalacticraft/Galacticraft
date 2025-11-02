@@ -727,9 +727,9 @@ public interface Constant {
         int PROGRESS_BACKGROUND_V = 0;
 
         int RECIPE_VIEWER_X = 51;
-        int RECIPE_VIEWER_Y = 21;
+        int RECIPE_VIEWER_Y = 26;
         int RECIPE_VIEWER_WIDTH = 83;
-        int RECIPE_VIEWER_HEIGHT = 39;
+        int RECIPE_VIEWER_HEIGHT = 34;
     }
 
     interface ElectricArcFurnace {
@@ -752,9 +752,9 @@ public interface Constant {
         int PROGRESS_BACKGROUND_V = 0;
 
         int RECIPE_VIEWER_X = 43;
-        int RECIPE_VIEWER_Y = 21;
+        int RECIPE_VIEWER_Y = 26;
         int RECIPE_VIEWER_WIDTH = 112;
-        int RECIPE_VIEWER_HEIGHT = 39;
+        int RECIPE_VIEWER_HEIGHT = 34;
     }
 
     interface RocketWorkbench {

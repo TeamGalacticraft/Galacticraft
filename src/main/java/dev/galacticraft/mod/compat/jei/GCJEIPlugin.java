@@ -102,7 +102,7 @@ public class GCJEIPlugin implements IModPlugin {
                 Constant.ElectricFurnace.PROGRESS_Y - 3,
                 Constant.ElectricFurnace.PROGRESS_WIDTH + 2,
                 Constant.ElectricFurnace.PROGRESS_HEIGHT + 6,
-                RecipeTypes.SMELTING
+                GCJEIRecipeTypes.ELECTRIC_SMELTING
         );
         registration.addRecipeClickArea(
                 ElectricArcFurnaceScreen.class,
@@ -110,7 +110,7 @@ public class GCJEIPlugin implements IModPlugin {
                 Constant.ElectricArcFurnace.PROGRESS_Y - 3,
                 Constant.ElectricArcFurnace.PROGRESS_WIDTH + 2,
                 Constant.ElectricArcFurnace.PROGRESS_HEIGHT + 6,
-                RecipeTypes.BLASTING
+                GCJEIRecipeTypes.ELECTRIC_BLASTING
         );
     }
 
@@ -120,8 +120,8 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.ELECTRIC_COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ROCKET_WORKBENCH), GCJEIRecipeTypes.ROCKET);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), GCJEIRecipeTypes.ELECTRIC_BLASTING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), GCJEIRecipeTypes.ELECTRIC_SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
     }
 
@@ -132,6 +132,8 @@ public class GCJEIPlugin implements IModPlugin {
                 new JEIFabricationCategory(helper),
                 new JEICompressingCategory(helper),
                 new JEIElectricCompressingCategory(helper),
+                new JEIElectricFurnaceCategory(helper),
+                new JEIElectricArcFurnaceCategory(helper),
                 new JEIRocketCategory(helper)
         );
     }
@@ -144,6 +146,8 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_SMELTING, manager.getAllRecipesFor(RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_BLASTING, manager.getAllRecipesFor(RecipeType.BLASTING).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
