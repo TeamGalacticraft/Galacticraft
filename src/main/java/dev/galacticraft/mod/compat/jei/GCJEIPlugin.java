@@ -23,6 +23,11 @@
 package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
 import dev.galacticraft.mod.compat.jei.category.*;
 import dev.galacticraft.mod.compat.jei.replacers.*;
 import dev.galacticraft.mod.compat.jei.subtypes.*;
@@ -35,6 +40,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -69,6 +75,43 @@ public class GCJEIPlugin implements IModPlugin {
         registration.registerSubtypeInterpreter(GCItems.ROCKET, RocketSubtypeInterpreter.INSTANCE);
         registration.registerSubtypeInterpreter(GCItems.CANNED_FOOD, CannedFoodSubtypeInterpreter.INSTANCE);
         registration.registerSubtypeInterpreter(GCBlocks.PARACHEST.asItem(), ParachestSubtypeInterpreter.INSTANCE);
+    }
+
+    @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addRecipeClickArea(CircuitFabricatorScreen.class, 79, 50, 83, 20, GCJEIRecipeTypes.FABRICATION);
+        registration.addRecipeClickArea(
+                CompressorScreen.class,
+                Constant.Compressor.PROGRESS_X - 1,
+                Constant.Compressor.PROGRESS_Y - 3,
+                Constant.Compressor.PROGRESS_WIDTH + 2,
+                3 + Math.min(Constant.Compressor.PROGRESS_HEIGHT, Constant.Compressor.FUEL_Y - Constant.Compressor.PROGRESS_Y - 2),
+                GCJEIRecipeTypes.COMPRESSING
+        );
+        registration.addRecipeClickArea(
+                ElectricCompressorScreen.class,
+                Constant.ElectricCompressor.PROGRESS_X - 1,
+                Constant.ElectricCompressor.PROGRESS_Y - 3,
+                Constant.ElectricCompressor.PROGRESS_WIDTH + 2,
+                Constant.ElectricCompressor.PROGRESS_HEIGHT + 6,
+                GCJEIRecipeTypes.COMPRESSING
+        );
+        registration.addRecipeClickArea(
+                ElectricFurnaceScreen.class,
+                Constant.ElectricFurnace.PROGRESS_X - 1,
+                Constant.ElectricFurnace.PROGRESS_Y - 3,
+                Constant.ElectricFurnace.PROGRESS_WIDTH + 2,
+                Constant.ElectricFurnace.PROGRESS_HEIGHT + 6,
+                RecipeTypes.SMELTING
+        );
+        registration.addRecipeClickArea(
+                ElectricArcFurnaceScreen.class,
+                Constant.ElectricArcFurnace.PROGRESS_X - 1,
+                Constant.ElectricArcFurnace.PROGRESS_Y - 3,
+                Constant.ElectricArcFurnace.PROGRESS_WIDTH + 2,
+                Constant.ElectricArcFurnace.PROGRESS_HEIGHT + 6,
+                RecipeTypes.BLASTING
+        );
     }
 
     @Override
