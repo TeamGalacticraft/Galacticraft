@@ -94,7 +94,7 @@ public class GCJEIPlugin implements IModPlugin {
                 Constant.ElectricCompressor.PROGRESS_Y - 3,
                 Constant.ElectricCompressor.PROGRESS_WIDTH + 2,
                 Constant.ElectricCompressor.PROGRESS_HEIGHT + 6,
-                GCJEIRecipeTypes.COMPRESSING
+                GCJEIRecipeTypes.ELECTRIC_COMPRESSING
         );
         registration.addRecipeClickArea(
                 ElectricFurnaceScreen.class,
@@ -118,7 +118,7 @@ public class GCJEIPlugin implements IModPlugin {
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR), GCJEIRecipeTypes.FABRICATION);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.ELECTRIC_COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ROCKET_WORKBENCH), GCJEIRecipeTypes.ROCKET);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
@@ -131,6 +131,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCategories(
                 new JEIFabricationCategory(helper),
                 new JEICompressingCategory(helper),
+                new JEIElectricCompressingCategory(helper),
                 new JEIRocketCategory(helper)
         );
     }
@@ -142,6 +143,7 @@ public class GCJEIPlugin implements IModPlugin {
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();

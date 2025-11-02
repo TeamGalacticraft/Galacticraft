@@ -31,5 +31,6 @@ import mezz.jei.api.recipe.RecipeType;
 public interface GCJEIRecipeTypes {
     RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, "fabrication", FabricationRecipe.class);
     RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, "compressing", CompressingRecipe.class);
+    RecipeType<CompressingRecipe> ELECTRIC_COMPRESSING = RecipeType.create(Constant.MOD_ID, "electric_compressing", CompressingRecipe.class);
     RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, "rocket", RocketRecipe.class);
 }
