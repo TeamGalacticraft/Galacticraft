@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -40,14 +39,9 @@ public class ElectricShapelessCompressingDisplay implements ElectricCompressingD
     private int processingTime = (int) (200 / 1.5F);
 
     public ElectricShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
-        this.input = Lists.newArrayList();
-        recipe.value().getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
-            }
-        });
+        this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
-        this.output = Collections.singletonList(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
+        this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = (int) (recipe.value().getTime() / 1.5F);
     }
 
