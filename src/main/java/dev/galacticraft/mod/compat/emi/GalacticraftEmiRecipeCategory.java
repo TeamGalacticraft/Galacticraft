@@ -33,20 +33,37 @@ import java.util.Comparator;
 import static dev.galacticraft.mod.util.Translations.RecipeCategory.PREFIX;
 
 public class GalacticraftEmiRecipeCategory extends EmiRecipeCategory {
+    private final Component name;
+
     public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon) {
-        super(id, icon, icon);
+        this(id, icon, icon, PREFIX + id.getPath());
     }
 
     public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon, EmiRenderable simplified) {
-        super(id, icon, simplified);
+        this(id, icon, simplified, PREFIX + id.getPath());
     }
 
     public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon, EmiRenderable simplified, Comparator<EmiRecipe> sorter) {
+        this(id, icon, simplified, sorter, PREFIX + id.getPath());
+    }
+
+    public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon, String translationKey) {
+        super(id, icon, icon);
+        this.name = Component.translatable(translationKey);
+    }
+
+    public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon, EmiRenderable simplified, String translationKey) {
+        super(id, icon, simplified);
+        this.name = Component.translatable(translationKey);
+    }
+
+    public GalacticraftEmiRecipeCategory(ResourceLocation id, EmiRenderable icon, EmiRenderable simplified, Comparator<EmiRecipe> sorter, String translationKey) {
         super(id, icon, simplified, sorter);
+        this.name = Component.translatable(translationKey);
     }
 
     @Override
     public Component getName() {
-        return Component.translatable(PREFIX + this.getId().getPath());
+        return this.name;
     }
 }
