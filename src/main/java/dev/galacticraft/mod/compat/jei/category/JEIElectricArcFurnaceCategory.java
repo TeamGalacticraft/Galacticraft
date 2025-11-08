@@ -45,8 +45,8 @@ import net.minecraft.world.item.crafting.BlastingRecipe;
 import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
 public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRecipe> {
-    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
-    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+    private static final int PROGRESS_BAR_X = PROGRESS_X - JEI_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - JEI_Y;
 
     private final IDrawable icon;
     private final IDrawableStatic arrow;
@@ -70,12 +70,12 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
 
     @Override
     public int getWidth() {
-        return RECIPE_VIEWER_WIDTH;
+        return JEI_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return RECIPE_VIEWER_HEIGHT;
+        return JEI_HEIGHT;
     }
 
     @Override
@@ -85,13 +85,13 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
 
     @Override
     public void setRecipe(IRecipeLayoutBuilder builder, BlastingRecipe recipe, IFocusGroup focuses) {
-        builder.addInputSlot(INPUT_X - RECIPE_VIEWER_X, INPUT_Y - RECIPE_VIEWER_Y)
+        builder.addInputSlot(INPUT_X - JEI_X, INPUT_Y - JEI_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(0));
-        builder.addOutputSlot(OUTPUT_X_1 - RECIPE_VIEWER_X, OUTPUT_Y_1 - RECIPE_VIEWER_Y)
+        builder.addOutputSlot(OUTPUT_X_1 - JEI_X, OUTPUT_Y_1 - JEI_Y)
                 .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
-        builder.addOutputSlot(OUTPUT_X_2 - RECIPE_VIEWER_X, OUTPUT_Y_2 - RECIPE_VIEWER_Y)
+        builder.addOutputSlot(OUTPUT_X_2 - JEI_X, OUTPUT_Y_2 - JEI_Y)
                 .setOutputSlotBackground();
     }
 

@@ -67,7 +67,7 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
 
     @Override
     public @NotNull List<Widget> setupDisplay(ElectricArcFurnaceDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.x + (bounds.width - RECIPE_VIEWER_WIDTH) / 2 - RECIPE_VIEWER_X, bounds.y - RECIPE_VIEWER_Y + 10);
+        final Point startPoint = new Point(bounds.x + (bounds.width - REI_WIDTH) / 2 - REI_X, bounds.y - REI_Y + 5);
 
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
@@ -91,7 +91,7 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
 
     @Override
     public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 15;
+        return REI_HEIGHT + 10;
     }
 
     @Override
