@@ -69,7 +69,7 @@ public class ElectricBlastingEmiRecipe extends BasicEmiRecipe {
 
         widgets.addText(Component.translatable(EMI_XP, this.experience), PROGRESS_BAR_X + PROGRESS_WIDTH / 2, 28, -1, true).horizontalAlign(Alignment.CENTER);
 
-        widgets.addSlot(this.inputs.get(0), INPUT_X - EMI_X, INPUT_Y - EMI_Y);
+        widgets.addSlot(this.inputs.get(0), INPUT_X - EMI_X - 1, INPUT_Y - EMI_Y - 1);
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
