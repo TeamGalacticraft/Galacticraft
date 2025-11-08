@@ -99,24 +99,24 @@ public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecip
         if (cookingTime > 0) {
             Component timeString = Component.translatable(RecipeCategory.JEI_TIME, cookingTime / 20);
             builder.addText(timeString, PROGRESS_WIDTH, 10)
-                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM)
                     .setTextAlignment(HorizontalAlignment.CENTER)
-                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setTextAlignment(VerticalAlignment.BOTTOM)
                     .setColor(0xFF808080);
 
             builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, cookingTime, IDrawableAnimated.StartDirection.LEFT, false))
                     .setPosition(PROGRESS_BAR_X, PROGRESS_BAR_Y);
         }
 
-        float experience = recipe.getExperience();
-        if (experience > 0.0F) {
-            Component xpString = Component.translatable(RecipeCategory.JEI_XP, experience);
-            builder.addText(xpString, PROGRESS_WIDTH + 8, 10)
-                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM)
-                    .setTextAlignment(HorizontalAlignment.CENTER)
-                    .setTextAlignment(VerticalAlignment.BOTTOM)
-                    .setColor(0xFF808080);
-        }
+        // float experience = recipe.getExperience();
+        // if (experience > 0.0F) {
+        //     Component xpString = Component.translatable(RecipeCategory.JEI_XP, experience);
+        //     builder.addText(xpString, PROGRESS_WIDTH + 8, 10)
+        //             .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+        //             .setTextAlignment(HorizontalAlignment.CENTER)
+        //             .setTextAlignment(VerticalAlignment.TOP)
+        //             .setColor(0xFF808080);
+        // }
     }
 
     @Override

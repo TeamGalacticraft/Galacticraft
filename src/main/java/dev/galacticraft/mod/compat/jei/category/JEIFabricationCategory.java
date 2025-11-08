@@ -109,7 +109,7 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         if (processingTime > 0) {
             this.progressBar.setProcessingTime(processingTime);
             Component timeString = Component.translatable(RecipeCategory.JEI_TIME, processingTime / 20);
-            builder.addText(timeString, this.getWidth() - 20, 10)
+            builder.addText(timeString, 57, 10)
                     .setPosition(0, 0, this.getWidth(), this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
                     .setTextAlignment(HorizontalAlignment.CENTER)
                     .setTextAlignment(VerticalAlignment.TOP)

@@ -112,9 +112,9 @@ public class JEIElectricCompressingCategory implements IRecipeCategory<Compressi
         if (time > 0) {
             Component timeString = Component.translatable(RecipeCategory.JEI_TIME, time / 20);
             builder.addText(timeString, PROGRESS_WIDTH, 10)
-                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM)
                     .setTextAlignment(HorizontalAlignment.CENTER)
-                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setTextAlignment(VerticalAlignment.BOTTOM)
                     .setColor(0xFF808080);
 
             builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, time, IDrawableAnimated.StartDirection.LEFT, false))
