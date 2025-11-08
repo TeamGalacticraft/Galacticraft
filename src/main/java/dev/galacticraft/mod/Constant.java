@@ -730,6 +730,11 @@ public interface Constant {
         int RECIPE_VIEWER_Y = 21;
         int RECIPE_VIEWER_WIDTH = 83;
         int RECIPE_VIEWER_HEIGHT = 39;
+
+        int EMI_X = 52;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 82;
+        int EMI_HEIGHT = 38;
     }
 
     interface ElectricArcFurnace {
@@ -755,6 +760,11 @@ public interface Constant {
         int RECIPE_VIEWER_Y = 21;
         int RECIPE_VIEWER_WIDTH = 112;
         int RECIPE_VIEWER_HEIGHT = 39;
+
+        int EMI_X = 44;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 111;
+        int EMI_HEIGHT = 38;
     }
 
     interface RocketWorkbench {

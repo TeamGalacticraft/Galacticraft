@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
-import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiStack;
@@ -37,8 +36,11 @@ import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.item.crafting.RecipeType;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 
 public class GalacticraftEmiPlugin implements EmiPlugin {
     private static final ResourceLocation SIMPLIFIED_ICONS = Constant.id("textures/gui/simplified_icons_emi.png");
@@ -55,12 +57,16 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiRenderable FABRICATION_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 0, 16, 16, 16, 16, 64, 64);
     public static final EmiRenderable COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16, 16, 16, 64, 64);
     public static final EmiRenderable ELECTRIC_COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable ELECTRIC_SMELTING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable ELECTRIC_BLASTING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 0, 0, 16, 16, 16, 16, 64, 64);
     public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 0, 16, 16, 16, 16, 64, 64);
 
     // Categories
     public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR, FABRICATION_ICON);
     public static final EmiRecipeCategory COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.COMPRESSING), COMPRESSOR, COMPRESSING_ICON);
     public static final EmiRecipeCategory ELECTRIC_COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_COMPRESSING), ELECTRIC_COMPRESSOR, ELECTRIC_COMPRESSING_ICON, RecipeCategory.ELECTRIC_COMPRESSOR);
+    public static final EmiRecipeCategory ELECTRIC_SMELTING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_SMELTING), ELECTRIC_FURNACE, ELECTRIC_SMELTING_ICON, RecipeCategory.ELECTRIC_FURNACE);
+    public static final EmiRecipeCategory ELECTRIC_BLASTING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_BLASTING), ELECTRIC_ARC_FURNACE, ELECTRIC_BLASTING_ICON, RecipeCategory.ELECTRIC_ARC_FURNACE);
     public static final EmiRecipeCategory ROCKET = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ROCKET), ROCKET_WORKBENCH, ROCKET_ICON);
 
     @Override
@@ -68,13 +74,15 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addCategory(FABRICATION);
         registry.addCategory(COMPRESSING);
         registry.addCategory(ELECTRIC_COMPRESSING);
+        registry.addCategory(ELECTRIC_SMELTING);
+        registry.addCategory(ELECTRIC_BLASTING);
         registry.addCategory(ROCKET);
 
         registry.addWorkstation(FABRICATION, CIRCUIT_FABRICATOR);
         registry.addWorkstation(COMPRESSING, COMPRESSOR);
         registry.addWorkstation(ELECTRIC_COMPRESSING, ELECTRIC_COMPRESSOR);
-        registry.addWorkstation(VanillaEmiRecipeCategories.SMELTING, ELECTRIC_FURNACE);
-        registry.addWorkstation(VanillaEmiRecipeCategories.BLASTING, ELECTRIC_ARC_FURNACE);
+        registry.addWorkstation(ELECTRIC_SMELTING, ELECTRIC_FURNACE);
+        registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
         RecipeManager manager = registry.getRecipeManager();
@@ -86,6 +94,14 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         for (RecipeHolder<CompressingRecipe> recipe : manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE)) {
             registry.addRecipe(new CompressingEmiRecipe(recipe));
             registry.addRecipe(new ElectricCompressingEmiRecipe(recipe));
+        }
+
+        for (RecipeHolder<SmeltingRecipe> recipe : manager.getAllRecipesFor(RecipeType.SMELTING)) {
+            registry.addRecipe(new ElectricSmeltingEmiRecipe(recipe));
+        }
+
+        for (RecipeHolder<BlastingRecipe> recipe : manager.getAllRecipesFor(RecipeType.BLASTING)) {
+            registry.addRecipe(new ElectricBlastingEmiRecipe(recipe));
         }
 
         for (RecipeHolder<RocketRecipe> recipe : manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE)) {
