@@ -29,7 +29,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,14 +43,9 @@ public class ElectricShapedCompressingDisplay implements ElectricCompressingDisp
     }
 
     public ElectricShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
-        this.input = new ArrayList<>();
-        recipe.value().getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
-            }
-        });
+        this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
-        this.output = Collections.singletonList(EntryIngredients.ofItemStacks(List.of(stack, stack.copyWithCount(stack.getCount() * 2))));
+        this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = (int) (recipe.value().getTime() / 1.5F);
     }
 

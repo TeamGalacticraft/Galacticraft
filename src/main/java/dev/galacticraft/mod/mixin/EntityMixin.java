@@ -285,6 +285,11 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
     private void galacticraft$onBelowWorld(Entity entity, Operation<Void> original) {
+        if (!entity.getType().is(GCEntityTypeTags.CAN_REENTER_ATMOSPHERE)) {
+            original.call(entity);
+            return;
+        }
+
         Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
         CelestialBody fromBody = holder != null ? holder.value() : null;
         if (fromBody != null && fromBody.isSatellite() && fromBody.parent().isPresent()) {

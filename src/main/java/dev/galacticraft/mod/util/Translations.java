@@ -79,6 +79,7 @@ public interface Translations {
         String REI_TIME = "category.rei.campfire.time";
         String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
         String JEI_TIME = "gui.jei.category.smelting.time.seconds";
+        String JEI_XP = "gui.jei.category.smelting.experience";
         String EMI_TIME = "emi.cooking.time";
         String EMI_XP = "emi.cooking.experience";
     }

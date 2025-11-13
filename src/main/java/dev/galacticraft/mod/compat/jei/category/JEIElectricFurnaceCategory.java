@@ -24,67 +24,58 @@ package dev.galacticraft.mod.compat.jei.category;
 
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import mezz.jei.api.gui.builder.IRecipeLayoutBuilder;
 import mezz.jei.api.gui.drawable.IDrawable;
 import mezz.jei.api.gui.drawable.IDrawableAnimated;
 import mezz.jei.api.gui.drawable.IDrawableStatic;
-import mezz.jei.api.gui.ingredient.ICraftingGridHelper;
 import mezz.jei.api.gui.ingredient.IRecipeSlotsView;
 import mezz.jei.api.gui.placement.HorizontalAlignment;
 import mezz.jei.api.gui.placement.VerticalAlignment;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.entity.AbstractFurnaceBlockEntity;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 
-import java.util.stream.Collectors;
+import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
 
-import static dev.galacticraft.mod.Constant.Compressor.*;
-
-public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe> {
-    private static final int PROGRESS_BAR_X = PROGRESS_X - RECIPE_VIEWER_X;
-    private static final int PROGRESS_BAR_Y = PROGRESS_Y - RECIPE_VIEWER_Y;
+public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecipe> {
+    private static final int PROGRESS_BAR_X = PROGRESS_X - JEI_X;
+    private static final int PROGRESS_BAR_Y = PROGRESS_Y - JEI_Y;
 
     private final IDrawable icon;
-    private final ICraftingGridHelper craftingGridHelper;
     private final IDrawableStatic arrow;
     private final IGuiHelper helper;
 
-    public JEICompressingCategory(IGuiHelper helper) {
-        this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.COMPRESSOR));
-        this.craftingGridHelper = helper.createCraftingGridHelper();
+    public JEIElectricFurnaceCategory(IGuiHelper helper) {
+        this.icon = helper.createDrawableItemStack(new ItemStack(GCBlocks.ELECTRIC_FURNACE));
         this.arrow = helper.createDrawable(SCREEN_TEXTURE, PROGRESS_U, PROGRESS_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
         this.helper = helper;
     }
 
     @Override
-    public RecipeType<CompressingRecipe> getRecipeType() {
-        return GCJEIRecipeTypes.COMPRESSING;
+    public RecipeType<SmeltingRecipe> getRecipeType() {
+        return GCJEIRecipeTypes.ELECTRIC_SMELTING;
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(RecipeCategory.COMPRESSOR);
+        return Component.translatable(RecipeCategory.ELECTRIC_FURNACE);
     }
 
     @Override
     public int getWidth() {
-        return RECIPE_VIEWER_WIDTH;
+        return JEI_WIDTH;
     }
 
     @Override
     public int getHeight() {
-        return RECIPE_VIEWER_HEIGHT;
+        return JEI_HEIGHT;
     }
 
     @Override
@@ -93,44 +84,43 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
     }
 
     @Override
-    public void setRecipe(IRecipeLayoutBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
-        int width = 0;
-        int height = 0;
-        if (recipe instanceof ShapedCompressingRecipe shapedRecipe) {
-            width = shapedRecipe.getWidth();
-            height = shapedRecipe.getHeight();
-        }
-        this.craftingGridHelper.createAndSetIngredients(builder, recipe.getIngredients(), width, height);
-
-        builder.addSlot(RecipeIngredientRole.RENDER_ONLY, FUEL_X - RECIPE_VIEWER_X, FUEL_Y - RECIPE_VIEWER_Y)
+    public void setRecipe(IRecipeLayoutBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
+        builder.addInputSlot(INPUT_X - JEI_X, INPUT_Y - JEI_Y)
                 .setStandardSlotBackground()
-                .addItemStacks(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(Item::getDefaultInstance).collect(Collectors.toList()));
-
-        builder.addOutputSlot(OUTPUT_X - RECIPE_VIEWER_X, OUTPUT_Y - RECIPE_VIEWER_Y)
+                .addIngredients(recipe.getIngredients().get(0));
+        builder.addOutputSlot(OUTPUT_X - JEI_X, OUTPUT_Y - JEI_Y)
                 .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
     @Override
-    public void createRecipeExtras(IRecipeExtrasBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
-        int time = recipe.getTime();
-        if (time > 0) {
-            Component timeString = Component.translatable(RecipeCategory.JEI_TIME, time / 20);
+    public void createRecipeExtras(IRecipeExtrasBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
+        int cookingTime = recipe.getCookingTime();
+        if (cookingTime > 0) {
+            Component timeString = Component.translatable(RecipeCategory.JEI_TIME, cookingTime / 20);
             builder.addText(timeString, PROGRESS_WIDTH, 10)
-                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.BOTTOM)
                     .setTextAlignment(HorizontalAlignment.CENTER)
-                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setTextAlignment(VerticalAlignment.BOTTOM)
                     .setColor(0xFF808080);
 
-            builder.addAnimatedRecipeFlame(300)
-                    .setPosition(FIRE_X - RECIPE_VIEWER_X, FIRE_Y - RECIPE_VIEWER_Y);
-            builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, time, IDrawableAnimated.StartDirection.LEFT, false))
+            builder.addDrawable(this.helper.createAnimatedDrawable(this.arrow, cookingTime, IDrawableAnimated.StartDirection.LEFT, false))
                     .setPosition(PROGRESS_BAR_X, PROGRESS_BAR_Y);
         }
+
+        // float experience = recipe.getExperience();
+        // if (experience > 0.0F) {
+        //     Component xpString = Component.translatable(RecipeCategory.JEI_XP, experience);
+        //     builder.addText(xpString, PROGRESS_WIDTH + 8, 10)
+        //             .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+        //             .setTextAlignment(HorizontalAlignment.CENTER)
+        //             .setTextAlignment(VerticalAlignment.TOP)
+        //             .setColor(0xFF808080);
+        // }
     }
 
     @Override
-    public void draw(CompressingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
+    public void draw(SmeltingRecipe recipe, IRecipeSlotsView recipeSlotsView, GuiGraphics graphics, double mouseX, double mouseY) {
         graphics.blit(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT);
     }
 }

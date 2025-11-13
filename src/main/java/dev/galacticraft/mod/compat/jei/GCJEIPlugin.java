@@ -23,6 +23,11 @@
 package dev.galacticraft.mod.compat.jei;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
+import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
 import dev.galacticraft.mod.compat.jei.category.*;
 import dev.galacticraft.mod.compat.jei.replacers.*;
 import dev.galacticraft.mod.compat.jei.subtypes.*;
@@ -35,6 +40,7 @@ import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
@@ -72,13 +78,50 @@ public class GCJEIPlugin implements IModPlugin {
     }
 
     @Override
+    public void registerGuiHandlers(IGuiHandlerRegistration registration) {
+        registration.addRecipeClickArea(CircuitFabricatorScreen.class, 79, 50, 83, 20, GCJEIRecipeTypes.FABRICATION);
+        registration.addRecipeClickArea(
+                CompressorScreen.class,
+                Constant.Compressor.PROGRESS_X - 1,
+                Constant.Compressor.PROGRESS_Y - 3,
+                Constant.Compressor.PROGRESS_WIDTH + 2,
+                3 + Math.min(Constant.Compressor.PROGRESS_HEIGHT, Constant.Compressor.FUEL_Y - Constant.Compressor.PROGRESS_Y - 2),
+                GCJEIRecipeTypes.COMPRESSING
+        );
+        registration.addRecipeClickArea(
+                ElectricCompressorScreen.class,
+                Constant.ElectricCompressor.PROGRESS_X - 1,
+                Constant.ElectricCompressor.PROGRESS_Y - 3,
+                Constant.ElectricCompressor.PROGRESS_WIDTH + 2,
+                Constant.ElectricCompressor.PROGRESS_HEIGHT + 6,
+                GCJEIRecipeTypes.ELECTRIC_COMPRESSING
+        );
+        registration.addRecipeClickArea(
+                ElectricFurnaceScreen.class,
+                Constant.ElectricFurnace.PROGRESS_X - 1,
+                Constant.ElectricFurnace.PROGRESS_Y - 3,
+                Constant.ElectricFurnace.PROGRESS_WIDTH + 2,
+                Constant.ElectricFurnace.PROGRESS_HEIGHT + 6,
+                GCJEIRecipeTypes.ELECTRIC_SMELTING
+        );
+        registration.addRecipeClickArea(
+                ElectricArcFurnaceScreen.class,
+                Constant.ElectricArcFurnace.PROGRESS_X - 1,
+                Constant.ElectricArcFurnace.PROGRESS_Y - 3,
+                Constant.ElectricArcFurnace.PROGRESS_WIDTH + 2,
+                Constant.ElectricArcFurnace.PROGRESS_HEIGHT + 6,
+                GCJEIRecipeTypes.ELECTRIC_BLASTING
+        );
+    }
+
+    @Override
     public void registerRecipeCatalysts(IRecipeCatalystRegistration registration) {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR), GCJEIRecipeTypes.FABRICATION);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.COMPRESSING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_COMPRESSOR), GCJEIRecipeTypes.ELECTRIC_COMPRESSING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ROCKET_WORKBENCH), GCJEIRecipeTypes.ROCKET);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), RecipeTypes.BLASTING);
-        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), RecipeTypes.SMELTING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), GCJEIRecipeTypes.ELECTRIC_BLASTING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), GCJEIRecipeTypes.ELECTRIC_SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
     }
 
@@ -88,6 +131,9 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCategories(
                 new JEIFabricationCategory(helper),
                 new JEICompressingCategory(helper),
+                new JEIElectricCompressingCategory(helper),
+                new JEIElectricFurnaceCategory(helper),
+                new JEIElectricArcFurnaceCategory(helper),
                 new JEIRocketCategory(helper)
         );
     }
@@ -99,6 +145,9 @@ public class GCJEIPlugin implements IModPlugin {
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_SMELTING, manager.getAllRecipesFor(RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_BLASTING, manager.getAllRecipesFor(RecipeType.BLASTING).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();

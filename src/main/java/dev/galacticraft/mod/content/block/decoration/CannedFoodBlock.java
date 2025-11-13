@@ -32,6 +32,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.EntityBlock;
@@ -39,6 +40,7 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.HitResult;
@@ -53,25 +55,29 @@ import org.jetbrains.annotations.Nullable;
 import java.util.List;
 
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
+import static net.minecraft.world.level.block.Blocks.AIR;
 
 public class CannedFoodBlock extends Block implements EntityBlock {
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final BooleanProperty MAX = BooleanProperty.create("max");
 
     public CannedFoodBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(FACING, Direction.NORTH));
+                .setValue(FACING, Direction.NORTH)
+                .setValue(MAX, false));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(FACING).add(MAX);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         return this.defaultBlockState()
-                .setValue(FACING, ctx.getHorizontalDirection().getOpposite());
+                .setValue(FACING, ctx.getHorizontalDirection().getOpposite())
+                .setValue(MAX, false);
     }
 
     @Override
@@ -106,6 +112,21 @@ public class CannedFoodBlock extends Block implements EntityBlock {
             }
             super.onRemove(state, level, pos, newState, moved);
         }
+    }
+
+    @Override
+    protected boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
+        BlockPos below = blockPos.below();
+        BlockState belowState = levelReader.getBlockState(below);
+        return belowState.isFaceSturdy(levelReader, below, Direction.UP) || (belowState.getBlock() instanceof CannedFoodBlock && belowState.getValue(MAX));
+    }
+
+    @Override
+    protected BlockState updateShape(BlockState blockState, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos blockPos, BlockPos neighborPos) {
+        if (!blockState.canSurvive(levelAccessor, blockPos)) {
+            return AIR.defaultBlockState();
+        }
+        return super.updateShape(blockState, direction, neighborState, levelAccessor, blockPos, neighborPos);
     }
 
     @Override

@@ -67,6 +67,9 @@ public class GCEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProv
         this.getOrCreateTagBuilder(GCEntityTypeTags.SENSITIVE_TO_ACID)
                 .add(EntityType.TNT);
 
+        this.getOrCreateTagBuilder(GCEntityTypeTags.CAN_REENTER_ATMOSPHERE)
+                .add(EntityType.PLAYER);
+
         this.getOrCreateTagBuilder(EntityTypeTags.IMPACT_PROJECTILES)
                 .add(GCEntityTypes.THROWABLE_METEOR_CHUNK);
         this.getOrCreateTagBuilder(EntityTypeTags.FALL_DAMAGE_IMMUNE)
