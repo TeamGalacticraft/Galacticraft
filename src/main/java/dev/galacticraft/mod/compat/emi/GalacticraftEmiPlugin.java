@@ -25,22 +25,37 @@ package dev.galacticraft.mod.compat.emi;
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
+import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
+import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.core.Holder;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.material.Fluids;
+
+import java.util.ArrayList;
+import java.util.List;
 
 public class GalacticraftEmiPlugin implements EmiPlugin {
     private static final ResourceLocation SIMPLIFIED_ICONS = Constant.id("textures/gui/simplified_icons_emi.png");
@@ -107,5 +122,41 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         for (RecipeHolder<RocketRecipe> recipe : manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE)) {
             registry.addRecipe(new RocketEmiRecipe(recipe));
         }
+
+        addWorldInteraction(registry);
+    }
+
+    private static void addWorldInteraction(EmiRegistry registry) {
+        List<ItemStack> glassFluidPipes = new ArrayList<>();
+        for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(GCItemTags.GLASS_FLUID_PIPES)) {
+            glassFluidPipes.add(new ItemStack(holder));
+        }
+
+        ResourceLocation pipeInteraction = Constant.id("/world/glass_fluid_pipe/");
+
+        GCBlocks.GLASS_FLUID_PIPES.forEach((pipeColor, block) -> {
+                Ingredient dye = pipeColor.dye();
+                Item pipe = block.asItem();
+                registry.addRecipe(
+                        EmiWorldInteractionRecipe.builder()
+                                .id(pipeInteraction.withSuffix(pipeColor.getName()))
+                                .leftInput(EmiIngredient.of(Ingredient.of(glassFluidPipes.stream().filter(stack -> !stack.is(pipe)))))
+                                .rightInput(dye != null ? EmiIngredient.of(dye) : EmiStack.of(Items.WET_SPONGE), dye == null)
+                                .output(EmiStack.of(pipe))
+                                .supportsRecipeTree(false)
+                                .build()
+                );
+        });
+
+        registry.addRecipe(
+                EmiWorldInteractionRecipe.builder()
+                        .id(Constant.id("/world/cauldron_washing/parachute"))
+                        .leftInput(EmiIngredient.of(Ingredient.of(GCItems.DYED_PARACHUTES.colorMap().values().stream().map(Item::getDefaultInstance))))
+                        .rightInput(EmiStack.of(Items.CAULDRON), true)
+                        .rightInput(EmiStack.of(Fluids.WATER, FluidConstants.BOTTLE), false)
+                        .output(EmiStack.of(GCItems.PARACHUTE))
+                        .supportsRecipeTree(false)
+                        .build()
+        );
     }
 }
