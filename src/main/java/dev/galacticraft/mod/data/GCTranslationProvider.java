@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -60,7 +61,8 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
         this.generateBlockTranslations();
         this.generateItemTranslations();
-        this.generateTagTranslations();
+        this.generateItemTagTranslations();
+        this.generateFluidTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
         this.generateCelestialBodyTranslations();
@@ -85,7 +87,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
         this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
-        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
+        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabrication");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
         this.add(RecipeCategory.ELECTRIC_COMPRESSOR, "Compressing (Electric)");
         this.add(RecipeCategory.ELECTRIC_FURNACE, "Smelting (Electric)");
@@ -622,7 +624,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
     }
 
-    protected void generateTagTranslations() {
+    protected void generateItemTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
         this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
@@ -760,6 +762,18 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+    }
+
+    protected void generateFluidTagTranslations() {
+        this.tag(GCFluidTags.OIL, "Galacticraft Oil");
+        this.tag(GCFluidTags.OIL_COMMON, "Oil");
+        this.tag(GCFluidTags.FUEL, "Galacticraft Fuel");
+        this.tag(GCFluidTags.FUEL_COMMON, "Fuel");
+        this.tag(GCFluidTags.SULFURIC_ACID, "Galacticraft Sulfuric Acid");
+        this.tag(GCFluidTags.SULFURIC_ACID_COMMON, "Sulfuric Acid");
+        this.tag(GCFluidTags.LIQUID_OXYGEN, "Liquid Oxygen");
+        this.tag(GCFluidTags.OXYGEN, "Oxygen");
+        this.tag(GCFluidTags.NON_BREATHABLE, "Non-Breathable Fluids");
     }
 
     protected void generateGasTranslations() {

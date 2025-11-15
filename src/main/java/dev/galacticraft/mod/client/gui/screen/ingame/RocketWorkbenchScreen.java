@@ -29,12 +29,14 @@ import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -76,6 +78,10 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.imageWidth = MAIN_UI_WIDTH;
         this.imageHeight = UI_HEIGHT;
         super.init();
+
+        if (FabricLoader.getInstance().isModLoaded("emi")) {
+            this.topPos = Mth.clamp(this.height - this.imageHeight - 23, 2, this.topPos);
+        }
     }
 
     @Override
