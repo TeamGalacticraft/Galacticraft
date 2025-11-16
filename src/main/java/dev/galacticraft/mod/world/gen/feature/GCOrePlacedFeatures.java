@@ -67,6 +67,19 @@ public class GCOrePlacedFeatures {
 
     public static final ResourceKey<PlacedFeature> ORE_LUNAR_SAPPHIRE_MOON = key("ore_lunar_sapphire_moon");
 
+    // MARS
+    public static final ResourceKey<PlacedFeature> ORE_COPPER_MARS = key("ore_copper_mars");
+    public static final ResourceKey<PlacedFeature> ORE_COPPER_LARGE_MARS = key("ore_copper_large_mars");
+
+    public static final ResourceKey<PlacedFeature> ORE_TIN_UPPER_MARS = key("ore_tin_upper_mars");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_MIDDLE_MARS = key("ore_tin_middle_mars");
+    public static final ResourceKey<PlacedFeature> ORE_TIN_SMALL_MARS = key("ore_tin_small_mars");
+
+    public static final ResourceKey<PlacedFeature> ORE_IRON_MARS = key("ore_iron_mars");
+    public static final ResourceKey<PlacedFeature> ORE_IRON_LARGE_MARS = key("ore_iron_large_mars");
+
+    public static final ResourceKey<PlacedFeature> ORE_DESH_MARS = key("ore_desh_mars");
+
     public static void register() {
         BiomeModifications.create(Constant.id("ores")).add(ModificationPhase.ADDITIONS, BiomeSelectors.foundInOverworld(), context -> {
             context.getGenerationSettings().addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, ORE_SILICON);
@@ -101,6 +114,16 @@ public class GCOrePlacedFeatures {
         context.register(ORE_CHEESE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_CHEESE_SMALL_MOON), modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
         context.register(ORE_CHEESE_LARGE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_CHEESE_LARGE_MOON), modifiersWithCount(5, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
         context.register(ORE_LUNAR_SAPPHIRE_MOON, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_LUNAR_SAPPHIRE_MOON), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+
+        // MARS
+        context.register(ORE_COPPER_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_SMALL_MARS), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.bottom(), VerticalAnchor.absolute(112)))));
+        context.register(ORE_COPPER_LARGE_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_COPPER_LARGE_MARS), modifiersWithCount(17, HeightRangePlacement.triangle(VerticalAnchor.bottom(), VerticalAnchor.absolute(112)))));
+        context.register(ORE_TIN_UPPER_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MARS), modifiersWithCount(54, HeightRangePlacement.triangle(VerticalAnchor.absolute(90), VerticalAnchor.absolute(384)))));
+        context.register(ORE_TIN_MIDDLE_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_MARS), modifiersWithCount(6, HeightRangePlacement.triangle(VerticalAnchor.absolute(-16), VerticalAnchor.absolute(56)))));
+        context.register(ORE_TIN_SMALL_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_TIN_SMALL_MARS), modifiersWithCount(6, HeightRangePlacement.uniform(VerticalAnchor.bottom(), VerticalAnchor.absolute(80)))));
+        context.register(ORE_IRON_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_IRON_SMALL_MARS), modifiersWithCount(10, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_IRON_LARGE_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_IRON_LARGE_MARS), modifiersWithCount(5, HeightRangePlacement.uniform(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
+        context.register(ORE_DESH_MARS, new PlacedFeature(lookup.getOrThrow(GCOreConfiguredFeature.ORE_DESH_MARS), modifiersWithCount(18, HeightRangePlacement.triangle(VerticalAnchor.absolute(0), VerticalAnchor.absolute(112)))));
     }
 
     @Contract(pure = true)

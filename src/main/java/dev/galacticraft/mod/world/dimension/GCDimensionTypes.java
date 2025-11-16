@@ -36,6 +36,7 @@ import java.util.OptionalLong;
 
 public class GCDimensionTypes {
     public static final ResourceKey<DimensionType> MOON = key("moon");
+    public static final ResourceKey<DimensionType> MARS = key("mars");
     public static final ResourceKey<DimensionType> VENUS = key("venus");
     public static final ResourceKey<DimensionType> ASTEROID = key("asteroid");
 
@@ -58,6 +59,26 @@ public class GCDimensionTypes {
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
 
+
+        context.register(MARS, new DimensionType(
+                OptionalLong.empty(), // fixedTime
+                true, // hasSkyLight
+                false, // hasCeiling
+                false, // ultraWarm
+                false, // natural
+                1.0, // coordinateScale
+                true, // bedWorks (doesn't explode, we can cancel working later)
+                false, // respawnAnchorWorks (doesn't explode, we can cancel working later)
+                -32, // minY
+                384, // height
+                384, // logicalHeight
+                GCBlockTags.INFINIBURN_MARS, // infiniburn
+                Constant.id("mars"), // effectsLocation //
+                0.1F, // ambientLight
+                new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
+        ));
+
+
         context.register(VENUS, new DimensionType(
                 OptionalLong.empty(), // fixedTime
                 true, // hasSkyLight
@@ -75,6 +96,8 @@ public class GCDimensionTypes {
                 0.1F, // ambientLight
                 new DimensionType.MonsterSettings(false, false, UniformInt.of(0, 7), 0)
         ));
+
+
         context.register(ASTEROID, new DimensionType(
                 OptionalLong.empty(), // fixedTime
                 false, // hasSkyLight

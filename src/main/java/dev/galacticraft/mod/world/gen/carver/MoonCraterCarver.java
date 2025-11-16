@@ -40,8 +40,8 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
 import java.util.function.Function;
 
-public class CraterCarver extends WorldCarver<CraterCarverConfig> {
-    public CraterCarver(Codec<CraterCarverConfig> configCodec) {
+public class MoonCraterCarver extends WorldCarver<CraterCarverConfig> {
+    public MoonCraterCarver(Codec<CraterCarverConfig> configCodec) {
         super(configCodec);
     }
 
