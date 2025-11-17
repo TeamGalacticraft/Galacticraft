@@ -29,6 +29,7 @@ import net.minecraft.resources.ResourceLocation;
 
 public class GCDimensionEffects {
     public static final ResourceLocation MOON = Constant.id("moon");
+    public static final ResourceLocation MARS = Constant.id("mars");
     public static final ResourceLocation VENUS = Constant.id("venus");
     public static final ResourceLocation ASTEROID = Constant.id("asteroid");
     public static final ResourceLocation SATELLITE = Constant.id("satellite");
@@ -38,6 +39,11 @@ public class GCDimensionEffects {
         DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MOON, EmptyCloudRenderer.INSTANCE);
         DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MOON, EmptyWeatherRenderer.INSTANCE);
         DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MOON, MoonSkyRenderer.INSTANCE);
+
+        DimensionRenderingRegistry.registerDimensionEffects(MARS, MarsDimensionEffects.INSTANCE);
+        DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.MARS, EmptyCloudRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerWeatherRenderer(GCDimensions.MARS, EmptyWeatherRenderer.INSTANCE);
+        DimensionRenderingRegistry.registerSkyRenderer(GCDimensions.MARS, MarsSkyRenderer.INSTANCE);
 
         DimensionRenderingRegistry.registerDimensionEffects(VENUS, VenusDimensionEffects.INSTANCE);
         DimensionRenderingRegistry.registerCloudRenderer(GCDimensions.VENUS, EmptyCloudRenderer.INSTANCE);

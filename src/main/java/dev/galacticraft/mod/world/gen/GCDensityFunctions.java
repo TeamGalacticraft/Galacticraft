@@ -30,6 +30,7 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.levelgen.DensityFunction;
 import net.minecraft.world.level.levelgen.DensityFunctions;
 import net.minecraft.world.level.levelgen.NoiseRouterData;
+import net.minecraft.world.level.levelgen.Noises;
 import net.minecraft.world.level.levelgen.synth.BlendedNoise;
 
 public class GCDensityFunctions {
@@ -38,6 +39,10 @@ public class GCDensityFunctions {
     public static final class Moon {
         public static final ResourceKey<DensityFunction> EROSION = createKey("moon/erosion");
         public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("moon/final_density");
+    }
+
+    public static final class Mars {
+        public static final ResourceKey<DensityFunction> FINAL_DENSITY = createKey("mars/final_density");
     }
 
     public static final class Venus {
@@ -129,6 +134,30 @@ public class GCDensityFunctions {
 //                noodles
 //            )
 //        );
+
+        DensityFunction baseTerrain = DensityFunctions.mul(
+                DensityFunctions.noise(
+                        noiseRegistry.getOrThrow(Noises.CONTINENTALNESS),
+                        0.5, // XZ scale
+                        0.5 // Y scale
+                ),
+                DensityFunctions.constant(0.15) // Amplitude
+        );
+
+        DensityFunction heightBias = DensityFunctions.yClampedGradient(
+                -64,
+                256,
+                0.45, // lower = more solid near bottom
+                -0.65 // upper = more air near top
+        );
+
+        DensityFunction marsFinal = DensityFunctions.add(
+                baseTerrain,
+                heightBias
+        );
+
+        context.register(Mars.FINAL_DENSITY, marsFinal);
+
 
         context.register(Venus.FINAL_DENSITY, DensityFunctions.add(
                 DensityFunctions.yClampedGradient(0, 90, 1, -1),

@@ -1,5 +1,5 @@
 {
-  "type": "galacticraft:moon_craters",
+  "type": "galacticraft:mars_craters",
   "config": {
     "debug_settings": {
       "barrier_state": {
@@ -20,7 +20,7 @@
     "ideal_range_offset": 8,
     "max_radius": 27,
     "min_radius": 8,
-    "probability": 0.05,
+    "probability": 0.01,
     "y": {
       "absolute": 128
     },

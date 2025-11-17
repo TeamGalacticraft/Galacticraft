@@ -954,6 +954,7 @@ public interface Constant {
         ResourceLocation MOON_PHASES = ResourceLocation.withDefaultNamespace("textures/environment/moon_phases.png");
         ResourceLocation SUN = ResourceLocation.withDefaultNamespace("textures/environment/sun.png");
         ResourceLocation SUN_MOON = id("textures/environment/sun_moon.png");
+        ResourceLocation SUN_MARS = id("textures/environment/sun_mars.png");
         ResourceLocation SUN_VENUS = id("textures/environment/sun_venus.png");
         ResourceLocation EARTH = id("textures/environment/earth.png");
         ResourceLocation CLOUDS = id("textures/environment/clouds.png");
@@ -1317,6 +1318,10 @@ public interface Constant {
         String MOON_CRATER_CARVER = "moon_crater_carver";
         String MOON_HIGHLANDS_CAVE_CARVER = "moon_highlands_cave_carver";
         String MOON_MARE_CAVE_CARVER = "moon_mare_cave_carver";
+        String MARS_CANYON_CARVER = "mars_canyon_carver";
+        String MARS_CRATER_CARVER = "mars_crater_carver";
+        String MARS_HIGHLANDS_CAVE_CARVER = "mars_highlands_cave_carver";
+        String MARS_LOWLANDS_CAVE_CARVER = "mars_lowlands_cave_carver";
     }
 
     interface Packet {
