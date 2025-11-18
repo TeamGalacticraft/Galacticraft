@@ -25,7 +25,7 @@ package dev.galacticraft.mod.mixin.client;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
-import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.api.item.OxygenTank;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.renderer.entity.layers.CapeLayer;
 import net.minecraft.core.Holder;
@@ -42,8 +42,8 @@ public class CapeLayerMixin {
     @ModifyArgs(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2))
     private void galacticraft$restrictCapeWithOxygenTanks(Args args, @Local AbstractClientPlayer player) {
         Container inv = player.galacticraft$getOxygenTanks();
-        boolean tank1 = inv.getItem(0).is(GCItemTags.OXYGEN_TANKS);
-        boolean tank2 = inv.getItem(1).is(GCItemTags.OXYGEN_TANKS);
+        boolean tank1 = inv.getItem(0).getItem() instanceof OxygenTank;
+        boolean tank2 = inv.getItem(1).getItem() instanceof OxygenTank;
         if (tank1 && tank2) {
             args.set(0, 0.0F);
         } else if (tank2 && !tank1) {
@@ -58,7 +58,7 @@ public class CapeLayerMixin {
         Holder<CelestialBody<?, ?>> holder = player.level().galacticraft$getCelestialBody();
         if (holder != null && holder.value().gravity() < 0.8) {
             Container inv = player.galacticraft$getOxygenTanks();
-            if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS) || inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
+            if (inv.getItem(0).getItem() instanceof OxygenTank || inv.getItem(1).getItem() instanceof OxygenTank) {
                 angle /= 6.0F;
             }
         }
@@ -71,7 +71,7 @@ public class CapeLayerMixin {
             return 0.0F;
         }
         Container inv = player.galacticraft$getOxygenTanks();
-        if (inv.getItem(0).is(GCItemTags.OXYGEN_TANKS) || inv.getItem(1).is(GCItemTags.OXYGEN_TANKS)) {
+        if (inv.getItem(0).getItem() instanceof OxygenTank || inv.getItem(1).getItem() instanceof OxygenTank) {
             angle = Mth.clamp(0.5F * (angle - 4.0F), 0.0F, 18.0F);
         }
         return angle;
