@@ -170,6 +170,10 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         return slotIndex < this.slots.size() - 9 * 4;
     }
 
+    public int getRecipeSize() {
+        return this.recipeSize;
+    }
+
     @Override
     public @NotNull ItemStack quickMoveStack(Player player, int index) {
         ItemStack out = ItemStack.EMPTY;

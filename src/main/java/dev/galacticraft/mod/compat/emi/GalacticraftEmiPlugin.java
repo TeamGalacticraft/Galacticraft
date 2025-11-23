@@ -31,8 +31,12 @@ import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
+import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
+import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -41,6 +45,8 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.screen.CompressorMenu;
+import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
@@ -51,17 +57,13 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
-import net.minecraft.world.item.crafting.BlastingRecipe;
-import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.item.crafting.RecipeManager;
-import net.minecraft.world.item.crafting.RecipeType;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
+import java.util.stream.IntStream;
 
 public class GalacticraftEmiPlugin implements EmiPlugin {
     private static final ResourceLocation SIMPLIFIED_ICONS = Constant.id("textures/gui/simplified_icons_emi.png");
@@ -105,6 +107,24 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
+
+        registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR, new MachineRecipeHandler<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>>(
+                FABRICATION, List.of(
+                        CircuitFabricatorBlockEntity.DIAMOND_SLOT,
+                        CircuitFabricatorBlockEntity.SILICON_SLOT_1,
+                        CircuitFabricatorBlockEntity.SILICON_SLOT_2,
+                        CircuitFabricatorBlockEntity.REDSTONE_SLOT,
+                        CircuitFabricatorBlockEntity.INPUT_SLOT
+                ), 7));
+        registry.addRecipeHandler(GCMenuTypes.COMPRESSOR, new MachineRecipeHandler<CompressorMenu>(
+                COMPRESSING, IntStream.range(CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_SLOTS + CompressorBlockEntity.INPUT_LENGTH + 1).boxed().toList(), 11));
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_COMPRESSOR, new MachineRecipeHandler<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>>(
+                ELECTRIC_COMPRESSING, IntStream.range(ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_SLOTS + ElectricCompressorBlockEntity.INPUT_LENGTH + 1).boxed().toList(), 12));
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_FURNACE, new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>>(
+                ELECTRIC_SMELTING, List.of(ElectricFurnaceBlockEntity.INPUT_SLOT), 3));
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_ARC_FURNACE, new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>>(
+                ELECTRIC_BLASTING, List.of(ElectricArcFurnaceBlockEntity.INPUT_SLOT), 4));
+        registry.addRecipeHandler(GCMenuTypes.ROCKET_WORKBENCH, new RocketRecipeHandler(ROCKET));
 
         RecipeManager manager = registry.getRecipeManager();
 
