@@ -24,6 +24,7 @@ package dev.galacticraft.mod.compat.emi;
 
 import dev.emi.emi.api.EmiPlugin;
 import dev.emi.emi.api.EmiRegistry;
+import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
 import dev.emi.emi.api.render.EmiRenderable;
@@ -33,6 +34,9 @@ import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.item.EmergencyKitItem;
+import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.item.ParachuteItem;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
@@ -43,6 +47,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
@@ -56,6 +61,7 @@ import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 public class GalacticraftEmiPlugin implements EmiPlugin {
     private static final ResourceLocation SIMPLIFIED_ICONS = Constant.id("textures/gui/simplified_icons_emi.png");
@@ -122,6 +128,17 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         for (RecipeHolder<RocketRecipe> recipe : manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE)) {
             registry.addRecipe(new RocketEmiRecipe(recipe));
         }
+
+        registry.addRecipe(new EmiCraftingRecipe(
+                EmergencyKitItem.getContents(DyeColor.RED).stream()
+                        .map(itemStack -> itemStack.getItem() instanceof ParachuteItem
+                                ? EmiIngredient.of(GCItemTags.PARACHUTES)
+                                : EmiStack.of(itemStack))
+                        .collect(Collectors.toList()),
+                EmiStack.of(GCItems.EMERGENCY_KIT),
+                Constant.id("/" + Constant.Recipe.Serializer.EMERGENCY_KIT),
+                true
+        ));
 
         addWorldInteraction(registry);
     }
