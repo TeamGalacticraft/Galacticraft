@@ -108,22 +108,53 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
-        registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR, new MachineRecipeHandler<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>>(
-                FABRICATION, List.of(
-                        CircuitFabricatorBlockEntity.DIAMOND_SLOT,
-                        CircuitFabricatorBlockEntity.SILICON_SLOT_1,
-                        CircuitFabricatorBlockEntity.SILICON_SLOT_2,
-                        CircuitFabricatorBlockEntity.REDSTONE_SLOT,
-                        CircuitFabricatorBlockEntity.INPUT_SLOT
-                ), 7));
-        registry.addRecipeHandler(GCMenuTypes.COMPRESSOR, new MachineRecipeHandler<CompressorMenu>(
-                COMPRESSING, IntStream.range(CompressorBlockEntity.INPUT_SLOTS, CompressorBlockEntity.INPUT_SLOTS + CompressorBlockEntity.INPUT_LENGTH + 1).boxed().toList(), 11));
-        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_COMPRESSOR, new MachineRecipeHandler<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>>(
-                ELECTRIC_COMPRESSING, IntStream.range(ElectricCompressorBlockEntity.INPUT_SLOTS, ElectricCompressorBlockEntity.INPUT_SLOTS + ElectricCompressorBlockEntity.INPUT_LENGTH + 1).boxed().toList(), 12));
-        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_FURNACE, new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>>(
-                ELECTRIC_SMELTING, List.of(ElectricFurnaceBlockEntity.INPUT_SLOT), 3));
-        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_ARC_FURNACE, new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>>(
-                ELECTRIC_BLASTING, List.of(ElectricArcFurnaceBlockEntity.INPUT_SLOT), 4));
+        registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
+                new MachineRecipeHandler<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>>(
+                        FABRICATION,
+                        List.of(
+                                CircuitFabricatorBlockEntity.DIAMOND_SLOT,
+                                CircuitFabricatorBlockEntity.SILICON_SLOT_1,
+                                CircuitFabricatorBlockEntity.SILICON_SLOT_2,
+                                CircuitFabricatorBlockEntity.REDSTONE_SLOT,
+                                CircuitFabricatorBlockEntity.INPUT_SLOT
+                        ),
+                        CircuitFabricatorBlockEntity.OUTPUT_SLOT + 1
+                )
+        );
+        registry.addRecipeHandler(GCMenuTypes.COMPRESSOR,
+                new MachineRecipeHandler<CompressorMenu>(
+                        COMPRESSING,
+                        IntStream.range(
+                                CompressorBlockEntity.INPUT_SLOTS,
+                                CompressorBlockEntity.INPUT_SLOTS + CompressorBlockEntity.INPUT_LENGTH
+                        ).boxed().toList(),
+                        CompressorBlockEntity.OUTPUT_SLOT + 1
+                )
+        );
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_COMPRESSOR,
+                new MachineRecipeHandler<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>>(
+                        ELECTRIC_COMPRESSING,
+                        IntStream.range(
+                                ElectricCompressorBlockEntity.INPUT_SLOTS,
+                                ElectricCompressorBlockEntity.INPUT_SLOTS + ElectricCompressorBlockEntity.INPUT_LENGTH
+                        ).boxed().toList(),
+                        ElectricCompressorBlockEntity.OUTPUT_SLOTS + ElectricCompressorBlockEntity.OUTPUT_LENGTH
+                )
+        );
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_FURNACE,
+                new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>>(
+                        ELECTRIC_SMELTING,
+                        List.of(ElectricFurnaceBlockEntity.INPUT_SLOT),
+                        ElectricFurnaceBlockEntity.OUTPUT_SLOT + 1
+                )
+        );
+        registry.addRecipeHandler(GCMenuTypes.ELECTRIC_ARC_FURNACE,
+                new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>>(
+                        ELECTRIC_BLASTING,
+                        List.of(ElectricArcFurnaceBlockEntity.INPUT_SLOT),
+                        ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH
+                )
+        );
         registry.addRecipeHandler(GCMenuTypes.ROCKET_WORKBENCH, new RocketRecipeHandler(ROCKET));
 
         RecipeManager manager = registry.getRecipeManager();

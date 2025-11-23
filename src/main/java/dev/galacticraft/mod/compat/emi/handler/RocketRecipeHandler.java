@@ -61,6 +61,11 @@ public class RocketRecipeHandler implements StandardRecipeHandler<RocketWorkbenc
     }
 
     @Override
+    public Slot getOutputSlot(RocketWorkbenchMenu handler) {
+        return handler.getSlot(handler.getRecipeSize() + 1);
+    }
+
+    @Override
     public boolean supportsRecipe(EmiRecipe recipe) {
         return recipe.getCategory() == category && recipe.supportsRecipeTree();
     }
