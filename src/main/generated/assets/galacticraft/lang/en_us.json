@@ -896,6 +896,7 @@
   "tooltip.galacticraft.energy_remaining": "Energy Remaining: %s",
   "tooltip.galacticraft.glowstone_lantern": "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.",
   "tooltip.galacticraft.glowstone_torch": "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.",
+  "tooltip.galacticraft.incorrect_number_of_slots": "Incorrect number of slots in the workstation for this recipe.",
   "tooltip.galacticraft.infinite": "Infinite",
   "tooltip.galacticraft.oxygen_remaining": "Oxygen Remaining: %s",
   "tooltip.galacticraft.press_shift": "Press LSHIFT for more information.",

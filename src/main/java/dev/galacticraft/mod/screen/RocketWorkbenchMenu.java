@@ -227,6 +227,10 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.onItemChanged();
     }
 
+    public int getRecipeSize() {
+        return this.recipeSize;
+    }
+
     // From ingredient slots
     @Override
     public void onItemChanged() {
