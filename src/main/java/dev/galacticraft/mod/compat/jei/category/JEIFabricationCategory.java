@@ -34,7 +34,6 @@ import mezz.jei.api.gui.placement.VerticalAlignment;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
@@ -91,10 +90,10 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         builder.addInputSlot(SILICON_X_2 - RECIPE_VIEWER_X, SILICON_Y_2 - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(2));
-        builder.addSlot(RecipeIngredientRole.CATALYST, REDSTONE_X - RECIPE_VIEWER_X, REDSTONE_Y - RECIPE_VIEWER_Y)
+        builder.addInputSlot(REDSTONE_X - RECIPE_VIEWER_X, REDSTONE_Y - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(3));
-        builder.addSlot(RecipeIngredientRole.CATALYST, INGREDIENT_X - RECIPE_VIEWER_X, INGREDIENT_Y - RECIPE_VIEWER_Y)
+        builder.addInputSlot(INGREDIENT_X - RECIPE_VIEWER_X, INGREDIENT_Y - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(4));
 

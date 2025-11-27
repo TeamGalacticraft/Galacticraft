@@ -52,6 +52,7 @@ import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
+import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.category.CategoryRegistry;
@@ -185,7 +186,11 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
                 new SimpleTransferHandler.IntRange(1, 10)));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING,
                 new SimpleTransferHandler.IntRange(1, 10)));
-        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ROCKET,
-                new SimpleTransferHandler.IntRange(1, 15)));
+        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_SMELTING,
+                new SimpleTransferHandler.IntRange(1, 2)));
+        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_BLASTING,
+                new SimpleTransferHandler.IntRange(1, 2)));
+        registry.register(SimpleTransferHandler.create(RocketWorkbenchMenu.class, GalacticraftREIServerPlugin.ROCKET,
+                new SimpleTransferHandler.IntRange(0, 15)));
     }
 }

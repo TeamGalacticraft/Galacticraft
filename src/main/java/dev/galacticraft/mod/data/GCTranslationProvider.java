@@ -967,6 +967,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
+        this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
     }
 
     protected void generateConfigTranslations() {
