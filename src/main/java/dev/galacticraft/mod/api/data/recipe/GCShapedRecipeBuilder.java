@@ -26,49 +26,62 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import net.minecraft.advancements.Criterion;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
+import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Objects;
 
-public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
+public class GCShapedRecipeBuilder extends GCCraftingRecipeBuilder {
     private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private int time = 200;
 
-    protected ShapedCompressorRecipeBuilder(ItemLike result, int count) {
-        super("compressing", result, count);
+    protected GCShapedRecipeBuilder(RecipeCategory category, ItemLike result, int count) {
+        super(category, result, count);
     }
 
-    public static ShapedCompressorRecipeBuilder create(ItemLike itemLike) {
-        return new ShapedCompressorRecipeBuilder(itemLike, 1);
+    public static GCShapedRecipeBuilder crafting(RecipeCategory category, ItemLike itemLike) {
+        return new GCShapedRecipeBuilder(category, itemLike, 1);
     }
 
-    public static ShapedCompressorRecipeBuilder create(ItemLike itemLike, int count) {
-        return new ShapedCompressorRecipeBuilder(itemLike, count);
+    public static GCShapedRecipeBuilder crafting(RecipeCategory category, ItemLike itemLike, int count) {
+        return new GCShapedRecipeBuilder(category, itemLike, count);
     }
 
-    public ShapedCompressorRecipeBuilder time(int time) {
+    public static GCShapedRecipeBuilder compressing(ItemLike itemLike) {
+        return new GCShapedRecipeBuilder(null, itemLike, 1);
+    }
+
+    public static GCShapedRecipeBuilder compressing(ItemLike itemLike, int count) {
+        return new GCShapedRecipeBuilder(null, itemLike, count);
+    }
+
+    public GCShapedRecipeBuilder time(int time) {
         this.time = time;
         return this;
     }
 
-    public ShapedCompressorRecipeBuilder define(Character character, TagKey<Item> tagKey) {
+    public GCShapedRecipeBuilder define(Character character, TagKey<Item> tagKey) {
         return this.define(character, Ingredient.of(tagKey));
     }
 
-    public ShapedCompressorRecipeBuilder define(Character character, ItemLike itemLike) {
+    public GCShapedRecipeBuilder define(Character character, ItemLike itemLike) {
         return this.define(character, Ingredient.of(itemLike));
     }
 
-    public ShapedCompressorRecipeBuilder define(Character character, Ingredient ingredient) {
+    public GCShapedRecipeBuilder define(Character character, Ingredient ingredient) {
         if (this.key.containsKey(character)) {
             throw new IllegalArgumentException("Symbol '" + character + "' is already defined!");
         } else if (character == ' ') {
@@ -79,12 +92,7 @@ public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
         }
     }
 
-    @Override
-    public ShapedCompressorRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
-        return (ShapedCompressorRecipeBuilder) super.unlockedBy(name, criterion);
-    }
-
-    public ShapedCompressorRecipeBuilder pattern(String string) {
+    public GCShapedRecipeBuilder pattern(String string) {
         if (!this.rows.isEmpty() && string.length() != this.rows.get(0).length()) {
             throw new IllegalArgumentException("Pattern must be the same width on every line!");
         } else {
@@ -94,8 +102,33 @@ public class ShapedCompressorRecipeBuilder extends GCRecipeBuilder {
     }
 
     @Override
+    public GCShapedRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+        this.criteria.put(name, criterion);
+        return this;
+    }
+
+    @Override
+    public GCShapedRecipeBuilder group(@Nullable String group) {
+        this.group = group;
+        return this;
+    }
+
+    @Override
+    public GCShapedRecipeBuilder emiDefault(boolean emiDefault) {
+        this.emiDefault = emiDefault;
+        return this;
+    }
+
+    @Override
     public Recipe<?> createRecipe(ResourceLocation id) {
-        return new ShapedCompressingRecipe(this.group, ensureValid(id), new ItemStack(this.result, this.count), this.time);
+        String groupName = Objects.requireNonNullElse(this.group, "");
+        ShapedRecipePattern shapedRecipePattern = this.ensureValid(id);
+        ItemStack itemStack = new ItemStack(this.result, this.count);
+        if (this.category != null) {
+            return new ShapedRecipe(groupName, RecipeBuilder.determineBookCategory(this.category), shapedRecipePattern, itemStack, true);
+        } else {
+            return new ShapedCompressingRecipe(groupName, shapedRecipePattern, itemStack, this.time);
+        }
     }
 
     private ShapedRecipePattern ensureValid(ResourceLocation resourceLocation) {

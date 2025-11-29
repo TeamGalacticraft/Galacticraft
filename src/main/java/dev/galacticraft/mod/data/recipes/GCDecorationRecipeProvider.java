@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.api.data.recipe.*;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.model.GCBlockFamilies;
@@ -33,7 +34,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -79,25 +79,27 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
         smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
                 .define('G', ConventionalItemTags.GLOWSTONE_DUSTS)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("G")
                 .pattern("S")
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
+                .emiDefault(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
                 .define('G', GCItems.GLOWSTONE_TORCH)
                 .define('I', ConventionalItemTags.IRON_NUGGETS)
                 .pattern("III")
                 .pattern("IGI")
                 .pattern("III")
                 .unlockedBy(getHasName(GCItems.GLOWSTONE_TORCH), has(GCItems.GLOWSTONE_TORCH))
+                .emiDefault(true)
                 .save(output);
 
         // Vacuum glass
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.VACUUM_GLASS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.VACUUM_GLASS)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
                 .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("TGT")
@@ -106,7 +108,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.CLEAR_VACUUM_GLASS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.CLEAR_VACUUM_GLASS)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
                 .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .pattern("AGA")
@@ -115,7 +117,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.STRONG_VACUUM_GLASS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.STRONG_VACUUM_GLASS)
                 .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .pattern("AGA")
@@ -125,14 +127,14 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Misc decoration blocks
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.IRON_GRATING, 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.IRON_GRATING, 4)
                 .define('I', Items.IRON_BARS)
                 .pattern("II")
                 .pattern("II")
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
                 .define('T', GCItemTags.TIN_INGOTS)
                 .pattern("T T")
                 .pattern("TTT")
@@ -165,7 +167,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void pillar(RecipeOutput output, ItemLike pillar, ItemLike base) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, pillar, 2)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.BUILDING_BLOCKS, pillar, 2)
                 .define('#', base)
                 .pattern("#")
                 .pattern("#")
@@ -177,7 +179,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
 
     public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base) {
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, brick, base);
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.BUILDING_BLOCKS, brick, 4)
                 .define('#', base)
                 .pattern("##")
                 .pattern("##")
@@ -198,21 +200,23 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void baseDecorationBlocks(RecipeOutput output, ItemLike input, GCBlockFamilies.DecorationFamily family) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, family.original().getBaseBlock(), 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.BUILDING_BLOCKS, family.original().getBaseBlock(), 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("## ")
                 .pattern("##X")
                 .unlockedBy(getHasName(input), has(input))
+                .emiDefault(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, family.detailed().getBaseBlock(), 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.BUILDING_BLOCKS, family.detailed().getBaseBlock(), 4)
                 .define('#', Items.STONE)
                 .define('X', input)
                 .pattern("##")
                 .pattern("##")
                 .pattern(" X")
                 .unlockedBy(getHasName(input), has(input))
+                .emiDefault(true)
                 .save(output);
     }
 

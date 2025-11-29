@@ -29,6 +29,7 @@ import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -39,9 +40,10 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class GCRecipeBuilder implements RecipeBuilder {
-    private final String prefix;
-
+public abstract class GCCraftingRecipeBuilder implements RecipeBuilder {
+    @Nullable
+    protected final RecipeCategory category;
+    protected final String prefix;
     protected final Item result;
     protected final int count;
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
@@ -49,29 +51,26 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
     protected String group = "";
     protected boolean emiDefault = false;
 
-    protected GCRecipeBuilder(ItemLike result, int count) {
-        this("", result, count);
-    }
-
-    protected GCRecipeBuilder(String prefix, ItemLike result, int count) {
-        this.prefix = prefix;
+    protected GCCraftingRecipeBuilder(RecipeCategory category, ItemLike result, int count) {
+        this.category = category;
+        this.prefix = category == null ? "compressing/" : "";
         this.result = result.asItem();
         this.count = count;
     }
 
     @Override
-    public GCRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public GCCraftingRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
         this.criteria.put(name, criterion);
         return this;
     }
 
     @Override
-    public GCRecipeBuilder group(@Nullable String group) {
+    public GCCraftingRecipeBuilder group(@Nullable String group) {
         this.group = group;
         return this;
     }
 
-    public GCRecipeBuilder emiDefault(boolean emiDefault) {
+    public GCCraftingRecipeBuilder emiDefault(boolean emiDefault) {
         this.emiDefault = emiDefault;
         return this;
     }
@@ -89,7 +88,13 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
         ResourceLocation resourceLocation = id.withPrefix(this.prefix);
-        output.accept(resourceLocation, createRecipe(id), builder.build(id.withPrefix("recipes/")));
+        ResourceLocation resourceLocation2;
+        if (this.category != null) {
+            resourceLocation2 = id.withPrefix("recipes/" + this.category.getFolderName() + "/");
+        } else {
+            resourceLocation2 = id.withPrefix("recipes/");
+        }
+        output.accept(resourceLocation, createRecipe(id), builder.build(resourceLocation2));
 
         if (this.emiDefault) {
             EmiDefaultRecipeProvider.add(resourceLocation);

@@ -41,7 +41,7 @@ public class RocketRecipeBuilder extends GCRecipeBuilder {
     private RocketData rocketData;
 
     protected RocketRecipeBuilder(ItemLike result, int count) {
-        super("rocket", result, count);
+        super("rocket/", result, count);
     }
 
     public static RocketRecipeBuilder create(ItemLike result) {
