@@ -54,7 +54,7 @@ public class EmiDefaultRecipeProvider implements DataProvider {
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("added", jsonArray);
         return DataProvider.saveStable(writer, jsonObject,
-                this.output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "recipe/defaults").json(ResourceLocation.fromNamespaceAndPath("emi", Constant.MOD_ID + "_copy")));
+                this.output.createPathProvider(PackOutput.Target.RESOURCE_PACK, "recipe/defaults").json(ResourceLocation.fromNamespaceAndPath("emi", Constant.MOD_ID)));
     }
 
     public static void add(ResourceLocation resourceLocation) {
