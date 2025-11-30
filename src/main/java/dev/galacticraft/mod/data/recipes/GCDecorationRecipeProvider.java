@@ -131,6 +131,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("II")
                 .pattern("II")
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
+                .emiDefault(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
@@ -139,6 +140,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern("T T")
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
+                .emiDefault(true)
                 .save(output);
     }
 

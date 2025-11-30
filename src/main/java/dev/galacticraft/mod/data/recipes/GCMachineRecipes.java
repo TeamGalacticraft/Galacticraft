@@ -460,6 +460,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(ItemTags.COALS)
                 .requires(GCItems.COMPRESSED_IRON)
                 .requires(ItemTags.COALS)
+                .emiDefault(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_STEEL)
                 .unlockedBy("has_steel_ingot", has(GCItemTags.STEEL_INGOTS))
