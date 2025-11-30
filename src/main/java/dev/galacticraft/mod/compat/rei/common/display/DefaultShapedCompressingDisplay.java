@@ -56,21 +56,21 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
 
     @Override
     public List<EntryIngredient> getRequiredEntries() {
-        return input;
+        return this.input;
     }
 
     @Override
     public List<EntryIngredient> getInputEntries() {
-        return input;
+        return this.input;
     }
 
     @Override
     public List<EntryIngredient> getOutputEntries() {
-        return output;
+        return this.output;
     }
 
     @Override
     public int getProcessingTime() {
-        return processingTime;
+        return this.processingTime;
     }
 }

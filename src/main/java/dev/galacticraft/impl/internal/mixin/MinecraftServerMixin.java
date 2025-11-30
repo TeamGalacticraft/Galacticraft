@@ -73,7 +73,8 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
-    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+    public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
+        ResourceLocation id = satellite.config().getId();
         this.satellites.put(id, satellite);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Added satellite with id {}", id);
@@ -84,6 +85,15 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
         this.satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         Constant.LOGGER.info("Removed satellite with id {}", id);
+    }
+
+    @Override
+    public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+        ResourceLocation id = satellite.config().getId();
+        this.satellites.replace(id, satellite);
+        RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
+        RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
+        Constant.LOGGER.info("Updated satellite with id {}", id);
     }
 
     @Inject(method = "saveEverything", at = @At("RETURN"))
@@ -122,7 +132,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                         continue;
                     }
                     CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst());
-                    this.galacticraft$addSatellite(id, satellite);
+                    this.galacticraft$addSatellite(satellite, false);
 
                     LevelStem levelStem = satellite.config().getOptions();
                     dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());

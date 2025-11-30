@@ -70,7 +70,15 @@ public interface Translations {
     interface RecipeCategory {
         String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
         String COMPRESSOR = "category.recipe_viewer.compressing";
+        String ELECTRIC_COMPRESSOR = "category.recipe_viewer.compressing.electric";
+        String ELECTRIC_FURNACE = "category.recipe_viewer.smelting.electric";
+        String ELECTRIC_ARC_FURNACE = "category.recipe_viewer.blasting.electric";
         String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+
+        String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
+        String JEI_XP = "gui.jei.category.smelting.experience";
     }
 
     interface Waila {
@@ -140,6 +148,7 @@ public interface Translations {
         String RESET = "config.galacticraft.reset";
 
         String CLIENT = "config.galacticraft.client";
+        String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 
@@ -248,6 +257,7 @@ public interface Translations {
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
+        String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
     }
 
     interface Gas {

@@ -87,6 +87,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ELECTRIC_COMPRESSOR, "Compressing (Electric)");
+        this.add(RecipeCategory.ELECTRIC_FURNACE, "Smelting (Electric)");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
         this.add(BannerPattern.ROCKET + ".white", "White Rocket");
@@ -249,13 +252,6 @@ public class GCTranslationProvider extends TranslationProvider {
                 this.block(entry.getValue(), TranslationProvider.normalizeName(color.getName()) + " Stained Glass Fluid Pipe");
             }
         }
-
-        // LIGHT PANELS
-        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
-        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
-        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
-        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
-        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
 
         // VACUUM GLASS
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
@@ -957,6 +953,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
+        this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
     }
 
     protected void generateConfigTranslations() {
@@ -964,6 +961,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.RESET, "Reset");
 
         this.add(Config.CLIENT, "Client");
+        this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.PLAYER, "Player");
 

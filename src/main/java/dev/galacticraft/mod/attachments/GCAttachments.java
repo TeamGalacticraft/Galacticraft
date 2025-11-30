@@ -43,4 +43,7 @@ public final class GCAttachments {
             Constant.id(Attachments.FOOTPRINT_TRACKER), GCFootprintTracker::new);
 
     public static final AttachmentType<FootprintManager> FOOTPRINT_MANAGER = AttachmentRegistry.create(Constant.id(Attachments.FOOTPRINT_MANAGER));
+
+    public static void init() {
+    }
 }

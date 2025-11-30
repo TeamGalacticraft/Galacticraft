@@ -155,12 +155,10 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         SatelliteConfig config = new SatelliteConfig(id, name, Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
-        ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite);
+        ((SatelliteAccessor) server).galacticraft$addSatellite(satellite, true);
         DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type);
 
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            ServerPlayNetworking.send(player, new AddSatellitePayload(id, satellite.config()));
-        }
+        server.getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), true)));
         return satellite;
     }
 

@@ -282,11 +282,11 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.STANDARD_WRENCH)
-                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .define('B', GCItems.COMPRESSED_BRONZE)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("  S")
-                .pattern(" A ")
-                .pattern("A  ")
+                .pattern(" B ")
+                .pattern("B  ")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .save(output);
     }

@@ -91,7 +91,7 @@ public class GCBlocks {
     public static final DecorationSet TITANIUM_DECORATION = BLOCKS.registerDecoration(Constant.Block.TITANIUM_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.CLAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
     public static final DecorationSet DARK_DECORATION = BLOCKS.registerDecoration(Constant.Block.DARK_DECORATION, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(2.0F, 3.0F).requiresCorrectToolForDrops(), 2.5F, 3.0F);
 
-    public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.METAL).noOcclusion().forceSolidOn()));
+    public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.METAL).noOcclusion().forceSolidOn().pushReaction(PushReaction.DESTROY)));
 
     // MOON NATURAL
     public static final Block MOON_TURF = BLOCKS.registerWithItem(Constant.Block.MOON_TURF, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F)));
@@ -315,13 +315,6 @@ public class GCBlocks {
     public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(ALUMINUM_WIRE)));
     public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));
     public static final Block IRON_GRATING = BLOCKS.registerWithItem(Constant.Block.IRON_GRATING, new IronGratingBlock(BlockBehaviour.Properties.of().mapColor(MapColor.STONE).strength(2.5f, 6.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
-
-    // LIGHT PANELS
-    public static final Block SQUARE_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SQUARE_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL)));
-    public static final Block SPOTLIGHT_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.SPOTLIGHT_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 3.0f));
-    public static final Block LINEAR_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.LINEAR_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 5.0f));
-    public static final Block DASHED_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DASHED_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
-    public static final Block DIAGONAL_LIGHT_PANEL = BLOCKS.registerWithItem(Constant.Block.DIAGONAL_LIGHT_PANEL, new LightPanelBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL), 1.0f));
 
     // VACUUM GLASS
     public static final Block VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));

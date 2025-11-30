@@ -30,8 +30,10 @@ import net.minecraft.world.entity.EntityType;
 public class GCEntityTypeTags {
     public static final TagKey<EntityType<?>> HAS_FOOTPRINTS = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_footprints"));
     public static final TagKey<EntityType<?>> HAS_OXYGEN_SETUP = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_oxygen_setup"));
+    public static final TagKey<EntityType<?>> HAS_PET_INVENTORY = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_pet_inventory"));
     public static final TagKey<EntityType<?>> IMMUNE_TO_ACID = TagKey.create(Registries.ENTITY_TYPE, Constant.id("immune_to_acid"));
     public static final TagKey<EntityType<?>> SENSITIVE_TO_ACID = TagKey.create(Registries.ENTITY_TYPE, Constant.id("sensitive_to_acid"));
+    public static final TagKey<EntityType<?>> CAN_REENTER_ATMOSPHERE = TagKey.create(Registries.ENTITY_TYPE, Constant.id("can_reenter_atmosphere"));
 
     public static void register() {
     }

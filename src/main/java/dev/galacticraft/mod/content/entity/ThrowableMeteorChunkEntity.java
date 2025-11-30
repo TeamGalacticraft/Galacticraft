@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.content.entity;
 
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
@@ -45,6 +43,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.EntityHitResult;
 import net.minecraft.world.phys.HitResult;
+
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.METEOR_STRIKE;
 
 public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
     private static final EntityDataAccessor<Boolean> HOT = SynchedEntityData.defineId(ThrowableMeteorChunkEntity.class, EntityDataSerializers.BOOLEAN);
@@ -108,7 +108,7 @@ public class ThrowableMeteorChunkEntity extends ThrowableItemProjectile {
         Entity entity = result.getEntity();
         Entity owner = this.getOwner();
         // TODO: Find out why the owner isn't getting credited for the damage
-        DamageSource damage = new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.METEOR_STRIKE), this, owner != null ? owner : this);
+        DamageSource damage = this.damageSources().source(METEOR_STRIKE, this, owner != null ? owner : this);
         if (this.entityData.get(HOT)) {
             entity.hurt(damage, 4.0F);
             entity.igniteForSeconds(3);
