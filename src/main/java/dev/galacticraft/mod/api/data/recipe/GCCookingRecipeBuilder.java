@@ -91,8 +91,8 @@ public class GCCookingRecipeBuilder extends GCCraftingRecipeBuilder {
     }
 
     @Override
-    public GCCookingRecipeBuilder emiDefault(boolean emiDefault) {
-        this.emiDefault = emiDefault;
+    public GCCookingRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
+        this.emiDefaultRecipe = emiDefaultRecipe;
         return this;
     }
 

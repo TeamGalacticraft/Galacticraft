@@ -54,7 +54,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("PPP")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_CHESTPLATE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -62,7 +62,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("PPP")
                 .pattern("PPP")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_LEGGINGS)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -70,14 +70,14 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("P P")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_BOOTS)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern("P P")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_HELMET)
@@ -85,7 +85,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("DDD")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE)
                 .define('D', GCItems.DESH_INGOT)
@@ -93,7 +93,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("DDD")
                 .pattern("DDD")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS)
                 .define('D', GCItems.DESH_INGOT)
@@ -101,14 +101,14 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("D D")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_BOOTS)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("D D")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_HELMET)
@@ -116,7 +116,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_CHESTPIECE)
                 .define('C', GCItems.THERMAL_CLOTH)
@@ -124,7 +124,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("CCC")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_LEGGINGS)
                 .define('C', GCItems.THERMAL_CLOTH)
@@ -132,14 +132,14 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_BOOTS)
                 .define('C', GCItems.THERMAL_CLOTH)
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_HELMET)
@@ -147,7 +147,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
@@ -155,7 +155,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("CCC")
                 .pattern("CCC")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_LEGGINGS)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
@@ -163,14 +163,14 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_BOOTS)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
@@ -182,7 +182,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("S S")
                 .pattern("LML")
                 .unlockedBy(getHasName(GCItems.SENSOR_LENS), has(GCItems.SENSOR_LENS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Heavy-Duty Tools
@@ -193,7 +193,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("S")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -202,7 +202,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S ")
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -211,7 +211,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("PS")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -220,7 +220,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
@@ -229,7 +229,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("P")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Desh Tools
@@ -240,7 +240,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("S")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_PICKAXE)
                 .define('D', GCItems.DESH_INGOT)
@@ -249,7 +249,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S ")
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_AXE)
                 .define('D', GCItems.DESH_INGOT)
@@ -258,7 +258,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("DS")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_HOE)
                 .define('D', GCItems.DESH_INGOT)
@@ -267,7 +267,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" S")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_SWORD)
                 .define('D', GCItems.DESH_INGOT)
@@ -276,7 +276,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("D")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Smithing Recipes
@@ -304,7 +304,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         GCShapelessRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
                 .requires(GCItems.RAW_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         oreSmeltingAndBlasting(output, RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F, 100, true);
@@ -316,7 +316,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern(" B ")
                 .pattern("B  ")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
     }
 
@@ -332,7 +332,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         EmiDefaultRecipeProvider.add(Constant.id(path));
     }
 
-    private static void oreSmeltingAndBlasting(RecipeOutput output, RecipeCategory category, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefault) {
+    private static void oreSmeltingAndBlasting(RecipeOutput output, RecipeCategory category, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefaultRecipe) {
         Ingredient ingredient = Ingredient.of(input);
         String hasName = RecipeProvider.getHasName(input);
         var criterion = RecipeProvider.has(input);
@@ -340,7 +340,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
 
         GCCookingRecipeBuilder.smelting(ingredient, category, result, experience, cookingTime * 2)
                 .unlockedBy(hasName, criterion)
-                .emiDefault(emiDefault)
+                .emiDefaultRecipe(emiDefaultRecipe)
                 .save(output, itemName + "_from_smelting");
         GCCookingRecipeBuilder.blasting(ingredient, category, result, experience, cookingTime)
                 .unlockedBy(hasName, criterion)

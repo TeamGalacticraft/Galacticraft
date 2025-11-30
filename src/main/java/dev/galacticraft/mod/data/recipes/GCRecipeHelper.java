@@ -55,7 +55,7 @@ public final class GCRecipeHelper {
             Items.WHITE_DYE
     );
 
-    public static void dyeColoring(RecipeOutput output, RecipeCategory category, GCRegistry.ColorSet<? extends Item> set, boolean emiDefault) {
+    public static void dyeColoring(RecipeOutput output, RecipeCategory category, GCRegistry.ColorSet<? extends Item> set, boolean emiDefaultRecipe) {
         Item base = set.get(DyeColor.WHITE);
         for (Item dye : DYES) {
             DyeColor color = ((DyeItem) dye).getDyeColor();
@@ -64,19 +64,19 @@ public final class GCRecipeHelper {
                     .requires(base)
                     .requires(dye)
                     .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
-                    .emiDefault(emiDefault)
+                    .emiDefaultRecipe(emiDefaultRecipe)
                     .save(output);
         }
     }
 
-    public static void dyeColoring(RecipeOutput output, RecipeCategory category, Item base, GCRegistry.ColorSet<? extends Item> set, boolean emiDefault) {
+    public static void dyeColoring(RecipeOutput output, RecipeCategory category, Item base, GCRegistry.ColorSet<? extends Item> set, boolean emiDefaultRecipe) {
         for (Item dye : DYES) {
             DyeColor color = ((DyeItem) dye).getDyeColor();
             GCShapelessRecipeBuilder.crafting(category, set.get(color))
                     .requires(base)
                     .requires(dye)
                     .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
-                    .emiDefault(emiDefault)
+                    .emiDefaultRecipe(emiDefaultRecipe)
                     .save(output);
         }
     }

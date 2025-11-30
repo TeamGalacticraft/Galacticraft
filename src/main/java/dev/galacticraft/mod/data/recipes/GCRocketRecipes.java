@@ -57,7 +57,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("LWL")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Rocket Part Items
@@ -68,7 +68,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern(" P ")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_NOSE_CONE)
@@ -78,7 +78,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern(" P ")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_FIN)
@@ -88,7 +88,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PSP")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_FIN)
@@ -119,7 +119,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PTP")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_ENGINE)
@@ -132,7 +132,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PTP")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_BOOSTER)
@@ -145,7 +145,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("MFM")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         RocketRecipeBuilder.create(GCItems.ROCKET)

@@ -114,8 +114,8 @@ public class GCShapedRecipeBuilder extends GCCraftingRecipeBuilder {
     }
 
     @Override
-    public GCShapedRecipeBuilder emiDefault(boolean emiDefault) {
-        this.emiDefault = emiDefault;
+    public GCShapedRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
+        this.emiDefaultRecipe = emiDefaultRecipe;
         return this;
     }
 

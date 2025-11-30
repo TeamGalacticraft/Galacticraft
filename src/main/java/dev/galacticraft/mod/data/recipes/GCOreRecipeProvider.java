@@ -119,7 +119,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
                 .pattern("###")
                 .group(compactingGroup)
                 .unlockedBy(getHasName(baseItem), has(baseItem))
-                .emiDefault(compactingGroup == null)
+                .emiDefaultRecipe(compactingGroup == null)
                 .save(output, Constant.id(compactingId));
 
         // Unpacking recipe
@@ -127,7 +127,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
                 .requires(compactItem)
                 .group(reverseGroup)
                 .unlockedBy(getHasName(compactItem), has(compactItem))
-                .emiDefault(reverseGroup == null)
+                .emiDefaultRecipe(reverseGroup == null)
                 .save(output, Constant.id(reverseId));
     }
 

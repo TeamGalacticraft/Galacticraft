@@ -47,7 +47,7 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     @Nullable
     protected String group = "";
-    protected boolean emiDefault = false;
+    protected boolean emiDefaultRecipe = false;
 
     protected GCRecipeBuilder(ItemLike result, int count) {
         this("", result, count);
@@ -71,8 +71,8 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
         return this;
     }
 
-    public GCRecipeBuilder emiDefault(boolean emiDefault) {
-        this.emiDefault = emiDefault;
+    public GCRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
+        this.emiDefaultRecipe = emiDefaultRecipe;
         return this;
     }
 
@@ -91,7 +91,7 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
         ResourceLocation resourceLocation = id.withPrefix(this.prefix);
         output.accept(resourceLocation, createRecipe(id), builder.build(id.withPrefix("recipes/")));
 
-        if (this.emiDefault) {
+        if (this.emiDefaultRecipe) {
             EmiDefaultRecipeProvider.add(resourceLocation);
         }
     }

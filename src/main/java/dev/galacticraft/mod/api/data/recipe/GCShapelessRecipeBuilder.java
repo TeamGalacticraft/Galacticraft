@@ -109,8 +109,8 @@ public class GCShapelessRecipeBuilder extends GCCraftingRecipeBuilder {
     }
 
     @Override
-    public GCShapelessRecipeBuilder emiDefault(boolean emiDefault) {
-        this.emiDefault = emiDefault;
+    public GCShapelessRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
+        this.emiDefaultRecipe = emiDefaultRecipe;
         return this;
     }
 

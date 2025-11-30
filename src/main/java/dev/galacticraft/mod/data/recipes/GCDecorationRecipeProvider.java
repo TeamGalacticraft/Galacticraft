@@ -84,7 +84,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("G")
                 .pattern("S")
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
@@ -94,7 +94,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("IGI")
                 .pattern("III")
                 .unlockedBy(getHasName(GCItems.GLOWSTONE_TORCH), has(GCItems.GLOWSTONE_TORCH))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Vacuum glass
@@ -131,7 +131,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("II")
                 .pattern("II")
                 .unlockedBy(getHasName(Items.IRON_BARS), has(Items.IRON_BARS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.TIN_LADDER, 6)
@@ -140,7 +140,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern("T T")
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
     }
 
@@ -188,10 +188,10 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
     }
 
-    public static void smeltBuildingBlock(RecipeOutput output, ItemLike result, ItemLike ingredient, boolean emiDefault) {
+    public static void smeltBuildingBlock(RecipeOutput output, ItemLike result, ItemLike ingredient, boolean emiDefaultRecipe) {
         GCCookingRecipeBuilder.smelting(Ingredient.of(ingredient), RecipeCategory.BUILDING_BLOCKS, result, 0.1F, 200)
                 .unlockedBy(getHasName(ingredient), has(ingredient))
-                .emiDefault(emiDefault)
+                .emiDefaultRecipe(emiDefaultRecipe)
                 .save(output);
     }
 
@@ -208,7 +208,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("## ")
                 .pattern("##X")
                 .unlockedBy(getHasName(input), has(input))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.BUILDING_BLOCKS, family.detailed().getBaseBlock(), 4)
@@ -218,7 +218,7 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("##")
                 .pattern(" X")
                 .unlockedBy(getHasName(input), has(input))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
     }
 

@@ -60,7 +60,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SPS")
                 .pattern("WAW")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.BASIC_SOLAR_PANEL)
@@ -73,7 +73,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SPS")
                 .pattern("WBW")
                 .unlockedBy(getHasName(GCItems.BASIC_WAFER), has(GCItems.BASIC_WAFER))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.CIRCUIT_FABRICATOR)
@@ -87,7 +87,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("BFB")
                 .pattern("WRW")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.COAL_GENERATOR)
@@ -99,7 +99,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("AFA")
                 .pattern("AWA")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.COMPRESSOR)
@@ -111,7 +111,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("ICI")
                 .pattern("IWI")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ELECTRIC_ARC_FURNACE)
@@ -123,7 +123,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("HEH")
                 .pattern("MWM")
                 .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ELECTRIC_COMPRESSOR)
@@ -158,7 +158,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SFS")
                 .pattern("AWA")
                 .unlockedBy(getHasName(GCItems.BASIC_WAFER), has(GCItems.BASIC_WAFER))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ENERGY_STORAGE_MODULE)
@@ -168,7 +168,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("BBB")
                 .pattern("SSS")
                 .unlockedBy(getHasName(GCItems.BATTERY), has(GCItems.BATTERY))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR)
@@ -180,7 +180,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("VAV")
                 .pattern("SFS")
                 .unlockedBy(getHasName(GCItems.OXYGEN_FAN), has(GCItems.OXYGEN_FAN))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_COLLECTOR)
@@ -194,7 +194,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("FTV")
                 .pattern("ACA")
                 .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_COMPRESSOR)
@@ -206,7 +206,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("ACA")
                 .pattern("SBS")
                 .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_DECOMPRESSOR)
@@ -219,7 +219,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("ACA")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FOOD_CANNER)
@@ -232,7 +232,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("ABA")
                 .unlockedBy(getHasName(GCItems.EMPTY_CAN), has(GCItems.EMPTY_CAN))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_SEALER)
@@ -244,7 +244,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("VFV")
                 .pattern("ASA")
                 .unlockedBy(getHasName(GCItems.OXYGEN_FAN), has(GCItems.OXYGEN_FAN))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_STORAGE_MODULE)
@@ -254,7 +254,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern("SSS")
                 .unlockedBy(getHasName(GCItems.LARGE_OXYGEN_TANK), has(GCItems.LARGE_OXYGEN_TANK))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.REFINERY)
@@ -265,7 +265,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("SFS")
                 .unlockedBy(getHasName(GCItems.CRUDE_OIL_BUCKET), has(GCItems.CRUDE_OIL_BUCKET))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FUEL_LOADER)
@@ -277,7 +277,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("UCU")
                 .pattern("TWT")
                 .unlockedBy(getHasName(GCItems.FUEL_BUCKET), has(GCItems.FUEL_BUCKET))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIR_LOCK_FRAME, 4)
@@ -288,7 +288,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("AAA")
                 .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIR_LOCK_CONTROLLER)
@@ -299,7 +299,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("MWM")
                 .pattern("SSS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.CRYOGENIC_CHAMBER)
@@ -311,7 +311,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("DBT")
                 .pattern("DPT")
                 .unlockedBy(getHasName(GCItems.TIER_2_HEAVY_DUTY_PLATE), has(GCItems.TIER_2_HEAVY_DUTY_PLATE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Pipes from panes
@@ -357,7 +357,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("AAA")
                 .pattern("WWW")
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
@@ -365,7 +365,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("TWT")
                 .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.WALKWAY, 5)
@@ -373,7 +373,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("TTT")
                 .pattern(" T ")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.WIRE_WALKWAY, 5)
@@ -412,19 +412,19 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(Items.BREAD)
                 .requires(Items.BREAD)
                 .time(100)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_ALUMINUM)
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .requires(GCItemTags.ALUMINUM_INGOTS)
                 .requires(GCItemTags.ALUMINUM_INGOTS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_BRONZE)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_COPPER), has(GCItems.COMPRESSED_COPPER))
                 .requires(GCItems.COMPRESSED_COPPER)
                 .requires(GCItems.COMPRESSED_TIN)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_BRONZE)
                 .unlockedBy("has_bronze_ingot", has(GCItemTags.BRONZE_INGOTS))
@@ -435,32 +435,32 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .requires(ConventionalItemTags.COPPER_INGOTS)
                 .requires(ConventionalItemTags.COPPER_INGOTS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_DESH)
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
                 .requires(GCItems.DESH_INGOT)
                 .requires(GCItems.DESH_INGOT)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_IRON)
                 .unlockedBy(getHasName(Items.IRON_INGOT), has(ConventionalItemTags.IRON_INGOTS))
                 .requires(ConventionalItemTags.IRON_INGOTS)
                 .requires(ConventionalItemTags.IRON_INGOTS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.METEORIC_IRON_INGOT), has(GCItems.METEORIC_IRON_INGOT))
                 .requires(GCItems.METEORIC_IRON_INGOT)
                 .requires(GCItems.METEORIC_IRON_INGOT)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_STEEL)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
                 .requires(ItemTags.COALS)
                 .requires(GCItems.COMPRESSED_IRON)
                 .requires(ItemTags.COALS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_STEEL)
                 .unlockedBy("has_steel_ingot", has(GCItemTags.STEEL_INGOTS))
@@ -471,13 +471,13 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .requires(GCItemTags.TIN_INGOTS)
                 .requires(GCItemTags.TIN_INGOTS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_TITANIUM)
                 .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItems.TITANIUM_INGOT))
                 .requires(GCItems.TITANIUM_INGOT)
                 .requires(GCItems.TITANIUM_INGOT)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapedRecipeBuilder.compressing(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
@@ -487,40 +487,40 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .define('B', GCItems.COMPRESSED_BRONZE)
                 .pattern("SAB")
                 .pattern("SAB")
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapelessRecipeBuilder.compressing(GCItems.TIER_2_HEAVY_DUTY_PLATE)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .requires(GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .requires(GCItems.COMPRESSED_METEORIC_IRON)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         GCShapelessRecipeBuilder.compressing(GCItems.TIER_3_HEAVY_DUTY_PLATE)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .requires(GCItems.TIER_2_HEAVY_DUTY_PLATE)
                 .requires(GCItems.COMPRESSED_DESH)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Circuit Fabricator
         CircuitFabricatorRecipeBuilder.create(GCItems.BASIC_WAFER, 3)
                 .requires(Items.REDSTONE_TORCH)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.ADVANCED_WAFER)
                 .requires(Items.REPEATER)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
 
         CircuitFabricatorRecipeBuilder.create(GCItems.BLUE_SOLAR_WAFER, 9)
                 .requires(ConventionalItemTags.LAPIS_GEMS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
         CircuitFabricatorRecipeBuilder.create(GCItems.SOLAR_ARRAY_WAFER, 3)
                 .requires(GCItemTags.SOLAR_DUSTS)
-                .emiDefault(true)
+                .emiDefaultRecipe(true)
                 .save(output);
     }
 
