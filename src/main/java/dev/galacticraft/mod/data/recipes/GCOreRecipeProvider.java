@@ -102,37 +102,42 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         oreBlasting(output, input, RecipeCategory.MISC, result, experience, time, BuiltInRegistries.ITEM.getKey(result.asItem()).getPath());
     }
 
-    public static void nineBlockStoragePackingRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, String compactingGroup) {
-        nineBlockStorageRecipe(exporter, reverseCategory, baseItem, compactingCategory, compactItem, compactingId, compactingGroup, getSimpleRecipeName(baseItem), null);
+    public static void nineBlockStoragePackingRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, String compactingGroup) {
+        nineBlockStorageRecipe(output, reverseCategory, baseItem, compactingCategory, compactItem, compactingId, compactingGroup, getSimpleRecipeName(baseItem), null);
     }
 
-    public static void nineBlockStorageUnpackingRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String reverseId, String reverseGroup) {
-        nineBlockStorageRecipe(exporter, reverseCategory, baseItem, compactingCategory, compactItem, getSimpleRecipeName(compactItem), null, reverseId, reverseGroup);
+    public static void nineBlockStorageUnpackingRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String reverseId, String reverseGroup) {
+        nineBlockStorageRecipe(output, reverseCategory, baseItem, compactingCategory, compactItem, getSimpleRecipeName(compactItem), null, reverseId, reverseGroup);
     }
 
-    public static void nineBlockStorageRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, String reverseId, @Nullable String reverseGroup) {
+    public static void nineBlockStorageRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, String reverseId, @Nullable String reverseGroup) {
+        // Packing recipe
+        GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
+                .define('#', baseItem)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .group(compactingGroup)
+                .unlockedBy(getHasName(baseItem), has(baseItem))
+                .emiDefault(compactingGroup == null)
+                .save(output, Constant.id(compactingId));
+
+        // Unpacking recipe
         GCShapelessRecipeBuilder.crafting(reverseCategory, baseItem, 9)
                 .requires(compactItem)
                 .group(reverseGroup)
                 .unlockedBy(getHasName(compactItem), has(compactItem))
-                .save(exporter, Constant.id(reverseId));
-        GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
-                .define('#', baseItem)
-                .pattern("###")
-                .pattern("###")
-                .pattern("###")
-                .group(compactingGroup)
-                .unlockedBy(getHasName(baseItem), has(baseItem))
-                .save(exporter, Constant.id(compactingId));
+                .emiDefault(reverseGroup == null)
+                .save(output, Constant.id(reverseId));
     }
 
-    public static void crystalBlockStorageRecipe(RecipeOutput exporter, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup) {
+    public static void crystalBlockStorageRecipe(RecipeOutput output, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup) {
         GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
                 .define('#', baseItem)
                 .pattern("##")
                 .pattern("##")
                 .group(compactingGroup)
                 .unlockedBy(getHasName(baseItem), has(baseItem))
-                .save(exporter, Constant.id(compactingId));
+                .save(output, Constant.id(compactingId));
     }
 }
