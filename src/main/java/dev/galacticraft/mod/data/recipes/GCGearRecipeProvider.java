@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.data.recipe.*;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.EmiDefaultRecipeProvider;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
@@ -322,11 +324,15 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
     }
 
     private static void titaniumSmithing(RecipeOutput output, Item input, RecipeCategory category, Item result) {
+        String path = getItemName(result) + "_smithing";
+
         SmithingTransformRecipeBuilder.smithing(
                         Ingredient.of(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(input), Ingredient.of(GCItems.COMPRESSED_TITANIUM), category, result
                 )
                 .unlocks(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output, getItemName(result) + "_smithing");
+                .save(output, path);
+
+        EmiDefaultRecipeProvider.add(Constant.id(path));
     }
 
     @Override
