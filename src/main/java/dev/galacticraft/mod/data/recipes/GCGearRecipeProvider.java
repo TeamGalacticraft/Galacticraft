@@ -33,10 +33,8 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.*;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -282,15 +280,15 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Smithing Recipes
-        titaniumSmithing(output, GCItems.DESH_CHESTPLATE, RecipeCategory.COMBAT, GCItems.TITANIUM_CHESTPLATE);
-        titaniumSmithing(output, GCItems.DESH_LEGGINGS, RecipeCategory.COMBAT, GCItems.TITANIUM_LEGGINGS);
-        titaniumSmithing(output, GCItems.DESH_HELMET, RecipeCategory.COMBAT, GCItems.TITANIUM_HELMET);
-        titaniumSmithing(output, GCItems.DESH_BOOTS, RecipeCategory.COMBAT, GCItems.TITANIUM_BOOTS);
-        titaniumSmithing(output, GCItems.DESH_SWORD, RecipeCategory.COMBAT, GCItems.TITANIUM_SWORD);
-        titaniumSmithing(output, GCItems.DESH_AXE, RecipeCategory.TOOLS, GCItems.TITANIUM_AXE);
-        titaniumSmithing(output, GCItems.DESH_PICKAXE, RecipeCategory.TOOLS, GCItems.TITANIUM_PICKAXE);
-        titaniumSmithing(output, GCItems.DESH_HOE, RecipeCategory.TOOLS, GCItems.TITANIUM_HOE);
-        titaniumSmithing(output, GCItems.DESH_SHOVEL, RecipeCategory.TOOLS, GCItems.TITANIUM_SHOVEL);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE, GCItems.TITANIUM_CHESTPLATE);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS, GCItems.TITANIUM_LEGGINGS);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_HELMET, GCItems.TITANIUM_HELMET);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_BOOTS, GCItems.TITANIUM_BOOTS);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_SWORD, GCItems.TITANIUM_SWORD);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_AXE, GCItems.TITANIUM_AXE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_PICKAXE, GCItems.TITANIUM_PICKAXE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_HOE, GCItems.TITANIUM_HOE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_SHOVEL, GCItems.TITANIUM_SHOVEL);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, 2)
                 .define('D', ConventionalItemTags.DIAMOND_GEMS)
@@ -309,8 +307,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .emiDefault(true)
                 .save(output);
 
-        simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, 200, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
-        simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
+        oreSmeltingAndBlasting(output, RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F, 100, true);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.STANDARD_WRENCH)
                 .define('B', GCItems.COMPRESSED_BRONZE)
@@ -323,7 +320,7 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
     }
 
-    private static void titaniumSmithing(RecipeOutput output, Item input, RecipeCategory category, Item result) {
+    private static void titaniumSmithing(RecipeOutput output, RecipeCategory category, Item input, Item result) {
         String path = getItemName(result) + "_smithing";
 
         SmithingTransformRecipeBuilder.smithing(
@@ -333,6 +330,21 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output, path);
 
         EmiDefaultRecipeProvider.add(Constant.id(path));
+    }
+
+    private static void oreSmeltingAndBlasting(RecipeOutput output, RecipeCategory category, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefault) {
+        Ingredient ingredient = Ingredient.of(input);
+        String hasName = RecipeProvider.getHasName(input);
+        var criterion = RecipeProvider.has(input);
+        String itemName = RecipeProvider.getItemName(result);
+
+        GCCookingRecipeBuilder.smelting(ingredient, category, result, experience, cookingTime * 2)
+                .unlockedBy(hasName, criterion)
+                .emiDefault(emiDefault)
+                .save(output, itemName + "_from_smelting");
+        GCCookingRecipeBuilder.blasting(ingredient, category, result, experience, cookingTime)
+                .unlockedBy(hasName, criterion)
+                .save(output, itemName + "_from_blasting");
     }
 
     @Override

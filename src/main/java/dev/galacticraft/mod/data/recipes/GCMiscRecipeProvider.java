@@ -156,7 +156,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy("has_coal", has(ItemTags.COALS))
                 .save(output);
 
-        SimpleCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
+        GCCookingRecipeBuilder.generic(Ingredient.of(ItemTags.PLANKS), RecipeCategory.MISC, GCItems.CARBON_FRAGMENTS, 0.1f, 200, RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new)
                 .unlockedBy("has_planks", has(ItemTags.PLANKS))
                 .save(output, getSmeltingRecipeName(GCItems.CARBON_FRAGMENTS));
 
@@ -411,7 +411,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Food
-        cookingRecipes(output, 100, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F);
+        cookingRecipes(output, GCItems.GROUND_BEEF, GCItems.BEEF_PATTY, 0.35F, 100, true);
 
         GCShapelessRecipeBuilder.crafting(RecipeCategory.FOOD, GCItems.CHEESE_CRACKER)
                 .requires(GCItems.CRACKER)
@@ -474,9 +474,21 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
         return "Misc Recipes";
     }
 
-    private static void cookingRecipes(RecipeOutput output, int cookingTime, ItemLike input, ItemLike result, float experience) {
-        simpleCookingRecipe(output, "smoking", RecipeSerializer.SMOKING_RECIPE, SmokingRecipe::new, cookingTime, input, result, experience);
-        simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, cookingTime * 2, input, result, experience);
-        simpleCookingRecipe(output, "campfire_cooking", RecipeSerializer.CAMPFIRE_COOKING_RECIPE, CampfireCookingRecipe::new, cookingTime * 6, input, result, experience);
+    private static void cookingRecipes(RecipeOutput output, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefault) {
+        Ingredient ingredient = Ingredient.of(input);
+        String hasName = RecipeProvider.getHasName(input);
+        var criterion = RecipeProvider.has(input);
+        String itemName = RecipeProvider.getItemName(result);
+
+        GCCookingRecipeBuilder.smelting(ingredient, RecipeCategory.FOOD, result, experience, cookingTime * 2)
+                .unlockedBy(hasName, criterion)
+                .emiDefault(emiDefault)
+                .save(output, itemName + "_from_smelting");
+        GCCookingRecipeBuilder.smoking(ingredient, RecipeCategory.FOOD, result, experience, cookingTime)
+                .unlockedBy(hasName, criterion)
+                .save(output, itemName + "_from_smoking");
+        GCCookingRecipeBuilder.campfireCooking(ingredient, RecipeCategory.FOOD, result, experience, cookingTime * 6)
+                .unlockedBy(hasName, criterion)
+                .save(output, itemName + "_from_campfire_cooking");
     }
 }

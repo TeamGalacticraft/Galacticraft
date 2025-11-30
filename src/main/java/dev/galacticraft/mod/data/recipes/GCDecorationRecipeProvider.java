@@ -34,7 +34,6 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -65,19 +64,19 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         baseDecorationBlocks(output, GCItems.COMPRESSED_TIN, GCBlockFamilies.TIN_DECORATIONS);
         baseDecorationBlocks(output, GCItems.COMPRESSED_TITANIUM, GCBlockFamilies.TITANIUM_DECORATIONS);
 
-        smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
-        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
+        smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK, true);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK, true);
         squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
         squareStone(output, GCBlocks.POLISHED_MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
         chiseledStone(output, GCBlocks.CHISELED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK_SLAB, GCBlocks.MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
         pillar(output, GCBlocks.MOON_ROCK_PILLAR, GCBlocks.MOON_ROCK);
 
-        smeltBuildingBlock(output, GCBlocks.LUNASLATE, GCBlocks.COBBLED_LUNASLATE);
+        smeltBuildingBlock(output, GCBlocks.LUNASLATE, GCBlocks.COBBLED_LUNASLATE, true);
 
         squareStone(output, GCBlocks.MOON_BASALT_BRICK, GCBlocks.MOON_BASALT);
-        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_BASALT_BRICK, GCBlocks.MOON_BASALT_BRICK);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_BASALT_BRICK, GCBlocks.MOON_BASALT_BRICK, true);
 
-        smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
+        smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE, true);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCItems.GLOWSTONE_TORCH, 4)
                 .define('G', ConventionalItemTags.GLOWSTONE_DUSTS)
@@ -187,9 +186,10 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .save(output);
     }
 
-    public static void smeltBuildingBlock(RecipeOutput output, ItemLike result, ItemLike ingredient) {
-        SimpleCookingRecipeBuilder.smelting(Ingredient.of(ingredient), RecipeCategory.BUILDING_BLOCKS, result, 0.1F, 200)
+    public static void smeltBuildingBlock(RecipeOutput output, ItemLike result, ItemLike ingredient, boolean emiDefault) {
+        GCCookingRecipeBuilder.smelting(Ingredient.of(ingredient), RecipeCategory.BUILDING_BLOCKS, result, 0.1F, 200)
                 .unlockedBy(getHasName(ingredient), has(ingredient))
+                .emiDefault(emiDefault)
                 .save(output);
     }
 
