@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod;
 
-import dev.galacticraft.api.component.GCItemSubPredicates;
 import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.command.GCCommands;
@@ -85,7 +84,6 @@ public class Galacticraft implements ModInitializer {
         GCBlockEntityTypes.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
-        GCItemSubPredicates.init();
         GCRocketPartTypes.register();
         GCRocketPartRecipeTypes.register();
         GCTravelPredicates.register();
