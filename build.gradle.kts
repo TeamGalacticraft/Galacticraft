@@ -100,6 +100,9 @@ sourceSets {
     main {
         compileClasspath += api.get().output
         runtimeClasspath += api.get().output
+        java {
+            srcDir("src/api/java")
+        }
         resources {
             srcDir("src/main/generated")
             exclude(".cache/")
