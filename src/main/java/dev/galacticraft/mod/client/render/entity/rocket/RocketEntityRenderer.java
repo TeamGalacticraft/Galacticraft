@@ -81,6 +81,13 @@ public class RocketEntityRenderer extends EntityRenderer<RocketEntity> {
 //        RenderSystem.setShaderTexture(0, getTextureLocation(entity));
         matrices.translate(0.0F, 0.4375F, 0.0F);
 
+//        RocketLayout layout = entity.getRocketLayout();
+//        List<Holder<? extends RocketPart<?, ?>>> parts = layout.parts().stream().map(eitherHolder -> maybeGet(entity, eitherHolder));
+//
+//        for (EitherHolder<? extends RocketPart<?, ?>> part : layout.parts()) {
+//            part.
+//        }
+
         Holder<? extends RocketPart<?, ?>> part = entity.engine();
         if (part != null) {
             matrices.pushPose();

@@ -28,12 +28,12 @@ import dev.galacticraft.api.entity.ControllableEntity;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.RocketData;
-import dev.galacticraft.api.rocket.RocketPrefabs;
-import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
+import dev.galacticraft.mod.content.rocket.RocketPrefabs;
+import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.api.block.entity.FuelDock;
+import dev.galacticraft.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -80,7 +80,6 @@ import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -645,8 +644,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             this.setFuel(tag.getLong("Fuel"));
         }
 
-        BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
-        if (be instanceof FuelDock pad)
+        FuelDock pad = FuelDock.SIDED.find(this.level(), BlockPos.of(tag.getLong("Linked")), null);
+        if (pad != null)
             this.linkedPad = pad;
     }
 
@@ -705,6 +704,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     private <T> @Nullable Holder<T> maybeGet(Optional<EitherHolder<T>> holder) {
         return holder.flatMap(tEitherHolder -> tEitherHolder.unwrap(this.registryAccess())).orElse(null);
     }
+
+//    @Override
+//    public @NotNull RocketLayout getRocketLayout() {
+//        return getRocketData().layout();
+//    }
 
     public void setData(RocketData data) {
         this.entityData.set(ROCKET_DATA, data);

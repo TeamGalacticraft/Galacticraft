@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -49,7 +50,7 @@ public class FootprintRenderer {
         ResourceLocation dimActive = context.world().dimensionTypeRegistration().unwrapKey().get().location();
         List<Footprint> footprintsToDraw = new LinkedList<>();
 
-        for (List<Footprint> footprintList : context.world().galacticraft$getFootprintManager().getFootprints().values()) {
+        for (List<Footprint> footprintList : context.world().getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER).getFootprints().values()) {
             for (Footprint footprint : footprintList) {
                 if (footprint.dimension.equals(dimActive)) {
                     footprintsToDraw.add(footprint);
@@ -127,7 +128,7 @@ public class FootprintRenderer {
     }
 
     public static void setFootprints(long chunk, List<Footprint> prints) {
-        FootprintManager manager = Minecraft.getInstance().level.galacticraft$getFootprintManager();
+        FootprintManager manager = Minecraft.getInstance().level.getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER);
         List<Footprint> footprintList = manager.getFootprints().get(chunk);
 
         if (footprintList == null) {

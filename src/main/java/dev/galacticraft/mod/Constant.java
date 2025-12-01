@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.APIConstants;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
@@ -39,8 +40,8 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 public interface Constant {
-    String MOD_ID = "galacticraft";
-    String COMMON_NAMESPACE = "c";
+    String MOD_ID = APIConstants.MOD_ID;
+    String COMMON_NAMESPACE = APIConstants.COMMON_NAMESPACE;
     Logger LOGGER = LogManager.getLogger("Galacticraft");
 
     double RADIANS_TO_DEGREES = 180.0 / Math.PI;
@@ -54,12 +55,12 @@ public interface Constant {
 
     @Contract(value = "_ -> new", pure = true)
     static @NotNull ResourceLocation id(String id) {
-        return ResourceLocation.fromNamespaceAndPath(MOD_ID, id);
+        return APIConstants.id(id);
     }
 
     @Contract(value = "_, _ -> new", pure = true)
     static @NotNull <T> ResourceKey<T> key(ResourceKey<Registry<T>> registry, String id) {
-        return ResourceKey.create(registry, Constant.id(id));
+        return APIConstants.key(registry, id);
     }
 
     String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes_roles.json";
@@ -392,6 +393,16 @@ public interface Constant {
         String SULFURIC_ACID_STILL = "sulfuric_acid_still";
         String OXYGEN_GAS = "oxygen_gas";
         String LIQUID_OXYGEN = "liquid_oxygen";
+
+        interface Gas {
+            String HYDROGEN = "hydrogen";
+            String HELIUM = "helium";
+            String NITROGEN = "nitrogen";
+            String OXYGEN = "oxygen";
+            String NEON = "neon";
+            String OZONE = "ozone";
+            String WATER_VAPOR = "water_vapor";
+        }
 
         static ResourceLocation fluidId(String s) {
             return Constant.id("block/fluid/" + s);
@@ -943,6 +954,24 @@ public interface Constant {
         ResourceLocation NEPTUNE = id("textures/gui/celestialbodies/neptune.png");
     }
 
+    interface TravelPredicate {
+        String ACCESS_WEIGHT = "access_weight";
+        String CONSTANT = "constant";
+        String AND = "and";
+        String OR = "or";
+    }
+
+    // We don't really have interchangeable rocket parts, so this is fine
+    interface TieredRocketPart {
+        String BASIC = "basic";
+        String STORAGE = "storage";
+    }
+
+    interface RocketPartRecipeTypes {
+        String WRAP_PATTERNED = "wrap_patterned";
+        String CENTERED_PATTERNED = "centered_patterned";
+    }
+
     interface CelestialOverlay {
         ResourceLocation EARTH = Constant.id("textures/gui/rocket/overworld_rocket_gui.png");
         ResourceLocation MOON = Constant.id("textures/gui/rocket/moon_rocket_gui.png");
@@ -1352,6 +1381,9 @@ public interface Constant {
     interface Attachments {
         String SERVER_PLAYER = "server_player";
         String CLIENT_PLAYER = "client_player";
+        String SEALER_MANAGER = "sealer_manager";
+        String FOOTPRINT_TRACKER = "footprint_tracker";
+        String FOOTPRINT_MANAGER = "footprint_manager";
     }
 
     interface Teleporters {

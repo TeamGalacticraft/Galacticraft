@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.api.entity.ControllableEntity;
+import dev.galacticraft.api.util.StreamCodecs;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.codec.ByteBufCodecs;

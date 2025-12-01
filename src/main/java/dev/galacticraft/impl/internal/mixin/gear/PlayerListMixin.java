@@ -22,9 +22,9 @@
 
 package dev.galacticraft.impl.internal.mixin.gear;
 
-import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
+import dev.galacticraft.mod.accessor.SatelliteAccessor;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.Connection;

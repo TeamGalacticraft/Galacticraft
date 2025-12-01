@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.data.tag;
 
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCFluids.Gases;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;

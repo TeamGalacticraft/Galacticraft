@@ -24,18 +24,25 @@ package dev.galacticraft.mod.attachments;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Attachments;
+import dev.galacticraft.mod.machine.SealerManager;
+import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentRegistry;
 import net.fabricmc.fabric.api.attachment.v1.AttachmentType;
 
 @SuppressWarnings("UnstableApiUsage")
 public final class GCAttachments {
-    public static final AttachmentType<GCServerPlayer> SERVER_PLAYER = AttachmentRegistry.<GCServerPlayer>builder()
+    public static final AttachmentType<GCServerPlayer> SERVER_PLAYER = AttachmentRegistry.create(Constant.id(Attachments.SERVER_PLAYER), builder -> builder
             .persistent(GCServerPlayer.CODEC)
-            .copyOnDeath()
-            .buildAndRegister(Constant.id(Attachments.SERVER_PLAYER));
+            .copyOnDeath());
 
-    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
-            .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
+    public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.create(Constant.id(Attachments.CLIENT_PLAYER));
+
+    public static final AttachmentType<SealerManager> SEALER_MANAGER = AttachmentRegistry.create(Constant.id(Attachments.SEALER_MANAGER));
+
+    public static final AttachmentType<GCFootprintTracker> FOOTPRINT_TRACKER = AttachmentRegistry.createDefaulted(
+            Constant.id(Attachments.FOOTPRINT_TRACKER), GCFootprintTracker::new);
+
+    public static final AttachmentType<FootprintManager> FOOTPRINT_MANAGER = AttachmentRegistry.create(Constant.id(Attachments.FOOTPRINT_MANAGER));
 
     public static void init() {
     }

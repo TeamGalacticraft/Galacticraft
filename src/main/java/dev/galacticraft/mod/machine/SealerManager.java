@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.machine;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.minecraft.core.BlockPos;
@@ -51,6 +52,10 @@ public class SealerManager {
             return floodFillQueue.isEmpty();
         }
 
+    }
+
+    public static SealerManager get(Level level) {
+        return level.getAttachedOrCreate(GCAttachments.SEALER_MANAGER, () -> new SealerManager(level));
     }
 
     private final Level level;

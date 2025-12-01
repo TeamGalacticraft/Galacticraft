@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.compat.jei.subtypes;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.mod.content.rocket.RocketPrefabs;
 import mezz.jei.api.ingredients.subtypes.ISubtypeInterpreter;
 import mezz.jei.api.ingredients.subtypes.UidContext;
 import net.minecraft.core.component.DataComponentPatch;

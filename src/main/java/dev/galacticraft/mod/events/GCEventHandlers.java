@@ -27,6 +27,8 @@ import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.mod.attachments.GCAttachments;
+import dev.galacticraft.mod.machine.SealerManager;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -72,7 +74,7 @@ public class GCEventHandlers {
     }
 
     public static void onWorldTick(ServerLevel level) {
-        FootprintManager footprintManager = level.galacticraft$getFootprintManager();
+        FootprintManager footprintManager = level.getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER);
         if (!footprintManager.footprintBlockChanges.isEmpty()) {
             for (GlobalPos targetPoint : footprintManager.footprintBlockChanges) {
                 if (level.dimension().location().equals(targetPoint.dimension().location())) {
@@ -85,7 +87,7 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
-        level.galacticraft$getSealerManager().tick();
+        SealerManager.get(level).tick();
     }
 
     public static void onServerTick(MinecraftServer server) {

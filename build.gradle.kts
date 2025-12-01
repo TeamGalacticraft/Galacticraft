@@ -55,7 +55,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.10-SNAPSHOT")
+    id("fabric-loom") version("1.11-SNAPSHOT")
     id("com.diffplug.spotless") version("7.0.4")
     id("org.ajoberstar.grgit") version("5.3.2")
     id("dev.galacticraft.mojarn") version("0.6.1+19")
@@ -67,15 +67,6 @@ java {
 
     withSourcesJar()
     withJavadocJar()
-}
-
-sourceSets {
-    main {
-        resources {
-            srcDir("src/main/generated")
-            exclude(".cache/")
-        }
-    }
 }
 
 group = modGroup
@@ -103,10 +94,47 @@ version = buildString {
 println("Galacticraft: $version")
 base.archivesName.set(modName)
 
+sourceSets {
+    val api = register("api");
+
+    main {
+        compileClasspath += api.get().output
+        runtimeClasspath += api.get().output
+        java {
+            srcDir("src/api/java")
+        }
+        resources {
+            srcDir("src/main/generated")
+            exclude(".cache/")
+        }
+    }
+
+    test {
+        compileClasspath += api.get().output
+        runtimeClasspath += api.get().output
+    }
+}
+
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
     mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
+
+    val apiSourceSet = sourceSets["api"]
+
+    mods {
+        register("galacticraft") {
+            // Source sets we want to include in the mod jar
+            sourceSet(sourceSets.main.get())
+            sourceSet(apiSourceSet)
+        }
+
+        register("galacticraft-api") {
+            sourceSet(apiSourceSet)
+        }
+    }
+
+    createRemapConfigurations(apiSourceSet)
 
     runs {
         getByName("client") {
@@ -139,6 +167,12 @@ loom {
         }
 
         afterEvaluate {
+            sourceSets {
+                getByName("api") {
+                    compileClasspath += configurations.getByName("minecraftNamedCompile")
+                }
+            }
+
             val mixinJarFile = configurations.runtimeClasspath.get().incoming.artifactView {
                 componentFilter {
                     it is ModuleComponentIdentifier
@@ -218,6 +252,11 @@ configurations {
     include {
         extendsFrom(core)
     }
+
+    getByName("modApiImplementation") {
+        extendsFrom(configurations.modImplementation.get())
+        extendsFrom(configurations.implementation.get())
+    }
 }
 
 dependencies {
@@ -255,6 +294,8 @@ dependencies {
     if (runJei) {
         modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
     }
+
+    "apiCompileOnly"("org.jetbrains:annotations:26.0.2")
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }

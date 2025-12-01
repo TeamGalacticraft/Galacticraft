@@ -22,9 +22,9 @@
 
 package dev.galacticraft.impl.network.s2c;
 
-import dev.galacticraft.api.client.accessor.ClientSatelliteAccessor;
+import dev.galacticraft.mod.client.accessor.ClientSatelliteAccessor;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
-import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.mod.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;

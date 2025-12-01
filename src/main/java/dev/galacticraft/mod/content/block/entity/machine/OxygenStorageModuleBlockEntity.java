@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -34,6 +33,7 @@ import dev.galacticraft.machinelib.api.storage.slot.FluidResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
@@ -54,7 +54,7 @@ public class OxygenStorageModuleBlockEntity extends ResourceStorageBlockEntity {
                     FluidResourceSlot.builder(TransferType.STORAGE)
                             .hidden()
                             .capacity(OxygenStorageModuleBlockEntity.MAX_OXYGEN)
-                            .filter(ResourceFilters.ofResource(Gases.OXYGEN))
+                            .filter(ResourceFilters.ofResource(GCFluids.Gases.OXYGEN))
             )
     );
     private final FluidSource source = new FluidSource(this);

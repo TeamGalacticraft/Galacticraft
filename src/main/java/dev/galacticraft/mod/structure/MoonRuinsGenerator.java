@@ -43,6 +43,7 @@ import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.StructurePieceAccessor;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
+import net.minecraft.world.level.levelgen.structure.structures.OceanRuinStructure;
 import net.minecraft.world.level.levelgen.structure.templatesystem.*;
 import net.minecraft.world.level.material.FluidState;
 
@@ -65,10 +66,13 @@ public class MoonRuinsGenerator {
 
     public static void addPiecesToStructure(StructureTemplateManager manager, BlockPos pos, Rotation rotation, StructurePieceAccessor structurePiecesHolder, RandomSource random) {
         addPieces(manager, pos, rotation, structurePiecesHolder, random);
-        method_14825(manager, random, rotation, pos, structurePiecesHolder);
+        addClusterRuins(manager, random, rotation, pos, structurePiecesHolder);
     }
 
-    private static void method_14825(StructureTemplateManager manager, RandomSource random, Rotation rotation, BlockPos pos, StructurePieceAccessor structurePiecesHolder) {
+    /**
+     * Vanilla copy {@link net.minecraft.world.level.levelgen.structure.structures.OceanRuinPieces#addClusterRuins(StructureTemplateManager, RandomSource, Rotation, BlockPos, OceanRuinStructure, StructurePieceAccessor)}
+     */
+    private static void addClusterRuins(StructureTemplateManager manager, RandomSource random, Rotation rotation, BlockPos pos, StructurePieceAccessor structurePiecesHolder) {
         BlockPos blockPos = new BlockPos(pos.getX(), 90, pos.getZ());
         BlockPos blockPos2 = StructureTemplate.transform(new BlockPos(15, 0, 15), Mirror.NONE, rotation, BlockPos.ZERO).offset(blockPos);
         BoundingBox blockBox = BoundingBox.fromCorners(blockPos, blockPos2);

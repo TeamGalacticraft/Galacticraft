@@ -25,9 +25,8 @@ package dev.galacticraft.mod.data;
 import com.mojang.serialization.Lifecycle;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
-import dev.galacticraft.impl.universe.galaxy.GalaxyImpl;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCCelestialBodies;
+import dev.galacticraft.mod.universe.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCJukeboxSongs;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCTeleporterTypes;
@@ -39,6 +38,7 @@ import dev.galacticraft.mod.data.tag.*;
 import dev.galacticraft.mod.misc.banner.GCBannerPatterns;
 import dev.galacticraft.mod.structure.GCStructureSets;
 import dev.galacticraft.mod.structure.GCStructureTemplatePools;
+import dev.galacticraft.mod.universe.GCGalaxies;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.dimension.GCDimensionTypes;
@@ -109,7 +109,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Structure Template Pools", GCStructureTemplatePools::bootstrapRegistries));
 
         // universe
-        pack.addProvider(BootstrapDataProvider.create("Galaxies", GalaxyImpl::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Galaxies", GCGalaxies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Bodies", GCCelestialBodies::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Celestial Teleporters", GCTeleporterTypes::bootstrapRegistries));
 
@@ -156,7 +156,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         builder.add(Registries.TEMPLATE_POOL, Lifecycle.stable(), GCStructureTemplatePools::bootstrapRegistries);
 
         // universe
-        builder.add(AddonRegistries.GALAXY, GalaxyImpl::bootstrapRegistries);
+        builder.add(AddonRegistries.GALAXY, GCGalaxies::bootstrapRegistries);
         builder.add(AddonRegistries.CELESTIAL_BODY, Lifecycle.stable(), GCCelestialBodies::bootstrapRegistries);
         builder.add(AddonRegistries.CELESTIAL_TELEPORTER, Lifecycle.stable(), GCTeleporterTypes::bootstrapRegistries);
 

@@ -22,11 +22,12 @@
 
 package dev.galacticraft.mod.network.s2c;
 
+import dev.galacticraft.api.util.StreamCodecs;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
-import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.BlockPos;
@@ -53,7 +54,7 @@ public record FootprintRemovedPacket(long chunk, BlockPos pos) implements S2CPay
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
         return () -> {
             BlockPos pos = pos();
-            FootprintManager manager = context.player().level().galacticraft$getFootprintManager();
+            FootprintManager manager = context.player().level().getAttachedOrThrow(GCAttachments.FOOTPRINT_MANAGER);
             List<Footprint> footprintList = manager.getFootprints().get(this.chunk);
             List<Footprint> toRemove = new ArrayList<>();
 

@@ -25,12 +25,12 @@ package dev.galacticraft.impl.internal.mixin.gear;
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
-import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
@@ -204,7 +204,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                 Storage<FluidVariant> storage = ContainerItemContext.ofSingleSlot(tankInv.getSlot(i)).find(FluidStorage.ITEM);
                 if (storage != null) {
                     try (Transaction transaction = Transaction.openOuter()) {
-                        if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
+                        if (storage.extract(FluidVariant.of(GCFluids.Gases.OXYGEN), rate, transaction) > 0) {
                             transaction.commit();
                             this.lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));

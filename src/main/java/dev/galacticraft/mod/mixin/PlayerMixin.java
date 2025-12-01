@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.api.accessor.CryogenicAccessor;
 import dev.galacticraft.mod.accessor.PetInventoryOpener;
 import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import net.minecraft.world.entity.LivingEntity;

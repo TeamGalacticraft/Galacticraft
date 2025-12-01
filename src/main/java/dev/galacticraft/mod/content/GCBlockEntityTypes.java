@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.api.block.entity.FuelDock;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.*;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
@@ -86,5 +87,14 @@ public class GCBlockEntityTypes {
 
     private static<T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.BlockEntitySupplier<T> supplier, Block... compatibleBlocks) {
         return BLOCK_ENTITIES.register(id, BlockEntityType.Builder.of(supplier, compatibleBlocks).build());
+    }
+
+    public static void register() {
+        FuelDock.SIDED.registerFallback((world, pos, state, blockEntity, context) -> {
+            if (blockEntity instanceof FuelDock fuelDock) {
+                return fuelDock;
+            }
+            return null;
+        });
     }
 }
