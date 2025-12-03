@@ -71,7 +71,11 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
     public void addWidgets(WidgetHolder widgets) {
         int slot = 0;
         for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(this.bodyHeight, this.hasBoosters)) {
-            widgets.addSlot(this.inputs.get(slot++), data.x() - RECIPE_VIEWER_X - 1, data.y() - RECIPE_VIEWER_Y - 1);
+            if (data.mirror()) {
+                widgets.add(new MirroredSlotWidget(this.inputs.get(slot++), data.x() - RECIPE_VIEWER_X - 1, data.y() - RECIPE_VIEWER_Y - 1));
+            } else {
+                widgets.addSlot(this.inputs.get(slot++), data.x() - RECIPE_VIEWER_X - 1, data.y() - RECIPE_VIEWER_Y - 1);
+            }
         }
 
         // Storage

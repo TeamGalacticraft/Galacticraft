@@ -33,10 +33,10 @@ import java.util.List;
 
 public class MachineRecipeHandler<T extends MachineMenu> implements StandardRecipeHandler<T> {
     private final EmiRecipeCategory category;
-    private final List<Integer> slotIds;
+    private final int[] slotIds;
     private final int invStart;
 
-    public MachineRecipeHandler(EmiRecipeCategory category, List<Integer> slotIds, int invStart) {
+    public MachineRecipeHandler(EmiRecipeCategory category, int[] slotIds, int invStart) {
         this.category = category;
         this.slotIds = slotIds;
         this.invStart = invStart;

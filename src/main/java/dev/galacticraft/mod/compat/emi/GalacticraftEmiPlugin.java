@@ -31,7 +31,6 @@ import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
 import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
@@ -45,7 +44,6 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
-import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
@@ -109,49 +107,49 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
         registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
-                new MachineRecipeHandler<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>>(
+                new MachineRecipeHandler<>(
                         FABRICATION,
-                        List.of(
+                        new int[] {
                                 CircuitFabricatorBlockEntity.DIAMOND_SLOT,
                                 CircuitFabricatorBlockEntity.SILICON_SLOT_1,
                                 CircuitFabricatorBlockEntity.SILICON_SLOT_2,
                                 CircuitFabricatorBlockEntity.REDSTONE_SLOT,
                                 CircuitFabricatorBlockEntity.INPUT_SLOT
-                        ),
+                        },
                         CircuitFabricatorBlockEntity.OUTPUT_SLOT + 1
                 )
         );
         registry.addRecipeHandler(GCMenuTypes.COMPRESSOR,
-                new MachineRecipeHandler<CompressorMenu>(
+                new MachineRecipeHandler<>(
                         COMPRESSING,
                         IntStream.range(
                                 CompressorBlockEntity.INPUT_SLOTS,
                                 CompressorBlockEntity.INPUT_SLOTS + CompressorBlockEntity.INPUT_LENGTH
-                        ).boxed().toList(),
+                        ).toArray(),
                         CompressorBlockEntity.OUTPUT_SLOT + 1
                 )
         );
         registry.addRecipeHandler(GCMenuTypes.ELECTRIC_COMPRESSOR,
-                new MachineRecipeHandler<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>>(
+                new MachineRecipeHandler<>(
                         ELECTRIC_COMPRESSING,
                         IntStream.range(
                                 ElectricCompressorBlockEntity.INPUT_SLOTS,
                                 ElectricCompressorBlockEntity.INPUT_SLOTS + ElectricCompressorBlockEntity.INPUT_LENGTH
-                        ).boxed().toList(),
+                        ).toArray(),
                         ElectricCompressorBlockEntity.OUTPUT_SLOTS + ElectricCompressorBlockEntity.OUTPUT_LENGTH
                 )
         );
         registry.addRecipeHandler(GCMenuTypes.ELECTRIC_FURNACE,
-                new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>>(
+                new MachineRecipeHandler<>(
                         ELECTRIC_SMELTING,
-                        List.of(ElectricFurnaceBlockEntity.INPUT_SLOT),
+                        new int[] {ElectricFurnaceBlockEntity.INPUT_SLOT},
                         ElectricFurnaceBlockEntity.OUTPUT_SLOT + 1
                 )
         );
         registry.addRecipeHandler(GCMenuTypes.ELECTRIC_ARC_FURNACE,
-                new MachineRecipeHandler<RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>>(
+                new MachineRecipeHandler<>(
                         ELECTRIC_BLASTING,
-                        List.of(ElectricArcFurnaceBlockEntity.INPUT_SLOT),
+                        new int[] {ElectricArcFurnaceBlockEntity.INPUT_SLOT},
                         ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH
                 )
         );
