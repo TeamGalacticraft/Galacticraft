@@ -162,8 +162,20 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         }
 
         for (RecipeHolder<CompressingRecipe> recipe : manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE)) {
-            registry.addRecipe(new CompressingEmiRecipe(recipe));
-            registry.addRecipe(new ElectricCompressingEmiRecipe(recipe));
+            boolean nonEmpty = true;
+            for (Ingredient ingredient : recipe.value().getIngredients()) {
+                if (ingredient.isEmpty()) {
+                    nonEmpty = false;
+                    break;
+                }
+            }
+
+            // Prevents recipes such as compressed steel from steel ingots
+            // from being displayed when the #c:ingots/steel item tag is empty
+            if (nonEmpty) {
+                registry.addRecipe(new CompressingEmiRecipe(recipe));
+                registry.addRecipe(new ElectricCompressingEmiRecipe(recipe));
+            }
         }
 
         for (RecipeHolder<SmeltingRecipe> recipe : manager.getAllRecipesFor(RecipeType.SMELTING)) {
