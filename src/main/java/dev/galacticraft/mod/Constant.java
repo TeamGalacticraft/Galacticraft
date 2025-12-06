@@ -1025,6 +1025,7 @@ public interface Constant {
         String GAZER = "gazer";
         String FALLING_METEOR = "falling_meteor";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
+        String CHEESE_SLIME = "cheese_slime";
     }
 
     interface SpawnEgg {
@@ -1044,6 +1045,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub_spawn_egg";
         String COMET_CUBE = "comet_cube_spawn_egg";
         String GAZER = "gazer_spawn_egg";
+        String CHEESE_SLIME = "cheese_slime_spawn_egg";
     }
 
     interface EntityTexture {
@@ -1058,6 +1060,7 @@ public interface Constant {
         String GAZER = "textures/entity/gazer.png";
         String LANDER = "textures/entity/lander.png";
         String SKELETON_BOSS = "textures/entity/skeletonboss.png";
+        String CHEESE_SLIME = "textures/entity/cheese_slime.png";
     }
 
     interface GearTexture {
