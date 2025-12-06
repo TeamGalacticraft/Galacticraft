@@ -683,6 +683,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.RAW_TITANIUM_BLOCKS, "Raw Titanium Blocks");
 
         this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCItemTags.BRONZE_INGOTS, "Bronze Ingots");
         this.tag(GCItemTags.DESH_INGOTS, "Desh Ingots");
         this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
         this.tag(GCItemTags.METEORIC_IRON_INGOTS, "Meteoric Iron Ingots");

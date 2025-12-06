@@ -402,6 +402,11 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCItems.COMPRESSED_COPPER)
                 .requires(GCItems.COMPRESSED_TIN)
                 .save(output);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_BRONZE)
+                .unlockedBy("has_bronze_ingot", has(GCItemTags.BRONZE_INGOTS))
+                .requires(GCItemTags.BRONZE_INGOTS)
+                .requires(GCItemTags.BRONZE_INGOTS)
+                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_BRONZE).withSuffix("_from_ingots"));
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_COPPER)
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .requires(ConventionalItemTags.COPPER_INGOTS)
