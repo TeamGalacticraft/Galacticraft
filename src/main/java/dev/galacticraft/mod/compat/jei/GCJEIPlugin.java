@@ -36,6 +36,7 @@ import dev.galacticraft.mod.compat.jei.subtypes.*;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
@@ -165,9 +166,12 @@ public class GCJEIPlugin implements IModPlugin {
         assert Minecraft.getInstance().level != null;
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
 
+        List<CompressingRecipe> compressingRecipes = manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value)
+                .filter(recipe -> recipe.getIngredients().stream().allMatch(ingredient -> !ingredient.isEmpty())).toList();
+
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
-        registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
-        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_COMPRESSING, manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value).toList());
+        registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, compressingRecipes);
+        registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_COMPRESSING, compressingRecipes);
         registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_SMELTING, manager.getAllRecipesFor(RecipeType.SMELTING).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ELECTRIC_BLASTING, manager.getAllRecipesFor(RecipeType.BLASTING).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
