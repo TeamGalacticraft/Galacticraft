@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/stairs",
+  "textures": {
+    "bottom": "galacticraft:block/moon_dungeon_bricks",
+    "side": "galacticraft:block/moon_dungeon_bricks",
+    "top": "galacticraft:block/moon_dungeon_bricks"
+  }
+}
