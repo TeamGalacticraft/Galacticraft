@@ -32,12 +32,11 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
 public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
-
     private Ingredient ingredient;
     private int time;
 
     public CircuitFabricatorRecipeBuilder(ItemLike result, int count) {
-        super("fabrication", result, count);
+        super("fabrication/", result, count);
     }
 
     public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike) {

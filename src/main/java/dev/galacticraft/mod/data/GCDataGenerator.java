@@ -77,6 +77,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCMiscRecipeProvider::new);
         pack.addProvider(GCOreRecipeProvider::new);
         pack.addProvider(GCRocketRecipes::new);
+        pack.addProvider(EmiDefaultRecipeProvider::new);
 
         // tags
         GCBlockTagProvider blockTags = pack.addProvider(GCBlockTagProvider::new);

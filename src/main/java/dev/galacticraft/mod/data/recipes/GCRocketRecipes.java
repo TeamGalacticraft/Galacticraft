@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.RocketRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -33,7 +34,6 @@ import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.NotNull;
@@ -47,7 +47,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
 
     @Override
     public void buildRecipes(RecipeOutput output) {
-        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.ROCKET_WORKBENCH)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ROCKET_WORKBENCH)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('C', ConventionalItemTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
                 .define('L', Items.LEVER)
@@ -57,37 +57,41 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("LWL")
                 .pattern("SRS")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Rocket Part Items
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.NOSE_CONE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.NOSE_CONE)
                 .define('R', Items.REDSTONE_TORCH)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" R ")
                 .pattern(" P ")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_NOSE_CONE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_NOSE_CONE)
                 .define('R', Items.REDSTONE_TORCH)
                 .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
                 .pattern(" R ")
                 .pattern(" P ")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_FIN)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_FIN)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern(" S ")
                 .pattern("PSP")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_FIN)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_FIN)
                 .define('T', GCItems.TIER_2_HEAVY_DUTY_PLATE)
                 .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
                 .pattern(" T ")
@@ -96,7 +100,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_FIN)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_FIN)
                 .define('T', GCItems.COMPRESSED_TITANIUM)
                 .define('P', GCItems.TIER_3_HEAVY_DUTY_PLATE)
                 .pattern(" T ")
@@ -105,7 +109,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
                 .save(output, getItemName(GCItems.HEAVY_ROCKET_FIN) + "_alt");
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_ENGINE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_ENGINE)
                 .define('F', Items.FLINT_AND_STEEL)
                 .define('B', ItemTags.STONE_BUTTONS)
                 .define('V', GCItems.OXYGEN_VENT)
@@ -115,9 +119,10 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PTP")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_ENGINE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.HEAVY_ROCKET_ENGINE)
                 .define('F', Items.FLINT_AND_STEEL)
                 .define('B', ItemTags.STONE_BUTTONS)
                 .define('V', GCItems.OXYGEN_VENT)
@@ -127,9 +132,10 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("PTP")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.TIER_3_HEAVY_DUTY_PLATE), has(GCItems.TIER_3_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_BOOSTER)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TRANSPORTATION, GCItems.ROCKET_BOOSTER)
                 .define('M', GCItems.COMPRESSED_METEORIC_IRON)
                 .define('Y', Items.YELLOW_WOOL)
                 .define('F', GCItemTags.FUEL_BUCKETS)
@@ -139,6 +145,7 @@ public class GCRocketRecipes extends FabricRecipeProvider {
                 .pattern("MFM")
                 .pattern("PVP")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
+                .emiDefaultRecipe(true)
                 .save(output);
 
         RocketRecipeBuilder.create(GCItems.ROCKET)
