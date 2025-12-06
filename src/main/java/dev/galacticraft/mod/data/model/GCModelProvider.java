@@ -38,6 +38,8 @@ import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
+import dev.galacticraft.mod.content.block.special.WebStringBlock;
+import dev.galacticraft.mod.content.block.special.WebTorchBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -108,6 +110,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_SOUL_LANTERN);
+
+        // WEB TORCH/STRING
+        createWebTorch(generator, GCBlocks.WEB_TORCH);
+        createWebString(generator, GCBlocks.WEB_STRING);
 
         // MOON NATURAL
         this.createMoonTurf(generator);
@@ -468,6 +474,30 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MachineBlock.ACTIVE)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive)
                 )));
+    }
+
+    private static void createWebString(BlockModelGenerators generator, Block webString) {
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top");
+        ResourceLocation middleModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_middle");
+        ResourceLocation bottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_bottom");
+        ResourceLocation topBottomModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_STRING, "_top_bottom");
+        generator.createSimpleFlatItemModel(webString, "_middle");
+        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webString)
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP), Variant.variant().with(VariantProperties.MODEL, topModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.MIDDLE), Variant.variant().with(VariantProperties.MODEL, middleModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.BOTTOM), Variant.variant().with(VariantProperties.MODEL, bottomModel))
+                .with(Condition.condition().term(WebStringBlock.WebStringPart.WEB_STRING_PART, WebStringBlock.WebStringPart.TOP_BOTTOM), Variant.variant().with(VariantProperties.MODEL, topBottomModel));
+        generator.blockStateOutput.accept(blockState);
+    }
+
+    private static void createWebTorch(BlockModelGenerators generator, Block webTorch) {
+        ResourceLocation normalModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH);
+        ResourceLocation topModel = ModelLocationUtils.getModelLocation(GCBlocks.WEB_TORCH, "_top");
+        generator.createSimpleFlatItemModel(webTorch);
+        MultiPartGenerator blockState = MultiPartGenerator.multiPart(webTorch)
+                .with(Condition.condition().term(WebTorchBlock.TOP, false), Variant.variant().with(VariantProperties.MODEL, normalModel))
+                .with(Condition.condition().term(WebTorchBlock.TOP, true), Variant.variant().with(VariantProperties.MODEL, topModel));
+        generator.blockStateOutput.accept(blockState);
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {

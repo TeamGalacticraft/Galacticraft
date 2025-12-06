@@ -1,0 +1,20 @@
+{
+  "multipart": [
+    {
+      "apply": {
+        "model": "galacticraft:block/web_torch"
+      },
+      "when": {
+        "top": "false"
+      }
+    },
+    {
+      "apply": {
+        "model": "galacticraft:block/web_torch_top"
+      },
+      "when": {
+        "top": "true"
+      }
+    }
+  ]
+}
