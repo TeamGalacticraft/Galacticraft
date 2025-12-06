@@ -22,7 +22,8 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.api.data.recipe.*;
+import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.model.GCBlockFamilies;

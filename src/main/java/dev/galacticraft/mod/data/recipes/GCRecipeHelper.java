@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.api.data.recipe.*;
+import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.GCRegistry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;

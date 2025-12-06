@@ -24,7 +24,9 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
-import dev.galacticraft.mod.api.data.recipe.*;
+import dev.galacticraft.mod.api.data.recipe.CircuitFabricatorRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
