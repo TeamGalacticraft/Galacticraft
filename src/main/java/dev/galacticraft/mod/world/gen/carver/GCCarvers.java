@@ -31,10 +31,14 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 
 public class GCCarvers {
     public static final WorldCarver<CaveCarverConfiguration> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
-    public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
+    public static final WorldCarver<CaveCarverConfiguration> MARTIAN_CAVE = new MartianCaveCarver(CaveCarverConfiguration.CODEC);
+    public static final WorldCarver<CraterCarverConfig> MOON_CRATERS = new MoonCraterCarver(CraterCarverConfig.CRATER_CODEC);
+    public static final WorldCarver<CraterCarverConfig> MARS_CRATERS = new MarsCraterCarver(CraterCarverConfig.CRATER_CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.CARVER, Constant.id("lunar_cave"), LUNAR_CAVE);
-        Registry.register(BuiltInRegistries.CARVER, Constant.id("craters"), CRATERS);
+        Registry.register(BuiltInRegistries.CARVER, Constant.id("martian_cave"), MARTIAN_CAVE);
+        Registry.register(BuiltInRegistries.CARVER, Constant.id("moon_craters"), MOON_CRATERS);
+        Registry.register(BuiltInRegistries.CARVER, Constant.id("mars_craters"), MARS_CRATERS);
     }
 }
