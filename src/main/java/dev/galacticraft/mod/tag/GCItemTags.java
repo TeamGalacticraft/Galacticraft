@@ -173,6 +173,8 @@ public class GCItemTags {
     public static final TagKey<Item> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
     public static final TagKey<Item> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
 
+    public static final TagKey<Item> METAL_LADDER_BLOCKS = galacticraftTag("metal_ladder_blocks");
+
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));
     }
