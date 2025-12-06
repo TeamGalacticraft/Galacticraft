@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -40,13 +39,9 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
     private int processingTime = 200;
 
     public DefaultShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
-        this.input = Lists.newArrayList();
-        recipe.value().getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack));
-            }
-        });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
+        this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
+        ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
+        this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = recipe.value().getTime();
     }
 

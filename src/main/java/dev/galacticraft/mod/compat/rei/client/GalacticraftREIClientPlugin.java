@@ -35,6 +35,7 @@ import dev.galacticraft.mod.compat.rei.client.category.DefaultRocketCategory;
 import dev.galacticraft.mod.compat.rei.client.category.ElectricArcFurnaceCategory;
 import dev.galacticraft.mod.compat.rei.client.category.ElectricCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.ElectricFurnaceCategory;
+import dev.galacticraft.mod.compat.rei.client.display.CompressingDisplayVisibilityPredicate;
 import dev.galacticraft.mod.compat.rei.client.filler.EmergencyKitRecipeFiller;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
@@ -114,6 +115,8 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {
             filler.registerDisplays(registry);
         }
+
+        registry.registerVisibilityPredicate(new CompressingDisplayVisibilityPredicate());
     }
 
     @Override

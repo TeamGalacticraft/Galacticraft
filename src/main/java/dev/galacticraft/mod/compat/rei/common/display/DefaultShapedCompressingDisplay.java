@@ -29,7 +29,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -44,13 +43,9 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     }
 
     public DefaultShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
-        this.input = new ArrayList<>();
-        recipe.value().getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack));
-            }
-        });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
+        this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
+        ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
+        this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = recipe.value().getTime();
     }
 
