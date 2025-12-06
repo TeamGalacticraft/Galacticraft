@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.api.item.OxygenTank;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.storage.PlaceholderItemStorage;
 import dev.galacticraft.mod.util.TooltipUtil;
@@ -39,7 +40,9 @@ import net.minecraft.world.item.TooltipFlag;
 
 import java.util.List;
 
-public class OxygenTankItem extends AccessoryItem {
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
+
+public class OxygenTankItem extends AccessoryItem implements OxygenTank {
     public final long capacity;
 
     public static StorageView<FluidVariant> getStorage(ItemStack stack) {
@@ -115,4 +118,13 @@ public class OxygenTankItem extends AccessoryItem {
         TooltipUtil.appendFluidRemainingTooltip(Translations.Tooltip.OXYGEN_REMAINING, storage.getAmount(), storage.getCapacity(), tooltip);
     }
 
+    @Override
+    public String getTankSize() {
+        return this.getDescriptionId().replace("item.galacticraft.", "");
+    }
+
+    @Override
+    public boolean canEquipInSlot(ItemStack stack, int slot) {
+        return stack.getItem() instanceof OxygenTank && (slot == OXYGEN_TANK_1_SLOT || slot == OXYGEN_TANK_2_SLOT);
+    }
 }
