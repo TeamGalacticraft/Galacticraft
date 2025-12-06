@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
@@ -85,30 +84,32 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
-        List<Slot> slots = Lists.newArrayList();
 
+        final int n = input.size();
+        int i = 0;
         for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipeDisplay.bodyHeight, recipeDisplay.hasBoosters)) {
-            slots.add(Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput());
+            Slot inputSlot = Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput();
+            if (i < n && !input.get(i).isEmpty()) {
+                if (data.mirror()) {
+                    inputSlot.entries(input.get(i).stream().map(
+                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
+                    ).toList());
+                } else {
+                    inputSlot.entries(input.get(i));
+                }
+            }
+            widgets.add(inputSlot);
+            ++i;
         }
 
         // Chest
         final Point chestPoint = new Point(startPoint.x + CHEST_X, startPoint.y + CHEST_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, chestPoint.x - 2, chestPoint.y - 2, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT));
-        slots.add(new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput());
-
-        for (int i = 0; i < input.size(); ++i) {
-            if (!input.get(i).isEmpty()) {
-                if (i == 11 || i == 12) {
-                    slots.get(i).entries(input.get(i).stream().map(
-                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
-                    ).toList());
-                } else {
-                    slots.get(i).entries(input.get(i));
-                }
-            }
+        Slot chestSlot = new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput();
+        if (i < n && !input.get(i).isEmpty()) {
+            chestSlot.entries(input.get(i));
         }
-
-        widgets.addAll(slots);
+        widgets.add(chestSlot);
 
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, outputPoint.x - OUTPUT_X_OFFSET, outputPoint.y - OUTPUT_Y_OFFSET, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT));
