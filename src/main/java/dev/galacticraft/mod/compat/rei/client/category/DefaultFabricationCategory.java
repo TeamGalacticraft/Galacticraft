@@ -52,7 +52,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.FABRICATION;
     }
 
     @Override

@@ -661,7 +661,7 @@ public interface Constant {
 
         int PROGRESS_X = 82;
         int PROGRESS_Y = 26;
-        int PROGRESS_U = 204;
+        int PROGRESS_U = 178;
         int PROGRESS_V = 0;
         int PROGRESS_WIDTH = 52;
         int PROGRESS_HEIGHT = 24;
@@ -670,7 +670,7 @@ public interface Constant {
 
         int FIRE_X = 83;
         int FIRE_Y = 25;
-        int FIRE_U = 178;
+        int FIRE_U = 242;
         int FIRE_V = 0;
         int FIRE_WIDTH = 14;
         int FIRE_HEIGHT = 14;
@@ -735,6 +735,11 @@ public interface Constant {
         int JEI_Y = 26;
         int JEI_WIDTH = 83;
         int JEI_HEIGHT = 34;
+
+        int EMI_X = 51;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 83;
+        int EMI_HEIGHT = 38;
     }
 
     interface ElectricArcFurnace {
@@ -765,6 +770,11 @@ public interface Constant {
         int JEI_Y = 26;
         int JEI_WIDTH = 112;
         int JEI_HEIGHT = 34;
+
+        int EMI_X = 43;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 112;
+        int EMI_HEIGHT = 38;
     }
 
     interface RocketWorkbench {
@@ -1253,6 +1263,9 @@ public interface Constant {
     interface Recipe {
         String FABRICATION = "fabrication";
         String COMPRESSING = "compressing";
+        String ELECTRIC_COMPRESSING = "electric_compressing";
+        String ELECTRIC_SMELTING = "electric_smelting";
+        String ELECTRIC_BLASTING = "electric_blasting";
         String ROCKET = "rocket";
 
         interface Serializer {

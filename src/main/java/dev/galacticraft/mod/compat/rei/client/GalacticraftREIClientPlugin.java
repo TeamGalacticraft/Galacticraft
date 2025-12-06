@@ -87,7 +87,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.add(new ElectricArcFurnaceCategory());
         registry.add(new DefaultRocketCategory());
 
-        registry.addWorkstations(GalacticraftREIServerPlugin.CIRCUIT_FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
+        registry.addWorkstations(GalacticraftREIServerPlugin.FABRICATION, EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.COMPRESSING, EntryStacks.of(GCBlocks.COMPRESSOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING, EntryStacks.of(GCBlocks.ELECTRIC_COMPRESSOR));
         registry.addWorkstations(GalacticraftREIServerPlugin.ROCKET, EntryStacks.of(GCBlocks.ROCKET_WORKBENCH));
@@ -134,7 +134,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.registerContainerClickArea(
                 new Rectangle(79, 50, 83, 20),
                 CircuitFabricatorScreen.class,
-                GalacticraftREIServerPlugin.CIRCUIT_FABRICATION
+                GalacticraftREIServerPlugin.FABRICATION
         );
         registry.registerContainerClickArea(
                 new Rectangle(
@@ -180,7 +180,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
 
     @Override
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
-        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.CIRCUIT_FABRICATION,
+        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.COMPRESSING,
                 new SimpleTransferHandler.IntRange(1, 10)));
