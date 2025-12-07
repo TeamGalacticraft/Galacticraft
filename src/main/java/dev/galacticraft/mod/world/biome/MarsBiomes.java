@@ -22,35 +22,87 @@
 
 package dev.galacticraft.mod.world.biome;
 
+import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCSounds;
+import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
+import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.sounds.Musics;
+import net.minecraft.world.entity.MobCategory;
 import net.minecraft.world.level.biome.*;
+import net.minecraft.world.level.levelgen.GenerationStep;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 
 public class MarsBiomes {
+
+    public static Biome marsHighlands(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
+        var generation = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MARS_HIGHLANDS_CAVE_CARVER);
+        return MarsBiomes.mars(featureLookup, carverLookup, generation);
+    }
+
+    public static Biome marsLowlands(HolderGetter<PlacedFeature> featureLookup, HolderGetter<ConfiguredWorldCarver<?>> carverLookup) {
+        var generation = new BiomeGenerationSettings.Builder(featureLookup, carverLookup);
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MARS_LOWLANDS_CAVE_CARVER);
+        return MarsBiomes.mars(featureLookup, carverLookup, generation);
+    }
+
+    public static void monsters(MobSpawnSettings.Builder builder, int zombieWeight, int zombieVillagerWeight, int skeletonWeight) {
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SPIDER, 100, 4, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE, zombieWeight, 4, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ZOMBIE_VILLAGER, zombieVillagerWeight, 1, 1));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SKELETON, skeletonWeight, 4, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_CREEPER, 100, 4, 4));
+//        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_SLIME, 100, 4, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_ENDERMAN, 10, 1, 4));
+        builder.addSpawn(MobCategory.MONSTER, new MobSpawnSettings.SpawnerData(GCEntityTypes.EVOLVED_WITCH, 5, 1, 1));
+    }
+
+    public static void addDefaultMarsOres(BiomeGenerationSettings.Builder builder) {
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_MARS);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_COPPER_LARGE_MARS);
+
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_SMALL_MARS);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_MIDDLE_MARS);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_TIN_UPPER_MARS);
+
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_IRON_MARS);
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_IRON_LARGE_MARS);
+
+        builder.addFeature(GenerationStep.Decoration.UNDERGROUND_ORES, GCOrePlacedFeatures.ORE_DESH_MARS);
+    }
+
+    public static void addDefaultSoftDisks(BiomeGenerationSettings.Builder builder) {
+
+    }
+
     public static Biome mars(
-            HolderGetter<PlacedFeature> featureGetter, HolderGetter<ConfiguredWorldCarver<?>> carverGetter
+            HolderGetter<PlacedFeature> featureGetter,
+            HolderGetter<ConfiguredWorldCarver<?>> carverGetter,
+            BiomeGenerationSettings.Builder generation
     ) {
         MobSpawnSettings.Builder spawnBuilder = new MobSpawnSettings.Builder();
-        BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(featureGetter, carverGetter);
         BiomeSpecialEffects.Builder specialEffects = new BiomeSpecialEffects.Builder();
-        specialEffects.waterColor(4159204)
+        specialEffects
+                .waterColor(4159204)
                 .waterFogColor(329011)
-                .fogColor(10518688)
-                .skyColor(0)
+                .fogColor(0xC46B3A)
+                .skyColor(0xD3864C)
                 .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
                 .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_MARS));
 
-//        MoonBiomes.addDefaultMoonOres(generation);
-//        MoonBiomes.addDefaultSoftDisks(generation);
-//        MoonBiomes.monsters(spawnBuilder, 95, 5, 100);
+        MarsBiomes.addDefaultMarsOres(generation);
+        MarsBiomes.addDefaultSoftDisks(generation);
+        MarsBiomes.monsters(spawnBuilder, 95, 5, 100);
+
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MARS_CRATER_CARVER);
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MARS_CANYON_CARVER);
 
         return new Biome.BiomeBuilder()
                 .mobSpawnSettings(spawnBuilder.build())
                 .hasPrecipitation(false)
-                .temperature(2.0F) // temp is hot to prevent snow
+                .temperature(2.0F) // hot to prevent snow
                 .downfall(0.0F)
                 .specialEffects(specialEffects.build())
                 .generationSettings(generation.build())

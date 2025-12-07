@@ -46,12 +46,18 @@ public class GCConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = key(Constant.Carver.MOON_MARE_CAVE_CARVER);
 
+    public static final ResourceKey<ConfiguredWorldCarver<?>> MARS_CANYON_CARVER = key(Constant.Carver.MARS_CANYON_CARVER);
+    public static final ResourceKey<ConfiguredWorldCarver<?>> MARS_CRATER_CARVER = key(Constant.Carver.MARS_CRATER_CARVER);
+    public static final ResourceKey<ConfiguredWorldCarver<?>> MARS_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MARS_HIGHLANDS_CAVE_CARVER);
+    public static final ResourceKey<ConfiguredWorldCarver<?>> MARS_LOWLANDS_CAVE_CARVER = key(Constant.Carver.MARS_LOWLANDS_CAVE_CARVER);
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_CARVER, s);
     }
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredWorldCarver<?>> context) {
+        // Moon carvers
         context.register(MOON_CANYON_CARVER, WorldCarver.CANYON.configured(new CanyonCarverConfiguration(
                 0.05f,
                 UniformHeight.of(VerticalAnchor.absolute(10), VerticalAnchor.absolute(67)),
@@ -68,7 +74,7 @@ public class GCConfiguredCarvers {
                         1.0f,
                         0.0f)
         )));
-        context.register(MOON_CRATER_CARVER, GCCarvers.CRATERS.configured(new CraterCarverConfig(
+        context.register(MOON_CRATER_CARVER, GCCarvers.MOON_CRATERS.configured(new CraterCarverConfig(
                 0.05f,
                 ConstantHeight.of(VerticalAnchor.absolute(128)),
                 UniformFloat.of(0.4f, 0.6f),
@@ -97,5 +103,53 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(0.8f, 1.3f),
                 UniformFloat.of(-1.0f, -0.4f)
         )));
+
+        // Mars carvers
+        context.register(MARS_CANYON_CARVER, WorldCarver.CANYON.configured(new CanyonCarverConfiguration(
+                0.05f,
+                UniformHeight.of(VerticalAnchor.absolute(10), VerticalAnchor.absolute(67)),
+                ConstantFloat.of(3.0f),
+                VerticalAnchor.aboveBottom(8),
+                CarverDebugSettings.DEFAULT,
+                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MARS_CARVER_REPLACEABLES),
+                UniformFloat.of(-0.125f, 0.125f),
+                new CanyonCarverConfiguration.CanyonShapeConfiguration(
+                        UniformFloat.of(0.75f, 1.0f),
+                        TrapezoidFloat.of(0, 6, 2),
+                        3,
+                        UniformFloat.of(0.75f, 1.0f),
+                        1.0f,
+                        0.0f)
+        )));
+        context.register(MARS_CRATER_CARVER, GCCarvers.MARS_CRATERS.configured(new CraterCarverConfig(
+                0.01f,
+                ConstantHeight.of(VerticalAnchor.absolute(128)),
+                UniformFloat.of(0.4f, 0.6f),
+                CarverDebugSettings.DEFAULT,
+                27,
+                8,
+                8
+        )));
+        context.register(MARS_HIGHLANDS_CAVE_CARVER, GCCarvers.MARTIAN_CAVE.configured(new CaveCarverConfiguration(
+                0.15f,
+                UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                UniformFloat.of(0.1f, 0.9f),
+                VerticalAnchor.aboveBottom(-64),
+                HolderSet.direct(),
+                UniformFloat.of(0.7f, 1.4f),
+                UniformFloat.of(0.8f, 1.3f),
+                UniformFloat.of(-1.0f, -0.4f)
+        )));
+        context.register(MARS_LOWLANDS_CAVE_CARVER, GCCarvers.MARTIAN_CAVE.configured(new CaveCarverConfiguration(
+                0.15f,
+                UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
+                UniformFloat.of(0.1f, 0.9f),
+                VerticalAnchor.aboveBottom(-64),
+                HolderSet.direct(),
+                UniformFloat.of(0.7f, 1.4f),
+                UniformFloat.of(0.8f, 1.3f),
+                UniformFloat.of(-1.0f, -0.4f)
+        )));
+
     }
 }
