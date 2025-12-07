@@ -33,7 +33,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public class RocketRecipeBuilder extends GCRecipeBuilder {
+public class RocketRecipeBuilder extends GCRecipeBuilder<RocketRecipeBuilder> {
     private int bodyHeight;
     private Ingredient body, cone, engine, fins;
     private Ingredient boosters = Ingredient.EMPTY;

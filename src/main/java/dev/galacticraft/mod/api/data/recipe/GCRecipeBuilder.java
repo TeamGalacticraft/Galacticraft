@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class GCRecipeBuilder implements RecipeBuilder {
+public abstract class GCRecipeBuilder<T extends GCRecipeBuilder> implements RecipeBuilder {
     protected final String prefix;
     @Nullable
     protected final RecipeCategory category;
@@ -60,20 +60,20 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
     }
 
     @Override
-    public GCRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public T unlockedBy(String name, Criterion<?> criterion) {
         this.criteria.put(name, criterion);
-        return this;
+        return (T) this;
     }
 
     @Override
-    public GCRecipeBuilder group(@Nullable String group) {
+    public T group(@Nullable String group) {
         this.group = group;
-        return this;
+        return (T) this;
     }
 
-    public GCRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
+    public T emiDefaultRecipe(boolean emiDefaultRecipe) {
         this.emiDefaultRecipe = emiDefaultRecipe;
-        return this;
+        return (T) this;
     }
 
     @Override

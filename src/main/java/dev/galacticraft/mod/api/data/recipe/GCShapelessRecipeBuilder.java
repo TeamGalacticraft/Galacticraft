@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.api.data.recipe;
 
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.core.NonNullList;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
@@ -35,11 +34,10 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapelessRecipe;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GCShapelessRecipeBuilder extends GCRecipeBuilder {
+public class GCShapelessRecipeBuilder extends GCRecipeBuilder<GCShapelessRecipeBuilder> {
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private int time;
 
@@ -93,24 +91,6 @@ public class GCShapelessRecipeBuilder extends GCRecipeBuilder {
 
     public GCShapelessRecipeBuilder time(int time) {
         this.time = time;
-        return this;
-    }
-
-    @Override
-    public GCShapelessRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
-        this.criteria.put(name, criterion);
-        return this;
-    }
-
-    @Override
-    public GCShapelessRecipeBuilder group(@Nullable String group) {
-        this.group = group;
-        return this;
-    }
-
-    @Override
-    public GCShapelessRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
-        this.emiDefaultRecipe = emiDefaultRecipe;
         return this;
     }
 

@@ -31,7 +31,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
+public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder<CircuitFabricatorRecipeBuilder> {
     private Ingredient ingredient;
     private int time;
 

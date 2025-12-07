@@ -25,7 +25,6 @@ package dev.galacticraft.mod.api.data.recipe;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
-import net.minecraft.advancements.Criterion;
 import net.minecraft.data.recipes.RecipeBuilder;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
@@ -37,13 +36,12 @@ import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.item.crafting.ShapedRecipe;
 import net.minecraft.world.item.crafting.ShapedRecipePattern;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class GCShapedRecipeBuilder extends GCRecipeBuilder {
+public class GCShapedRecipeBuilder extends GCRecipeBuilder<GCShapedRecipeBuilder> {
     private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private int time = 200;
@@ -99,24 +97,6 @@ public class GCShapedRecipeBuilder extends GCRecipeBuilder {
             this.rows.add(string);
             return this;
         }
-    }
-
-    @Override
-    public GCShapedRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
-        this.criteria.put(name, criterion);
-        return this;
-    }
-
-    @Override
-    public GCShapedRecipeBuilder group(@Nullable String group) {
-        this.group = group;
-        return this;
-    }
-
-    @Override
-    public GCShapedRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
-        this.emiDefaultRecipe = emiDefaultRecipe;
-        return this;
     }
 
     @Override

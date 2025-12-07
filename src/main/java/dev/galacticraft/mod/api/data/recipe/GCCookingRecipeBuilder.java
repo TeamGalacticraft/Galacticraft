@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.api.data.recipe;
 
-import net.minecraft.advancements.Criterion;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.resources.ResourceLocation;
@@ -38,11 +37,10 @@ import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.item.crafting.SmokingRecipe;
 import net.minecraft.world.level.ItemLike;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GCCookingRecipeBuilder extends GCRecipeBuilder {
+public class GCCookingRecipeBuilder extends GCRecipeBuilder<GCCookingRecipeBuilder> {
     private final CookingBookCategory bookCategory;
     private final Ingredient ingredient;
     private final float experience;
@@ -76,24 +74,6 @@ public class GCCookingRecipeBuilder extends GCRecipeBuilder {
 
     public static GCCookingRecipeBuilder smoking(Ingredient ingredient, RecipeCategory category, ItemLike result, float f, int n) {
         return new GCCookingRecipeBuilder(category, CookingBookCategory.FOOD, result, ingredient, f, n, SmokingRecipe::new);
-    }
-
-    @Override
-    public GCCookingRecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
-        this.criteria.put(name, criterion);
-        return this;
-    }
-
-    @Override
-    public GCCookingRecipeBuilder group(@Nullable String group) {
-        this.group = group;
-        return this;
-    }
-
-    @Override
-    public GCCookingRecipeBuilder emiDefaultRecipe(boolean emiDefaultRecipe) {
-        this.emiDefaultRecipe = emiDefaultRecipe;
-        return this;
     }
 
     @Override
