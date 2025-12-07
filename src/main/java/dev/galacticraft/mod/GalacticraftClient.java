@@ -174,6 +174,8 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_SOUL_LANTERN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WEB_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WEB_STRING, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.OLIVINE_CLUSTER, RenderType.cutout());
