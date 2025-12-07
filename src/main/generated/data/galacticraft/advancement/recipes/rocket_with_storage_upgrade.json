@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:rocket_with_storage_upgrade"
+        "recipe": "galacticraft:rocket_with_storage_upgrade"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:rocket_with_storage_upgrade"
+      "galacticraft:rocket_with_storage_upgrade"
     ]
   }
 }

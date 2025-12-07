@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:titanium_axe_smithing"
+        "recipe": "galacticraft:titanium_axe_smithing"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:titanium_axe_smithing"
+      "galacticraft:titanium_axe_smithing"
     ]
   }
 }

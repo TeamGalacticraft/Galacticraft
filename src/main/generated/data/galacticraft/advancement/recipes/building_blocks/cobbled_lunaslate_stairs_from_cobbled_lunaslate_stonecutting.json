@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:cobbled_lunaslate_stairs_from_cobbled_lunaslate_stonecutting"
+        "recipe": "galacticraft:cobbled_lunaslate_stairs_from_cobbled_lunaslate_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:cobbled_lunaslate_stairs_from_cobbled_lunaslate_stonecutting"
+      "galacticraft:cobbled_lunaslate_stairs_from_cobbled_lunaslate_stonecutting"
     ]
   }
 }

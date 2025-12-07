@@ -22,18 +22,19 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
-import net.minecraft.data.recipes.ShapedRecipeBuilder;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -90,7 +91,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_TITANIUM, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_TITANIUM_BLOCK, "raw_titanium_from_block", "raw_titanium");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_LEAD, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_LEAD_BLOCK, "raw_lead_from_block", "raw_lead");
 
-        crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null);
+        crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null, true);
     }
 
     @Override
@@ -98,42 +99,65 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         return "Ore Recipes";
     }
 
-    private static void oreSmeltingAndBlasting(RecipeOutput output, List<ItemLike> input, ItemLike result, float experience, int time) {
-        oreSmelting(output, input, RecipeCategory.MISC, result, experience, time * 2, BuiltInRegistries.ITEM.getKey(result.asItem()).getPath());
-        oreBlasting(output, input, RecipeCategory.MISC, result, experience, time, BuiltInRegistries.ITEM.getKey(result.asItem()).getPath());
+    private static void oreSmeltingAndBlasting(RecipeOutput output, List<ItemLike> inputs, ItemLike result, float experience, int time) {
+        String groupName = getItemName(result);
+        String smeltingName = getSmeltingRecipeName(result) + "_";
+        String blastingName = getBlastingRecipeName(result) + "_";
+
+        for (ItemLike input : inputs) {
+            Ingredient ingredient = Ingredient.of(input);
+            String hasName = getHasName(input);
+            var criterion = has(input);
+            String itemName = getItemName(input);
+
+            GCCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC, result, experience, time * 2)
+                    .group(groupName)
+                    .unlockedBy(hasName, criterion)
+                    .save(output, smeltingName + itemName);
+            GCCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, result, experience, time)
+                    .group(groupName)
+                    .unlockedBy(hasName, criterion)
+                    .save(output, blastingName + itemName);
+        }
     }
 
-    public static void nineBlockStoragePackingRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, String compactingGroup) {
-        nineBlockStorageRecipe(exporter, reverseCategory, baseItem, compactingCategory, compactItem, compactingId, compactingGroup, getSimpleRecipeName(baseItem), null);
+    public static void nineBlockStoragePackingRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, String compactingGroup) {
+        nineBlockStorageRecipe(output, reverseCategory, baseItem, compactingCategory, compactItem, compactingId, compactingGroup, getSimpleRecipeName(baseItem), null);
     }
 
-    public static void nineBlockStorageUnpackingRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String reverseId, String reverseGroup) {
-        nineBlockStorageRecipe(exporter, reverseCategory, baseItem, compactingCategory, compactItem, getSimpleRecipeName(compactItem), null, reverseId, reverseGroup);
+    public static void nineBlockStorageUnpackingRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String reverseId, String reverseGroup) {
+        nineBlockStorageRecipe(output, reverseCategory, baseItem, compactingCategory, compactItem, getSimpleRecipeName(compactItem), null, reverseId, reverseGroup);
     }
 
-    public static void nineBlockStorageRecipe(RecipeOutput exporter, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, String reverseId, @Nullable String reverseGroup) {
-        ShapelessRecipeBuilder.shapeless(reverseCategory, baseItem, 9)
+    public static void nineBlockStorageRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, String reverseId, @Nullable String reverseGroup) {
+        // Packing recipe
+        GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
+                .define('#', baseItem)
+                .pattern("###")
+                .pattern("###")
+                .pattern("###")
+                .group(compactingGroup)
+                .unlockedBy(getHasName(baseItem), has(baseItem))
+                .emiDefaultRecipe(compactingGroup == null)
+                .save(output, Constant.id(compactingId));
+
+        // Unpacking recipe
+        GCShapelessRecipeBuilder.crafting(reverseCategory, baseItem, 9)
                 .requires(compactItem)
                 .group(reverseGroup)
                 .unlockedBy(getHasName(compactItem), has(compactItem))
-                .save(exporter, Constant.id(reverseId));
-        ShapedRecipeBuilder.shaped(compactingCategory, compactItem)
-                .define('#', baseItem)
-                .pattern("###")
-                .pattern("###")
-                .pattern("###")
-                .group(compactingGroup)
-                .unlockedBy(getHasName(baseItem), has(baseItem))
-                .save(exporter, Constant.id(compactingId));
+                .emiDefaultRecipe(reverseGroup == null)
+                .save(output, Constant.id(reverseId));
     }
 
-    public static void crystalBlockStorageRecipe(RecipeOutput exporter, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup) {
-        ShapedRecipeBuilder.shaped(compactingCategory, compactItem)
+    public static void crystalBlockStorageRecipe(RecipeOutput output, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, boolean emiDefaultRecipe) {
+        GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
                 .define('#', baseItem)
                 .pattern("##")
                 .pattern("##")
                 .group(compactingGroup)
                 .unlockedBy(getHasName(baseItem), has(baseItem))
-                .save(exporter, Constant.id(compactingId));
+                .emiDefaultRecipe(emiDefaultRecipe)
+                .save(output, Constant.id(compactingId));
     }
 }

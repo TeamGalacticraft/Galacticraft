@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:tin_ingot_from_blasting_deepslate_tin_ore"
+        "recipe": "galacticraft:tin_ingot_from_blasting_deepslate_tin_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:tin_ingot_from_blasting_deepslate_tin_ore"
+      "galacticraft:tin_ingot_from_blasting_deepslate_tin_ore"
     ]
   }
 }

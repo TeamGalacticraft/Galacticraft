@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:mars_stone_slab_from_mars_stone_stonecutting"
+        "recipe": "galacticraft:mars_stone_slab_from_mars_stone_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:mars_stone_slab_from_mars_stone_stonecutting"
+      "galacticraft:mars_stone_slab_from_mars_stone_stonecutting"
     ]
   }
 }

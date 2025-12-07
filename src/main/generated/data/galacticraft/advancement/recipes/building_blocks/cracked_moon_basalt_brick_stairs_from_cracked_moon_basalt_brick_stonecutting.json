@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:cracked_moon_basalt_brick_stairs_from_cracked_moon_basalt_brick_stonecutting"
+        "recipe": "galacticraft:cracked_moon_basalt_brick_stairs_from_cracked_moon_basalt_brick_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:cracked_moon_basalt_brick_stairs_from_cracked_moon_basalt_brick_stonecutting"
+      "galacticraft:cracked_moon_basalt_brick_stairs_from_cracked_moon_basalt_brick_stonecutting"
     ]
   }
 }

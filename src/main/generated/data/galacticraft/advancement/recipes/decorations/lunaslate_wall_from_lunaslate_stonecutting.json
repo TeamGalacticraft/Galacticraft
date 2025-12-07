@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:lunaslate_wall_from_lunaslate_stonecutting"
+        "recipe": "galacticraft:lunaslate_wall_from_lunaslate_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:lunaslate_wall_from_lunaslate_stonecutting"
+      "galacticraft:lunaslate_wall_from_lunaslate_stonecutting"
     ]
   }
 }

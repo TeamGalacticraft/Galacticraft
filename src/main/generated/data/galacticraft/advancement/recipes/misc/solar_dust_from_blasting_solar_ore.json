@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:solar_dust_from_blasting_solar_ore"
+        "recipe": "galacticraft:solar_dust_from_blasting_solar_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:solar_dust_from_blasting_solar_ore"
+      "galacticraft:solar_dust_from_blasting_solar_ore"
     ]
   }
 }

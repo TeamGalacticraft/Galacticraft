@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:titanium_ingot_from_blasting_raw_titanium"
+        "recipe": "galacticraft:titanium_ingot_from_blasting_raw_titanium"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:titanium_ingot_from_blasting_raw_titanium"
+      "galacticraft:titanium_ingot_from_blasting_raw_titanium"
     ]
   }
 }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:copper_decoration_wall_from_copper_decoration_stonecutting"
+        "recipe": "galacticraft:copper_decoration_wall_from_copper_decoration_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:copper_decoration_wall_from_copper_decoration_stonecutting"
+      "galacticraft:copper_decoration_wall_from_copper_decoration_stonecutting"
     ]
   }
 }
