@@ -91,7 +91,7 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_TITANIUM, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_TITANIUM_BLOCK, "raw_titanium_from_block", "raw_titanium");
         nineBlockStorageUnpackingRecipe(output, RecipeCategory.MISC, GCItems.RAW_LEAD, RecipeCategory.BUILDING_BLOCKS, GCBlocks.RAW_LEAD_BLOCK, "raw_lead_from_block", "raw_lead");
 
-        crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null);
+        crystalBlockStorageRecipe(output, GCItems.OLIVINE_SHARD, RecipeCategory.MISC, GCBlocks.OLIVINE_BLOCK, "olivine_block_from_shards", null, true);
     }
 
     @Override
@@ -150,13 +150,14 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
                 .save(output, Constant.id(reverseId));
     }
 
-    public static void crystalBlockStorageRecipe(RecipeOutput output, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup) {
+    public static void crystalBlockStorageRecipe(RecipeOutput output, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, @Nullable String compactingGroup, boolean emiDefaultRecipe) {
         GCShapedRecipeBuilder.crafting(compactingCategory, compactItem)
                 .define('#', baseItem)
                 .pattern("##")
                 .pattern("##")
                 .group(compactingGroup)
                 .unlockedBy(getHasName(baseItem), has(baseItem))
+                .emiDefaultRecipe(emiDefaultRecipe)
                 .save(output, Constant.id(compactingId));
     }
 }

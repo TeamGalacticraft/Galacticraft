@@ -323,6 +323,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                     .pattern("   ")
                     .pattern("XXX")
                     .unlockedBy(getHasName(Items.GLASS_PANE), has(Items.GLASS_PANE))
+                    .emiDefaultRecipe(color.equals(PipeColor.CLEAR))
                     .save(output);
         }
 
