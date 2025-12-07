@@ -88,7 +88,16 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
-        String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
+
+        String MOON_DUNGEON_BRICKS = "moon_dungeon_bricks";
+        String MOON_DUNGEON_BRICK_SLAB = "moon_dungeon_brick_slab";
+        String MOON_DUNGEON_BRICK_STAIRS = "moon_dungeon_brick_stairs";
+        String MOON_DUNGEON_BRICK_WALL = "moon_dungeon_brick_wall";
+        String CHISELED_MOON_DUNGEON_BRICKS = "chiseled_moon_dungeon_bricks";
+        String CRACKED_MOON_DUNGEON_BRICKS = "cracked_moon_dungeon_bricks";
+        String CRACKED_MOON_DUNGEON_BRICK_SLAB = "cracked_moon_dungeon_brick_slab";
+        String CRACKED_MOON_DUNGEON_BRICK_STAIRS = "cracked_moon_dungeon_brick_stairs";
+        String CRACKED_MOON_DUNGEON_BRICK_WALL = "cracked_moon_dungeon_brick_wall";
 
         String MOON_ROCK = "moon_rock";
         String MOON_ROCK_SLAB = "moon_rock_slab";
@@ -462,6 +471,8 @@ public interface Constant {
         String ATMOSPHERIC_VALVE = "atmospheric_valve";
         String AMBIENT_THERMAL_CONTROLLER = "ambient_thermal_controller";
         String LIQUID_CANISTER = "liquid_canister";
+        String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
+
         //FOOD
         String MOON_CHEESE_WHEEL = "moon_cheese_wheel";
         String MOON_CHEESE_CURD = "moon_cheese_curd";
@@ -472,13 +483,16 @@ public interface Constant {
         String GROUND_BEEF = "ground_beef";
         String BEEF_PATTY = "beef_patty";
         String CHEESEBURGER = "cheeseburger";
+
         //ROCKET PARTS
         String TIER_1_HEAVY_DUTY_PLATE = "heavy_plating";
         String TIER_2_HEAVY_DUTY_PLATE = "heavy_plating_t2";
         String TIER_3_HEAVY_DUTY_PLATE = "heavy_plating_t3";
+
         //THROWABLE METEOR CHUNKS
         String THROWABLE_METEOR_CHUNK = "throwable_meteor_chunk";
         String HOT_THROWABLE_METEOR_CHUNK = "hot_throwable_meteor_chunk";
+
         //ARMOR
         String HEAVY_DUTY_HELMET = "heavy_duty_helmet";
         String HEAVY_DUTY_CHESTPLATE = "heavy_duty_chestplate";
@@ -493,6 +507,7 @@ public interface Constant {
         String TITANIUM_LEGGINGS = "titanium_leggings";
         String TITANIUM_BOOTS = "titanium_boots";
         String SENSOR_GLASSES = "sensor_glasses";
+
         //TOOLS + WEAPONS
         String HEAVY_DUTY_SWORD = "heavy_duty_sword";
         String HEAVY_DUTY_SHOVEL = "heavy_duty_shovel";

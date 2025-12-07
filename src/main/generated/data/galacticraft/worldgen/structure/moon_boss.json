@@ -8,7 +8,7 @@
   "dungeon_configuration": {
     "bossRoom": "galacticraft:moondungeonbossroom",
     "brickBlock": {
-      "Name": "galacticraft:moon_dungeon_brick"
+      "Name": "galacticraft:moon_dungeon_bricks"
     },
     "hallwayHeight": 5,
     "hallwayLengthMax": 16,
