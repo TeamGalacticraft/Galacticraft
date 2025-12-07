@@ -43,29 +43,29 @@ import java.util.List;
 import java.util.Map;
 import java.util.Objects;
 
-public class GCShapedRecipeBuilder extends GCCraftingRecipeBuilder {
+public class GCShapedRecipeBuilder extends GCRecipeBuilder {
     private final List<String> rows = Lists.newArrayList();
     private final Map<Character, Ingredient> key = Maps.newLinkedHashMap();
     private int time = 200;
 
-    protected GCShapedRecipeBuilder(RecipeCategory category, ItemLike result, int count) {
-        super(category, result, count);
+    protected GCShapedRecipeBuilder(String prefix, RecipeCategory category, ItemLike result, int count) {
+        super(prefix, category, result, count);
     }
 
     public static GCShapedRecipeBuilder crafting(RecipeCategory category, ItemLike itemLike) {
-        return new GCShapedRecipeBuilder(category, itemLike, 1);
+        return new GCShapedRecipeBuilder("", category, itemLike, 1);
     }
 
     public static GCShapedRecipeBuilder crafting(RecipeCategory category, ItemLike itemLike, int count) {
-        return new GCShapedRecipeBuilder(category, itemLike, count);
+        return new GCShapedRecipeBuilder("", category, itemLike, count);
     }
 
     public static GCShapedRecipeBuilder compressing(ItemLike itemLike) {
-        return new GCShapedRecipeBuilder(null, itemLike, 1);
+        return new GCShapedRecipeBuilder("compressing/", null, itemLike, 1);
     }
 
     public static GCShapedRecipeBuilder compressing(ItemLike itemLike, int count) {
-        return new GCShapedRecipeBuilder(null, itemLike, count);
+        return new GCShapedRecipeBuilder("compressing/", null, itemLike, count);
     }
 
     public GCShapedRecipeBuilder time(int time) {

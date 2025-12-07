@@ -42,7 +42,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GCCookingRecipeBuilder extends GCCraftingRecipeBuilder {
+public class GCCookingRecipeBuilder extends GCRecipeBuilder {
     private final CookingBookCategory bookCategory;
     private final Ingredient ingredient;
     private final float experience;
@@ -50,7 +50,7 @@ public class GCCookingRecipeBuilder extends GCCraftingRecipeBuilder {
     private final AbstractCookingRecipe.Factory<?> factory;
 
     protected GCCookingRecipeBuilder(RecipeCategory category, CookingBookCategory cookingBookCategory, ItemLike result, Ingredient ingredient, float f, int n, AbstractCookingRecipe.Factory<?> factory) {
-        super(category, result, 1);
+        super("", category, result, 1);
         this.bookCategory = cookingBookCategory;
         this.ingredient = ingredient;
         this.experience = f;

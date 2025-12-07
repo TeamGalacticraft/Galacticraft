@@ -39,28 +39,28 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
 
-public class GCShapelessRecipeBuilder extends GCCraftingRecipeBuilder {
+public class GCShapelessRecipeBuilder extends GCRecipeBuilder {
     private final NonNullList<Ingredient> ingredients = NonNullList.create();
     private int time;
 
-    protected GCShapelessRecipeBuilder(RecipeCategory category, ItemLike result, int count) {
-        super(category, result, count);
+    protected GCShapelessRecipeBuilder(String prefix, RecipeCategory category, ItemLike result, int count) {
+        super(prefix, category, result, count);
     }
 
     public static GCShapelessRecipeBuilder crafting(RecipeCategory category, ItemLike result) {
-        return new GCShapelessRecipeBuilder(category, result, 1);
+        return new GCShapelessRecipeBuilder("", category, result, 1);
     }
 
     public static GCShapelessRecipeBuilder crafting(RecipeCategory category, ItemLike result, int count) {
-        return new GCShapelessRecipeBuilder(category, result, count);
+        return new GCShapelessRecipeBuilder("", category, result, count);
     }
 
     public static GCShapelessRecipeBuilder compressing(ItemLike result) {
-        return new GCShapelessRecipeBuilder(null, result, 1);
+        return new GCShapelessRecipeBuilder("compressing/", null, result, 1);
     }
 
     public static GCShapelessRecipeBuilder compressing(ItemLike result, int count) {
-        return new GCShapelessRecipeBuilder(null, result, count);
+        return new GCShapelessRecipeBuilder("compressing/", null, result, count);
     }
 
     public GCShapelessRecipeBuilder requires(TagKey<Item> tagKey) {

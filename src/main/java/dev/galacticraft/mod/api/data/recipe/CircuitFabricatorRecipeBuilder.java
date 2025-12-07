@@ -36,7 +36,7 @@ public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
     private int time;
 
     public CircuitFabricatorRecipeBuilder(ItemLike result, int count) {
-        super("fabrication/", result, count);
+        super("fabrication/", null, result, count);
     }
 
     public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike) {
