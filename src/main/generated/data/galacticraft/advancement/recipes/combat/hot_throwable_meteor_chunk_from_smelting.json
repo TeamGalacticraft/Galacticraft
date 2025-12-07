@@ -3,7 +3,7 @@
   "criteria": {
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:hot_throwable_meteor_chunk_from_smelting"
+        "recipe": "galacticraft:hot_throwable_meteor_chunk_from_smelting"
       },
       "trigger": "minecraft:recipe_unlocked"
     },
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:hot_throwable_meteor_chunk_from_smelting"
+      "galacticraft:hot_throwable_meteor_chunk_from_smelting"
     ]
   }
 }
