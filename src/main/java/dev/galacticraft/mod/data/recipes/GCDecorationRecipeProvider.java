@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -35,6 +36,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SingleItemRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -227,6 +229,16 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
         stairBuilder(stairs, Ingredient.of(base))
                 .unlockedBy(getHasName(base), has(base))
                 .save(output);
+    }
+
+    public static void stonecutterResultFromBase(RecipeOutput recipeOutput, RecipeCategory recipeCategory, ItemLike input, ItemLike result) {
+        stonecutterResultFromBase(recipeOutput, recipeCategory, input, result, 1);
+    }
+
+    public static void stonecutterResultFromBase(RecipeOutput recipeOutput, RecipeCategory recipeCategory, ItemLike input, ItemLike result, int n) {
+        SingleItemRecipeBuilder.stonecutting(Ingredient.of(result), recipeCategory, input, n)
+                .unlockedBy(getHasName(result), has(result))
+                .save(recipeOutput, Constant.id(getConversionRecipeName(input, result) + "_stonecutting"));
     }
 
     @Override

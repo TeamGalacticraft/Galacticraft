@@ -33,7 +33,9 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SpecialRecipeBuilder;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
@@ -478,9 +480,9 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
 
     private static void cookingRecipes(RecipeOutput output, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefaultRecipe) {
         Ingredient ingredient = Ingredient.of(input);
-        String hasName = RecipeProvider.getHasName(input);
-        var criterion = RecipeProvider.has(input);
-        String itemName = RecipeProvider.getItemName(result);
+        String hasName = getHasName(input);
+        var criterion = has(input);
+        String itemName = getItemName(result);
 
         GCCookingRecipeBuilder.smelting(ingredient, RecipeCategory.FOOD, result, experience, cookingTime * 2)
                 .unlockedBy(hasName, criterion)

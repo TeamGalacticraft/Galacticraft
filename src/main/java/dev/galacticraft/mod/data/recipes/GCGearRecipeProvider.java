@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
@@ -33,7 +32,11 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
@@ -323,30 +326,29 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
     }
 
     private static void titaniumSmithing(RecipeOutput output, RecipeCategory category, Item input, Item result) {
-        String path = getItemName(result) + "_smithing";
+        ResourceLocation resourceLocation = RecipeBuilder.getDefaultRecipeId(result).withSuffix("_smithing");
 
         SmithingTransformRecipeBuilder.smithing(
                         Ingredient.of(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(input), Ingredient.of(GCItems.COMPRESSED_TITANIUM), category, result
                 )
                 .unlocks(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output, path);
+                .save(output, resourceLocation);
 
-        EmiDefaultRecipeProvider.add(Constant.id(path));
+        EmiDefaultRecipeProvider.add(resourceLocation);
     }
 
     private static void oreSmeltingAndBlasting(RecipeOutput output, RecipeCategory category, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefaultRecipe) {
         Ingredient ingredient = Ingredient.of(input);
-        String hasName = RecipeProvider.getHasName(input);
-        var criterion = RecipeProvider.has(input);
-        String itemName = RecipeProvider.getItemName(result);
+        String hasName = getHasName(input);
+        var criterion = has(input);
 
         GCCookingRecipeBuilder.smelting(ingredient, category, result, experience, cookingTime * 2)
                 .unlockedBy(hasName, criterion)
                 .emiDefaultRecipe(emiDefaultRecipe)
-                .save(output, itemName + "_from_smelting");
+                .save(output, getSmeltingRecipeName(result));
         GCCookingRecipeBuilder.blasting(ingredient, category, result, experience, cookingTime)
                 .unlockedBy(hasName, criterion)
-                .save(output, itemName + "_from_blasting");
+                .save(output, getBlastingRecipeName(result));
     }
 
     @Override

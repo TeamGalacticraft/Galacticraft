@@ -24,7 +24,6 @@ package dev.galacticraft.mod.data.recipes;
 
 import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.GCRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
@@ -63,7 +62,7 @@ public final class GCRecipeHelper {
             GCShapelessRecipeBuilder.crafting(category, set.get(color))
                     .requires(base)
                     .requires(dye)
-                    .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
+                    .unlockedBy(RecipeProvider.getHasName(dye), RecipeProvider.has(base))
                     .emiDefaultRecipe(emiDefaultRecipe)
                     .save(output);
         }
@@ -75,7 +74,7 @@ public final class GCRecipeHelper {
             GCShapelessRecipeBuilder.crafting(category, set.get(color))
                     .requires(base)
                     .requires(dye)
-                    .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
+                    .unlockedBy(RecipeProvider.getHasName(dye), RecipeProvider.has(base))
                     .emiDefaultRecipe(emiDefaultRecipe)
                     .save(output);
         }

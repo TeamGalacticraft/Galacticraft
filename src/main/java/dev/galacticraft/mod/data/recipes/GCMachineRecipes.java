@@ -34,7 +34,6 @@ import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.*;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
@@ -149,7 +148,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SCS")
                 .pattern("IWI")
                 .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.ELECTRIC_COMPRESSOR.asItem()).withSuffix("_upgrade"));
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.ELECTRIC_COMPRESSOR).withSuffix("_upgrade"));
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ELECTRIC_FURNACE)
                 .define('S', GCItems.COMPRESSED_STEEL)
@@ -391,7 +390,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCBlocks.WALKWAY)
                 .requires(GCBlocks.ALUMINUM_WIRE)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.WIRE_WALKWAY.asItem()).withSuffix("_shapeless"));
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.WIRE_WALKWAY).withSuffix("_shapeless"));
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY, 5)
                 .define('T', GCItems.COMPRESSED_TITANIUM)
@@ -406,7 +405,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCBlocks.WALKWAY)
                 .requires(GCItemTags.GLASS_FLUID_PIPES)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, BuiltInRegistries.ITEM.getKey(GCBlocks.FLUID_PIPE_WALKWAY.asItem()).withSuffix("_shapeless"));
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.FLUID_PIPE_WALKWAY).withSuffix("_shapeless"));
 
         // Compressor
         GCShapelessRecipeBuilder.compressing(GCItems.CRACKER, 3)
@@ -432,7 +431,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy("has_bronze_ingot", has(GCItemTags.BRONZE_INGOTS))
                 .requires(GCItemTags.BRONZE_INGOTS)
                 .requires(GCItemTags.BRONZE_INGOTS)
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_BRONZE).withSuffix("_from_ingots"));
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCItems.COMPRESSED_BRONZE).withSuffix("_from_ingots"));
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_COPPER)
                 .unlockedBy(getHasName(Items.COPPER_INGOT), has(ConventionalItemTags.COPPER_INGOTS))
                 .requires(ConventionalItemTags.COPPER_INGOTS)
@@ -468,7 +467,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy("has_steel_ingot", has(GCItemTags.STEEL_INGOTS))
                 .requires(GCItemTags.STEEL_INGOTS)
                 .requires(GCItemTags.STEEL_INGOTS)
-                .save(output, BuiltInRegistries.ITEM.getKey(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCItems.COMPRESSED_STEEL).withSuffix("_from_ingots"));
         GCShapelessRecipeBuilder.compressing(GCItems.COMPRESSED_TIN)
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .requires(GCItemTags.TIN_INGOTS)

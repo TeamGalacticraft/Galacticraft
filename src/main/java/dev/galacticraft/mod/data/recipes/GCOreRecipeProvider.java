@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.Constant;
@@ -30,10 +31,10 @@ import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.Nullable;
 
@@ -98,9 +99,26 @@ public class GCOreRecipeProvider extends FabricRecipeProvider {
         return "Ore Recipes";
     }
 
-    private static void oreSmeltingAndBlasting(RecipeOutput output, List<ItemLike> input, ItemLike result, float experience, int time) {
-        oreSmelting(output, input, RecipeCategory.MISC, result, experience, time * 2, BuiltInRegistries.ITEM.getKey(result.asItem()).getPath());
-        oreBlasting(output, input, RecipeCategory.MISC, result, experience, time, BuiltInRegistries.ITEM.getKey(result.asItem()).getPath());
+    private static void oreSmeltingAndBlasting(RecipeOutput output, List<ItemLike> inputs, ItemLike result, float experience, int time) {
+        String groupName = getItemName(result);
+        String smeltingName = getSmeltingRecipeName(result) + "_";
+        String blastingName = getBlastingRecipeName(result) + "_";
+
+        for (ItemLike input : inputs) {
+            Ingredient ingredient = Ingredient.of(input);
+            String hasName = getHasName(input);
+            var criterion = has(input);
+            String itemName = getItemName(input);
+
+            GCCookingRecipeBuilder.smelting(ingredient, RecipeCategory.MISC, result, experience, time * 2)
+                    .group(groupName)
+                    .unlockedBy(hasName, criterion)
+                    .save(output, smeltingName + itemName);
+            GCCookingRecipeBuilder.blasting(ingredient, RecipeCategory.MISC, result, experience, time)
+                    .group(groupName)
+                    .unlockedBy(hasName, criterion)
+                    .save(output, blastingName + itemName);
+        }
     }
 
     public static void nineBlockStoragePackingRecipe(RecipeOutput output, RecipeCategory reverseCategory, ItemLike baseItem, RecipeCategory compactingCategory, ItemLike compactItem, String compactingId, String compactingGroup) {

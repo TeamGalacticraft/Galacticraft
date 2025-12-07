@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.data.recipe;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.EmiDefaultRecipeProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
@@ -99,6 +100,11 @@ public abstract class GCCraftingRecipeBuilder implements RecipeBuilder {
         if (this.emiDefaultRecipe) {
             EmiDefaultRecipeProvider.add(resourceLocation);
         }
+    }
+
+    @Override
+    public void save(RecipeOutput output, String path) {
+        this.save(output, Constant.id(path));
     }
 
     public abstract Recipe<?> createRecipe(ResourceLocation id);
