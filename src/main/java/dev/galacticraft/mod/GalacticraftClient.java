@@ -161,6 +161,11 @@ public class GalacticraftClient implements ClientModInitializer {
         GCKeyBinds.register();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.ALUMINUM_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TITANIUM_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.BRONZE_LADDER, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.STEEL_LADDER, RenderType.cutout());
+
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
