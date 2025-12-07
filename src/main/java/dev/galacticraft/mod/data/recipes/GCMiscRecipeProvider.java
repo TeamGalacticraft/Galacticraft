@@ -22,11 +22,13 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.EmiDefaultRecipeProvider;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -143,7 +145,8 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        SpecialRecipeBuilder.special(EmergencyKitRecipe::new).save(output, "emergency_kit");
+        SpecialRecipeBuilder.special(EmergencyKitRecipe::new).save(output, Constant.Item.EMERGENCY_KIT);
+        EmiDefaultRecipeProvider.add(Constant.id("/" + Constant.Recipe.Serializer.EMERGENCY_KIT));
 
 
         // Misc crafting materials
