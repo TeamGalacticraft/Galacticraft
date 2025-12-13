@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -40,10 +41,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultFabricationDisplay extends BasicDisplay {
-    private int processingTime = 300;
+    public static final BasicDisplay.Serializer<DefaultFabricationDisplay> SERIALIZER = BasicDisplay.Serializer.of(
+            (inputs, outputs, id, tag) -> {
+                return new DefaultFabricationDisplay(inputs, outputs, id, tag.getInt(Constant.Nbt.PROCESSING_TIME));
+            },
+            (display, tag) -> {
+                tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+            }
+    );
 
-    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
+    private final int processingTime;
+
+    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime) {
         super(inputs, outputs, location);
+        this.processingTime = processingTime;
     }
 
     public DefaultFabricationDisplay(@Nullable RecipeHolder<FabricationRecipe> recipe) {
@@ -53,10 +64,6 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     public int getProcessingTime() {
         return this.processingTime;
-    }
-
-    public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
-        return new DefaultFabricationDisplay(inputs, outputs, location);
     }
 
     @Override

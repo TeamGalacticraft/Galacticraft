@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
@@ -40,11 +41,23 @@ import java.util.List;
 import java.util.Optional;
 
 public class ElectricFurnaceDisplay extends BasicDisplay {
-    private int processingTime = (int) (200 / 1.5F);
-    private float xp = 0.0F;
+    public static final BasicDisplay.Serializer<ElectricFurnaceDisplay> SERIALIZER = BasicDisplay.Serializer.of(
+            (inputs, outputs, id, tag) -> {
+                return new ElectricFurnaceDisplay(inputs, outputs, id, tag.getInt(Constant.Nbt.PROCESSING_TIME), tag.getFloat(Constant.Nbt.XP));
+            },
+            (display, tag) -> {
+                tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+                tag.putFloat(Constant.Nbt.XP, display.getXp());
+            }
+    );
 
-    protected ElectricFurnaceDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
+    private int processingTime;
+    private float xp;
+
+    protected ElectricFurnaceDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime, float xp) {
         super(inputs, outputs, location);
+        this.processingTime = processingTime;
+        this.xp = xp;
     }
 
     public ElectricFurnaceDisplay(@Nullable RecipeHolder<SmeltingRecipe> recipe) {
@@ -59,10 +72,6 @@ public class ElectricFurnaceDisplay extends BasicDisplay {
 
     public float getXp() {
         return this.xp;
-    }
-
-    public static ElectricFurnaceDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
-        return new ElectricFurnaceDisplay(inputs, outputs, location);
     }
 
     @Override

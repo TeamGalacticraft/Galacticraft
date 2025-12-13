@@ -40,13 +40,23 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultRocketDisplay extends BasicDisplay {
+    public static final BasicDisplay.Serializer<DefaultRocketDisplay> SERIALIZER = BasicDisplay.Serializer.of(
+            (inputs, outputs, id, tag) -> {
+                return new DefaultRocketDisplay(inputs, outputs, id, tag.getInt("BodyHeight"), tag.getBoolean("HasBoosters"));
+            },
+            (display, tag) -> {
+                tag.putInt("BodyHeight", display.bodyHeight);
+                tag.putBoolean("HasBoosters", display.hasBoosters);
+            }
+    );
+
     public final int bodyHeight;
     public final boolean hasBoosters;
 
-    protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
+    protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int bodyHeight, boolean hasBoosters) {
         super(inputs, outputs, location);
-        this.bodyHeight = 0;
-        this.hasBoosters = false;
+        this.bodyHeight = bodyHeight;
+        this.hasBoosters = hasBoosters;
     }
 
     public DefaultRocketDisplay(@Nullable RecipeHolder<RocketRecipe> recipe) {
@@ -58,10 +68,6 @@ public class DefaultRocketDisplay extends BasicDisplay {
             this.bodyHeight = 0;
             this.hasBoosters = false;
         }
-    }
-
-    public static DefaultRocketDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
-        return new DefaultRocketDisplay(inputs, outputs, location);
     }
 
     @Override

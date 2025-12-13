@@ -59,11 +59,14 @@ public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
         @Override
         public CompoundTag save(CompoundTag tag, ElectricCompressingDisplay display) {
             tag.putBoolean(Constant.Nbt.SHAPED, display instanceof ElectricShapedCompressingDisplay);
+            tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+
             ListTag list = new ListTag();
             for (EntryIngredient inputEntry : display.getInputEntries()) {
                 list.add(inputEntry.saveIngredient());
             }
             tag.put(Constant.Nbt.INPUTS, list);
+
             list = new ListTag();
             for (EntryIngredient outputEntry : display.getOutputEntries()) {
                 list.add(outputEntry.saveIngredient());
@@ -75,20 +78,25 @@ public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
 
         @Override
         public ElectricCompressingDisplay read(CompoundTag tag) {
-            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             List<EntryIngredient> inputs = new ArrayList<>();
             List<EntryIngredient> outputs = new ArrayList<>();
+
+            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
                 inputs.add(EntryIngredient.read((ListTag) element));
             }
+
             list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
                 outputs.add(EntryIngredient.read((ListTag) element));
             }
+
+            int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
+
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new ElectricShapedCompressingDisplay(inputs, outputs);
+                return new ElectricShapedCompressingDisplay(inputs, outputs, processingTime);
             } else {
-                return new ElectricShapelessCompressingDisplay(inputs, outputs);
+                return new ElectricShapelessCompressingDisplay(inputs, outputs, processingTime);
             }
         }
     }

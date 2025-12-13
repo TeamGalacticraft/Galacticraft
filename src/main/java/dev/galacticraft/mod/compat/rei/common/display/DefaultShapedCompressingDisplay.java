@@ -35,11 +35,12 @@ import java.util.List;
 public class DefaultShapedCompressingDisplay implements DefaultCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = 200;
+    private final int processingTime;
 
-    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
+    public DefaultShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output, int processingTime) {
         this.input = input;
         this.output = output;
+        this.processingTime = processingTime;
     }
 
     public DefaultShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {

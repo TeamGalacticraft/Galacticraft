@@ -44,8 +44,10 @@ public class FabricationProgressWidget extends Widget {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        float progress = (System.currentTimeMillis() % this.processingTime) / (float) this.processingTime;
-        CircuitFabricatorProgressAnimation.render(graphics, this.x, this.y, progress);
+        if (this.processingTime > 0) {
+            float progress = (System.currentTimeMillis() % this.processingTime) / (float) this.processingTime;
+            CircuitFabricatorProgressAnimation.render(graphics, this.x, this.y, progress);
+        }
     }
 
     @Override

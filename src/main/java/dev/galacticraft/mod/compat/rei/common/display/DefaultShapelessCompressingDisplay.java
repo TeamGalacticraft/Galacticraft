@@ -36,18 +36,19 @@ import java.util.List;
 public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = 200;
+    private final int processingTime;
+
+    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, int processingTime) {
+        this.input = inputs;
+        this.output = outputs;
+        this.processingTime = processingTime;
+    }
 
     public DefaultShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
         this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
         this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = recipe.value().getTime();
-    }
-
-    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
-        this.input = inputs;
-        this.output = outputs;
     }
 
     @Override

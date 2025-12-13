@@ -1224,6 +1224,8 @@ public interface Constant {
         String INPUTS = "Inputs";
         String OUTPUTS = "Outputs";
         String SHAPED = "Shaped";
+        String PROCESSING_TIME = "ProcessingTime";
+        String XP = "xp";
         String ITEMS = "Items";
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "CryogenicCooldown";

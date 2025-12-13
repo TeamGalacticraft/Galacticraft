@@ -59,11 +59,14 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
         @Override
         public CompoundTag save(CompoundTag tag, DefaultCompressingDisplay display) {
             tag.putBoolean(Constant.Nbt.SHAPED, display instanceof DefaultShapedCompressingDisplay);
+            tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+
             ListTag list = new ListTag();
             for (EntryIngredient inputEntry : display.getInputEntries()) {
                 list.add(inputEntry.saveIngredient());
             }
             tag.put(Constant.Nbt.INPUTS, list);
+
             list = new ListTag();
             for (EntryIngredient outputEntry : display.getOutputEntries()) {
                 list.add(outputEntry.saveIngredient());
@@ -75,20 +78,25 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
 
         @Override
         public DefaultCompressingDisplay read(CompoundTag tag) {
-            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             List<EntryIngredient> inputs = new ArrayList<>();
             List<EntryIngredient> outputs = new ArrayList<>();
+
+            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
                 inputs.add(EntryIngredient.read((ListTag) element));
             }
+
             list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
                 outputs.add(EntryIngredient.read((ListTag) element));
             }
+
+            int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
+
             if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new DefaultShapedCompressingDisplay(inputs, outputs);
+                return new DefaultShapedCompressingDisplay(inputs, outputs, processingTime);
             } else {
-                return new DefaultShapelessCompressingDisplay(inputs, outputs);
+                return new DefaultShapelessCompressingDisplay(inputs, outputs, processingTime);
             }
         }
     }

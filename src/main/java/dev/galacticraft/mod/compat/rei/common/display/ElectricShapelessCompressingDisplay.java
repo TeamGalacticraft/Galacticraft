@@ -36,18 +36,19 @@ import java.util.List;
 public class ElectricShapelessCompressingDisplay implements ElectricCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = (int) (200 / 1.5F);
+    private final int processingTime;
+
+    public ElectricShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, int processingTime) {
+        this.input = inputs;
+        this.output = outputs;
+        this.processingTime = processingTime;
+    }
 
     public ElectricShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
         this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
         this.output = Collections.singletonList(EntryIngredients.of(stack));
         this.processingTime = (int) (recipe.value().getTime() / 1.5F);
-    }
-
-    public ElectricShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
-        this.input = inputs;
-        this.output = outputs;
     }
 
     @Override

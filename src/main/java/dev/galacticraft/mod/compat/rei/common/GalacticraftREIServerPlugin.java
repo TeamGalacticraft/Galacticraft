@@ -31,7 +31,6 @@ import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay
 import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
-import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
@@ -45,11 +44,11 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
 
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
-        registry.register(FABRICATION, BasicDisplay.Serializer.ofSimple(DefaultFabricationDisplay::createRaw));
+        registry.register(FABRICATION, DefaultFabricationDisplay.SERIALIZER);
         registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_COMPRESSING, ElectricCompressingDisplay.Serializer.INSTANCE);
-        registry.register(ELECTRIC_SMELTING, BasicDisplay.Serializer.ofSimple(ElectricFurnaceDisplay::createRaw));
-        registry.register(ELECTRIC_BLASTING, BasicDisplay.Serializer.ofSimple(ElectricArcFurnaceDisplay::createRaw));
-        registry.register(ROCKET, BasicDisplay.Serializer.ofSimple(DefaultRocketDisplay::createRaw));
+        registry.register(ELECTRIC_SMELTING, ElectricFurnaceDisplay.SERIALIZER);
+        registry.register(ELECTRIC_BLASTING, ElectricArcFurnaceDisplay.SERIALIZER);
+        registry.register(ROCKET, DefaultRocketDisplay.SERIALIZER);
     }
 }

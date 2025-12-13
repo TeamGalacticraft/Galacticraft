@@ -35,11 +35,12 @@ import java.util.List;
 public class ElectricShapedCompressingDisplay implements ElectricCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = (int) (200 / 1.5F);
+    private final int processingTime;
 
-    public ElectricShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output) {
+    public ElectricShapedCompressingDisplay(List<EntryIngredient> input, List<EntryIngredient> output, int processingTime) {
         this.input = input;
         this.output = output;
+        this.processingTime = processingTime;
     }
 
     public ElectricShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
