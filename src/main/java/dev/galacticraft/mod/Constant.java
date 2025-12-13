@@ -1223,7 +1223,7 @@ public interface Constant {
         String HEAT = "Heat";
         String INPUTS = "Inputs";
         String OUTPUTS = "Outputs";
-        String SHAPED = "Shaped";
+        String SHAPELESS = "Shapeless";
         String PROCESSING_TIME = "ProcessingTime";
         String XP = "xp";
         String ITEMS = "Items";

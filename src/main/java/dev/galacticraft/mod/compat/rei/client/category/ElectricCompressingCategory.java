@@ -103,6 +103,10 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
         widgets.add(Widgets.createResultSlotBackground(new Point(startPoint.x + OUTPUT_X_2, startPoint.y + OUTPUT_Y_2)));
         widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
+        if (recipeDisplay.isShapeless()) {
+            widgets.add(Widgets.createShapelessIcon(new Point(startPoint.x + OUTPUT_X_1 - 6, bounds.y + 5)));
+        }
         return widgets;
     }
 

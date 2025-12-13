@@ -53,12 +53,14 @@ public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
         return (int) (200 / 1.5F);
     }
 
+    boolean isShapeless();
+
     enum Serializer implements DisplaySerializer<ElectricCompressingDisplay> {
         INSTANCE;
 
         @Override
         public CompoundTag save(CompoundTag tag, ElectricCompressingDisplay display) {
-            tag.putBoolean(Constant.Nbt.SHAPED, display instanceof ElectricShapedCompressingDisplay);
+            tag.putBoolean(Constant.Nbt.SHAPELESS, display.isShapeless());
             tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
 
             ListTag list = new ListTag();
@@ -93,10 +95,10 @@ public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
 
             int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
 
-            if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new ElectricShapedCompressingDisplay(inputs, outputs, processingTime);
-            } else {
+            if (tag.getBoolean(Constant.Nbt.SHAPELESS)) {
                 return new ElectricShapelessCompressingDisplay(inputs, outputs, processingTime);
+            } else {
+                return new ElectricShapedCompressingDisplay(inputs, outputs, processingTime);
             }
         }
     }

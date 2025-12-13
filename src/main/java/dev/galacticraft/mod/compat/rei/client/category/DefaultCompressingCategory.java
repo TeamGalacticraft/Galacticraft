@@ -106,6 +106,10 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
         widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
+
+        if (recipeDisplay.isShapeless()) {
+            widgets.add(Widgets.createShapelessIcon(new Point(bounds.getMaxX() - 4, bounds.getMaxY() - 14)));
+        }
         return widgets;
     }
 

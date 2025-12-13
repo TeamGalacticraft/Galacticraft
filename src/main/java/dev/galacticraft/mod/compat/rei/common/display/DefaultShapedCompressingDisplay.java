@@ -69,4 +69,9 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
     public int getProcessingTime() {
         return this.processingTime;
     }
+
+    @Override
+    public boolean isShapeless() {
+        return false;
+    }
 }

@@ -69,4 +69,9 @@ public class ElectricShapedCompressingDisplay implements ElectricCompressingDisp
     public int getProcessingTime() {
         return this.processingTime;
     }
+
+    @Override
+    public boolean isShapeless() {
+        return false;
+    }
 }

@@ -53,12 +53,14 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
         return 200;
     }
 
+    boolean isShapeless();
+
     enum Serializer implements DisplaySerializer<DefaultCompressingDisplay> {
         INSTANCE;
 
         @Override
         public CompoundTag save(CompoundTag tag, DefaultCompressingDisplay display) {
-            tag.putBoolean(Constant.Nbt.SHAPED, display instanceof DefaultShapedCompressingDisplay);
+            tag.putBoolean(Constant.Nbt.SHAPELESS, display.isShapeless());
             tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
 
             ListTag list = new ListTag();
@@ -93,10 +95,10 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
 
             int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
 
-            if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new DefaultShapedCompressingDisplay(inputs, outputs, processingTime);
-            } else {
+            if (tag.getBoolean(Constant.Nbt.SHAPELESS)) {
                 return new DefaultShapelessCompressingDisplay(inputs, outputs, processingTime);
+            } else {
+                return new DefaultShapedCompressingDisplay(inputs, outputs, processingTime);
             }
         }
     }
