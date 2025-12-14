@@ -105,9 +105,11 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         // Chest
         final Point chestPoint = new Point(startPoint.x + CHEST_X, startPoint.y + CHEST_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, chestPoint.x - 2, chestPoint.y - 2, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT));
-        Slot chestSlot = new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput();
+        Slot chestSlot = Widgets.createSlot(chestPoint).markInput();
         if (i < n && !input.get(i).isEmpty()) {
             chestSlot.entries(input.get(i));
+        } else {
+            chestSlot.entry(EntryStack.empty().copy().withRenderer(new SlotSpriteEntryRenderer(CHEST_SLOT_SPRITE)));
         }
         widgets.add(chestSlot);
 
