@@ -227,13 +227,24 @@ public interface Constant {
         String DARK_DECORATION = "dark_decoration";
 
         String IRON_GRATING = "iron_grating";
-        String TIN_LADDER = "tin_ladder";
+        String SQUARE_LIGHT_PANEL = "square_light_panel";
+        String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
+        String LINEAR_LIGHT_PANEL = "linear_light_panel";
+        String DASHED_LIGHT_PANEL = "dashed_light_panel";
+        String DIAGONAL_LIGHT_PANEL = "diagonal_light_panel";
         String VACUUM_GLASS = "vacuum_glass";
         String CLEAR_VACUUM_GLASS = "vacuum_glass_clear";
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
+
+        // Ladders
+        String TIN_LADDER = "tin_ladder";
+        String ALUMINUM_LADDER = "aluminum_ladder";
+        String TITANIUM_LADDER = "titanium_ladder";
+        String BRONZE_LADDER = "bronze_ladder";
+        String STEEL_LADDER = "steel_ladder";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";

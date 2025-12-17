@@ -22,17 +22,19 @@
 
 package dev.galacticraft.mod.content.block.special;
 
-import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.LevelReader;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.LadderBlock;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -43,25 +45,27 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 
-public class TinLadderBlock extends LadderBlock {
-    public TinLadderBlock(BlockBehaviour.Properties properties) {
+public class MetalLadderBlock extends LadderBlock {
+    public MetalLadderBlock(BlockBehaviour.Properties properties) {
         super(properties);
+        this.registerDefaultState(stateDefinition.any().setValue(FACING, Direction.NORTH).setValue(WATERLOGGED, false));
     }
 
     @Nullable
-    private ItemInteractionResult checkCanTinLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState) {
+    private ItemInteractionResult checkCanMetalLadderBePlaced(Level level, BlockPos checkPos, Player player, ItemStack itemStack, BlockState blockState, Block ladderBlock) {
         BlockState checkState = level.getBlockState(checkPos);
 
-        // Added check to ensure ladders are all facing the same way.
-        if (checkState.is(GCBlocks.TIN_LADDER) && blockState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) != blockState.getValue(FACING)) {
+        // Added check to ensure ladders are all facing the same way. If not, then pass to default interaction.
+        if (checkState.getBlock() instanceof MetalLadderBlock && blockState.getBlock() instanceof MetalLadderBlock && checkState.getValue(FACING) != blockState.getValue(FACING)) {
             return ItemInteractionResult.PASS_TO_DEFAULT_BLOCK_INTERACTION;
         }
-        // Can only place into a fluid if its water.
+        // If we can replace the block.
         if (checkState.canBeReplaced()) {
+            // Can only be waterlogged into a fluid if its water.
             boolean waterLogged = checkState.is(Blocks.WATER)
                     && (checkState.getFluidState().getAmount() >= 8 || checkState.getFluidState().isSource())
                     || (checkState.hasProperty(WATERLOGGED) && checkState.getValue(WATERLOGGED));
-            var newState = this.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(WATERLOGGED, waterLogged);
+            var newState = ladderBlock.defaultBlockState().setValue(FACING, blockState.getValue(FACING)).setValue(WATERLOGGED, waterLogged);
             level.setBlockAndUpdate(checkPos, newState);
             level.playSound(null, checkPos, blockState.getSoundType().getPlaceSound(), SoundSource.BLOCKS, (blockState.getSoundType().getVolume() + 1.0F) / 2.0F, blockState.getSoundType().getPitch() * 0.8F);
             level.gameEvent(GameEvent.BLOCK_PLACE, checkPos, GameEvent.Context.of(player, newState));
@@ -70,7 +74,7 @@ public class TinLadderBlock extends LadderBlock {
                 itemStack.shrink(1);
             }
             return ItemInteractionResult.SUCCESS;
-        } else if (!checkState.is(this)) {
+        } else if (!(checkState.getBlock() instanceof MetalLadderBlock)) {
             return ItemInteractionResult.SKIP_DEFAULT_BLOCK_INTERACTION;
         }
         return null;
@@ -78,11 +82,12 @@ public class TinLadderBlock extends LadderBlock {
 
     @Override
     protected ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
-        if (stack.is(GCBlocks.TIN_LADDER.asItem())) { // Checks stack in hand is a tin ladder.
+        if (stack.is(GCItemTags.METAL_LADDER_BLOCKS)) { // Checks stack in hand is a metal ladder.
+            Block ladderBlock = ((BlockItem)(stack.getItem())).getBlock();
             if (player.getXRot() < 0f) { // If looking above horizontal plane.
                 // Find a pos directly above the existing ladder (this) but below world height where the ladder can be placed.
                 for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() < level.getMaxBuildHeight(); checkPos = checkPos.offset(0, 1, 0)) {
-                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, stack, state);
+                    var result = this.checkCanMetalLadderBePlaced(level, checkPos, player, stack, state, ladderBlock);
                     if (result != null) {
                         return result;
                     }
@@ -90,7 +95,7 @@ public class TinLadderBlock extends LadderBlock {
             } else {
                 // Find a pos directly below the existing ladder (this) but above world bottom where the ladder can be placed.
                 for (BlockPos checkPos = new BlockPos.MutableBlockPos(pos.getX(), pos.getY(), pos.getZ()); checkPos.getY() > level.getMinBuildHeight(); checkPos = checkPos.offset(0, -1, 0)) {
-                    var result = this.checkCanTinLadderBePlaced(level, checkPos, player, stack, state);
+                    var result = this.checkCanMetalLadderBePlaced(level, checkPos, player, stack, state, ladderBlock);
                     if (result != null) {
                         return result;
                     }
@@ -113,7 +118,6 @@ public class TinLadderBlock extends LadderBlock {
 
     /// Checks to see if a ladder could survive in the suggested location. Called when a nearby block is broken or
     /// and sometimes when a new ladder is being placed.
-    /// If you want other ladder blocks to support tin ladders, then use instance of LadderBlock instead of is(TIN_LADDER)
     @Override
     public boolean canSurvive(BlockState blockState, LevelReader level, BlockPos blockPos) {
         Direction facingDirection = blockState.getValue(FACING);
@@ -127,12 +131,12 @@ public class TinLadderBlock extends LadderBlock {
             if (direction == Direction.UP || direction == Direction.DOWN) {
                 // If the face is sturdy
                 if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite())) return true;
-                // If it's a tin ladder in facing the same way
-                if (checkState.is(GCBlocks.TIN_LADDER) && checkState.getValue(FACING) == facingDirection) return true;
+                // If it's a metal ladder in facing the same way
+                if (checkState.getBlock() instanceof MetalLadderBlock && checkState.getValue(FACING) == facingDirection) return true;
             } else { // It's on the same level - not above or below.
-                // If the face is sturdy and it isn't a tin ladder. This prevents the situation where a tin ladder can be placed
-                // back to back with another tin ladder and they can end up supporting themselves floating in the air.
-                if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite()) && !checkState.is(GCBlocks.TIN_LADDER)) return true;
+                // If the face is sturdy and it isn't a metal ladder. This prevents the situation where a metal ladder can be placed
+                // back to back with another metal ladder and they can end up supporting themselves floating in the air.
+                if (checkState.isFaceSturdy(level, checkPos, direction.getOpposite()) && !(checkState.getBlock() instanceof MetalLadderBlock)) return true;
             }
         }
         return false;
@@ -147,9 +151,9 @@ public class TinLadderBlock extends LadderBlock {
         if ((blockState.isFaceSturdy(level, blockPos, Direction.UP) && (direction == Direction.DOWN))
                 || (blockState.isFaceSturdy(level, blockPos, Direction.DOWN) && (direction == Direction.UP))) return true;
 
-        // If this isn't a tin ladder block, and we know it isn't solid, then not supported.
+        // If this isn't a metal ladder block, and we know it isn't solid, then not supported.
         // Change this to instanceof LadderBlock if you want wooden (and other ladders) to be considered support.
-        if (!blockState.is(GCBlocks.TIN_LADDER)) return false;
+        if (!(blockState.getBlock() instanceof MetalLadderBlock)) return false;
 
         // Check to ensure that the ladder is facing in the same direction.
         if (blockState.getValue(FACING) != facingDirection) return false;
