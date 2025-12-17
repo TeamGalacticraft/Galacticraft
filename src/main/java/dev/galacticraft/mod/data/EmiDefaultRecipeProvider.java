@@ -37,7 +37,7 @@ import java.util.List;
 import java.util.concurrent.CompletableFuture;
 
 public class EmiDefaultRecipeProvider implements DataProvider {
-    private static final List<ResourceLocation> defaultRecipes = new ArrayList<>();
+    private static final List<ResourceLocation> DEFAULT_RECIPES = new ArrayList<>();
 
     private final FabricDataOutput output;
     private final CompletableFuture<HolderLookup.Provider> registries;
@@ -50,7 +50,7 @@ public class EmiDefaultRecipeProvider implements DataProvider {
     @Override
     public CompletableFuture<?> run(CachedOutput writer) {
         JsonArray jsonArray = new JsonArray();
-        defaultRecipes.forEach(resourceLocation -> jsonArray.add(resourceLocation.toString()));
+        DEFAULT_RECIPES.forEach(resourceLocation -> jsonArray.add(resourceLocation.toString()));
         JsonObject jsonObject = new JsonObject();
         jsonObject.add("added", jsonArray);
         return DataProvider.saveStable(writer, jsonObject,
@@ -58,7 +58,7 @@ public class EmiDefaultRecipeProvider implements DataProvider {
     }
 
     public static void add(ResourceLocation resourceLocation) {
-        defaultRecipes.add(resourceLocation);
+        DEFAULT_RECIPES.add(resourceLocation);
     }
 
     @Override

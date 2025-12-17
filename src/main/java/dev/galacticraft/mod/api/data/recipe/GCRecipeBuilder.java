@@ -41,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class GCRecipeBuilder<T extends GCRecipeBuilder> implements RecipeBuilder {
+public abstract class GCRecipeBuilder<T extends GCRecipeBuilder<T>> implements RecipeBuilder {
     protected final String prefix;
     @Nullable
     protected final RecipeCategory category;
