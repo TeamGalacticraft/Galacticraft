@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:web_string"
+    },
+    {
+      "item": "galacticraft:glowstone_torch"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:web_torch"
+  }
+}

@@ -366,6 +366,10 @@ public class GCBlocks {
     public static final Block UNLIT_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_WALL_TORCH, new UnlitWallTorchBlock(Blocks.WALL_TORCH, BlockBehaviour.Properties.ofFullCopy(UNLIT_TORCH).dropsLike(UNLIT_TORCH)));
     public static final Block UNLIT_SOUL_WALL_TORCH = BLOCKS.register(Constant.Block.UNLIT_SOUL_WALL_TORCH, new UnlitWallTorchBlock(Blocks.SOUL_WALL_TORCH, BlockBehaviour.Properties.ofFullCopy(UNLIT_SOUL_TORCH).dropsLike(UNLIT_SOUL_TORCH)));
 
+    // WEB TORCH & WEB STRING
+    public static final Block WEB_TORCH = BLOCKS.registerWithItem(Constant.Block.WEB_TORCH, new WebTorchBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).sound(SoundType.COBWEB).noCollission().strength(3.0F).pushReaction(PushReaction.DESTROY).lightLevel(state -> 10)));
+    public static final Block WEB_STRING = BLOCKS.registerWithItem(Constant.Block.WEB_STRING, new WebStringBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOL).sound(SoundType.COBWEB).noCollission().strength(3.0F).pushReaction(PushReaction.DESTROY)));
+
     // LANTERNS - Don't use registerWithItem in order for the torches to be before the lanterns
     public static final Block GLOWSTONE_LANTERN = BLOCKS.register(Constant.Block.GLOWSTONE_LANTERN, new GlowstoneLanternBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN)));
     public static final Block UNLIT_LANTERN = BLOCKS.register(Constant.Block.UNLIT_LANTERN, new UnlitLanternBlock(Blocks.LANTERN, BlockBehaviour.Properties.ofFullCopy(Blocks.LANTERN).lightLevel(state -> 0)));
@@ -392,7 +396,7 @@ public class GCBlocks {
         return false;
     }
 
-    private static ToIntFunction<BlockState> litBlockEmission(int i) {
-        return blockState -> blockState.getValue(BlockStateProperties.LIT) ? i : 0;
+    private static ToIntFunction<BlockState> litBlockEmission(int intensity) {
+        return blockState -> blockState.getValue(BlockStateProperties.LIT) ? intensity : 0;
     }
 }

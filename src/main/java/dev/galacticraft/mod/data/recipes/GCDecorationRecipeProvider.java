@@ -34,6 +34,7 @@ import net.minecraft.data.BlockFamily;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.ShapedRecipeBuilder;
+import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.data.recipes.SimpleCookingRecipeBuilder;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
@@ -85,6 +86,12 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("G")
                 .pattern("S")
                 .unlockedBy(getHasName(Items.GLOWSTONE_DUST), has(ConventionalItemTags.GLOWSTONE_DUSTS))
+                .save(output);
+
+        ShapelessRecipeBuilder.shapeless(RecipeCategory.DECORATIONS, GCBlocks.WEB_TORCH, 1)
+                .requires(GCBlocks.WEB_STRING)
+                .requires(GCItems.GLOWSTONE_TORCH)
+                .unlockedBy(getHasName(GCBlocks.WEB_STRING), has(GCBlocks.WEB_STRING))
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.GLOWSTONE_LANTERN)
