@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.BlockFamily;
 import net.minecraft.world.level.block.Block;
@@ -54,6 +55,16 @@ public class GCBlockFamilies {
             .slab(MOON_ROCK_SLAB)
             .stairs(MOON_ROCK_STAIRS)
             .wall(MOON_ROCK_WALL)
+            .getFamily();
+    public static final BlockFamily MOON_DUNGEON_BRICKS = builder(GCBlocks.MOON_DUNGEON_BRICKS)
+            .slab(MOON_DUNGEON_BRICK_SLAB)
+            .stairs(MOON_DUNGEON_BRICK_STAIRS)
+            .wall(MOON_DUNGEON_BRICK_WALL)
+            .getFamily();
+    public static final BlockFamily CRACKED_MOON_DUNGEON_BRICKS = builder(GCBlocks.CRACKED_MOON_DUNGEON_BRICKS)
+            .slab(CRACKED_MOON_DUNGEON_BRICK_SLAB)
+            .stairs(CRACKED_MOON_DUNGEON_BRICK_STAIRS)
+            .wall(CRACKED_MOON_DUNGEON_BRICK_WALL)
             .getFamily();
     public static final BlockFamily MOON_ROCK_BRICKS = builder(MOON_ROCK_BRICK)
             .slab(MOON_ROCK_BRICK_SLAB)

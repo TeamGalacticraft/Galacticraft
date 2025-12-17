@@ -57,6 +57,8 @@ public class GCItems {
     public static final Item UNLIT_SOUL_LANTERN = ITEMS.register(Constant.Block.UNLIT_SOUL_LANTERN, new BlockItem(GCBlocks.UNLIT_SOUL_LANTERN, new Item.Properties()));
 
     // MATERIALS
+    public static final Item MOON_DUNGEON_BRICK = registerGeneric(Constant.Item.MOON_DUNGEON_BRICK);
+
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
 
     public static final Item LUNAR_SAPPHIRE = registerGeneric(Constant.Item.LUNAR_SAPPHIRE);

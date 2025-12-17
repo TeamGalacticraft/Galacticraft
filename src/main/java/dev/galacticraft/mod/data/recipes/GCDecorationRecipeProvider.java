@@ -139,6 +139,208 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
                 .pattern("T T")
                 .unlockedBy(getHasName(GCItems.TIN_INGOT), has(GCItemTags.TIN_INGOTS))
                 .save(output);
+
+        // Metal decoration blocks
+        decorationBlock(output, GCItems.COMPRESSED_TIN,
+                GCBlocks.TIN_DECORATION.item(),
+                GCBlocks.TIN_DECORATION.slabItem(),
+                GCBlocks.TIN_DECORATION.stairsItem(),
+                GCBlocks.TIN_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_TIN,
+                GCBlocks.TIN_DECORATION.detailedItem(),
+                GCBlocks.TIN_DECORATION.detailedSlabItem(),
+                GCBlocks.TIN_DECORATION.detailedStairsItem(),
+                GCBlocks.TIN_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_COPPER,
+                GCBlocks.COPPER_DECORATION.item(),
+                GCBlocks.COPPER_DECORATION.slabItem(),
+                GCBlocks.COPPER_DECORATION.stairsItem(),
+                GCBlocks.COPPER_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_COPPER,
+                GCBlocks.COPPER_DECORATION.detailedItem(),
+                GCBlocks.COPPER_DECORATION.detailedSlabItem(),
+                GCBlocks.COPPER_DECORATION.detailedStairsItem(),
+                GCBlocks.COPPER_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_IRON,
+                GCBlocks.IRON_DECORATION.item(),
+                GCBlocks.IRON_DECORATION.slabItem(),
+                GCBlocks.IRON_DECORATION.stairsItem(),
+                GCBlocks.IRON_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_IRON,
+                GCBlocks.IRON_DECORATION.detailedItem(),
+                GCBlocks.IRON_DECORATION.detailedSlabItem(),
+                GCBlocks.IRON_DECORATION.detailedStairsItem(),
+                GCBlocks.IRON_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
+                GCBlocks.ALUMINUM_DECORATION.item(),
+                GCBlocks.ALUMINUM_DECORATION.slabItem(),
+                GCBlocks.ALUMINUM_DECORATION.stairsItem(),
+                GCBlocks.ALUMINUM_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_ALUMINUM,
+                GCBlocks.ALUMINUM_DECORATION.detailedItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedSlabItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedStairsItem(),
+                GCBlocks.ALUMINUM_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_STEEL,
+                GCBlocks.STEEL_DECORATION.item(),
+                GCBlocks.STEEL_DECORATION.slabItem(),
+                GCBlocks.STEEL_DECORATION.stairsItem(),
+                GCBlocks.STEEL_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_STEEL,
+                GCBlocks.STEEL_DECORATION.detailedItem(),
+                GCBlocks.STEEL_DECORATION.detailedSlabItem(),
+                GCBlocks.STEEL_DECORATION.detailedStairsItem(),
+                GCBlocks.STEEL_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_BRONZE,
+                GCBlocks.BRONZE_DECORATION.item(),
+                GCBlocks.BRONZE_DECORATION.slabItem(),
+                GCBlocks.BRONZE_DECORATION.stairsItem(),
+                GCBlocks.BRONZE_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_BRONZE,
+                GCBlocks.BRONZE_DECORATION.detailedItem(),
+                GCBlocks.BRONZE_DECORATION.detailedSlabItem(),
+                GCBlocks.BRONZE_DECORATION.detailedStairsItem(),
+                GCBlocks.BRONZE_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
+                GCBlocks.METEORIC_IRON_DECORATION.item(),
+                GCBlocks.METEORIC_IRON_DECORATION.slabItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.stairsItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_METEORIC_IRON,
+                GCBlocks.METEORIC_IRON_DECORATION.detailedItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedSlabItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedStairsItem(),
+                GCBlocks.METEORIC_IRON_DECORATION.detailedWallItem()
+        );
+
+        decorationBlock(output, GCItems.COMPRESSED_TITANIUM,
+                GCBlocks.TITANIUM_DECORATION.item(),
+                GCBlocks.TITANIUM_DECORATION.slabItem(),
+                GCBlocks.TITANIUM_DECORATION.stairsItem(),
+                GCBlocks.TITANIUM_DECORATION.wallItem()
+        );
+        detailedDecorationBlock(output, GCItems.COMPRESSED_TITANIUM,
+                GCBlocks.TITANIUM_DECORATION.detailedItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedSlabItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedStairsItem(),
+                GCBlocks.TITANIUM_DECORATION.detailedWallItem()
+        );
+
+        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.item(),
+                GCBlocks.DARK_DECORATION.slabItem(),
+                GCBlocks.DARK_DECORATION.stairsItem(),
+                GCBlocks.DARK_DECORATION.wallItem()
+        );
+        decorationBlockVariants(output, GCBlocks.DARK_DECORATION.detailedItem(),
+                GCBlocks.DARK_DECORATION.detailedSlabItem(),
+                GCBlocks.DARK_DECORATION.detailedStairsItem(),
+                GCBlocks.DARK_DECORATION.detailedWallItem()
+        );
+
+        // Rock decoration blocks
+        decorationBlockVariants(output, GCBlocks.MOON_ROCK,
+                GCBlocks.MOON_ROCK_SLAB,
+                GCBlocks.MOON_ROCK_STAIRS,
+                GCBlocks.MOON_ROCK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MOON_DUNGEON_BRICKS,
+                GCBlocks.MOON_DUNGEON_BRICK_SLAB,
+                GCBlocks.MOON_DUNGEON_BRICK_STAIRS,
+                GCBlocks.MOON_DUNGEON_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.CRACKED_MOON_DUNGEON_BRICKS,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_DUNGEON_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MOON_ROCK_BRICK,
+                GCBlocks.MOON_ROCK_BRICK_SLAB,
+                GCBlocks.MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.MOON_ROCK_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.CRACKED_MOON_ROCK_BRICK,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.POLISHED_MOON_ROCK,
+                GCBlocks.POLISHED_MOON_ROCK_SLAB,
+                GCBlocks.POLISHED_MOON_ROCK_STAIRS,
+                GCBlocks.POLISHED_MOON_ROCK_WALL
+        );
+
+        smeltBuildingBlock(output, GCItems.MOON_DUNGEON_BRICK, GCBlocks.MOON_TURF);
+        squareStone(output, GCBlocks.MOON_DUNGEON_BRICKS, GCItems.MOON_DUNGEON_BRICK, 1);
+        chiseledStone(output, GCBlocks.CHISELED_MOON_DUNGEON_BRICKS, GCBlocks.MOON_DUNGEON_BRICK_SLAB, GCBlocks.MOON_DUNGEON_BRICKS);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_DUNGEON_BRICKS, GCBlocks.MOON_DUNGEON_BRICKS);
+
+        smeltBuildingBlock(output, GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK);
+        squareStone(output, GCBlocks.MOON_ROCK_BRICK, GCBlocks.MOON_ROCK);
+        squareStone(output, GCBlocks.POLISHED_MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        chiseledStone(output, GCBlocks.CHISELED_MOON_ROCK_BRICK, GCBlocks.MOON_ROCK_BRICK_SLAB, GCBlocks.MOON_ROCK, GCBlocks.MOON_ROCK_BRICK);
+        pillar(output, GCBlocks.MOON_ROCK_PILLAR, GCBlocks.MOON_ROCK);
+
+        decorationBlockVariants(output, GCBlocks.LUNASLATE,
+                GCBlocks.LUNASLATE_SLAB,
+                GCBlocks.LUNASLATE_STAIRS,
+                GCBlocks.LUNASLATE_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.COBBLED_LUNASLATE,
+                GCBlocks.COBBLED_LUNASLATE_SLAB,
+                GCBlocks.COBBLED_LUNASLATE_STAIRS,
+                GCBlocks.COBBLED_LUNASLATE_WALL
+        );
+        smeltBuildingBlock(output, GCBlocks.LUNASLATE, GCBlocks.COBBLED_LUNASLATE);
+
+        decorationBlockVariants(output, GCBlocks.MOON_BASALT,
+                GCBlocks.MOON_BASALT_SLAB,
+                GCBlocks.MOON_BASALT_STAIRS,
+                GCBlocks.MOON_BASALT_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MOON_BASALT_BRICK,
+                GCBlocks.MOON_BASALT_BRICK_SLAB,
+                GCBlocks.MOON_BASALT_BRICK_STAIRS,
+                GCBlocks.MOON_BASALT_BRICK_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.CRACKED_MOON_BASALT_BRICK,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_SLAB,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS,
+                GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL
+        );
+        squareStone(output, GCBlocks.MOON_BASALT_BRICK, GCBlocks.MOON_BASALT);
+        smeltBuildingBlock(output, GCBlocks.CRACKED_MOON_BASALT_BRICK, GCBlocks.MOON_BASALT_BRICK);
+
+        decorationBlockVariants(output, GCBlocks.MARS_STONE,
+                GCBlocks.MARS_STONE_SLAB,
+                GCBlocks.MARS_STONE_STAIRS,
+                GCBlocks.MARS_STONE_WALL
+        );
+        decorationBlockVariants(output, GCBlocks.MARS_COBBLESTONE,
+                GCBlocks.MARS_COBBLESTONE_SLAB,
+                GCBlocks.MARS_COBBLESTONE_STAIRS,
+                GCBlocks.MARS_COBBLESTONE_WALL
+        );
+        smeltBuildingBlock(output, GCBlocks.MARS_STONE, GCBlocks.MARS_COBBLESTONE);
     }
 
     private static void generateBlockFamilyRecipes(RecipeOutput output, BlockFamily blockFamily) {
@@ -176,8 +378,12 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base) {
+        squareStone(output, brick, base, 4);
+    }
+
+    public static void squareStone(RecipeOutput output, ItemLike brick, ItemLike base, int count) {
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, brick, base);
-        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, 4)
+        ShapedRecipeBuilder.shaped(RecipeCategory.BUILDING_BLOCKS, brick, count)
                 .define('#', base)
                 .pattern("##")
                 .pattern("##")
@@ -192,8 +398,12 @@ public class GCDecorationRecipeProvider extends FabricRecipeProvider {
     }
 
     public static void chiseledStone(RecipeOutput output, ItemLike chiseled, ItemLike brickSlab, ItemLike base, ItemLike brick) {
-        chiseled(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brickSlab);
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, base);
+        chiseledStone(output, chiseled, brickSlab, brick);
+    }
+
+    public static void chiseledStone(RecipeOutput output, ItemLike chiseled, ItemLike brickSlab, ItemLike brick) {
+        chiseled(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brickSlab);
         stonecutterResultFromBase(output, RecipeCategory.BUILDING_BLOCKS, chiseled, brick);
     }
 

@@ -62,7 +62,16 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
                 output.accept(MOON_SURFACE_ROCK);
-                output.accept(MOON_DUNGEON_BRICK);
+
+                output.accept(MOON_DUNGEON_BRICKS);
+                output.accept(MOON_DUNGEON_BRICK_SLAB);
+                output.accept(MOON_DUNGEON_BRICK_STAIRS);
+                output.accept(MOON_DUNGEON_BRICK_WALL);
+                output.accept(CHISELED_MOON_DUNGEON_BRICKS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICKS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_SLAB);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_STAIRS);
+                output.accept(CRACKED_MOON_DUNGEON_BRICK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
@@ -308,6 +317,7 @@ public class GCCreativeModeTabs {
                 output.accept(EMERGENCY_KIT);
 
                 // MATERIALS
+                output.accept(MOON_DUNGEON_BRICK);
                 output.accept(RAW_TIN);
                 output.accept(RAW_ALUMINUM);
                 output.accept(RAW_METEORIC_IRON);

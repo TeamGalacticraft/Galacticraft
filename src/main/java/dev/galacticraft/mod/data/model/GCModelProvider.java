@@ -114,8 +114,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_DIRT);
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
         generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
-        generator.createTrivialCube(GCBlocks.MOON_DUNGEON_BRICK);
         generator.createTrivialCube(GCBlocks.CHISELED_MOON_ROCK_BRICK);
+        generator.createTrivialCube(GCBlocks.CHISELED_MOON_DUNGEON_BRICKS);
+//        generator.createTrivialCube(GCBlocks.CRACKED_MOON_DUNGEON_BRICKS);
         generator.createAxisAlignedPillarBlock(GCBlocks.MOON_ROCK_PILLAR, TexturedModel.COLUMN);
         generator.createAxisAlignedPillarBlock(GCBlocks.OLIVINE_BLOCK, TexturedModel.COLUMN);
 
@@ -610,6 +611,8 @@ public class GCModelProvider extends FabricModelProvider {
     @Override
     public void generateItemModels(ItemModelGenerators generator) {
         // MATERIALS
+        generator.generateFlatItem(GCItems.MOON_DUNGEON_BRICK, ModelTemplates.FLAT_ITEM);
+
         generator.generateFlatItem(GCItems.SILICON, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.RAW_METEORIC_IRON, ModelTemplates.FLAT_ITEM);

@@ -12,7 +12,7 @@
     "frame": "goal",
     "icon": {
       "count": 1,
-      "id": "galacticraft:moon_dungeon_brick"
+      "id": "galacticraft:moon_dungeon_bricks"
     },
     "title": {
       "translate": "advancement.galacticraft.moon_dungeon.title"
