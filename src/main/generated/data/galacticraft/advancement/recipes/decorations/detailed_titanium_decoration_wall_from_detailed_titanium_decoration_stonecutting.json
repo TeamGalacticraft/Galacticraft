@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:detailed_titanium_decoration_wall_from_detailed_titanium_decoration_stonecutting"
+        "recipe": "galacticraft:detailed_titanium_decoration_wall_from_detailed_titanium_decoration_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:detailed_titanium_decoration_wall_from_detailed_titanium_decoration_stonecutting"
+      "galacticraft:detailed_titanium_decoration_wall_from_detailed_titanium_decoration_stonecutting"
     ]
   }
 }
