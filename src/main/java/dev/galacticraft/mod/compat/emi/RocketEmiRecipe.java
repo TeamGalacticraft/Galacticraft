@@ -50,6 +50,7 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
 
     private final int bodyHeight;
     private final boolean hasBoosters;
+    private static final EmiIngredient EMPTY = EmiIngredient.of(Ingredient.EMPTY);
     public static RocketEntity ROCKET_ENTITY = new RocketEntity(GCEntityTypes.ROCKET, Minecraft.getInstance().level);
 
     static {
@@ -83,7 +84,7 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
         if (slot < this.inputs.size()) {
             widgets.addSlot(this.inputs.get(slot++), CHEST_SLOT_X, CHEST_SLOT_Y);
         } else {
-            widgets.addTexture(SCREEN_TEXTURE, CHEST_SLOT_X + 1, CHEST_SLOT_Y + 1, 16, 16, CHEST_U + 2, CHEST_V + 2);
+            widgets.addSlot(EMPTY, CHEST_SLOT_X, CHEST_SLOT_Y).backgroundTexture(SCREEN_TEXTURE, CHEST_U + 1, CHEST_V + 1);
         }
 
         // Adds an output slot on the right
