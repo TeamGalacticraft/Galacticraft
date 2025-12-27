@@ -327,7 +327,8 @@
   },
   "depends": {
     "minecraft": ">=1.21",
-    "fabricloader": ">=0.15.3"
+    "fabricloader": ">=0.15.3",
+    "fabric-api": ">=$fabricVersion"
   },
   "suggests": {
     "modmenu": "*",
