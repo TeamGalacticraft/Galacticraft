@@ -271,6 +271,7 @@ tasks.processResources {
     val properties = mapOf(
         "version" to project.version,
         "fabricVersion" to project.property("fabric.version"),
+        "minecraftVersion" to project.property("minecraft.version"),
     )
     inputs.properties(properties)
 

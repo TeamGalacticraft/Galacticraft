@@ -326,7 +326,7 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.21",
+    "minecraft": "=$minecraftVersion",
     "fabricloader": ">=0.15.3",
     "fabric-api": ">=$fabricVersion"
   },
