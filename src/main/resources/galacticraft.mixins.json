@@ -48,7 +48,9 @@
     "client.ScreenEffectRendererMixin",
     "client.SpriteContentAccessor",
     "client.CreativeScreenMixin",
-    "client.AbstractContainerScreenAccessor"
+    "client.AbstractContainerScreenAccessor",
+    "client.ScreenAccessor",
+    "client.CreativeModeInventoryScreenAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {

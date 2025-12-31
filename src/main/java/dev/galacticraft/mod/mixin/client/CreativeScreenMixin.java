@@ -1,31 +1,41 @@
 package dev.galacticraft.mod.mixin.client;
 
+import dev.galacticraft.mod.content.GCAccessorySlots;
+import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
+import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.CreativeModeTabs;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
+import org.jetbrains.annotations.NotNull;
+import org.spongepowered.asm.mixin.*;
+import org.spongepowered.asm.mixin.gen.Invoker;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Constructor;
+import java.util.Collection;
+import java.util.Iterator;
+import java.util.List;
+import java.util.ListIterator;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeScreenMixin {
 
     private static final ResourceLocation GC_GUIARROWS_TEX =
             ResourceLocation.fromNamespaceAndPath("galacticraft", "textures/gui/vertical_arrows.png");
+    private static final ResourceLocation GC_GUIBG_TEX =
+            ResourceLocation.fromNamespaceAndPath("galacticraft", "textures/gui/creative_tab_inventory.png");
 
     @Shadow private static CreativeModeTab selectedTab;
 
@@ -46,30 +56,51 @@ public abstract class CreativeScreenMixin {
             c.setAccessible(true);
             return (Slot) c.newInstance(target, invSlot, x, y);
         } catch (Exception e) {
-            throw new RuntimeException("Не удалось создать SlotWrapper", e);
+            throw new RuntimeException("Cannot create SlotWrapper", e);
         }
     }
 
-    @Inject(method = "selectTab", at=@At("TAIL"))
-     void addExtraSlotToInventoryTab(CreativeModeTab group, CallbackInfo ci) {
+    /**
+     * @author
+     * @reason
+     */
+    @Overwrite
+    public void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY)
+    {
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
+        int leftPos = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
+        int topPos = ((AbstractContainerScreenAccessor)(Object)this).getTopPos();
+        int imageWidth = ((AbstractContainerScreenAccessor)(Object)this).getImageWidth();
+        int imageHeight = ((AbstractContainerScreenAccessor)(Object)this).getImageHeight();
 
-        if (!self.isInventoryOpen()) return;
+        for(CreativeModeTab creativeModeTab : CreativeModeTabs.tabs()) {
+            if (creativeModeTab != selectedTab) {
+                ((CreativeModeInventoryScreenAccessor)(Object)this).GCrenderTabButton(graphics, creativeModeTab);
+            }
+        }
 
-        AbstractContainerMenu invMenu = self.getMenu();
 
-        int extraTargetIndex = 0;
+        graphics.blit(bGCInventory ? GC_GUIBG_TEX : selectedTab.getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        ((CreativeModeInventoryScreenAccessor)(Object)this).getSearchBox().render(graphics, mouseX, mouseY, delta);
+        int i = leftPos + 175;
+        int j = topPos + 18;
+        int k = j + 112;
+        if (selectedTab.canScroll()) {
+            ResourceLocation resourceLocation =  ((CreativeModeInventoryScreenAccessor)(Object)this).GCcanScroll() ? ((CreativeModeInventoryScreenAccessor)(Object)this).get_SCROLLER_SPRITE() : ((CreativeModeInventoryScreenAccessor)(Object)this).get_SCROLLER_DISABLED_SPRITE();
+            graphics.blitSprite(resourceLocation, i, j + (int)((float)(k - j - 17) * ((CreativeModeInventoryScreenAccessor)(Object)this).getScrollOffs()), 12, 15);
+        }
 
-        int x = 108 + 18;
-        int y = 6;
+        ((CreativeModeInventoryScreenAccessor)(Object)this).GCrenderTabButton(graphics, selectedTab);
+        if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
+            InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, bGCInventory ? leftPos + 54 : leftPos + 73, topPos + 6, leftPos + 105, topPos + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, ((ScreenAccessor)(Object)this).getMinecraft().player);
+        }
 
-        Slot wrapped = makeSlotWrapper(invMenu.slots.get(extraTargetIndex), extraTargetIndex, x, y);
-        ((CreativeModeInventoryScreen.ItemPickerMenu) self.getMenu()).slots.add(wrapped);
+        renderArrows(graphics, delta, mouseX, mouseY);
     }
 
-    @Inject(method = "renderBg", at=@At("TAIL"))
-    private void renderArrows(GuiGraphics g, float delta, int MouseX, int MouseY, CallbackInfo ci)
+    private void renderArrows(GuiGraphics g, float delta, int MouseX, int MouseY)
     {
+        CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
 
         if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
@@ -204,5 +235,6 @@ public abstract class CreativeScreenMixin {
             }
         }
     }
+
 
 }
