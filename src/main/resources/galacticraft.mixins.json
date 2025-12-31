@@ -46,7 +46,9 @@
     "client.MinecraftMixin",
     "client.PauseMenuScreenMixin",
     "client.ScreenEffectRendererMixin",
-    "client.SpriteContentAccessor"
+    "client.SpriteContentAccessor",
+    "client.CreativeScreenMixin",
+    "client.AbstractContainerScreenAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {
