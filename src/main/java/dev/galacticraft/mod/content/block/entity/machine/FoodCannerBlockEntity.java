@@ -36,6 +36,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
@@ -49,6 +50,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -91,6 +94,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     private boolean transferringCan = false;
     private boolean transferringFood = false;
     private boolean ejectCan = false;
+    private boolean hasCan = false;
+    private boolean hadCan = false;
     private boolean[] rowsConsumed = {false, false, false, false};
 
     private static final StorageSpec SPEC = StorageSpec.of(
@@ -155,6 +160,12 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         profiler.push("extract_resources");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
+
+        this.hasCan = !this.inputSlotEmpty() || !this.storageSlotEmpty() || !this.outputSlotEmpty();
+        if (this.hasCan != this.hadCan) {
+            this.hadCan = this.hasCan;
+            world.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override
@@ -164,6 +175,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         }
         this.incrementProgress();
         if (this.storageSlotEmpty()) {
+            this.ejectCan = false;
             if (this.inputSlotEmpty()) {
                 this.reset(0);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
@@ -287,6 +299,13 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         }
 
         return GCMachineStatuses.CANNING;
+    }
+
+    @Override
+    public void updateActiveState(Level level, BlockPos pos, BlockState state, boolean active) {
+        this.hasCan = !this.inputSlotEmpty() || !this.storageSlotEmpty() || !this.outputSlotEmpty();
+        this.hadCan = this.hasCan;
+        super.updateActiveState(level, pos, state.setValue(FoodCannerBlock.CAN, this.hasCan), active);
     }
 
     private boolean inputSlotEmpty() {

@@ -35,7 +35,7 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
 public record ControlEntityPayload(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left,
-                                   boolean right, boolean jumping, boolean shiftKeyDown) implements C2SPayload {
+                                   boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) implements C2SPayload {
     public static final StreamCodec<ByteBuf, ControlEntityPayload> STREAM_CODEC = StreamCodecs.composite(
             ByteBufCodecs.FLOAT,
             p -> p.leftImpulse,
@@ -53,6 +53,8 @@ public record ControlEntityPayload(float leftImpulse, float forwardImpulse, bool
             p -> p.jumping,
             ByteBufCodecs.BOOL,
             p -> p.shiftKeyDown,
+            ByteBufCodecs.BOOL,
+            p -> p.invertControls,
             ControlEntityPayload::new
     );
     public static final ResourceLocation ID = Constant.id("control_entity");
@@ -61,7 +63,7 @@ public record ControlEntityPayload(float leftImpulse, float forwardImpulse, bool
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         if (context.player().isPassenger() && context.player().getVehicle() instanceof ControllableEntity controllable) {
-            controllable.inputTick(leftImpulse(), forwardImpulse(), up(), down(), left(), right(), jumping(), shiftKeyDown());
+            controllable.inputTick(leftImpulse(), forwardImpulse(), up(), down(), left(), right(), jumping(), shiftKeyDown(), invertControls());
         }
     }
 

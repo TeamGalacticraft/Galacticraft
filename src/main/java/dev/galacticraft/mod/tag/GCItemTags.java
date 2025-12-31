@@ -45,6 +45,8 @@ public class GCItemTags {
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
 
+    public static final TagKey<Item> ACID_RESISTANT = galacticraftTag("acid_resistant");
+
     public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
 
@@ -92,6 +94,7 @@ public class GCItemTags {
     public static final TagKey<Item> TITANIUM_RAW_MATERIALS = commonTag("raw_materials/titanium");
 
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
+    public static final TagKey<Item> BRONZE_INGOTS = commonTag("ingots/bronze");
     public static final TagKey<Item> DESH_INGOTS = commonTag("ingots/desh");
     public static final TagKey<Item> LEAD_INGOTS = commonTag("ingots/lead");
     public static final TagKey<Item> METEORIC_IRON_INGOTS = commonTag("ingots/meteoric_iron");

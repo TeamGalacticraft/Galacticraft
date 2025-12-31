@@ -43,6 +43,7 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.util.FormattedCharSequence;
+import net.minecraft.util.Mth;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
@@ -77,6 +78,7 @@ public class ConfigImpl implements Config {
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private boolean squareCannedFood = false;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -86,6 +88,7 @@ public class ConfigImpl implements Config {
     private long parrotOxygenConsumptionRate = 1 * FluidConstants.DROPLET;
     private boolean cannotEatInNoAtmosphere = true;
     private boolean cannotEatWithMask = true;
+    private float meteorSpawnMultiplier = 1.0f;
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
@@ -300,6 +303,20 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public boolean squareCannedFood() {
+        return this.squareCannedFood;
+    }
+
+    public void setSquareCannedFood(boolean squareCannedFood) {
+        boolean reload = this.squareCannedFood != squareCannedFood;
+        this.squareCannedFood = squareCannedFood;
+        if (reload) {
+            Constant.LOGGER.info("Reload resource packs");
+            Minecraft.getInstance().reloadResourcePacks();
+        }
+    }
+
+    @Override
     public long smallOxygenTankCapacity() {
         return this.smallOxygenTankCapacity;
     }
@@ -378,6 +395,15 @@ public class ConfigImpl implements Config {
 
     public void setCannotEatWithMask(boolean cannotEatWithMask) {
         this.cannotEatWithMask = cannotEatWithMask;
+    }
+
+    @Override
+    public float meteorSpawnMultiplier() {
+        return this.meteorSpawnMultiplier;
+    }
+
+    public void setMeteorSpawnMultiplier(float meteorSpawnMultiplier) {
+        this.meteorSpawnMultiplier = meteorSpawnMultiplier;
     }
 
     @Override
@@ -728,6 +754,20 @@ public class ConfigImpl implements Config {
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
 
+            // --- CLIENT CONFIG ---
+
+            ConfigCategory client = b.getOrCreateCategory(Component.translatable(Translations.Config.CLIENT));
+
+            client.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.SQUARE_CANNED_FOOD),
+                    config.squareCannedFood())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.SQUARE_CANNED_FOOD))
+                    .setSaveConsumer(config::setSquareCannedFood)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
@@ -857,6 +897,17 @@ public class ConfigImpl implements Config {
             // --- DIFFICULTY CONFIG ---
 
             ConfigCategory difficulty = b.getOrCreateCategory(Component.translatable(Translations.Config.DIFFICULTY));
+
+            difficulty.addEntry(new FloatFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.METEOR_SPAWN_MULTIPLIER),
+                    config.meteorSpawnMultiplier())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.METEOR_SPAWN_MULTIPLIER))
+                    .setSaveConsumer(config::setMeteorSpawnMultiplier)
+                    .setDefaultValue(1.0f)
+                    .setMin(Mth.EPSILON)
+                    .build()
+            );
 
             difficulty.addEntry(new DoubleFieldBuilder(
                     Component.translatable(Translations.Config.RESET),

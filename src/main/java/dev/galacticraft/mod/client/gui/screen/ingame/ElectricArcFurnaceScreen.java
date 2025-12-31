@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.gui.GuiGraphics;
@@ -34,16 +33,11 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 
-public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBlockEntity, RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
-    private static final int ARROW_X = 68;
-    private static final int ARROW_Y = 34;
-    private static final int ARROW_U = 176;
-    private static final int ARROW_V = 0;
-    private static final int ARROW_WIDTH = 26;
-    private static final int ARROW_HEIGHT = 16;
+import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
+public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBlockEntity, RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity>> {
     public ElectricArcFurnaceScreen(RecipeMachineMenu<SingleRecipeInput, BlastingRecipe, ElectricArcFurnaceBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.ELECTRIC_ARC_FURNACE_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
     }
 
     @Override
@@ -51,8 +45,8 @@ public class ElectricArcFurnaceScreen extends MachineScreen<ElectricArcFurnaceBl
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
         if (this.menu.getMaxProgress() != 0 && this.menu.getProgress() != 0) {
             float scale = (float) menu.getProgress() / (float) menu.getMaxProgress();
-            int width = Mth.ceil(ARROW_WIDTH * scale);
-            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + ARROW_X, this.topPos + ARROW_Y, ARROW_U, ARROW_V, width, ARROW_HEIGHT);
+            int width = Mth.ceil(PROGRESS_WIDTH * scale);
+            DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT);
         }
     }
 }

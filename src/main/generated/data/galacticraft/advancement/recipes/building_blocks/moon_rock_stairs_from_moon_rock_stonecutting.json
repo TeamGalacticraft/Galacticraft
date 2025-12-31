@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:moon_rock_stairs_from_moon_rock_stonecutting"
+        "recipe": "galacticraft:moon_rock_stairs_from_moon_rock_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:moon_rock_stairs_from_moon_rock_stonecutting"
+      "galacticraft:moon_rock_stairs_from_moon_rock_stonecutting"
     ]
   }
 }

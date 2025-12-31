@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -37,17 +36,12 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.item.crafting.CraftingInput;
 
+import static dev.galacticraft.mod.Constant.ElectricCompressor.*;
+
 @Environment(EnvType.CLIENT)
 public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBlockEntity, RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> {
-    private static final int PROGRESS_U = 177;
-    private static final int PROGRESS_V = 0;
-    private static final int PROGRESS_X = 87;
-    private static final int PROGRESS_Y = 27;
-    private static final int PROGRESS_WIDTH = 52;
-    private static final int PROGRESS_HEIGHT = 25;
-
     public ElectricCompressorScreen(RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity> handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
     }
 
     @Override
@@ -59,7 +53,7 @@ public class ElectricCompressorScreen extends MachineScreen<ElectricCompressorBl
     protected void drawCraftProgressBar(GuiGraphics graphics) {
         float progressScale = (float) this.menu.getProgress() / (float) this.menu.getMaxProgress();
         int width = Mth.ceil(PROGRESS_WIDTH * progressScale);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.ELECTRIC_COMPRESSOR_SCREEN);
+        RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);
         DrawableUtil.drawProgressTexture(graphics.pose(), this.leftPos + PROGRESS_X, this.topPos + PROGRESS_Y, PROGRESS_U, PROGRESS_V, width, PROGRESS_HEIGHT);
     }
 }

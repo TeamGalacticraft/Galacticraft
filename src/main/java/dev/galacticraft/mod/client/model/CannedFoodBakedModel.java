@@ -25,10 +25,7 @@ package dev.galacticraft.mod.client.model;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
-import net.fabricmc.fabric.api.renderer.v1.model.SpriteFinder;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -47,6 +44,7 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
 
     // Define relative positions for each can layout
     public static float[][][] POSITIONS = {
+            {}, // 0 cans
             {{8, 0, 8}}, // 1 can
             {{4, 0, 8}, {12, 0, 8}}, // 2 cans
             {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}}, // 3 cans
@@ -62,19 +60,17 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
         List<ItemStack> contents = (List<ItemStack>) blockView.getBlockEntityRenderData(pos);
         int canCount = contents.size();
 
-        TextureAtlas atlas = Minecraft.getInstance().getModelManager().getAtlas(TextureAtlas.LOCATION_BLOCKS);
-        SpriteFinder spriteFinder = SpriteFinder.get(atlas);
-
         for (int i = 0; i < canCount; i++) {
-            float[] position = POSITIONS[canCount - 1][i];
-            float x = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
+            float[] position = POSITIONS[canCount][i];
+            float x0 = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
             float y = position[1] / 16.0f;
-            float z = (position[2] - 8) / 16.0f;
+            float z0 = (position[2] - 8) / 16.0f;
 
-            ItemStack stack = contents.get(i);
-            int canColor = stack.getOrDefault(GCDataComponents.COLOR, 0);
+            Direction direction = state.getValue(CannedFoodBlock.FACING);
+            final float x = direction.getStepX() * z0 + direction.getStepZ() * x0;
+            final float z = direction.getStepZ() * z0 - direction.getStepX() * x0;
 
-            Direction facing = state.getValue(CannedFoodBlock.FACING);
+            final int canColor = contents.get(i).getOrDefault(GCDataComponents.COLOR, 0);
 
             context.pushTransform(quad -> {
                 quad.pos(0, quad.x(0) + x, quad.y(0) + y, quad.z(0) + z);
@@ -82,7 +78,7 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
                 quad.pos(2, quad.x(2) + x, quad.y(2) + y, quad.z(2) + z);
                 quad.pos(3, quad.x(3) + x, quad.y(3) + y, quad.z(3) + z);
 
-                if (spriteFinder.find(quad).contents().name().toString().contains("canned_food_label_texture")) {
+                if (quad.colorIndex() != -1) {
                     quad.color(0, canColor);
                     quad.color(1, canColor);
                     quad.color(2, canColor);

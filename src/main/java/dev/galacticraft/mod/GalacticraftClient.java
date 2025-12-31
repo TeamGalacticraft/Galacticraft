@@ -23,7 +23,7 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
-import dev.galacticraft.api.component.*;
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -145,6 +145,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.OLI_GRUB, OliGrubEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.GREY, GreyEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ARCH_GREY, GreyEntityRenderer::arch);
+        EntityRendererRegistry.register(GCEntityTypes.FALLING_METEOR, FallingMeteorRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);
@@ -158,7 +159,6 @@ public class GalacticraftClient implements ClientModInitializer {
         GCEntityModelLayer.register();
         GalacticraftRocketPartRenderers.register();
         GCKeyBinds.register();
-        GCItemSubPredicates.init();
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());

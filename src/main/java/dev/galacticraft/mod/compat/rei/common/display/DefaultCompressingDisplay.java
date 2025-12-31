@@ -33,7 +33,7 @@ import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
@@ -50,20 +50,25 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
     }
 
     default int getProcessingTime() {
-        return 10;
+        return 200;
     }
+
+    boolean isShapeless();
 
     enum Serializer implements DisplaySerializer<DefaultCompressingDisplay> {
         INSTANCE;
 
         @Override
         public CompoundTag save(CompoundTag tag, DefaultCompressingDisplay display) {
-            tag.putBoolean(Constant.Nbt.SHAPED, display instanceof DefaultShapedCompressingDisplay);
+            tag.putBoolean(Constant.Nbt.SHAPELESS, display.isShapeless());
+            tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+
             ListTag list = new ListTag();
             for (EntryIngredient inputEntry : display.getInputEntries()) {
                 list.add(inputEntry.saveIngredient());
             }
             tag.put(Constant.Nbt.INPUTS, list);
+
             list = new ListTag();
             for (EntryIngredient outputEntry : display.getOutputEntries()) {
                 list.add(outputEntry.saveIngredient());
@@ -75,20 +80,25 @@ public interface DefaultCompressingDisplay extends SimpleGridMenuDisplay {
 
         @Override
         public DefaultCompressingDisplay read(CompoundTag tag) {
+            List<EntryIngredient> inputs = new ArrayList<>();
+            List<EntryIngredient> outputs = new ArrayList<>();
+
             ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
-            List<EntryIngredient> inputs = new LinkedList<>();
-            List<EntryIngredient> outputs = new LinkedList<>();
             for (Tag element : list) {
-                inputs.add(EntryIngredient.read(((ListTag) element)));
+                inputs.add(EntryIngredient.read((ListTag) element));
             }
+
             list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
             for (Tag element : list) {
-                outputs.add(EntryIngredient.read(((ListTag) element)));
+                outputs.add(EntryIngredient.read((ListTag) element));
             }
-            if (tag.getBoolean(Constant.Nbt.SHAPED)) {
-                return new DefaultShapedCompressingDisplay(inputs, outputs);
+
+            int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
+
+            if (tag.getBoolean(Constant.Nbt.SHAPELESS)) {
+                return new DefaultShapelessCompressingDisplay(inputs, outputs, processingTime);
             } else {
-                return new DefaultShapelessCompressingDisplay(inputs, outputs);
+                return new DefaultShapedCompressingDisplay(inputs, outputs, processingTime);
             }
         }
     }

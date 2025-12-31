@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.misc.footprint;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.UUIDUtil;
@@ -76,24 +75,26 @@ public class Footprint {
 
     public static Vector3d getFootprintPosition(Level level, float rotation, Vector3d startPosition, Vec3 playerCenter) {
         Vector3d position = new Vector3d(startPosition);
+
         float footprintScale = 0.375F;
+        double xMin = Double.POSITIVE_INFINITY;
+        double xMax = Double.NEGATIVE_INFINITY;
+        double zMin = Double.POSITIVE_INFINITY;
+        double zMax = Double.NEGATIVE_INFINITY;
 
-        int mainPosX = Mth.floor(position.x());
-        int mainPosZ = Mth.floor(position.z());
+        rotation = 45.0F * Mth.DEG_TO_RAD - rotation;
+        for (int i = 0; i < 4; i++) {
+            double x = position.x + Mth.sin(rotation) * footprintScale;
+            double z = position.z + Mth.cos(rotation) * footprintScale;
+            xMin = Math.min(xMin, x);
+            xMax = Math.max(xMax, x);
+            zMin = Math.min(zMin, z);
+            zMax = Math.max(zMax, z);
+            rotation += Mth.HALF_PI;
+        }
 
-        double x0 = (Math.sin((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x1 = (Math.sin((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x2 = (Math.sin((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double x3 = (Math.sin((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.x;
-        double z0 = (Math.cos((45 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z1 = (Math.cos((135 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z2 = (Math.cos((225 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-        double z3 = (Math.cos((315 - rotation) / Constant.RADIANS_TO_DEGREES) * footprintScale) + position.z;
-
-        double xMin = Math.min(Math.min(x0, x1), Math.min(x2, x3));
-        double xMax = Math.max(Math.max(x0, x1), Math.max(x2, x3));
-        double zMin = Math.min(Math.min(z0, z1), Math.min(z2, z3));
-        double zMax = Math.max(Math.max(z0, z1), Math.max(z2, z3));
+        int mainPosX = Mth.floor(position.x);
+        int mainPosZ = Mth.floor(position.z);
 
         if (xMin < mainPosX) {
             position.x += mainPosX - xMin;

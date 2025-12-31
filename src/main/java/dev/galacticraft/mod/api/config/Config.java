@@ -67,6 +67,8 @@ public interface Config {
 
     long foodCannerEnergyConsumptionRate();
 
+    boolean squareCannedFood();
+
     long smallOxygenTankCapacity();
 
     long mediumOxygenTankCapacity();
@@ -84,6 +86,8 @@ public interface Config {
     boolean cannotEatWithMask();
 
     boolean cannotEatInNoAtmosphere();
+
+    float meteorSpawnMultiplier();
 
     double bossHealthMultiplier();
 

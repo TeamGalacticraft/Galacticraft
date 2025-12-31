@@ -40,7 +40,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.RocketEvents;
@@ -62,7 +61,6 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.particles.ParticleTypes;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -90,6 +88,8 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.CRASH_LANDING;
+
 @SuppressWarnings("UnstableApiUsage")
 public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
@@ -108,6 +108,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     private float timeSinceLaunch;
     private float zRot;
     public float zRotO;
+    private float initialYRot;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -243,6 +244,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
+    public ItemStack getPickResult() {
+        return this.getDropItem();
+    }
+
+    @Override
     public ItemStack getDropItem() {
         ItemStack rocket = new ItemStack(GCItems.ROCKET);
         rocket.applyComponents(this.getRocketData().asPatch());
@@ -316,6 +322,14 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         return Mth.lerp(f, this.zRotO, this.getZRot());
     }
 
+    public float getInitialYRot() {
+        return this.initialYRot;
+    }
+
+    public void setInitialYRot(float yaw) {
+        this.initialYRot = yaw;
+    }
+
     @Override
     public void move(MoverType type, Vec3 vec3d) {
         if (onGround()) vec3d.multiply(1.0D, 0.0D, 1.0D);
@@ -348,6 +362,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public InteractionResult interact(Player player, InteractionHand hand) {
         if (this.getPassengers().isEmpty()) {
+            this.setInitialYRot(this.getYRot());
             player.absRotateTo(this.getYRot(), this.getXRot());
             player.startRiding(this);
             return InteractionResult.SUCCESS;
@@ -514,7 +529,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 for (int i = 0; i < 4; i++) {
                     this.level().explode(
                             this,
-                            new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
+                            this.damageSources().source(CRASH_LANDING),
                             new ExplosionDamageCalculator(),
                             this.position().x + (this.level().random.nextDouble() - 0.5 * 4),
                             this.position().y + (this.level().random.nextDouble() * 3),
@@ -618,6 +633,14 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             this.setThrust(tag.getFloat("Thrust"));
         }
 
+        if (tag.contains("ZRot")) {
+            this.setZRot(tag.getFloat("ZRot"));
+        }
+
+        if (tag.contains("InitialYRot")) {
+            this.setInitialYRot(tag.getFloat("InitialYRot"));
+        }
+
         if (tag.contains("Fuel")) {
             this.setFuel(tag.getLong("Fuel"));
         }
@@ -633,7 +656,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         tag.put("data", result.getPartialOrThrow());
 
         tag.putString("Stage", getLaunchStage().name());
-        tag.putDouble("Thrust", this.getThrust());
+        tag.putFloat("Thrust", this.getThrust());
+        tag.putFloat("ZRot", this.getZRot());
+        tag.putFloat("InitialYRot", this.getInitialYRot());
         tag.putLong("Fuel", this.getFuel());
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
@@ -686,32 +711,34 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) {
         float turnFactor = 2.0F;
         float angle = 180.0F;
 
-        LaunchStage stage = getLaunchStage();
+        LaunchStage stage = this.getLaunchStage();
 
-        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal())
-            onJump();
+        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal()) {
+            this.onJump();
+        }
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
-            if (up) {
-                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
-            } else if (down) {
-                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
+            if (invertControls ? down : up) {
+                this.setXRot(Mth.clamp(this.getXRot() - 0.5F * turnFactor, -angle, angle));
+            } else if (invertControls ? up : down) {
+                this.setXRot(Mth.clamp(this.getXRot() + 0.5F * turnFactor, -angle, angle));
             }
 
-            if (left) {
-                setYRot(Mth.wrapDegrees(getYRot() - turnFactor));
-            } else if (right) {
-                setYRot(Mth.wrapDegrees(getYRot() + turnFactor));
+            if (invertControls ? left : right) {
+                this.setYRot(this.getYRot() - turnFactor);
+            } else if (invertControls ? right : left) {
+                this.setYRot(this.getYRot() + turnFactor);
             }
 
-            if (jumping) {
-                setZRot(Mth.wrapDegrees(getZRot() - turnFactor));
-            } else if (shiftKeyDown) {
-                setZRot(Mth.wrapDegrees(getZRot() + turnFactor));
+            // This might be more trouble than it's worth...
+            if (invertControls ? shiftKeyDown && !left : jumping && !right) {
+                this.setZRot(this.getZRot() - turnFactor);
+            } else if (invertControls ? jumping && !right : shiftKeyDown && !left) {
+                this.setZRot(this.getZRot() + turnFactor);
             }
         }
     }

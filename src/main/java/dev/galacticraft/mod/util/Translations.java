@@ -68,10 +68,21 @@ public interface Translations {
     }
 
     interface RecipeCategory {
-        String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
-        String COMPRESSOR = "category.recipe_viewer.compressing";
-        String CANNING = "category.recipe_viewer.canning";
-        String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+        String PREFIX = "category.recipe_viewer.";
+        String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
+        String COMPRESSOR = PREFIX + "compressing";
+        String ELECTRIC_COMPRESSOR = PREFIX + "compressing.electric";
+        String ELECTRIC_FURNACE = PREFIX + "smelting.electric";
+        String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
+        String CANNING = PREFIX + "canning";
+        String ROCKET_WORKBENCH = PREFIX + "rocket";
+
+        String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
+        String JEI_XP = "gui.jei.category.smelting.experience";
+        String EMI_TIME = "emi.cooking.time";
+        String EMI_XP = "emi.cooking.experience";
     }
 
     interface Waila {
@@ -141,6 +152,7 @@ public interface Translations {
         String RESET = "config.galacticraft.reset";
 
         String CLIENT = "config.galacticraft.client";
+        String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 
@@ -189,6 +201,7 @@ public interface Translations {
         String CANNOT_EAT_WITH_MASK = "config.galacticraft.lifesupport.cannot_eat_with_mask";
 
         String DIFFICULTY = "config.galacticraft.difficulty";
+        String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
     }
@@ -248,6 +261,7 @@ public interface Translations {
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
+        String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
     }
 
     interface Gas {

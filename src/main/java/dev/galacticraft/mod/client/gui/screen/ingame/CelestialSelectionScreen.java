@@ -37,6 +37,7 @@ import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
+import dev.galacticraft.mod.network.c2s.SatelliteUpdatePayload;
 import dev.galacticraft.mod.util.Translations;
 import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;
@@ -293,7 +294,6 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
                         if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative()) {
-//                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_BIND_SPACE_STATION_ID, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.selectedBody.getWorld()}));
                             SatelliteCreationPayload payload = new SatelliteCreationPayload(this.selectedBody.getKey(this.celestialBodies));
                             ClientPlayNetworking.send(payload);
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
@@ -340,14 +340,9 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
                         String strName = this.minecraft.player.getName().getString();
-                        // Integer spacestationID = this.spaceStationIDs.get(strName);
-                        // if (spacestationID == null) spacestationID = this.spaceStationIDs.get(strName.toLowerCase());
                         CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
                         selectedSatellite.type().setCustomName(this.renamingString, selectedSatellite.config());
-                        // RegistryKey<World> spacestationID = selectedSatellite.getWorld();
-                        // this.spaceStationMap.get(getSatelliteParentID(selectedSatellite)).get(strName).setStationName(this.renamingString);
-                        // this.spaceStationNames.put(strName, this.renamingString);
-                        // GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_RENAME_SPACE_STATION, GCCoreUtil.getWorld(this.minecraft.level), new Object[]{this.renamingString, spacestationID})); //TODO SS ID PACKET
+                        ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config()));
                         this.renamingSpaceStation = false;
                     }
                     // Cancel
@@ -369,8 +364,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 }
 
                 CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                assert this.minecraft != null;
-                int stationListSize = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().size();
+                List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellites = this.getVisibleSatellitesForCelestialBody(selectedSatellite.parentValue(this.celestialBodies));
+                int stationListSize = visibleSatellites.size();
                 int max = Math.min((this.height / 2) / 14, stationListSize);
 
                 int xPos;
@@ -398,11 +393,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     clickHandled = true;
                 }
 
-                Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().iterator();
                 int i = 0;
                 int j = 0;
-                while (it.hasNext() && i < max) {
-                    CelestialBody<SatelliteConfig, SatelliteType> satellite = it.next();
+                for (CelestialBody<SatelliteConfig, SatelliteType> satellite : visibleSatellites) {
+                    if (i >= max) break;
+
                     if (j >= this.spaceStationListOffset) {
                         int xOffset = 0;
 
@@ -731,18 +726,17 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     private void drawSpaceStationDetails(Graphics graphics) {
-        int max;
+        CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
+        List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellites = this.getVisibleSatellitesForCelestialBody(selectedSatellite.parentValue(this.celestialBodies));
+        int stationListSize = visibleSatellites.size();
+        int max = Math.min((this.height / 2) / 14, stationListSize);
 
         try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512)) {
-            CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-            int stationListSize = (int) ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parentValue(this.celestialBodies) == this.selectedBody.parentValue(this.celestialBodies)).count();
-
-            max = Math.min((this.height / 2) / 14, stationListSize);
             texture.blit(RHS - 95, LHS, 95, 53, this.selectedStationOwner.isEmpty() ? 95 : 0, 186, 95, 53, BLUE);
             texture.blit(RHS - 85, LHS + 45, 61, 4, 0, 239, 61, 4, this.spaceStationListOffset <= 0 ? GREY6 : BLUE);
             texture.blit(RHS - 85, LHS + 49 + max * 14, 61, 4, 0, 239 + 4, 61, -4, max + this.spaceStationListOffset >= stationListSize ? GREY6 : BLUE);
 
-            if (((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().noneMatch(s -> s.parent() == this.selectedBody.parent() && s.type().ownershipData(s.config()).canAccess(this.minecraft.player))) {
+            if (stationListSize == 0) {
                 texture.drawSplitText(Component.translatable(Translations.CelestialSelection.SELECT_SS), RHS - 47, LHS + 20, 91, WHITE);
             } else {
                 texture.drawText(Component.translatable(Translations.CelestialSelection.SS_OWNER), RHS - 85, LHS + 18, WHITE, false);
@@ -751,11 +745,10 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
 
         try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-            Iterator<CelestialBody<SatelliteConfig, SatelliteType>> it = ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values().stream().filter(s -> s.parent() == this.selectedBody.parent() && s.type().ownershipData(s.config()).canAccess(this.minecraft.player)).iterator();
             int i = 0;
             int j = 0;
-            while (it.hasNext() && i < max) {
-                CelestialBody<SatelliteConfig, SatelliteType> body = it.next();
+            for (CelestialBody<SatelliteConfig, SatelliteType> body : visibleSatellites) {
+                if (i >= max) break;
 
                 if (j >= this.spaceStationListOffset) {
                     SatelliteConfig config = body.config();

@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -60,7 +61,8 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
         this.generateBlockTranslations();
         this.generateItemTranslations();
-        this.generateTagTranslations();
+        this.generateItemTagTranslations();
+        this.generateFluidTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
         this.generateCelestialBodyTranslations();
@@ -85,8 +87,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
         this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
-        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
+        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabrication");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ELECTRIC_COMPRESSOR, "Compressing (Electric)");
+        this.add(RecipeCategory.ELECTRIC_FURNACE, "Smelting (Electric)");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.CANNING, "Canning");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
@@ -250,13 +255,6 @@ public class GCTranslationProvider extends TranslationProvider {
                 this.block(entry.getValue(), TranslationProvider.normalizeName(color.getName()) + " Stained Glass Fluid Pipe");
             }
         }
-
-        // LIGHT PANELS
-        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
-        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
-        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
-        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
-        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
 
         // VACUUM GLASS
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
@@ -627,7 +625,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
     }
 
-    protected void generateTagTranslations() {
+    protected void generateItemTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
         this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
@@ -642,6 +640,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
+
+        this.tag(GCItemTags.ACID_RESISTANT, "Sulfuric Acid Resistant Items");
 
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
@@ -684,6 +684,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.RAW_TITANIUM_BLOCKS, "Raw Titanium Blocks");
 
         this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCItemTags.BRONZE_INGOTS, "Bronze Ingots");
         this.tag(GCItemTags.DESH_INGOTS, "Desh Ingots");
         this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
         this.tag(GCItemTags.METEORIC_IRON_INGOTS, "Meteoric Iron Ingots");
@@ -763,6 +764,18 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
         this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
         this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+    }
+
+    protected void generateFluidTagTranslations() {
+        this.tag(GCFluidTags.OIL, "Galacticraft Oil");
+        this.tag(GCFluidTags.OIL_COMMON, "Oil");
+        this.tag(GCFluidTags.FUEL, "Galacticraft Fuel");
+        this.tag(GCFluidTags.FUEL_COMMON, "Fuel");
+        this.tag(GCFluidTags.SULFURIC_ACID, "Galacticraft Sulfuric Acid");
+        this.tag(GCFluidTags.SULFURIC_ACID_COMMON, "Sulfuric Acid");
+        this.tag(GCFluidTags.LIQUID_OXYGEN, "Liquid Oxygen");
+        this.tag(GCFluidTags.OXYGEN, "Oxygen");
+        this.tag(GCFluidTags.NON_BREATHABLE, "Non-Breathable Fluids");
     }
 
     protected void generateGasTranslations() {
@@ -956,6 +969,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
+        this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
     }
 
     protected void generateConfigTranslations() {
@@ -963,6 +977,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.RESET, "Reset");
 
         this.add(Config.CLIENT, "Client");
+        this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.PLAYER, "Player");
 
@@ -1011,6 +1026,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
 
         this.add(Config.DIFFICULTY, "Difficulty");
+        this.add(Config.METEOR_SPAWN_MULTIPLIER, "Meteor Spawn Multiplier");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
         this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
 
