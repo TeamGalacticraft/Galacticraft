@@ -779,13 +779,24 @@ public interface Constant {
     interface FoodCanner {
         ResourceLocation SCREEN_TEXTURE = id("textures/gui/food_canner_screen.png");
 
-        int GRID_X = 37;
-        int GRID_Y = 1;
-        int MIDDLE_SLOT_Y = 28;
-        int BOTTOM_SLOT_Y = 55;
+        int INPUT_X = 62;
+        int INPUT_Y = 13;
+        int CURRENT_X = 62;
+        int CURRENT_Y = 40;
+        int OUTPUT_X = 62;
+        int OUTPUT_Y = 67;
+        int GRID_X = 98;
+        int GRID_Y = 13;
 
-        int RECIPE_VIEWER_U = 61;
-        int RECIPE_VIEWER_V = 12;
+        int PROGRESS_BACKGROUND_X = 68;
+        int PROGRESS_BACKGROUND_Y = 19;
+        int PROGRESS_BACKGROUND_U = 180;
+        int PROGRESS_BACKGROUND_V = 80;
+        int PROGRESS_BACKGROUND_WIDTH = 29;
+        int PROGRESS_BACKGROUND_HEIGHT = 57;
+
+        int RECIPE_VIEWER_X = 61;
+        int RECIPE_VIEWER_Y = 12;
         int RECIPE_VIEWER_WIDTH = 108;
         int RECIPE_VIEWER_HEIGHT = 72;
     }

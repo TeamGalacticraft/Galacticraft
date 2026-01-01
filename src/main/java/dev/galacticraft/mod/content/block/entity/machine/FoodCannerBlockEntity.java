@@ -59,6 +59,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.galacticraft.mod.Constant.FoodCanner.*;
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
@@ -117,21 +118,21 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         );
         storage.add(
                 ItemResourceSlot.builder(TransferType.INPUT)
-                        .pos(62, 13)
+                        .pos(INPUT_X, INPUT_Y)
                         .filter(ResourceFilters.ofResource(EMPTY_CAN))
                         .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.FOOD_CAN))
         );
         storage.add(
                 ItemResourceSlot.builder(TransferType.INTERNAL)
-                        .pos(62, 40)
+                        .pos(CURRENT_X, CURRENT_Y)
                         .capacity(1)
                         .filter(ResourceFilters.ofResource(EMPTY_CAN))
         );
         storage.add(
                 ItemResourceSlot.builder(TransferType.OUTPUT)
-                        .pos(62, 67)
+                        .pos(OUTPUT_X, OUTPUT_Y)
         );
-        for (ItemResourceSlot.Spec slot : createFoodSlots(98, 13, 4, 4)) {
+        for (ItemResourceSlot.Spec slot : createFoodSlots(GRID_X, GRID_Y, 4, 4)) {
             storage.add(slot);
         }
         return storage;

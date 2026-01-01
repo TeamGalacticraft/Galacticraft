@@ -25,15 +25,18 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCanningDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -64,29 +67,36 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
     @Override
     public @NotNull List<Widget> setupDisplay(DefaultCanningDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - RECIPE_VIEWER_WIDTH / 2, bounds.getCenterY() - RECIPE_VIEWER_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x, startPoint.y, RECIPE_VIEWER_U, RECIPE_VIEWER_V, RECIPE_VIEWER_WIDTH, RECIPE_VIEWER_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_BACKGROUND_X, startPoint.y + PROGRESS_BACKGROUND_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_BACKGROUND_WIDTH, PROGRESS_BACKGROUND_HEIGHT));
 
         List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
-        for (int i = 0; i < ingredients.size(); i++) {
-            widgets.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + 18 * (i % 4), startPoint.y + GRID_Y + 18 * (i / 4))).entries(recipeDisplay.getInputEntries().get(i)));
+        int n = ingredients.size();
+        for (int i = 0; i < 16; i++) {
+            Slot slot = Widgets.createSlot(new Point(startPoint.x + GRID_X + 18 * (i % 4), startPoint.y + GRID_Y + 18 * (i / 4))).markInput();
+            if (i < n) {
+                slot.entries(ingredients.get(i));
+            }
+            widgets.add(slot);
         }
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + 1, startPoint.y + MIDDLE_SLOT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(EntryIngredients.of(GCItems.EMPTY_CAN)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput());
         return widgets;
     }
 
     @Override
     public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
     public int getDisplayWidth(DefaultCanningDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
