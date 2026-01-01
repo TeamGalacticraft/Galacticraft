@@ -24,10 +24,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.lang.reflect.Constructor;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.List;
-import java.util.ListIterator;
+import java.util.*;
 
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeScreenMixin {
@@ -39,12 +36,15 @@ public abstract class CreativeScreenMixin {
 
     @Shadow private static CreativeModeTab selectedTab;
 
+    @Unique private final List<Slot> gc$slots = new ArrayList<>();
+
     @Unique private boolean bGCInventory = false;
 
     @Unique private int b0x, b0y, b1x, b1y;
-    @Unique private static final int BTN_W = 12;
+    @Unique private static final int BTN_W = 11;
     @Unique private static final int BTN_H = 10;
     @Unique private boolean btn1Hovered, btn2Hovered;
+    @Unique private List<Slot> GCInvSlots;
 
     @Unique
     private static Slot makeSlotWrapper(Slot target, int invSlot, int x, int y) {
@@ -96,6 +96,7 @@ public abstract class CreativeScreenMixin {
         }
 
         renderArrows(graphics, delta, mouseX, mouseY);
+
     }
 
     private void renderArrows(GuiGraphics g, float delta, int MouseX, int MouseY)
@@ -120,44 +121,40 @@ public abstract class CreativeScreenMixin {
             {
                 if(btn1Hovered)
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, false),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, false),BTN_W,BTN_H,256,256);
                 }
                 else
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, false),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, false),BTN_W,BTN_H,256,256);
                 }
                 if(btn2Hovered)
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(0),getArrowBlitCoordsV(1, true),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(0),getArrowBlitCoordsV(1, true),BTN_W,BTN_H,256,256);
                 }
                 else
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(0),getArrowBlitCoordsV(0, true),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(0),getArrowBlitCoordsV(0, true),BTN_W,BTN_H,256,256);
                 }
             }
             else
             {
                 if(btn1Hovered)
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(0),getArrowBlitCoordsV(1, false),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(0),getArrowBlitCoordsV(1, false),BTN_W,BTN_H,256,256);
                 }
                 else
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(0),getArrowBlitCoordsV(0, false),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset,getArrowBlitCoordsU(0),getArrowBlitCoordsV(0, false),BTN_W,BTN_H,256,256);
                 }
                 if(btn2Hovered)
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, true),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, true),BTN_W,BTN_H,256,256);
                 }
                 else
                 {
-                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, true),12,10,256,256);
+                    g.blit(GC_GUIARROWS_TEX, leftP+11, topP+offset+BTN_H,getArrowBlitCoordsU(2),getArrowBlitCoordsV(2, true),BTN_W,BTN_H,256,256);
                 }
             }
-
-
-
-
 
         }
     }
@@ -179,7 +176,7 @@ public abstract class CreativeScreenMixin {
         return switch (style) {
             case 0 -> 0;
             case 1 -> 0;
-            case 2 -> 12;
+            case 2 -> 11;
             default -> 0;
         };
     }
@@ -224,6 +221,11 @@ public abstract class CreativeScreenMixin {
             {
                 playButtonClickSound();
                 bGCInventory = true;
+                CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
+                self.getMenu().slots.clear();
+
+                generateGCSlots();
+
                 cir.setReturnValue(true);
             }
 
@@ -231,9 +233,61 @@ public abstract class CreativeScreenMixin {
             {
                 playButtonClickSound();
                 bGCInventory = false;
+                CreativeModeInventoryScreenAccessor self = (CreativeModeInventoryScreenAccessor)(Object)this;
+                for(CreativeModeTab tab : CreativeModeTabs.tabs())
+                {
+                    if(tab.getType() == CreativeModeTab.Type.INVENTORY)
+                    {
+                        self.gcSelectTab(tab);
+                        gc$slots.clear();
+                        break;
+                    }
+                }
                 cir.setReturnValue(true);
             }
         }
+    }
+
+    private void generateGCSlots()
+    {
+        for(int i = 0; i < 3; i++)
+        {
+            generateGCSlot(10+(i*16),10,i);
+        }
+    }
+
+    private void generateGCSlot(int x, int y, int idx)
+    {
+        int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
+        int topP = ((AbstractContainerScreenAccessor)(Object)this).getTopPos();
+        var player = ((ScreenAccessor)(Object)this).getMinecraft().player;
+        Slot s = new AccessorySlot(
+                player.galacticraft$getGearInv(),
+                player,
+                0,
+                leftP+x,
+                topP+y,
+                GCAccessorySlots.SLOT_TAGS.get(idx),
+                GCAccessorySlots.SLOT_SPRITES.get(idx)
+        );
+
+        gc$slots.add(s);
+    }
+
+    @Inject(method = "render", at = @At("TAIL"))
+    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci)
+    {
+        int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
+        int topP = ((AbstractContainerScreenAccessor)(Object)this).getTopPos();
+
+        for (Slot s : gc$slots) {
+            ((AbstractContainerScreenAccessor) this).gcRenderSlot(graphics,s);
+            if(((AbstractContainerScreenAccessor) this).gcIsHovering(s,mouseX+leftP, mouseY+topP) && s.isHighlightable())
+            {
+                CreativeModeInventoryScreen.renderSlotHighlight(graphics,s.x, s.y, 0);
+            }
+        }
+
     }
 
 

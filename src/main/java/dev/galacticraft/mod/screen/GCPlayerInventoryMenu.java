@@ -43,6 +43,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
 
         this.player = player;
         this.inventory = player.galacticraft$getGearInv();
+        
 
         // Galacticraft inv
         for (int i = 0; i < 12; ++i) {

@@ -22,6 +22,9 @@ public interface CreativeModeInventoryScreenAccessor {
     @Invoker("canScroll")
     boolean GCcanScroll();
 
+    @Invoker("selectTab")
+    void gcSelectTab(CreativeModeTab group);
+
     @Accessor("SCROLLER_SPRITE")
     ResourceLocation get_SCROLLER_SPRITE();
     @Accessor("SCROLLER_DISABLED_SPRITE") ResourceLocation get_SCROLLER_DISABLED_SPRITE();

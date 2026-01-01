@@ -26,7 +26,8 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "SpiderMixin",
-    "TorchBlockMixin"
+    "TorchBlockMixin",
+    "InventoryMenuMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
