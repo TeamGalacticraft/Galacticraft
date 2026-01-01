@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
 import dev.galacticraft.mod.network.c2s.EjectCanPayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
@@ -36,12 +35,13 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 
+import static dev.galacticraft.mod.Constant.FoodCanner.*;
 import static dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity.*;
 
 @Environment(EnvType.CLIENT)
 public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodCannerMenu> {
     public FoodCannerScreen(FoodCannerMenu handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.FOOD_CANNER_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
         this.imageHeight = 171;
         this.capacitorX = 8;
         this.capacitorY = 13;

@@ -43,11 +43,10 @@ import org.jetbrains.annotations.NotNull;
 import java.util.LinkedList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.FoodCanner.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDisplay> {
-
     @Override
     public CategoryIdentifier<? extends DefaultCanningDisplay> getCategoryIdentifier() {
         return GalacticraftREIServerPlugin.CANNING;
@@ -65,11 +64,11 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
     @Override
     public @NotNull List<Widget> setupDisplay(DefaultCanningDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - FOOD_CANNER_WIDTH / 2, bounds.getCenterY() - FOOD_CANNER_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.getCenterX() - RECIPE_VIEWER_WIDTH / 2, bounds.getCenterY() - RECIPE_VIEWER_HEIGHT / 2);
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, startPoint.x, startPoint.y, FOOD_CANNER_U, FOOD_CANNER_V, FOOD_CANNER_WIDTH, FOOD_CANNER_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x, startPoint.y, RECIPE_VIEWER_U, RECIPE_VIEWER_V, RECIPE_VIEWER_WIDTH, RECIPE_VIEWER_HEIGHT));
 
         List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
         for (int i = 0; i < ingredients.size(); i++) {
@@ -82,12 +81,12 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
     @Override
     public int getDisplayHeight() {
-        return FOOD_CANNER_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 8;
     }
 
     @Override
     public int getDisplayWidth(DefaultCanningDisplay display) {
-        return FOOD_CANNER_WIDTH + 8;
+        return RECIPE_VIEWER_WIDTH + 8;
     }
 
     @Override

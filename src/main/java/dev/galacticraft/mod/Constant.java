@@ -613,7 +613,6 @@ public interface Constant {
 
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -775,6 +774,20 @@ public interface Constant {
         int EMI_Y = 30;
         int EMI_WIDTH = 112;
         int EMI_HEIGHT = 38;
+    }
+
+    interface FoodCanner {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/food_canner_screen.png");
+
+        int GRID_X = 37;
+        int GRID_Y = 1;
+        int MIDDLE_SLOT_Y = 28;
+        int BOTTOM_SLOT_Y = 55;
+
+        int RECIPE_VIEWER_U = 61;
+        int RECIPE_VIEWER_V = 12;
+        int RECIPE_VIEWER_WIDTH = 108;
+        int RECIPE_VIEWER_HEIGHT = 72;
     }
 
     interface RocketWorkbench {

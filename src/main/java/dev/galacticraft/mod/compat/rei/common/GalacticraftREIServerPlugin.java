@@ -51,7 +51,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
         registry.register(ELECTRIC_COMPRESSING, ElectricCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_SMELTING, ElectricFurnaceDisplay.SERIALIZER);
         registry.register(ELECTRIC_BLASTING, ElectricArcFurnaceDisplay.SERIALIZER);
-        registry.register(CANNING, BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw));
+        registry.register(CANNING, DefaultCanningDisplay.SERIALIZER);
         registry.register(ROCKET, DefaultRocketDisplay.SERIALIZER);
     }
 }

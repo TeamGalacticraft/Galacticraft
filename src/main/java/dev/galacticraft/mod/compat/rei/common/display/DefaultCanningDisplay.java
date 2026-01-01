@@ -40,6 +40,8 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 public class DefaultCanningDisplay extends BasicDisplay {
+    public static final BasicDisplay.Serializer<DefaultCanningDisplay> SERIALIZER = BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw);
+
     public DefaultCanningDisplay(ItemStack output) {
         super(getInputs(output), Collections.singletonList(EntryIngredients.of(output)), Optional.empty());
     }
