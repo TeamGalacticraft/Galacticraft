@@ -788,12 +788,26 @@ public interface Constant {
         int GRID_X = 98;
         int GRID_Y = 13;
 
-        int PROGRESS_BACKGROUND_X = 68;
-        int PROGRESS_BACKGROUND_Y = 19;
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 19;
+        int PROGRESS_WIDTH = 29;
+        int PROGRESS_HEIGHT = 57;
         int PROGRESS_BACKGROUND_U = 180;
         int PROGRESS_BACKGROUND_V = 80;
-        int PROGRESS_BACKGROUND_WIDTH = 29;
-        int PROGRESS_BACKGROUND_HEIGHT = 57;
+
+        int TRANSFER_INPUT = 9;
+        int START_ROW_1 = TRANSFER_INPUT + 1;
+        int START_ROW_2 = START_ROW_1 + 28;
+        int SKIP_ROW_2 = START_ROW_2 + 9;
+        int START_ROW_4 = START_ROW_2 + 21;
+        int START_ROW_3 = START_ROW_4 + 27;
+        int SKIP_ROW_3 = START_ROW_3 + 8;
+        int FINAL_PROGRESS = START_ROW_3 + 21;
+        int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
+        int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
+
+        int[] ROW_ORDER = {0, 1, 3, 2};
+        int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
 
         int RECIPE_VIEWER_X = 61;
         int RECIPE_VIEWER_Y = 12;

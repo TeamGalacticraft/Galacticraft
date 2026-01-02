@@ -36,11 +36,13 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.LinkedList;
@@ -71,7 +73,7 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
         List<Widget> widgets = new LinkedList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_BACKGROUND_X, startPoint.y + PROGRESS_BACKGROUND_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_BACKGROUND_WIDTH, PROGRESS_BACKGROUND_HEIGHT));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
         int n = ingredients.size();
@@ -83,9 +85,16 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
             widgets.add(slot);
         }
 
+        CanningProgressWidget progressWidget = new CanningProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, n);
+        widgets.add(progressWidget);
+
         widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(EntryIngredients.of(GCItems.EMPTY_CAN)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput());
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).markOutput().entries(
+                recipeDisplay.getOutputEntries().get(0).stream().map(
+                        entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
+                ).toList()
+        ));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 

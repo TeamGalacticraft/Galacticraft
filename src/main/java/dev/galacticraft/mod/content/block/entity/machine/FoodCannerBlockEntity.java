@@ -76,20 +76,6 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             {12, 13, 14, 15},
             {16, 17, 18, 19}
     };
-    public static final int[] ROW_ORDER = {0, 1, 3, 2};
-
-    public static final int TRANSFER_INPUT = 9;
-    public static final int START_ROW_1 = TRANSFER_INPUT + 1;
-    public static final int START_ROW_2 = START_ROW_1 + 28;
-    public static final int SKIP_ROW_2 = START_ROW_2 + 9;
-    public static final int START_ROW_4 = START_ROW_2 + 21;
-    public static final int START_ROW_3 = START_ROW_4 + 27;
-    public static final int SKIP_ROW_3 = START_ROW_3 + 8;
-    public static final int FINAL_PROGRESS = START_ROW_3 + 21;
-    public static final int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
-    public static final int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
-
-    public static final int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
 
     private int progress = 0;
     private boolean transferringCan = false;
