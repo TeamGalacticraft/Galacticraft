@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.client;
 
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
@@ -204,8 +205,8 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
                 new SimpleTransferHandler.IntRange(1, 2)));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_BLASTING,
                 new SimpleTransferHandler.IntRange(1, 2)));
-        registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.CANNING,
-                new SimpleTransferHandler.IntRange(1, 17)));
+        registry.register(SimpleTransferHandler.create(MachineMenu.class, GalacticraftREIServerPlugin.CANNING,
+                new SimpleTransferHandler.IntRange(4, 20)));
         registry.register(SimpleTransferHandler.create(RocketWorkbenchMenu.class, GalacticraftREIServerPlugin.ROCKET,
                 new SimpleTransferHandler.IntRange(0, 15)));
     }
