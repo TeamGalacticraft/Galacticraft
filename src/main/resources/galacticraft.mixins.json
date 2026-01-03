@@ -27,7 +27,8 @@
     "ServerPlayerMixin",
     "SpiderMixin",
     "TorchBlockMixin",
-    "InventoryMenuMixin"
+    "InventoryMenuMixin",
+    "AbstractContainerMenuMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -51,7 +52,8 @@
     "client.CreativeScreenMixin",
     "client.AbstractContainerScreenAccessor",
     "client.ScreenAccessor",
-    "client.CreativeModeInventoryScreenAccessor"
+    "client.CreativeModeInventoryScreenAccessor",
+    "client.AbstractContainerScreenMixin"
   ],
   "minVersion": "0.8.0",
   "injectors": {

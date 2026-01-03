@@ -39,6 +39,7 @@ public class GCServerPacketReceivers {
         registerPacket(OpenGcInventoryPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(BubbleMaxPayload.TYPE);
+        registerPacket(CreativeGcTransferItemPayload.TYPE);
     }
 
     public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {

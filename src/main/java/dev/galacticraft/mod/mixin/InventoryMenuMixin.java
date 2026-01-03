@@ -20,18 +20,4 @@ public abstract class InventoryMenuMixin extends AbstractContainerMenu {
         super(type, syncId);
     }
 
-    @Inject(method = "<init>", at = @At("TAIL"))
-    private void addGcAccessorySlots(Inventory inv, boolean onServer, Player player, CallbackInfo ci) {
-        var gearInv = player.galacticraft$getGearInv();
-        if (gearInv == null) return;
-
-        for (int i = 0; i < 12; i++) {
-            this.addSlot(new AccessorySlot(
-                    gearInv, player, i,
-                    -2000, -2000,
-                    GCAccessorySlots.SLOT_TAGS.get(i),
-                    GCAccessorySlots.SLOT_SPRITES.get(i)
-            ));
-        }
-    }
 }
