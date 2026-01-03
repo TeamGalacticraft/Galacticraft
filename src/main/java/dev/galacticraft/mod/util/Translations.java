@@ -133,6 +133,10 @@ public interface Translations {
 
         String COMMANDS = "config.galacticraft.commands";
         String ENABLE_GC_HOUSTON = "config.galacticraft.commands.enable_gc_houston";
+
+        String MISC = "config.galacticraft.misc";
+        String CREATIVE = "config.galacticraft.misc.creative";
+        String ENABLE_CREATIVE_GEARINV = "config.galacticraft.misc.creative.enable_gearinv";
     }
 
     interface Galaxy {

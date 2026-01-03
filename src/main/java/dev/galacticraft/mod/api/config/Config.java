@@ -69,6 +69,8 @@ public interface Config {
 
     boolean enableGcHouston();
 
+    boolean enableCreativeGearInv();
+
     void load();
 
     void save();
