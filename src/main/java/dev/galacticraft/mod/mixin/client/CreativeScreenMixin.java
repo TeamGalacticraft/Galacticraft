@@ -2,8 +2,10 @@ package dev.galacticraft.mod.mixin.client;
 
 import de.javagl.obj.Obj;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
 import dev.galacticraft.mod.accessor.GCInventoryFlag;
+import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.client.gui.widget.RadioButton;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.network.c2s.CreativeGcTransferItemPayload;
@@ -39,8 +41,7 @@ import java.util.*;
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreativeGuiSlots {
 
-    private static final ResourceLocation GC_GUIBG_TEX =
-            ResourceLocation.fromNamespaceAndPath("galacticraft", "textures/gui/creative_tab_inventory.png");
+    private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 
     @Shadow private static CreativeModeTab selectedTab;
 
@@ -66,8 +67,8 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
     @Unique private List<Slot> GCInvSlots;
 
     /**
-     * @author
-     * @reason
+     * @author MaverX
+     * @reason It's easier to rewrite the function entirely than to try to inject something into it.
      */
     @Overwrite
     public void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY)
@@ -85,8 +86,7 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
             }
         }
 
-
-        graphics.blit(bGCInventory ? GC_GUIBG_TEX : selectedTab.getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
+        graphics.blit(isGCInventoryEnabled() ? GC_GUIBG_TEX : selectedTab.getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
         ((CreativeModeInventoryScreenAccessor)(Object)this).getSearchBox().render(graphics, mouseX, mouseY, delta);
         int i = leftPos + 175;
         int j = topPos + 18;
@@ -98,13 +98,20 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
 
         ((CreativeModeInventoryScreenAccessor)(Object)this).GCrenderTabButton(graphics, selectedTab);
         if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
-            InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, bGCInventory ? leftPos + 54 : leftPos + 73, topPos + 6, leftPos + 105, topPos + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, ((ScreenAccessor)(Object)this).getMinecraft().player);
+            InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, isGCInventoryEnabled() ? leftPos + 54 : leftPos + 73, topPos + 6, leftPos + 105, topPos + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, ((ScreenAccessor)(Object)this).getMinecraft().player);
         }
     }
 
+    @Unique
     public boolean isGCInventoryEnabled()
     {
         return bGCInventory;
+    }
+
+    @Unique
+    private boolean isCreativeGearInvAllowed()
+    {
+        return Galacticraft.CONFIG.enableCreativeGearInv();
     }
 
     @Unique
@@ -137,20 +144,31 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
             int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
             int topP = ((AbstractContainerScreenAccessor)(Object)this).getTopPos();
 
-            creativeSwitchButton.setX(leftP+11);
-            creativeSwitchButton.setY(topP+18);
-            creativeSwitchButton.radioButtonOnClick = () ->{
-                bGCInventory = creativeSwitchButton.getIsBottomButtonActive();
-                regenerateSlots();
-                Constant.LOGGER.info("Creat switch {}", creativeSwitchButton.getIsBottomButtonActive());
-            };
-            ((ScreenAccessor)(Object)this).gc$addRenderableWidget(creativeSwitchButton);
+            if(isCreativeGearInvAllowed())
+            {
+                creativeSwitchButton.setX(leftP+11);
+                creativeSwitchButton.setY(topP+18);
+                creativeSwitchButton.radioButtonOnClick = () ->{
+                    bGCInventory = creativeSwitchButton.getIsBottomButtonActive();
+                    regenerateSlots();
+                };
+                ((ScreenAccessor)(Object)this).gc$addRenderableWidget(creativeSwitchButton);
+            }
+            else
+            {
+                creativeSwitchButton.setX(-2000);
+                creativeSwitchButton.setY(-2000);
+                creativeSwitchButton.radioButtonOnClick = null;
+            }
+
         }
         if(group.getType() != CreativeModeTab.Type.INVENTORY)
         {
             ((ScreenAccessor)(Object)this).gc$removeWidget(creativeSwitchButton);
             bGCInventory = false;
             gc$slots.clear();
+            creativeSwitchButton.setX(-2000);
+            creativeSwitchButton.setY(-2000);
             creativeSwitchButton.setIsBottomButtonActive(false);
         }
     }
@@ -158,21 +176,30 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
     @Inject(method = "resize", at = @At(value = "TAIL"))
     void resize(Minecraft client, int width, int height, CallbackInfo ci)
     {
-        if(bGCInventory)
+        if(isGCInventoryEnabled())
         {
-            gc$slots.clear();
-            CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
-            self.getMenu().slots.clear();
-            generateGCSlots();
-            generatePlayerInventorySlots();
+            regenerateSlots();
+            creativeSwitchButton.setIsBottomButtonActive(true);
         }
 
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-        if (button != 0) return;
+
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
+
+        //Dublication support
+        if(button == 2)
+        {
+            Slot slot = gc$findSlot(mouseX, mouseY);
+            if(slot != null)
+            {
+                self.getMenu().setCarried(slot.getItem().copy());
+            }
+            return;
+        }
+
         CreativeModeInventoryScreenAccessor invAccessor = (CreativeModeInventoryScreenAccessor)(Object)this;
         AbstractContainerScreenAccessor absAccessor = (AbstractContainerScreenAccessor)(Object)this;
         int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
@@ -182,25 +209,23 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
         if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
 
 
-            if(bGCInventory)
+            if(isGCInventoryEnabled())
             {
                 ItemStack carried = self.getMenu().getCarried();
-                Slot slot = findSlot(mouseX+leftP, mouseY+topP);
+                Slot slot = gc$findSlot(mouseX, mouseY);
                 if(slot != null)
                 {
+                    //Quick stack
                     if(Screen.hasShiftDown())
                     {
-                        Constant.LOGGER.info("GC quick remove required");
                         gcTryQuickStackToPlayerInv(slot);
                         cir.setReturnValue(true);
                         return;
                     }
-
                     if(!carried.isEmpty() && slot.mayPlace(carried))
                     {
                         if(slot.getItem().isEmpty())
                         {
-                            Constant.LOGGER.info("GC client place was carried {}", carried);
                             slot.set(carried);
                             slot.setChanged();
                             self.getMenu().setCarried(ItemStack.EMPTY);
@@ -212,10 +237,11 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
                                             1.0F
                                     )
                             );
+                            cir.setReturnValue(true);
+                            return;
                         }
                         else if(slot.mayPlace(carried))
                         {
-                            Constant.LOGGER.info("GC swap items");
                             ItemStack oldItem = slot.getItem();
                             ItemStack newItem = carried;
 
@@ -223,6 +249,8 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
                             slot.set(newItem);
                             slot.setChanged();
                             ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), 1, newItem));
+                            cir.setReturnValue(true);
+                            return;
 
                         }
 
@@ -234,8 +262,9 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
                         slot.set(ItemStack.EMPTY);
                         slot.setChanged();
                         ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), 0, ItemStack.EMPTY));
+                        cir.setReturnValue(true);
+                        return;
                     }
-
 
                     cir.setReturnValue(true);
                     return;
@@ -245,13 +274,14 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
         }
     }
 
+    @Unique
     private void regenerateSlots()
     {
         gc$slots.clear();
         CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
         self.getMenu().slots.clear();
 
-        if(bGCInventory)
+        if(isGCInventoryEnabled())
         {
             generatePlayerInventorySlots();
             generateGCSlots();
@@ -266,7 +296,7 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
 
     @Nullable
     @Unique
-    private Slot findSlot(double x, double y) {
+    private Slot gc$findSlot(double x, double y) {
         for(int i = 0; i < gc$slots.size(); ++i) {
             Slot slot = (Slot)gc$slots.get(i);
             if (((AbstractContainerScreenAccessor) this).gcIsHovering(slot, x, y) && slot.isActive()) {
@@ -308,14 +338,13 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
                 player.galacticraft$getGearInv(),
                 player,
                 idx,
-                leftP+x,
-                topP+y,
+                x,
+                y,
                 GCAccessorySlots.SLOT_TAGS.get(idx),
                 GCAccessorySlots.SLOT_SPRITES.get(idx)
         );
 
         gc$slots.add(s);
-
     }
 
     @Unique
@@ -385,7 +414,6 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
     {
         if(region != null)
         {
-            Constant.LOGGER.info("Action {} slotItem: {}",actionType, region.getItem());
             if(actionType == ClickType.QUICK_MOVE)
             {
                 if(gcTryQuickStackToGCInv(region))
@@ -440,16 +468,12 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
         self.getMenu().slots.add(((CreativeModeInventoryScreenAccessor)(Object)this).getDestroyItemSlot());
     }
 
-    @Inject(method = "render", at = @At("TAIL"))
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci)
-    {
-        ((AbstractContainerScreenAccessor) this).setHoveredSlot(null);
-        int leftP = ((AbstractContainerScreenAccessor)(Object)this).getLeftPos();
-        int topP = ((AbstractContainerScreenAccessor)(Object)this).getTopPos();
+    @Override
+    public void gc$renderGcSlots(GuiGraphics graphics, int mouseX, int mouseY) {
 
         for (Slot s : gc$slots) {
             ((AbstractContainerScreenAccessor) this).gcRenderSlot(graphics,s);
-            if(((AbstractContainerScreenAccessor) this).gcIsHovering(s,mouseX+leftP, mouseY+topP) && s.isActive())
+            if(((AbstractContainerScreenAccessor) this).gcIsHovering(s,mouseX, mouseY) && s.isActive())
             {
                 ((AbstractContainerScreenAccessor) this).setHoveredSlot(s);
                 if(s.isHighlightable())
@@ -459,26 +483,6 @@ public abstract class CreativeScreenMixin implements GCInventoryFlag, GCCreative
 
             }
         }
-
-        renderTooltip(graphics,mouseX, mouseY);
-    }
-
-    @Override
-    public void gc$renderGcSlots(GuiGraphics graphics, int mouseX, int mouseY) {
-
-    }
-
-    @Unique
-    protected void renderTooltip(GuiGraphics graphics, int x, int y) {
-
-        ScreenAccessor sacc = ((ScreenAccessor)this);
-        CreativeModeInventoryScreen self = (CreativeModeInventoryScreen)(Object)this;
-        AbstractContainerScreenAccessor aself = ((AbstractContainerScreenAccessor) this);
-        if (self.getMenu().getCarried().isEmpty() && aself.getHoveredSlot() != null && aself.getHoveredSlot().hasItem()) {
-           ItemStack itemStack = aself.getHoveredSlot().getItem();
-            graphics.renderTooltip(sacc.gcGetFont(), aself.gcGetTooltipFromContainerItem(itemStack), itemStack.getTooltipImage(), x, y);
-        }
-
     }
 
 

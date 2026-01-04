@@ -18,6 +18,7 @@ import java.util.List;
 @Environment(EnvType.CLIENT)
 @Mixin(AbstractContainerScreen.class)
 public interface AbstractContainerScreenAccessor {
+
     @Accessor("leftPos") int getLeftPos();
     @Accessor("topPos") int getTopPos();
     @Accessor("imageWidth") int getImageWidth();
@@ -37,4 +38,5 @@ public interface AbstractContainerScreenAccessor {
 
     @Invoker("findSlot")
     Slot gcFindSlot(double x, double y);
+
 }

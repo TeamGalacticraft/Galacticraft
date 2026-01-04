@@ -8,11 +8,9 @@ import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
-import java.util.EventListener;
-
 public class RadioButton extends AbstractWidget {
 
-    ResourceLocation buttonTex = ResourceLocation.fromNamespaceAndPath("galacticraft", "textures/gui/vertical_arrows.png");
+    ResourceLocation buttonTex = Constant.id("textures/gui/radiobutton_gear_inventory_buttons.png");
 
     private static final int BTN_WIDTH = 11;
     private static final int BTN_HEIGHT = 10;

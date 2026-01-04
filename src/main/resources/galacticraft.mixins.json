@@ -27,7 +27,6 @@
     "ServerPlayerMixin",
     "SpiderMixin",
     "TorchBlockMixin",
-    "InventoryMenuMixin",
     "AbstractContainerMenuMixin"
   ],
   "client": [
