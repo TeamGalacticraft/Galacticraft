@@ -37,6 +37,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -566,6 +567,20 @@ public class CannedFoodItem extends Item implements FabricItemStack {
             };
         }
         return itemsToBeConsumed;
+    }
+
+    public static List<ItemStack> getDefaultCannedFoods() {
+        List<ItemStack> cannedFoods = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (CannedFoodItem.canAddToCan(item)) {
+                // Create new canned food item with empty components
+                ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
+                // Add the default itemstack of the edible item into the canned foods components
+                CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                cannedFoods.add(cannedFoodItem);
+            }
+        }
+        return cannedFoods;
     }
 
     private boolean canInsertCan(Level level, BlockPos blockPos, boolean canPlace) {

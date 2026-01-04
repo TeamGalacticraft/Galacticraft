@@ -29,8 +29,6 @@ import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
 import java.util.ArrayList;
@@ -39,7 +37,6 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 
 import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
-import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
 public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultCanningDisplay> {
@@ -72,15 +69,9 @@ public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultC
 
     private Optional<List<DefaultCanningDisplay>> defaultCanningDisplays() {
         List<DefaultCanningDisplay> displays = new ArrayList<>();
-        for (Item item : BuiltInRegistries.ITEM) {
-            if (CannedFoodItem.canAddToCan(item)) {
-                // Create new canned food item with empty components
-                ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
-                // Add the default itemstack of the edible item into the canned foods components
-                CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
-                List<EntryIngredient> entries = CannedFoodItem.getContents(cannedFoodItem).stream().map(stack -> EntryIngredients.of(stack)).collect(Collectors.toList());
-                displays.add(new DefaultCanningDisplay(entries, List.of(EntryIngredients.of(cannedFoodItem)), Optional.empty()));
-            }
+        for (ItemStack cannedFoodItem : CannedFoodItem.getDefaultCannedFoods()) {
+            List<EntryIngredient> entries = CannedFoodItem.getContents(cannedFoodItem).stream().map(stack -> EntryIngredients.of(stack)).collect(Collectors.toList());
+            displays.add(new DefaultCanningDisplay(entries, List.of(EntryIngredients.of(cannedFoodItem)), Optional.empty()));
         }
         return Optional.of(displays);
     }
