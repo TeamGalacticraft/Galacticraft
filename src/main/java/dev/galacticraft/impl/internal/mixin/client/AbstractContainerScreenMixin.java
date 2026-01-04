@@ -61,7 +61,7 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onTabClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
-        boolean tabsVisible = true;
+        boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {
                 tabsVisible = true;

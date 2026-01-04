@@ -26,8 +26,7 @@
     "ServerLevelMixin",
     "ServerPlayerMixin",
     "SpiderMixin",
-    "TorchBlockMixin",
-    "AbstractContainerMenuMixin"
+    "TorchBlockMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
@@ -51,7 +50,6 @@
     "client.CreativeScreenMixin",
     "client.AbstractContainerScreenAccessor",
     "client.ScreenAccessor",
-    "client.CreativeModeInventoryScreenAccessor",
     "client.AbstractContainerScreenMixin"
   ],
   "minVersion": "0.8.0",
