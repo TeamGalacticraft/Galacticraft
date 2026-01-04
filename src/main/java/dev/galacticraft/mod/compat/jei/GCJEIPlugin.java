@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.jei;
 
-import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
@@ -41,6 +40,7 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
+import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
@@ -136,7 +136,7 @@ public class GCJEIPlugin implements IModPlugin {
                 ElectricFurnaceBlockEntity.INPUT_SLOT, 1, ElectricFurnaceBlockEntity.OUTPUT_SLOT + 1, 36);
         registration.addRecipeTransferHandler(RecipeMachineMenu.class, null, GCJEIRecipeTypes.ELECTRIC_BLASTING,
                 ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 36);
-        registration.addRecipeTransferHandler(MachineMenu.class, null, GCJEIRecipeTypes.CANNING, 4, 16, 19, 36);
+        registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING, 4, 16, 20, 36);
         registration.addRecipeTransferHandler(new RocketRecipeTransferHandler(registration.getTransferHelper()), GCJEIRecipeTypes.ROCKET);
     }
 
