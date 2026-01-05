@@ -142,12 +142,6 @@
       }
     },
     {
-      "name": "ChipWolf",
-      "contact": {
-        "homepage": "https://github.com/ChipWolf"
-      }
-    },
-    {
       "name": "BeetMacol",
       "contact": {
         "homepage": "https://github.com/BeetMacol"
@@ -160,9 +154,9 @@
       }
     },
     {
-      "name": "davo899",
+      "name": "ChipWolf",
       "contact": {
-        "homepage": "https://github.com/davo899"
+        "homepage": "https://github.com/ChipWolf"
       }
     },
     {
@@ -172,15 +166,21 @@
       }
     },
     {
+      "name": "Dragon-Seeker",
+      "contact": {
+        "homepage": "https://github.com/Dragon-Seeker"
+      }
+    },
+    {
       "name": "LeMayday",
       "contact": {
         "homepage": "https://github.com/LeMayday"
       }
     },
     {
-      "name": "Dragon-Seeker",
+      "name": "davo899",
       "contact": {
-        "homepage": "https://github.com/Dragon-Seeker"
+        "homepage": "https://github.com/davo899"
       }
     },
     {
@@ -250,15 +250,15 @@
       }
     },
     {
-      "name": "ScottRox",
-      "contact": {
-        "homepage": "https://github.com/ScottRox"
-      }
-    },
-    {
       "name": "danilwhale",
       "contact": {
         "homepage": "https://github.com/danilwhale"
+      }
+    },
+    {
+      "name": "ScottRox",
+      "contact": {
+        "homepage": "https://github.com/ScottRox"
       }
     }
   ],
