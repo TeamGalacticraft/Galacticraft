@@ -48,7 +48,6 @@
     "client.ScreenEffectRendererMixin",
     "client.SpriteContentAccessor",
     "client.CreativeScreenMixin",
-    "client.AbstractContainerScreenAccessor",
     "client.ScreenAccessor",
     "client.AbstractContainerScreenMixin"
   ],

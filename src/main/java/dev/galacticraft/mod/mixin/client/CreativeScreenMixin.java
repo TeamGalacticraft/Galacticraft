@@ -171,9 +171,9 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Inject(method = "selectTab", at = @At(value = "HEAD"))
     void gc$selectTab(CreativeModeTab group, CallbackInfo ci)
     {
-        if(group.getType() == CreativeModeTab.Type.INVENTORY)
+        if (group.getType() == CreativeModeTab.Type.INVENTORY)
         {
-            if(isCreativeGearInvAllowed())
+            if (isCreativeGearInvAllowed())
             {
                 creativeSwitchButton.setX(leftPos+11);
                 creativeSwitchButton.setY(topPos+18);
@@ -189,7 +189,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
             }
 
         }
-        if(group.getType() != CreativeModeTab.Type.INVENTORY)
+        if (group.getType() != CreativeModeTab.Type.INVENTORY)
         {
             removeWidget(creativeSwitchButton);
             bGCInventory = false;
@@ -203,7 +203,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Inject(method = "resize", at = @At(value = "TAIL"))
     void resize(Minecraft client, int width, int height, CallbackInfo ci)
     {
-        if(isGCInventoryEnabled())
+        if (isGCInventoryEnabled())
         {
             regenerateSlots();
             creativeSwitchButton.setIsBottomButtonActive(true);
@@ -215,10 +215,10 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
 
         //Item duplication support
-        if(button == 2)
+        if (button == 2)
         {
             Slot slot = gc$findSlot(mouseX, mouseY);
-            if(slot != null)
+            if (slot != null)
             {
                 getMenu().setCarried(slot.getItem().copy());
             }
@@ -317,7 +317,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     private Slot gc$findSlot(double x, double y) {
         for (int i = 0; i < gc$slots.size(); ++i) {
             Slot slot = (Slot)gc$slots.get(i);
-            if (((AbstractContainerScreenAccessor) this).gcIsHovering(slot, x, y) && slot.isActive()) {
+            if (isHovering(slot.x, slot.y, 16, 16, x, y) && slot.isActive()) {
                 return slot;
             }
         }
@@ -423,18 +423,9 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Inject(method = "slotClicked", at = @At("HEAD"))
     protected void slotClicked(Slot region, int slotId, int button, ClickType actionType, CallbackInfo ci)
     {
-        if (region != null)
-        {
-            if (actionType == ClickType.QUICK_MOVE)
-            {
-                if (gcTryQuickStackToGCInv(region))
-                {
-                    return;
-                }
-            }
+        if (region != null && actionType == ClickType.QUICK_MOVE) {
+            if (gcTryQuickStackToGCInv(region)) { return; };
         }
-
-
     }
 
     @Unique
@@ -479,7 +470,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
         for (Slot s : gc$slots) {
             renderSlot(graphics, s);
-            if (((AbstractContainerScreenAccessor) this).gcIsHovering(s, mouseX, mouseY) && s.isActive())
+            if (isHovering(s.x, s.y, 16, 16, mouseX, mouseY) && s.isActive())
             {
                 hoveredSlot = s;
                 if (s.isHighlightable())
