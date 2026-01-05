@@ -102,8 +102,34 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         return gc$slots;
     }
 
+    @Unique
+    public boolean isGCInventoryEnabled()
+    {
+        return bGCInventory;
+    }
+
+    @Unique
+    private boolean isCreativeGearInvAllowed()
+    {
+        return Galacticraft.CONFIG.enableCreativeGearInv();
+    }
+
     public CreativeScreenMixin(AbstractContainerMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(null, null, null);
+    }
+
+    @Unique
+    private static Slot makeSlotWrapper(Slot target, int invSlot, int x, int y) {
+        try {
+            Class<?> cls = Class.forName(
+                    "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$SlotWrapper"
+            );
+            Constructor<?> c = cls.getDeclaredConstructor(Slot.class, int.class, int.class, int.class);
+            c.setAccessible(true);
+            return (Slot) c.newInstance(target, invSlot, x, y);
+        } catch (Exception e) {
+            throw new RuntimeException("Cannot create SlotWrapper", e);
+        }
     }
 
     /**
@@ -133,32 +159,6 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         renderTabButton(graphics, selectedTab);
         if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, isGCInventoryEnabled() ? leftPos + 55 : leftPos + 73, topPos + 6, leftPos + 105, topPos + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, minecraft.player);
-        }
-    }
-
-    @Unique
-    public boolean isGCInventoryEnabled()
-    {
-        return bGCInventory;
-    }
-
-    @Unique
-    private boolean isCreativeGearInvAllowed()
-    {
-        return Galacticraft.CONFIG.enableCreativeGearInv();
-    }
-
-    @Unique
-    private static Slot makeSlotWrapper(Slot target, int invSlot, int x, int y) {
-        try {
-            Class<?> cls = Class.forName(
-                    "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$SlotWrapper"
-            );
-            Constructor<?> c = cls.getDeclaredConstructor(Slot.class, int.class, int.class, int.class);
-            c.setAccessible(true);
-            return (Slot) c.newInstance(target, invSlot, x, y);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot create SlotWrapper", e);
         }
     }
 
@@ -303,9 +303,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         {
             generatePlayerInventorySlots();
             generateGCSlots();
-        }
-        else
-        {
+        } else {
             selectTab(BuiltInRegistries.CREATIVE_MODE_TAB.get(CreativeModeTabs.INVENTORY));
         }
 
@@ -368,9 +366,9 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         var gcInv = minecraft.player.galacticraft$getGearInv();
 
         boolean canPlaceInAny = false;
-        for(int i = 0; i < gc$slots.size(); i++)
+        for (int i = 0; i < gc$slots.size(); i++)
         {
-            if( gc$slots.get(i).mayPlace(playerSlot.getItem()) && gc$slots.get(i).getItem().isEmpty())
+            if ( gc$slots.get(i).mayPlace(playerSlot.getItem()) && gc$slots.get(i).getItem().isEmpty())
             {
                 canPlaceInAny = true;
                 ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, i, 1, playerSlot.getItem().copy()));
