@@ -115,8 +115,8 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     }
 
     /**
-     * @author MaverX
-     * @reason It's easier to rewrite the function entirely than to try to inject something into it.
+     * author MaverX
+     * reason It's easier to rewrite the function entirely than to try to inject something into it.
      */
     @Overwrite
     public void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
