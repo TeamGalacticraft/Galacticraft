@@ -26,6 +26,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Unmodifiable;
@@ -39,7 +40,7 @@ public interface MultiBlockBase {
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
             if (!level.getBlockState(otherPart).isAir()) {
-                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }
@@ -50,7 +51,7 @@ public interface MultiBlockBase {
         for (var otherPart : this.getOtherParts(blockState)) {
             otherPart = otherPart.immutable().offset(blockPos);
             if (!level.getBlockState(otherPart).isAir()) {
-                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), 3);
+                level.setBlock(otherPart, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
     }

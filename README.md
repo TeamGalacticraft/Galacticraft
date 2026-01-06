@@ -36,7 +36,10 @@ We welcome and encourage community contributions,
 but before you start please read our [contributing guidelines][contributing].\
 Pull requests require at least one team member's approving review, and a successful build before they will be merged.
 
+If you are interested in helping to translate Galacticraft into different languages, please view the [translations][translations] section for more information.
+
 [actions]: https://github.com/TeamGalacticraft/Galacticraft/actions/workflows/build.yml
 [contributing]: https://github.com/TeamGalacticraft/Galacticraft/blob/main/.github/CONTRIBUTING.md
+[translations]: https://github.com/TeamGalacticraft/Galacticraft/blob/main/.github/CONTRIBUTING.md#translations
 [discord]: https://discord.gg/n3QqhMYyFK
 [twitch]: https://twitch.tv/galacticraftdev

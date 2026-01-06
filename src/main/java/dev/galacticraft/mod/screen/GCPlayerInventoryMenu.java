@@ -32,7 +32,7 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 
 public class GCPlayerInventoryMenu extends AbstractContainerMenu {
-    public static final int[] COLUMNS = {8, 80, 98};
+    public static final int[] COLUMNS = {80, 98, 8};
 
     public final Container inventory;
 
@@ -80,9 +80,10 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
             stack = stackFrom.copy();
 
             // Index of Indexes :)
-            // 0-3 (4): GC, thermal armor slots;
-            // 4-5 (2): GC, oxygen tank slots;
-            // 6-11 (6): GC, accessory slots;
+            // 0-1 (2): GC, oxygen mask/gear slots;
+            // 2-3 (2): GC, oxygen tank slots;
+            // 4-7 (6): GC, accessory slots;
+            // 8-11 (4): GC, thermal armor slots;
             // 12-38 (27): MC, non-hotbar inventory slots;
             // 39-47 (9): MC, hotbar slots.
             if (index < 12) {
@@ -95,7 +96,7 @@ public class GCPlayerInventoryMenu extends AbstractContainerMenu {
                     !this.moveItemStackTo(stackFrom, 39, 48, false)) {
                     return ItemStack.EMPTY;
                 }
-            } else if (index < 49) {
+            } else if (index < 48) {
                 if (!this.moveItemStackTo(stackFrom, 0, 12, false) &&
                     !this.moveItemStackTo(stackFrom, 12, 39, false)) {
                     return ItemStack.EMPTY;

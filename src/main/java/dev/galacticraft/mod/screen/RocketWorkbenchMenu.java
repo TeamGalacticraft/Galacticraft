@@ -25,6 +25,7 @@ package dev.galacticraft.mod.screen;
 import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.inventory.MirroredSlot;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
@@ -55,12 +56,9 @@ import java.util.List;
 import java.util.Optional;
 import java.util.function.Predicate;
 
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
+
 public class RocketWorkbenchMenu extends AbstractContainerMenu implements VariableSizedContainer.Listener, ContainerListener {
-    public static final int SPACING = 2;
-
-    public static final int SCREEN_CENTER_BASE_X = 88;
-    public static final int SCREEN_CENTER_BASE_Y = 158;
-
     public final RocketWorkbenchBlockEntity workbench;
     public RecipeHolder<RocketRecipe> recipe;
     protected int recipeSize;
@@ -97,49 +95,47 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     protected void addSlots() {
         RocketRecipe recipe = this.recipe.value();
-        int bodyHeight = recipe.bodyHeight();
-        int y = this.coneY();
-        int centerX = SCREEN_CENTER_BASE_X - 36;
 
-        // Cone
-        this.coneSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, 0, centerX - 8, y, recipe.cone()).withBackground(Constant.SlotSprite.ROCKET_CONE));
-
-        // Body
         this.bodySlots = new ArrayList<>();
-        int nextSlot = 1;
-        for (int i = 0; i < bodyHeight; i++) {
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 17, 18 + 18 * i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
-            this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 1, 18 + 18 * i + y, recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
-            nextSlot += 2;
-        }
-
-        // Boosters
         this.boosterSlots = new ArrayList<>();
-        if (!recipe.boosters().isEmpty()) {
-            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
-            this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight - 18 + y, recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
-            nextSlot += 2;
-        }
-
-        // Left fins
         this.finSlots = new ArrayList<>();
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 35, 18 * bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX - 35, 18 * bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        nextSlot += 2;
 
-        // Right fins
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX + 19, 18 * bodyHeight + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot + 1, centerX + 19, 18 * bodyHeight + 18 + y, recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN)));
-        nextSlot += 2;
-
-        // Engine
-        this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, centerX - 8, 18 * bodyHeight + 18 + y, recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
+        int nextSlot = 0;
+        for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipe.bodyHeight(), !recipe.boosters().isEmpty())) {
+            switch (data.partType()) {
+                case CONE: {
+                    this.coneSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.cone()).withBackground(Constant.SlotSprite.ROCKET_CONE));
+                    break;
+                }
+                case BODY: {
+                    this.bodySlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.body()).withBackground(Constant.SlotSprite.ROCKET_PLATING)));
+                    break;
+                }
+                case BOOSTER: {
+                    this.boosterSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.boosters()).withBackground(Constant.SlotSprite.ROCKET_BOOSTER)));
+                    break;
+                }
+                case FIN: {
+                    if (data.mirror()) {
+                        this.finSlots.add(this.addSlot(new MirroredFilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN_RIGHT)));
+                    } else {
+                        this.finSlots.add(this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.fins()).withBackground(Constant.SlotSprite.ROCKET_FIN_LEFT)));
+                    }
+                    break;
+                }
+                case ENGINE: {
+                    this.engineSlot = this.addSlot(new FilteredSlot(this.workbench.ingredients, nextSlot, data.x(), data.y(), recipe.engine()).withBackground(Constant.SlotSprite.ROCKET_ENGINE));
+                    break;
+                }
+            }
+            ++nextSlot;
+        }
 
         // Chest
-        this.addSlot(new FilteredSlot(this.workbench.chests, 0, 44, 140, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
+        this.addSlot(new FilteredSlot(this.workbench.chests, 0, CHEST_X, CHEST_Y, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
 
         // Output
-        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, 125, 135));
+        this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, OUTPUT_X, OUTPUT_Y));
 
         // Player inventory
         for (int row = 0; row < 3; ++row) {
@@ -166,20 +162,16 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(data.pos), playerInventory);
     }
 
-    private int rocketHeight() {
-        return 18 + this.recipe.value().bodyHeight() * 18 + 18;
-    }
-
-    private int coneY() {
-        return 81 - rocketHeight() / 2;
-    }
-
     protected boolean isIngredient(ItemStack stack) {
         return this.recipe.value().getIngredients().stream().distinct().anyMatch(ingredient -> ingredient.test(stack));
     }
 
     protected boolean isWorkbenchInventory(int slotIndex) {
         return slotIndex < this.slots.size() - 9 * 4;
+    }
+
+    public int getRecipeSize() {
+        return this.recipeSize;
     }
 
     @Override
@@ -293,13 +285,19 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         }
 
         @Override
-        public @Nullable com.mojang.datafixers.util.Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
+        public @Nullable Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
             return this.background;
         }
 
         public FilteredSlot withBackground(ResourceLocation background) {
-            this.background = new Pair<>(InventoryMenu.BLOCK_ATLAS, background);
+            this.background = Pair.of(InventoryMenu.BLOCK_ATLAS, background);
             return this;
+        }
+    }
+
+    private static class MirroredFilteredSlot extends FilteredSlot implements MirroredSlot {
+        public MirroredFilteredSlot(Container container, int slot, int x, int y, Predicate<ItemStack> filter) {
+            super(container, slot, x, y, filter);
         }
     }
 

@@ -47,7 +47,7 @@ public class AccessorySlot extends Slot {
         this.icon = (icon != null) ? Pair.of(InventoryMenu.BLOCK_ATLAS, icon) : null;
     }
 
-    public AccessorySlot(Container inventory, LivingEntity owner, int x, int y, int index) {
+    public AccessorySlot(Container inventory, LivingEntity owner, int index, int x, int y) {
         super(inventory, index, x, y);
         this.owner = owner;
         this.stackPredicate = itemStack -> false;
@@ -70,7 +70,7 @@ public class AccessorySlot extends Slot {
     public Pair<ResourceLocation, ResourceLocation> getNoItemIcon() {
         return this.icon;
     }
-    
+
     @Override
     public int getMaxStackSize() {
         return 1;

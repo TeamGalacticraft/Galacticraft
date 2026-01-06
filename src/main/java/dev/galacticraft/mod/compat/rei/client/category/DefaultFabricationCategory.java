@@ -25,7 +25,7 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
@@ -37,44 +37,46 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 import java.text.DecimalFormat;
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 @Environment(EnvType.CLIENT)
 public class DefaultFabricationCategory implements DisplayCategory<DefaultFabricationDisplay> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.FABRICATION;
     }
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(GCBlocks.CIRCUIT_FABRICATOR.asItem().getDefaultInstance());
+        return EntryStacks.of(new ItemStack(GCBlocks.CIRCUIT_FABRICATOR));
     }
 
     @Override
     public Component getTitle() {
-        return Component.translatable(Translations.RecipeCategory.CIRCUIT_FABRICATOR);
+        return Component.translatable(RecipeCategory.CIRCUIT_FABRICATOR);
     }
 
     @Override
     public @NotNull List<Widget> setupDisplay(DefaultFabricationDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - CIRCUIT_FABRICATOR_WIDTH / 2, bounds.getCenterY() - CIRCUIT_FABRICATOR_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
-        List<Widget> widgets = new LinkedList<>();
+        List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(Widgets.createTexturedWidget(RECIPE_VIEWER_DISPLAY_TEXTURE, new Rectangle(startPoint.x, startPoint.y, CIRCUIT_FABRICATOR_WIDTH, CIRCUIT_FABRICATOR_HEIGHT)));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
-        DecimalFormat df = new DecimalFormat("###.##");
-        double processingTime = recipeDisplay.getProcessingTime();
+        double processingTime = recipeDisplay.getProcessingTime() / 20.0D;
+        widgets.add(new FabricationProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, recipeDisplay.getProcessingTime()));
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
-                Component.translatable("category.rei.campfire.time", df.format(processingTime / 20.0D))).noShadow().color(0xFF404040, 0xFFBBBBBB));
+                Component.translatable(RecipeCategory.REI_TIME, FORMAT.format(processingTime))).noShadow().color(0xFF404040, 0xFFBBBBBB));
 
         // Diamond ingredients
         // Silicon
@@ -88,18 +90,18 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).entries(recipeDisplay.getInputEntries().get(3)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).entries(recipeDisplay.getInputEntries().get(4)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + WAFER_X, startPoint.y + WAFER_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
     @Override
-    public int getDisplayHeight() {
-        return CIRCUIT_FABRICATOR_HEIGHT + 8;
+    public int getDisplayWidth(DefaultFabricationDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
-    public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return CIRCUIT_FABRICATOR_WIDTH + 8;
+    public int getDisplayHeight() {
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override

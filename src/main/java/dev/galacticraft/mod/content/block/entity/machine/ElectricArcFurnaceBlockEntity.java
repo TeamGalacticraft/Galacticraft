@@ -48,6 +48,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -55,6 +56,8 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
 public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
@@ -70,11 +73,11 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(44, 35),
+                            .pos(INPUT_X, INPUT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(108, 35),
+                            .pos(OUTPUT_X_1, OUTPUT_Y_1),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(134, 35)
+                            .pos(OUTPUT_X_2, OUTPUT_Y_2)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
@@ -109,8 +112,29 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
+    public int decreaseProgressAmount() {
+        return 2;
+    }
+
+    @Override
     public int getProcessingTime(@NotNull RecipeHolder<BlastingRecipe> recipe) {
-        return (int) (recipe.value().getCookingTime() * 0.9);
+        return (int) (recipe.value().getCookingTime() / 1.5F);
+    }
+
+    @Override
+    protected void outputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
+        ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
+        int count = assembled.getCount();
+        if (this.level.getRandom().nextFloat() < Galacticraft.CONFIG.electricArcFurnaceBonusChance()) {
+            ++count;
+        }
+        this.outputSlots.insertMatching(assembled.getItem(), assembled.getComponentsPatch(), count);
+    }
+
+    @Override
+    protected boolean canOutputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
+        ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
+        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2);
     }
 
     @Override

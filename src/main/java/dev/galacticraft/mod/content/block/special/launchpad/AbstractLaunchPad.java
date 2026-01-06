@@ -33,7 +33,9 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelReader;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.RenderShape;
+import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.EnumProperty;
@@ -73,6 +75,16 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         builder.add(PART);
+    }
+
+    @Override
+    protected BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(PART, state.getValue(PART).rotate(rotation));
+    }
+
+    @Override
+    protected BlockState mirror(BlockState state, Mirror mirror) {
+        return state.setValue(PART, state.getValue(PART).mirror(mirror));
     }
 
     @Override
@@ -240,6 +252,7 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
         SOUTH(Pair.of(Direction.SOUTH, null)),
         SOUTH_EAST(Pair.of(Direction.SOUTH, Direction.EAST));
 
+        public static final StringRepresentable.EnumCodec<Part> CODEC = StringRepresentable.fromEnum(Part::values);
         private Pair<Direction, Direction> direction;
 
         Part() {
@@ -257,6 +270,58 @@ public abstract class AbstractLaunchPad extends BaseEntityBlock {
         @Nullable
         public Pair<Direction, @Nullable Direction> getDirection() {
             return this.direction;
+        }
+
+        public Part rotate(Rotation rotation) {
+            if (this.direction != null) {
+                Direction first = rotation.rotate(this.direction.getFirst());
+                Direction second = this.direction.getSecond();
+                if (second == null) {
+                    return Part.byName(first.getName());
+                }
+                second = rotation.rotate(second);
+                String name;
+                switch (rotation) {
+                    case CLOCKWISE_90:
+                    case COUNTERCLOCKWISE_90:
+                        name = second.getName() + "_" + first.getName();
+                        break;
+                    default:
+                        name = first.getName() + "_" + second.getName();
+                }
+                return Part.byName(name);
+            }
+            return this;
+        }
+
+        public Part mirror(Mirror mirror) {
+            if (this.direction != null) {
+                Direction first = this.direction.getFirst();
+                Direction second = this.direction.getSecond();
+                switch (mirror) {
+                    case LEFT_RIGHT: {
+                        first = mirror.mirror(first);
+                        break;
+                    }
+                    case FRONT_BACK: {
+                        if (second != null) {
+                            second = mirror.mirror(second);
+                        } else {
+                            first = mirror.mirror(first);
+                        }
+                    }
+                }
+                String name = first.getName();
+                if (second != null) {
+                    name += "_" + second.getName();
+                }
+                return Part.byName(name);
+            }
+            return this;
+        }
+
+        public static Part byName(String name) {
+            return CODEC.byName(name, NONE);
         }
     }
 

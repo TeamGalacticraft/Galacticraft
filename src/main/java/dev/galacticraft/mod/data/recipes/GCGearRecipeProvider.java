@@ -22,19 +22,24 @@
 
 package dev.galacticraft.mod.data.recipes;
 
-import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
+import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.data.EmiDefaultRecipeProvider;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricRecipeProvider;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.HolderLookup;
-import net.minecraft.data.recipes.*;
+import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
+import net.minecraft.data.recipes.RecipeOutput;
+import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.Ingredient;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.SmeltingRecipe;
+import net.minecraft.world.level.ItemLike;
 
 import java.util.concurrent.CompletableFuture;
 
@@ -49,115 +54,131 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput output) {
         // Armor
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_HELMET)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_HELMET)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern("PPP")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_CHESTPLATE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_CHESTPLATE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern("P P")
                 .pattern("PPP")
                 .pattern("PPP")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_LEGGINGS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_LEGGINGS)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern("PPP")
                 .pattern("P P")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_BOOTS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_BOOTS)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .pattern("P P")
                 .pattern("P P")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_HELMET)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_HELMET)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("DDD")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("D D")
                 .pattern("DDD")
                 .pattern("DDD")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("DDD")
                 .pattern("D D")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_BOOTS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_BOOTS)
                 .define('D', GCItems.DESH_INGOT)
                 .pattern("D D")
                 .pattern("D D")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_HELMET)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_HELMET)
                 .define('C', GCItems.THERMAL_CLOTH)
                 .pattern("CCC")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_CHESTPIECE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_CHESTPIECE)
                 .define('C', GCItems.THERMAL_CLOTH)
                 .pattern("C C")
                 .pattern("CCC")
                 .pattern("CCC")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_LEGGINGS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_LEGGINGS)
                 .define('C', GCItems.THERMAL_CLOTH)
                 .pattern("CCC")
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.THERMAL_PADDING_BOOTS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.THERMAL_PADDING_BOOTS)
                 .define('C', GCItems.THERMAL_CLOTH)
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.THERMAL_CLOTH), has(GCItems.THERMAL_CLOTH))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_HELMET)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_HELMET)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
                 .pattern("CCC")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_CHESTPIECE)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
                 .pattern("C C")
                 .pattern("CCC")
                 .pattern("CCC")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_LEGGINGS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_LEGGINGS)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
                 .pattern("CCC")
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_BOOTS)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.ISOTHERMAL_PADDING_BOOTS)
                 .define('C', GCItems.ISOTHERMAL_FABRIC)
                 .pattern("C C")
                 .pattern("C C")
                 .unlockedBy(getHasName(GCItems.ISOTHERMAL_FABRIC), has(GCItems.ISOTHERMAL_FABRIC))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.SENSOR_GLASSES)
                 .define('D', ConventionalItemTags.DIAMOND_GEMS)
                 .define('S', ConventionalItemTags.STRINGS)
                 .define('L', GCItems.SENSOR_LENS)
@@ -166,104 +187,115 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .pattern("S S")
                 .pattern("LML")
                 .unlockedBy(getHasName(GCItems.SENSOR_LENS), has(GCItems.SENSOR_LENS))
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Heavy-Duty Tools
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_SHOVEL)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_SHOVEL)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("P")
                 .pattern("S")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_PICKAXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PPP")
                 .pattern(" S ")
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_AXE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PP")
                 .pattern("PS")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.HEAVY_DUTY_HOE)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("PP")
                 .pattern(" S")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.HEAVY_DUTY_SWORD)
                 .define('P', GCItems.TIER_1_HEAVY_DUTY_PLATE)
                 .define('S', ConventionalItemTags.WOODEN_RODS)
                 .pattern("P")
                 .pattern("P")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.TIER_1_HEAVY_DUTY_PLATE), has(GCItems.TIER_1_HEAVY_DUTY_PLATE))
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Desh Tools
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_SHOVEL)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_SHOVEL)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("D")
                 .pattern("S")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_PICKAXE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_PICKAXE)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("DDD")
                 .pattern(" S ")
                 .pattern(" S ")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_AXE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_AXE)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("DD")
                 .pattern("DS")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.DESH_HOE)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.DESH_HOE)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("DD")
                 .pattern(" S")
                 .pattern(" S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
-        ShapedRecipeBuilder.shaped(RecipeCategory.COMBAT, GCItems.DESH_SWORD)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.DESH_SWORD)
                 .define('D', GCItems.DESH_INGOT)
                 .define('S', GCItems.DESH_STICK)
                 .pattern("D")
                 .pattern("D")
                 .pattern("S")
                 .unlockedBy(getHasName(GCItems.DESH_INGOT), has(GCItems.DESH_INGOT))
+                .emiDefaultRecipe(true)
                 .save(output);
 
         // Smithing Recipes
-        titaniumSmithing(output, GCItems.DESH_CHESTPLATE, RecipeCategory.COMBAT, GCItems.TITANIUM_CHESTPLATE);
-        titaniumSmithing(output, GCItems.DESH_LEGGINGS, RecipeCategory.COMBAT, GCItems.TITANIUM_LEGGINGS);
-        titaniumSmithing(output, GCItems.DESH_HELMET, RecipeCategory.COMBAT, GCItems.TITANIUM_HELMET);
-        titaniumSmithing(output, GCItems.DESH_BOOTS, RecipeCategory.COMBAT, GCItems.TITANIUM_BOOTS);
-        titaniumSmithing(output, GCItems.DESH_SWORD, RecipeCategory.COMBAT, GCItems.TITANIUM_SWORD);
-        titaniumSmithing(output, GCItems.DESH_AXE, RecipeCategory.TOOLS, GCItems.TITANIUM_AXE);
-        titaniumSmithing(output, GCItems.DESH_PICKAXE, RecipeCategory.TOOLS, GCItems.TITANIUM_PICKAXE);
-        titaniumSmithing(output, GCItems.DESH_HOE, RecipeCategory.TOOLS, GCItems.TITANIUM_HOE);
-        titaniumSmithing(output, GCItems.DESH_SHOVEL, RecipeCategory.TOOLS, GCItems.TITANIUM_SHOVEL);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_CHESTPLATE, GCItems.TITANIUM_CHESTPLATE);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_LEGGINGS, GCItems.TITANIUM_LEGGINGS);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_HELMET, GCItems.TITANIUM_HELMET);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_BOOTS, GCItems.TITANIUM_BOOTS);
+        titaniumSmithing(output, RecipeCategory.COMBAT, GCItems.DESH_SWORD, GCItems.TITANIUM_SWORD);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_AXE, GCItems.TITANIUM_AXE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_PICKAXE, GCItems.TITANIUM_PICKAXE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_HOE, GCItems.TITANIUM_HOE);
+        titaniumSmithing(output, RecipeCategory.TOOLS, GCItems.DESH_SHOVEL, GCItems.TITANIUM_SHOVEL);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.MISC, GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, 2)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, 2)
                 .define('D', ConventionalItemTags.DIAMOND_GEMS)
                 .define('T', GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE)
                 .define('A', GCItemTags.ASTEROID_ROCKS)
@@ -274,30 +306,49 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .save(output);
 
         // Other Items
-        ShapelessRecipeBuilder.shapeless(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
+        GCShapelessRecipeBuilder.crafting(RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, 3)
                 .requires(GCItems.RAW_METEORIC_IRON)
                 .unlockedBy(getHasName(GCItems.RAW_METEORIC_IRON), has(GCItems.RAW_METEORIC_IRON))
+                .emiDefaultRecipe(true)
                 .save(output);
 
-        simpleCookingRecipe(output, "smelting", RecipeSerializer.SMELTING_RECIPE, SmeltingRecipe::new, 200, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
-        simpleCookingRecipe(output, "blasting", RecipeSerializer.BLASTING_RECIPE, BlastingRecipe::new, 100, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F);
+        oreSmeltingAndBlasting(output, RecipeCategory.COMBAT, GCItems.THROWABLE_METEOR_CHUNK, GCItems.HOT_THROWABLE_METEOR_CHUNK, 0.1F, 100, true);
 
-        ShapedRecipeBuilder.shaped(RecipeCategory.TOOLS, GCItems.STANDARD_WRENCH)
-                .define('A', GCItems.COMPRESSED_ALUMINUM)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.STANDARD_WRENCH)
+                .define('B', GCItems.COMPRESSED_BRONZE)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .pattern("  S")
-                .pattern(" A ")
-                .pattern("A  ")
+                .pattern(" B ")
+                .pattern("B  ")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .emiDefaultRecipe(true)
                 .save(output);
     }
 
-    private static void titaniumSmithing(RecipeOutput output, Item input, RecipeCategory category, Item result) {
+    private static void titaniumSmithing(RecipeOutput output, RecipeCategory category, Item input, Item result) {
+        ResourceLocation resourceLocation = RecipeBuilder.getDefaultRecipeId(result).withSuffix("_smithing");
+
         SmithingTransformRecipeBuilder.smithing(
                         Ingredient.of(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE), Ingredient.of(input), Ingredient.of(GCItems.COMPRESSED_TITANIUM), category, result
                 )
                 .unlocks(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output, getItemName(result) + "_smithing");
+                .save(output, resourceLocation);
+
+        EmiDefaultRecipeProvider.add(resourceLocation);
+    }
+
+    private static void oreSmeltingAndBlasting(RecipeOutput output, RecipeCategory category, ItemLike input, ItemLike result, float experience, int cookingTime, boolean emiDefaultRecipe) {
+        Ingredient ingredient = Ingredient.of(input);
+        String hasName = getHasName(input);
+        var criterion = has(input);
+
+        GCCookingRecipeBuilder.smelting(ingredient, category, result, experience, cookingTime * 2)
+                .unlockedBy(hasName, criterion)
+                .emiDefaultRecipe(emiDefaultRecipe)
+                .save(output, getSmeltingRecipeName(result));
+        GCCookingRecipeBuilder.blasting(ingredient, category, result, experience, cookingTime)
+                .unlockedBy(hasName, criterion)
+                .save(output, getBlastingRecipeName(result));
     }
 
     @Override

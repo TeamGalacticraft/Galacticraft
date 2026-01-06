@@ -32,13 +32,17 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
  */
 public class GCServerPacketReceivers {
     public static void register() {
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(BubbleMaxPayload.TYPE);
+        registerPacket(BubbleVisibilityPayload.TYPE);
+        registerPacket(ControlEntityPayload.TYPE);
+        registerPacket(EjectCanPayload.TYPE);
+        registerPacket(OpenGcInventoryPayload.TYPE);
+        registerPacket(OpenPetInventoryPayload.TYPE);
+        registerPacket(OpenRocketPayload.TYPE);
+        registerPacket(PlanetTeleportPayload.TYPE);
+        registerPacket(SatelliteCreationPayload.TYPE);
+        registerPacket(SatelliteUpdatePayload.TYPE);
+        registerPacket(CapeSelectionPayload.TYPE);
         registerPacket(CreativeGcTransferItemPayload.TYPE);
     }
 

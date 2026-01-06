@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -48,6 +49,7 @@ import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+import static dev.galacticraft.mod.Constant.Cape;
 import static dev.galacticraft.mod.util.Translations.*;
 
 public class GCTranslationProvider extends TranslationProvider {
@@ -59,7 +61,8 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateTranslations(HolderLookup.@NotNull Provider registries) {
         this.generateBlockTranslations();
         this.generateItemTranslations();
-        this.generateTagTranslations();
+        this.generateItemTagTranslations();
+        this.generateFluidTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
         this.generateCelestialBodyTranslations();
@@ -74,7 +77,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateMachineStatusTranslations();
         this.generateCelestialSelectionTranslations();
         this.generateUiTranslations();
+        this.generateWailaTranslations();
         this.generateStatsTranslations();
+        this.generateAdvancementsTranslations();
 
         // Tabs in the creative inventory
         this.add(ItemGroup.BLOCKS, "Galacticraft Blocks");
@@ -82,8 +87,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(ItemGroup.MACHINES, "Galacticraft Machines");
         this.add(ItemGroup.CANNED_FOOD, "Canned Food");
 
-        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabricating");
+        this.add(RecipeCategory.CIRCUIT_FABRICATOR, "Circuit Fabrication");
         this.add(RecipeCategory.COMPRESSOR, "Compressing");
+        this.add(RecipeCategory.ELECTRIC_COMPRESSOR, "Compressing (Electric)");
+        this.add(RecipeCategory.ELECTRIC_FURNACE, "Smelting (Electric)");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
 
         this.add(BannerPattern.ROCKET + ".white", "White Rocket");
@@ -110,10 +118,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GLOWSTONE_WALL_TORCH, "Glowstone Torch");
         this.block(GCBlocks.UNLIT_TORCH, "Unlit Torch");
         this.block(GCBlocks.UNLIT_WALL_TORCH, "Unlit Torch");
+        this.block(GCBlocks.UNLIT_SOUL_TORCH, "Unlit Soul Torch");
+        this.block(GCBlocks.UNLIT_SOUL_WALL_TORCH, "Unlit Soul Torch");
 
         // LANTERNS
         this.block(GCBlocks.GLOWSTONE_LANTERN, "Glowstone Lantern");
         this.block(GCBlocks.UNLIT_LANTERN, "Unlit Lantern");
+        this.block(GCBlocks.UNLIT_SOUL_LANTERN, "Unlit Soul Lantern");
 
         // FLUIDS
         this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
@@ -243,13 +254,6 @@ public class GCTranslationProvider extends TranslationProvider {
                 this.block(entry.getValue(), TranslationProvider.normalizeName(color.getName()) + " Stained Glass Fluid Pipe");
             }
         }
-
-        // LIGHT PANELS
-        this.block(GCBlocks.SQUARE_LIGHT_PANEL, "Light Panel (Square)");
-        this.block(GCBlocks.SPOTLIGHT_LIGHT_PANEL, "Light Panel (Spotlight)");
-        this.block(GCBlocks.LINEAR_LIGHT_PANEL, "Light Panel (Linear)");
-        this.block(GCBlocks.DASHED_LIGHT_PANEL, "Light Panel (Dashed)");
-        this.block(GCBlocks.DIAGONAL_LIGHT_PANEL, "Light Panel (Diagonal)");
 
         // VACUUM GLASS
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
@@ -451,8 +455,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.EMPTY_CAN, "Empty Can");
 
         this.item(GCItems.MOON_CHEESE_CURD, "Moon Cheese Curd");
-
         this.item(GCItems.MOON_CHEESE_SLICE, "Moon Cheese Slice");
+
+        this.item(GCItems.CRACKER, "Cracker");
+        this.item(GCItems.CHEESE_CRACKER, "Cracker with Moon Cheese");
+
         this.item(GCItems.BURGER_BUN, "Burger Bun");
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
@@ -519,22 +526,23 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SULFURIC_ACID_BUCKET, "Sulfuric Acid Bucket");
 
         // GALACTICRAFT INVENTORY
-        this.item(GCItems.PARACHUTE.get(DyeColor.WHITE), "Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.ORANGE), "Orange Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.MAGENTA), "Magenta Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.YELLOW), "Yellow Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIME), "Lime Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.PINK), "Pink Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.GRAY), "Gray Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.CYAN), "Cyan Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.PURPLE), "Purple Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BLUE), "Blue Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BROWN), "Brown Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.GREEN), "Green Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.RED), "Red Parachute");
-        this.item(GCItems.PARACHUTE.get(DyeColor.BLACK), "Black Parachute");
+        this.item(GCItems.PARACHUTE, "Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.WHITE), "White Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.ORANGE), "Orange Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.MAGENTA), "Magenta Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIGHT_BLUE), "Light Blue Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.YELLOW), "Yellow Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIME), "Lime Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.PINK), "Pink Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.GRAY), "Gray Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.LIGHT_GRAY), "Light Gray Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.CYAN), "Cyan Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.PURPLE), "Purple Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BLUE), "Blue Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BROWN), "Brown Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.GREEN), "Green Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.RED), "Red Parachute");
+        this.item(GCItems.DYED_PARACHUTES.get(DyeColor.BLACK), "Black Parachute");
 
         this.item(GCItems.OXYGEN_MASK, "Oxygen Mask");
         this.item(GCItems.OXYGEN_GEAR, "Oxygen Gear");
@@ -616,8 +624,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
     }
 
-    protected void generateTagTranslations() {
+    protected void generateItemTagTranslations() {
         this.tag(GCItemTags.WRENCHES, "Wrenches");
+        this.tag(GCItemTags.CUTS_CHEESE, "Cuts Cheese");
 
         this.tag(GCItemTags.THERMAL_HEAD, "Thermal Padding Helmets");
         this.tag(GCItemTags.THERMAL_CHEST, "Thermal Padding Chestpieces");
@@ -630,6 +639,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
+
+        this.tag(GCItemTags.ACID_RESISTANT, "Sulfuric Acid Resistant Items");
 
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
@@ -672,6 +683,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.RAW_TITANIUM_BLOCKS, "Raw Titanium Blocks");
 
         this.tag(GCItemTags.ALUMINUM_INGOTS, "Aluminum Ingots");
+        this.tag(GCItemTags.BRONZE_INGOTS, "Bronze Ingots");
         this.tag(GCItemTags.DESH_INGOTS, "Desh Ingots");
         this.tag(GCItemTags.LEAD_INGOTS, "Lead Ingots");
         this.tag(GCItemTags.METEORIC_IRON_INGOTS, "Meteoric Iron Ingots");
@@ -721,13 +733,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.CANNED_FOODS, "Canned Foods");
         this.tag(GCItemTags.UNCANNABLE_FOODS, "Uncannable Foods");
 
+        this.tag(GCItemTags.BURGER_BUN_SEEDS, "Burger Bun Seeds");
+
         this.tag(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS, "Rocket Storage Upgrade Items");
 
         this.tag(GCItemTags.EVOLVED_CREEPER_DROP_MUSIC_DISCS, "Evolved Creeper Music Disc Drops");
-
-        this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
-        this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
-        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
 
         this.tag(GCItemTags.SLABS, "Galacticraft Slabs");
         this.tag(GCItemTags.STAIRS, "Galacticraft Stairs");
@@ -736,6 +746,35 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.MOON_COBBLESTONES, "Moon Cobblestones");
         this.tag(GCItemTags.LUNASLATE_COBBLESTONES, "Lunaslate Cobblestones");
         this.tag(GCItemTags.MARS_COBBLESTONES, "Mars Cobblestones");
+
+        this.tag(GCItemTags.ASTEROID_ROCKS, "Asteroid Rocks");
+
+        this.tag(GCItemTags.DECORATION_BLOCKS, "Decoration Blocks");
+        this.tag(GCItemTags.ALUMINUM_DECORATION_BLOCKS, "Aluminum Decoration Blocks");
+        this.tag(GCItemTags.BRONZE_DECORATION_BLOCKS, "Bronze Decoration Blocks");
+        this.tag(GCItemTags.COPPER_DECORATION_BLOCKS, "Copper Decoration Blocks");
+        this.tag(GCItemTags.DARK_DECORATION_BLOCKS, "Dark Decoration Blocks");
+        this.tag(GCItemTags.IRON_DECORATION_BLOCKS, "Iron Decoration Blocks");
+        this.tag(GCItemTags.METEORIC_IRON_DECORATION_BLOCKS, "Meteoric Iron Decoration Blocks");
+        this.tag(GCItemTags.STEEL_DECORATION_BLOCKS, "Steel Decoration Blocks");
+        this.tag(GCItemTags.TIN_DECORATION_BLOCKS, "Tin Decoration Blocks");
+        this.tag(GCItemTags.TITANIUM_DECORATION_BLOCKS, "Titanium Decoration Blocks");
+
+        this.tag(GCItemTags.OIL_BUCKETS, "Oil Buckets");
+        this.tag(GCItemTags.FUEL_BUCKETS, "Fuel Buckets");
+        this.tag(GCItemTags.SULFURIC_ACID_BUCKETS, "Sulfuric Acid Buckets");
+    }
+
+    protected void generateFluidTagTranslations() {
+        this.tag(GCFluidTags.OIL, "Galacticraft Oil");
+        this.tag(GCFluidTags.OIL_COMMON, "Oil");
+        this.tag(GCFluidTags.FUEL, "Galacticraft Fuel");
+        this.tag(GCFluidTags.FUEL_COMMON, "Fuel");
+        this.tag(GCFluidTags.SULFURIC_ACID, "Galacticraft Sulfuric Acid");
+        this.tag(GCFluidTags.SULFURIC_ACID_COMMON, "Sulfuric Acid");
+        this.tag(GCFluidTags.LIQUID_OXYGEN, "Liquid Oxygen");
+        this.tag(GCFluidTags.OXYGEN, "Oxygen");
+        this.tag(GCFluidTags.NON_BREATHABLE, "Non-Breathable Fluids");
     }
 
     protected void generateGasTranslations() {
@@ -838,6 +877,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.CANNOT_EAT_IN_NO_ATMOSPHERE, "You can't eat that while holding your breath.");
         this.add(Chat.CANNOT_EAT_WITH_MASK, "You can't eat that while wearing a mask.");
+        this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
+        this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
 
@@ -862,6 +903,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
+        this.deathBy(GCDamageTypes.METEOR_STRIKE, "%s was struck by a meteor",
+                "%s was struck by a meteor hurled by %s");
         this.deathBy(GCDamageTypes.OIL_BOOM, "%s tried to put out fire with a very flammable material",
                 "%s tried to put out fire with a very flammable material while trying to escape %s");
         this.deathBy(GCDamageTypes.SUFFOCATION, "%s died from lack of oxygen",
@@ -925,41 +968,68 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
+        this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
     }
 
     protected void generateConfigTranslations() {
+        this.add(Config.TITLE, "Galacticraft Config");
+        this.add(Config.RESET, "Reset");
+
         this.add(Config.CLIENT, "Client");
+        this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
         this.add(Config.SKYBOX, "Skybox");
+        this.add(Config.PLAYER, "Player");
+
         this.add(Config.COMMANDS, "Commands");
         this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
         this.add(Config.MISC, "Misc");
         this.add(Config.CREATIVE, "Creative");
         this.add(Config.ENABLE_CREATIVE_GEARINV, "Enable Creative Gear Inventory");
         this.add(Config.DEBUG, "Debug");
-        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
+        this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");
+
         this.add(Config.ENERGY, "Energy");
+
+        this.add(Config.WIRES, "Wires");
+        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
+        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
+
         this.add(Config.MACHINES, "Machines");
+        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
+        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
+        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
         this.add(Config.CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE, "Circuit Fabricator Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Electric Compressor Energy Consumption Rate/t");
-        this.add(Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE, "Coal Generator Energy Production Rate/t");
         this.add(Config.ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Furnace Energy Consumption Rate/t");
-        this.add(Config.ENERGY_STORAGE_MODULE_STORAGE_SIZE, "Energy Storage Module Energy Storage Size");
-        this.add(Config.ENERGY_STORAGE_SIZE, "Default Machine Energy Storage Size");
+        this.add(Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Arc Furnace Energy Consumption Rate/t");
+        this.add(Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "Electric Arc Furnace Bonus Chance");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
-        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE, "Oxygen Sealer Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE, "Oxygen Sealer Oxygen Consumption Rate/t");
+        this.add(Config.MAX_SEALING_POWER, "Maximum Sealing Power");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
-        this.add(Config.SOLAR_PANEL_ENERGY_PRODUCTION_RATE, "Solar Panel Energy Production Rate/t");
-        this.add(Config.WIRES, "Wires");
-        this.add(Config.HEAVY_WIRE_ENERGY_TRANSFER_LIMIT, "Heavy Wire Transfer Limit/t");
-        this.add(Config.WIRE_ENERGY_TRANSFER_LIMIT, "Wire Transfer Limit/t");
-        this.add(Config.PLAYER_LIFE_SUPPORT, "Life Support");
-        this.add(Config.PLAYER, "Player");
-        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Oxygen Consumption Rate/t");
-        this.add(Config.RESET, "Reset");
-        this.add(Config.TITLE, "Galacticraft Config");
+        this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
+        this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
+
+        this.add(Config.LIFE_SUPPORT, "Life Support");
+        this.add(Config.SMALL_OXYGEN_TANK_CAPACITY, "Small Oxygen Tank Capacity");
+        this.add(Config.MEDIUM_OXYGEN_TANK_CAPACITY, "Medium Oxygen Tank Capacity");
+        this.add(Config.LARGE_OXYGEN_TANK_CAPACITY, "Large Oxygen Tank Capacity");
+        this.add(Config.PLAYER_OXYGEN_CONSUMPTION_RATE, "Player Oxygen Consumption Rate/t");
+        this.add(Config.WOLF_OXYGEN_CONSUMPTION_RATE, "Wolf Oxygen Consumption Rate/t");
+        this.add(Config.CAT_OXYGEN_CONSUMPTION_RATE, "Cat Oxygen Consumption Rate/t");
+        this.add(Config.PARROT_OXYGEN_CONSUMPTION_RATE, "Parrot Oxygen Consumption Rate/t");
+        this.add(Config.CANNOT_EAT_IN_NO_ATMOSPHERE, "Cannot Eat In No Atmosphere");
+        this.add(Config.CANNOT_EAT_WITH_MASK, "Cannot Eat With Mask Except From Cans");
+
+        this.add(Config.DIFFICULTY, "Difficulty");
+        this.add(Config.METEOR_SPAWN_MULTIPLIER, "Meteor Spawn Multiplier");
+        this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
+        this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1032,6 +1102,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.REFINING, "Refining");
         this.add(MachineStatus.MISSING_OIL, "Missing Oil");
         this.add(MachineStatus.FUEL_TANK_FULL, "Fuel Tank Full");
+        this.add(MachineStatus.PREPARING, "Preparing");
         this.add(MachineStatus.LOADING, "Loading");
         this.add(MachineStatus.NOT_ENOUGH_FUEL, "Not Enough Fuel");
         this.add(MachineStatus.NO_ROCKET, "No Rocket");
@@ -1111,11 +1182,80 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.TOTAL_NUTRITION, "Total Nutrition: %s");
         this.add(Ui.SPACE_STATION_NAME, "%s's Space Station");
+
+        this.add(Ui.CAPE_BUTTON, "Cape");
+        this.add(Ui.CAPES_TITLE, "Capes");
+        this.add(Ui.CAPES_STATE + "vanilla", "Vanilla");
+        this.add(Ui.CAPES_STATE + "gc", "Galacticraft");
+        this.add(Ui.CAPES_STATE + "off", "Off");
+
+        this.cape(Cape.EARTH, "Earth");
+        this.cape(Cape.JUPITER, "Jupiter");
+        this.cape(Cape.MARS, "Mars");
+        this.cape(Cape.MERCURY, "Mercury");
+        this.cape(Cape.MOON, "Moon");
+        this.cape(Cape.NEPTUNE, "Neptune");
+        this.cape(Cape.PLAIN, "Plain");
+        this.cape(Cape.SPACE_STATION, "Space Station");
+        this.cape(Cape.SUN, "Sun");
+        this.cape(Cape.URANUS, "Uranus");
+        this.cape(Cape.VENUS, "Venus");
+        this.cape(Cape.DEVELOPER, "Developer");
+        this.cape(Cape.REWOVEN, "Rewoven");
+        this.cape(Cape.DEVELOPER_RED, "Developer Red");
+    }
+
+    protected void generateWailaTranslations() {
+        this.add(Waila.PLUGIN_GALACTICRAFT, "Galacticraft");
+        this.add(Waila.SHOW_OXYGEN_LEVEL, "Show Oxygen Tank Levels");
+        this.add(Waila.OXYGEN_TANK_LABEL, "O₂ Tank %s");
     }
 
     protected void generateStatsTranslations() {
+        this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
+        this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
+        this.stat(GCStats.CRASH_LANDING, "Crash Landings");
+        this.stat(GCStats.SAFE_LANDING, "Safe Landings");
+        this.stat(GCStats.EAT_CHEESE_WHEEL_SLICE, "Cheese Wheel Slices Eaten");
+        this.stat(GCStats.CHEESE_SLICED, "Cheese Wheels Sliced");
+    }
+
+    protected void generateAdvancementsTranslations() {
+        this.advancement(Advancements.ROOT, "Galacticraft", "Explore the Moon... and beyond!");
+        this.advancement(Advancements.COAL_GENERATOR, "Coal Power", "Craft a Coal Generator");
+        this.advancement(Advancements.CIRCUIT_FABRICATOR, "Fabricated", "Craft a Circuit Fabricator to make Wafers");
+        this.advancement(Advancements.BASIC_WAFER, "Tasty Wafers", "Craft a Basic Wafer (it's Silicon so please don't eat it!)");
+        this.advancement(Advancements.ADVANCED_WAFER, "Golden Wafers", "Craft an Advanced Wafer (you still can't eat it!)");
+        this.advancement(Advancements.BASIC_SOLAR_PANEL, "Free Energy", "Craft a Basic Solar Panel");
+        this.advancement(Advancements.ADVANCED_SOLAR_PANEL, "Fast + Efficient", "Craft an Advanced Solar Panel");
+        this.advancement(Advancements.COMPRESSOR, "Compressed", "Craft a Compressor");
+        this.advancement(Advancements.ELECTRIC_COMPRESSOR, "Electrical Upgrade", "Craft an Electric Compressor");
+        this.advancement(Advancements.OIL, "Sticky Stuff", "Fall into some Oil");
+        this.advancement(Advancements.REFINERY, "Time to Refine", "Craft a Refinery");
+        this.advancement(Advancements.FUEL, "Rocket Fuel", "Refine Oil in the Refinery");
+        this.advancement(Advancements.OXYGEN_COLLECTOR, "Oxygen Not Included", "Craft an Oxygen Collector");
+        this.advancement(Advancements.OXYGEN_COMPRESSOR, "Compress the Air", "Craft an Oxygen Compressor");
+        this.advancement(Advancements.FILL_TANK, "Air 2 Go", "Fill up an Oxygen Tank");
+        this.advancement(Advancements.FILL_ALL_TANKS, "Oxygen Stockpile", "Fill up every kind of Oxygen Tank");
+        this.advancement(Advancements.OXYGEN_GEAR, "All Set", "Create everything you need to breathe in space");
+        this.advancement(Advancements.ROCKET_WORKBENCH, "Space Engineer", "Craft a Rocket Workbench");
+        this.advancement(Advancements.ROCKET, "We Have a Rocket!", "Weld a Rocket together");
+        this.advancement(Advancements.FUEL_LOADER, "Fill Her Up!", "Craft a Fuel Loader");
+        this.advancement(Advancements.LEAVE_ROCKET_DURING_COUNTDOWN, "We've Forgotten the Crackers!", "Leave a Rocket during the countdown");
+        this.advancement(Advancements.LAUNCH_ROCKET, "We Have Liftoff", "Launch your first Rocket");
+        this.advancement(Advancements.MOON, "The Moon!", "Land on the Moon");
+        this.advancement(Advancements.PARROT_LANDING, "The Parrot has Landed", "Land on the Moon with a Parrot on your shoulder");
+        this.advancement(Advancements.EAT_MOON_CHEESE_CURD, "Wensleydale? Stilton?", "Eat Moon Cheese Curd");
+        this.advancement(Advancements.CHEESE_AND_CRACKERS, "It's Like No Cheese I've Ever Tasted...", "Eat cheese and crackers");
+        this.advancement(Advancements.CHEESE_TAX, "Cheese Tax", "Give Cheese to a pet Wolf");
+        this.advancement(Advancements.THROW_METEOR_CHUNK, "Nice to Meteor You", "Hit a mob with a Throwable Meteor Chunk");
+        this.advancement(Advancements.SPACE_STATION, "Space Station", "Create your own Space Station!");
+        this.advancement(Advancements.MOON_DUNGEON, "Worse than a Wither", "Find an Evolved Skeleton Boss in a Moon Dungeon");
+        this.advancement(Advancements.MOON_DUNGEON_KEY, "I Has the Key", "Kill the boss in the Moon Dungeon, and steal its key");
+        this.advancement(Advancements.BUGGY_SCHEMATIC, "Glitchy Schematic", "Obtain a Moon Buggy Schematic");
+        this.advancement(Advancements.BUGGY, "Buggy", "Weld a Moon Buggy together");
     }
 
     protected void decorationSet(DecorationSet decoSet, String translation) {
@@ -1153,6 +1293,15 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void rocketPart(ResourceKey<? extends RocketPart<?, ?>> key, String translation) {
         this.add(RocketPart.getKey(key), translation);
+    }
+
+    protected void advancement(String translationKey, String title, String description) {
+        this.add(translationKey + ".title", title);
+        this.add(translationKey + ".description", description);
+    }
+
+    protected void cape(String key, String translation) {
+        this.add(Ui.CAPE + key, translation);
     }
 
     @Override

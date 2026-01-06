@@ -25,6 +25,7 @@ package dev.galacticraft.impl.internal.mixin;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.Holder;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelTimeAccess;
 import org.spongepowered.asm.mixin.Mixin;
@@ -58,7 +59,7 @@ public interface LevelTimeAccessMixin extends LevelTimeAccess {
                 }
 
                 float f2 = f1;
-                f1 = 0.5F - (float) Math.cos(f1 * Math.PI) / 2.0F;
+                f1 = 0.5F - Mth.cos(f1 * Mth.PI) / 2.0F;
                 cir.setReturnValue(f2 + (f1 - f2) / 3.0F);
             }
         }

@@ -22,12 +22,11 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
 import dev.galacticraft.mod.content.GCRegistry;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.RecipeProvider;
-import net.minecraft.data.recipes.ShapelessRecipeBuilder;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.DyeItem;
 import net.minecraft.world.item.Item;
@@ -55,15 +54,28 @@ public final class GCRecipeHelper {
             Items.WHITE_DYE
     );
 
-    public static void dyeColoring(RecipeOutput output, RecipeCategory category, GCRegistry.ColorSet<? extends Item> set) {
+    public static void dyeColoring(RecipeOutput output, RecipeCategory category, GCRegistry.ColorSet<? extends Item> set, boolean emiDefaultRecipe) {
         Item base = set.get(DyeColor.WHITE);
         for (Item dye : DYES) {
             DyeColor color = ((DyeItem) dye).getDyeColor();
             if (color == DyeColor.WHITE) continue;
-            ShapelessRecipeBuilder.shapeless(category, set.get(color))
+            GCShapelessRecipeBuilder.crafting(category, set.get(color))
                     .requires(base)
                     .requires(dye)
-                    .unlockedBy("has_" + BuiltInRegistries.ITEM.getKey(dye).getPath(), RecipeProvider.has(base))
+                    .unlockedBy(RecipeProvider.getHasName(dye), RecipeProvider.has(base))
+                    .emiDefaultRecipe(emiDefaultRecipe)
+                    .save(output);
+        }
+    }
+
+    public static void dyeColoring(RecipeOutput output, RecipeCategory category, Item base, GCRegistry.ColorSet<? extends Item> set, boolean emiDefaultRecipe) {
+        for (Item dye : DYES) {
+            DyeColor color = ((DyeItem) dye).getDyeColor();
+            GCShapelessRecipeBuilder.crafting(category, set.get(color))
+                    .requires(base)
+                    .requires(dye)
+                    .unlockedBy(RecipeProvider.getHasName(dye), RecipeProvider.has(base))
+                    .emiDefaultRecipe(emiDefaultRecipe)
                     .save(output);
         }
     }

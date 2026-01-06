@@ -1,0 +1,40 @@
+{
+  "parent": "minecraft:galacticraft/launch_rocket",
+  "criteria": {
+    "moon_landing": {
+      "conditions": {
+        "player": [
+          {
+            "condition": "minecraft:entity_properties",
+            "entity": "this",
+            "predicate": {
+              "location": {
+                "dimension": "galacticraft:moon"
+              }
+            }
+          }
+        ]
+      },
+      "trigger": "galacticraft:safe_landing"
+    }
+  },
+  "display": {
+    "description": {
+      "translate": "advancement.galacticraft.moon.description"
+    },
+    "frame": "challenge",
+    "icon": {
+      "count": 1,
+      "id": "galacticraft:moon_turf"
+    },
+    "title": {
+      "translate": "advancement.galacticraft.moon.title"
+    }
+  },
+  "requirements": [
+    [
+      "moon_landing"
+    ]
+  ],
+  "sends_telemetry_event": true
+}

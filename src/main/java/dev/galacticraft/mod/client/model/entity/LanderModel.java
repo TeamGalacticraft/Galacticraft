@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model.entity;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import dev.galacticraft.mod.content.entity.orbital.lander.LanderEntity;
+import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.client.model.geom.PartPose;
@@ -42,41 +42,41 @@ public class LanderModel extends EntityModel<LanderEntity> {
     }
 
     public static LayerDefinition createBodyLayer() {
-        MeshDefinition meshdefinition = new MeshDefinition();
-        PartDefinition partdefinition = meshdefinition.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
 
-        PartDefinition feet = partdefinition.addOrReplaceChild("feet", CubeListBuilder.create().texOffs(0, 52).addBox(-24.0F, -4.0F, 28.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 52).addBox(16.0F, -4.0F, 28.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition feet = partDefinition.addOrReplaceChild("feet", CubeListBuilder.create().texOffs(0, 52).addBox(-24.0F, -4.0F, 28.0F, 8.0F, 4.0F, 8.0F, CubeDeformation.NONE)
+                .texOffs(0, 52).addBox(16.0F, -4.0F, 28.0F, 8.0F, 4.0F, 8.0F, CubeDeformation.NONE), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        feet.addOrReplaceChild("foot_r1", CubeListBuilder.create().texOffs(0, 52).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-20.0F, 0.0F, -32.0F, 0.0F, 3.1416F, 0.0F));
+        feet.addOrReplaceChild("foot_r1", CubeListBuilder.create().texOffs(0, 52).addBox(-4.0F, -4.0F, -4.0F, 8.0F, 4.0F, 8.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(-20.0F, 0.0F, -32.0F, 0.0F, 3.1416F, 0.0F));
 
-        feet.addOrReplaceChild("foot_r2", CubeListBuilder.create().texOffs(0, 52).addBox(-4.0F, 2.0F, -4.0F, 8.0F, 4.0F, 8.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(20.0F, -6.0F, -32.0F, 0.0F, 3.1416F, 0.0F));
+        feet.addOrReplaceChild("foot_r2", CubeListBuilder.create().texOffs(0, 52).addBox(-4.0F, 2.0F, -4.0F, 8.0F, 4.0F, 8.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(20.0F, -6.0F, -32.0F, 0.0F, 3.1416F, 0.0F));
 
-        PartDefinition legs = partdefinition.addOrReplaceChild("legs", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
+        PartDefinition legs = partDefinition.addOrReplaceChild("legs", CubeListBuilder.create(), PartPose.offset(0.0F, 24.0F, 0.0F));
 
-        legs.addOrReplaceChild("cap_r1", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -3.1716F, 8.0F, 20.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(1.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(20.0F, -4.0F, -32.0F, -0.7363F, -0.3035F, -0.3185F));
+        legs.addOrReplaceChild("cap_r1", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -3.1716F, 8.0F, 20.0F, 8.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(1.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(20.0F, -4.0F, -32.0F, -0.7363F, -0.3035F, -0.3185F));
 
-        legs.addOrReplaceChild("cap_r2", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -3.1716F, 8.0F, 20.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(1.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-20.0F, -4.0F, -32.0F, -0.7363F, 0.3035F, 0.3185F));
+        legs.addOrReplaceChild("cap_r2", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -3.1716F, 8.0F, 20.0F, 8.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(1.0F, -12.1716F, -0.1716F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(-20.0F, -4.0F, -32.0F, -0.7363F, 0.3035F, 0.3185F));
 
-        legs.addOrReplaceChild("cap_r3", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -4.8284F, 8.0F, 20.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(1.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(-20.0F, -4.0F, 32.0F, 0.7363F, -0.3035F, 0.3185F));
+        legs.addOrReplaceChild("cap_r3", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -4.8284F, 8.0F, 20.0F, 8.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(1.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(-20.0F, -4.0F, 32.0F, 0.7363F, -0.3035F, 0.3185F));
 
-        legs.addOrReplaceChild("cap_r4", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -4.8284F, 8.0F, 20.0F, 8.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(1.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, new CubeDeformation(0.0F)), PartPose.offsetAndRotation(20.0F, -4.0F, 32.0F, 0.7363F, 0.3035F, -0.3185F));
+        legs.addOrReplaceChild("cap_r4", CubeListBuilder.create().texOffs(200, 0).addBox(-4.0F, -32.1716F, -4.8284F, 8.0F, 20.0F, 8.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(1.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(-3.0F, -12.1716F, -1.8284F, 2.0F, 15.0F, 2.0F, CubeDeformation.NONE), PartPose.offsetAndRotation(20.0F, -4.0F, 32.0F, 0.7363F, 0.3035F, -0.3185F));
 
-        partdefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(16, 0).addBox(0.0F, -66.0F, -14.0F, 12.0F, 14.0F, 0.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 0).addBox(-18.0F, -26.0F, -22.0F, 36.0F, 8.0F, 44.0F, new CubeDeformation(0.0F))
-                .texOffs(0, 52).addBox(-12.0F, -44.0F, -16.0F, 24.0F, 18.0F, 32.0F, new CubeDeformation(0.0F))
-                .texOffs(112, 54).addBox(-16.0F, -52.0F, -20.0F, 32.0F, 22.0F, 30.0F, new CubeDeformation(0.0F))
-                .texOffs(116, 0).addBox(-16.0F, -56.0F, 14.0F, 32.0F, 26.0F, 10.0F, new CubeDeformation(0.0F)), PartPose.offset(0.0F, 23.0F, 0.0F));
+        partDefinition.addOrReplaceChild("head", CubeListBuilder.create().texOffs(16, 0).addBox(0.0F, -66.0F, -14.0F, 12.0F, 14.0F, 0.0F, CubeDeformation.NONE)
+                .texOffs(0, 0).addBox(-18.0F, -26.0F, -22.0F, 36.0F, 8.0F, 44.0F, CubeDeformation.NONE)
+                .texOffs(0, 52).addBox(-12.0F, -44.0F, -16.0F, 24.0F, 18.0F, 32.0F, CubeDeformation.NONE)
+                .texOffs(112, 54).addBox(-16.0F, -52.0F, -20.0F, 32.0F, 22.0F, 30.0F, CubeDeformation.NONE)
+                .texOffs(116, 0).addBox(-16.0F, -56.0F, 14.0F, 32.0F, 26.0F, 10.0F, CubeDeformation.NONE), PartPose.offset(0.0F, 23.0F, 0.0F));
 
-        return LayerDefinition.create(meshdefinition, 256, 128);
+        return LayerDefinition.create(meshDefinition, 256, 128);
     }
 
     @Override
@@ -86,8 +86,8 @@ public class LanderModel extends EntityModel<LanderEntity> {
 
     @Override
     public void renderToBuffer(PoseStack matrices, VertexConsumer vertices, int light, int overlay, int color) {
-        feet.render(matrices, vertices, light, overlay, color);
-        legs.render(matrices, vertices, light, overlay, color);
-        head.render(matrices, vertices, overlay, overlay, color);
+        this.feet.render(matrices, vertices, light, overlay, color);
+        this.legs.render(matrices, vertices, light, overlay, color);
+        this.head.render(matrices, vertices, overlay, overlay, color);
     }
 }

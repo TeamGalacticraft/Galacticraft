@@ -203,10 +203,12 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
+                output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
+                output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
                 // MISC DECOR
                 output.accept(WALKWAY);
@@ -224,6 +226,7 @@ public class GCCreativeModeTabs {
                 }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
+                output.accept(ROCKET_WORKBENCH);
 
                 // MISC MACHINES
                 output.accept(CRYOGENIC_CHAMBER);
@@ -234,13 +237,6 @@ public class GCCreativeModeTabs {
                     stack.set(DataComponents.BASE_COLOR, color);
                     output.accept(stack);
                 }
-
-                // LIGHT PANELS
-                output.accept(SQUARE_LIGHT_PANEL);
-                output.accept(SPOTLIGHT_LIGHT_PANEL);
-                output.accept(LINEAR_LIGHT_PANEL);
-                output.accept(DASHED_LIGHT_PANEL);
-                output.accept(DIAGONAL_LIGHT_PANEL);
 
                 // VACUUM GLASS
                 output.accept(VACUUM_GLASS);
@@ -282,7 +278,7 @@ public class GCCreativeModeTabs {
             .builder()
             .icon(() -> new ItemStack(CANVAS))
             .title(Component.translatable(Translations.ItemGroup.ITEMS))
-            .displayItems((parameters, output) -> {                
+            .displayItems((parameters, output) -> {
                 // BATTERIES
                 output.accept(BATTERY);
                 ItemStack chargedBattery = new ItemStack(BATTERY);
@@ -304,8 +300,9 @@ public class GCCreativeModeTabs {
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
 
+                output.accept(PARACHUTE);
                 for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
-                    output.accept(PARACHUTE.get(color));
+                    output.accept(DYED_PARACHUTES.get(color));
                 }
 
                 output.accept(EMERGENCY_KIT);
@@ -383,6 +380,8 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_CHEESE_CURD);
                 output.accept(GCItems.MOON_CHEESE_WHEEL);
                 output.accept(MOON_CHEESE_SLICE);
+                output.accept(CRACKER);
+                output.accept(CHEESE_CRACKER);
                 output.accept(GROUND_BEEF);
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);

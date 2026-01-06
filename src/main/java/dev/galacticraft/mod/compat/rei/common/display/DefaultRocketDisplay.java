@@ -40,16 +40,34 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultRocketDisplay extends BasicDisplay {
-    protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
+    public static final BasicDisplay.Serializer<DefaultRocketDisplay> SERIALIZER = BasicDisplay.Serializer.of(
+            (inputs, outputs, id, tag) -> {
+                return new DefaultRocketDisplay(inputs, outputs, id, tag.getInt("BodyHeight"), tag.getBoolean("HasBoosters"));
+            },
+            (display, tag) -> {
+                tag.putInt("BodyHeight", display.bodyHeight);
+                tag.putBoolean("HasBoosters", display.hasBoosters);
+            }
+    );
+
+    public final int bodyHeight;
+    public final boolean hasBoosters;
+
+    protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int bodyHeight, boolean hasBoosters) {
         super(inputs, outputs, location);
+        this.bodyHeight = bodyHeight;
+        this.hasBoosters = hasBoosters;
     }
 
     public DefaultRocketDisplay(@Nullable RecipeHolder<RocketRecipe> recipe) {
         super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
-    }
-
-    public static DefaultRocketDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
-        return new DefaultRocketDisplay(inputs, outputs, location);
+        if (recipe != null) {
+            this.bodyHeight = recipe.value().bodyHeight();
+            this.hasBoosters = !recipe.value().boosters().isEmpty();
+        } else {
+            this.bodyHeight = 0;
+            this.hasBoosters = false;
+        }
     }
 
     @Override
@@ -60,10 +78,15 @@ public class DefaultRocketDisplay extends BasicDisplay {
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<RocketRecipe> recipe) {
         if (recipe == null) return Collections.emptyList();
         RocketRecipe rocketRecipe = recipe.value();
-        List<EntryIngredient> list = new ArrayList<>(14);
+        List<EntryIngredient> list = new ArrayList<>();
         list.add(EntryIngredients.ofIngredient(rocketRecipe.cone()));
         for (int i = 0; i < 2 * rocketRecipe.bodyHeight(); i++) {
             list.add(EntryIngredients.ofIngredient(rocketRecipe.body()));
+        }
+        if (!rocketRecipe.boosters().isEmpty()) {
+            for (int i = 0; i < 2; i++) {
+                list.add(EntryIngredients.ofIngredient(rocketRecipe.boosters()));
+            }
         }
         for (int i = 0; i < 4; i++) {
             list.add(EntryIngredients.ofIngredient(rocketRecipe.fins()));

@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.component.GCItemSubPredicates;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
@@ -31,7 +33,10 @@ import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCCreativeModeTabs;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
+import dev.galacticraft.mod.events.GCCauldronInteraction;
 import dev.galacticraft.mod.events.GCEventHandlers;
+import dev.galacticraft.mod.events.GCExtinguishable;
+import dev.galacticraft.mod.events.GCSulfuricAcidHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.network.GCPackets;
@@ -65,6 +70,7 @@ public class Galacticraft implements ModInitializer {
         GCChunkGenerator.register();
         GCBiomeTags.register();
         GCBlockTags.register();
+        GCDamageTypeTags.register();
         GCDimensionTypeTags.register();
         GCEntityTypeTags.register();
         GCFluidTags.register();
@@ -74,12 +80,14 @@ public class Galacticraft implements ModInitializer {
         GCBlocks.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
+        GCItemSubPredicates.init();
         GCTriggers.register();
         GCCreativeModeTabs.register();
         GCApiLookupProviders.register();
         GCRecipes.register();
         GCEntityDataSerializers.register();
         GCEntityTypes.register();
+        GCAttachments.init();
         GCOrePlacedFeatures.register();
         GCPlacedFeatures.register();
         GCStructurePieceTypes.register();
@@ -104,6 +112,9 @@ public class Galacticraft implements ModInitializer {
         GCStats.register();
         GCCelestialHandlers.register();
         GCEventHandlers.init();
+        GCCauldronInteraction.init();
+        GCExtinguishable.register();
+        GCSulfuricAcidHandlers.register();
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(OxygenBlockDataManager.INSTANCE);
         Constant.LOGGER.info("Initialization complete. (Took {}ms).", System.currentTimeMillis() - startInitTime);
     }

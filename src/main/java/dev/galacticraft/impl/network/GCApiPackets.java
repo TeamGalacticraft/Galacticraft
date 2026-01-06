@@ -34,6 +34,7 @@ public class GCApiPackets {
         PayloadTypeRegistry.playS2C().register(OxygenUpdatePayload.TYPE, OxygenUpdatePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(RemoveSatellitePayload.TYPE, RemoveSatellitePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(ResearchUpdatePayload.TYPE, ResearchUpdatePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(UpdateSatellitePayload.TYPE, UpdateSatellitePayload.CODEC);
 
         PayloadTypeRegistry.playC2S().register(FlagDataPayload.TYPE, FlagDataPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(TeamNamePayload.TYPE, TeamNamePayload.CODEC);

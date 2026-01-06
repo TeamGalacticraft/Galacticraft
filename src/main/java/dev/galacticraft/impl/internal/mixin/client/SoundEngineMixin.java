@@ -22,14 +22,13 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.audio.Listener;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
-import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.client.sounds.SoundEngine;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -38,7 +37,6 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(SoundEngine.class)
 @Environment(EnvType.CLIENT)
@@ -54,18 +52,15 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
 
     @ModifyReturnValue(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"))
     private float galacticraft_adjustVolumeToAtmosphere(float original, float f, SoundSource soundSource) {
-        if (multiplier != 1.0f && soundSource != SoundSource.MASTER) {
+        if (this.multiplier != 1.0f && soundSource != SoundSource.MASTER) {
             return Mth.clamp(original * this.multiplier, 0.0f, 2.0f);
         }
         return original;
     }
 
-    @WrapOperation(method = "play", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/resources/sounds/SoundInstance;canStartSilent()Z", ordinal = 0))
-    private boolean galacticraft_shouldAlwaysPlay(SoundInstance soundInstance, Operation<Boolean> original) {
-        if (this.multiplier != 1.0f && soundInstance.getAttenuation() != SoundInstance.Attenuation.NONE) {
-            return true;
-        }
-        return original.call(soundInstance);
+    @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
+    private boolean galacticraft_hideSubtitles(boolean original, @Local(ordinal = 2) float f3) {
+        return original || f3 < 0.01f;
     }
 
     @Override

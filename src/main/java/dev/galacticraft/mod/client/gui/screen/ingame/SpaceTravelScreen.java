@@ -44,10 +44,10 @@ public class SpaceTravelScreen extends Screen {
     };
     private final int text;
     private String dots = ".";
-    private final String planet;
+    private final Component planet;
     private final ResourceKey<Level> target;
 
-    public SpaceTravelScreen(String planet, ResourceKey<Level> target) {
+    public SpaceTravelScreen(Component planet, ResourceKey<Level> target) {
         super(GameNarrator.NO_TITLE);
         this.planet = planet;
         this.target = target;

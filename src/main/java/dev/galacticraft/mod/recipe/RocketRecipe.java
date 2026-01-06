@@ -25,6 +25,7 @@ package dev.galacticraft.mod.recipe;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.NonNullList;
@@ -35,6 +36,11 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static dev.galacticraft.mod.Constant.RocketWorkbench.CENTER_X;
 
 public class RocketRecipe implements Recipe<RecipeInput> {
     private final String group;
@@ -143,35 +149,75 @@ public class RocketRecipe implements Recipe<RecipeInput> {
     }
 
     public ItemStack result() {
-        return result;
+        return this.result;
     }
 
     public Ingredient cone() {
-        return cone;
+        return this.cone;
     }
 
     public Ingredient engine() {
-        return engine;
+        return this.engine;
     }
 
     public Ingredient body() {
-        return body;
+        return this.body;
     }
 
     public Ingredient fins() {
-        return fins;
+        return this.fins;
     }
 
     public Ingredient boosters() {
-        return boosters;
+        return this.boosters;
     }
 
     public Ingredient storage() {
-        return storage;
+        return this.storage;
     }
 
     public int bodyHeight() {
-        return bodyHeight;
+        return this.bodyHeight;
+    }
+
+    public static List<RocketSlotData> slotData(int bodyHeight, boolean hasBoosters) {
+        List<RocketSlotData> data = new ArrayList<>();
+        int rocketHeight = 18 * (bodyHeight + 2);
+        int y = 81 - rocketHeight / 2;
+
+        // Cone
+        data.add(new RocketSlotData(RocketPartTypes.CONE, CENTER_X - 9, y));
+
+        // Body
+        for (int i = 0; i < bodyHeight; i++) {
+            data.add(new RocketSlotData(RocketPartTypes.BODY, CENTER_X - 18, 18 + 18 * i + y));
+            data.add(new RocketSlotData(RocketPartTypes.BODY, CENTER_X, 18 + 18 * i + y));
+        }
+
+        // Boosters
+        if (hasBoosters) {
+            data.add(new RocketSlotData(RocketPartTypes.BOOSTER, CENTER_X - 36, 18 * bodyHeight - 18 + y));
+            data.add(new RocketSlotData(RocketPartTypes.BOOSTER, CENTER_X + 18, 18 * bodyHeight - 18 + y));
+        }
+
+        // Left fins
+        data.add(new RocketSlotData(RocketPartTypes.FIN, CENTER_X - 36, 18 * bodyHeight + y));
+        data.add(new RocketSlotData(RocketPartTypes.FIN, CENTER_X - 36, 18 * bodyHeight + 18 + y));
+
+        // Right fins
+        data.add(new RocketSlotData(RocketPartTypes.FIN, CENTER_X + 18, 18 * bodyHeight + y, true));
+        data.add(new RocketSlotData(RocketPartTypes.FIN, CENTER_X + 18, 18 * bodyHeight + 18 + y, true));
+
+        // Engine
+        data.add(new RocketSlotData(RocketPartTypes.ENGINE, CENTER_X - 9, 18 * bodyHeight + 18 + y));
+
+        return data;
+    }
+
+    public record RocketSlotData(RocketPartTypes partType, int x, int y, boolean mirror) {
+        public RocketSlotData(RocketPartTypes partType, int x, int y) {
+            this(partType, x, y, false);
+        }
     }
 
     public static class Serializer implements RecipeSerializer<RocketRecipe> {

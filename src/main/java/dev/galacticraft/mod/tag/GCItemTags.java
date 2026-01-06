@@ -30,6 +30,8 @@ import net.minecraft.world.item.Item;
 
 public class GCItemTags {
     public static final TagKey<Item> WRENCHES = commonTag("tools/wrench");
+    public static final TagKey<Item> KNIVES = commonTag("tools/knife");
+    public static final TagKey<Item> CUTS_CHEESE = galacticraftTag("cuts_cheese");
 
     public static final TagKey<Item> THERMAL_HEAD = galacticraftTag("thermal/head");
     public static final TagKey<Item> THERMAL_CHEST = galacticraftTag("thermal/chest");
@@ -42,6 +44,8 @@ public class GCItemTags {
     public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+
+    public static final TagKey<Item> ACID_RESISTANT = galacticraftTag("acid_resistant");
 
     public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
@@ -90,6 +94,7 @@ public class GCItemTags {
     public static final TagKey<Item> TITANIUM_RAW_MATERIALS = commonTag("raw_materials/titanium");
 
     public static final TagKey<Item> ALUMINUM_INGOTS = commonTag("ingots/aluminum");
+    public static final TagKey<Item> BRONZE_INGOTS = commonTag("ingots/bronze");
     public static final TagKey<Item> DESH_INGOTS = commonTag("ingots/desh");
     public static final TagKey<Item> LEAD_INGOTS = commonTag("ingots/lead");
     public static final TagKey<Item> METEORIC_IRON_INGOTS = commonTag("ingots/meteoric_iron");
@@ -125,15 +130,27 @@ public class GCItemTags {
     public static final TagKey<Item> CANISTERS = commonTag("canisters");
     public static final TagKey<Item> COPPER_CANISTERS = commonTag("canisters/copper");
     public static final TagKey<Item> TIN_CANISTERS = commonTag("canisters/tin");
-    
+
     public static final TagKey<Item> SOLAR_DUSTS = commonTag("dusts/solar");
 
     public static final TagKey<Item> CHEESE_FOODS = commonTag("foods/cheese");
     public static final TagKey<Item> CANNED_FOODS = commonTag("foods/canned");
     public static final TagKey<Item> UNCANNABLE_FOODS = galacticraftTag("uncannable_foods");
 
+    public static final TagKey<Item> SESAME_SEEDS = commonTag("seeds/sesame");
+    public static final TagKey<Item> POPPY_SEEDS = commonTag("seeds/poppy");
+    public static final TagKey<Item> SUNFLOWER_SEEDS = commonTag("seeds/sunflower");
+    public static final TagKey<Item> CHIA_SEEDS = commonTag("seeds/chia");
+    public static final TagKey<Item> FLAX_SEEDS = commonTag("seeds/flax");
+    public static final TagKey<Item> BURGER_BUN_SEEDS = galacticraftTag("burger_bun_seeds");
+
     public static final TagKey<Item> ROCKET_STORAGE_UPGRADE_ITEMS = galacticraftTag("rocket_storage_upgrade_items");
+
     public static final TagKey<Item> EVOLVED_CREEPER_DROP_MUSIC_DISCS = galacticraftTag("evolved_creeper_drop_music_discs");
+
+    public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
+    public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
+    public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");
 
     public static final TagKey<Item> SLABS = galacticraftTag("slabs");
     public static final TagKey<Item> STAIRS = galacticraftTag("stairs");
@@ -145,9 +162,16 @@ public class GCItemTags {
 
     public static final TagKey<Item> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
 
-    public static final TagKey<Item> OIL_BUCKETS = commonTag("buckets/oil");
-    public static final TagKey<Item> FUEL_BUCKETS = commonTag("buckets/fuel");
-    public static final TagKey<Item> SULFURIC_ACID_BUCKETS = commonTag("buckets/sulfuric_acid");
+    public static final TagKey<Item> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
+    public static final TagKey<Item> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
+    public static final TagKey<Item> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");
+    public static final TagKey<Item> COPPER_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/copper");
+    public static final TagKey<Item> DARK_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/dark");
+    public static final TagKey<Item> IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/iron");
+    public static final TagKey<Item> METEORIC_IRON_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/meteoric_iron");
+    public static final TagKey<Item> STEEL_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/steel");
+    public static final TagKey<Item> TIN_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/tin");
+    public static final TagKey<Item> TITANIUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/titanium");
 
     public static TagKey<Item> commonTag(String path) {
         return TagKey.create(Registries.ITEM, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

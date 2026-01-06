@@ -25,7 +25,6 @@ package dev.galacticraft.mod.compat.rei.client.category;
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
@@ -49,10 +48,12 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.Collectors;
 
-import static dev.galacticraft.mod.Constant.RecipeViewer.*;
+import static dev.galacticraft.mod.Constant.Compressor.*;
+import static dev.galacticraft.mod.content.GCBlocks.COMPRESSOR;
 
 @Environment(EnvType.CLIENT)
 public class DefaultCompressingCategory implements DisplayCategory<DefaultCompressingDisplay> {
+    private static final DecimalFormat FORMAT = new DecimalFormat("###.##");
 
     @Override
     public CategoryIdentifier<? extends DefaultCompressingDisplay> getCategoryIdentifier() {
@@ -61,7 +62,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.COMPRESSOR));
+        return EntryStacks.of(new ItemStack(COMPRESSOR));
     }
 
     @Override
@@ -70,24 +71,25 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     public @NotNull List<Widget> setupDisplay(DefaultCompressingDisplay recipeDisplay, Rectangle bounds) {
-        final Point startPoint = new Point(bounds.getCenterX() - COMPRESSOR_WIDTH / 2, bounds.getCenterY() - COMPRESSOR_HEIGHT / 2);
+        final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
-        widgets.add(new BaseWidget(startPoint));
+        widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
+
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
         List<Slot> slots = Lists.newArrayList();
 
-        DecimalFormat df = new DecimalFormat("###.##");
-        double processingTime = recipeDisplay.getProcessingTime();
-        widgets.add(Widgets.createLabel(new Point(bounds.x + bounds.width - 5, bounds.y + 5),
-                Component.translatable("category.rei.campfire.time", df.format(processingTime / 20.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
+        double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
+        widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
+        widgets.add(Widgets.createLabel(new Point(bounds.getMaxX() - 5, bounds.y + 5),
+                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().rightAligned().color(0xFF404040, 0xFFBBBBBB));
 
         // 3x3 grid
         // Output
         int i;
         for (i = 0; i < 3; ++i) {
             for (int x = 0; x < 3; ++x) {
-                slots.add(Widgets.createSlot(new Point(startPoint.x + (x * 18) + 1, startPoint.y + (i * 18) + 1)).markInput());
+                slots.add(Widgets.createSlot(new Point(startPoint.x + GRID_X + (x * 18), startPoint.y + GRID_Y + (i * 18))).markInput());
             }
         }
         for (i = 0; i < input.size(); ++i) {
@@ -97,10 +99,17 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         }
 
         widgets.addAll(slots);
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + COMPRESSED_X, startPoint.y + COMPRESSED_Y)).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
+        final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
+        widgets.add(Widgets.createResultSlotBackground(outputPoint));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
         widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
+
+        if (recipeDisplay.isShapeless()) {
+            widgets.add(Widgets.createShapelessIcon(new Point(bounds.getMaxX() - 4, bounds.getMaxY() - 14)));
+        }
         return widgets;
     }
 
@@ -137,18 +146,17 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     }
 
     @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
+    public int getDisplayWidth(DefaultCompressingDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
     public int getDisplayHeight() {
-        return COMPRESSOR_HEIGHT + 8;
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
-    public int getDisplayWidth(DefaultCompressingDisplay display) {
-        return COMPRESSOR_WIDTH + 8;
+    public int getMaximumDisplaysPerPage() {
+        return 99;
     }
-
 }

@@ -25,6 +25,9 @@ import java.time.format.DateTimeFormatter
 
 // Build Info
 val isCi = (System.getenv("CI") ?: "false") == "true"
+val runJei = project.getProperties().getOrDefault("jei", "false").toString().toBoolean()
+val runEmi = project.getProperties().getOrDefault("emi", "false").toString().toBoolean()
+val runRei = project.getProperties().getOrDefault("rei", !runJei && !runEmi).toString().toBoolean()
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -44,6 +47,7 @@ val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toS
 val machineLibVersion        = project.property("machinelib.version").toString()
 val reiVersion               = project.property("rei.version").toString()
 val jeiVersion               = project.property("jei.version").toString()
+val emiVersion               = project.property("emi.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
@@ -54,9 +58,9 @@ plugins {
     java
     `maven-publish`
     id("fabric-loom") version("1.10-SNAPSHOT")
-    id("org.cadixdev.licenser") version("0.6.1")
-    id("org.ajoberstar.grgit") version("5.3.0")
-    id("dev.galacticraft.mojarn") version("0.6.1+0")
+    id("com.diffplug.spotless") version("7.0.4")
+    id("org.ajoberstar.grgit") version("5.3.2")
+    id("dev.galacticraft.mojarn") version("0.6.1+19")
 }
 
 java {
@@ -104,6 +108,7 @@ base.archivesName.set(modName)
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
     mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
+    mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
 
     runs {
         getByName("client") {
@@ -156,8 +161,7 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("https://maven.teamgalacticraft.org") {
-        // https://repo.terradevelopment.net/repository/maven-releases/
+    maven("https://repo.terradevelopment.net/repository/maven-releases/") {
         // https://maven.galacticraft.net/repository/maven-releases
         content {
             includeGroup("dev.galacticraft")
@@ -184,6 +188,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/") {
         content {
             includeGroup("com.terraformersmc")
+            includeGroup("dev.emi")
         }
     }
     maven("https://maven.bai.lol") {
@@ -233,7 +238,7 @@ dependencies {
     include(implementation("de.javagl:obj:$objVersion")) {}
 
     "core"("dev.galacticraft:dynamicdimensions-fabric:$dynamicdimensionsVersion")
-    "core"("dev.galacticraft:machinelib:$machineLibVersion")
+    "core"("dev.galacticraft:MachineLib:$machineLibVersion")
     "core"("lol.bai:badpackets:fabric-$badpacketsVersion")
 
     // Optional Dependencies
@@ -243,30 +248,35 @@ dependencies {
     "compat"("dev.architectury:architectury-fabric:$architecturyVersion") // required for REI fluid support
     "compat"("squeek.appleskin:appleskin-fabric:$appleskinVersion")
 
-    multicompat(group = "me.shedaniel",
-            api = "RoughlyEnoughItems-api-fabric",
-            extra = "RoughlyEnoughItems-default-plugin-fabric",
-            // runtime = "RoughlyEnoughItems-fabric",
-            version = reiVersion) {
-        exclude(group = "net.fabricmc.fabric-api")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$reiVersion")
+    modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$reiVersion")
+    if (runRei) {
+        modLocalRuntime("me.shedaniel:RoughlyEnoughItems-fabric:$reiVersion")
     }
 
-    multicompat(group = "mezz.jei",
-            api = "jei-$minecraftVersion-common-api",
-            extra = "jei-$minecraftVersion-fabric-api",
-//            runtime = "jei-$minecraftVersion-fabric", // we already have REI at runtime
-            version = jeiVersion) {
-        exclude(group = "net.fabricmc.fabric-api")
+    modCompileOnly("mezz.jei:jei-$minecraftVersion-fabric-api:$jeiVersion")
+    if (runJei) {
+        modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
+    }
+
+	modCompileOnly("dev.emi:emi-fabric:$emiVersion:api")
+    if (runEmi) {
+	    modLocalRuntime("dev.emi:emi-fabric:$emiVersion")
     }
 
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }
 
 tasks.processResources {
-    inputs.property("version", project.version)
+    val properties = mapOf(
+        "version" to project.version,
+        "fabricVersion" to project.property("fabric.version"),
+        "minecraftVersion" to project.property("minecraft.version"),
+    )
+    inputs.properties(properties)
 
     filesMatching("fabric.mod.json") {
-        expand("version" to project.version)
+        expand(properties)
     }
 
     // Minify json resources (https://stackoverflow.com/a/41029113)
@@ -307,14 +317,20 @@ tasks.jar {
 }
 
 tasks.test {
+    useJUnitPlatform()
     workingDir = project.file("run")
     dependsOn(tasks.getByName("runGametest"))
 }
 
-license {
-    setHeader(project.file("LICENSE_HEADER.txt"))
-    include("**/dev/galacticraft/**/*.java")
-    include("build.gradle.kts")
+spotless {
+    lineEndings = com.diffplug.spotless.LineEnding.UNIX
+
+    java {
+        licenseHeader(processLicenseHeader(rootProject.file("LICENSE")))
+        leadingTabsToSpaces()
+        removeUnusedImports()
+        trimTrailingWhitespace()
+    }
 }
 
 publishing {
@@ -365,8 +381,10 @@ publishing {
     }
 }
 
-fun DependencyHandler.multicompat(group: String, api: String, extra: String, runtime: String = "", version: String, action: Action<ExternalModuleDependency> = Action {}) {
-    modCompileOnly(group = group, name = api, version = version, dependencyConfiguration = action)
-    modCompileOnly(group = group, name = extra, version = version, dependencyConfiguration = action)
-    if (runtime.isNotBlank()) modRuntimeOnly(group = group, name = runtime, version = version, dependencyConfiguration = action)
+fun processLicenseHeader(license: File): String {
+    val text = license.readText()
+    return "/*\n * " + text.substring(text.indexOf("Copyright"))
+        .replace("\n", "\n * ")
+        .replace("* \n", "*\n")
+        .trim() + "/\n\n"
 }

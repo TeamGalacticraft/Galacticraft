@@ -22,12 +22,15 @@
 
 package dev.galacticraft.mod.api.data.recipe;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.data.EmiDefaultRecipeProvider;
 import net.minecraft.advancements.Advancement;
 import net.minecraft.advancements.AdvancementRequirements;
 import net.minecraft.advancements.AdvancementRewards;
 import net.minecraft.advancements.Criterion;
 import net.minecraft.advancements.critereon.RecipeUnlockedTrigger;
 import net.minecraft.data.recipes.RecipeBuilder;
+import net.minecraft.data.recipes.RecipeCategory;
 import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
@@ -38,31 +41,39 @@ import org.jetbrains.annotations.Nullable;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
-public abstract class GCRecipeBuilder implements RecipeBuilder {
-    private final String subPath;
-
+public abstract class GCRecipeBuilder<T extends GCRecipeBuilder<T>> implements RecipeBuilder {
+    protected final String prefix;
+    @Nullable
+    protected final RecipeCategory category;
     protected final Item result;
     protected final int count;
     protected final Map<String, Criterion<?>> criteria = new LinkedHashMap<>();
     @Nullable
     protected String group = "";
+    protected boolean emiDefaultRecipe = false;
 
-    protected GCRecipeBuilder(String subPath, ItemLike result, int count) {
-        this.subPath = subPath;
+    protected GCRecipeBuilder(String prefix, RecipeCategory category, ItemLike result, int count) {
+        this.prefix = prefix;
+        this.category = category;
         this.result = result.asItem();
         this.count = count;
     }
 
     @Override
-    public RecipeBuilder unlockedBy(String name, Criterion<?> criterion) {
+    public T unlockedBy(String name, Criterion<?> criterion) {
         this.criteria.put(name, criterion);
-        return this;
+        return (T) this;
     }
 
     @Override
-    public RecipeBuilder group(@Nullable String group) {
+    public T group(@Nullable String group) {
         this.group = group;
-        return this;
+        return (T) this;
+    }
+
+    public T emiDefaultRecipe(boolean emiDefaultRecipe) {
+        this.emiDefaultRecipe = emiDefaultRecipe;
+        return (T) this;
     }
 
     @Override
@@ -77,7 +88,23 @@ public abstract class GCRecipeBuilder implements RecipeBuilder {
                 .rewards(AdvancementRewards.Builder.recipe(id))
                 .requirements(AdvancementRequirements.Strategy.OR);
         this.criteria.forEach(builder::addCriterion);
-        output.accept(ResourceLocation.fromNamespaceAndPath(id.getNamespace(), this.subPath + '/' + id.getPath()), createRecipe(id), builder.build(id.withPrefix("recipes/")));
+        ResourceLocation resourceLocation = id.withPrefix(this.prefix);
+        ResourceLocation resourceLocation2;
+        if (this.category != null) {
+            resourceLocation2 = id.withPrefix("recipes/" + this.category.getFolderName() + "/");
+        } else {
+            resourceLocation2 = id.withPrefix("recipes/");
+        }
+        output.accept(resourceLocation, createRecipe(id), builder.build(resourceLocation2));
+
+        if (this.emiDefaultRecipe) {
+            EmiDefaultRecipeProvider.add(resourceLocation);
+        }
+    }
+
+    @Override
+    public void save(RecipeOutput output, String path) {
+        this.save(output, Constant.id(path));
     }
 
     public abstract Recipe<?> createRecipe(ResourceLocation id);

@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -37,36 +36,38 @@ import java.util.List;
 public class DefaultShapelessCompressingDisplay implements DefaultCompressingDisplay {
     private final List<EntryIngredient> input;
     private final List<EntryIngredient> output;
-    private int processingTime = 200;
+    private final int processingTime;
 
-    public DefaultShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
-        this.input = Lists.newArrayList();
-        recipe.value().getIngredients().forEach((ingredient) -> {
-            for (ItemStack stack : ingredient.getItems()) {
-                input.add(EntryIngredients.of(stack));
-            }
-        });
-        this.output = Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(BasicDisplay.registryAccess())));
-        this.processingTime = recipe.value().getTime();
-    }
-
-    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs) {
+    public DefaultShapelessCompressingDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, int processingTime) {
         this.input = inputs;
         this.output = outputs;
+        this.processingTime = processingTime;
+    }
+
+    public DefaultShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
+        this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
+        ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());
+        this.output = Collections.singletonList(EntryIngredients.of(stack));
+        this.processingTime = recipe.value().getTime();
     }
 
     @Override
     public @NotNull List<EntryIngredient> getInputEntries() {
-        return input;
+        return this.input;
     }
 
     @Override
     public @NotNull List<EntryIngredient> getOutputEntries() {
-        return output;
+        return this.output;
     }
 
     @Override
     public int getProcessingTime() {
-        return processingTime;
+        return this.processingTime;
+    }
+
+    @Override
+    public boolean isShapeless() {
+        return true;
     }
 }

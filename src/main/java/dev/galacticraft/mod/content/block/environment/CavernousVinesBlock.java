@@ -148,6 +148,6 @@ public class CavernousVinesBlock extends GrowingPlantHeadBlock implements Boneme
 
     @Override
     public void performBonemeal(ServerLevel serverLevel, RandomSource randomSource, BlockPos blockPos, BlockState blockState) {
-        serverLevel.setBlock(blockPos, blockState.setValue(POISONOUS, true), 2);
+        serverLevel.setBlock(blockPos, blockState.setValue(POISONOUS, true), Block.UPDATE_CLIENTS);
     }
 }

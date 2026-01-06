@@ -24,6 +24,42 @@ package dev.galacticraft.mod.util;
 
 public interface Translations {
 
+    interface Advancements {
+        String ROOT = "advancement.galacticraft.root";
+        String COAL_GENERATOR = "advancement.galacticraft.coal_generator";
+        String CIRCUIT_FABRICATOR = "advancement.galacticraft.circuit_fabricator";
+        String BASIC_WAFER = "advancement.galacticraft.basic_wafer";
+        String ADVANCED_WAFER = "advancement.galacticraft.advanced_wafer";
+        String BASIC_SOLAR_PANEL = "advancement.galacticraft.basic_solar_panel";
+        String ADVANCED_SOLAR_PANEL = "advancement.galacticraft.advanced_solar_panel";
+        String COMPRESSOR = "advancement.galacticraft.compressor";
+        String ELECTRIC_COMPRESSOR = "advancement.galacticraft.electric_compressor";
+        String OIL = "advancement.galacticraft.oil";
+        String REFINERY = "advancement.galacticraft.refinery";
+        String FUEL = "advancement.galacticraft.fuel";
+        String OXYGEN_COLLECTOR = "advancement.galacticraft.oxygen_collector";
+        String OXYGEN_COMPRESSOR = "advancement.galacticraft.oxygen_compressor";
+        String FILL_TANK = "advancement.galacticraft.fill_tank";
+        String FILL_ALL_TANKS = "advancement.galacticraft.fill_all_tanks";
+        String OXYGEN_GEAR = "advancement.galacticraft.oxygen_gear";
+        String ROCKET_WORKBENCH = "advancement.galacticraft.rocket_workbench";
+        String ROCKET = "advancement.galacticraft.rocket";
+        String FUEL_LOADER = "advancement.galacticraft.fuel_loader";
+        String LEAVE_ROCKET_DURING_COUNTDOWN = "advancement.galacticraft.leave_rocket_during_countdown";
+        String LAUNCH_ROCKET = "advancement.galacticraft.launch_rocket";
+        String MOON = "advancement.galacticraft.moon";
+        String PARROT_LANDING = "advancement.galacticraft.parrot_landing";
+        String EAT_MOON_CHEESE_CURD = "advancement.galacticraft.eat_moon_cheese_curd";
+        String CHEESE_AND_CRACKERS = "advancement.galacticraft.cheese_and_crackers";
+        String CHEESE_TAX = "advancement.galacticraft.cheese_tax";
+        String THROW_METEOR_CHUNK = "advancement.galacticraft.throw_meteor_chunk";
+        String SPACE_STATION = "advancement.galacticraft.space_station";
+        String MOON_DUNGEON = "advancement.galacticraft.moon_dungeon";
+        String MOON_DUNGEON_KEY = "advancement.galacticraft.moon_dungeon_key";
+        String BUGGY_SCHEMATIC = "advancement.galacticraft.buggy_schematic";
+        String BUGGY = "advancement.galacticraft.buggy";
+    }
+
     interface ItemGroup {
         String ITEMS = "itemGroup.galacticraft.items";
         String BLOCKS = "itemGroup.galacticraft.blocks";
@@ -32,9 +68,26 @@ public interface Translations {
     }
 
     interface RecipeCategory {
-        String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
-        String COMPRESSOR = "category.recipe_viewer.compressing";
-        String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+        String PREFIX = "category.recipe_viewer.";
+        String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
+        String COMPRESSOR = PREFIX + "compressing";
+        String ELECTRIC_COMPRESSOR = PREFIX + "compressing.electric";
+        String ELECTRIC_FURNACE = PREFIX + "smelting.electric";
+        String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
+        String ROCKET_WORKBENCH = PREFIX + "rocket";
+
+        String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
+        String JEI_TIME = "gui.jei.category.smelting.time.seconds";
+        String JEI_XP = "gui.jei.category.smelting.experience";
+        String EMI_TIME = "emi.cooking.time";
+        String EMI_XP = "emi.cooking.experience";
+    }
+
+    interface Waila {
+        String OXYGEN_TANK_LABEL = "tooltip.galacticraft.waila_oxygen_tank";
+        String PLUGIN_GALACTICRAFT = "config.waila.plugin_galacticraft";
+        String SHOW_OXYGEN_LEVEL = "config.waila.plugin_galacticraft.oxygen_level.enabled";
     }
 
     interface BannerPattern {
@@ -57,6 +110,8 @@ public interface Translations {
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
         String CANNOT_EAT_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_eat_in_no_atmosphere";
         String CANNOT_EAT_WITH_MASK = "chat.galacticraft.cannot_eat_with_mask";
+        String CANNOT_FEED_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_feed_in_no_atmosphere";
+        String CANNOT_FEED_WITH_MASK = "chat.galacticraft.cannot_feed_with_mask";
     }
 
     interface Subtitles {
@@ -95,6 +150,18 @@ public interface Translations {
         String TITLE = "config.galacticraft.title";
         String RESET = "config.galacticraft.reset";
 
+        String CLIENT = "config.galacticraft.client";
+        String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
+        String SKYBOX = "config.galacticraft.client.skybox";
+        String PLAYER = "config.galacticraft.player";
+
+        String COMMANDS = "config.galacticraft.commands";
+        String ENABLE_GC_HOUSTON = "config.galacticraft.commands.enable_gc_houston";
+      
+        String MISC = "config.galacticraft.misc";
+        String CREATIVE = "config.galacticraft.misc.creative";
+        String ENABLE_CREATIVE_GEARINV = "config.galacticraft.misc.creative.enable_gearinv";
+
         String DEBUG = "config.galacticraft.debug";
         String DEBUG_LOGGING = "config.galacticraft.debug.logging";
         String HIDE_ALPHA_WARNING = "config.galacticraft.debug.hide_alpha_warning";
@@ -106,37 +173,40 @@ public interface Translations {
         String HEAVY_WIRE_ENERGY_TRANSFER_LIMIT = "config.galacticraft.energy.wires.heavy_transfer_limit";
 
         String MACHINES = "config.galacticraft.energy.machines";
+        String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
+        String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_module_storage_size";
         String COAL_GENERATOR_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.coal_generator_energy_production_rate";
         String SOLAR_PANEL_ENERGY_PRODUCTION_RATE = "config.galacticraft.energy.machines.solar_panel_energy_production_rate";
         String CIRCUIT_FABRICATOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.circuit_fabricator_energy_consumption_rate";
         String ELECTRIC_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_compressor_energy_consumption_rate";
+        String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
+        String ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_arc_furnace_energy_consumption_rate";
+        String ELECTRIC_ARC_FURNACE_BONUS_CHANCE = "config.galacticraft.energy.machines.electric_arc_furnace_bonus_chance";
         String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
-        String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
-        String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_oxygen_consumption_rate";
+        String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
+        String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
+        String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_energy_consumption_rate";
+        String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_oxygen_consumption_rate";
         String MAX_SEALING_POWER = "config.galacticraft.machines.max_sealing_power";
         String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
-        String ELECTRIC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_furnace_energy_consumption_rate";
-        String ENERGY_STORAGE_MODULE_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_module_storage_size";
-        String ENERGY_STORAGE_SIZE = "config.galacticraft.energy.machines.energy_storage_size";
-        String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
+        String FUEL_LOADER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.fuel_loader_energy_consumption_rate";
         String FOOD_CANNER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.food_canner_energy_consumption_rate";
-        String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
 
-        String CLIENT = "config.galacticraft.client";
+        String LIFE_SUPPORT = "config.galacticraft.lifesupport";
+        String SMALL_OXYGEN_TANK_CAPACITY = "config.galacticraft.lifesupport.oxygen_tank_capacity.small";
+        String MEDIUM_OXYGEN_TANK_CAPACITY = "config.galacticraft.lifesupport.oxygen_tank_capacity.medium";
+        String LARGE_OXYGEN_TANK_CAPACITY = "config.galacticraft.lifesupport.oxygen_tank_capacity.large";
+        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.player";
+        String WOLF_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.wolf";
+        String CAT_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.cat";
+        String PARROT_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.lifesupport.oxygen_consumption_rate.parrot";
+        String CANNOT_EAT_IN_NO_ATMOSPHERE = "config.galacticraft.lifesupport.cannot_eat_in_no_atmosphere";
+        String CANNOT_EAT_WITH_MASK = "config.galacticraft.lifesupport.cannot_eat_with_mask";
 
-        String PLAYER = "config.galacticraft.player";
-        String PLAYER_LIFE_SUPPORT = "config.galacticraft.lifesupport";
-        String PLAYER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.player.lifesupport.oxygen_consumption_rate";
+        String DIFFICULTY = "config.galacticraft.difficulty";
+        String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
-        String SKYBOX = "config.galacticraft.client.skybox";
-
-        String COMMANDS = "config.galacticraft.commands";
-        String ENABLE_GC_HOUSTON = "config.galacticraft.commands.enable_gc_houston";
-
-        String MISC = "config.galacticraft.misc";
-        String CREATIVE = "config.galacticraft.misc.creative";
-        String ENABLE_CREATIVE_GEARINV = "config.galacticraft.misc.creative.enable_gearinv";
     }
 
     interface Galaxy {
@@ -194,6 +264,7 @@ public interface Translations {
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
+        String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
     }
 
     interface Gas {
@@ -284,6 +355,7 @@ public interface Translations {
         String REFINING = "ui.galacticraft.status.refining";
         String MISSING_OIL = "ui.galacticraft.status.missing_oil";
         String FUEL_TANK_FULL = "ui.galacticraft.status.fuel_tank_full";
+        String PREPARING = "ui.galacticraft.status.preparing";
         String LOADING = "ui.galacticraft.status.loading";
         String NOT_ENOUGH_FUEL = "ui.galacticraft.status.not_enough_fuel";
         String NO_ROCKET = "ui.galacticraft.status.no_rocket";
@@ -365,6 +437,11 @@ public interface Translations {
         String TRAVELING_TO = "ui.galacticraft.traveling_to";
         String TOTAL_NUTRITION = "ui.galacticraft.total_nutrition";
         String SPACE_STATION_NAME = "ui.galacticraft.space_station_name";
+
+        String CAPE_BUTTON = "ui.options.cape";
+        String CAPES_TITLE = "ui.capes.title";
+        String CAPES_STATE = "galacticraft.capes.state.";
+        String CAPE = "cape.galacticraft.";
     }
 
     interface Boss {

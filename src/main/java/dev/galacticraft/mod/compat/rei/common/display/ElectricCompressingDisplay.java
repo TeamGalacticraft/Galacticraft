@@ -1,0 +1,105 @@
+/*
+ * Copyright (c) 2019-2025 Team Galacticraft
+ *
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
+ *
+ * The above copyright notice and this permission notice shall be included in all
+ * copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
+ */
+
+package dev.galacticraft.mod.compat.rei.common.display;
+
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
+import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.display.DisplaySerializer;
+import me.shedaniel.rei.api.common.display.SimpleGridMenuDisplay;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
+import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.ListTag;
+import net.minecraft.nbt.Tag;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+
+public interface ElectricCompressingDisplay extends SimpleGridMenuDisplay {
+    default @NotNull CategoryIdentifier<?> getCategoryIdentifier() {
+        return GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING;
+    }
+
+    default int getWidth() {
+        return 3;
+    }
+
+    default int getHeight() {
+        return 3;
+    }
+
+    default int getProcessingTime() {
+        return (int) (200 / 1.5F);
+    }
+
+    boolean isShapeless();
+
+    enum Serializer implements DisplaySerializer<ElectricCompressingDisplay> {
+        INSTANCE;
+
+        @Override
+        public CompoundTag save(CompoundTag tag, ElectricCompressingDisplay display) {
+            tag.putBoolean(Constant.Nbt.SHAPELESS, display.isShapeless());
+            tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+
+            ListTag list = new ListTag();
+            for (EntryIngredient inputEntry : display.getInputEntries()) {
+                list.add(inputEntry.saveIngredient());
+            }
+            tag.put(Constant.Nbt.INPUTS, list);
+
+            list = new ListTag();
+            for (EntryIngredient outputEntry : display.getOutputEntries()) {
+                list.add(outputEntry.saveIngredient());
+            }
+            tag.put(Constant.Nbt.OUTPUTS, list);
+
+            return tag;
+        }
+
+        @Override
+        public ElectricCompressingDisplay read(CompoundTag tag) {
+            List<EntryIngredient> inputs = new ArrayList<>();
+            List<EntryIngredient> outputs = new ArrayList<>();
+
+            ListTag list = tag.getList(Constant.Nbt.INPUTS, Tag.TAG_LIST);
+            for (Tag element : list) {
+                inputs.add(EntryIngredient.read((ListTag) element));
+            }
+
+            list = tag.getList(Constant.Nbt.OUTPUTS, Tag.TAG_LIST);
+            for (Tag element : list) {
+                outputs.add(EntryIngredient.read((ListTag) element));
+            }
+
+            int processingTime = tag.getInt(Constant.Nbt.PROCESSING_TIME);
+
+            if (tag.getBoolean(Constant.Nbt.SHAPELESS)) {
+                return new ElectricShapelessCompressingDisplay(inputs, outputs, processingTime);
+            } else {
+                return new ElectricShapedCompressingDisplay(inputs, outputs, processingTime);
+            }
+        }
+    }
+}

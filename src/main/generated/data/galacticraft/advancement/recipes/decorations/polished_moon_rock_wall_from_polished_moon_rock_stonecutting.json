@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:polished_moon_rock_wall_from_polished_moon_rock_stonecutting"
+        "recipe": "galacticraft:polished_moon_rock_wall_from_polished_moon_rock_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:polished_moon_rock_wall_from_polished_moon_rock_stonecutting"
+      "galacticraft:polished_moon_rock_wall_from_polished_moon_rock_stonecutting"
     ]
   }
 }

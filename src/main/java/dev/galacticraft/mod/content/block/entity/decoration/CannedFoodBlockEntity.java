@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.decoration;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
@@ -62,7 +63,12 @@ public class CannedFoodBlockEntity extends BlockEntity {
 
     public void addCanItem(ItemStack stack) {
         if (this.canContents.size() < 8) {
-            this.canContents.add(stack);
+            ItemStack copy = stack.copyWithCount(1);
+            if (!stack.has(GCDataComponents.COLOR)) {
+                copy.set(GCDataComponents.COLOR, 0xFFFFFF);
+            }
+            this.canContents.add(copy);
+
             setChanged();
             if (level != null) {
                 BlockState state = getBlockState();

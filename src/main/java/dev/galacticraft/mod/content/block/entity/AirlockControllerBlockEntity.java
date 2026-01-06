@@ -35,6 +35,7 @@ import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
@@ -171,9 +172,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
                             } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
                             }
                         }
                     }
@@ -186,9 +187,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
                             } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
                             }
                         }
                     }
@@ -199,9 +200,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).isAir()) {
                             if (facingNorth) {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.EAST), Block.UPDATE_ALL);
                             } else {
-                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), 3);
+                                this.level.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(FACING, Direction.NORTH), Block.UPDATE_ALL);
                             }
                         }
                     }
@@ -257,9 +258,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).getBlock() == GCBlocks.AIR_LOCK_SEAL) {
                             if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                             else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
                 }
@@ -295,9 +296,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                             if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                             else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
                 }
@@ -331,9 +332,9 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
                         pos = new BlockPos(x, y, z);
                         if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
                             if (sealedSide)
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                             else
-                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), 3);
+                                this.level.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
                         }
                     }
                 }

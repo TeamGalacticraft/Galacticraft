@@ -1,0 +1,21 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "C": {
+      "item": "galacticraft:canvas"
+    },
+    "S": {
+      "tag": "c:strings"
+    }
+  },
+  "pattern": [
+    "CCC",
+    "S S",
+    " S "
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:parachute"
+  }
+}

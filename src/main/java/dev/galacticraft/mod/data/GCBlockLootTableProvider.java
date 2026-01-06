@@ -67,9 +67,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.GLOWSTONE_TORCH);
         this.dropSelf(GCBlocks.UNLIT_TORCH);
+        this.dropSelf(GCBlocks.UNLIT_SOUL_TORCH);
 
         this.dropSelf(GCBlocks.GLOWSTONE_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_LANTERN);
+        this.dropSelf(GCBlocks.UNLIT_SOUL_LANTERN);
 
         for (DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
             this.dropSelf(decorationSet.block());
@@ -181,12 +183,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             this.dropSelf(pipe);
         }
-
-        this.dropSelf(GCBlocks.SQUARE_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.LINEAR_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.DASHED_LIGHT_PANEL);
-        this.dropSelf(GCBlocks.DIAGONAL_LIGHT_PANEL);
 
         this.dropSelf(GCBlocks.VACUUM_GLASS);
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);

@@ -9,6 +9,7 @@ on:
 
 jobs:
   crowdin_push:
+    if: github.repository == 'TeamGalacticraft/Galacticraft'
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repository
