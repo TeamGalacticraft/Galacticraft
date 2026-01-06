@@ -115,7 +115,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     }
 
     /**
-     * author MaverX
+     * @author MaverX
      * reason It's easier to rewrite the function entirely than to try to inject something into it.
      */
     @Overwrite
@@ -265,18 +265,18 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Unique
     private void generateGCSlots() {
-        int offset = 6;
-        for (int i = 8; i < 12; i++) {
-            int col = i % 2;
-            int row = i / 2;
-            generateGCSlot(-45 + row * 18, offset + (col * 27), i);
-        }
+        int yOffset = 6;
 
         for (int i = 0; i < 8; i++) {
-            int col = i % 4;
-            int row = i / 4;
-            row = 1 - row;
-            generateGCSlot(99 + col * 18, (row * 27) + offset, i);
+            int column = i % 4;
+            int row = 1 - (i / 4);
+            generateGCSlot(99 + column * 18, yOffset + row * 27, i);
+        }
+
+        for (int i = 0; i < 4; i++) {
+            int column = i % 2;
+            int row = i / 2;
+            generateGCSlot(27 + column * 18, yOffset + row * 27, i + 8);
         }
     }
 
