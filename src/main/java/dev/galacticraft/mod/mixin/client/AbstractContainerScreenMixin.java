@@ -55,7 +55,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             original.call(graphics, itemStack, x, y, z);
         }
     }
-  
+
     @Inject(
             method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V",
             at = @At(

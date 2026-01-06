@@ -781,11 +781,11 @@ public class ConfigImpl implements Config {
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
-          
+
             // --- CREATIVE CONFIG ---
-          
+
             SubCategoryBuilder creative = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.CREATIVE));
-          
+
             creative.add(new BooleanToggleBuilder(
                     Component.translatable(Translations.Config.RESET),
                     Component.translatable(Translations.Config.ENABLE_CREATIVE_GEARINV),
@@ -794,7 +794,7 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(true)
                     .build()
             );
-          
+
             b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
 
             // --- LIFE SUPPORT CONFIG ---
