@@ -154,14 +154,14 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
             if (isCreativeGearInvAllowed()) {
                 creativeSwitchButton.setX(leftPos + 11);
                 creativeSwitchButton.setY(topPos + 18);
+                creativeSwitchButton.visible = true;
                 creativeSwitchButton.radioButtonOnClick = () -> {
                     bGCInventory = creativeSwitchButton.getIsBottomButtonActive();
                     regenerateSlots();
                 };
                 addRenderableWidget(creativeSwitchButton);
             } else {
-                creativeSwitchButton.setX(-2000);
-                creativeSwitchButton.setY(-2000);
+                creativeSwitchButton.visible = false;
                 creativeSwitchButton.radioButtonOnClick = null;
             }
         }
@@ -169,8 +169,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
             removeWidget(creativeSwitchButton);
             bGCInventory = false;
             gc$slots.clear();
-            creativeSwitchButton.setX(-2000);
-            creativeSwitchButton.setY(-2000);
+            creativeSwitchButton.visible = false;
             creativeSwitchButton.setIsBottomButtonActive(false);
         }
     }
