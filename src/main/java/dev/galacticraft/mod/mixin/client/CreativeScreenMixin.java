@@ -62,7 +62,7 @@ import java.util.List;
 @Mixin(CreativeModeInventoryScreen.class)
 public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implements GCCreativeGuiSlots {
 
-    private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
+    @Unique private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 
     @Shadow private static CreativeModeTab selectedTab;
 
@@ -144,8 +144,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
                 creativeSwitchButton.visible = false;
                 creativeSwitchButton.radioButtonOnClick = null;
             }
-        }
-        if (group.getType() != CreativeModeTab.Type.INVENTORY) {
+        } else {
             removeWidget(creativeSwitchButton);
             bGCInventory = false;
             gc$slots.clear();
@@ -182,35 +181,11 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
                     //Quick stack
                     if (Screen.hasShiftDown()) {
                         gcTryQuickStackToPlayerInv(slot);
-                        cir.setReturnValue(true);
-                        return;
-                    }
-                    if (!carried.isEmpty() && slot.mayPlace(carried)) {
-                        if (slot.getItem().isEmpty()) {
-                            slot.set(carried);
-                            slot.setChanged();
-                            getMenu().setCarried(ItemStack.EMPTY);
-                            ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), 1, carried));
-                            cir.setReturnValue(true);
-                            return;
-                        } else if (slot.mayPlace(carried)) {
-                            ItemStack oldItem = slot.getItem();
-                            ItemStack newItem = carried;
-                            getMenu().setCarried(oldItem);
-                            slot.set(newItem);
-                            slot.setChanged();
-                            ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), 1, newItem));
-                            cir.setReturnValue(true);
-                            return;
-                        }
-                    } else if (carried.isEmpty()) {
-                        ItemStack slotStack = slot.getItem();
-                        getMenu().setCarried(slotStack);
-                        slot.set(ItemStack.EMPTY);
+                    } else if (carried.isEmpty() || slot.mayPlace(carried)) {
+                        getMenu().setCarried(slot.getItem());
+                        slot.set(carried);
                         slot.setChanged();
-                        ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), 0, ItemStack.EMPTY));
-                        cir.setReturnValue(true);
-                        return;
+                        ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), carried.isEmpty() ? 0 : 1, carried));
                     }
                     cir.setReturnValue(true);
                     return;
@@ -254,8 +229,8 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         }
 
         for (int i = 0; i < 4; i++) {
-            int column = i % 2;
-            int row = i / 2;
+            int column = i / 2;
+            int row = i % 2;
             generateGCSlot(27 + column * 18, yOffset + row * 27, i + 8);
         }
     }
