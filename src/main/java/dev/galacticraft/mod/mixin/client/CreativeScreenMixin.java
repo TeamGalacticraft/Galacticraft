@@ -36,7 +36,6 @@ import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -52,6 +51,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -114,33 +114,13 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         }
     }
 
-    /**
-     * @author MaverX
-     * reason It's easier to rewrite the function entirely than to try to inject something into it.
-     */
-    @Overwrite
-    public void renderBg(GuiGraphics graphics, float delta, int mouseX, int mouseY) {
-
-        for (CreativeModeTab creativeModeTab : CreativeModeTabs.tabs()) {
-            if (creativeModeTab != selectedTab) {
-                renderTabButton(graphics, creativeModeTab);
-            }
-        }
-
-        graphics.blit(isGCInventoryEnabled() ? GC_GUIBG_TEX : selectedTab.getBackgroundTexture(), leftPos, topPos, 0, 0, imageWidth, imageHeight);
-        searchBox.render(graphics, mouseX, mouseY, delta);
-        int i = leftPos + 175;
-        int j = topPos + 18;
-        int k = j + 112;
-        if (selectedTab.canScroll()) {
-            ResourceLocation resourceLocation = canScroll() ? SCROLLER_SPRITE : SCROLLER_DISABLED_SPRITE;
-            graphics.blitSprite(resourceLocation, i, j + (int)((float)(k - j - 17) * scrollOffs), 12, 15);
-        }
-
-        renderTabButton(graphics, selectedTab);
-        if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
-            InventoryScreen.renderEntityInInventoryFollowsMouse(graphics, isGCInventoryEnabled() ? leftPos + 55 : leftPos + 73, topPos + 6, leftPos + 105, topPos + 49, 20, 0.0625F, (float)mouseX, (float)mouseY, minecraft.player);
-        }
+    @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"), index = 0)
+    private ResourceLocation gc$changeBackground(ResourceLocation original) {
+        return isGCInventoryEnabled() ? GC_GUIBG_TEX : original;
+    }
+    @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;renderEntityInInventoryFollowsMouse(Lnet/minecraft/client/gui/GuiGraphics;IIIIIFFFLnet/minecraft/world/entity/LivingEntity;)V"), index = 1)
+    private int gc$shiftEntityLeft(int original) {
+        return isGCInventoryEnabled() ? leftPos + 55 : original;
     }
 
     @Inject(method = "init", at = @At("HEAD"))
