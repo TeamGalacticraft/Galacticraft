@@ -32,7 +32,6 @@ import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
@@ -68,15 +67,6 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Shadow protected abstract void selectTab(CreativeModeTab group);
 
-    @Shadow protected abstract void renderTabButton(GuiGraphics graphics, CreativeModeTab group);
-
-    @Shadow private EditBox searchBox;
-
-    @Shadow protected abstract boolean canScroll();
-
-    @Shadow @Final private static ResourceLocation SCROLLER_SPRITE;
-    @Shadow @Final private static ResourceLocation SCROLLER_DISABLED_SPRITE;
-    @Shadow private float scrollOffs;
     @Shadow @Nullable private Slot destroyItemSlot;
     @Shadow @Final private static SimpleContainer CONTAINER;
     @Unique private final List<AccessorySlot> gc$slots = new ArrayList<>();
@@ -118,6 +108,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     private ResourceLocation gc$changeBackground(ResourceLocation original) {
         return isGCInventoryEnabled() ? GC_GUIBG_TEX : original;
     }
+
     @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;renderEntityInInventoryFollowsMouse(Lnet/minecraft/client/gui/GuiGraphics;IIIIIFFFLnet/minecraft/world/entity/LivingEntity;)V"), index = 1)
     private int gc$shiftEntityLeft(int original) {
         return isGCInventoryEnabled() ? leftPos + 55 : original;

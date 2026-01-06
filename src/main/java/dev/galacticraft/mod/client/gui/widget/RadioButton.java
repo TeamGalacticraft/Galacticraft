@@ -74,15 +74,13 @@ public class RadioButton extends AbstractWidget {
     }
 
     public int getButtonHovered(int mouseX, int mouseY) {
-        boolean top = mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
-                mouseY >= getY() && mouseY < getY() + BTN_HEIGHT;
-
-        boolean bottom = mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
-                mouseY >= getY() + BTN_HEIGHT && mouseY < getY() + BTN_HEIGHT * 2;
-        if (top) {
+        if (mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
+                mouseY >= getY() && mouseY < getY() + BTN_HEIGHT) {
             return 0;
         }
-        if (bottom) {
+
+        if (mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
+                mouseY >= getY() + BTN_HEIGHT && mouseY < getY() + BTN_HEIGHT * 2) {
             return 1;
         }
         return -1;
