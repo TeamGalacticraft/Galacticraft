@@ -33,14 +33,14 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.entity.animal.Cow;
 
 @Environment(EnvType.CLIENT)
-public class CheeseCowEntityRender extends MobRenderer <Cow, CowModel<Cow>> {
+public class CheeseCowEntityRenderer extends MobRenderer<Cow, CowModel<Cow>> {
     private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.CHEESE_COW);
 
-    public CheeseCowEntityRender(EntityRendererProvider.Context context) {
+    public CheeseCowEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new CowModel(context.bakeLayer(ModelLayers.COW)), 0.7F);
     }
 
-    public ResourceLocation getTextureLocation(Cow cheese_cow) {
+    public ResourceLocation getTextureLocation(Cow cheeseCow) {
         return TEXTURE;
     }
 

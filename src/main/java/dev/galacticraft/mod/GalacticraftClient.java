@@ -153,7 +153,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.PARACHEST, ParachestRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.THROWABLE_METEOR_CHUNK, ThrownItemRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.SKELETON_BOSS, EvolvedSkeletonBossRenderer::new);
-        EntityRendererRegistry.register(GCEntityTypes.CHEES_COW, CheeseCowEntityRender :: new);
+        EntityRendererRegistry.register(GCEntityTypes.CHEES_COW, CheeseCowEntityRenderer::new);
 
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
@@ -194,8 +194,8 @@ public class GalacticraftClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_SULFURIC_ACID, DrippingSulfuricAcidProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_SULFURIC_ACID, FallingSulfuricAcidProvider::new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CHEESE_WHIZ, DrippingCheeseWhizProvider:: new);
-        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CHEESE_WHIZ, FallingCheeseWhizProvider:: new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CHEESE_WHIZ, DrippingCheeseWhizProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CHEESE_WHIZ, FallingCheeseWhizProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);

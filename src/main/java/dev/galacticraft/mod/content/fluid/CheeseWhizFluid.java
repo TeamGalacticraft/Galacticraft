@@ -32,7 +32,9 @@ import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 
 public abstract class CheeseWhizFluid extends BasicFluid{
-    protected CheeseWhizFluid(){super (true, true,0, 5,30,100.0F);}
+    protected CheeseWhizFluid(){
+        super (false, true, 0, 5, 10, 100.0F);
+    }
 
     @Override
     public Fluid getFlowing() {

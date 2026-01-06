@@ -392,6 +392,10 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(Items.BREAD)
                 .time(100)
                 .save(output);
+        ShapelessCompressorRecipeBuilder.shapeless(GCItems.MOON_CHEESE_WHEEL)
+                .unlockedBy(getHasName(GCItems.CHEESE_WHIZ_BUCKET), has(GCItems.CHEESE_WHIZ_BUCKET))
+                .requires(GCItems.CHEESE_WHIZ_BUCKET)
+                .save(output);
         ShapelessCompressorRecipeBuilder.shapeless(GCItems.COMPRESSED_ALUMINUM)
                 .unlockedBy(getHasName(GCItems.ALUMINUM_INGOT), has(GCItemTags.ALUMINUM_INGOTS))
                 .requires(GCItemTags.ALUMINUM_INGOTS)
@@ -442,10 +446,6 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.TITANIUM_INGOT), has(GCItems.TITANIUM_INGOT))
                 .requires(GCItems.TITANIUM_INGOT)
                 .requires(GCItems.TITANIUM_INGOT)
-                .save(output);
-        ShapelessCompressorRecipeBuilder.shapeless(GCItems.MOON_CHEESE_WHEEL)
-                .unlockedBy(getHasName(GCItems.CHEESE_WHIZ_BUCKET), has(GCItems.CHEESE_WHIZ_BUCKET))
-                .requires(GCItems.CHEESE_WHIZ_BUCKET)
                 .save(output);
         ShapedCompressorRecipeBuilder.create(GCItems.TIER_1_HEAVY_DUTY_PLATE, 2)
                 .unlockedBy(getHasName(GCItems.COMPRESSED_BRONZE), has(GCItems.COMPRESSED_BRONZE))

@@ -279,7 +279,7 @@ public class GCItems {
     public static final Item CRUDE_OIL_BUCKET = ITEMS.register(Constant.Item.CRUDE_OIL_BUCKET, new BucketItem(GCFluids.CRUDE_OIL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item FUEL_BUCKET = ITEMS.register(Constant.Item.FUEL_BUCKET, new BucketItem(GCFluids.FUEL, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
     public static final Item SULFURIC_ACID_BUCKET = ITEMS.register(Constant.Item.SULFURIC_ACID_BUCKET, new BucketItem(GCFluids.SULFURIC_ACID, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
-    public static final Item CHEESE_WHIZ_BUCKET = ITEMS.register(Constant.Item.CHEESE_WHIZ_BUCKET, new BucketItem(GCFluids.CHEESE_WHIZ, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)) );
+    public static final Item CHEESE_WHIZ_BUCKET = ITEMS.register(Constant.Item.CHEESE_WHIZ_BUCKET, new BucketItem(GCFluids.CHEESE_WHIZ, new Item.Properties().craftRemainder(Items.BUCKET).stacksTo(1)));
 
     // CANNED FOOD
     public static final CannedFoodItem EMPTY_CAN = ITEMS.register(Constant.Item.EMPTY_CAN, new CannedFoodItem(new Item.Properties().food(null)));
@@ -302,7 +302,7 @@ public class GCItems {
     public static final Item OLI_GRUB_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.OLI_GRUB, new SpawnEggItem(GCEntityTypes.OLI_GRUB, 0xd4dd7e, 0xa4bf63, new Item.Properties()));
     public static final Item GREY_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.GREY, new SpawnEggItem(GCEntityTypes.GREY, 0x656463, 0x769e41, new Item.Properties()));
     public static final Item ARCH_GREY_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.ARCH_GREY, new SpawnEggItem(GCEntityTypes.ARCH_GREY, 0x656463, 0x2d8563, new Item.Properties()));
-    public static final Item CHEESE_COW_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.CHEESE_COW, new SpawnEggItem(GCEntityTypes.CHEES_COW, 0xffa500,0Xcc8400, new Item.Properties()));
+    public static final Item CHEESE_COW_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.CHEESE_COW, new SpawnEggItem(GCEntityTypes.CHEES_COW, 0xffa500, 0Xcc8400, new Item.Properties()));
 
     private static Item registerGeneric(String id) {
         return ITEMS.register(id, new Item(new Item.Properties()));
