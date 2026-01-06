@@ -301,7 +301,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
         for (int i = 0; i < gc$slots.size(); i++) {
             Slot targetSlot = gc$slots.get(i);
-            if (gc$slots.get(i).mayPlace(playerSlot.getItem()) && gc$slots.get(i).getItem().isEmpty()) {
+            if (targetSlot.mayPlace(playerSlot.getItem()) && targetSlot.getItem().isEmpty()) {
                 ItemStack newItem = playerSlot.getItem().copy();
                 ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, targetSlot.getContainerSlot(), 1, newItem));
                 playerSlot.set(ItemStack.EMPTY);
