@@ -43,8 +43,7 @@ public abstract class AbstractContainerScreenMixin {
             )
     )
     private void gc$beforeCarried(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        Object self = this;
-        if (self instanceof GCCreativeGuiSlots gc) {
+        if ((Object)this instanceof GCCreativeGuiSlots gc) {
             gc.gc$renderGcSlots(graphics, mouseX, mouseY);
         }
     }

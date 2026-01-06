@@ -31,12 +31,9 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 
 public class RadioButton extends AbstractWidget {
-
-    ResourceLocation buttonTex = Constant.id("textures/gui/radiobutton_gear_inventory_buttons.png");
-
+    private static final ResourceLocation BUTTON_TEX = Constant.id("textures/gui/radiobutton_gear_inventory_buttons.png");
     private static final int BTN_WIDTH = 11;
     private static final int BTN_HEIGHT = 10;
-
     private boolean isBottomButtonActive = false;
 
     public boolean getIsBottomButtonActive() {
@@ -45,57 +42,47 @@ public class RadioButton extends AbstractWidget {
 
     public Runnable radioButtonOnClick;
 
-    public RadioButton(int x, int y){
-        super(x, y, BTN_WIDTH, BTN_HEIGHT*2, Component.empty());
+    public RadioButton(int x, int y) {
+        super(x, y, BTN_WIDTH, BTN_HEIGHT * 2, Component.empty());
     }
 
-    public void setIsBottomButtonActive(boolean newActive)
-    {
+    public void setIsBottomButtonActive(boolean newActive) {
         isBottomButtonActive = newActive;
     }
 
     @Override
     protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-
         int hovered = getButtonHovered(mouseX, mouseY);
         boolean isTopHovered = hovered == 0;
         boolean isBottomHovered = hovered == 1;
-        graphics.blit(buttonTex, getX(), getY(),getArrowBlitCoordsU(isBottomButtonActive ? (isTopHovered ? 1 : 0) : 2), getArrowBlitCoordsV(false),BTN_WIDTH,BTN_HEIGHT,33,20);
-        graphics.blit(buttonTex, getX(), getY()+BTN_HEIGHT,getArrowBlitCoordsU(isBottomButtonActive ? 2 : (isBottomHovered ? 1 : 0)), getArrowBlitCoordsV(true),BTN_WIDTH,BTN_HEIGHT,33,20);
-
+        graphics.blit(BUTTON_TEX, getX(), getY(), getArrowBlitCoordsU(isBottomButtonActive ? (isTopHovered ? 1 : 0) : 2), getArrowBlitCoordsV(false), BTN_WIDTH, BTN_HEIGHT, 33, 20);
+        graphics.blit(BUTTON_TEX, getX(), getY() + BTN_HEIGHT, getArrowBlitCoordsU(isBottomButtonActive ? 2 : (isBottomHovered ? 1 : 0)), getArrowBlitCoordsV(true), BTN_WIDTH, BTN_HEIGHT, 33, 20);
     }
 
     @Override
     protected void updateWidgetNarration(NarrationElementOutput output) {
-
     }
 
     // style - 0: default 1: active 2: inactive
-    private int getArrowBlitCoordsV(boolean isBottomTex)
-    {
+    private int getArrowBlitCoordsV(boolean isBottomTex) {
         return isBottomTex ? BTN_HEIGHT : 0;
     }
 
     // style - 0: default 1: active 2: inactive
-    private int getArrowBlitCoordsU(int style)
-    {
+    private int getArrowBlitCoordsU(int style) {
         return BTN_WIDTH * style;
     }
 
-    public int getButtonHovered(int mouseX, int mouseY)
-    {
+    public int getButtonHovered(int mouseX, int mouseY) {
         boolean top = mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
                 mouseY >= getY() && mouseY < getY() + BTN_HEIGHT;
 
         boolean bottom = mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
-                mouseY >= getY()+BTN_HEIGHT && mouseY < getY() + BTN_HEIGHT*2;
-
-        if(top)
-        {
+                mouseY >= getY() + BTN_HEIGHT && mouseY < getY() + BTN_HEIGHT * 2;
+        if (top) {
             return 0;
         }
-        if(bottom)
-        {
+        if (bottom) {
             return 1;
         }
         return -1;
@@ -105,22 +92,20 @@ public class RadioButton extends AbstractWidget {
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.active && this.visible) {
             if (this.isValidClickButton(button)) {
-                int hovered = getButtonHovered((int)mouseX,(int)mouseY);
+                int hovered = getButtonHovered((int)mouseX, (int)mouseY);
                 boolean isTopHovered = hovered == 0;
                 boolean isBottomHovered = hovered == 1;
-
                 if (!isBottomButtonActive ? isBottomHovered : isTopHovered) {
                     isBottomButtonActive = !isBottomButtonActive;
                     this.playDownSound(Minecraft.getInstance().getSoundManager());
                     this.onClick(mouseX, mouseY);
-                    radioButtonOnClick.run();
+                    if (radioButtonOnClick != null) {
+                        radioButtonOnClick.run();
+                    }
                     return true;
                 }
-
             }
-            return false;
-        } else {
-            return false;
         }
+        return false;
     }
 }

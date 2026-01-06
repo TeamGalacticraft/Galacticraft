@@ -22,15 +22,8 @@
 
 package dev.galacticraft.mod.accessor;
 
-import dev.galacticraft.mod.screen.slot.AccessorySlot;
 import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.List;
-
 public interface GCCreativeGuiSlots {
-
-    boolean gc$isGCInventoryEnabled();
-    List<AccessorySlot> gc$getRenderSlots();
-    void gc$renderGcSlots(GuiGraphics graphics, int mouseX, int mouseY);
-
+    void gc$renderGcSlots(GuiGraphics g, int mouseX, int mouseY);
 }

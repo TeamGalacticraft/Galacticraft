@@ -30,6 +30,7 @@
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
+    "client.AbstractContainerScreenMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",
     "client.BlockModelMixin",
@@ -37,6 +38,7 @@
     "client.CameraMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
+    "client.CreativeScreenMixin",
     "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.HumanoidModelMixin",
@@ -46,10 +48,7 @@
     "client.MinecraftMixin",
     "client.PauseMenuScreenMixin",
     "client.ScreenEffectRendererMixin",
-    "client.SpriteContentAccessor",
-    "client.CreativeScreenMixin",
-    "client.ScreenAccessor",
-    "client.AbstractContainerScreenMixin"
+    "client.SpriteContentAccessor"
   ],
   "minVersion": "0.8.0",
   "injectors": {
