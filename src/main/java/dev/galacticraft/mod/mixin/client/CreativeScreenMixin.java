@@ -266,17 +266,17 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Unique
     private void generateGCSlots() {
         int offset = 6;
-        for (int i = 0; i < 4; i++) {
+        for (int i = 8; i < 12; i++) {
             int col = i % 2;
             int row = i / 2;
-            generateGCSlot(27 + row * 18, offset + (col * 27), i);
+            generateGCSlot(-45 + row * 18, offset + (col * 27), i);
         }
 
-        for (int i = 4; i < 12; i++) {
+        for (int i = 0; i < 8; i++) {
             int col = i % 4;
             int row = i / 4;
             row = 1 - row;
-            generateGCSlot(99 + col * 18, (row * 27) + 33, i);
+            generateGCSlot(99 + col * 18, (row * 27) + offset, i);
         }
     }
 
@@ -300,9 +300,10 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
         }
 
         for (int i = 0; i < gc$slots.size(); i++) {
+            Slot targetSlot = gc$slots.get(i);
             if (gc$slots.get(i).mayPlace(playerSlot.getItem()) && gc$slots.get(i).getItem().isEmpty()) {
                 ItemStack newItem = playerSlot.getItem().copy();
-                ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, i, 1, newItem));
+                ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, targetSlot.getContainerSlot(), 1, newItem));
                 playerSlot.set(ItemStack.EMPTY);
                 playerSlot.setChanged();
                 return true;
