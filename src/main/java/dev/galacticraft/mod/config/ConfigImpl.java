@@ -92,6 +92,7 @@ public class ConfigImpl implements Config {
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
+    private boolean enableCreativeGearInv = true;
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -422,6 +423,15 @@ public class ConfigImpl implements Config {
 
     public void setEnableGcHouston(boolean enableGcHouston) {
         this.enableGcHouston = enableGcHouston;
+    }
+
+    @Override
+    public boolean enableCreativeGearInv() {
+        return this.enableCreativeGearInv;
+    }
+
+    public void setCreativeGearInv(boolean enableCreativeGearInv) {
+        this.enableCreativeGearInv = enableCreativeGearInv;
     }
 
     public void load() {
@@ -771,6 +781,21 @@ public class ConfigImpl implements Config {
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
+
+            // --- CREATIVE CONFIG ---
+
+            SubCategoryBuilder creative = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.CREATIVE));
+
+            creative.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENABLE_CREATIVE_GEARINV),
+                    config.enableCreativeGearInv)
+                    .setSaveConsumer(config::setCreativeGearInv)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
 
             // --- LIFE SUPPORT CONFIG ---
 

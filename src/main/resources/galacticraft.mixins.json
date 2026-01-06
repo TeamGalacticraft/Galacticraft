@@ -41,6 +41,7 @@
     "client.CapeLayerMixin",
     "client.ClientLevelMixin",
     "client.ClientPacketListenerMixin",
+    "client.CreativeScreenMixin",
     "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.GameRendererMixin",

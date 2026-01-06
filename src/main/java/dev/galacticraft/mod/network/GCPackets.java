@@ -47,5 +47,6 @@ public class GCPackets {
         PayloadTypeRegistry.playC2S().register(SatelliteCreationPayload.TYPE, SatelliteCreationPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(SatelliteUpdatePayload.TYPE, SatelliteUpdatePayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(CapeSelectionPayload.TYPE, CapeSelectionPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(CreativeGcTransferItemPayload.TYPE, CreativeGcTransferItemPayload.STREAM_CODEC);
     }
 }

@@ -982,7 +982,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.COMMANDS, "Commands");
         this.add(Config.ENABLE_GC_HOUSTON, "Enable /gchouston");
-
+        this.add(Config.MISC, "Misc");
+        this.add(Config.CREATIVE, "Creative");
+        this.add(Config.ENABLE_CREATIVE_GEARINV, "Enable Creative Gear Inventory");
         this.add(Config.DEBUG, "Debug");
         this.add(Config.DEBUG_LOGGING, "Debug Logging");
         this.add(Config.HIDE_ALPHA_WARNING, "Hide Alpha Warning");

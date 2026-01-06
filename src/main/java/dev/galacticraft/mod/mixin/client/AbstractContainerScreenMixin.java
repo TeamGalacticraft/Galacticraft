@@ -27,6 +27,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.inventory.MirroredSlot;
 import dev.galacticraft.mod.util.DrawableUtil;
+import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -36,6 +37,8 @@ import net.minecraft.world.inventory.Slot;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 @Environment(EnvType.CLIENT)
@@ -50,6 +53,21 @@ public abstract class AbstractContainerScreenMixin extends Screen {
             DrawableUtil.renderItemMirrored(graphics, itemStack, x, y, z);
         } else {
             original.call(graphics, itemStack, x, y, z);
+        }
+    }
+
+    @Inject(
+            method = "render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;renderLabels(Lnet/minecraft/client/gui/GuiGraphics;II)V",
+                    shift = At.Shift.BEFORE,
+                    ordinal = 0
+            )
+    )
+    private void gc$beforeCarried(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if ((Object)this instanceof GCCreativeGuiSlots gc) {
+            gc.gc$renderGcSlots(graphics, mouseX, mouseY);
         }
     }
 }
