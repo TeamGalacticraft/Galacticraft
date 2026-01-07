@@ -33,6 +33,29 @@ import static dev.galacticraft.mod.Constant.FoodCanner.*;
 
 @Environment(EnvType.CLIENT)
 public class FoodCannerProgressAnimation {
+    public static float renderForRecipeViewer(GuiGraphics graphics, int x, int y, float progress, boolean[] showRow) {
+        progress = FoodCannerProgressAnimation.calculateProgress(progress, showRow);
+        FoodCannerProgressAnimation.render(graphics, x, y, (int) progress, showRow);
+        return progress;
+    }
+
+    public static float calculateProgress(float progress, boolean[] showRow) {
+        if (progress >= MAX_PROGRESS) {
+            return 0.0F;
+        }
+
+        int prog = (int) progress;
+        if (prog == START_ROW_2 && !showRow[1]) {
+            prog = SKIP_ROW_2;
+        } else if (prog == START_ROW_4 && !showRow[3]) {
+            prog = showRow[2] ? START_ROW_3 : FINAL_PROGRESS;
+        } else if (prog == START_ROW_3 && !showRow[2]) {
+            prog = FINAL_PROGRESS;
+        }
+
+        return prog + progress % 1.0F;
+    }
+
     public static void render(GuiGraphics graphics, int x, int y, int progress, boolean[] showRow) {
         PoseStack matrices = graphics.pose();
         RenderSystem.setShaderTexture(0, SCREEN_TEXTURE);

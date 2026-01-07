@@ -45,15 +45,15 @@ public class CanningProgressWidget extends Widget {
     private final int x;
     private final int y;
     private float progress;
-    private boolean[] showRows;
+    private boolean[] showRow;
 
     public CanningProgressWidget(int x, int y, int numIngredients) {
         this.x = x;
         this.y = y;
         this.progress = 0;
-        this.showRows = new boolean[4];
+        this.showRow = new boolean[4];
         for (int i = 0; i < 4; i++) {
-            this.showRows[i] = numIngredients > 4 * i;
+            this.showRow[i] = numIngredients > 4 * i;
         }
     }
 
@@ -67,23 +67,7 @@ public class CanningProgressWidget extends Widget {
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        this.progress += delta;
-        if (this.progress >= MAX_PROGRESS) {
-            this.progress = 0;
-            return;
-        }
-
-        int prog = this.getProgress();
-        if (prog == START_ROW_2 && !this.showRows[1]) {
-            prog = SKIP_ROW_2;
-        } else if (prog == START_ROW_4 && !this.showRows[3]) {
-            prog = this.showRows[2] ? START_ROW_3 : FINAL_PROGRESS;
-        } else if (prog == START_ROW_3 && !this.showRows[2]) {
-            prog = FINAL_PROGRESS;
-        }
-        this.progress = prog + (this.progress % 1.0F);
-
-        FoodCannerProgressAnimation.render(graphics, this.x, this.y, prog, showRows);
+        this.progress = FoodCannerProgressAnimation.renderForRecipeViewer(graphics, this.x, this.y, this.progress + delta, this.showRow);
     }
 
     @Override

@@ -42,7 +42,7 @@ import static dev.galacticraft.mod.Constant.FoodCanner.*;
 public class JEICanningProgressBar implements IDrawable {
     private long previousTime;
     private float progress;
-    private boolean[] showRows = {false, false, false, false};
+    private boolean[] showRow = {false, false, false, false};
 
     public void setProcessingTime() {
         this.previousTime = System.currentTimeMillis();
@@ -64,9 +64,9 @@ public class JEICanningProgressBar implements IDrawable {
     }
 
     public void setSlotsUsed(int numIngredients) {
-        this.showRows = new boolean[4];
+        this.showRow = new boolean[4];
         for (int i = 0; i < 4; i++) {
-            this.showRows[i] = numIngredients > 4 * i;
+            this.showRow[i] = numIngredients > 4 * i;
         }
     }
 
@@ -76,23 +76,7 @@ public class JEICanningProgressBar implements IDrawable {
         long delta = currentTime - this.previousTime;
         this.previousTime = currentTime;
 
-        this.progress += delta / 50.0F;
-        if (this.progress >= MAX_PROGRESS) {
-            this.progress = 0;
-            return;
-        }
-
-        int prog = this.getProgress();
-        if (prog == START_ROW_2 && !this.showRows[1]) {
-            prog = SKIP_ROW_2;
-        } else if (prog == START_ROW_4 && !this.showRows[3]) {
-            prog = this.showRows[2] ? START_ROW_3 : FINAL_PROGRESS;
-        } else if (prog == START_ROW_3 && !this.showRows[2]) {
-            prog = FINAL_PROGRESS;
-        }
-        this.progress = prog + (this.progress % 1.0F);
-
-        FoodCannerProgressAnimation.render(graphics, xOffset, yOffset, prog, this.showRows);
+        this.progress = FoodCannerProgressAnimation.renderForRecipeViewer(graphics, xOffset, yOffset, this.progress + delta / 50.0F, this.showRow);
     }
 
     public CurrentCanIngredientRenderer getIngredientRenderer(ItemStack fallback) {
