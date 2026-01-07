@@ -136,7 +136,8 @@ public class GCJEIPlugin implements IModPlugin {
                 ElectricFurnaceBlockEntity.INPUT_SLOT, 1, ElectricFurnaceBlockEntity.OUTPUT_SLOT + 1, 36);
         registration.addRecipeTransferHandler(RecipeMachineMenu.class, null, GCJEIRecipeTypes.ELECTRIC_BLASTING,
                 ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 36);
-        registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING, 4, 16, 20, 36);
+        registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING,
+                FoodCannerBlockEntity.INPUT_SLOT, FoodCannerBlockEntity.INPUT_LENGTH, FoodCannerBlockEntity.OUTPUT_SLOT + 1, 36);
         registration.addRecipeTransferHandler(new RocketRecipeTransferHandler(registration.getTransferHelper()), GCJEIRecipeTypes.ROCKET);
     }
 

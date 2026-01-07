@@ -49,6 +49,7 @@ import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricShapedCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricShapelessCompressingDisplay;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -196,18 +197,40 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     @Override
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
-                new SimpleTransferHandler.IntRange(1, 6)));
+                new SimpleTransferHandler.IntRange(1, 6)
+        ));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.COMPRESSING,
-                new SimpleTransferHandler.IntRange(1, 10)));
+                new SimpleTransferHandler.IntRange(
+                        CompressorBlockEntity.INPUT_SLOTS,
+                        CompressorBlockEntity.INPUT_SLOTS + CompressorBlockEntity.INPUT_LENGTH
+                )
+        ));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_COMPRESSING,
-                new SimpleTransferHandler.IntRange(1, 10)));
+                new SimpleTransferHandler.IntRange(
+                        ElectricCompressorBlockEntity.INPUT_SLOTS,
+                        ElectricCompressorBlockEntity.INPUT_SLOTS + ElectricCompressorBlockEntity.INPUT_LENGTH
+                )
+        ));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_SMELTING,
-                new SimpleTransferHandler.IntRange(1, 2)));
+                new SimpleTransferHandler.IntRange(
+                        ElectricFurnaceBlockEntity.INPUT_SLOT,
+                        ElectricFurnaceBlockEntity.INPUT_SLOT + 1
+                )
+        ));
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.ELECTRIC_BLASTING,
-                new SimpleTransferHandler.IntRange(1, 2)));
+                new SimpleTransferHandler.IntRange(
+                        ElectricArcFurnaceBlockEntity.INPUT_SLOT,
+                        ElectricArcFurnaceBlockEntity.INPUT_SLOT + 1
+                )
+        ));
         registry.register(SimpleTransferHandler.create(FoodCannerMenu.class, GalacticraftREIServerPlugin.CANNING,
-                new SimpleTransferHandler.IntRange(4, 20)));
+                new SimpleTransferHandler.IntRange(
+                        FoodCannerBlockEntity.INPUT_SLOT,
+                        FoodCannerBlockEntity.INPUT_SLOT + FoodCannerBlockEntity.INPUT_LENGTH
+                )
+        ));
         registry.register(SimpleTransferHandler.create(RocketWorkbenchMenu.class, GalacticraftREIServerPlugin.ROCKET,
-                new SimpleTransferHandler.IntRange(0, 15)));
+                new SimpleTransferHandler.IntRange(0, 15)
+        ));
     }
 }

@@ -87,6 +87,10 @@ public class JEICanningCategory implements IRecipeCategory<CanningRecipe> {
         int n = ingredients.size();
         this.progressBar.setSlotsUsed(n);
 
+        builder.addInputSlot(INPUT_X - RECIPE_VIEWER_X, INPUT_Y - RECIPE_VIEWER_Y)
+                .setStandardSlotBackground()
+                .addItemStack(GCItems.EMPTY_CAN.getDefaultInstance());
+
         for (int i = 0; i < 16; i++) {
             builder.addInputSlot(GRID_X - RECIPE_VIEWER_X + 18 * (i % 4), GRID_Y - RECIPE_VIEWER_Y + 18 * (i / 4))
                     .setStandardSlotBackground()
@@ -95,9 +99,6 @@ public class JEICanningCategory implements IRecipeCategory<CanningRecipe> {
 
         var ingredientRenderer = this.progressBar.getIngredientRenderer(GCItems.CANNED_FOOD.getDefaultInstance());
 
-        builder.addSlot(RecipeIngredientRole.CATALYST, INPUT_X - RECIPE_VIEWER_X, INPUT_Y - RECIPE_VIEWER_Y)
-                .setStandardSlotBackground()
-                .addItemStack(GCItems.EMPTY_CAN.getDefaultInstance());
         builder.addSlot(RecipeIngredientRole.RENDER_ONLY, CURRENT_X - RECIPE_VIEWER_X, CURRENT_Y - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addItemStack(recipe.cannedFood())

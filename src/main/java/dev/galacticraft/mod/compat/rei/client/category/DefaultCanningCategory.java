@@ -37,7 +37,6 @@ import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -45,7 +44,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.LinkedList;
+import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.FoodCanner.*;
@@ -71,16 +70,16 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
     public @NotNull List<Widget> setupDisplay(DefaultCanningDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
-        List<Widget> widgets = new LinkedList<>();
+        List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
         List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
-        int n = ingredients.size();
+        int n = ingredients.size() - 1;
         for (int i = 0; i < 16; i++) {
             Slot slot = Widgets.createSlot(new Point(startPoint.x + GRID_X + 18 * (i % 4), startPoint.y + GRID_Y + 18 * (i / 4))).markInput();
             if (i < n) {
-                slot.entries(ingredients.get(i));
+                slot.entries(ingredients.get(i + 1));
             }
             widgets.add(slot);
         }
@@ -88,7 +87,7 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
         CanningProgressWidget progressWidget = new CanningProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, n);
         widgets.add(progressWidget);
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(EntryIngredients.of(GCItems.EMPTY_CAN)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).markOutput().entries(
                 recipeDisplay.getOutputEntries().get(0).stream().map(
                         entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))

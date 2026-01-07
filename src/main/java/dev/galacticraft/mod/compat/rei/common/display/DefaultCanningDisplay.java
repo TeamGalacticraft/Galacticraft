@@ -24,6 +24,7 @@ package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -37,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 public class DefaultCanningDisplay extends BasicDisplay {
     public static final BasicDisplay.Serializer<DefaultCanningDisplay> SERIALIZER = BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw);
@@ -60,9 +60,12 @@ public class DefaultCanningDisplay extends BasicDisplay {
     }
 
     private static List<EntryIngredient> getInputs(ItemStack output) {
-        return CannedFoodItem.getContents(output).stream()
-                .map(itemStack -> EntryIngredients.of(itemStack))
-                .collect(Collectors.toList());
+        List<EntryIngredient> inputs = new ArrayList<>();
+        inputs.add(EntryIngredients.of(GCItems.EMPTY_CAN));
+        for (ItemStack itemStack : CannedFoodItem.getContents(output)) {
+            inputs.add(EntryIngredients.of(itemStack));
+        }
+        return inputs;
     }
 
     public List<InputIngredient<EntryStack<?>>> getInputIngredients() {
