@@ -1,0 +1,13 @@
+{
+  "required": false,
+  "package": "dev.galacticraft.mod.mixin.omnishape",
+  "plugin": "dev.galacticraft.mod.GalacticraftMixinPlugin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "ExplosionDamageCalculatorMixin",
+    "ServerPlayerGameModeMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}
