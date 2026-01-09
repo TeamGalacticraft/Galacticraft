@@ -42,6 +42,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GCLevelStems {
     public static final ResourceKey<LevelStem> MOON = key("moon");
+    public static final ResourceKey<LevelStem> MARS = key("mars");
     public static final ResourceKey<LevelStem> VENUS = key("venus");
     public static final ResourceKey<LevelStem> ASTEROID = key("asteroid");
 
@@ -53,6 +54,7 @@ public class GCLevelStems {
 
         // the returned reference may be null
 //        context.register(MOON, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MOON), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON))));
+        context.register(MARS, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.MARS), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MARS)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MARS))));
         context.register(VENUS, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.VENUS), new NoiseBasedChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.VENUS)), noiseLookup.getOrThrow(GCNoiseGeneratorSettings.VENUS))));
         context.register(ASTEROID, new LevelStem(typeLookup.getOrThrow(GCDimensionTypes.ASTEROID), new AsteroidChunkGenerator(MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.ASTEROID)), ResourceKey.create(Registries.DIMENSION, Constant.id("asteroid")), 1000)));
     }
