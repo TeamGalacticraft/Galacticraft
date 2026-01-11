@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.rei.common.display.DefaultCanningDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
@@ -39,6 +40,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<ElectricCompressingDisplay> ELECTRIC_COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_COMPRESSING);
     public static final CategoryIdentifier<ElectricFurnaceDisplay> ELECTRIC_SMELTING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_SMELTING);
     public static final CategoryIdentifier<ElectricArcFurnaceDisplay> ELECTRIC_BLASTING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_BLASTING);
+    public static final CategoryIdentifier<DefaultCanningDisplay> CANNING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.CANNING);
 //    public static final CategoryIdentifier<DefaultCompressingDisplay> COAL_GENERATOR_FUEL = CategoryIdentifier.of(Constant.MOD_ID, "plugins/coal_generator_fuel");
     public static final CategoryIdentifier<DefaultRocketDisplay> ROCKET = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ROCKET);
 
@@ -49,6 +51,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
         registry.register(ELECTRIC_COMPRESSING, ElectricCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_SMELTING, ElectricFurnaceDisplay.SERIALIZER);
         registry.register(ELECTRIC_BLASTING, ElectricArcFurnaceDisplay.SERIALIZER);
+        registry.register(CANNING, DefaultCanningDisplay.SERIALIZER);
         registry.register(ROCKET, DefaultRocketDisplay.SERIALIZER);
     }
 }
