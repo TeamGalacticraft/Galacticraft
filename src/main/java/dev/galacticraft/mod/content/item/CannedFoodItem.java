@@ -267,7 +267,12 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     }
 
     public static boolean isCannedFoodItem(ItemStack stack) {
-        return stack.getItem() == CANNED_FOOD;
+        return stack.getItem() == CANNED_FOOD && !getContents(stack).isEmpty();
+    }
+
+    public static boolean isEmptyCan(ItemStack stack) {
+        Item item = stack.getItem();
+        return item == EMPTY_CAN || (item == CANNED_FOOD && getContents(stack).isEmpty());
     }
 
     public static void removeOne(ItemStack stack) {

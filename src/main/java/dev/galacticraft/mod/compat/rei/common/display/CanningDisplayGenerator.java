@@ -26,21 +26,15 @@ import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
 import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
-import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.world.item.ItemStack;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
-import java.util.stream.Collectors;
 
 import static dev.galacticraft.mod.content.GCBlocks.FOOD_CANNER;
-import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
 public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultCanningDisplay> {
-
     @Override
     public Optional<List<DefaultCanningDisplay>> getRecipeFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack itemStack && CannedFoodItem.isCannedFoodItem(itemStack)) {
@@ -52,7 +46,7 @@ public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultC
     @Override
     public Optional<List<DefaultCanningDisplay>> getUsageFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack itemStack) {
-            if (itemStack.getItem() == EMPTY_CAN || itemStack.getItem() == FOOD_CANNER.asItem()) {
+            if (CannedFoodItem.isEmptyCan(itemStack) || itemStack.getItem() == FOOD_CANNER.asItem()) {
                 return this.defaultCanningDisplays();
             }
         }
@@ -68,11 +62,6 @@ public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultC
     }
 
     private Optional<List<DefaultCanningDisplay>> defaultCanningDisplays() {
-        List<DefaultCanningDisplay> displays = new ArrayList<>();
-        for (ItemStack cannedFoodItem : CannedFoodItem.getDefaultCannedFoods()) {
-            List<EntryIngredient> entries = CannedFoodItem.getContents(cannedFoodItem).stream().map(stack -> EntryIngredients.of(stack)).collect(Collectors.toList());
-            displays.add(new DefaultCanningDisplay(entries, List.of(EntryIngredients.of(cannedFoodItem)), Optional.empty()));
-        }
-        return Optional.of(displays);
+        return Optional.of(CannedFoodItem.getDefaultCannedFoods().stream().map(stack -> new DefaultCanningDisplay(stack)).toList());
     }
 }

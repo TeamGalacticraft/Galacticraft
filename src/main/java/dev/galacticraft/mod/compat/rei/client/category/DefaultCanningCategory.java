@@ -88,7 +88,7 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
         widgets.add(progressWidget);
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).markOutput().entries(
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).entries(
                 recipeDisplay.getOutputEntries().get(0).stream().map(
                         entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
                 ).toList()

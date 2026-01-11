@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
+import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -62,9 +63,7 @@ public class DefaultCanningDisplay extends BasicDisplay {
     private static List<EntryIngredient> getInputs(ItemStack output) {
         List<EntryIngredient> inputs = new ArrayList<>();
         inputs.add(EntryIngredients.of(GCItems.EMPTY_CAN));
-        for (ItemStack itemStack : CannedFoodItem.getContents(output)) {
-            inputs.add(EntryIngredients.of(itemStack));
-        }
+        CannedFoodItem.getContents(output).forEach(stack -> inputs.add(EntryIngredients.of(stack)));
         return inputs;
     }
 
@@ -73,7 +72,7 @@ public class DefaultCanningDisplay extends BasicDisplay {
         int n = inputEntries.size();
         List<InputIngredient<EntryStack<?>>> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
-            list.add(InputIngredient.of(i, inputEntries.get(i)));
+            list.add(InputIngredient.of(FoodCannerBlockEntity.INPUT_SLOT + i, inputEntries.get(i)));
         }
         return list;
     }

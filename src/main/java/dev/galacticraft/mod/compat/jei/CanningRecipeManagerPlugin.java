@@ -34,7 +34,7 @@ public class CanningRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Ca
     @Override
     public boolean isHandledInput(ITypedIngredient<?> input) {
         if (input.getIngredient() instanceof ItemStack itemStack) {
-            return CannedFoodItem.canAddToCan(itemStack.getItem());
+            return CannedFoodItem.isEmptyCan(itemStack) || CannedFoodItem.canAddToCan(itemStack.getItem());
         }
         return false;
     }
@@ -50,7 +50,9 @@ public class CanningRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Ca
     @Override
     public List<CanningRecipe> getRecipesForInput(ITypedIngredient<?> input) {
         if (input.getIngredient() instanceof ItemStack itemStack) {
-            if (CannedFoodItem.canAddToCan(itemStack.getItem())) {
+            if (CannedFoodItem.isEmptyCan(itemStack)) {
+                return this.getAllRecipes();
+            } else if (CannedFoodItem.canAddToCan(itemStack.getItem())) {
                 // Create new canned food item with empty components
                 ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
                 // Add the default itemstack of the edible item into the canned foods components
