@@ -54,7 +54,6 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
-import java.lang.reflect.Constructor;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -88,20 +87,6 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     private CreativeScreenMixin(AbstractContainerMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(null, null, null);
-    }
-
-    @Unique
-    private static Slot makeSlotWrapper(Slot target, int invSlot, int x, int y) {
-        try {
-            Class<?> cls = Class.forName(
-                    "net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen$SlotWrapper"
-            );
-            Constructor<?> c = cls.getDeclaredConstructor(Slot.class, int.class, int.class, int.class);
-            c.setAccessible(true);
-            return (Slot) c.newInstance(target, invSlot, x, y);
-        } catch (Exception e) {
-            throw new RuntimeException("Cannot create SlotWrapper", e);
-        }
     }
 
     @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"), index = 0)
@@ -294,7 +279,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
             boolean hidden = i < 9 || i == 45;
             int x = hidden ? -2000 : 9 + ((i - 9) % 9) * 18;
             int y = hidden ? -2000 : (i >= 36 ? 112 : 54 + ((i - 9) / 9) * 18);
-            getMenu().slots.add(makeSlotWrapper((Slot) abstractContainerMenu.slots.get(i), i, x, y));
+            getMenu().slots.add(new CreativeModeInventoryScreen.SlotWrapper(abstractContainerMenu.slots.get(i), i, x, y));
         }
         destroyItemSlot = new Slot(CONTAINER, 0, 173, 112);
         getMenu().slots.add(destroyItemSlot);
