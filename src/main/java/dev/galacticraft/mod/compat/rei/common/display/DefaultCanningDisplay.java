@@ -28,20 +28,14 @@ import dev.galacticraft.mod.content.item.GCItems;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
-import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultCanningDisplay extends BasicDisplay {
     public static final BasicDisplay.Serializer<DefaultCanningDisplay> SERIALIZER = BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw);
@@ -68,12 +62,6 @@ public class DefaultCanningDisplay extends BasicDisplay {
         inputs.add(EntryIngredients.of(GCItems.EMPTY_CAN));
         CannedFoodItem.getContents(output).forEach(stack -> inputs.add(EntryIngredients.of(stack)));
         return inputs;
-    }
-
-    @Override
-    public List<InputIngredient<EntryStack<?>>> getInputIngredients(@Nullable AbstractContainerMenu menu, @Nullable Player player) {
-        AtomicInteger slot = new AtomicInteger();
-        return this.getInputEntries().stream().map(entry -> InputIngredient.of(slot.getAndIncrement(), entry)).toList();
     }
 
     public int getWidth() {
