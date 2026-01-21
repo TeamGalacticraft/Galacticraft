@@ -46,7 +46,6 @@ import org.jetbrains.annotations.NotNull;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import static dev.galacticraft.mod.Constant.Compressor.*;
 import static dev.galacticraft.mod.content.GCBlocks.COMPRESSOR;
@@ -104,7 +103,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
         widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
 
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).markInput().entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).collect(Collectors.toList())));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).toList()));
         widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
 
         if (recipeDisplay.isShapeless()) {

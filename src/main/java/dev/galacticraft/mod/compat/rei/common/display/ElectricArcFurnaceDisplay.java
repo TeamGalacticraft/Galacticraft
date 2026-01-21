@@ -27,8 +27,6 @@ import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -89,16 +87,6 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
         List<EntryIngredient> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(i)));
-        }
-        return list;
-    }
-
-    public List<InputIngredient<EntryStack<?>>> getInputIngredients() {
-        List<EntryIngredient> inputEntries = getInputEntries();
-        int n = inputEntries.size();
-        List<InputIngredient<EntryStack<?>>> list = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            list.add(InputIngredient.of(i, inputEntries.get(i)));
         }
         return list;
     }
