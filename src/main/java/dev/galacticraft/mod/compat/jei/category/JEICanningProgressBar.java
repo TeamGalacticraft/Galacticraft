@@ -80,21 +80,19 @@ public class JEICanningProgressBar implements IDrawable {
     }
 
     public CurrentCanIngredientRenderer getIngredientRenderer(ItemStack fallback) {
-        return new CurrentCanIngredientRenderer(this, fallback);
+        return new CurrentCanIngredientRenderer(fallback);
     }
 
     public class CurrentCanIngredientRenderer implements IIngredientRenderer<ItemStack>, IRecipeSlotRichTooltipCallback {
         private final Minecraft minecraft = Minecraft.getInstance();
-        private final JEICanningProgressBar progressWidget;
         private final ItemStack fallback;
 
-        protected CurrentCanIngredientRenderer(JEICanningProgressBar progressWidget, ItemStack fallback) {
-            this.progressWidget = progressWidget;
+        protected CurrentCanIngredientRenderer(ItemStack fallback) {
             this.fallback = fallback;
         }
 
         private ItemStack getItemStack(ItemStack itemStack) {
-            int progress = this.progressWidget.getProgress();
+            int progress = JEICanningProgressBar.this.getProgress();
             if (progress <= TRANSFER_INPUT) {
                 return ItemStack.EMPTY;
             } else if (progress >= TRANSFER_OUTPUT) {
@@ -120,7 +118,7 @@ public class JEICanningProgressBar implements IDrawable {
 
         @Override
         public void onRichTooltip(IRecipeSlotView recipeSlotView, ITooltipBuilder tooltip) {
-            int progress = this.progressWidget.getProgress();
+            int progress = JEICanningProgressBar.this.getProgress();
             if (progress <= TRANSFER_INPUT) {
                 tooltip.clear();
             } else if (progress < TRANSFER_OUTPUT) {

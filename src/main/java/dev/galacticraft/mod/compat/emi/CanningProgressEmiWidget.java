@@ -67,23 +67,21 @@ public class CanningProgressEmiWidget extends Widget {
     }
 
     public SlotWidget getSlotWidget(EmiIngredient stack, EmiIngredient fallback, int x, int y) {
-        return new CurrentCanWidget(this, stack, fallback, x, y);
+        return new CurrentCanWidget(stack, fallback, x, y);
     }
 
     private class CurrentCanWidget extends SlotWidget {
-        private final CanningProgressEmiWidget progressWidget;
         private final EmiIngredient fallback;
         private static final EmiIngredient EMPTY = EmiIngredient.of(Ingredient.EMPTY);
 
-        protected CurrentCanWidget(CanningProgressEmiWidget progressWidget, EmiIngredient stack, EmiIngredient fallback, int x, int y) {
+        protected CurrentCanWidget(EmiIngredient stack, EmiIngredient fallback, int x, int y) {
             super(stack, x, y);
-            this.progressWidget = progressWidget;
             this.fallback = fallback;
         }
 
         @Override
         public EmiIngredient getStack() {
-            int progress = this.progressWidget.getProgress();
+            int progress = CanningProgressEmiWidget.this.getProgress();
             if (progress <= TRANSFER_INPUT) {
                 return EMPTY;
             } else if (progress >= TRANSFER_OUTPUT) {

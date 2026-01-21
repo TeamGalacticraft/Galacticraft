@@ -58,7 +58,7 @@ public class CanningProgressWidget extends Widget {
     }
 
     public EntryRenderer<ItemStack> getEntryRenderer(ItemStack fallback) {
-        return new CurrentCanEntryRenderer(this, fallback);
+        return new CurrentCanEntryRenderer(fallback);
     }
 
     public int getProgress() {
@@ -98,16 +98,14 @@ public class CanningProgressWidget extends Widget {
 
     private class CurrentCanEntryRenderer implements EntryRenderer<ItemStack> {
         private final Minecraft minecraft = Minecraft.getInstance();
-        private final CanningProgressWidget progressWidget;
         private final ItemStack fallback;
 
-        protected CurrentCanEntryRenderer(CanningProgressWidget progressWidget, ItemStack fallback) {
-            this.progressWidget = progressWidget;
+        protected CurrentCanEntryRenderer(ItemStack fallback) {
             this.fallback = fallback;
         }
 
         private ItemStack getItemStack(EntryStack<ItemStack> entryStack) {
-            int progress = this.progressWidget.getProgress();
+            int progress = CanningProgressWidget.this.getProgress();
             if (progress <= TRANSFER_INPUT) {
                 return ItemStack.EMPTY;
             } else if (progress >= TRANSFER_OUTPUT) {
@@ -127,7 +125,7 @@ public class CanningProgressWidget extends Widget {
 
         @Override
         public Tooltip getTooltip(EntryStack<ItemStack> entryStack, TooltipContext context) {
-            int progress = this.progressWidget.getProgress();
+            int progress = CanningProgressWidget.this.getProgress();
             if (progress >= TRANSFER_OUTPUT) {
                 return entryStack.getDefinition().getRenderer().getTooltip(entryStack.cast(), context);
             }
