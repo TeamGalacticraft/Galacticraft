@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
@@ -33,12 +32,16 @@ import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class DefaultCanningDisplay extends BasicDisplay {
     public static final BasicDisplay.Serializer<DefaultCanningDisplay> SERIALIZER = BasicDisplay.Serializer.ofSimple(DefaultCanningDisplay::createRaw);
@@ -67,14 +70,10 @@ public class DefaultCanningDisplay extends BasicDisplay {
         return inputs;
     }
 
-    public List<InputIngredient<EntryStack<?>>> getInputIngredients() {
-        List<EntryIngredient> inputEntries = getInputEntries();
-        int n = inputEntries.size();
-        List<InputIngredient<EntryStack<?>>> list = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            list.add(InputIngredient.of(FoodCannerBlockEntity.INPUT_SLOT + i, inputEntries.get(i)));
-        }
-        return list;
+    @Override
+    public List<InputIngredient<EntryStack<?>>> getInputIngredients(@Nullable AbstractContainerMenu menu, @Nullable Player player) {
+        AtomicInteger slot = new AtomicInteger();
+        return this.getInputEntries().stream().map(entry -> InputIngredient.of(slot.getAndIncrement(), entry)).toList();
     }
 
     public int getWidth() {

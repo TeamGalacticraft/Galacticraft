@@ -70,12 +70,20 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
     public @NotNull List<Widget> setupDisplay(DefaultCanningDisplay recipeDisplay, Rectangle bounds) {
         final Point startPoint = new Point(bounds.x - RECIPE_VIEWER_X + 5, bounds.y - RECIPE_VIEWER_Y + 5);
 
+        List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
+        final int n = ingredients.size() - 1;
+
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V, PROGRESS_WIDTH, PROGRESS_HEIGHT));
 
-        List<EntryIngredient> ingredients = recipeDisplay.getInputEntries();
-        int n = ingredients.size() - 1;
+        CanningProgressWidget progressWidget = new CanningProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, n);
+        widgets.add(progressWidget);
+
+        // Top slot
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
+
+        // Grid slots
         for (int i = 0; i < 16; i++) {
             Slot slot = Widgets.createSlot(new Point(startPoint.x + GRID_X + 18 * (i % 4), startPoint.y + GRID_Y + 18 * (i / 4))).markInput();
             if (i < n) {
@@ -84,16 +92,16 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
             widgets.add(slot);
         }
 
-        CanningProgressWidget progressWidget = new CanningProgressWidget(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, n);
-        widgets.add(progressWidget);
-
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
+        // Middle slot
         widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).entries(
                 recipeDisplay.getOutputEntries().get(0).stream().map(
                         entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
                 ).toList()
         ));
+
+        // Bottom slot
         widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+
         return widgets;
     }
 
