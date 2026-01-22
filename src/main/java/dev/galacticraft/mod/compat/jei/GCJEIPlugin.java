@@ -40,12 +40,14 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
+import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
+import mezz.jei.api.registration.IAdvancedRegistration;
 import mezz.jei.api.registration.IGuiHandlerRegistration;
 import mezz.jei.api.registration.IRecipeCatalystRegistration;
 import mezz.jei.api.registration.IRecipeCategoryRegistration;
@@ -134,6 +136,8 @@ public class GCJEIPlugin implements IModPlugin {
                 ElectricFurnaceBlockEntity.INPUT_SLOT, 1, ElectricFurnaceBlockEntity.OUTPUT_SLOT + 1, 36);
         registration.addRecipeTransferHandler(RecipeMachineMenu.class, null, GCJEIRecipeTypes.ELECTRIC_BLASTING,
                 ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 36);
+        registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING,
+                FoodCannerBlockEntity.INPUT_SLOT, FoodCannerBlockEntity.INPUT_LENGTH, FoodCannerBlockEntity.OUTPUT_SLOT + 1, 36);
         registration.addRecipeTransferHandler(new RocketRecipeTransferHandler(registration.getTransferHelper()), GCJEIRecipeTypes.ROCKET);
     }
 
@@ -146,6 +150,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_ARC_FURNACE), GCJEIRecipeTypes.ELECTRIC_BLASTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), GCJEIRecipeTypes.ELECTRIC_SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.FOOD_CANNER), GCJEIRecipeTypes.CANNING);
     }
 
     @Override
@@ -157,6 +162,7 @@ public class GCJEIPlugin implements IModPlugin {
                 new JEIElectricCompressingCategory(helper),
                 new JEIElectricFurnaceCategory(helper),
                 new JEIElectricArcFurnaceCategory(helper),
+                new JEICanningCategory(helper),
                 new JEIRocketCategory(helper)
         );
     }
@@ -180,6 +186,11 @@ public class GCJEIPlugin implements IModPlugin {
         var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
         var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
         registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
+    }
+
+    @Override
+    public void registerAdvanced(IAdvancedRegistration registration) {
+        registration.addTypedRecipeManagerPlugin(GCJEIRecipeTypes.CANNING, new CanningRecipeManagerPlugin());
     }
 
     private static List<RecipeHolder<CraftingRecipe>> replaceSpecialCraftingRecipes(List<RecipeHolder<CraftingRecipe>> unhandledCraftingRecipes, IJeiHelpers jeiHelpers) {

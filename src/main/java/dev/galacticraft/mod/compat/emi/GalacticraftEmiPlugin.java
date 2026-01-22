@@ -36,6 +36,7 @@ import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
 import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.*;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -72,6 +73,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ELECTRIC_COMPRESSOR = EmiStack.of(GCBlocks.ELECTRIC_COMPRESSOR);
     public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
+    public static final EmiStack FOOD_CANNER = EmiStack.of(GCBlocks.FOOD_CANNER);
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Simplified Icons
@@ -80,7 +82,8 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiRenderable ELECTRIC_COMPRESSING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 0, 16, 16, 16, 16, 64, 64);
     public static final EmiRenderable ELECTRIC_SMELTING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 0, 16, 16, 16, 16, 64, 64);
     public static final EmiRenderable ELECTRIC_BLASTING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 48, 0, 16, 16, 16, 16, 64, 64);
-    public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 16, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable CANNING_ICON = new EmiTexture(SIMPLIFIED_ICONS, 16, 16, 16, 16, 16, 16, 64, 64);
+    public static final EmiRenderable ROCKET_ICON = new EmiTexture(SIMPLIFIED_ICONS, 32, 16, 16, 16, 16, 16, 64, 64);
 
     // Categories
     public static final EmiRecipeCategory FABRICATION = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.FABRICATION), CIRCUIT_FABRICATOR, FABRICATION_ICON);
@@ -88,6 +91,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiRecipeCategory ELECTRIC_COMPRESSING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_COMPRESSING), ELECTRIC_COMPRESSOR, ELECTRIC_COMPRESSING_ICON, RecipeCategory.ELECTRIC_COMPRESSOR);
     public static final EmiRecipeCategory ELECTRIC_SMELTING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_SMELTING), ELECTRIC_FURNACE, ELECTRIC_SMELTING_ICON, RecipeCategory.ELECTRIC_FURNACE);
     public static final EmiRecipeCategory ELECTRIC_BLASTING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ELECTRIC_BLASTING), ELECTRIC_ARC_FURNACE, ELECTRIC_BLASTING_ICON, RecipeCategory.ELECTRIC_ARC_FURNACE);
+    public static final EmiRecipeCategory CANNING = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.CANNING), FOOD_CANNER, CANNING_ICON);
     public static final EmiRecipeCategory ROCKET = new GalacticraftEmiRecipeCategory(Constant.id(Constant.Recipe.ROCKET), ROCKET_WORKBENCH, ROCKET_ICON);
 
     @Override
@@ -97,6 +101,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addCategory(ELECTRIC_COMPRESSING);
         registry.addCategory(ELECTRIC_SMELTING);
         registry.addCategory(ELECTRIC_BLASTING);
+        registry.addCategory(CANNING);
         registry.addCategory(ROCKET);
 
         registry.addWorkstation(FABRICATION, CIRCUIT_FABRICATOR);
@@ -104,6 +109,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_COMPRESSING, ELECTRIC_COMPRESSOR);
         registry.addWorkstation(ELECTRIC_SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
+        registry.addWorkstation(CANNING, FOOD_CANNER);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
         registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
@@ -153,6 +159,16 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                         ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH
                 )
         );
+        registry.addRecipeHandler(GCMenuTypes.FOOD_CANNER,
+                new MachineRecipeHandler<>(
+                        CANNING,
+                        IntStream.range(
+                                FoodCannerBlockEntity.INPUT_SLOT,
+                                FoodCannerBlockEntity.INPUT_SLOT + FoodCannerBlockEntity.INPUT_LENGTH
+                        ).toArray(),
+                        FoodCannerBlockEntity.OUTPUT_SLOT + 1
+                )
+        );
         registry.addRecipeHandler(GCMenuTypes.ROCKET_WORKBENCH, new RocketRecipeHandler(ROCKET));
 
         RecipeManager manager = registry.getRecipeManager();
@@ -188,6 +204,10 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
 
         for (RecipeHolder<RocketRecipe> recipe : manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE)) {
             registry.addRecipe(new RocketEmiRecipe(recipe));
+        }
+
+        for (ItemStack cannedFood : CannedFoodItem.getDefaultCannedFoods()) {
+            registry.addRecipe(new CanningEmiRecipe(cannedFood));
         }
 
         registry.addRecipe(new EmiCraftingRecipe(

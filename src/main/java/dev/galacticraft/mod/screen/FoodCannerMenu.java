@@ -32,11 +32,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
     private int progress;
-
-    private boolean firstRowConsumed;
-    private boolean secondRowConsumed;
-    private boolean thirdRowConsumed;
-    private boolean fourthRowConsumed;
+    private boolean[] rowsConsumed = {false, false, false, false};
 
     public FoodCannerMenu(int syncId, @NotNull ServerPlayer player, @NotNull FoodCannerBlockEntity machine) {
         super(GCMenuTypes.FOOD_CANNER, syncId, player, machine);
@@ -65,35 +61,39 @@ public class FoodCannerMenu extends MachineMenu<FoodCannerBlockEntity> {
         this.progress = value;
     }
 
+    public boolean[] getRowsConsumed() {
+        return this.rowsConsumed;
+    }
+
     public boolean getFirstRowConsumed() {
-        return this.firstRowConsumed;
+        return this.rowsConsumed[0];
     }
 
     public void setFirstRowConsumed(boolean value) {
-        this.firstRowConsumed = value;
+        this.rowsConsumed[0] = value;
     }
 
     public boolean getSecondRowConsumed() {
-        return this.secondRowConsumed;
+        return this.rowsConsumed[1];
     }
 
     public void setSecondRowConsumed(boolean value) {
-        this.secondRowConsumed = value;
+        this.rowsConsumed[1] = value;
     }
 
     public boolean getThirdRowConsumed() {
-        return this.thirdRowConsumed;
+        return this.rowsConsumed[2];
     }
 
     public void setThirdRowConsumed(boolean value) {
-        this.thirdRowConsumed = value;
+        this.rowsConsumed[2] = value;
     }
 
     public boolean getFourthRowConsumed() {
-        return this.fourthRowConsumed;
+        return this.rowsConsumed[3];
     }
 
     public void setFourthRowConsumed(boolean value) {
-        this.fourthRowConsumed = value;
+        this.rowsConsumed[3] = value;
     }
 }

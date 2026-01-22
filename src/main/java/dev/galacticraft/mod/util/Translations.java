@@ -74,6 +74,7 @@ public interface Translations {
         String ELECTRIC_COMPRESSOR = PREFIX + "compressing.electric";
         String ELECTRIC_FURNACE = PREFIX + "smelting.electric";
         String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
+        String CANNING = PREFIX + "canning";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
 
         String REI_TIME = "category.rei.campfire.time";
