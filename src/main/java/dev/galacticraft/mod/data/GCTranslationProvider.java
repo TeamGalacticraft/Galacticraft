@@ -623,6 +623,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.OLI_GRUB_SPAWN_EGG, "Oli Grub Spawn Egg");
         this.item(GCItems.GREY_SPAWN_EGG, "Grey Spawn Egg");
         this.item(GCItems.ARCH_GREY_SPAWN_EGG, "Arch Grey Spawn Egg");
+        this.item(GCItems.CHEESE_SLIME_SPAWN_EGG, "Cheese Slime Spawn Egg");
     }
 
     protected void generateItemTagTranslations() {
@@ -824,6 +825,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.ROCKET, "Rocket");
         this.entity(GCEntityTypes.RUMBLER, "Rumbler");
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+        this.entity(GCEntityTypes.CHEESE_SLIME, "Cheese Slime");
     }
 
     protected void generateCelestialBodyTranslations() {
