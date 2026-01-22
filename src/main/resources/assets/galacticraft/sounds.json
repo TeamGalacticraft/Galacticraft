@@ -180,6 +180,22 @@
       }
     ]
   },
+    "machine.machinebuzz": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/machinebuzz",
+        "stream": true
+      }
+    ]
+  },
+    "machine.machinehum": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/machinehum",
+        "stream": true
+      }
+    ]
+  },
   "music_disc.legacy.mars": {
     "sounds": [
       {
