@@ -126,10 +126,21 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         return 183 / 20;
     }
 
+    private int timer = 0;
+
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
+            if (timer == 0) {
+                this.level.playSound(null, pos, GCSounds.MACHINE_HUM, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+            timer++;
+            if (timer>=40) {
+                timer = 0;
+            }
+        }
     }
 
     @Override
@@ -141,7 +152,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_HUM, SoundSource.BLOCKS, 1.0F, 1.0F);
+                if (timer==0) {
+                this.level.playSound(null, pos, GCSounds.OXYGEN_FAN, SoundSource.BLOCKS, 1.0F, 1.0F);
+            }
+
                 profiler.push("collect");
                 this.collectionAmount = this.collectOxygen(level, pos);
                 profiler.pop();

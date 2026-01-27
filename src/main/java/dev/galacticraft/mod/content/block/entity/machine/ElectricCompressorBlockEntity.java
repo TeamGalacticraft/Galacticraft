@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -92,10 +93,21 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
         super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
     }
 
+    private int timer = 0;
+
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
+            if (timer == 0) {
+                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+            timer++;
+            if (timer>=40) {
+                timer = 0;
+            }
+        }
     }
 
     @Override
