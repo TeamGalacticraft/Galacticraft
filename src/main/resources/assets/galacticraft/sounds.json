@@ -184,15 +184,16 @@
     "sounds": [
       {
         "name": "galacticraft:machine/machinebuzz",
-        "stream": true
+        "stream": false
       }
     ]
   },
     "machine.machinehum": {
     "sounds": [
       {
-        "name": "galacticraft:machine/machinehum",
-        "stream": true
+        "name": "galacticraft:machine/machinehum1",
+        "name": "galacticraft:machine/machinehum2",
+        "stream": false
       }
     ]
   },
