@@ -191,8 +191,15 @@
     "machine.machinehum": {
     "sounds": [
       {
-        "name": "galacticraft:machine/machinehum1",
-        "name": "galacticraft:machine/machinehum2",
+        "name": "galacticraft:machine/machinehum",
+        "stream": false
+      }
+    ]
+  },
+      "machine.oxygenfan": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/oxygenfan",
         "stream": false
       }
     ]
