@@ -36,5 +36,6 @@ public interface GCJEIRecipeTypes {
     RecipeType<CompressingRecipe> ELECTRIC_COMPRESSING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_COMPRESSING, CompressingRecipe.class);
     RecipeType<SmeltingRecipe> ELECTRIC_SMELTING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_SMELTING, SmeltingRecipe.class);
     RecipeType<BlastingRecipe> ELECTRIC_BLASTING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_BLASTING, BlastingRecipe.class);
+    RecipeType<CanningRecipe> CANNING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.CANNING, CanningRecipe.class);
     RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ROCKET, RocketRecipe.class);
 }

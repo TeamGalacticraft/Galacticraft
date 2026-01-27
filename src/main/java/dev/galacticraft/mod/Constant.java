@@ -613,7 +613,6 @@ public interface Constant {
 
         ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -775,6 +774,45 @@ public interface Constant {
         int EMI_Y = 30;
         int EMI_WIDTH = 112;
         int EMI_HEIGHT = 38;
+    }
+
+    interface FoodCanner {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/food_canner_screen.png");
+
+        int INPUT_X = 62;
+        int INPUT_Y = 13;
+        int CURRENT_X = 62;
+        int CURRENT_Y = 40;
+        int OUTPUT_X = 62;
+        int OUTPUT_Y = 67;
+        int GRID_X = 98;
+        int GRID_Y = 13;
+
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 19;
+        int PROGRESS_WIDTH = 29;
+        int PROGRESS_HEIGHT = 57;
+        int PROGRESS_BACKGROUND_U = 180;
+        int PROGRESS_BACKGROUND_V = 80;
+
+        int TRANSFER_INPUT = 9;
+        int START_ROW_1 = TRANSFER_INPUT + 1;
+        int START_ROW_2 = START_ROW_1 + 28;
+        int SKIP_ROW_2 = START_ROW_2 + 9;
+        int START_ROW_4 = START_ROW_2 + 21;
+        int START_ROW_3 = START_ROW_4 + 27;
+        int SKIP_ROW_3 = START_ROW_3 + 8;
+        int FINAL_PROGRESS = START_ROW_3 + 21;
+        int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
+        int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
+
+        int[] ROW_ORDER = {0, 1, 3, 2};
+        int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
+
+        int RECIPE_VIEWER_X = 61;
+        int RECIPE_VIEWER_Y = 12;
+        int RECIPE_VIEWER_WIDTH = 108;
+        int RECIPE_VIEWER_HEIGHT = 72;
     }
 
     interface RocketWorkbench {
@@ -1268,12 +1306,14 @@ public interface Constant {
         String ELECTRIC_COMPRESSING = "electric_compressing";
         String ELECTRIC_SMELTING = "electric_smelting";
         String ELECTRIC_BLASTING = "electric_blasting";
+        String CANNING = "canning";
         String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String CANNING = "canning";
             String ROCKET = "rocket";
             String EMERGENCY_KIT = "crafting_special_emergencykit";
         }
