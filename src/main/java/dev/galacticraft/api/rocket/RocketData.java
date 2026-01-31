@@ -36,6 +36,7 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
@@ -51,6 +52,7 @@ public record RocketData(
         Optional<EitherHolder<RocketBooster<?, ?>>> booster,
         Optional<EitherHolder<RocketEngine<?, ?>>> engine,
         Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade,
+        Optional<ResourceLocation> explosiveBlock,
         int color
 ) {
     public RocketData(
@@ -60,8 +62,19 @@ public record RocketData(
             @Nullable EitherHolder<RocketBooster<?, ?>> booster,
             @Nullable EitherHolder<RocketEngine<?, ?>> engine,
             @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
-            int color) {
-        this(Optional.ofNullable(cone), Optional.ofNullable(body), Optional.ofNullable(fin), Optional.ofNullable(booster), Optional.ofNullable(engine), Optional.ofNullable(upgrade), Optional.of(color).orElse(0xFFFFFFFF));
+            @Nullable ResourceLocation explosiveBlock,
+            int color
+    ) {
+        this(
+                Optional.ofNullable(cone),
+                Optional.ofNullable(body),
+                Optional.ofNullable(fin),
+                Optional.ofNullable(booster),
+                Optional.ofNullable(engine),
+                Optional.ofNullable(upgrade),
+                Optional.ofNullable(explosiveBlock),
+                Optional.of(color).orElse(0xFFFFFFFF)
+        );
     }
 
     public static final Codec<RocketData> CODEC = RecordCodecBuilder.create(instance -> instance.group(
@@ -71,51 +84,89 @@ public record RocketData(
             RocketBooster.EITHER_CODEC.optionalFieldOf("booster").forGetter(RocketData::booster),
             RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(RocketData::engine),
             RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(RocketData::upgrade),
+            ResourceLocation.CODEC.optionalFieldOf("explosive_block").forGetter(RocketData::explosiveBlock),
             Codec.INT.optionalFieldOf("color", 0xFFFFFFFF).forGetter(RocketData::color)
     ).apply(instance, RocketData::new));
 
-    public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC = ByteBufCodecs.fromCodecWithRegistriesTrusted(CODEC);
+    public static final StreamCodec<RegistryFriendlyByteBuf, RocketData> STREAM_CODEC =
+            ByteBufCodecs.fromCodecWithRegistriesTrusted(CODEC);
 
-    @Contract("_, _, _, _, _, _, _ -> new")
-    static @NotNull RocketData create(int color, @Nullable Holder<RocketCone<?, ?>> cone, @Nullable Holder<RocketBody<?, ?>> body,
-                                      @Nullable Holder<RocketFin<?, ?>> fin, @Nullable Holder<RocketBooster<?, ?>> booster,
-                                      @Nullable Holder<RocketEngine<?, ?>> engine, @Nullable Holder<RocketUpgrade<?, ?>> upgrade) {
-        return new RocketData(maybeHolder(cone), maybeHolder(body), maybeHolder(fin), maybeHolder(booster), maybeHolder(engine), maybeHolder(upgrade), color);
+    @Contract("_, _, _, _, _, _, _, _ -> new")
+    static @NotNull RocketData create(
+            int color,
+            @Nullable Holder<RocketCone<?, ?>> cone,
+            @Nullable Holder<RocketBody<?, ?>> body,
+            @Nullable Holder<RocketFin<?, ?>> fin,
+            @Nullable Holder<RocketBooster<?, ?>> booster,
+            @Nullable Holder<RocketEngine<?, ?>> engine,
+            @Nullable Holder<RocketUpgrade<?, ?>> upgrade,
+            @Nullable ResourceLocation explosiveBlock
+    ) {
+        return new RocketData(
+                maybeHolder(cone),
+                maybeHolder(body),
+                maybeHolder(fin),
+                maybeHolder(booster),
+                maybeHolder(engine),
+                maybeHolder(upgrade),
+                Optional.ofNullable(explosiveBlock),
+                color
+        );
     }
 
-    @Contract("_, _, _, _, _, _, _ -> new")
-    static @NotNull RocketData create(int color, @Nullable ResourceKey<RocketCone<?, ?>> cone, @Nullable ResourceKey<RocketBody<?, ?>> body,
-                                      @Nullable ResourceKey<RocketFin<?, ?>> fin, @Nullable ResourceKey<RocketBooster<?, ?>> booster,
-                                      @Nullable ResourceKey<RocketEngine<?, ?>> engine, @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade) {
-        return new RocketData(maybeHolder(cone), maybeHolder(body), maybeHolder(fin), maybeHolder(booster), maybeHolder(engine), maybeHolder(upgrade), color);
+    @Contract("_, _, _, _, _, _, _, _ -> new")
+    static @NotNull RocketData create(
+            int color,
+            @Nullable ResourceKey<RocketCone<?, ?>> cone,
+            @Nullable ResourceKey<RocketBody<?, ?>> body,
+            @Nullable ResourceKey<RocketFin<?, ?>> fin,
+            @Nullable ResourceKey<RocketBooster<?, ?>> booster,
+            @Nullable ResourceKey<RocketEngine<?, ?>> engine,
+            @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade,
+            @Nullable ResourceLocation explosiveBlock
+    ) {
+        return new RocketData(
+                maybeHolder(cone),
+                maybeHolder(body),
+                maybeHolder(fin),
+                maybeHolder(booster),
+                maybeHolder(engine),
+                maybeHolder(upgrade),
+                Optional.ofNullable(explosiveBlock),
+                color
+        );
     }
 
-    @Contract("_, _, _, _, _, _, _ -> new")
-    static @NotNull RocketData create(int color, @Nullable EitherHolder<RocketCone<?, ?>> cone, @Nullable EitherHolder<RocketBody<?, ?>> body,
-                                      @Nullable EitherHolder<RocketFin<?, ?>> fin, @Nullable EitherHolder<RocketBooster<?, ?>> booster,
-                                      @Nullable EitherHolder<RocketEngine<?, ?>> engine, @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade) {
-        return new RocketData(Optional.of(cone), Optional.of(body), Optional.of(fin), Optional.of(booster), Optional.of(engine), Optional.of(upgrade), color);
+    @Contract("_, _, _, _, _, _, _, _ -> new")
+    static @NotNull RocketData create(
+            int color,
+            @Nullable EitherHolder<RocketCone<?, ?>> cone,
+            @Nullable EitherHolder<RocketBody<?, ?>> body,
+            @Nullable EitherHolder<RocketFin<?, ?>> fin,
+            @Nullable EitherHolder<RocketBooster<?, ?>> booster,
+            @Nullable EitherHolder<RocketEngine<?, ?>> engine,
+            @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
+            @Nullable ResourceLocation explosiveBlock
+    ) {
+        return new RocketData(
+                Optional.ofNullable(cone),
+                Optional.ofNullable(body),
+                Optional.ofNullable(fin),
+                Optional.ofNullable(booster),
+                Optional.ofNullable(engine),
+                Optional.ofNullable(upgrade),
+                Optional.ofNullable(explosiveBlock),
+                color
+        );
     }
 
-    //TODO: HSV?
-    public int red() {
-        return FastColor.ARGB32.red(this.color());
-    }
-
-    public int green() {
-        return FastColor.ARGB32.green(this.color());
-    }
-
-    public int blue() {
-        return FastColor.ARGB32.blue(this.color());
-    }
-
-    public int alpha() {
-        return FastColor.ARGB32.alpha(this.color());
-    }
+    public int red()   { return FastColor.ARGB32.red(this.color()); }
+    public int green() { return FastColor.ARGB32.green(this.color()); }
+    public int blue()  { return FastColor.ARGB32.blue(this.color()); }
+    public int alpha() { return FastColor.ARGB32.alpha(this.color()); }
 
     public boolean isValid() {
-        return this.cone() != null && this.body() != null && this.fin() != null && this.engine() != null;
+        return this.cone.isPresent() && this.body.isPresent() && this.fin.isPresent() && this.engine.isPresent();
     }
 
     public DataComponentPatch asPatch() {
@@ -142,7 +193,6 @@ public record RocketData(
             type = type.merge(upgrade == null ? TravelPredicateType.Result.PASS : upgrade.value().travelPredicate().canTravel(from, to, cone, body, fin, booster, engine, upgrade));
             return type == TravelPredicateType.Result.ALLOW;
         }
-
         return false;
     }
 
@@ -158,11 +208,8 @@ public record RocketData(
         return holder.isPresent() ? holder.get().unwrap(lookup).orElse(null) : null;
     }
 
-    private <T> void maybeSet(DataComponentPatch.Builder builder, DataComponentType<T> type, @Nullable T value) {
-        if (value != null) {
-            builder.set(type, value);
-        } else {
-            builder.remove(type);
-        }
+    private static <T> void maybeSet(DataComponentPatch.Builder builder, DataComponentType<T> type, @Nullable T value) {
+        if (value != null) builder.set(type, value);
+        else builder.remove(type);
     }
 }

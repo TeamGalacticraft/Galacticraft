@@ -20,28 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.type;
+package dev.galacticraft.api.rocket;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import dev.galacticraft.api.rocket.part.RocketUpgrade;
-import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.EitherHolder;
 
-public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig> implements RocketPartType<C> {
-    private final @NotNull MapCodec<RocketUpgrade<C, RocketUpgradeType<C>>> codec;
+public final class RocketCodecs {
+    private RocketCodecs() {}
 
-    protected RocketUpgradeType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketUpgrade::config);
-    }
+    public static <T> Codec<EitherHolder<T>> eitherHolderWithRegistry(ResourceKey<? extends Registry<T>> registryKey) {
+        Codec<ResourceKey<T>> keyCodec = ResourceKey.codec((ResourceKey<Registry<T>>) registryKey);
 
-    @Override
-    public @NotNull RocketUpgrade<C, RocketUpgradeType<C>> configure(@NotNull C config) {
-        return RocketUpgrade.create(config, this);
-    }
-
-    @Override
-    public @NotNull MapCodec<? extends RocketUpgrade<C, ? extends RocketUpgradeType<C>>> codec() {
-        return this.codec;
+        return keyCodec.xmap(EitherHolder::new, EitherHolder::key);
     }
 }

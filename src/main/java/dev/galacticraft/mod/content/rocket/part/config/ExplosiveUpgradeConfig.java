@@ -20,28 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.type;
+package dev.galacticraft.mod.content.rocket.part.config;
 
 import com.mojang.serialization.Codec;
-import com.mojang.serialization.MapCodec;
-import dev.galacticraft.api.rocket.part.RocketUpgrade;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
-import org.jetbrains.annotations.NotNull;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
 
-public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig> implements RocketPartType<C> {
-    private final @NotNull MapCodec<RocketUpgrade<C, RocketUpgradeType<C>>> codec;
+public record ExplosiveUpgradeConfig(
+        float blastRadiusMultiplier,
+        int fuseTicks,
+        RocketPartRecipe<?, ?> recipe
+) implements RocketUpgradeConfig {
 
-    protected RocketUpgradeType(@NotNull Codec<C> configCodec) {
-        this.codec = configCodec.fieldOf("config").xmap(this::configure, RocketUpgrade::config);
-    }
-
-    @Override
-    public @NotNull RocketUpgrade<C, RocketUpgradeType<C>> configure(@NotNull C config) {
-        return RocketUpgrade.create(config, this);
-    }
-
-    @Override
-    public @NotNull MapCodec<? extends RocketUpgrade<C, ? extends RocketUpgradeType<C>>> codec() {
-        return this.codec;
-    }
+    public static final Codec<ExplosiveUpgradeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.FLOAT.optionalFieldOf("blast_radius_multiplier", 1.0f).forGetter(ExplosiveUpgradeConfig::blastRadiusMultiplier),
+            Codec.INT.optionalFieldOf("fuse_ticks", 80).forGetter(ExplosiveUpgradeConfig::fuseTicks),
+            RocketPartRecipe.DIRECT_CODEC.fieldOf("recipe").forGetter(ExplosiveUpgradeConfig::recipe)
+    ).apply(instance, ExplosiveUpgradeConfig::new));
 }
