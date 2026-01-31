@@ -202,18 +202,26 @@ public class GCCelestialBodies {
                 null
         )));
 
-        context.register(MARS, DecorativePlanetType.INSTANCE.configure(new DecorativePlanetConfig(
+        context.register(MARS, PlanetType.INSTANCE.configure(new PlanetConfig(
                 Component.translatable(Translations.CelestialBody.MARS),
                 Component.translatable(Translations.CelestialBody.MARS_DESC),
                 Optional.of(SOL),
                 OrbitalCelestialPositionType.INSTANCE.configure(new OrbitalCelestialPositionConfig(1.8811610076670317634173055859803F, 1.25F, 0.1667F, true)),
                 IconCelestialDisplayType.INSTANCE.configure(new IconCelestialDisplayConfig(Constant.CelestialBody.MARS, 0, 0, 16, 16, Constant.CelestialOverlay.MARS)),
                 DefaultCelestialRingDisplayType.INSTANCE.configure(new DefaultCelestialRingDisplayConfig()),
+                GCDimensions.MARS,
+                teleporters.getOrThrow(GCTeleporterTypes.LANDER_CELESTIAL_TELEPORTER),
+
                 new GasComposition.Builder()
                         .temperature(23.0)
                         .pressure(3.0E-15F)
                         .build(),
-                0.166F,
+                0.38F,
+                GCCelestialHandlers.DEFAULT,
+                1,
+                105,
+                -180,
+                24000L, // Same as earth
                 null
         )));
 
@@ -230,7 +238,7 @@ public class GCCelestialBodies {
                         .temperature(-2.0)
                         .pressure(0)
                         .build(),
-                0.1f,
+                0.1F,
                 GCCelestialHandlers.DEFAULT,
                 2,
                 -2,

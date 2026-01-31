@@ -29,6 +29,7 @@ import net.minecraft.world.level.biome.Biome;
 
 public class GCBiomeTags {
     public static final TagKey<Biome> MOON = TagKey.create(Registries.BIOME, Constant.id("moon"));
+    public static final TagKey<Biome> MARS = TagKey.create(Registries.BIOME, Constant.id("mars"));
     public static final TagKey<Biome> VENUS = TagKey.create(Registries.BIOME, Constant.id("venus"));
     public static final TagKey<Biome> ASTEROID = TagKey.create(Registries.BIOME, Constant.id("asteroid"));
 

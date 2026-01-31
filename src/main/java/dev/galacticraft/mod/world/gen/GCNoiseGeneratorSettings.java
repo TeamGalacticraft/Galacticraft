@@ -24,6 +24,7 @@ package dev.galacticraft.mod.world.gen;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.world.gen.surfacerule.MarsSurfaceRules;
 import dev.galacticraft.mod.world.gen.surfacerule.VenusSurfaceRules;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
@@ -37,10 +38,11 @@ import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
 /**
- * This class describes how terrain should be shaped based on the given density fuctions
+ * This class describes how terrain should be shaped based on the given density functions
  */
 public class GCNoiseGeneratorSettings {
     public static final ResourceKey<NoiseGeneratorSettings> MOON = key("moon");
+    public static final ResourceKey<NoiseGeneratorSettings> MARS = key("mars");
     public static final ResourceKey<NoiseGeneratorSettings> VENUS = key("venus");
 
     public static void bootstrapRegistries(BootstrapContext<NoiseGeneratorSettings> context) {
@@ -60,6 +62,20 @@ public class GCNoiseGeneratorSettings {
 //                false,
 //                false
 //        ));
+
+        context.register(MARS, new NoiseGeneratorSettings(
+                NoiseSettings.create(-64, 384, 1, 2),
+                GCBlocks.MARS_STONE.defaultBlockState(),
+                Blocks.AIR.defaultBlockState(),
+                GCNoiseGeneratorSettings.mars(densityLookup, noiseLookup),
+                MarsSurfaceRules.MARS,
+                new OverworldBiomeBuilder().spawnTarget(),
+                64,
+                false,
+                false,
+                false,
+                false
+        ));
 
         context.register(VENUS, new NoiseGeneratorSettings(
                 NoiseSettings.create(-32, 256, 1, 2),
@@ -131,6 +147,31 @@ public class GCNoiseGeneratorSettings {
                 DensityFunctions.zero(), // veinToggle
                 DensityFunctions.zero(), // veinRidged
                 DensityFunctions.zero()  // veinGap
+        );
+    }
+
+    public static NoiseRouter mars(HolderGetter<DensityFunction> densityLookup,
+                                   HolderGetter<NormalNoise.NoiseParameters> noiseLookup) {
+        DensityFunction finalMars = GCDensityFunctions.getFunction(
+                densityLookup, GCDensityFunctions.Mars.FINAL_DENSITY
+        );
+
+        return new NoiseRouter(
+                DensityFunctions.zero(), // barrierNoise
+                DensityFunctions.zero(),
+                DensityFunctions.zero(),
+                DensityFunctions.zero(),
+                DensityFunctions.zero(), // temperature
+                DensityFunctions.zero(), // vegetation
+                DensityFunctions.zero(), // continents
+                DensityFunctions.zero(), // erosion
+                DensityFunctions.zero(), // depth
+                DensityFunctions.zero(), // ridges
+                finalMars,               // initialDensityWithoutJaggedness
+                DensityFunctions.blendDensity(finalMars), // finalDensity
+                DensityFunctions.zero(),
+                DensityFunctions.zero(),
+                DensityFunctions.zero()
         );
     }
 

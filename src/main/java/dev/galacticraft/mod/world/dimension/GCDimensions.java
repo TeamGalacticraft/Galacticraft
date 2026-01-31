@@ -31,6 +31,7 @@ import org.jetbrains.annotations.NotNull;
 
 public class GCDimensions {
     public static final ResourceKey<Level> MOON = key("moon");
+    public static final ResourceKey<Level> MARS = key("mars");
     public static final ResourceKey<Level> VENUS = key("venus");
     public static final ResourceKey<Level> ASTEROID = key("asteroid");
 

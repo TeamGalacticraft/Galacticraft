@@ -85,10 +85,14 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     private static final Parameter WEIRDNESS_H_MOUNTAINS = Parameter.span(0.56666666F, 0.7666667F);
 
     public static final ResourceLocation MOON_PRESET_ID = Constant.id("moon");
+    public static final ResourceLocation MARS_PRESET_ID = Constant.id("mars");
     public static final ResourceLocation VENUS_PRESET_ID = Constant.id("venus");
     public static final ResourceLocation ASTEROID_PRESET_ID = Constant.id("asteroid");
     public static final MultiNoiseBiomeSourceParameterList.Preset MOON_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
             MOON_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateMoon
+    );
+    public static final MultiNoiseBiomeSourceParameterList.Preset MARS_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
+            MARS_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateMars
     );
     public static final MultiNoiseBiomeSourceParameterList.Preset VENUS_PRESET = new MultiNoiseBiomeSourceParameterList.Preset(
             VENUS_PRESET_ID, GCMultiNoiseBiomeSourceParameterLists::generateVenus
@@ -98,6 +102,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     );
 
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> MOON = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "moon");
+    public static final ResourceKey<MultiNoiseBiomeSourceParameterList> MARS = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "mars");
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> VENUS = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "venus");
     public static final ResourceKey<MultiNoiseBiomeSourceParameterList> ASTEROID = Constant.key(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, "asteroid");
 
@@ -131,12 +136,35 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Climate.Parameter.span(-1.2F, -1.05F),
+                Parameter.span(-1.2F, -1.05F),
                 FULL_RANGE,
                 FULL_RANGE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.OLIVINE_SPIKES)
         );
+
+        return new Climate.ParameterList<>(builder.build());
+    }
+
+    @Contract("_ -> new")
+    private static <T> Climate.@NotNull ParameterList<T> generateMars(Function<ResourceKey<Biome>, T> biomeRegistry) {
+        ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
+        writeBiomeParameters(builder::add,
+                HOT,
+                DRY,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_H_MIXED,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Mars.MARS_HIGHLANDS));
+        writeBiomeParameters(builder::add,
+                HOT,
+                DRY,
+                Parameter.span(SHORE_CONTINENTALNESS, MID_INLAND_CONTINENTALNESS),
+                MIN_EROSION,
+                WEIRDNESS_L_MIXED,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Mars.MARS_LOWLANDS));
 
         return new Climate.ParameterList<>(builder.build());
     }
@@ -213,6 +241,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
 
     public static void register() {
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(MOON_PRESET_ID, MOON_PRESET);
+        MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(MARS_PRESET_ID, MARS_PRESET);
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(VENUS_PRESET_ID, VENUS_PRESET);
         MultiNoiseBiomeSourceParameterListPresetAccessor.getByName().put(ASTEROID_PRESET_ID, ASTEROID_PRESET);
     }
@@ -220,6 +249,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     public static void bootstrapRegistries(BootstrapContext<MultiNoiseBiomeSourceParameterList> context) {
         HolderGetter<Biome> lookup = context.lookup(Registries.BIOME);
         context.register(MOON, new MultiNoiseBiomeSourceParameterList(MOON_PRESET, lookup));
+        context.register(MARS, new MultiNoiseBiomeSourceParameterList(MARS_PRESET, lookup));
         context.register(VENUS, new MultiNoiseBiomeSourceParameterList(VENUS_PRESET, lookup));
         context.register(ASTEROID, new MultiNoiseBiomeSourceParameterList(ASTEROID_PRESET, lookup));
     }

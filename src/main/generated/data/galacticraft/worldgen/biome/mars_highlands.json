@@ -1,0 +1,96 @@
+{
+  "carvers": {
+    "air": [
+      "galacticraft:mars_highlands_cave_carver",
+      "galacticraft:mars_crater_carver",
+      "galacticraft:mars_canyon_carver"
+    ]
+  },
+  "downfall": 0.0,
+  "effects": {
+    "fog_color": 12872506,
+    "mood_sound": {
+      "block_search_extent": 8,
+      "offset": 2.0,
+      "sound": "minecraft:ambient.cave",
+      "tick_delay": 6000
+    },
+    "music": {
+      "max_delay": 24000,
+      "min_delay": 12000,
+      "replace_current_music": false,
+      "sound": "galacticraft:music.mars"
+    },
+    "sky_color": 13862476,
+    "water_color": 4159204,
+    "water_fog_color": 329011
+  },
+  "features": [
+    [],
+    [],
+    [],
+    [],
+    [],
+    [],
+    [
+      "galacticraft:ore_copper_mars",
+      "galacticraft:ore_copper_large_mars",
+      "galacticraft:ore_tin_small_mars",
+      "galacticraft:ore_tin_middle_mars",
+      "galacticraft:ore_tin_upper_mars",
+      "galacticraft:ore_iron_mars",
+      "galacticraft:ore_iron_large_mars",
+      "galacticraft:ore_desh_mars"
+    ]
+  ],
+  "has_precipitation": false,
+  "spawn_costs": {},
+  "spawners": {
+    "ambient": [],
+    "axolotls": [],
+    "creature": [],
+    "misc": [],
+    "monster": [
+      {
+        "type": "galacticraft:evolved_spider",
+        "maxCount": 4,
+        "minCount": 4,
+        "weight": 100
+      },
+      {
+        "type": "galacticraft:evolved_zombie",
+        "maxCount": 4,
+        "minCount": 4,
+        "weight": 95
+      },
+      {
+        "type": "galacticraft:evolved_skeleton",
+        "maxCount": 4,
+        "minCount": 4,
+        "weight": 100
+      },
+      {
+        "type": "galacticraft:evolved_creeper",
+        "maxCount": 4,
+        "minCount": 4,
+        "weight": 100
+      },
+      {
+        "type": "galacticraft:evolved_enderman",
+        "maxCount": 4,
+        "minCount": 1,
+        "weight": 10
+      },
+      {
+        "type": "galacticraft:evolved_witch",
+        "maxCount": 1,
+        "minCount": 1,
+        "weight": 5
+      }
+    ],
+    "underground_water_creature": [],
+    "water_ambient": [],
+    "water_creature": []
+  },
+  "temperature": 2.0
+}
