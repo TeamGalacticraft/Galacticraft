@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2026 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -20,7 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.config;
+package dev.galacticraft.api.rocket;
 
-public non-sealed interface RocketUpgradeConfig extends RocketPartConfig {
+import com.mojang.serialization.Codec;
+import net.minecraft.core.Registry;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.item.EitherHolder;
+
+public final class RocketCodecs {
+    private RocketCodecs() {}
+
+    public static <T> Codec<EitherHolder<T>> eitherHolderWithRegistry(ResourceKey<? extends Registry<T>> registryKey) {
+        Codec<ResourceKey<T>> keyCodec = ResourceKey.codec((ResourceKey<Registry<T>>) registryKey);
+
+        return keyCodec.xmap(EitherHolder::new, EitherHolder::key);
+    }
 }

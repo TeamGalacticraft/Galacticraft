@@ -926,6 +926,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.rocketPart(GCRocketParts.TIER_1_ENGINE, "Basic Engine");
         this.rocketPart(GCRocketParts.TIER_1_FIN, "Basic Fins");
         this.rocketPart(GCRocketParts.STORAGE_UPGRADE, "Storage Upgrade");
+        this.rocketPart(GCRocketParts.EXPLOSIVE_UPGRADE, "Explosive Upgrade");
     }
 
     protected void generateSmithingTranslations() {

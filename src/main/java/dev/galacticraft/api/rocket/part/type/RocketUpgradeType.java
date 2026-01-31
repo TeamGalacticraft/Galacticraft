@@ -28,9 +28,6 @@ import dev.galacticraft.api.rocket.part.RocketUpgrade;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
 import org.jetbrains.annotations.NotNull;
 
-/**
- * An upgrade for a rocket.
- */
 public non-sealed abstract class RocketUpgradeType<C extends RocketUpgradeConfig> implements RocketPartType<C> {
     private final @NotNull MapCodec<RocketUpgrade<C, RocketUpgradeType<C>>> codec;
 

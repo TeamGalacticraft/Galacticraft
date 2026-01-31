@@ -28,13 +28,14 @@ import net.minecraft.world.item.EitherHolder;
 import java.util.Optional;
 
 public class RocketPrefabs {
-    public static final RocketData MISSING = new RocketData(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), 0);
+    public static final RocketData MISSING = new RocketData(Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), Optional.empty(), 0);
     public static final RocketData TIER_1 = new RocketData(
             new EitherHolder<>(GCRocketParts.TIER_1_CONE),
             new EitherHolder<>(GCRocketParts.TIER_1_BODY),
             new EitherHolder<>(GCRocketParts.TIER_1_FIN),
             null,
             new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
+            null,
             null,
             0xFFFFFFFF
     );
@@ -45,6 +46,7 @@ public class RocketPrefabs {
             null,
             new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
             new EitherHolder<>(GCRocketParts.STORAGE_UPGRADE),
+            null,
             0xFFFFFFFF
     );
     // Same as t1 for now
@@ -54,6 +56,7 @@ public class RocketPrefabs {
             new EitherHolder<>(GCRocketParts.TIER_1_FIN),
             null,
             new EitherHolder<>(GCRocketParts.TIER_1_ENGINE),
+            null,
             null,
             0xFFFFFFFF
     );
