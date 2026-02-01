@@ -608,10 +608,8 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
-        ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
-        ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
@@ -619,6 +617,9 @@ public interface Constant {
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+
+        int OXYGEN_TANK_WIDTH = 16;
+        int OXYGEN_TANK_HEIGHT = 48;
     }
 
     interface CircuitFabricator {
@@ -860,6 +861,57 @@ public interface Constant {
         int RECIPE_VIEWER_Y = 26;
         int RECIPE_VIEWER_WIDTH = 149;
         int RECIPE_VIEWER_HEIGHT = 134;
+    }
+
+    interface BubbleDistributor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/oxygen_bubble_distributor_screen.png");
+
+        int BUTTON_X = 156;
+        int BUTTON_Y = 16;
+        int BUTTON_WIDTH = 13;
+        int BUTTON_HEIGHT = 13;
+
+        int BUTTON_RED_U = 178;
+        int BUTTON_RED_V = 0;
+        int BUTTON_RED_HOVER_U = 191;
+        int BUTTON_RED_HOVER_V = 0;
+
+        int BUTTON_GREEN_U = 178;
+        int BUTTON_GREEN_V = 13;
+        int BUTTON_GREEN_HOVER_U = 191;
+        int BUTTON_GREEN_HOVER_V = 13;
+
+        int BUTTON_NORMAL_U = 204;
+        int BUTTON_NORMAL_V = 13;
+        int BUTTON_NORMAL_HOVER_U = 204;
+        int BUTTON_NORMAL_HOVER_V = 0;
+
+        int TEXT_X = 60;
+        int VISIBILITY_LABEL_Y = 19;
+        int STATUS_LABEL_Y = 34;
+        int STATUS_Y = 44;
+        int CURRENT_SIZE_Y = 59;
+
+        int TEXT_FIELD_X = 132;
+        int TEXT_FIELD_Y = 69;
+        int TEXT_FIELD_WIDTH = 26;
+        int TEXT_FIELD_HEIGHT = 20;
+
+        int ARROW_X = 158;
+        int ARROW_VERTICAL_WIDTH = 11;
+        int ARROW_VERTICAL_HEIGHT = 10;
+
+        int ARROW_UP_Y = 69;
+        int ARROW_UP_U = 206;
+        int ARROW_UP_V = 0;
+        int ARROW_UP_HOVER_U = 217;
+        int ARROW_UP_HOVER_V = 0;
+
+        int ARROW_DOWN_Y = 79;
+        int ARROW_DOWN_U = 206;
+        int ARROW_DOWN_V = 10;
+        int ARROW_DOWN_HOVER_U = 217;
+        int ARROW_DOWN_HOVER_V = 10;
     }
 
     interface CelestialScreen {
@@ -1106,56 +1158,6 @@ public interface Constant {
         String SPIDER_GEAR = "textures/entity/gear/spider_gear.png";
         String WITCH_GEAR = "textures/entity/gear/witch_gear.png";
         String ILLAGER_GEAR = "textures/entity/gear/illager_gear.png";
-    }
-
-    interface TextureCoordinate {
-        int OVERLAY_WIDTH = 16;
-        int OVERLAY_HEIGHT = 48;
-
-        int ENERGY_DARK_U = 0;
-        int ENERGY_DARK_V = 0;
-        int ENERGY_LIGHT_U = 16;
-        int ENERGY_LIGHT_V = 0;
-
-        int OXYGEN_DARK_U = 0;
-        int OXYGEN_DARK_V = 50;
-        int OXYGEN_LIGHT_U = 16;
-        int OXYGEN_LIGHT_V = 50;
-
-        int FLUID_TANK_WIDTH = 18;
-
-        int BASE_FLUID_TANK_Y = 49;
-
-        int BUTTON_WIDTH = 13;
-        int BUTTON_HEIGHT = 13;
-
-        int BUTTON_RED_U = 0;
-        int BUTTON_RED_V = 115;
-        int BUTTON_RED_HOVER_U = 0;
-        int BUTTON_RED_HOVER_V = 102;
-
-        int BUTTON_GREEN_U = 13;
-        int BUTTON_GREEN_V = 115;
-        int BUTTON_GREEN_HOVER_U = 13;
-        int BUTTON_GREEN_HOVER_V = 102;
-
-        int BUTTON_NORMAL_U = 26;
-        int BUTTON_NORMAL_V = 115;
-        int BUTTON_NORMAL_HOVER_U = 26;
-        int BUTTON_NORMAL_HOVER_V = 102;
-
-        int ARROW_VERTICAL_WIDTH = 11;
-        int ARROW_VERTICAL_HEIGHT = 10;
-
-        int ARROW_UP_U = 39;
-        int ARROW_UP_V = 108;
-        int ARROW_UP_HOVER_U = 50;
-        int ARROW_UP_HOVER_V = 108;
-
-        int ARROW_DOWN_U = 39;
-        int ARROW_DOWN_V = 118;
-        int ARROW_DOWN_HOVER_U = 50;
-        int ARROW_DOWN_HOVER_V = 118;
     }
 
     interface Menu {

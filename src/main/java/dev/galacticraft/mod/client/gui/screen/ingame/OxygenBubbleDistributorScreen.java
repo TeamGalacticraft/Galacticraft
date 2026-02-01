@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenBubbleDistributorBlockEntity;
 import dev.galacticraft.mod.network.c2s.BubbleMaxPayload;
 import dev.galacticraft.mod.network.c2s.BubbleVisibilityPayload;
@@ -42,32 +41,14 @@ import net.minecraft.world.entity.player.Inventory;
 
 import java.text.DecimalFormat;
 
+import static dev.galacticraft.mod.Constant.BubbleDistributor.*;
+
 public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDistributorBlockEntity, OxygenBubbleDistributorMenu> {
-    public static final int VISIBILITY_BUTTON_X = 156;
-    public static final int VISIBILITY_BUTTON_Y = 16;
-    public static final int VISIBILITY_BUTTON_WIDTH = 26;
-    public static final int VISIBILITY_BUTTON_HEIGHT = 20;
-
-    public static final int TEXT_X = 60;
-    public static final int VISIBILITY_BUTTON_LABEL_Y = 19;
-    public static final int STATUS_LABEL_Y = 34;
-    public static final int STATUS_Y = 44;
-    public static final int CURRENT_SIZE_Y = 59;
-
-    public static final int TEXT_FIELD_X = 132;
-    public static final int TEXT_FIELD_Y = 69;
-    public static final int TEXT_FIELD_WIDTH = 26;
-    public static final int TEXT_FIELD_HEIGHT = 20;
-
-    public static final int ARROW_X = 158;
-    public static final int ARROW_UP_Y = 69;
-    public static final int ARROW_DOWN_Y = 79;
-
     private static final DecimalFormat FORMAT = new DecimalFormat();
     private final EditBox textField;
 
     public OxygenBubbleDistributorScreen(OxygenBubbleDistributorMenu handler, Inventory inv, Component title) {
-        super(handler, title, Constant.ScreenTexture.BUBBLE_DISTRIBUTOR_SCREEN);
+        super(handler, title, SCREEN_TEXTURE);
         this.imageHeight = 176;
         this.imageWidth = 176;
         this.capacitorX = 8;
@@ -96,36 +77,36 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     @SuppressWarnings("DataFlowIssue")
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        int buttonX = this.leftPos + VISIBILITY_BUTTON_X;
-        int buttonY = this.topPos + VISIBILITY_BUTTON_Y;
+        int buttonX = this.leftPos + BUTTON_X;
+        int buttonY = this.topPos + BUTTON_Y;
         int buttonU, buttonV, color;
         Component text;
 
         if (this.menu.bubbleVisible) {
             color = ChatFormatting.DARK_GREEN.getColor();
             text = Component.translatable(Translations.Ui.BUBBLE_VISIBLE);
-            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
-                buttonU = Constant.TextureCoordinate.BUTTON_GREEN_HOVER_U;
-                buttonV = Constant.TextureCoordinate.BUTTON_GREEN_HOVER_V;
+            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                buttonU = BUTTON_GREEN_HOVER_U;
+                buttonV = BUTTON_GREEN_HOVER_V;
             } else {
-                buttonU = Constant.TextureCoordinate.BUTTON_GREEN_U;
-                buttonV = Constant.TextureCoordinate.BUTTON_GREEN_V;
+                buttonU = BUTTON_GREEN_U;
+                buttonV = BUTTON_GREEN_V;
             }
         } else {
             color = ChatFormatting.RED.getColor();
             text = Component.translatable(Translations.Ui.BUBBLE_NOT_VISIBLE);
-            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
-                buttonU = Constant.TextureCoordinate.BUTTON_RED_HOVER_U;
-                buttonV = Constant.TextureCoordinate.BUTTON_RED_HOVER_V;
+            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+                buttonU = BUTTON_RED_HOVER_U;
+                buttonV = BUTTON_RED_HOVER_V;
             } else {
-                buttonU = Constant.TextureCoordinate.BUTTON_RED_U;
-                buttonV = Constant.TextureCoordinate.BUTTON_RED_V;
+                buttonU = BUTTON_RED_U;
+                buttonV = BUTTON_RED_V;
             }
         }
 
-        graphics.blit(Constant.ScreenTexture.OVERLAY, buttonX, buttonY, buttonU, buttonV, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, buttonX, buttonY, buttonU, buttonV, BUTTON_WIDTH, BUTTON_HEIGHT);
 
-        graphics.drawString(this.font, text, this.leftPos + TEXT_X, this.topPos + VISIBILITY_BUTTON_LABEL_Y, color, false);
+        graphics.drawString(this.font, text, this.leftPos + TEXT_X, this.topPos + VISIBILITY_LABEL_Y, color, false);
         graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, Component.empty()), this.leftPos + TEXT_X, this.topPos + STATUS_LABEL_Y, ChatFormatting.DARK_GRAY.getColor(), false);
         graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_TARGET_SIZE), this.leftPos + TEXT_X, this.topPos + TEXT_FIELD_Y + 6, ChatFormatting.DARK_GRAY.getColor(), false);
 
@@ -133,20 +114,20 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         int arrowUpY = this.topPos + ARROW_UP_Y;
         int arrowDownY = this.topPos + ARROW_DOWN_Y;
 
-        int arrowUpU = Constant.TextureCoordinate.ARROW_UP_U;
-        int arrowUpV = Constant.TextureCoordinate.ARROW_UP_V;
-        int arrowDownU = Constant.TextureCoordinate.ARROW_DOWN_U;
-        int arrowDownV = Constant.TextureCoordinate.ARROW_DOWN_V;
-        if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowUpY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-            arrowUpU = Constant.TextureCoordinate.ARROW_UP_HOVER_U;
-            arrowUpV = Constant.TextureCoordinate.ARROW_UP_HOVER_V;
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowDownY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
-            arrowDownU = Constant.TextureCoordinate.ARROW_DOWN_HOVER_U;
-            arrowDownV = Constant.TextureCoordinate.ARROW_DOWN_HOVER_V;
+        int arrowUpU = ARROW_UP_U;
+        int arrowUpV = ARROW_UP_V;
+        int arrowDownU = ARROW_DOWN_U;
+        int arrowDownV = ARROW_DOWN_V;
+        if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowUpY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+            arrowUpU = ARROW_UP_HOVER_U;
+            arrowUpV = ARROW_UP_HOVER_V;
+        } else if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowDownY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+            arrowDownU = ARROW_DOWN_HOVER_U;
+            arrowDownV = ARROW_DOWN_HOVER_V;
         }
 
-        graphics.blit(Constant.ScreenTexture.OVERLAY, arrowX, arrowUpY, arrowUpU, arrowUpV, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
-        graphics.blit(Constant.ScreenTexture.OVERLAY, arrowX, arrowDownY, arrowDownU, arrowDownV, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, arrowX, arrowUpY, arrowUpU, arrowUpV, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT);
+        graphics.blit(SCREEN_TEXTURE, arrowX, arrowDownY, arrowDownU, arrowDownV, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT);
     }
 
     @Override
@@ -185,14 +166,14 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + VISIBILITY_BUTTON_X, this.topPos + VISIBILITY_BUTTON_Y, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
+            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + BUTTON_X, this.topPos + BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 this.menu.bubbleVisible = !this.menu.bubbleVisible;
                 ClientPlayNetworking.send(new BubbleVisibilityPayload(this.menu.bubbleVisible));
                 this.playButtonSound();
                 return true;
             }
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_UP_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_UP_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize != Byte.MAX_VALUE) {
                     this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
                     textField.setValue(String.valueOf(this.menu.targetSize));
@@ -202,7 +183,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 }
             }
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_DOWN_Y, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_DOWN_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize > 1) {
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
                     textField.setValue(String.valueOf(this.menu.targetSize));
