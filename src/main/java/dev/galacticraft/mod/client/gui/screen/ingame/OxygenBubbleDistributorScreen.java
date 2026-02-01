@@ -36,6 +36,8 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.player.Inventory;
 
 import java.text.DecimalFormat;
@@ -100,7 +102,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         Component text;
 
         if (this.menu.bubbleVisible) {
-            color = ChatFormatting.GREEN.getColor();
+            color = ChatFormatting.DARK_GREEN.getColor();
             text = Component.translatable(Translations.Ui.BUBBLE_VISIBLE);
             if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, Constant.TextureCoordinate.BUTTON_WIDTH, Constant.TextureCoordinate.BUTTON_HEIGHT)) {
                 buttonU = Constant.TextureCoordinate.BUTTON_GREEN_HOVER_U;
@@ -150,7 +152,12 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
     @Override
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderForeground(graphics, mouseX, mouseY, delta);
-        graphics.drawString(this.font, this.menu.state.getStatusText(this.menu.redstoneMode), this.leftPos + TEXT_X, this.topPos + STATUS_Y, -1, false);
+
+        MutableComponent statusText = this.menu.state.getStatusText(this.menu.redstoneMode).copy();
+        if (statusText.getStyle().getColor() == TextColor.fromLegacyFormat(ChatFormatting.GREEN)) {
+            statusText.withStyle(ChatFormatting.DARK_GREEN);
+        }
+        graphics.drawString(this.font, statusText, this.leftPos + TEXT_X, this.topPos + STATUS_Y, -1, false);
 
         String currentSize = this.menu.state.isActive() ? FORMAT.format(this.menu.size) : "0";
         graphics.drawString(this.font, Component.translatable(Translations.Ui.BUBBLE_CURRENT_SIZE, currentSize), this.leftPos + TEXT_X, this.topPos + CURRENT_SIZE_Y, ChatFormatting.DARK_GRAY.getColor(), false);
