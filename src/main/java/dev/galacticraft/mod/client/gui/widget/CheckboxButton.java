@@ -40,7 +40,7 @@ public class CheckboxButton extends AbstractButton {
     public void renderWidget(GuiGraphics graphics, int i, int j, float f) {
         super.renderWidget(graphics, i, j, f);
         graphics.pose().pushPose();
-        graphics.blit(Constant.ScreenTexture.OVERLAY, this.getX(), this.getY(), checked ? Constant.TextureCoordinate.BUTTON_GREEN_X : Constant.TextureCoordinate.BUTTON_RED_X, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
+        graphics.blit(Constant.ScreenTexture.OVERLAY, this.getX(), this.getY(), checked ? Constant.TextureCoordinate.BUTTON_GREEN_U : Constant.TextureCoordinate.BUTTON_RED_U, isHoveredOrFocused() ? 115 : 102, getWidth(), getHeight());
         graphics.pose().popPose();
     }
 

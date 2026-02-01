@@ -43,7 +43,7 @@ public class OxygenBubbleDistributorMenu extends MachineMenu<OxygenBubbleDistrib
     }
 
     public OxygenBubbleDistributorMenu(int syncId, Inventory inv, BlockPos pos) {
-        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, pos, 8, 84);
+        super(GCMenuTypes.OXYGEN_BUBBLE_DISTRIBUTOR, syncId, inv, pos, 8, 94);
     }
 
     @Override

@@ -1112,15 +1112,15 @@ public interface Constant {
         int OVERLAY_WIDTH = 16;
         int OVERLAY_HEIGHT = 48;
 
-        int ENERGY_DARK_X = 0;
-        int ENERGY_DARK_Y = 0;
-        int ENERGY_LIGHT_X = 16;
-        int ENERGY_LIGHT_Y = 0;
+        int ENERGY_DARK_U = 0;
+        int ENERGY_DARK_V = 0;
+        int ENERGY_LIGHT_U = 16;
+        int ENERGY_LIGHT_V = 0;
 
-        int OXYGEN_DARK_X = 0;
-        int OXYGEN_DARK_Y = 50;
-        int OXYGEN_LIGHT_X = 16;
-        int OXYGEN_LIGHT_Y = 50;
+        int OXYGEN_DARK_U = 0;
+        int OXYGEN_DARK_V = 50;
+        int OXYGEN_LIGHT_U = 16;
+        int OXYGEN_LIGHT_V = 50;
 
         int FLUID_TANK_WIDTH = 18;
 
@@ -1129,33 +1129,33 @@ public interface Constant {
         int BUTTON_WIDTH = 13;
         int BUTTON_HEIGHT = 13;
 
-        int BUTTON_RED_X = 0;
-        int BUTTON_RED_Y = 115;
-        int BUTTON_RED_HOVER_X = 0;
-        int BUTTON_RED_HOVER_Y = 102;
+        int BUTTON_RED_U = 0;
+        int BUTTON_RED_V = 115;
+        int BUTTON_RED_HOVER_U = 0;
+        int BUTTON_RED_HOVER_V = 102;
 
-        int BUTTON_GREEN_X = 13;
-        int BUTTON_GREEN_Y = 115;
-        int BUTTON_GREEN_HOVER_X = 13;
-        int BUTTON_GREEN_HOVER_Y = 102;
+        int BUTTON_GREEN_U = 13;
+        int BUTTON_GREEN_V = 115;
+        int BUTTON_GREEN_HOVER_U = 13;
+        int BUTTON_GREEN_HOVER_V = 102;
 
-        int BUTTON_NORMAL_X = 26;
-        int BUTTON_NORMAL_Y = 115;
-        int BUTTON_NORMAL_HOVER_X = 26;
-        int BUTTON_NORMAL_HOVER_Y = 102;
+        int BUTTON_NORMAL_U = 26;
+        int BUTTON_NORMAL_V = 115;
+        int BUTTON_NORMAL_HOVER_U = 26;
+        int BUTTON_NORMAL_HOVER_V = 102;
 
         int ARROW_VERTICAL_WIDTH = 11;
         int ARROW_VERTICAL_HEIGHT = 10;
 
-        int ARROW_UP_X = 39;
-        int ARROW_UP_Y = 108;
-        int ARROW_UP_HOVER_X = 50;
-        int ARROW_UP_HOVER_Y = 108;
+        int ARROW_UP_U = 39;
+        int ARROW_UP_V = 108;
+        int ARROW_UP_HOVER_U = 50;
+        int ARROW_UP_HOVER_V = 108;
 
-        int ARROW_DOWN_X = 39;
-        int ARROW_DOWN_Y = 118;
-        int ARROW_DOWN_HOVER_X = 50;
-        int ARROW_DOWN_HOVER_Y = 118;
+        int ARROW_DOWN_U = 39;
+        int ARROW_DOWN_V = 118;
+        int ARROW_DOWN_HOVER_U = 50;
+        int ARROW_DOWN_HOVER_V = 118;
     }
 
     interface Menu {
