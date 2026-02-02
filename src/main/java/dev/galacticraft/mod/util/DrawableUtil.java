@@ -25,7 +25,6 @@ package dev.galacticraft.mod.util;
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
@@ -47,19 +46,6 @@ public class DrawableUtil {
 
     public static MutableComponent getEnergyDisplay(long amount) {
         return Component.literal(String.valueOf(amount)); //todo
-    }
-
-    public static void drawOxygenBuffer(PoseStack matrices, int x, int y, long oxygen, long capacity) {
-        if (oxygen == 0 && capacity == 0) capacity = 1;
-        drawOxygenBuffer(matrices, x, y, (double) oxygen / (double) capacity);
-    }
-
-    public static void drawOxygenBuffer(PoseStack matrices, int x, int y, double scale) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-        drawProgressTexture(matrices, x, y, 0, Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT, 256, 256);
-        drawProgressTexture(matrices, x, y, 0, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (float) (Constant.TextureCoordinate.OVERLAY_HEIGHT * (1 - scale)), 256, 256);
     }
 
     public static boolean isWithin(double mouseX, double mouseY, int x, int y, int width, int height) {
