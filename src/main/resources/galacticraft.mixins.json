@@ -53,6 +53,7 @@
     "client.LivingEntityRendererMixin",
     "client.LocalPlayerMixin",
     "client.MinecraftMixin",
+    "client.MultiPlayerGameModeMixin",
     "client.ParrotOnShoulderLayerMixin",
     "client.PauseMenuScreenMixin",
     "client.PlayerMixin",
