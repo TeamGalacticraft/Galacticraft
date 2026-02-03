@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -257,8 +257,6 @@ public interface Translations {
     interface Tooltip {
         String CREATIVE_ONLY = "tooltip.galacticraft.creative_only";
         String ENERGY_REMAINING = "tooltip.galacticraft.energy_remaining";
-        String GLOWSTONE_LANTERN = "tooltip.galacticraft.glowstone_lantern";
-        String GLOWSTONE_TORCH = "tooltip.galacticraft.glowstone_torch";
         String INFINITE = "tooltip.galacticraft.infinite";
         String OXYGEN_REMAINING = "tooltip.galacticraft.oxygen_remaining";
         String PRESS_SHIFT = "tooltip.galacticraft.press_shift";

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,9 +29,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.special.TinLadderBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
@@ -46,6 +49,7 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -54,8 +58,10 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.List;
+import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
@@ -187,5 +193,19 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             }
         }
         original.call(entity, itemStack, n);
+    }
+
+    @Inject(method = "onClimbable", at = @At("TAIL"), cancellable = true)
+    private void galacticraft$onClimbable(CallbackInfoReturnable<Boolean> cir) {
+        // Make the back side of tin ladders climbable
+        BlockPos blockPos = this.blockPosition();
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
+            BlockState blockState = this.level().getBlockState(blockPos.relative(direction));
+            if (blockState.is(GCBlocks.TIN_LADDER) && blockState.getValue(TinLadderBlock.FACING) == direction) {
+                ((LivingEntityAccessor) this).setLastClimbablePos(Optional.of(blockPos));
+                cir.setReturnValue(true);
+                return;
+            }
+        }
     }
 }

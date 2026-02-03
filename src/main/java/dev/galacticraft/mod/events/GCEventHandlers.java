@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
@@ -51,8 +52,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
-
-import static dev.galacticraft.mod.Constant.CelestialBody.EARTH;
 
 public class GCEventHandlers {
     public static void init() {
@@ -93,7 +92,7 @@ public class GCEventHandlers {
         PlayerLookup.all(server).forEach(player -> {
             ServerLevel level = player.serverLevel();
             Holder<CelestialBody<?, ?>> celestialBody = level.galacticraft$getCelestialBody();
-            if (celestialBody == null || celestialBody.is(EARTH)) return;
+            if (celestialBody == null || celestialBody.is(GCCelestialBodies.EARTH)) return;
 
             // calculate frequency of meteors on current celestial body
             float atmospherePressure = celestialBody.value().atmosphere().pressure();

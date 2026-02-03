@@ -20,22 +20,17 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.dimension;
+package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.core.registries.Registries;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.Level;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.NotNull;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.entity.LivingEntity;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.gen.Accessor;
 
-public class GCDimensions {
-    public static final ResourceKey<Level> MOON = key("moon");
-    public static final ResourceKey<Level> VENUS = key("venus");
-    public static final ResourceKey<Level> ASTEROID = key("asteroid");
+import java.util.Optional;
 
-    @Contract(pure = true)
-    private static @NotNull ResourceKey<Level> key(@NotNull String id) {
-        return Constant.key(Registries.DIMENSION, id);
-    }
+@Mixin(LivingEntity.class)
+public interface LivingEntityAccessor {
+    @Accessor("lastClimbablePos")
+    void setLastClimbablePos(Optional<BlockPos> pos);
 }

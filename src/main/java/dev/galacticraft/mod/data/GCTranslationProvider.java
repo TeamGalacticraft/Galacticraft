@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -938,35 +938,35 @@ public class GCTranslationProvider extends TranslationProvider {
 
     protected void generateTooltipTranslations() {
         // Block Descriptions
-        this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "Advanced Solar Panels collect energy from the sun, and store it for further use. Adjusts position to face the sun, to collect more electricity.");
-        this.blockDesc(GCBlocks.BASIC_SOLAR_PANEL, "Basic Solar Panels collect energy from the sun, and store it for further use. Collects most energy at mid-day (non-adjustable).");
-        this.blockDesc(GCBlocks.CIRCUIT_FABRICATOR, "Circuit Fabricator will process basic materials into silicon wafers, used for advanced machines.");
-        this.blockDesc(GCBlocks.COAL_GENERATOR, "Burns coal and charcoal for energy. The simplest but least efficient energy method.");
-        this.blockDesc(GCBlocks.COMPRESSOR, "Compressor will process ingots into their compressed equivalents.");
-        this.blockDesc(GCBlocks.ELECTRIC_COMPRESSOR, "Electric Compressor will process ingots into their compressed equivalents. Compresses two at a time, making it more effective than its predecessor.");
-        this.blockDesc(GCBlocks.ELECTRIC_FURNACE, "Electric Furnace is used as a faster alternative to traditional coal furnaces.");
-        this.blockDesc(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace is used as a better and faster alternative to both traditional coal and electric furnaces: double output from ores!");
-        this.blockDesc(GCBlocks.ENERGY_STORAGE_MODULE, "Energy Storage Module is used to store large amounts of energy for later use.");
-        this.blockDesc(GCBlocks.FUEL_LOADER, "After being connected to a launch pad, a Fuel Loader will allow fuel to passed into the connected Rocket or other vehicle.");
-        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Moon Cheese Wheels are created from the cheeses of the Moon, place-able and edible.");
-        this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Oxygen Bubble Distributor creates a bubble of air around itself. Requires oxygen and electricity.");
-        this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor will unload oxygen into internal storage from an oxygen tank.");
-        this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector will store oxygen collected from leaves in the surrounding area.");
-        this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Oxygen Compressor will load oxygen from internal storage into an oxygen tank.");
-        this.blockDesc(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer will check for an enclosed space. If the space is enclosed, it will fill with breathable air.");
-        this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Oxygen Storage Module is used to store large amounts of oxygen for later use.");
-        this.blockDesc(GCBlocks.FOOD_CANNER, "Food Canner is used to compress up to %s edible items into a can that allows you to eat the food while wearing an oxygen mask.");
-        this.blockDesc(GCBlocks.PARACHEST, "Parachests will fall from the sky after landing on certain planets/moons, such as Earth. Contains rocket, fuel, and cargo from previous launch.");
-        this.blockDesc(GCBlocks.REFINERY, "Refinery will take an input of oil and energy, and output fuel used for rockets and vehicles.");
+        this.blockDesc(GCBlocks.ADVANCED_SOLAR_PANEL, "A more efficient solar panel that rotates to face the sun.");
+        this.blockDesc(GCBlocks.BASIC_SOLAR_PANEL, "Converts energy from the sun into electricity. Most effective at noon.");
+        this.blockDesc(GCBlocks.CIRCUIT_FABRICATOR, "Fabricates the silicon wafers needed for more advanced machines.");
+        this.blockDesc(GCBlocks.COAL_GENERATOR, "Burns coal and charcoal to generate electricity.");
+        this.blockDesc(GCBlocks.COMPRESSOR, "Compresses ingots to create stronger materials. Requires furnace fuel to run.");
+        this.blockDesc(GCBlocks.ELECTRIC_COMPRESSOR, "Compresses ingots to create stronger materials.");
+        this.blockDesc(GCBlocks.ELECTRIC_FURNACE, "Uses electricity instead of fuel to smelt items.");
+        this.blockDesc(GCBlocks.ELECTRIC_ARC_FURNACE, "A faster, electric blast furnace for smelting ores.");
+        this.blockDesc(GCBlocks.ENERGY_STORAGE_MODULE, "Stores a large amount of energy.");
+        this.blockDesc(GCBlocks.FOOD_CANNER, "Compresses several food items into a single can. Canned foods can be eaten while wearing an oxygen mask.");
+        this.blockDesc(GCBlocks.FUEL_LOADER, "Loads fuel into a rocket placed on an adjacent launch pad.");
+        this.blockDesc(GCBlocks.GLOWSTONE_LANTERN, "Provides light, even in areas without oxygen.");
+        this.blockDesc(GCBlocks.GLOWSTONE_TORCH, "Provides light, even in areas without oxygen.");
+        this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Can be placed and eaten like a cake. Made with all-natural Moon cheese.");
+        this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
+        this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
+        this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Collects oxygen from nearby crops and trees.");
+        this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Fills oxygen tanks.");
+        this.blockDesc(GCBlocks.OXYGEN_SEALER, "Fills an airtight room with oxygen to make it breathable.");
+        this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Stores a large amount of oxygen.");
+        this.blockDesc(GCBlocks.PARACHEST, "Falls from the sky when you travel to certain planets, carrying your rocket, fuel, and cargo.");
+        this.blockDesc(GCBlocks.REFINERY, "Refines crude oil into fuel used by rockets and vehicles.");
 
         this.add(Tooltip.CREATIVE_ONLY, "Creative Only");
         this.add(Tooltip.ENERGY_REMAINING, "Energy Remaining: %s");
-        this.add(Tooltip.GLOWSTONE_LANTERN, "Glowstone Lanterns are best used to light areas when there is no oxygen for lanterns to burn.");
-        this.add(Tooltip.GLOWSTONE_TORCH, "Glowstone Torches are best used to light areas when there is no oxygen for wood torches to burn.");
         this.add(Tooltip.INFINITE, "Infinite");
         this.add(Tooltip.OXYGEN_REMAINING, "Oxygen Remaining: %s");
-        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more information.");
-        this.add(Tooltip.STANDARD_WRENCH, "Most Galacticraft machines can be rotated by right-clicking with the Standard Wrench.");
+        this.add(Tooltip.PRESS_SHIFT, "Press LSHIFT for more information");
+        this.add(Tooltip.STANDARD_WRENCH, "Rotates and configures various Galacticraft blocks.");
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
         this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
