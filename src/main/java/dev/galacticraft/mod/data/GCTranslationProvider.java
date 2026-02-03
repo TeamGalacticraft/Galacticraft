@@ -1160,7 +1160,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.BUBBLE_TARGET_SIZE, "Target Size: ");
         this.add(Ui.BUBBLE_VISIBLE, "Bubble Visible");
 
-        this.add(Ui.COLLECTING, "Collecting: %s/s");
+        this.add(Ui.COLLECTING, "Collecting: %s/t");
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MILLIBUCKETS, "mB");
