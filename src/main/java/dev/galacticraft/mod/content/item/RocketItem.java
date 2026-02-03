@@ -114,8 +114,29 @@ public class RocketItem extends Item {
             list.add(RocketPartTypes.BOOSTER.name.copy().append(": ").append(RocketPart.getName(data.booster().get().key())).withStyle(style));
         if (data.engine().isPresent())
             list.add(RocketPartTypes.ENGINE.name.copy().append(": ").append(RocketPart.getName(data.engine().get().key())).withStyle(style));
-        if (data.upgrade().isPresent())
-            list.add(RocketPartTypes.UPGRADE.name.copy().append(": ").append(RocketPart.getName(data.upgrade().get().key())).withStyle(style));
+        if (data.upgrade().isPresent()) {
+            var upgradeKey = data.upgrade().get().key();
+            Component upgradeName = RocketPart.getName(upgradeKey);
+            list.add(
+                    RocketPartTypes.UPGRADE.name.copy()
+                            .append(": ")
+                            .append(upgradeName)
+                            .withStyle(style)
+            );
+
+            if (upgradeKey.equals(dev.galacticraft.mod.content.GCRocketParts.EXPLOSIVE_UPGRADE)) {
+                data.explosiveBlock().ifPresent(id -> {
+                    var block = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(id);
+                    Component blockName = block.getName();
+
+                    list.add(
+                            Component.literal("       ")
+                                    .append(blockName)
+                                    .withStyle(style)
+                    );
+                });
+            }
+        }
 
         TooltipUtil.appendLshiftTooltip(list, tooltip);
         super.appendHoverText(stack, context, tooltip, options);

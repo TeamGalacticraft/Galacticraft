@@ -25,6 +25,7 @@ package dev.galacticraft.api.rocket.part;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.api.registry.BuiltInRocketRegistries;
 import dev.galacticraft.api.registry.RocketRegistries;
+import dev.galacticraft.api.rocket.RocketCodecs;
 import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
 import dev.galacticraft.api.rocket.part.type.RocketUpgradeType;
 import dev.galacticraft.impl.rocket.part.RocketUpgradeImpl;
@@ -45,8 +46,8 @@ public non-sealed interface RocketUpgrade<C extends RocketUpgradeConfig, T exten
     Codec<HolderSet<RocketUpgrade<?, ?>>> LIST_CODEC = RegistryCodecs.homogeneousList(RocketRegistries.ROCKET_UPGRADE, DIRECT_CODEC);
     StreamCodec<RegistryFriendlyByteBuf, Holder<RocketUpgrade<?, ?>>> STREAM_CODEC = StreamCodecs.ofHolder(RocketRegistries.ROCKET_UPGRADE);
 
-    Codec<EitherHolder<RocketUpgrade<?, ?>>> EITHER_CODEC = EitherHolder.codec(RocketRegistries.ROCKET_UPGRADE, CODEC);
-    StreamCodec<RegistryFriendlyByteBuf, EitherHolder<RocketUpgrade<?, ?>>> EITHER_STREAM_CODEC = EitherHolder.streamCodec(RocketRegistries.ROCKET_UPGRADE, STREAM_CODEC);
+    public static final Codec<EitherHolder<RocketUpgrade<?, ?>>> EITHER_CODEC =
+            RocketCodecs.eitherHolderWithRegistry(RocketRegistries.ROCKET_UPGRADE);
 
     @Contract(pure = true, value = "_, _ -> new")
     static @NotNull <C extends RocketUpgradeConfig, T extends RocketUpgradeType<C>> RocketUpgrade<C, T> create(@NotNull C config, @NotNull T type) {
