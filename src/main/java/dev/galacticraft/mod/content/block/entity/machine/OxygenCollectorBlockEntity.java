@@ -134,7 +134,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         this.chargeFromSlot(CHARGE_SLOT);
         if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
             if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_HUM, SoundSource.BLOCKS, 1.0F, 1.0F);
+                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
             timer++;
             if (timer>=40) {
