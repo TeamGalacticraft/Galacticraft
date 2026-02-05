@@ -180,6 +180,13 @@
       }
     ]
   },
+  "machine.circuitscritch": {
+  "sounds": [
+    "galacticraft:machine/circuitscritch1",
+    "galacticraft:machine/circuitscritch3",
+    "galacticraft:machine/circuitscritch4"
+  ]
+},
     "machine.machinebuzz": {
     "sounds": [
       {
