@@ -115,7 +115,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     }
 
     private int timer = 0;
-    
+
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(level, pos, state, profiler);

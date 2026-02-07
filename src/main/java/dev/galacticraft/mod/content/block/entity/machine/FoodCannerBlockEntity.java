@@ -150,7 +150,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
             this.hadCan = this.hasCan;
             world.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
         }
-        
+
         if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
             if (timer == 0) {
                 this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);

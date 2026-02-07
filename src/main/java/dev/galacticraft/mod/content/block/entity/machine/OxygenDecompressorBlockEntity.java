@@ -100,7 +100,7 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
     }
 
     private int timer = 0;
-    
+
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
