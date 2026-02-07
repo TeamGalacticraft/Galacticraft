@@ -39,11 +39,13 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenSealerMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -105,6 +107,8 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         }
     }
 
+    private int timer = 0;
+
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(level, pos, state, profiler);
@@ -112,6 +116,15 @@ public class OxygenSealerBlockEntity extends MachineBlockEntity {
         this.chargeFromSlot(CHARGE_SLOT);
         this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
+            if (timer == 0) {
+                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+            timer++;
+            if (timer>=40) {
+                timer = 0;
+            }
+        }
     }
 
     @Override

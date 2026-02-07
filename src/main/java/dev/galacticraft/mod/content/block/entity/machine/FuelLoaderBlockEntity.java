@@ -41,6 +41,7 @@ import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
@@ -57,6 +58,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -187,6 +189,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
         }
     }
 
+    private int timer = 0;
+
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.check.size() > 0) {
@@ -212,6 +216,16 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 
         this.chargeFromSlot(CHARGE_SLOT);
         this.takeFluidFromSlot(FUEL_INPUT_SLOT, FUEL_TANK, GCFluids.FUEL);
+
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
+            if (timer == 0) {
+                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+            timer++;
+            if (timer>=40) {
+                timer = 0;
+            }
+        }
     }
 
     @Override
