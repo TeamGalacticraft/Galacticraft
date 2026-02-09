@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
@@ -49,7 +50,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.ScreenTexture.OXYGEN_TANK_WIDTH, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
@@ -62,7 +63,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
                 }
                 graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_1_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
             }
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.ScreenTexture.OXYGEN_TANK_WIDTH, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
@@ -102,7 +103,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             }
 
             if (capacity > 0) {
-                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 129, this.topPos + 8, amount, capacity);
+                GraphicsUtil.drawCapacitor(graphics, this.leftPos + 129, this.topPos + 8, capacity, amount, true);
             }
         }
         Storage<FluidVariant> storage2 = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
@@ -117,7 +118,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
             }
 
             if (capacity > 0) {
-                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 152, this.topPos + 8, amount, capacity);
+                GraphicsUtil.drawCapacitor(graphics, this.leftPos + 152, this.topPos + 8, capacity, amount, true);
             }
         }
 
