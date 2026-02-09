@@ -39,8 +39,14 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.function.UnaryOperator;
 
 public class GCDataComponents {
-    public static final DataComponentType<RocketData> ROCKET_DATA = register("rocket_data", b -> b
-            .persistent(RocketData.CODEC).networkSynchronized(RocketData.STREAM_CODEC));
+    public static final DataComponentType<RocketData> ROCKET_DATA = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Constant.id("rocket_data"),
+            DataComponentType.<RocketData>builder()
+                    .persistent(RocketData.CODEC)
+                    .networkSynchronized(RocketData.STREAM_CODEC)
+                    .build()
+    );
     public static final DataComponentType<Long> AMOUNT = register("amount", b -> b
             .persistent(Codec.LONG).networkSynchronized(StreamCodecs.LONG));
     public static final DataComponentType<Integer> COLOR = register("color", b -> b

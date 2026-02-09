@@ -20,7 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.config;
+package dev.galacticraft.mod.content.rocket.part.config;
 
-public non-sealed interface RocketUpgradeConfig extends RocketPartConfig {
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.rocket.part.config.RocketUpgradeConfig;
+import dev.galacticraft.api.rocket.recipe.RocketPartRecipe;
+
+public record ExplosiveUpgradeConfig(
+        float blastRadiusMultiplier,
+        int fuseTicks,
+        RocketPartRecipe<?, ?> recipe
+) implements RocketUpgradeConfig {
+
+    public static final Codec<ExplosiveUpgradeConfig> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+            Codec.FLOAT.optionalFieldOf("blast_radius_multiplier", 1.0f).forGetter(ExplosiveUpgradeConfig::blastRadiusMultiplier),
+            Codec.INT.optionalFieldOf("fuse_ticks", 80).forGetter(ExplosiveUpgradeConfig::fuseTicks),
+            RocketPartRecipe.DIRECT_CODEC.fieldOf("recipe").forGetter(ExplosiveUpgradeConfig::recipe)
+    ).apply(instance, ExplosiveUpgradeConfig::new));
 }

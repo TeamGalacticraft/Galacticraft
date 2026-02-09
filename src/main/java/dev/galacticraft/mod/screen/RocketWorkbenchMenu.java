@@ -22,12 +22,12 @@
 
 package dev.galacticraft.mod.screen;
 
-import com.mojang.datafixers.util.Either;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.inventory.MirroredSlot;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.rocket.RocketPrefabs;
+import dev.galacticraft.api.rocket.part.RocketUpgrade;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
@@ -45,9 +45,12 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.inventory.Slot;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.TntBlock;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -71,7 +74,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     private boolean finsComplete;
     private boolean engineComplete;
 
-    // Tracking each part of the rocket for the preview
     private Slot coneSlot;
     private List<Slot> bodySlots;
     private List<Slot> boosterSlots;
@@ -131,20 +133,17 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             ++nextSlot;
         }
 
-        // Chest
-        this.addSlot(new FilteredSlot(this.workbench.chests, 0, CHEST_X, CHEST_Y, stack -> this.workbench.chests.canPlaceItem(0, stack)).withBackground(Constant.SlotSprite.CHEST));
+        this.addSlot(new FilteredSlot(this.workbench.chests, 0, CHEST_X, CHEST_Y, stack -> this.workbench.chests.canPlaceItem(0, stack))
+                .withBackground(Constant.SlotSprite.CHEST));
 
-        // Output
         this.addSlot(new RocketResultSlot(this, this.workbench.output, 0, OUTPUT_X, OUTPUT_Y));
 
-        // Player inventory
         for (int row = 0; row < 3; ++row) {
             for (int column = 0; column < 9; ++column) {
                 this.addSlot(new Slot(this.playerInventory, column + row * 9 + 9, column * 18 + 8, row * 18 + 167));
             }
         }
 
-        // Player hotbar
         for (int column = 0; column < 9; ++column) {
             this.addSlot(new Slot(this.playerInventory, column, column * 18 + 8, 225));
         }
@@ -208,17 +207,64 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         return out;
     }
 
+    private boolean isExplosiveUpgradeItem(ItemStack stack) {
+        if (!(stack.getItem() instanceof BlockItem bi)) return false;
+        Block block = bi.getBlock();
+        return block instanceof TntBlock;
+    }
+
+    private Optional<EitherHolder<RocketUpgrade<?, ?>>> computeUpgradeKey(ItemStack upgradeStack) {
+        if (upgradeStack.isEmpty()) return Optional.empty();
+
+        if (isExplosiveUpgradeItem(upgradeStack)) {
+            return Optional.of(new EitherHolder<>(GCRocketParts.EXPLOSIVE_UPGRADE));
+        }
+        return Optional.of(new EitherHolder<>(GCRocketParts.STORAGE_UPGRADE));
+    }
+
+    private Optional<ResourceLocation> computeExplosiveBlockId(ItemStack upgradeStack) {
+        if (upgradeStack.isEmpty()) return Optional.empty();
+        if (!(upgradeStack.getItem() instanceof BlockItem bi)) return Optional.empty();
+        if (!isExplosiveUpgradeItem(upgradeStack)) return Optional.empty();
+
+        return Optional.of(net.minecraft.core.registries.BuiltInRegistries.BLOCK.getKey(bi.getBlock()));
+    }
+
+    private RocketData withWorkbenchUpgrade(RocketData base) {
+        ItemStack upgradeStack = this.workbench.chests.getItem(0);
+
+        Optional<EitherHolder<RocketUpgrade<?, ?>>> key = computeUpgradeKey(upgradeStack);
+        Optional<ResourceLocation> explosive = computeExplosiveBlockId(upgradeStack);
+
+        if (key.isEmpty() || !isExplosiveUpgradeItem(upgradeStack)) {
+            explosive = Optional.empty();
+        }
+
+        return new RocketData(
+                base.cone(),
+                base.body(),
+                base.fin(),
+                base.booster(),
+                base.engine(),
+                key,
+                explosive,
+                base.color()
+        );
+    }
+
     public RocketData previewRocket() {
         RocketData data = this.recipe.value().result().getOrDefault(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-        return new RocketData(
+        RocketData withParts = new RocketData(
                 this.coneComplete ? data.cone() : Optional.empty(),
                 this.bodyComplete ? data.body() : Optional.empty(),
                 this.finsComplete ? data.fin() : Optional.empty(),
                 this.boostersComplete ? data.booster() : Optional.empty(),
                 this.engineComplete ? data.engine() : Optional.empty(),
-                this.workbench.chests.isEmpty() ? Optional.empty() : Optional.of(EitherHolder.fromEither(Either.right(GCRocketParts.STORAGE_UPGRADE))),
+                data.upgrade(),
+                Optional.empty(),
                 data.color()
         );
+        return this.withWorkbenchUpgrade(withParts);
     }
 
     @Override
@@ -231,22 +277,15 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.onItemChanged();
     }
 
-    // From ingredient slots
     @Override
     public void onItemChanged() {
         if (this.recipe.value().matches(this.workbench.ingredients.asInput(), this.workbench.getLevel())) {
             ItemStack output = this.recipe.value().result().copy();
-            RocketData rocketData = output.getOrDefault(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
-            RocketData upgradedRocketData = new RocketData(
-                    rocketData.cone(),
-                    rocketData.body(),
-                    rocketData.fin(),
-                    rocketData.booster(),
-                    rocketData.engine(),
-                    this.workbench.chests.isEmpty() ? Optional.empty() : Optional.of(EitherHolder.fromEither(Either.right(GCRocketParts.STORAGE_UPGRADE))),
-                    rocketData.color()
-            );
-            output.set(GCDataComponents.ROCKET_DATA, upgradedRocketData);
+
+            RocketData base = output.getOrDefault(GCDataComponents.ROCKET_DATA, RocketPrefabs.TIER_1);
+            RocketData upgraded = this.withWorkbenchUpgrade(base);
+
+            output.set(GCDataComponents.ROCKET_DATA, upgraded);
             this.workbench.output.setItem(0, output);
         } else {
             this.workbench.output.clearContent();
@@ -259,7 +298,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         this.engineComplete = this.engineSlot.hasItem();
     }
 
-    // From chest slots
     @Override
     public void containerChanged(Container sender) {
         this.onItemChanged();
