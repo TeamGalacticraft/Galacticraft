@@ -279,9 +279,6 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
     @Override
     public void onItemChanged() {
-        if (this.workbench.getLevel() == null || this.workbench.getLevel().isClientSide) {
-            return;
-        }
         if (this.recipe.value().matches(this.workbench.ingredients.asInput(), this.workbench.getLevel())) {
             ItemStack output = this.recipe.value().result().copy();
 
