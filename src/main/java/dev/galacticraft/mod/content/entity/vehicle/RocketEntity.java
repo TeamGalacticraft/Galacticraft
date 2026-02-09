@@ -110,10 +110,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     private static final int CRASH_ARM_DELAY_TICKS = 20;
 
-    private static final double CRASH_MIN_SPEED_SQR = 0.12 * 0.12;
-    private static final double CRASH_MIN_HORIZ_SQR = 0.06 * 0.06;
-    private static final double CRASH_MIN_UP_SQR = 0.06 * 0.06;
-    private static final double CRASH_GROUND_Y_SPEED = -0.45;
+    private static final double CRASH_MIN_SPEED_SQR = 0.0 * 0.0; //rockets now explode when they hit anything at any speed
+    private static final double CRASH_MIN_HORIZ_SQR = 0.0 * 0.0;
+    private static final double CRASH_MIN_UP_SQR = 0.0 * 0.0;
+    private static final double CRASH_GROUND_Y_SPEED = -0.0;
 
     private int crashArmTimer = 0;
     private boolean crashed = false;
