@@ -180,6 +180,37 @@
       }
     ]
   },
+  "machine.circuitscritch": {
+  "sounds": [
+    "galacticraft:machine/circuitscritch1",
+    "galacticraft:machine/circuitscritch3",
+    "galacticraft:machine/circuitscritch4"
+  ]
+},
+    "machine.machinebuzz": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/machinebuzz",
+        "stream": false
+      }
+    ]
+  },
+    "machine.machinehum": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/machinehum",
+        "stream": false
+      }
+    ]
+  },
+      "machine.oxygenfan": {
+    "sounds": [
+      {
+        "name": "galacticraft:machine/oxygenfan",
+        "stream": false
+      }
+    ]
+  },
   "music_disc.legacy.mars": {
     "sounds": [
       {

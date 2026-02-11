@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -46,6 +47,7 @@ import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -110,14 +112,36 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
     }
 
+    private int timer = 0;
+
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
+        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
+            if (timer == 0) {
+                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
+        }
+            timer++;
+            if (timer>=40) {
+                timer = 0;
+            }
+        }
     }
 
+    @Override
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        RecipeHolder<FabricationRecipe> recipe = this.getActiveRecipe();
+        if (recipe != null && this.getState().isActive()) {
+            int maxProgress = this.getProcessingTime(recipe);
+            if (this.getProgress() % (maxProgress / 5) == 0 && this.getProgress() > maxProgress / 2) {
+                level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
+            }
+        }
+        return super.tick(level, pos, state, profiler);
+    }
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
         return this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
@@ -208,4 +232,5 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                 this
         );
     }
+
 }
