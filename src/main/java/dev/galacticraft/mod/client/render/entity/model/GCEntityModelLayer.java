@@ -36,6 +36,8 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation RUMBLER = registerModelLayer("rumbler");
     public static final ModelLayerLocation COMET_CUBE = registerModelLayer("comet_cube");
     public static final ModelLayerLocation OLI_GRUB = registerModelLayer("oli_grub");
+    public static final ModelLayerLocation CHEESE_SLIME = registerModelLayer("cheese_slime");
+    public static final ModelLayerLocation CHEESE_SLIME_OUTER = registerModelLayer("cheese_slime", "outer");
     public static final ModelLayerLocation GREY = registerModelLayer("grey");
     public static final ModelLayerLocation ARCH_GREY = registerModelLayer("arch_grey");
     public static final ModelLayerLocation LANDER = registerModelLayer("lander");
@@ -50,7 +52,11 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation ROCKET_WORKBENCH = registerModelLayer("rocket_workbench");
 
     private static ModelLayerLocation registerModelLayer(String id) {
-        return new ModelLayerLocation(Constant.id(id), DEFAULT_LAYER);
+        return registerModelLayer(id, DEFAULT_LAYER);
+    }
+
+    private static ModelLayerLocation registerModelLayer(String id, String layer) {
+        return new ModelLayerLocation(Constant.id(id), layer);
     }
 
     public static void register() {
@@ -58,6 +64,8 @@ public class GCEntityModelLayer {
         EntityModelLayerRegistry.registerModelLayer(RUMBLER, RumblerEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(COMET_CUBE, CometCubeEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(OLI_GRUB, OliGrubEntityModel::createBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CHEESE_SLIME, CheeseSlimeEntityModel::createInnerBodyLayer);
+        EntityModelLayerRegistry.registerModelLayer(CHEESE_SLIME_OUTER, CheeseSlimeEntityModel::createOuterBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(GREY, GreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ARCH_GREY, ArchGreyEntityModel::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(LANDER, LanderModel::createBodyLayer);

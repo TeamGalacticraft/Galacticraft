@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCRegistry;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.data.loot.GCEntityLootSubProvider;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
@@ -227,6 +228,17 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
                                         .when(LootItemKilledByPlayerCondition.killedByPlayer())
                         )
         );
+        add(GCEntityTypes.CHEESE_SLIME,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(GCItems.MOON_CHEESE_CURD)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        ));
         add(GCEntityTypes.GAZER, noDrops());
         add(GCEntityTypes.RUMBLER, noDrops());
         add(GCEntityTypes.COMET_CUBE, noDrops());
