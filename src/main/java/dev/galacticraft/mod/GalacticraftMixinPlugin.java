@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod;
 
+import net.fabricmc.loader.api.FabricLoader;
 import org.objectweb.asm.tree.ClassNode;
 import org.spongepowered.asm.mixin.extensibility.IMixinConfigPlugin;
 import org.spongepowered.asm.mixin.extensibility.IMixinInfo;
@@ -30,6 +31,8 @@ import java.util.List;
 import java.util.Set;
 
 public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
+    private static final boolean OMNISHAPE_LOADED = FabricLoader.getInstance().isModLoaded("omnishape");
+
     @Override
     public void onLoad(String mixinPackage) {
     }
@@ -41,6 +44,9 @@ public class GalacticraftMixinPlugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
+        if ((mixinClassName.contains("ExplosionDamageCalculatorMixin") || mixinClassName.contains("ServerPlayerGameModeMixin")) && !OMNISHAPE_LOADED) {
+            return false;
+        }
         return true;
     }
 
