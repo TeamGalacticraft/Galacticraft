@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.item.Accessory;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.dispenser.BlockSource;
@@ -47,6 +46,8 @@ import net.minecraft.world.phys.AABB;
 
 import java.util.List;
 
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
+
 public class AccessoryItem extends Item implements Accessory {
     public Holder<SoundEvent> equipSound;
 
@@ -68,8 +69,8 @@ public class AccessoryItem extends Item implements Accessory {
         LivingEntity entity = (LivingEntity) list.get(0);
         Container inv = entity.galacticraft$getGearInv();
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
-            int i = (slot == GCAccessorySlots.PET_THERMAL_SLOT && entity instanceof TamableAnimal) ? GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1 : slot;
-            if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(i))) {
+            int i = (slot == PET_THERMAL_SLOT && entity instanceof TamableAnimal) ? THERMAL_ARMOR_SLOT_START + 1 : slot;
+            if (inv.getItem(slot).isEmpty() && itemStack.getItem() instanceof Accessory accessory && accessory.canEquipInSlot(itemStack, i)) {
                 ItemStack itemStack2 = itemStack.split(1);
                 inv.setItem(slot, itemStack2);
                 entity.galacticraft$onEquipAccessory(itemStack, itemStack2);
@@ -93,18 +94,22 @@ public class AccessoryItem extends Item implements Accessory {
         return this.equipSound;
     }
 
+    public boolean canEquipInSlot(ItemStack stack, int slot) {
+        return SLOT_TAGS.containsKey(slot) ? stack.is(SLOT_TAGS.get(slot)) : false;
+    }
+
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
         Container inv = player.galacticraft$getGearInv();
         ItemStack itemStack = player.getItemInHand(hand);
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
-            if (itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+            if (this.canEquipInSlot(itemStack, slot)) {
                 ItemStack itemStack2 = inv.getItem(slot);
-                if (GCAccessorySlots.ACCESSORY_SLOT_START <= slot && slot < GCAccessorySlots.ACCESSORY_SLOT_END && !itemStack2.isEmpty()) {
+                if (ACCESSORY_SLOT_START <= slot && slot < ACCESSORY_SLOT_END && !itemStack2.isEmpty()) {
                     continue;
                 }
                 if (ItemStack.matches(itemStack, itemStack2) || (itemStack2.getItem() instanceof OxygenTankItem && OxygenTankItem.getStorage(itemStack2).getAmount() > 0)) {
-                    if (slot == GCAccessorySlots.OXYGEN_TANK_1_SLOT) {
+                    if (slot == OXYGEN_TANK_1_SLOT) {
                         continue;
                     }
                     return InteractionResultHolder.fail(itemStack);

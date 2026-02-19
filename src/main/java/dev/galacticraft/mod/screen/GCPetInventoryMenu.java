@@ -24,8 +24,8 @@ package dev.galacticraft.mod.screen;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.screen.slot.AccessorySlot;
+import dev.galacticraft.mod.screen.slot.OxygenTankSlot;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.Container;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -40,6 +40,8 @@ import net.minecraft.world.item.Items;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.ticks.ContainerSingleItem;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 public class GCPetInventoryMenu extends AbstractContainerMenu {
     public final Container inventory;
@@ -85,11 +87,15 @@ public class GCPetInventoryMenu extends AbstractContainerMenu {
 
         // Galacticraft inv
         for (int i = 0; i < 3; ++i) {
-            this.addSlot(new AccessorySlot(inventory, animal, i, 80, (i + 1) * 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+            if (i == OXYGEN_TANK_1_SLOT) {
+                this.addSlot(new OxygenTankSlot(inventory, animal, i, 80, (i + 1) * 18));
+            } else {
+                this.addSlot(new AccessorySlot(inventory, animal, i, 80, (i + 1) * 18, SLOT_TAGS.get(i), SLOT_SPRITES.get(i)));
+            }
         }
 
-        int i = GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1;
-        this.addSlot(new AccessorySlot(inventory, animal, 3, 8, 18, GCAccessorySlots.SLOT_TAGS.get(i), GCAccessorySlots.SLOT_SPRITES.get(i)));
+        int i = THERMAL_ARMOR_SLOT_START + 1;
+        this.addSlot(new AccessorySlot(inventory, animal, 3, 8, 18, SLOT_TAGS.get(i), SLOT_SPRITES.get(i)));
 
         // Player main inv
         for (int slotY = 0; slotY < 3; ++slotY) {
