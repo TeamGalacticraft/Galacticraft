@@ -962,7 +962,7 @@
   "ui.galacticraft.lander.controls": "Hold \"%s\" to slow down!",
   "ui.galacticraft.lander.velocity": "Entry Velocity: %s m/s",
   "ui.galacticraft.lander.warning": "WARNING",
-  "ui.galacticraft.machine.collecting": "Collecting: %s/s",
+  "ui.galacticraft.machine.collecting": "Collecting: %s/t",
   "ui.galacticraft.machine.current_oxygen": "Oxygen: %s",
   "ui.galacticraft.machine.gj_per_t": "%s gJ/t",
   "ui.galacticraft.machine.max_oxygen": "Maximum Oxygen: %s",
