@@ -25,9 +25,9 @@ package dev.galacticraft.mod.client.gui.overlay;
 import com.mojang.blaze3d.platform.Window;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
-import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
@@ -62,7 +62,7 @@ public class OxygenOverlay {
                 final int n = inv.getContainerSize();
                 for (int i = n; i > 0; i--) {
                     Storage<FluidVariant> storage = ContainerItemContext.withConstant(inv.getItem(n - i)).find(FluidStorage.ITEM);
-                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.TextureCoordinate.OVERLAY_WIDTH + y) * i);
+                    int x = mc.getWindow().getGuiScaledWidth() - ((Constant.ScreenTexture.OXYGEN_TANK_WIDTH + y) * i);
 
                     long amount = 0;
                     long capacity = 1;
@@ -73,8 +73,8 @@ public class OxygenOverlay {
                     }
                     hasOxygen = hasOxygen || amount > 0;
 
-                    graphics.fill(x - 1, y - 1, x + Constant.TextureCoordinate.OVERLAY_WIDTH + 1, y + Constant.TextureCoordinate.OVERLAY_HEIGHT + 1, outline);
-                    DrawableUtil.drawOxygenBuffer(graphics.pose(), x, y, amount, capacity);
+                    graphics.fill(x - 1, y - 1, x + Constant.ScreenTexture.OXYGEN_TANK_WIDTH + 1, y + Constant.ScreenTexture.OXYGEN_TANK_HEIGHT + 1, outline);
+                    GraphicsUtil.drawCapacitor(graphics, x, y, capacity, amount, true);
                 }
 
                 if (nonBreathable && !((hasMaskAndGear && hasOxygen) || mc.level.isBreathable(mc.player.blockPosition().above()))) {
@@ -106,8 +106,8 @@ public class OxygenOverlay {
                     // Less obtrusive warning for if the player currently has oxygen, but has an invalid oxygen setup
                     graphics.pose().pushPose();
                     graphics.pose().scale(2.0F, 2.0F, 0.0F);
-                    int x = mc.getWindow().getGuiScaledWidth() - Constant.TextureCoordinate.OVERLAY_WIDTH - 13;
-                    graphics.pose().translate(0.5F * x, 0.5F * y + 0.25F * (Constant.TextureCoordinate.OVERLAY_HEIGHT - 14), 0.0F);
+                    int x = mc.getWindow().getGuiScaledWidth() - Constant.ScreenTexture.OXYGEN_TANK_WIDTH - 13;
+                    graphics.pose().translate(0.5F * x, 0.5F * y + 0.25F * (Constant.ScreenTexture.OXYGEN_TANK_HEIGHT - 14), 0.0F);
                     graphics.blit(Constant.ScreenTexture.WARNING_SIGN, 0, 0, 0.0F, 0.0F, 7, 7, 8, 8);
                     graphics.pose().popPose();
                 }

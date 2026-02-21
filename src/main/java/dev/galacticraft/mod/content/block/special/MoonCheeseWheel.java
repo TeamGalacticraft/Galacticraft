@@ -24,7 +24,9 @@ package dev.galacticraft.mod.content.block.special;
 
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
+import net.minecraft.network.chat.Component;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -37,6 +39,7 @@ import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
@@ -46,6 +49,8 @@ import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.phys.BlockHitResult;
+
+import java.util.List;
 
 import static dev.galacticraft.mod.content.item.GCItems.MOON_CHEESE_SLICE;
 
@@ -116,5 +121,11 @@ public class MoonCheeseWheel extends CakeBlock {
             levelAccessor.gameEvent(player, GameEvent.BLOCK_DESTROY, blockPos);
         }
         return InteractionResult.SUCCESS;
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
+        TooltipUtil.appendLshiftTooltip(this.getDescriptionId() + ".description", tooltip);
+        super.appendHoverText(stack, context, tooltip, options);
     }
 }

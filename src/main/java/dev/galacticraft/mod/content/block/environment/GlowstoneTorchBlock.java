@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.RandomSource;
@@ -51,7 +50,7 @@ public class GlowstoneTorchBlock extends TorchBlock {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_TORCH, tooltip);
+        TooltipUtil.appendLshiftTooltip(this.getDescriptionId() + ".description", tooltip);
         super.appendHoverText(stack, context, tooltip, options);
     }
 
