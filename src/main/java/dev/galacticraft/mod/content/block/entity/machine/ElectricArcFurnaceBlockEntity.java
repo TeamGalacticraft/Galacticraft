@@ -38,14 +38,14 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -90,23 +90,14 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
-    }
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.electricArcFurnaceEnergyConsumptionRate()));
 
-    private int timer = 0;
+    }
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
-            if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-            timer++;
-            if (timer>=40) {
-                timer = 0;
-            }
-        }
     }
 
     @Override

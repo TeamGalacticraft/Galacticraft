@@ -39,15 +39,15 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -90,6 +90,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state, SPEC);
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate()));
+
     }
 
     @Override
@@ -126,21 +128,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         return 183 / 20;
     }
 
-    private int timer = 0;
-
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
-            if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-            timer++;
-            if (timer>=40) {
-                timer = 0;
-            }
-        }
     }
 
     @Override
@@ -152,10 +143,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.popPush("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
-                if (timer==0) {
-                this.level.playSound(null, pos, GCSounds.OXYGEN_FAN, SoundSource.BLOCKS, 1.0F, 1.0F);
-            }
-
                 profiler.push("collect");
                 this.collectionAmount = this.collectOxygen(level, pos);
                 profiler.pop();

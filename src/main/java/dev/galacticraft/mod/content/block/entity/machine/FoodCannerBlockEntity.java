@@ -35,18 +35,18 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -135,9 +135,9 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     public FoodCannerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FOOD_CANNER, pos, state, SPEC);
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.foodCannerEnergyConsumptionRate()));
     }
 
-    private int timer = 0;
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
@@ -149,16 +149,6 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         if (this.hasCan != this.hadCan) {
             this.hadCan = this.hasCan;
             world.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
-        }
-
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
-            if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-            timer++;
-            if (timer>=40) {
-                timer = 0;
-            }
         }
     }
 

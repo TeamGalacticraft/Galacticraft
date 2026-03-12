@@ -22,32 +22,44 @@
 
 package dev.galacticraft.mod.client.sounds;
 
-
-
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public class MachineSoundInstance extends AbstractTickableSoundInstance {
-    protected final MachineBlockEntity machine;
+    private final MachineBlockEntity machine;
+    private long energyConsumptionRate;
 
-    public MachineSoundInstance(MachineBlockEntity entity, SoundEvent sound, SoundSource source) {
+    public MachineSoundInstance(MachineBlockEntity machine, long energyConsumption) {
         super(GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS,SoundInstance.createUnseededRandom());
-        this.machine = entity;
+        this.machine = machine;
         this.looping = true;
         this.delay = 0;
-        this.volume = 0.0F;
+        this.volume = 0.00001F;
+        this.pitch = 1.0F;
+        this.delay = 0;
+        this.energyConsumptionRate = energyConsumption;
+        this.x = machine.getBlockPos().getX();
+        this.y = machine.getBlockPos().getY();
+        this.z = machine.getBlockPos().getZ();
+        System.out.println("turning on!");
     }
     
     public void tick() {
-        if (!machine.energyStorage().isEmpty()) {
-            this.volume = 1.0F;
-
+        //System.out.println("Detecting Sounds!");
+        if (!this.machine.isRemoved()) {
+            if (this.machine.energyStorage().canExtract(energyConsumptionRate)) {
+                this.volume = 1.0F;
+                //System.out.println("playing sounds!");
+                //System.out.println(this.volume);
+            } else {
+                this.volume = 0.00001F;
+            }
         } else {
-            this.stop();
+            System.out.println("stopping");
+            stop();
         }
 
     }
