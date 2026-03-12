@@ -38,21 +38,21 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.network.s2c.BubbleSizePayload;
 import dev.galacticraft.mod.network.s2c.BubbleUpdatePayload;
 import dev.galacticraft.mod.screen.OxygenBubbleDistributorMenu;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
@@ -106,6 +106,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate()));
     }
 
     @Override
@@ -114,7 +115,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         this.oxygenWorld = level.getDefaultBreathable();
     }
 
-    private int timer = 0;
 
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
@@ -124,15 +124,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         this.chargeFromSlot(CHARGE_SLOT);
         this.takeFluidFromSlot(OXYGEN_INPUT_SLOT, OXYGEN_TANK, Gases.OXYGEN);
         profiler.pop();
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
-            if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-            timer++;
-            if (timer>=40) {
-                timer = 0;
-            }
-        }
     }
 
     @Override
