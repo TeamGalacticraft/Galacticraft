@@ -46,7 +46,7 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
         this.z = machine.getBlockPos().getZ();
         System.out.println("turning on!");
     }
-    
+
     public void tick() {
         //System.out.println("Detecting Sounds!");
         if (!this.machine.isRemoved()) {
