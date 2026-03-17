@@ -20,19 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket;
+package dev.galacticraft.mod.content.rocket.part.data;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.core.Registry;
-import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.item.EitherHolder;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
 
-public final class RocketCodecs {
-    private RocketCodecs() {}
+public record ExplosiveRocketData(
+        ResourceLocation explosiveBlock
+) implements RocketUpgradeData {
 
-    public static <T> Codec<EitherHolder<T>> eitherHolderWithRegistry(ResourceKey<? extends Registry<T>> registryKey) {
-        Codec<ResourceKey<T>> keyCodec = ResourceKey.codec((ResourceKey<Registry<T>>) registryKey);
+    public static final String TYPE_NAME = "explosive";
 
-        return keyCodec.xmap(EitherHolder::new, EitherHolder::key);
+    public static final MapCodec<ExplosiveRocketData> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("explosive_block").forGetter(ExplosiveRocketData::explosiveBlock)
+    ).apply(instance, ExplosiveRocketData::new));
+
+    public static final Codec<ExplosiveRocketData> CODEC = MAP_CODEC.codec();
+
+    @Override
+    public String typeName() {
+        return TYPE_NAME;
     }
 }

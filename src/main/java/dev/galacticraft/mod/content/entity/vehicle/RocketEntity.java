@@ -42,6 +42,7 @@ import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.particle.EntityParticleOption;
@@ -417,7 +418,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     private boolean hasExplosiveUpgradeAndPayload() {
         RocketData data = this.getRocketData();
-        if (data.explosiveBlock().isEmpty()) return false;
+        if (data.getUpgradeData(ExplosiveRocketData.class).isEmpty()) return false;
         if (data.upgrade().isEmpty()) return false;
 
         ResourceKey<?> key = data.upgrade().get().key();
@@ -471,13 +472,13 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
      */
     private void doExplosivePayloadCrashInstant() {
         RocketData data = this.getRocketData();
-        ResourceLocation payloadId = data.explosiveBlock().orElse(null);
-        if (payloadId == null) {
+        Optional<ExplosiveRocketData> explosiveRocketData = data.getUpgradeData(ExplosiveRocketData.class);
+        if (explosiveRocketData.isEmpty()) {
             doDefaultCrashExplosion();
             return;
         }
 
-        Block payload = BuiltInRegistries.BLOCK.get(payloadId);
+        Block payload = BuiltInRegistries.BLOCK.get(explosiveRocketData.get().explosiveBlock());
         if (!(payload instanceof TntBlock tntBlock)) {
             boolean createFire = this.level().getDefaultBreathable();
             this.level().explode(
@@ -740,6 +741,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         double velX = horizontal * sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD);
         double velZ = horizontal * -sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD);
 
+        // The coefficient of this.getDeltaMovement().y() controls the terminal velocity
+        // You might have to solve a differential equation to obtain a specific value
         double velY = 0.955D * this.getDeltaMovement().y()
                 + 0.08D * Mth.SQRT_OF_TWO * this.getThrust() * Mth.cos(this.getXRot() * Mth.DEG_TO_RAD);
 

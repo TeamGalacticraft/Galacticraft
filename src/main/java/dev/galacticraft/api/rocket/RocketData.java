@@ -28,6 +28,7 @@ import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.rocket.travelpredicate.TravelPredicateType;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.mod.content.rocket.part.data.RocketUpgradeData;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponentPatch;
@@ -36,7 +37,6 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.EitherHolder;
 import org.jetbrains.annotations.Contract;
@@ -52,7 +52,7 @@ public record RocketData(
         Optional<EitherHolder<RocketBooster<?, ?>>> booster,
         Optional<EitherHolder<RocketEngine<?, ?>>> engine,
         Optional<EitherHolder<RocketUpgrade<?, ?>>> upgrade,
-        Optional<ResourceLocation> explosiveBlock,
+        Optional<RocketUpgradeData> upgradeData,
         int color
 ) {
     public RocketData(
@@ -62,7 +62,7 @@ public record RocketData(
             @Nullable EitherHolder<RocketBooster<?, ?>> booster,
             @Nullable EitherHolder<RocketEngine<?, ?>> engine,
             @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
-            @Nullable ResourceLocation explosiveBlock,
+            @Nullable RocketUpgradeData upgradeData,
             int color
     ) {
         this(
@@ -72,8 +72,8 @@ public record RocketData(
                 Optional.ofNullable(booster),
                 Optional.ofNullable(engine),
                 Optional.ofNullable(upgrade),
-                Optional.ofNullable(explosiveBlock),
-                Optional.of(color).orElse(0xFFFFFFFF)
+                Optional.ofNullable(upgradeData),
+                color
         );
     }
 
@@ -84,7 +84,7 @@ public record RocketData(
             RocketBooster.EITHER_CODEC.optionalFieldOf("booster").forGetter(RocketData::booster),
             RocketEngine.EITHER_CODEC.optionalFieldOf("engine").forGetter(RocketData::engine),
             RocketUpgrade.EITHER_CODEC.optionalFieldOf("upgrade").forGetter(RocketData::upgrade),
-            ResourceLocation.CODEC.optionalFieldOf("explosive_block").forGetter(RocketData::explosiveBlock),
+            RocketUpgradeData.DIRECT_CODEC.optionalFieldOf("upgrade_data").forGetter(RocketData::upgradeData),
             Codec.INT.optionalFieldOf("color", 0xFFFFFFFF).forGetter(RocketData::color)
     ).apply(instance, RocketData::new));
 
@@ -100,7 +100,7 @@ public record RocketData(
             @Nullable Holder<RocketBooster<?, ?>> booster,
             @Nullable Holder<RocketEngine<?, ?>> engine,
             @Nullable Holder<RocketUpgrade<?, ?>> upgrade,
-            @Nullable ResourceLocation explosiveBlock
+            @Nullable RocketUpgradeData upgradeData
     ) {
         return new RocketData(
                 maybeHolder(cone),
@@ -109,7 +109,7 @@ public record RocketData(
                 maybeHolder(booster),
                 maybeHolder(engine),
                 maybeHolder(upgrade),
-                Optional.ofNullable(explosiveBlock),
+                Optional.ofNullable(upgradeData),
                 color
         );
     }
@@ -123,7 +123,7 @@ public record RocketData(
             @Nullable ResourceKey<RocketBooster<?, ?>> booster,
             @Nullable ResourceKey<RocketEngine<?, ?>> engine,
             @Nullable ResourceKey<RocketUpgrade<?, ?>> upgrade,
-            @Nullable ResourceLocation explosiveBlock
+            @Nullable RocketUpgradeData upgradeData
     ) {
         return new RocketData(
                 maybeHolder(cone),
@@ -132,7 +132,7 @@ public record RocketData(
                 maybeHolder(booster),
                 maybeHolder(engine),
                 maybeHolder(upgrade),
-                Optional.ofNullable(explosiveBlock),
+                Optional.ofNullable(upgradeData),
                 color
         );
     }
@@ -146,7 +146,7 @@ public record RocketData(
             @Nullable EitherHolder<RocketBooster<?, ?>> booster,
             @Nullable EitherHolder<RocketEngine<?, ?>> engine,
             @Nullable EitherHolder<RocketUpgrade<?, ?>> upgrade,
-            @Nullable ResourceLocation explosiveBlock
+            @Nullable RocketUpgradeData upgradeData
     ) {
         return new RocketData(
                 Optional.ofNullable(cone),
@@ -155,15 +155,26 @@ public record RocketData(
                 Optional.ofNullable(booster),
                 Optional.ofNullable(engine),
                 Optional.ofNullable(upgrade),
-                Optional.ofNullable(explosiveBlock),
+                Optional.ofNullable(upgradeData),
                 color
         );
     }
 
-    public int red()   { return FastColor.ARGB32.red(this.color()); }
-    public int green() { return FastColor.ARGB32.green(this.color()); }
-    public int blue()  { return FastColor.ARGB32.blue(this.color()); }
-    public int alpha() { return FastColor.ARGB32.alpha(this.color()); }
+    public int red() {
+        return FastColor.ARGB32.red(this.color());
+    }
+
+    public int green() {
+        return FastColor.ARGB32.green(this.color());
+    }
+
+    public int blue() {
+        return FastColor.ARGB32.blue(this.color());
+    }
+
+    public int alpha() {
+        return FastColor.ARGB32.alpha(this.color());
+    }
 
     public boolean isValid() {
         return this.cone.isPresent() && this.body.isPresent() && this.fin.isPresent() && this.engine.isPresent();
@@ -196,6 +207,17 @@ public record RocketData(
         return false;
     }
 
+    public <T extends RocketUpgradeData> Optional<T> getUpgradeData(Class<T> clazz) {
+        if (this.upgradeData.isPresent() && clazz.isInstance(this.upgradeData.get())) {
+            return Optional.of(clazz.cast(this.upgradeData.get()));
+        }
+        return Optional.empty();
+    }
+
+    public boolean hasUpgradeData() {
+        return this.upgradeData.isPresent();
+    }
+
     private static <T> Optional<EitherHolder<T>> maybeHolder(@Nullable Holder<T> holder) {
         return holder == null ? Optional.empty() : Optional.of(new EitherHolder<>(holder));
     }
@@ -209,7 +231,10 @@ public record RocketData(
     }
 
     private static <T> void maybeSet(DataComponentPatch.Builder builder, DataComponentType<T> type, @Nullable T value) {
-        if (value != null) builder.set(type, value);
-        else builder.remove(type);
+        if (value != null) {
+            builder.set(type, value);
+        } else {
+            builder.remove(type);
+        }
     }
 }

@@ -29,12 +29,15 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
@@ -124,9 +127,9 @@ public class RocketItem extends Item {
                             .withStyle(style)
             );
 
-            if (upgradeKey.equals(dev.galacticraft.mod.content.GCRocketParts.EXPLOSIVE_UPGRADE)) {
-                data.explosiveBlock().ifPresent(id -> {
-                    var block = net.minecraft.core.registries.BuiltInRegistries.BLOCK.get(id);
+            if (upgradeKey.equals(GCRocketParts.EXPLOSIVE_UPGRADE)) {
+                data.getUpgradeData(ExplosiveRocketData.class).ifPresent(explosiveRocketData -> {
+                    var block = BuiltInRegistries.BLOCK.get(explosiveRocketData.explosiveBlock());
                     Component blockName = block.getName();
 
                     list.add(
