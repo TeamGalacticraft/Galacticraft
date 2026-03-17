@@ -49,7 +49,11 @@ public class FlagItem extends BlockItem {
     public @NotNull InteractionResult place(BlockPlaceContext context) {
         InteractionResult result = super.place(context);
         if (result.indicateItemUse() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof FlagBlockEntity flag) {
-            flag.setFacingRadians((float) Math.toRadians(context.getPlayer().getYHeadRot()));
+            float rotation = 0;
+            if (context.getPlayer() != null) {
+                rotation = context.getPlayer().getYHeadRot();
+            }
+            flag.setFacingRadians((float) Math.toRadians(rotation));
         }
 
         return result;
