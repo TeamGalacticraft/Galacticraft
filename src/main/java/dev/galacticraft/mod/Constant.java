@@ -235,6 +235,8 @@ public interface Constant {
         String WIRE_WALKWAY = "wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
+        String FLAG = "flag";
+
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
         String GLOWSTONE_WALL_TORCH = "glowstone_wall_torch";

@@ -1,0 +1,18 @@
+{
+    "parent": "block/block",
+    "elements": [
+        {
+            "from": [7, 0, 7],
+            "to": [9, 16, 9],
+            "color": 7,
+            "faces": {
+                "north": {"uv": [0, 0, 2, 16], "texture": "#missing"},
+                "east": {"uv": [0, 0, 2, 16], "texture": "#missing"},
+                "south": {"uv": [0, 0, 2, 16], "texture": "#missing"},
+                "west": {"uv": [0, 0, 2, 16], "texture": "#missing"},
+                "up": {"uv": [0, 0, 2, 2], "texture": "#missing"},
+                "down": {"uv": [0, 0, 2, 2], "texture": "#missing"}
+            }
+        }
+    ]
+}

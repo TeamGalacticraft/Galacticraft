@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -175,6 +176,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.IRON_GRATING);
 
         this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
+        for (Block flag : GCBlocks.FLAGS.values()) {
+            this.add(flag, this.createSinglePropConditionTable(flag, FlagBlock.SECTION, FlagBlock.Section.BOTTOM));
+        }
 
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);

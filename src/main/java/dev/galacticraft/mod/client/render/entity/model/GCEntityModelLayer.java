@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.render.entity.model;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
+import dev.galacticraft.mod.client.render.block.entity.FlagBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -32,7 +33,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 public class GCEntityModelLayer {
     private static final String DEFAULT_LAYER = "main";
 
-    public static final ModelLayerLocation GAZER = registerModelLayer("gazer");
+    public static final ModelLayerLocation GAZER =  registerModelLayer("gazer");
     public static final ModelLayerLocation RUMBLER = registerModelLayer("rumbler");
     public static final ModelLayerLocation COMET_CUBE = registerModelLayer("comet_cube");
     public static final ModelLayerLocation OLI_GRUB = registerModelLayer("oli_grub");
@@ -46,6 +47,7 @@ public class GCEntityModelLayer {
     public static final ModelLayerLocation SKELETON_BOSS = registerModelLayer("skeleton_boss");
 
     // Block Entity Renderers
+    public static final ModelLayerLocation FLAG = registerModelLayer("flag");
     public static final ModelLayerLocation SOLAR_PANEL = registerModelLayer("solar_panel");
     public static final ModelLayerLocation ROCKET_WORKBENCH = registerModelLayer("rocket_workbench");
 
@@ -66,6 +68,7 @@ public class GCEntityModelLayer {
 
         EntityModelLayerRegistry.registerModelLayer(SKELETON_BOSS, EvolvedSkeletonBossModel::createBodyLayer);
 
+        EntityModelLayerRegistry.registerModelLayer(FLAG, FlagBlockEntityRenderer::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, SolarPanelBlockEntityRenderer::getTexturedModelData);
         EntityModelLayerRegistry.registerModelLayer(ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::getTexturedModelData);
     }
