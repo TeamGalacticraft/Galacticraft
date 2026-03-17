@@ -129,7 +129,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         if (recipe != null && this.getState().isActive()) {
             int maxProgress = this.getProcessingTime(recipe);
             if (this.getProgress() % (maxProgress / 5) == 0 && this.getProgress() > maxProgress / 2) {
-                level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 1.0F, level.random.nextFloat() * 0.1F + 0.9F);
+                level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
             }
         }
         return super.tick(level, pos, state, profiler);
