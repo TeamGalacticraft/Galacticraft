@@ -33,7 +33,7 @@ import net.minecraft.client.model.geom.ModelLayerLocation;
 public class GCEntityModelLayer {
     private static final String DEFAULT_LAYER = "main";
 
-    public static final ModelLayerLocation GAZER =  registerModelLayer("gazer");
+    public static final ModelLayerLocation GAZER = registerModelLayer("gazer");
     public static final ModelLayerLocation RUMBLER = registerModelLayer("rumbler");
     public static final ModelLayerLocation COMET_CUBE = registerModelLayer("comet_cube");
     public static final ModelLayerLocation OLI_GRUB = registerModelLayer("oli_grub");
