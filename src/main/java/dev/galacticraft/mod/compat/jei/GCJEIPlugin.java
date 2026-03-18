@@ -38,6 +38,7 @@ import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.EmergencyKitRecipe;
+import dev.galacticraft.mod.recipe.FlagRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
@@ -196,6 +197,7 @@ public class GCJEIPlugin implements IModPlugin {
     private static List<RecipeHolder<CraftingRecipe>> replaceSpecialCraftingRecipes(List<RecipeHolder<CraftingRecipe>> unhandledCraftingRecipes, IJeiHelpers jeiHelpers) {
         Map<Class<? extends CraftingRecipe>, Supplier<List<RecipeHolder<CraftingRecipe>>>> replacers = new IdentityHashMap<>();
         replacers.put(EmergencyKitRecipe.class, EmergencyKitRecipeMaker::createRecipes);
+        replacers.put(FlagRecipe.class, FlagRecipeMaker::createRecipes);
 
         return unhandledCraftingRecipes.stream()
             .map(RecipeHolder::value)

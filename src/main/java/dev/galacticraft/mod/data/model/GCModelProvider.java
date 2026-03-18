@@ -687,6 +687,10 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.ATMOSPHERIC_VALVE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
+        for (Item flag : GCItems.FLAGS.values()) {
+            GCModelTemplates.FLAG_INVENTORY.create(ModelLocationUtils.getModelLocation(flag), new TextureMapping(), generator.output);
+        }
+
         GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.ALUMINUM_WIRE), generator.output);
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);

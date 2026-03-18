@@ -1315,6 +1315,7 @@ public interface Constant {
 
         interface Serializer {
             String FABRICATION = "fabrication";
+            String FLAG = "flag";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
             String CANNING = "canning";

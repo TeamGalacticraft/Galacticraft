@@ -210,6 +210,11 @@ public class GCCreativeModeTabs {
                 output.accept(GCItems.UNLIT_LANTERN);
                 output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
+                // FLAGS
+                for (Item flag : GCItems.FLAGS.values()) {
+                    output.accept(flag);
+                }
+
                 // MISC DECOR
                 output.accept(WALKWAY);
                 output.accept(WIRE_WALKWAY);
