@@ -39,6 +39,7 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
@@ -56,7 +57,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
 
         PartDefinition flag = root.addOrReplaceChild("flag",
                 CubeListBuilder.create().texOffs(0, 0).addBox(0, 0, 0, 20, 40, 1),
-                PartPose.rotation(0, 0, (float) Math.toRadians(90))
+                PartPose.rotation(0, 0, Mth.HALF_PI)
         );
 
         return LayerDefinition.create(mesh, 64, 64);
