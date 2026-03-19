@@ -44,7 +44,6 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
         this.x = machine.getBlockPos().getX();
         this.y = machine.getBlockPos().getY();
         this.z = machine.getBlockPos().getZ();
-        System.out.println("turning on!");
     }
 
     public void tick() {
@@ -58,7 +57,6 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
                 this.volume = 0.00001F;
             }
         } else {
-            System.out.println("stopping");
             stop();
         }
 
