@@ -92,7 +92,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
-                Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
 

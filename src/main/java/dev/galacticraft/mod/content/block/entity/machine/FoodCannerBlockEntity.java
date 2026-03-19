@@ -135,7 +135,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     public FoodCannerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FOOD_CANNER, pos, state, SPEC);
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.foodCannerEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
     @Override

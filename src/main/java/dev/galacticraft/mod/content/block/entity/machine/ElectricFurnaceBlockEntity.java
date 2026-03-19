@@ -85,7 +85,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, OUTPUT_SLOT);
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.electricFurnaceEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
 

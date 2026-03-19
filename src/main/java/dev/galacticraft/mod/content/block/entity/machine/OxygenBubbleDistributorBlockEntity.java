@@ -106,7 +106,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
     @Override

@@ -23,16 +23,19 @@
 package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundSource;
 
+
 public class MachineSoundInstance extends AbstractTickableSoundInstance {
     private final MachineBlockEntity machine;
-    private long energyConsumptionRate;
+    private MachineStatus status;
 
-    public MachineSoundInstance(MachineBlockEntity machine, long energyConsumption) {
+    public MachineSoundInstance(MachineBlockEntity machine) {
         super(GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS,SoundInstance.createUnseededRandom());
         this.machine = machine;
         this.looping = true;
@@ -40,7 +43,6 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
         this.volume = 0.00001F;
         this.pitch = 1.0F;
         this.delay = 0;
-        this.energyConsumptionRate = energyConsumption;
         this.x = machine.getBlockPos().getX();
         this.y = machine.getBlockPos().getY();
         this.z = machine.getBlockPos().getZ();
@@ -49,12 +51,14 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
     public void tick() {
         //System.out.println("Detecting Sounds!");
         if (!this.machine.isRemoved()) {
-            if (this.machine.energyStorage().canExtract(energyConsumptionRate)) {
+            status = this.machine.getState().getStatus();
+            if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
                 this.volume = 1.0F;
-                //System.out.println("playing sounds!");
-                //System.out.println(this.volume);
             } else {
                 this.volume = 0.00001F;
+            }
+            if (this.machine.isActive()) {
+                System.out.println("Active!");
             }
         } else {
             stop();

@@ -119,7 +119,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
         Direction.stream().forEach(direction -> this.check.add(direction));
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.fuelLoaderEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
     @NotNull

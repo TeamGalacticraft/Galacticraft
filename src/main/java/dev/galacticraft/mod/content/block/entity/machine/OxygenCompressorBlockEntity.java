@@ -92,7 +92,7 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
 
     public OxygenCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_COMPRESSOR, pos, state, SPEC);
-            Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
     @Override

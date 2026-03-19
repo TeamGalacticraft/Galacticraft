@@ -38,16 +38,16 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCFluids;
-import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -106,9 +106,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
     public RefineryBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.REFINERY, pos, state, SPEC);
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
-
-    private int timer = 0;
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
@@ -117,15 +116,6 @@ public class RefineryBlockEntity extends MachineBlockEntity {
 
         this.takeFluidFromSlot(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
         this.drainFluidToSlot(FUEL_OUTPUT_SLOT, FUEL_TANK);
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate())) {
-            if (timer == 0) {
-                this.level.playSound(null, pos, GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS, 1.0F, 1.0F);
-        }
-            timer++;
-            if (timer>=40) {
-                timer = 0;
-            }
-        }
     }
 
     @Override

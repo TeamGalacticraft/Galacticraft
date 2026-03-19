@@ -90,7 +90,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.electricArcFurnaceEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
 
     }
 

@@ -112,7 +112,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this,Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate()));
+        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
     }
 
 
