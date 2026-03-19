@@ -214,8 +214,8 @@ public record RocketData(
         return Optional.empty();
     }
 
-    public boolean hasUpgradeData() {
-        return this.upgradeData.isPresent();
+    public <T extends RocketUpgradeData> boolean hasUpgradeData(Class<T> clazz) {
+        return this.upgradeData.isPresent() && clazz.isInstance(this.upgradeData.get());
     }
 
     private static <T> Optional<EitherHolder<T>> maybeHolder(@Nullable Holder<T> holder) {
@@ -236,5 +236,9 @@ public record RocketData(
         } else {
             builder.remove(type);
         }
+    }
+
+    public boolean hasUpgrade(ResourceKey<RocketUpgrade<?,?>> upgrade) {
+        return this.upgrade.isPresent() && this.upgrade.get().key().equals(upgrade);
     }
 }

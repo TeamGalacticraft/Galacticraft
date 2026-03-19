@@ -35,6 +35,7 @@ import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.content.rocket.part.data.RocketUpgradeData;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.recipe.RocketRecipe;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.inventory.RocketResultSlot;
 import io.netty.buffer.ByteBuf;
 import net.minecraft.core.BlockPos;
@@ -219,7 +220,7 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
         if (upgradeStack.getItem() instanceof BlockItem blockItem && blockItem.getBlock() instanceof TntBlock tntBlock) {
             upgrade = Optional.of(new EitherHolder<>(GCRocketParts.EXPLOSIVE_UPGRADE));
             upgradeData = Optional.of(new ExplosiveRocketData(BuiltInRegistries.BLOCK.getKey(tntBlock)));
-        } else if (!upgradeStack.isEmpty()) {
+        } else if (upgradeStack.is(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)) {
             upgrade = Optional.of(new EitherHolder<>(GCRocketParts.STORAGE_UPGRADE));
         }
 

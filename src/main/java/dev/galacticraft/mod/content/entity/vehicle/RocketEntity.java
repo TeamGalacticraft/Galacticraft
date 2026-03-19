@@ -37,6 +37,7 @@ import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
@@ -95,7 +96,6 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -346,7 +346,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void move(MoverType type, Vec3 vec3d) {
-        if (onGround()) vec3d = vec3d.multiply(1.0D, 0.0D, 1.0D);
+        if (onGround()) {
+            vec3d = vec3d.multiply(1.0D, 0.0D, 1.0D);
+        }
         super.move(type, vec3d);
         this.getPassengers().forEach(this::positionRider);
     }
@@ -418,8 +420,8 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     private boolean hasExplosiveUpgradeAndPayload() {
         RocketData data = this.getRocketData();
-        if (data.getUpgradeData(ExplosiveRocketData.class).isEmpty()) return false;
-        if (data.upgrade().isEmpty()) return false;
+        if (!data.hasUpgradeData(ExplosiveRocketData.class)) return false;
+        if (!data.hasUpgrade(GCRocketParts.EXPLOSIVE_UPGRADE)) return false;
 
         ResourceKey<?> key = data.upgrade().get().key();
 
@@ -508,7 +510,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         BlockState oldState = level.getBlockState(pos);
         BlockState payloadState = tntBlock.defaultBlockState();
-        level.setBlock(pos, payloadState, 3);
+        level.setBlock(pos, payloadState, Block.UPDATE_ALL);
 
         try {
             Explosion dummy = level.explode(
@@ -528,19 +530,17 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                     this.getBoundingBox().inflate(scanRadius)
             );
 
-            List<PrimedTnt> spawned = new ArrayList<>();
-            for (PrimedTnt e : after) {
-                if (!before.contains(e)) spawned.add(e);
+            boolean spawned = false;
+            for (PrimedTnt primed : after) {
+                if (!before.contains(primed)) {
+                    spawned = true;
+                    primed.setFuse(0);
+                    primed.setDeltaMovement(Vec3.ZERO);
+                    primed.tick();
+                }
             }
 
-            for (PrimedTnt primed : spawned) {
-                primed.setFuse(0);
-                primed.setDeltaMovement(Vec3.ZERO);
-
-                primed.tick();
-            }
-
-            if (spawned.isEmpty()) {
+            if (!spawned) {
                 LivingEntity igniter = (this.getFirstPassenger() instanceof LivingEntity le) ? le : null;
                 PrimedTnt primed = new PrimedTnt(level, this.getX(), this.getY(), this.getZ(), igniter);
                 primed.setFuse(0);
@@ -548,7 +548,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                 primed.tick();
             }
         } finally {
-            level.setBlock(pos, oldState, 3);
+            level.setBlock(pos, oldState, Block.UPDATE_ALL);
         }
     }
 
@@ -562,7 +562,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         boolean collided = this.horizontalCollision || this.verticalCollision || this.isInWall();
 
         double speedSqr = preMoveDelta.lengthSqr();
-        double horizSqr = (preMoveDelta.x * preMoveDelta.x) + (preMoveDelta.z * preMoveDelta.z);
+        double horizSqr = preMoveDelta.horizontalDistanceSqr();
         double upSqr = (preMoveDelta.y > 0) ? (preMoveDelta.y * preMoveDelta.y) : 0.0;
 
         if (collided && speedSqr >= CRASH_MIN_SPEED_SQR) {
