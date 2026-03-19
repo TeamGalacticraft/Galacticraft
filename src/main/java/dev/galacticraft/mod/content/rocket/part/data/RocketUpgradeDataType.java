@@ -20,7 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.config;
+package dev.galacticraft.mod.content.rocket.part.data;
 
-public non-sealed interface RocketUpgradeConfig extends RocketPartConfig {
+import com.mojang.serialization.MapCodec;
+
+public final class RocketUpgradeDataType {
+    private RocketUpgradeDataType() {
+    }
+
+    public static MapCodec<? extends RocketUpgradeData> mapCodecByName(String name) {
+        return switch (name) {
+            case ExplosiveRocketData.TYPE_NAME -> ExplosiveRocketData.MAP_CODEC;
+            default -> throw new IllegalArgumentException("Unknown rocket upgrade data type: " + name);
+        };
+    }
 }
