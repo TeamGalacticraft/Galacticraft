@@ -89,18 +89,12 @@ public class FlagBlock extends AbstractBannerBlock {
         }
 
         Section section = state.getValue(SECTION);
-        if (section == Section.BOTTOM && direction == Direction.DOWN) {
+        if (section == Section.BOTTOM && direction == Direction.DOWN) { // Break flag if the block below can't support it
             if (!neighborState.isFaceSturdy(level, neighborPos, direction.getOpposite(), SupportType.CENTER)) {
                 return Blocks.AIR.defaultBlockState();
             }
-        } else if (section == Section.TOP && direction == Direction.UP) {
-            return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-        } else {
-            if (neighborState.is(state.getBlock())) {
-                return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
-            } else {
-                return Blocks.AIR.defaultBlockState();
-            }
+        } else if (!(section == Section.TOP && direction == Direction.UP) && !neighborState.is(state.getBlock())) { // Break flag if part of the pole is broken
+            return Blocks.AIR.defaultBlockState();
         }
 
         return super.updateShape(state, direction, neighborState, level, pos, neighborPos);
