@@ -133,7 +133,13 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     public float zRotO;
     private float initialYRot;
 
-    private long ticksSinceJump = 0;
+    private enum LaunchConfirmState {
+        IDLE,
+        WAITING_SECOND_PRESS
+    }
+
+    private boolean lastJumping = false;
+    private LaunchConfirmState launchConfirmState = LaunchConfirmState.IDLE;
 
     public RocketEntity(EntityType<?> entityType, Level level) {
         super(entityType, level);
@@ -169,6 +175,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             this.entityData.set(STAGE, launchStage);
             setTimeAsState(0);
             RocketEvents.STAGE_CHANGED.invoker().onStageChanged(this, oldStage);
+
+            if (launchStage == LaunchStage.IDLE) {
+                resetLaunchConfirmation();
+            }
         }
     }
 
@@ -190,6 +200,19 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         }
     }
 
+    private void resetLaunchConfirmation() {
+        this.launchConfirmState = LaunchConfirmState.IDLE;
+        this.lastJumping = false;
+    }
+
+    private void cancelPreLaunch() {
+        resetLaunchConfirmation();
+
+        if (this.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+            this.setLaunchStage(LaunchStage.IDLE);
+        }
+    }
+
     @Override
     protected boolean canRide(Entity ridable) {
         return false;
@@ -205,19 +228,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     public void onJump() {
-        if (!this.getPassengers().isEmpty() && ticksSinceJump > 10) {
-            if (this.getFirstPassenger() instanceof ServerPlayer) {
-                if (getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
-                    if (!isTankEmpty() || debugMode) {
-                        this.timeBeforeLaunch = getPreLaunchWait();
-                        this.setLaunchStage(this.getLaunchStage().next());
-                        if (getLaunchStage() == LaunchStage.WARNING) {
-                            ((ServerPlayer) this.getFirstPassenger()).sendSystemMessage(Component.translatable(Translations.Chat.ROCKET_WARNING), true);
-                        }
-                    }
-                }
-            }
-        }
     }
 
     public void setFuel(long fuel) {
@@ -404,8 +414,20 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     @Override
     public void removePassenger(Entity entity) {
         super.removePassenger(entity);
-        if (this.getLaunchStage() == LaunchStage.IGNITED && entity instanceof ServerPlayer player) {
-            GCTriggers.LEAVE_ROCKET_DURING_COUNTDOWN.trigger(player);
+
+        if (this.level().isClientSide()) {
+            return;
+        }
+
+        if (this.getLaunchStage() == LaunchStage.IGNITED) {
+            if (entity instanceof ServerPlayer player) {
+                GCTriggers.LEAVE_ROCKET_DURING_COUNTDOWN.trigger(player);
+            }
+            return;
+        }
+
+        if (this.getLaunchStage().ordinal() < LaunchStage.IGNITED.ordinal()) {
+            cancelPreLaunch();
         }
     }
 
@@ -726,8 +748,6 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
             }
         }
 
-        ticksSinceJump++;
-
         if (getLaunchStage().ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (!getPassengers().isEmpty() && getPassengers().get(0) instanceof ServerPlayer player) {
                 GCTriggers.LAUNCH_ROCKET.trigger(player);
@@ -868,11 +888,41 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         float turnFactor = 2.0F;
         float angle = 180.0F;
 
+        boolean risingEdge = jumping && !this.lastJumping;
+        this.lastJumping = jumping;
+
         LaunchStage stage = this.getLaunchStage();
 
-        if (jumping && stage.ordinal() < LaunchStage.IGNITED.ordinal()) {
-            this.onJump();
+        // Launch confirmation is server-authoritative and only happens on press-down.
+        if (!this.level().isClientSide() && stage.ordinal() < LaunchStage.IGNITED.ordinal()) {
+            if (isTankEmpty() && !debugMode) {
+                cancelPreLaunch();
+            } else if (!this.getPassengers().isEmpty() && this.getFirstPassenger() instanceof ServerPlayer player) {
+                if (risingEdge) {
+                    switch (this.launchConfirmState) {
+                        case IDLE -> {
+                            this.timeBeforeLaunch = getPreLaunchWait();
+                            this.setLaunchStage(LaunchStage.WARNING);
+                            this.launchConfirmState = LaunchConfirmState.WAITING_SECOND_PRESS;
+
+                            player.sendSystemMessage(
+                                    Component.translatable(Translations.Chat.ROCKET_WARNING),
+                                    true
+                            );
+                        }
+
+                        case WAITING_SECOND_PRESS -> {
+                            this.timeBeforeLaunch = getPreLaunchWait();
+                            this.setLaunchStage(LaunchStage.IGNITED);
+                            this.launchConfirmState = LaunchConfirmState.IDLE;
+                        }
+                    }
+                }
+            }
         }
+
+        // Re-read stage in case it changed above.
+        stage = this.getLaunchStage();
 
         if (stage.ordinal() >= LaunchStage.LAUNCHED.ordinal()) {
             if (invertControls ? down : up) {
