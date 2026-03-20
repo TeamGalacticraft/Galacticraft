@@ -123,7 +123,7 @@ public class FlagBlock extends AbstractBannerBlock {
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         for (int i = 1; i < HEIGHT; i++) {
             pos = pos.above();
-            level.setBlock(pos, state.setValue(SECTION, Section.values()[i]), 3);
+            level.setBlock(pos, state.setValue(SECTION, Section.values()[i]), Block.UPDATE_ALL);
         }
 
         if (placer != null && level.getBlockEntity(pos) instanceof FlagBlockEntity flag) {
@@ -157,6 +157,18 @@ public class FlagBlock extends AbstractBannerBlock {
         }
 
         return super.playerWillDestroy(level, pos, state, player);
+    }
+
+    @Override
+    public @NotNull ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        Section section = state.getValue(SECTION);
+        pos = pos.below(section.ordinal());
+
+        if (level.getBlockEntity(pos) instanceof FlagBlockEntity flag) {
+            return flag.getItem();
+        }
+
+        return super.getCloneItemStack(level, pos, state);
     }
 
     @Override
