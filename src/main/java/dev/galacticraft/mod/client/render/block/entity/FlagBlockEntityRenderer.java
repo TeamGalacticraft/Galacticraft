@@ -68,7 +68,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
         matrices.pushPose();
         matrices.translate(0.4375, 2.0416666667, 0.479166667);
 
-        matrices.mulPose(Axis.YP.rotation(-flag.getFacingRadians()));
+        matrices.mulPose(Axis.YN.rotationDegrees(flag.getYaw()));
 
         matrices.scale((float) 2 /3, (float) 2 /3, (float) 2 /3);
         renderPatterns(

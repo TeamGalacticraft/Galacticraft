@@ -127,7 +127,7 @@ public class FlagBlock extends AbstractBannerBlock {
         }
 
         if (placer != null && level.getBlockEntity(pos) instanceof FlagBlockEntity flag) {
-            flag.setFacingRadians((float) Math.toRadians(placer.getYHeadRot()));
+            flag.setYaw(placer.getYHeadRot());
             flag.setChanged();
         }
     }

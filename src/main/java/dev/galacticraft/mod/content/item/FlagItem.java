@@ -59,7 +59,7 @@ public class FlagItem extends BlockItem {
             if (context.getPlayer() != null) {
                 rotation = context.getPlayer().getYHeadRot();
             }
-            flag.setFacingRadians((float) Math.toRadians(rotation));
+            flag.setYaw(rotation);
         }
 
         return result;

@@ -36,7 +36,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 
 public class FlagBlockEntity extends BannerBlockEntity {
-    protected float facingRadians = 0;
+    protected float yaw = 0;
 
     public FlagBlockEntity(BlockPos pos, BlockState state, DyeColor baseColor) {
         super(pos, state, baseColor);
@@ -50,22 +50,22 @@ public class FlagBlockEntity extends BannerBlockEntity {
     protected void saveAdditional(CompoundTag compound, HolderLookup.Provider registryLookup) {
         super.saveAdditional(compound, registryLookup);
 
-        compound.putFloat("facing", this.facingRadians);
+        compound.putFloat("yaw", this.yaw);
     }
 
     @Override
     protected void loadAdditional(CompoundTag compound, HolderLookup.Provider registryLookup) {
         super.loadAdditional(compound, registryLookup);
 
-        this.facingRadians = compound.getFloat("facing");
+        this.yaw = compound.getFloat("yaw");
     }
 
-    public float getFacingRadians() {
-        return facingRadians;
+    public float getYaw() {
+        return yaw;
     }
 
-    public void setFacingRadians(float radians) {
-        this.facingRadians = radians;
+    public void setYaw(float yaw) {
+        this.yaw = yaw;
     }
 
     @Override
