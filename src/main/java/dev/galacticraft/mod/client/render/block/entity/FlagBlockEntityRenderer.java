@@ -56,7 +56,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
         PartDefinition root = mesh.getRoot();
 
         PartDefinition flag = root.addOrReplaceChild("flag",
-                CubeListBuilder.create().texOffs(0, 0).addBox(0, 0, 0, 20, 40, 1),
+                CubeListBuilder.create().texOffs(0, 0).addBox(48.5F, 1.5F, -0.5F, 20, 40, 1),
                 PartPose.rotation(0, 0, Mth.HALF_PI)
         );
 
@@ -66,7 +66,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
     @Override
     public void render(FlagBlockEntity flag, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
         matrices.pushPose();
-        matrices.translate(0.4375, 2.0416666667, 0.479166667);
+        matrices.translate(0.5, 0, 0.5);
 
         matrices.mulPose(Axis.YN.rotationDegrees(flag.getYaw()));
 
