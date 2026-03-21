@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
@@ -39,7 +40,6 @@ import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteUpdatePayload;
 import dev.galacticraft.mod.util.Translations;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -802,8 +802,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 boolean validInputMaterials = true;
 
                 int i = 0;
-                for (Int2ObjectMap.Entry<Ingredient> entry : recipe.ingredients().int2ObjectEntrySet()) {
-                    Ingredient ingredient = entry.getValue();
+                for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
+                    Ingredient ingredient = pair.getFirst();
                     int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
                     int yPos = LHS + 154 + canCreateOffset;
 
@@ -856,8 +856,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
                         gui.pose().popPose();
                     }
 
-                    str = "" + entry.getIntKey();
-                    boolean valid = amount >= entry.getIntKey();
+                    str = pair.getSecond().toString();
+                    boolean valid = amount >= pair.getSecond();
                     if (!valid && validInputMaterials) {
                         validInputMaterials = false;
                     }

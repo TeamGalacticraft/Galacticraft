@@ -26,42 +26,31 @@ import com.mojang.datafixers.util.Pair;
 import com.mojang.serialization.*;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.impl.satellite.SatelliteRecipeImpl;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.minecraft.world.Container;
 import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.function.Predicate;
 
 public interface SatelliteRecipe extends Predicate<Container> {
 
-    Codec<SatelliteRecipe> CODEC = RecordCodecBuilder.create(i -> i.group(
-            new Codec<Int2ObjectMap<Ingredient>>() {
-                @Override
-                public <T> DataResult<T> encode(Int2ObjectMap<Ingredient> input, DynamicOps<T> ops, T prefix) {
-                    RecordBuilder<T> mapBuilder = ops.mapBuilder();
-                    input.forEach((amount, ingredient) -> mapBuilder.add(ops.createInt(amount).toString(), Ingredient.CODEC.encodeStart(ops, ingredient).getOrThrow()));
-                    return mapBuilder.build(prefix);
-                }
+    Codec<Pair<Ingredient, Integer>> INGREDIENT_CODEC = RecordCodecBuilder.create(i -> i.group(
+            Ingredient.CODEC.fieldOf("ingredient").forGetter(Pair::getFirst),
+            Codec.INT.fieldOf("count").forGetter(Pair::getSecond)
+    ).apply(i, Pair::new));
 
-                @Override
-                public <T> DataResult<Pair<Int2ObjectMap<Ingredient>, T>> decode(DynamicOps<T> ops, T input) {
-                    MapLike<T> mapLike = ops.getMap(input).getOrThrow();
-                    Int2ObjectMap<Ingredient> list = new Int2ObjectArrayMap<>();
-                    mapLike.entries().forEachOrdered(ttPair -> list.put(Integer.decode(ops.getStringValue(ttPair.getFirst()).getOrThrow()).intValue(), Ingredient.CODEC.decode(ops, ttPair.getSecond()).getOrThrow().getFirst()));
-                    return DataResult.success(new Pair<>(list, input));
-                }
-            }.fieldOf("ingredients").forGetter(SatelliteRecipe::ingredients)
+    Codec<SatelliteRecipe> CODEC = RecordCodecBuilder.create(i -> i.group(
+            INGREDIENT_CODEC.listOf().fieldOf("ingredients").forGetter(SatelliteRecipe::ingredients)
     ).apply(i, SatelliteRecipe::create));
 
     @Contract(value = "_ -> new", pure = true)
-    static @NotNull SatelliteRecipe create(Int2ObjectMap<Ingredient> list) {
+    static @NotNull SatelliteRecipe create(List<Pair<Ingredient, Integer>> list) {
         return new SatelliteRecipeImpl(list);
     }
 
-    Int2ObjectMap<Ingredient> ingredients();
+    List<Pair<Ingredient, Integer>> ingredients();
 
     @Override
     boolean test(@NotNull Container inventory);
