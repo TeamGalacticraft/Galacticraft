@@ -47,19 +47,38 @@ public class FlagRecipe extends CustomRecipe {
             return false;
         }
 
+        boolean flipped = false;
+        ItemStack banner = input.getItem(1, 0);
+        if (invalidBanner(banner)) {
+            banner = input.getItem(0, 0);
+            if (invalidBanner(banner)) {
+                return false;
+            }
+
+            flipped = true;
+        }
+
+        int poleX = flipped ? 1 : 0;
         for (int y = 0; y < 3; y++) {
-            if (!input.getItem(0, y).is(GCItems.STEEL_POLE)) {
+            if (!input.getItem(poleX, y).is(GCItems.STEEL_POLE)) {
                 return false;
             }
         }
 
-        ItemStack banner = input.getItem(1, 0);
-        return banner.getItem() instanceof BannerItem && banner.has(DataComponents.BANNER_PATTERNS);
+        return true;
+    }
+
+    private static boolean invalidBanner(ItemStack stack) {
+        return !(stack.getItem() instanceof BannerItem) || !stack.has(DataComponents.BANNER_PATTERNS);
     }
 
     @Override
     public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider lookup) {
         ItemStack banner = input.getItem(1, 0);
+        if (invalidBanner(banner)) {
+            banner = input.getItem(0, 0);
+        }
+
         BannerPatternLayers patterns = banner.get(DataComponents.BANNER_PATTERNS);
         DyeColor color = DyeColor.WHITE;
 

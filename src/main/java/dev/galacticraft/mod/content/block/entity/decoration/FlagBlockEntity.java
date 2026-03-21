@@ -70,7 +70,7 @@ public class FlagBlockEntity extends BannerBlockEntity {
 
     @Override
     public @NotNull Component getName() {
-        return super.getCustomName() != null ? super.getCustomName() : Component.translatable("block.galacticraft.flag");
+        return super.getCustomName() != null ? super.getCustomName() : this.getBlockState().getBlock().getName();
     }
 
     @Override

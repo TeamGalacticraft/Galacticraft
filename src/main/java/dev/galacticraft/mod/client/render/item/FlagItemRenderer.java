@@ -46,7 +46,7 @@ public class FlagItemRenderer implements BuiltinItemRendererRegistry.DynamicItem
         }
 
         Block flagBlock = GCBlocks.FLAGS.get(color);
-        FlagBlockEntity flag = new FlagBlockEntity(new BlockPos(0, 0, 0), flagBlock.defaultBlockState(), color);
+        FlagBlockEntity flag = new FlagBlockEntity(BlockPos.ZERO, flagBlock.defaultBlockState(), color);
         flag.applyComponentsFromItemStack(stack);
 
         Minecraft client = Minecraft.getInstance();
