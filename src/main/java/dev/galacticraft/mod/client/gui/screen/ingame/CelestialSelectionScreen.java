@@ -615,7 +615,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     this.drawSpaceStationDetails(graphics);
                 } else {
                     try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                        texture.blit(RHS - 96, LHS, 96, 139, SIDE_PANEL_U, SIDE_PANEL_V, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, BLUE);
+                        texture.blit(RHS - SIDE_PANEL_WIDTH, LHS, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, SIDE_PANEL_U, SIDE_PANEL_V, BLUE);
                     }
                 }
 
