@@ -47,7 +47,6 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
@@ -59,7 +58,6 @@ import net.minecraft.world.level.material.PushReaction;
 
 import java.util.EnumMap;
 import java.util.Map;
-import java.util.function.Function;
 import java.util.function.ToIntFunction;
 
 @SuppressWarnings("unused")

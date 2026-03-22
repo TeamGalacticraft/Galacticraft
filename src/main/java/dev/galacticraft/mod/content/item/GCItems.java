@@ -41,10 +41,7 @@ import net.minecraft.world.level.block.DispenserBlock;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.ArrayList;
-import java.util.EnumMap;
 import java.util.List;
-import java.util.Map;
-import java.util.function.Function;
 
 @SuppressWarnings("unused")
 public class GCItems {
