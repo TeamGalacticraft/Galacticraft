@@ -81,7 +81,7 @@ public class GCBlockEntityTypes {
 
     // DECORATION
     public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = register(Constant.Block.CANNED_FOOD, CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD);
-    public static final BlockEntityType<FlagBlockEntity> FLAG = register(Constant.Block.FLAG, FlagBlockEntity::new, GCBlocks.FLAGS.values().toArray(new Block[0]));
+    public static final BlockEntityType<FlagBlockEntity> FLAG = register(Constant.Block.FLAG, FlagBlockEntity::new, GCBlocks.FLAGS.colorMap().values().toArray(new Block[0]));
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER);
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = register(Constant.Block.ROCKET_WORKBENCH, RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH);

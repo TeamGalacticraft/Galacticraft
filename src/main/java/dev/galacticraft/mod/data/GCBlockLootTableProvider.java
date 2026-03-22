@@ -176,7 +176,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.IRON_GRATING);
 
         this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
-        for (Block flag : GCBlocks.FLAGS.values()) {
+        for (Block flag : GCBlocks.FLAGS.colorMap().values()) {
             this.add(flag, this.createSinglePropConditionTable(flag, FlagBlock.SECTION, FlagBlock.Section.BOTTOM));
         }
 

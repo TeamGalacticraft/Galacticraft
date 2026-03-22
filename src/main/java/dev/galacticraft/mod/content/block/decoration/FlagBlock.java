@@ -50,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class FlagBlock extends AbstractBannerBlock {
     public static final MapCodec<FlagBlock> CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
-            propertiesCodec(), DyeColor.CODEC.fieldOf("color").forGetter(FlagBlock::getColor)
+            DyeColor.CODEC.fieldOf("color").forGetter(FlagBlock::getColor), propertiesCodec()
     ).apply(instance, FlagBlock::new));
 
     public static final EnumProperty<Section> SECTION = EnumProperty.create("section", Section.class);
@@ -62,7 +62,7 @@ public class FlagBlock extends AbstractBannerBlock {
             Block.box(6, 0, 6, 10, 2, 10)
     );
 
-    public FlagBlock(Properties properties, DyeColor color) {
+    public FlagBlock(DyeColor color, Properties properties) {
         super(color, properties);
 
         this.registerDefaultState(

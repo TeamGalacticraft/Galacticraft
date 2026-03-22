@@ -211,7 +211,7 @@ public class GCCreativeModeTabs {
                 output.accept(GCItems.UNLIT_SOUL_LANTERN);
 
                 // FLAGS
-                for (Item flag : GCItems.FLAGS.values()) {
+                for (Item flag : GCItems.FLAGS.colorMap().values()) {
                     output.accept(flag);
                 }
 

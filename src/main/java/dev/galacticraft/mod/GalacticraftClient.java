@@ -230,7 +230,7 @@ public class GalacticraftClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : FastColor.ARGB32.opaque(stack.getOrDefault(GCDataComponents.COLOR, 0xFFFFFF)), GCItems.CANNED_FOOD);
 
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
-        for (Item flag : GCItems.FLAGS.values()) {
+        for (Item flag : GCItems.FLAGS.colorMap().values()) {
             BuiltinItemRendererRegistry.INSTANCE.register(flag, new FlagItemRenderer());
         }
 

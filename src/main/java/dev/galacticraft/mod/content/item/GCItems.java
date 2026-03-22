@@ -62,7 +62,7 @@ public class GCItems {
     public static final Item UNLIT_SOUL_LANTERN = ITEMS.register(Constant.Block.UNLIT_SOUL_LANTERN, new BlockItem(GCBlocks.UNLIT_SOUL_LANTERN, new Item.Properties()));
 
     // DECORATION
-    public static final Map<DyeColor, Item> FLAGS = registerDyedSet(Constant.Block.FLAG,
+    public static final GCRegistry.ColorSet<Item> FLAGS =  ITEMS.registerColored(Constant.Block.FLAG,
             color -> new FlagItem(GCBlocks.FLAGS.get(color), new Item.Properties().stacksTo(1).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY))
     );
 
@@ -314,17 +314,6 @@ public class GCItems {
 
     private static Item registerGeneric(String id) {
         return ITEMS.register(id, new Item(new Item.Properties()));
-    }
-
-    private static Map<DyeColor, Item> registerDyedSet(String id, Function<DyeColor, Item> itemFactory) {
-        Map<DyeColor, Item> items = new EnumMap<>(DyeColor.class);
-        for (DyeColor color : DyeColor.values()) {
-            Item item = itemFactory.apply(color);
-            ITEMS.register(color.getName() + "_" + id, item);
-            items.put(color, item);
-        }
-
-        return items;
     }
 
     public static void register() {
