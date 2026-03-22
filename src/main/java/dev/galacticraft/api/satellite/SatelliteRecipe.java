@@ -54,4 +54,6 @@ public interface SatelliteRecipe extends Predicate<Container> {
 
     @Override
     boolean test(@NotNull Container inventory);
+
+    boolean handle(@NotNull Container inventory);
 }

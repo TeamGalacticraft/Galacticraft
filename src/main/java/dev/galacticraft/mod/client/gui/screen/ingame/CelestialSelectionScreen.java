@@ -293,7 +293,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     if (recipe != null && this.canCreateSpaceStation(this.selectedBody)) {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative()) {
+                        if (this.minecraft.player.hasInfiniteMaterials() || recipe.test(this.minecraft.player.getInventory())) {
                             SatelliteCreationPayload payload = new SatelliteCreationPayload(this.selectedBody.getKey(this.celestialBodies));
                             ClientPlayNetworking.send(payload);
                             //Zoom in on planet to show the new SpaceStation if not already zoomed

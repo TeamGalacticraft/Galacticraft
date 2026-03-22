@@ -67,4 +67,26 @@ public class SatelliteRecipeImpl implements SatelliteRecipe {
         }
         return true;
     }
+
+    @Override
+    public boolean handle(@NotNull Container inventory) {
+        int invSize = inventory.getContainerSize();
+        if (invSize == 0) return false;
+
+        for (Pair<Ingredient, Integer> pair : this.ingredients) {
+            Ingredient ingredient = pair.getFirst();
+            int amount = pair.getSecond();
+            for (int i = 0; i < invSize; i++) {
+                ItemStack stack = inventory.getItem(i);
+                if (ingredient.test(stack)) {
+                    int toRemove = Math.min(amount, stack.getCount());
+                    inventory.removeItem(i, toRemove);
+                    amount -= toRemove;
+                    if (amount <= 0) break;
+                }
+            }
+            if (amount > 0) return false;
+        }
+        return true;
+    }
 }
