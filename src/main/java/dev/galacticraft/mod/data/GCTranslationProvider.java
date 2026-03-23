@@ -65,6 +65,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateFluidTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
+        this.generateBannerPatternTranslations();
         this.generateCelestialBodyTranslations();
         this.generateBiomeTranslations();
         this.generateChatTranslations();
@@ -94,23 +95,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.CANNING, "Canning");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
-
-        this.add(BannerPattern.ROCKET + ".white", "White Rocket");
-        this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
-        this.add(BannerPattern.ROCKET + ".magenta", "Magenta Rocket");
-        this.add(BannerPattern.ROCKET + ".light_blue", "Light Blue Rocket");
-        this.add(BannerPattern.ROCKET + ".yellow", "Yellow Rocket");
-        this.add(BannerPattern.ROCKET + ".lime", "Lime Rocket");
-        this.add(BannerPattern.ROCKET + ".pink", "Pink Rocket");
-        this.add(BannerPattern.ROCKET + ".gray", "Gray Rocket");
-        this.add(BannerPattern.ROCKET + ".light_gray", "Light Gray Rocket");
-        this.add(BannerPattern.ROCKET + ".cyan", "Cyan Rocket");
-        this.add(BannerPattern.ROCKET + ".purple", "Purple Rocket");
-        this.add(BannerPattern.ROCKET + ".blue", "Blue Rocket");
-        this.add(BannerPattern.ROCKET + ".brown", "Brown Rocket");
-        this.add(BannerPattern.ROCKET + ".red", "Red Rocket");
-        this.add(BannerPattern.ROCKET + ".green", "Green Rocket");
-        this.add(BannerPattern.ROCKET + ".black", "Black Rocket");
     }
 
     protected void generateBlockTranslations() {
@@ -826,6 +810,34 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.ROCKET, "Rocket");
         this.entity(GCEntityTypes.RUMBLER, "Rumbler");
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+    }
+
+    protected void generateBannerPatternTranslations() {
+        Map<String, String> colorMap = Map.ofEntries(
+                Map.entry(".white", "White"),
+                Map.entry(".orange", "Orange"),
+                Map.entry(".magenta", "Magenta"),
+                Map.entry(".light_blue", "Light Blue"),
+                Map.entry(".yellow", "Yellow"),
+                Map.entry(".lime", "Lime"),
+                Map.entry(".pink", "Pink"),
+                Map.entry(".gray", "Gray"),
+                Map.entry(".light_gray", "Light Gray"),
+                Map.entry(".cyan", "Cyan"),
+                Map.entry(".purple", "Purple"),
+                Map.entry(".blue", "Blue"),
+                Map.entry(".brown", "Brown"),
+                Map.entry(".red", "Red"),
+                Map.entry(".green", "Green"),
+                Map.entry(".black", "Black")
+        );
+
+        for (var entry : colorMap.entrySet()) {
+            this.add(BannerPattern.ROCKET + entry.getKey(), entry.getValue() + " Rocket");
+            this.add(BannerPattern.CREEPER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Creeper Charge");
+            this.add(BannerPattern.MOJANG_ROTATED + entry.getKey(), entry.getValue() + " Rotated Thing");
+            this.add(BannerPattern.SKULL_ROTATED + entry.getKey(), entry.getValue() + " Rotated Skull Charge");
+        }
     }
 
     protected void generateCelestialBodyTranslations() {

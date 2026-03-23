@@ -31,8 +31,14 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class GCBannerPatterns {
     public static final ResourceKey<BannerPattern> ROCKET = Constant.key(Registries.BANNER_PATTERN, "rocket");
+    public static final ResourceKey<BannerPattern> CREEPER_ROTATED = Constant.key(Registries.BANNER_PATTERN, "creeper_rotated");
+    public static final ResourceKey<BannerPattern> MOJANG_ROTATED = Constant.key(Registries.BANNER_PATTERN, "mojang_rotated");
+    public static final ResourceKey<BannerPattern> SKULL_ROTATED = Constant.key(Registries.BANNER_PATTERN, "skull_rotated");
 
     public static void bootstrapRegistries(BootstrapContext<BannerPattern> context) {
         context.register(ROCKET, new BannerPattern(Constant.id("rocket"), Translations.BannerPattern.ROCKET));
+        context.register(CREEPER_ROTATED, new BannerPattern(Constant.id("creeper_rotated"), Translations.BannerPattern.CREEPER_ROTATED));
+        context.register(MOJANG_ROTATED, new BannerPattern(Constant.id("mojang_rotated"), Translations.BannerPattern.MOJANG_ROTATED));
+        context.register(SKULL_ROTATED, new BannerPattern(Constant.id("skull_rotated"), Translations.BannerPattern.SKULL_ROTATED));
     }
 }
