@@ -835,7 +835,12 @@ public class GCTranslationProvider extends TranslationProvider {
         for (var entry : colorMap.entrySet()) {
             this.add(BannerPattern.ROCKET + entry.getKey(), entry.getValue() + " Rocket");
             this.add(BannerPattern.CREEPER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Creeper Charge");
+            this.add(BannerPattern.FLOW_ROTATED + entry.getKey(), entry.getValue() + " Rotated Flow");
+            this.add(BannerPattern.FLOWER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Flower");
+            this.add(BannerPattern.GLOBE_ROTATED + entry.getKey(), entry.getValue() + " Rotated Globe");
+            this.add(BannerPattern.GUSTER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Guster");
             this.add(BannerPattern.MOJANG_ROTATED + entry.getKey(), entry.getValue() + " Rotated Thing");
+            this.add(BannerPattern.PIGLIN_ROTATED + entry.getKey(), entry.getValue() + " Rotated Snout");
             this.add(BannerPattern.SKULL_ROTATED + entry.getKey(), entry.getValue() + " Rotated Skull Charge");
         }
     }

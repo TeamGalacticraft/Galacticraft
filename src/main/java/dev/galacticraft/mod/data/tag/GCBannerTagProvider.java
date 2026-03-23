@@ -45,8 +45,23 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
         this.tag(BannerPatternTags.PATTERN_ITEM_CREEPER)
                 .add(GCBannerPatterns.CREEPER_ROTATED);
 
+        this.tag(BannerPatternTags.PATTERN_ITEM_FLOW)
+                .add(GCBannerPatterns.FLOW_ROTATED);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_FLOWER)
+                .add(GCBannerPatterns.FLOWER_ROTATED);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_GLOBE)
+                .add(GCBannerPatterns.GLOBE_ROTATED);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_GUSTER)
+                .add(GCBannerPatterns.GUSTER_ROTATED);
+
         this.tag(BannerPatternTags.PATTERN_ITEM_MOJANG)
                 .add(GCBannerPatterns.MOJANG_ROTATED);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_PIGLIN)
+                .add(GCBannerPatterns.PIGLIN_ROTATED);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_SKULL)
                 .add(GCBannerPatterns.SKULL_ROTATED);

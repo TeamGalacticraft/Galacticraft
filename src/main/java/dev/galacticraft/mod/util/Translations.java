@@ -94,7 +94,12 @@ public interface Translations {
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
         String CREEPER_ROTATED = "block.galacticraft.banner.creeper_rotated";
+        String FLOW_ROTATED = "block.galacticraft.banner.flow_rotated";
+        String FLOWER_ROTATED = "block.galacticraft.banner.flower_rotated";
+        String GLOBE_ROTATED = "block.galacticraft.banner.globe_rotated";
+        String GUSTER_ROTATED = "block.galacticraft.banner.guster_rotated";
         String MOJANG_ROTATED = "block.galacticraft.banner.mojang_rotated";
+        String PIGLIN_ROTATED = "block.galacticraft.banner.piglin_rotated";
         String SKULL_ROTATED = "block.galacticraft.banner.skull_rotated";
     }
 
