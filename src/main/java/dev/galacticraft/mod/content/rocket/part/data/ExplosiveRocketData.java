@@ -20,7 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.config;
+package dev.galacticraft.mod.content.rocket.part.data;
 
-public non-sealed interface RocketUpgradeConfig extends RocketPartConfig {
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.MapCodec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
+import net.minecraft.resources.ResourceLocation;
+
+public record ExplosiveRocketData(
+        ResourceLocation explosiveBlock
+) implements RocketUpgradeData {
+
+    public static final String TYPE_NAME = "explosive";
+
+    public static final MapCodec<ExplosiveRocketData> MAP_CODEC = RecordCodecBuilder.mapCodec(instance -> instance.group(
+            ResourceLocation.CODEC.fieldOf("explosive_block").forGetter(ExplosiveRocketData::explosiveBlock)
+    ).apply(instance, ExplosiveRocketData::new));
+
+    public static final Codec<ExplosiveRocketData> CODEC = MAP_CODEC.codec();
+
+    @Override
+    public String typeName() {
+        return TYPE_NAME;
+    }
 }

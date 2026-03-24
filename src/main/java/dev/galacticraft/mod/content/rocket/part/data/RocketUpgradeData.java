@@ -20,7 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.api.rocket.part.config;
+package dev.galacticraft.mod.content.rocket.part.data;
 
-public non-sealed interface RocketUpgradeConfig extends RocketPartConfig {
+import com.mojang.serialization.Codec;
+
+public sealed interface RocketUpgradeData permits ExplosiveRocketData {
+
+    Codec<RocketUpgradeData> DIRECT_CODEC =
+            Codec.STRING.dispatch(
+                    "type",
+                    RocketUpgradeData::typeName,
+                    RocketUpgradeDataType::mapCodecByName
+            );
+
+    String typeName();
 }
