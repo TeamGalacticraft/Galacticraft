@@ -39,7 +39,6 @@ import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
-import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.ParachuteItem;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
@@ -220,6 +219,8 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                 Constant.id("/" + Constant.Recipe.Serializer.EMERGENCY_KIT),
                 true
         ));
+
+        registry.addRecipe(new FlagEmiRecipe());
 
         addWorldInteraction(registry);
     }
