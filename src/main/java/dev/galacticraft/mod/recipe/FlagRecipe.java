@@ -24,16 +24,25 @@ package dev.galacticraft.mod.recipe;
 
 import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
+import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.BannerItem;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 
 public class FlagRecipe extends CustomRecipe {
     public FlagRecipe(CraftingBookCategory category) {
@@ -77,8 +86,25 @@ public class FlagRecipe extends CustomRecipe {
         return FlagItem.fromBanner(banner);
     }
 
-    private static boolean invalidBanner(ItemStack stack) {
+    public static boolean invalidBanner(ItemStack stack) {
         return !(stack.getItem() instanceof BannerItem) || !stack.has(DataComponents.BANNER_PATTERNS);
+    }
+
+    public static ItemStack randomBanner(DyeColor baseColor, List<Holder.Reference<BannerPattern>> availablePatterns, Random random) {
+        final int layerCount = 2;
+
+        BannerPatternLayers layers = new BannerPatternLayers(new ArrayList<>(layerCount));
+        for (int i = 0; i < layerCount; i++) {
+            layers.layers().add(new BannerPatternLayers.Layer(
+                    availablePatterns.get(random.nextInt(availablePatterns.size())),
+                    DyeColor.byId(random.nextInt(16))
+            ));
+        }
+
+        ItemStack banner = new ItemStack(BannerBlock.byColor(baseColor).asItem());
+        banner.set(DataComponents.BANNER_PATTERNS, layers);
+
+        return banner;
     }
 
     @Override

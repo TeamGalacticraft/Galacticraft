@@ -68,10 +68,6 @@ public class FlagItem extends BlockItem {
         return result;
     }
 
-    public static boolean isFlagItem(ItemStack stack) {
-        return stack.getItem() instanceof FlagItem && stack.has(DataComponents.BANNER_PATTERNS);
-    }
-
     public static ItemStack fromBanner(ItemStack stack) {
         DyeColor color = DyeColor.WHITE;
         if (stack.getItem() instanceof BannerItem banner) {

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.compat.rei.common.display;
 
 import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.recipe.FlagRecipe;
 import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -33,14 +34,11 @@ import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapedDisplay;
 import net.minecraft.core.Holder;
-import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
-import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.*;
 
@@ -48,7 +46,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     @Override
     public Optional<List<DefaultCraftingDisplay<?>>> getRecipeFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack stack) {
-            if (FlagItem.isFlagItem(stack)) {
+            if (stack.getItem() instanceof FlagItem) {
                 return Optional.of(Collections.singletonList(createDisplay(FlagItem.toBanner(stack), stack)));
             }
         }
@@ -88,8 +86,6 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
         );
     }
 
-    protected static final int BANNERS_PER_COLOR = 2;
-    protected static final int PATTERNS_PER_BANNER = 2;
     public static Optional<DefaultCustomShapedDisplay> randomFlagRecipe() {
         Random random = new Random();
         List<Holder.Reference<BannerPattern>> availablePatterns = BasicDisplay.registryAccess().registry(Registries.BANNER_PATTERN)
@@ -100,11 +96,12 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
             return Optional.empty();
         }
 
-        EntryIngredient.Builder banners = EntryIngredient.builder(16 * BANNERS_PER_COLOR * PATTERNS_PER_BANNER);
-        EntryIngredient.Builder flags = EntryIngredient.builder(16 * BANNERS_PER_COLOR * PATTERNS_PER_BANNER);
+        final int bannersPerColor = 2;
+        EntryIngredient.Builder banners = EntryIngredient.builder(16 * bannersPerColor);
+        EntryIngredient.Builder flags = EntryIngredient.builder(16 * bannersPerColor);
         for (DyeColor color : DyeColor.values()) {
-            for (int i = 0; i < BANNERS_PER_COLOR; i++) {
-                ItemStack banner = randomBanner(color, availablePatterns, random);
+            for (int i = 0; i < bannersPerColor; i++) {
+                ItemStack banner = FlagRecipe.randomBanner(color, availablePatterns, random);
                 ItemStack flag = FlagItem.fromBanner(banner);
 
                 banners.add(EntryStacks.of(banner));
@@ -118,22 +115,5 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
         EntryIngredient.unifyFocuses(banner, flag);
 
         return Optional.of(DefaultCustomShapedDisplay.simple(ingredientsFromBanner(banner), List.of(flag), 2, 3, Optional.empty()));
-    }
-
-    public static ItemStack randomBanner(DyeColor baseColor, List<Holder.Reference<BannerPattern>> availablePatterns, Random random) {
-        final int layerCount = 2;
-
-        BannerPatternLayers layers = new BannerPatternLayers(new ArrayList<>(layerCount));
-        for (int i = 0; i < layerCount; i++) {
-            layers.layers().add(new BannerPatternLayers.Layer(
-                    availablePatterns.get(random.nextInt(availablePatterns.size())),
-                    DyeColor.byId(random.nextInt(16))
-            ));
-        }
-
-        ItemStack banner = new ItemStack(BannerBlock.byColor(baseColor).asItem());
-        banner.set(DataComponents.BANNER_PATTERNS, layers);
-
-        return banner;
     }
 }
