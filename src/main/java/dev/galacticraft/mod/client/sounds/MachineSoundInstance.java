@@ -28,6 +28,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 
 
@@ -46,10 +47,10 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
         this.x = machine.getBlockPos().getX();
         this.y = machine.getBlockPos().getY();
         this.z = machine.getBlockPos().getZ();
+
     }
 
     public void tick() {
-        //System.out.println("Detecting Sounds!");
         if (!this.machine.isRemoved()) {
             status = this.machine.getState().getStatus();
             if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
