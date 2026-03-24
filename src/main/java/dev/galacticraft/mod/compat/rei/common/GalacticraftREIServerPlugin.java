@@ -23,19 +23,14 @@
 package dev.galacticraft.mod.compat.rei.common;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCanningDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.*;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FABRICATION);
+    public static final CategoryIdentifier<DefaultFlagDisplay> FLAG = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FLAG);
     public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.COMPRESSING);
     public static final CategoryIdentifier<ElectricCompressingDisplay> ELECTRIC_COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_COMPRESSING);
     public static final CategoryIdentifier<ElectricFurnaceDisplay> ELECTRIC_SMELTING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_SMELTING);
@@ -47,6 +42,7 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
         registry.register(FABRICATION, DefaultFabricationDisplay.SERIALIZER);
+        registry.register(FLAG, DefaultFlagDisplay.SERIALIZER);
         registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_COMPRESSING, ElectricCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_SMELTING, ElectricFurnaceDisplay.SERIALIZER);

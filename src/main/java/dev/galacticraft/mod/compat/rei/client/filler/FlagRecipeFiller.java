@@ -22,57 +22,89 @@
 
 package dev.galacticraft.mod.compat.rei.client.filler;
 
+import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FlagRecipe;
 import me.shedaniel.rei.api.common.display.Display;
+import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
+import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapedDisplay;
 import net.minecraft.core.Holder;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BannerItem;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.BannerBlock;
+import net.minecraft.world.level.block.entity.BannerPattern;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
+import java.util.Random;
 
 public class FlagRecipeFiller implements CraftingRecipeFiller<FlagRecipe> {
+    protected static final int BANNERS_PER_COLOR = 2;
+    protected static final int PATTERNS_PER_BANNER = 2;
+
     @Override
     public Collection<Display> apply(RecipeHolder<FlagRecipe> flagRecipeRecipeHolder) {
-        List<Display> displays = new ArrayList<>();
-        for (Holder<Item> item : BuiltInRegistries.ITEM.getTagOrEmpty(ItemTags.BANNERS)) {
-            if (item.value() instanceof BannerItem banner && item.value().components().has(DataComponents.BANNER_PATTERNS)) {
-                DyeColor color = banner.getColor();
-                ItemStack flag = new ItemStack(GCItems.FLAGS.get(color));
-                flag.set(DataComponents.BANNER_PATTERNS, banner.components().get(DataComponents.BANNER_PATTERNS));
+        System.out.println(flagRecipeRecipeHolder.value());
 
-                List<EntryIngredient> ingredients = List.of(
-                        EntryIngredients.of(GCItems.STEEL_POLE), EntryIngredients.of(banner),
-                        EntryIngredients.of(GCItems.STEEL_POLE), EntryIngredient.empty(),
-                        EntryIngredients.of(GCItems.STEEL_POLE), EntryIngredient.empty()
-                );
-                Display display = new DefaultCustomShapedDisplay(
-                        flagRecipeRecipeHolder,
-                        ingredients,
-                        List.of(EntryIngredients.of(flag)),
-                        2, 3
-                );
+        Random random = new Random();
+        List<Holder.Reference<BannerPattern>> availablePatterns = BasicDisplay.registryAccess().registry(Registries.BANNER_PATTERN)
+                .map(registry -> registry.holders().toList())
+                .orElseGet(List::of);
 
-                displays.add(display);
+        if (availablePatterns.isEmpty()) {
+            return List.of();
+        }
 
-//                CraftingRecipe recipe = new ShapedRecipe(GROUP, CraftingBookCategory.BUILDING, recipePattern, flag, false);
-//                recipes.add(new RecipeHolder<>(Constant.id(GROUP + "." + color.getName()), recipe));
+        EntryIngredient.Builder banners = EntryIngredient.builder(16 * BANNERS_PER_COLOR * PATTERNS_PER_BANNER);
+        EntryIngredient.Builder flags = EntryIngredient.builder(16 * BANNERS_PER_COLOR * PATTERNS_PER_BANNER);
+        for (DyeColor color : DyeColor.values()) {
+            for (int i = 0; i < BANNERS_PER_COLOR; i++) {
+                ItemStack banner = generateRandomBanner(color, availablePatterns, random);
+                ItemStack flag = FlagItem.fromBanner(banner);
+
+                banners.add(EntryStacks.of(banner));
+                flags.add(EntryStacks.of(flag));
             }
         }
 
-        return displays;
+        EntryIngredient banner = banners.build();
+        EntryIngredient flag = flags.build();
+
+        EntryIngredient.unifyFocuses(banner, flag);
+
+        List<EntryIngredient> inputs = List.of(
+                EntryIngredients.of(GCItems.STEEL_POLE), banner,
+                EntryIngredients.of(GCItems.STEEL_POLE), EntryIngredient.empty(),
+                EntryIngredients.of(GCItems.STEEL_POLE), EntryIngredient.empty()
+        );
+
+        return List.of(new DefaultCustomShapedDisplay(flagRecipeRecipeHolder, inputs, List.of(flag), 2, 3));
+    }
+
+    public static ItemStack generateRandomBanner(DyeColor baseColor, List<Holder.Reference<BannerPattern>> availablePatterns, Random random) {
+        final int layerCount = 2;
+
+        BannerPatternLayers layers = new BannerPatternLayers(new ArrayList<>(layerCount));
+        for (int i = 0; i < layerCount; i++) {
+            layers.layers().add(new BannerPatternLayers.Layer(
+                    availablePatterns.get(random.nextInt(availablePatterns.size())),
+                    DyeColor.byId(random.nextInt(16))
+            ));
+        }
+
+        ItemStack banner = new ItemStack(BannerBlock.byColor(baseColor).asItem());
+        banner.set(DataComponents.BANNER_PATTERNS, layers);
+
+        return banner;
     }
 
     @Override

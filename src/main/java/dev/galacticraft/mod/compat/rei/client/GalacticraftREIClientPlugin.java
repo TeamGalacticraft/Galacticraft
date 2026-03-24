@@ -40,15 +40,7 @@ import dev.galacticraft.mod.compat.rei.client.display.CompressingDisplayVisibili
 import dev.galacticraft.mod.compat.rei.client.filler.EmergencyKitRecipeFiller;
 import dev.galacticraft.mod.compat.rei.client.filler.FlagRecipeFiller;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
-import dev.galacticraft.mod.compat.rei.common.display.CanningDisplayGenerator;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultShapedCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultShapelessCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricShapedCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricShapelessCompressingDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.*;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -126,6 +118,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
         registry.registerRecipeFiller(RocketRecipe.class, GCRecipes.ROCKET_TYPE, DefaultRocketDisplay::new);
 
         registry.registerDisplayGenerator(GalacticraftREIServerPlugin.CANNING, new CanningDisplayGenerator());
+        registry.registerDisplayGenerator(BuiltinPlugin.CRAFTING, new FlagDisplayGenerator());
 
         for (CraftingRecipeFiller<?> filler : CRAFTING_RECIPE_FILLERS) {
             filler.registerDisplays(registry);

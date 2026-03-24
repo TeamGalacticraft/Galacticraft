@@ -1306,6 +1306,7 @@ public interface Constant {
 
     interface Recipe {
         String FABRICATION = "fabrication";
+        String FLAG = "flag";
         String COMPRESSING = "compressing";
         String ELECTRIC_COMPRESSING = "electric_compressing";
         String ELECTRIC_SMELTING = "electric_smelting";

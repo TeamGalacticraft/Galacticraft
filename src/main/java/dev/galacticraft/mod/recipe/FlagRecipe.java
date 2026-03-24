@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.recipe;
 
+import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
@@ -49,9 +50,9 @@ public class FlagRecipe extends CustomRecipe {
 
         boolean flipped = false;
         ItemStack banner = input.getItem(1, 0);
-        if (invalidBanner(banner)) {
+        if (!FlagItem.isFlagItem(banner)) {
             banner = input.getItem(0, 0);
-            if (invalidBanner(banner)) {
+            if (!FlagItem.isFlagItem(banner)) {
                 return false;
             }
 
@@ -68,14 +69,10 @@ public class FlagRecipe extends CustomRecipe {
         return true;
     }
 
-    private static boolean invalidBanner(ItemStack stack) {
-        return !(stack.getItem() instanceof BannerItem) || !stack.has(DataComponents.BANNER_PATTERNS);
-    }
-
     @Override
     public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider lookup) {
         ItemStack banner = input.getItem(1, 0);
-        if (invalidBanner(banner)) {
+        if (!FlagItem.isFlagItem(banner)) {
             banner = input.getItem(0, 0);
         }
 

@@ -23,11 +23,13 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.mod.content.block.entity.decoration.FlagBlockEntity;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.*;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.AbstractBannerBlock;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import org.jetbrains.annotations.NotNull;
 
@@ -63,5 +65,32 @@ public class FlagItem extends BlockItem {
         }
 
         return result;
+    }
+
+    public static boolean isFlagItem(ItemStack stack) {
+        return stack.getItem() instanceof FlagItem && stack.has(DataComponents.BANNER_PATTERNS);
+    }
+
+    public static ItemStack fromBanner(ItemStack stack) {
+        DyeColor color = DyeColor.WHITE;
+        if (stack.getItem() instanceof BannerItem banner) {
+            color = banner.getColor();
+        }
+
+        ItemStack flag = new ItemStack(GCItems.FLAGS.get(color));
+        flag.set(DataComponents.BANNER_PATTERNS, stack.get(DataComponents.BANNER_PATTERNS));
+        flag.set(DataComponents.CUSTOM_NAME, stack.get(DataComponents.CUSTOM_NAME));
+        return flag;
+    }
+
+    public static ItemStack toBanner(ItemStack stack) {
+        DyeColor color = DyeColor.WHITE;
+        if (stack.getItem() instanceof FlagItem flag) {
+            color = flag.getColor();
+        }
+
+        ItemStack banner = new ItemStack(BannerBlock.byColor(color).asItem());
+        banner.set(DataComponents.BANNER_PATTERNS, stack.get(DataComponents.BANNER_PATTERNS));
+        return banner;
     }
 }
