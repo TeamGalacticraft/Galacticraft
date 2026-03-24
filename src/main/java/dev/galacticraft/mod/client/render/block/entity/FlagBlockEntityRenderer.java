@@ -39,9 +39,12 @@ import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.ModelBakery;
+import net.minecraft.core.BlockPos;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
+import org.jetbrains.annotations.Nullable;
 
 public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEntity> {
     protected final ModelPart flag;
@@ -65,6 +68,14 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
 
     @Override
     public void render(FlagBlockEntity flag, float tickDelta, PoseStack matrices, MultiBufferSource vertexConsumers, int light, int overlay) {
+        Level level = flag.getLevel();
+        BlockPos pos = flag.getBlockPos();
+        if (shouldSway(level, pos)) {
+            long gameTime = level.getGameTime();
+            float sway = (tickDelta + Math.floorMod(pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L + gameTime, 100)) / 100;
+            this.flag.xRot = 0.01f * Mth.cos(Mth.TWO_PI * sway) * Mth.PI;
+        }
+
         matrices.pushPose();
         matrices.translate(0.5, 0, 0.5);
 
@@ -75,6 +86,12 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
                 matrices, vertexConsumers, light, overlay, this.flag, ModelBakery.BANNER_BASE, flag.getBaseColor(), flag.getPatterns()
         );
         matrices.popPose();
+    }
+
+    public static boolean shouldSway(@Nullable Level level, BlockPos pos) {
+        return level != null && level.galacticraft$getCelestialBody() != null &&
+                (level.galacticraft$getCelestialBody().value().atmosphere().pressure() >= 1f ||
+                level.isBreathable(pos.getX(), pos.getY(), pos.getZ()));
     }
 
     public static void renderPatterns(
