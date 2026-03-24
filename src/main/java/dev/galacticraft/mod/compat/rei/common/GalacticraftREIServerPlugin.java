@@ -30,7 +30,6 @@ import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FABRICATION);
-    public static final CategoryIdentifier<DefaultFlagDisplay> FLAG = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FLAG);
     public static final CategoryIdentifier<DefaultCompressingDisplay> COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.COMPRESSING);
     public static final CategoryIdentifier<ElectricCompressingDisplay> ELECTRIC_COMPRESSING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_COMPRESSING);
     public static final CategoryIdentifier<ElectricFurnaceDisplay> ELECTRIC_SMELTING = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.ELECTRIC_SMELTING);
@@ -42,7 +41,6 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
     @Override
     public void registerDisplaySerializer(DisplaySerializerRegistry registry) {
         registry.register(FABRICATION, DefaultFabricationDisplay.SERIALIZER);
-        registry.register(FLAG, DefaultFlagDisplay.SERIALIZER);
         registry.register(COMPRESSING, DefaultCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_COMPRESSING, ElectricCompressingDisplay.Serializer.INSTANCE);
         registry.register(ELECTRIC_SMELTING, ElectricFurnaceDisplay.SERIALIZER);

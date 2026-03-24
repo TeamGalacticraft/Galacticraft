@@ -38,7 +38,6 @@ import dev.galacticraft.mod.compat.rei.client.category.ElectricCompressingCatego
 import dev.galacticraft.mod.compat.rei.client.category.ElectricFurnaceCategory;
 import dev.galacticraft.mod.compat.rei.client.display.CompressingDisplayVisibilityPredicate;
 import dev.galacticraft.mod.compat.rei.client.filler.EmergencyKitRecipeFiller;
-import dev.galacticraft.mod.compat.rei.client.filler.FlagRecipeFiller;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.*;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -74,7 +73,6 @@ import net.minecraft.world.level.ItemLike;
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
     private static final CraftingRecipeFiller<?>[] CRAFTING_RECIPE_FILLERS = new CraftingRecipeFiller[]{
             new EmergencyKitRecipeFiller(),
-            new FlagRecipeFiller()
     };
 
     @Override
