@@ -97,7 +97,7 @@ public class FlagRecipe extends CustomRecipe {
             ));
         }
 
-        ItemStack banner = new ItemStack(BannerBlock.byColor(baseColor).asItem());
+        ItemStack banner = new ItemStack(BannerBlock.byColor(baseColor));
         banner.set(DataComponents.BANNER_PATTERNS, layers);
 
         return banner;

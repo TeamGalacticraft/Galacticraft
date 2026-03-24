@@ -28,12 +28,14 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.BannerBlock;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.*;
@@ -58,7 +60,7 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
             if (stack.getItem() instanceof BannerItem) {
                 return List.of(createRecipe(stack, FlagItem.fromBanner(stack)));
             } else if (stack.is(GCItems.STEEL_POLE)) {
-                return List.of(defaultRecipe());
+                return defaultRecipes();
             }
         }
         return List.of();
@@ -76,7 +78,7 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
 
     @Override
     public @NotNull List<RecipeHolder<CraftingRecipe>> getAllRecipes() {
-        return List.of(defaultRecipe());
+        return defaultRecipes();
     }
 
     public static RecipeHolder<CraftingRecipe> createRecipe(ItemStack banner, ItemStack flag) {
@@ -94,10 +96,13 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
                 "| "
         );
         ShapedRecipe recipe = new ShapedRecipe(Constant.Recipe.FLAG, CraftingBookCategory.BUILDING, ShapedRecipePattern.of(key, pattern), flag);
-        return new RecipeHolder<>(Constant.id(Constant.Recipe.FLAG), recipe);
+        ResourceLocation id = flag.getItemHolder().unwrapKey().map(ResourceKey::location).orElse(Constant.id(Constant.Recipe.FLAG));
+        return new RecipeHolder<>(id, recipe);
     }
 
-    public static RecipeHolder<CraftingRecipe> defaultRecipe() {
-        return createRecipe(new ItemStack(Items.WHITE_BANNER), new ItemStack(GCItems.FLAGS.get(DyeColor.WHITE)));
+    public static List<RecipeHolder<CraftingRecipe>> defaultRecipes() {
+        return Arrays.stream(DyeColor.values())
+                .map(color -> createRecipe(new ItemStack(BannerBlock.byColor(color)), new ItemStack(GCItems.FLAGS.get(color))))
+                .toList();
     }
 }

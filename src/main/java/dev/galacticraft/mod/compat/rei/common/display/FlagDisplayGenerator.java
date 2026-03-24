@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FlagRecipe;
 import dev.galacticraft.mod.tag.GCItemTags;
 import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
+import me.shedaniel.rei.api.client.view.ViewSearchBuilder;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.entry.EntryStack;
@@ -64,6 +65,11 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
             }
         }
         return Optional.empty();
+    }
+
+    @Override
+    public Optional<List<DefaultCraftingDisplay<?>>> generate(ViewSearchBuilder builder) {
+        return randomFlagRecipe().map(List::of);
     }
 
     public static DefaultCustomShapedDisplay createDisplay(ItemStack banner, ItemStack flag) {
