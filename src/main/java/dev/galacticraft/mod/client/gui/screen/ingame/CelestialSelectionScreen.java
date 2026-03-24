@@ -825,10 +825,10 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
 
                 color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), centerX, y + 4, CREATE_SS_PANEL_WIDTH - 2, FastColor.ARGB32.color(255, color, 255, color));
+                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), centerX, y + 3, CREATE_SS_PANEL_WIDTH - 2, FastColor.ARGB32.color(255, color, 255, color));
 
                 if (!mapMode) {
-                    texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), centerX, createSpaceStationButtonY + 3, CREATE_SS_PANEL_WIDTH - 2, WHITE);
+                    texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), centerX, createSpaceStationButtonY + 2, CREATE_SS_PANEL_WIDTH - 2, WHITE);
                 }
             }
         }
@@ -891,7 +891,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                 str = pair.getSecond().toString();
                 int color = validInputMaterials || hasIngredients.get(i) ? GREEN : RED;
-                gui.drawString(this.font, str, xPos + 8 - this.font.width(str) / 2, yPos + 16, color, false);
+                gui.drawString(this.font, str, xPos + 8 - this.font.width(str) / 2, yPos + 17, color, false);
 
                 i++;
             }
