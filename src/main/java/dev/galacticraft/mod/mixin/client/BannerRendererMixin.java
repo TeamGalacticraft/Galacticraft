@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.internal.mixin.client;
+package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.client.render.block.entity.FlagBlockEntityRenderer;

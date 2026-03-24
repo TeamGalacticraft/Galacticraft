@@ -36,6 +36,7 @@
     "client.AbstractContainerScreenMixin",
     "client.AlphaWarningTitleScreenMixin",
     "client.AnimalModelAgeableListModel",
+    "client.BannerRendererMixin",
     "client.BlockModelMixin",
     "client.BlockModelMixin$DeserializerMixin",
     "client.CameraMixin",

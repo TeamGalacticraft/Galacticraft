@@ -25,7 +25,6 @@
   "client": [
     "client.AbstractClientPlayerEntityMixin",
     "client.AbstractContainerScreenMixin",
-    "client.BannerRendererMixin",
     "client.ClientLevelMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.FogRendererMixin",
