@@ -25,6 +25,7 @@ package dev.galacticraft.mod.compat.rei.common.display;
 import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FlagRecipe;
+import dev.galacticraft.mod.tag.GCItemTags;
 import me.shedaniel.rei.api.client.registry.display.DynamicDisplayGenerator;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
@@ -35,7 +36,7 @@ import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCraftingDisplay;
 import me.shedaniel.rei.plugin.common.displays.crafting.DefaultCustomShapedDisplay;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.world.item.BannerItem;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.block.entity.BannerPattern;
@@ -46,7 +47,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     @Override
     public Optional<List<DefaultCraftingDisplay<?>>> getRecipeFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack stack) {
-            if (stack.getItem() instanceof FlagItem) {
+            if (stack.is(GCItemTags.FLAGS)) {
                 return Optional.of(Collections.singletonList(createDisplay(FlagItem.toBanner(stack), stack)));
             }
         }
@@ -56,7 +57,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     @Override
     public Optional<List<DefaultCraftingDisplay<?>>> getUsageFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack stack) {
-            if (stack.getItem() instanceof BannerItem) {
+            if (stack.is(ItemTags.BANNERS)) {
                 return Optional.of(List.of(createDisplay(stack, FlagItem.fromBanner(stack))));
             } else if (stack.is(GCItems.STEEL_POLE)) {
                 return randomFlagRecipe().map(List::of);

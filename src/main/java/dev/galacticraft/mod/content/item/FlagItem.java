@@ -87,7 +87,7 @@ public class FlagItem extends BlockItem {
         }
 
         ItemStack banner = new ItemStack(BannerBlock.byColor(color).asItem());
-        banner.set(DataComponents.BANNER_PATTERNS, stack.get(DataComponents.BANNER_PATTERNS));
+        banner.set(DataComponents.BANNER_PATTERNS, stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
         return banner;
     }
 }

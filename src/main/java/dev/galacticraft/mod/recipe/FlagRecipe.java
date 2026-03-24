@@ -27,7 +27,7 @@ import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
-import net.minecraft.world.item.BannerItem;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -57,9 +57,9 @@ public class FlagRecipe extends CustomRecipe {
 
         boolean flipped = false;
         ItemStack banner = input.getItem(1, 0);
-        if (invalidBanner(banner)) {
+        if (!banner.is(ItemTags.BANNERS)) {
             banner = input.getItem(0, 0);
-            if (invalidBanner(banner)) {
+            if (!banner.is(ItemTags.BANNERS)) {
                 return false;
             }
 
@@ -79,15 +79,11 @@ public class FlagRecipe extends CustomRecipe {
     @Override
     public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider lookup) {
         ItemStack banner = input.getItem(1, 0);
-        if (invalidBanner(banner)) {
+        if (!banner.is(ItemTags.BANNERS)) {
             banner = input.getItem(0, 0);
         }
 
         return FlagItem.fromBanner(banner);
-    }
-
-    public static boolean invalidBanner(ItemStack stack) {
-        return !(stack.getItem() instanceof BannerItem) || !stack.has(DataComponents.BANNER_PATTERNS);
     }
 
     public static ItemStack randomBanner(DyeColor baseColor, List<Holder.Reference<BannerPattern>> availablePatterns, Random random) {

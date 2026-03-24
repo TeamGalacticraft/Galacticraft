@@ -25,9 +25,10 @@ package dev.galacticraft.mod.compat.jei;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.FlagItem;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.recipe.FlagRecipe;
+import dev.galacticraft.mod.tag.GCItemTags;
 import mezz.jei.api.ingredients.ITypedIngredient;
 import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;
+import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
@@ -41,17 +42,14 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
     @Override
     public boolean isHandledInput(ITypedIngredient<?> input) {
         if (input.getIngredient() instanceof ItemStack stack) {
-            return stack.is(GCItems.STEEL_POLE) || !FlagRecipe.invalidBanner(stack);
+            return stack.is(GCItems.STEEL_POLE) || stack.is(ItemTags.BANNERS);
         }
         return false;
     }
 
     @Override
     public boolean isHandledOutput(ITypedIngredient<?> output) {
-        if (output.getIngredient() instanceof ItemStack stack) {
-            return stack.getItem() instanceof FlagItem;
-        }
-        return false;
+        return output.getIngredient() instanceof ItemStack stack && stack.is(GCItemTags.FLAGS);
     }
 
     @Override
@@ -69,7 +67,7 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
     @Override
     public @NotNull List<RecipeHolder<CraftingRecipe>> getRecipesForOutput(ITypedIngredient<?> output) {
         if (output.getIngredient() instanceof ItemStack stack) {
-            if (stack.getItem() instanceof FlagItem) {
+            if (stack.is(GCItemTags.FLAGS)) {
                 return List.of(createRecipe(FlagItem.toBanner(stack), stack));
             }
         }
