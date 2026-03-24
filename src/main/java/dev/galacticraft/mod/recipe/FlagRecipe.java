@@ -27,14 +27,12 @@ import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.item.BannerItem;
-import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.CustomRecipe;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.jetbrains.annotations.NotNull;
 
 public class FlagRecipe extends CustomRecipe {
@@ -50,9 +48,9 @@ public class FlagRecipe extends CustomRecipe {
 
         boolean flipped = false;
         ItemStack banner = input.getItem(1, 0);
-        if (!FlagItem.isFlagItem(banner)) {
+        if (invalidBanner(banner)) {
             banner = input.getItem(0, 0);
-            if (!FlagItem.isFlagItem(banner)) {
+            if (invalidBanner(banner)) {
                 return false;
             }
 
@@ -72,20 +70,15 @@ public class FlagRecipe extends CustomRecipe {
     @Override
     public @NotNull ItemStack assemble(CraftingInput input, HolderLookup.Provider lookup) {
         ItemStack banner = input.getItem(1, 0);
-        if (!FlagItem.isFlagItem(banner)) {
+        if (invalidBanner(banner)) {
             banner = input.getItem(0, 0);
         }
 
-        BannerPatternLayers patterns = banner.get(DataComponents.BANNER_PATTERNS);
-        DyeColor color = DyeColor.WHITE;
+        return FlagItem.fromBanner(banner);
+    }
 
-        if (banner.getItem() instanceof BannerItem bannerItem) {
-            color = bannerItem.getColor();
-        }
-
-        ItemStack flag = new ItemStack(GCItems.FLAGS.get(color));
-        flag.set(DataComponents.BANNER_PATTERNS, patterns);
-        return flag;
+    private static boolean invalidBanner(ItemStack stack) {
+        return !(stack.getItem() instanceof BannerItem) || !stack.has(DataComponents.BANNER_PATTERNS);
     }
 
     @Override

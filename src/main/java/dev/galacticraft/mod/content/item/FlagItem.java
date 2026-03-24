@@ -31,6 +31,7 @@ import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -78,7 +79,7 @@ public class FlagItem extends BlockItem {
         }
 
         ItemStack flag = new ItemStack(GCItems.FLAGS.get(color));
-        flag.set(DataComponents.BANNER_PATTERNS, stack.get(DataComponents.BANNER_PATTERNS));
+        flag.set(DataComponents.BANNER_PATTERNS, stack.getOrDefault(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY));
         flag.set(DataComponents.CUSTOM_NAME, stack.get(DataComponents.CUSTOM_NAME));
         return flag;
     }
