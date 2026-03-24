@@ -41,7 +41,7 @@ public class MachineSoundInstance extends AbstractTickableSoundInstance {
         this.machine = machine;
         this.looping = true;
         this.delay = 0;
-        this.volume = 0.00001F;
+        this.volume = 0.00001F; // if it is 0 nothing will play
         this.pitch = 1.0F;
         this.delay = 0;
         this.x = machine.getBlockPos().getX();
