@@ -788,11 +788,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
         SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
 
-        List<Boolean> hasIngredients = recipe.ingredients().stream()
+        List<Boolean> hasIngredients = recipe == null ? List.of() : recipe.ingredients().stream()
                 .map(pair -> this.getAmountInInventory(pair.getFirst()) >= pair.getSecond())
                 .toList();
 
         boolean validInputMaterials = this.minecraft.player.hasInfiniteMaterials() || !hasIngredients.contains(false);
+
+        final int rows = (int) Math.ceil(Math.max(hasIngredients.size(), 1) / 4.0);
+        final int rowHeight = 25;
 
         final int x = RHS - CREATE_SS_PANEL_WIDTH - 2;
         final int centerX = x + (int) Math.ceil(CREATE_SS_PANEL_WIDTH / 2.0);
@@ -809,6 +812,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
             for (int i = 0; i < canCreateLength; i++) {
                 texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, BLUE);
                 backgroundY += this.font.lineHeight;
+            }
+
+            for (int i = 1; i < rows; i++) {
+                texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, rowHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, rowHeight, BLUE);
+                backgroundY += rowHeight;
             }
 
             texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, BLUE);
@@ -838,8 +846,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
             int i = 0;
             for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
                 Ingredient ingredient = pair.getFirst();
-                final int xPos = (int) (x + i * CREATE_SS_PANEL_WIDTH / (double) recipe.ingredients().size() + 5);
-                final int yPos = createSpaceStationButtonY - 28;
+                final int xPos = x + 7 + 21 * (i % 4);
+                final int yPos = createSpaceStationButtonY - 3 + rowHeight * (i / 4 - rows);
 
                 boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
                 Lighting.setupFor3DItems();
@@ -891,7 +899,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
                 str = pair.getSecond().toString();
                 int color = validInputMaterials || hasIngredients.get(i) ? GREEN : RED;
-                gui.drawString(this.font, str, xPos + 8 - this.font.width(str) / 2, yPos + 17, color, false);
+                gui.drawString(this.font, str, xPos + 9 - this.font.width(str) / 2, yPos + 17, color, false);
 
                 i++;
             }
