@@ -24,6 +24,8 @@
     "LevelMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
+    "MapBannerMixin",
+    "MapItemMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",
