@@ -66,6 +66,7 @@ public class FlagBlockEntity extends BannerBlockEntity {
 
     public void setYaw(float yaw) {
         this.yaw = yaw;
+        this.setChanged();
     }
 
     @Override

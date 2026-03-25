@@ -58,11 +58,9 @@ public class FlagItem extends BlockItem {
     public @NotNull InteractionResult place(BlockPlaceContext context) {
         InteractionResult result = super.place(context);
         if (result.indicateItemUse() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof FlagBlockEntity flag) {
-            float rotation = 0;
             if (context.getPlayer() != null) {
-                rotation = context.getPlayer().getYHeadRot();
+                flag.setYaw(context.getPlayer().getYHeadRot());
             }
-            flag.setYaw(rotation);
         }
 
         return result;

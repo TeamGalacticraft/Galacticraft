@@ -125,11 +125,6 @@ public class FlagBlock extends AbstractBannerBlock {
             pos = pos.above();
             level.setBlock(pos, state.setValue(SECTION, Section.values()[i]), Block.UPDATE_ALL);
         }
-
-        if (placer != null && level.getBlockEntity(pos) instanceof FlagBlockEntity flag) {
-            flag.setYaw(placer.getYHeadRot());
-            flag.setChanged();
-        }
     }
 
     @Override
