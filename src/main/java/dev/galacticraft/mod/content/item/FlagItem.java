@@ -22,17 +22,13 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.content.block.entity.decoration.FlagBlockEntity;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.InteractionResult;
 import net.minecraft.world.item.*;
-import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.block.AbstractBannerBlock;
 import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BannerPatternLayers;
-import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -52,18 +48,6 @@ public class FlagItem extends BlockItem {
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
         BannerItem.appendHoverTextFromBannerBlockEntityTag(stack, tooltip);
-    }
-
-    @Override
-    public @NotNull InteractionResult place(BlockPlaceContext context) {
-        InteractionResult result = super.place(context);
-        if (result.indicateItemUse() && context.getLevel().getBlockEntity(context.getClickedPos()) instanceof FlagBlockEntity flag) {
-            if (context.getPlayer() != null) {
-                flag.setYaw(context.getPlayer().getYHeadRot());
-            }
-        }
-
-        return result;
     }
 
     public static ItemStack fromBanner(ItemStack stack) {
