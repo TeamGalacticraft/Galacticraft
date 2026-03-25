@@ -69,7 +69,10 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
 
     @Override
     public Optional<List<DefaultCraftingDisplay<?>>> generate(ViewSearchBuilder builder) {
-        return randomFlagRecipe().map(List::of);
+        if (builder.getRecipesFor().isEmpty() && builder.getUsagesFor().isEmpty()) {
+            return randomFlagRecipe().map(List::of);
+        }
+        return Optional.empty();
     }
 
     public static DefaultCustomShapedDisplay createDisplay(ItemStack banner, ItemStack flag) {
