@@ -20,6 +20,18 @@
               }
             }
           ],
+          "functions": [
+            {
+              "function": "minecraft:copy_components",
+              "include": [
+                "minecraft:custom_name",
+                "minecraft:item_name",
+                "minecraft:hide_additional_tooltip",
+                "minecraft:banner_patterns"
+              ],
+              "source": "block_entity"
+            }
+          ],
           "name": "galacticraft:magenta_flag"
         }
       ],
