@@ -31,7 +31,6 @@ import mezz.jei.api.recipe.advanced.ISimpleRecipeManagerPlugin;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.ItemTags;
-import net.minecraft.world.item.BannerItem;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.*;
@@ -57,10 +56,10 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
     @Override
     public @NotNull List<RecipeHolder<CraftingRecipe>> getRecipesForInput(ITypedIngredient<?> input) {
         if (input.getIngredient() instanceof ItemStack stack) {
-            if (stack.getItem() instanceof BannerItem) {
+            if (stack.is(ItemTags.BANNERS)) {
                 return List.of(createRecipe(stack, FlagItem.fromBanner(stack)));
             } else if (stack.is(GCItems.STEEL_POLE)) {
-                return defaultRecipes();
+                return getAllRecipes();
             }
         }
         return List.of();
@@ -78,17 +77,15 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
 
     @Override
     public @NotNull List<RecipeHolder<CraftingRecipe>> getAllRecipes() {
-        return defaultRecipes();
+        return Arrays.stream(DyeColor.values())
+                .map(color -> createRecipe(new ItemStack(BannerBlock.byColor(color)), new ItemStack(GCItems.FLAGS.get(color))))
+                .toList();
     }
 
     public static RecipeHolder<CraftingRecipe> createRecipe(ItemStack banner, ItemStack flag) {
-        if (banner.getCount() > 1) {
-            banner = banner.copyWithCount(1);
-        }
-
         Map<Character, Ingredient> key = Map.of(
                 '|', Ingredient.of(GCItems.STEEL_POLE),
-                'B', Ingredient.of(banner)
+                'B', Ingredient.of(banner.copyWithCount(1))
         );
         List<String> pattern = List.of(
                 "|B",
@@ -98,11 +95,5 @@ public class FlagRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Recip
         ShapedRecipe recipe = new ShapedRecipe(Constant.Recipe.FLAG, CraftingBookCategory.BUILDING, ShapedRecipePattern.of(key, pattern), flag);
         ResourceLocation id = flag.getItemHolder().unwrapKey().map(ResourceKey::location).orElse(Constant.id(Constant.Recipe.FLAG));
         return new RecipeHolder<>(id, recipe);
-    }
-
-    public static List<RecipeHolder<CraftingRecipe>> defaultRecipes() {
-        return Arrays.stream(DyeColor.values())
-                .map(color -> createRecipe(new ItemStack(BannerBlock.byColor(color)), new ItemStack(GCItems.FLAGS.get(color))))
-                .toList();
     }
 }

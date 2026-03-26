@@ -49,7 +49,7 @@ public class FlagEmiRecipe extends EmiPatternCraftingRecipe {
                 List.of(EmiIngredient.of(ItemTags.BANNERS), EmiStack.of(GCItems.STEEL_POLE)),
                 EmiStack.EMPTY,
                 Constant.id('/' + Constant.Recipe.FLAG),
-                true
+                false
         );
     }
 

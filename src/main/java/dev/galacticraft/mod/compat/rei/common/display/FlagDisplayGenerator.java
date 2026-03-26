@@ -49,7 +49,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     public Optional<List<DefaultCraftingDisplay<?>>> getRecipeFor(EntryStack<?> entry) {
         if (entry.getValue() instanceof ItemStack stack) {
             if (stack.is(GCItemTags.FLAGS)) {
-                return Optional.of(Collections.singletonList(createDisplay(FlagItem.toBanner(stack), stack)));
+                return Optional.of(List.of(createDisplay(FlagItem.toBanner(stack), stack)));
             }
         }
         return Optional.empty();
@@ -76,12 +76,8 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     }
 
     public static DefaultCustomShapedDisplay createDisplay(ItemStack banner, ItemStack flag) {
-        if (banner.getCount() > 1) {
-            banner = banner.copyWithCount(1);
-        }
-
         return DefaultCustomShapedDisplay.simple(
-                ingredientsFromBanner(EntryIngredients.of(banner)),
+                ingredientsFromBanner(EntryIngredients.of(banner.copyWithCount(1))),
                 List.of(EntryIngredients.of(flag)),
                 2, 3,
                 Optional.empty()
