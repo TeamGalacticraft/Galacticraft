@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.compat.emi;
 
 import dev.emi.emi.api.recipe.EmiPatternCraftingRecipe;
-import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.emi.emi.api.widget.GeneratedSlotWidget;
 import dev.emi.emi.api.widget.SlotWidget;
@@ -35,27 +34,25 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.Holder;
 import net.minecraft.core.registries.Registries;
-import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.List;
 import java.util.Random;
 
 public class FlagEmiRecipe extends EmiPatternCraftingRecipe {
-    public FlagEmiRecipe() {
+    protected final DyeColor baseColor;
+
+    public FlagEmiRecipe(DyeColor baseColor) {
         super(
-                List.of(EmiIngredient.of(ItemTags.BANNERS), EmiStack.of(GCItems.STEEL_POLE)),
-                EmiStack.EMPTY,
-                Constant.id('/' + Constant.Recipe.FLAG),
+                List.of(EmiStack.of(BannerBlock.byColor(baseColor)), EmiStack.of(GCItems.STEEL_POLE)),
+                EmiStack.of(GCItems.FLAGS.get(baseColor)),
+                Constant.id('/' + Constant.Recipe.FLAG + '/' + baseColor.getName()),
                 false
         );
-    }
-
-    @Override
-    public List<EmiStack> getOutputs() {
-        return GCItems.FLAGS.colorMap().values().stream().map(EmiStack::of).toList();
+        this.baseColor = baseColor;
     }
 
     @Override
@@ -73,7 +70,7 @@ public class FlagEmiRecipe extends EmiPatternCraftingRecipe {
         return new GeneratedSlotWidget(random -> EmiStack.of(FlagItem.fromBanner(randomBanner(random))), this.unique, x, y);
     }
 
-    public static ItemStack randomBanner(Random random) {
+    public ItemStack randomBanner(Random random) {
         ClientLevel level = Minecraft.getInstance().level;
         if (level == null) {
             return ItemStack.EMPTY;
@@ -87,7 +84,6 @@ public class FlagEmiRecipe extends EmiPatternCraftingRecipe {
             return ItemStack.EMPTY;
         }
 
-        DyeColor baseColor = DyeColor.byId(random.nextInt(16));
-        return FlagRecipe.randomBanner(baseColor, availablePatterns, random);
+        return FlagRecipe.randomBanner(this.baseColor, availablePatterns, random);
     }
 }

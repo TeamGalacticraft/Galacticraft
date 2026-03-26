@@ -220,7 +220,9 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                 true
         ));
 
-        registry.addRecipe(new FlagEmiRecipe());
+        for (DyeColor color : DyeColor.values()) {
+            registry.addRecipe(new FlagEmiRecipe(color));
+        }
 
         addWorldInteraction(registry);
     }
