@@ -62,7 +62,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
             if (stack.is(ItemTags.BANNERS)) {
                 return Optional.of(List.of(createDisplay(stack, FlagItem.fromBanner(stack))));
             } else if (stack.is(GCItems.STEEL_POLE)) {
-                return randomFlagRecipe().map(List::of);
+                return randomFlagRecipe();
             }
         }
         return Optional.empty();
@@ -71,7 +71,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
     @Override
     public Optional<List<DefaultCraftingDisplay<?>>> generate(ViewSearchBuilder builder) {
         if (builder.getRecipesFor().isEmpty() && builder.getUsagesFor().isEmpty()) {
-            return randomFlagRecipe().map(List::of);
+            return randomFlagRecipe();
         }
         return Optional.empty();
     }
@@ -93,7 +93,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
         );
     }
 
-    public static Optional<DefaultCustomShapedDisplay> randomFlagRecipe() {
+    public static Optional<List<DefaultCraftingDisplay<?>>> randomFlagRecipe() {
         Random random = new Random();
         List<Holder.Reference<BannerPattern>> availablePatterns = BasicDisplay.registryAccess().registry(Registries.BANNER_PATTERN)
                 .map(registry -> registry.holders().toList())
@@ -103,29 +103,32 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
             return Optional.empty();
         }
 
-        final int bannersPerColor = 2;
-        EntryIngredient.Builder banners = EntryIngredient.builder(16 * bannersPerColor);
-        EntryIngredient.Builder flags = EntryIngredient.builder(16 * bannersPerColor);
+        List<DefaultCraftingDisplay<?>> recipes = new ArrayList<>(16);
 
         for (DyeColor color : DyeColor.values()) {
+            EntryIngredient.Builder banners = EntryIngredient.builder(3);
+            EntryIngredient.Builder flags = EntryIngredient.builder(3);
+
             ItemStack plainBanner = new ItemStack(BannerBlock.byColor(color));
             banners.add(EntryStacks.of(plainBanner));
             flags.add(EntryStacks.of(FlagItem.fromBanner(plainBanner)));
 
-            for (int i = 0; i < bannersPerColor; i++) {
+            for (int i = 0; i < 2; i++) {
                 ItemStack banner = FlagRecipe.randomBanner(color, availablePatterns, random);
                 ItemStack flag = FlagItem.fromBanner(banner);
 
                 banners.add(EntryStacks.of(banner));
                 flags.add(EntryStacks.of(flag));
             }
+
+            EntryIngredient banner = banners.build();
+            EntryIngredient flag = flags.build();
+
+            EntryIngredient.unifyFocuses(banner, flag);
+
+            recipes.add(DefaultCustomShapedDisplay.simple(ingredientsFromBanner(banner), List.of(flag), 2, 3, Optional.empty()));
         }
 
-        EntryIngredient banner = banners.build();
-        EntryIngredient flag = flags.build();
-
-        EntryIngredient.unifyFocuses(banner, flag);
-
-        return Optional.of(DefaultCustomShapedDisplay.simple(ingredientsFromBanner(banner), List.of(flag), 2, 3, Optional.empty()));
+        return Optional.of(recipes);
     }
 }
