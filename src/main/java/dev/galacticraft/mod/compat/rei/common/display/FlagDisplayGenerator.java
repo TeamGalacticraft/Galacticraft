@@ -40,6 +40,7 @@ import net.minecraft.core.registries.Registries;
 import net.minecraft.tags.ItemTags;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.block.BannerBlock;
 import net.minecraft.world.level.block.entity.BannerPattern;
 
 import java.util.*;
@@ -105,7 +106,12 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
         final int bannersPerColor = 2;
         EntryIngredient.Builder banners = EntryIngredient.builder(16 * bannersPerColor);
         EntryIngredient.Builder flags = EntryIngredient.builder(16 * bannersPerColor);
+
         for (DyeColor color : DyeColor.values()) {
+            ItemStack plainBanner = new ItemStack(BannerBlock.byColor(color));
+            banners.add(EntryStacks.of(plainBanner));
+            flags.add(EntryStacks.of(FlagItem.fromBanner(plainBanner)));
+
             for (int i = 0; i < bannersPerColor; i++) {
                 ItemStack banner = FlagRecipe.randomBanner(color, availablePatterns, random);
                 ItemStack flag = FlagItem.fromBanner(banner);
