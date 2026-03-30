@@ -849,7 +849,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 final int xPos = x + 7 + 21 * (i % 4);
                 final int yPos = createSpaceStationButtonY - 3 + rowHeight * (i / 4 - rows);
 
-                boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
+                boolean showTooltip = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
                 Lighting.setupFor3DItems();
                 ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
 
@@ -859,11 +859,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 Lighting.setupForFlatItems();
                 RenderSystem.enableBlend();
 
-                if (b) {
+                if (showTooltip) {
                     RenderSystem.depthMask(true);
                     RenderSystem.enableDepthTest();
                     gui.pose().pushPose();
-                    gui.pose().translate(0, 0, 300);
+                    gui.pose().translate(0, 0, BORDER_Z + 1);
                     int k = this.font.width(stack.getHoverName());
                     int j2 = mousePosX - k / 2;
                     int k2 = mousePosY - 12;
