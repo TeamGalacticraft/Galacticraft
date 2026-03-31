@@ -9,5 +9,5 @@ base {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(path = ":common", configuration = "namedElements"))
 }

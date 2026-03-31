@@ -110,7 +110,7 @@ configurations {
 }
 
 dependencies {
-    implementation(project(":common"))
+    implementation(project(path = ":common", configuration = "namedElements"))
 
     minecraft("com.mojang:minecraft:$minecraftVersion")
     mappings(
