@@ -287,7 +287,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
 
         if (!this.mapMode) {
-            if (x >= RHS - CREATE_SS_PANEL_WIDTH - 2 && x < RHS && y > createSpaceStationButtonY && y < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
+            if (x >= RHS - CREATE_SS_PANEL_WIDTH - 2 && x < RHS - 2 && y > createSpaceStationButtonY && y < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
                 if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/) {
                     SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
                     if (recipe != null && this.canCreateSpaceStation(this.selectedBody)) {
@@ -826,7 +826,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                 int color = validInputMaterials ? GREEN1 : RED;
 
                 createSpaceStationButtonY = backgroundY + 1;
-                if (!this.mapMode && mousePosX >= x && mousePosX <= RHS && mousePosY >= createSpaceStationButtonY && mousePosY <= createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
+                if (!this.mapMode && mousePosX >= x && mousePosX < RHS - 2 && mousePosY >= createSpaceStationButtonY && mousePosY < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
                     texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
                 }
 
