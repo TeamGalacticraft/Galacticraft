@@ -53,7 +53,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 18, Constant.ScreenTexture.OXYGEN_TANK_WIDTH, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + 128, this.topPos + 17, Constant.ScreenTexture.OXYGEN_TANK_WIDTH + 2, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT + 2)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(2)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;

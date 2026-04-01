@@ -85,7 +85,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         if (this.menu.bubbleVisible) {
             color = ChatFormatting.DARK_GREEN.getColor();
             text = Component.translatable(Translations.Ui.BUBBLE_VISIBLE);
-            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 buttonU = BUTTON_GREEN_HOVER_U;
                 buttonV = BUTTON_GREEN_HOVER_V;
             } else {
@@ -95,7 +95,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         } else {
             color = ChatFormatting.RED.getColor();
             text = Component.translatable(Translations.Ui.BUBBLE_NOT_VISIBLE);
-            if (DrawableUtil.isWithin(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, buttonX, buttonY, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 buttonU = BUTTON_RED_HOVER_U;
                 buttonV = BUTTON_RED_HOVER_V;
             } else {
@@ -118,10 +118,10 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
         int arrowUpV = ARROW_UP_V;
         int arrowDownU = ARROW_DOWN_U;
         int arrowDownV = ARROW_DOWN_V;
-        if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowUpY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, arrowX, arrowUpY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
             arrowUpU = ARROW_UP_HOVER_U;
             arrowUpV = ARROW_UP_HOVER_V;
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, arrowX, arrowDownY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+        } else if (DrawableUtil.mouseIn(mouseX, mouseY, arrowX, arrowDownY, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
             arrowDownU = ARROW_DOWN_HOVER_U;
             arrowDownV = ARROW_DOWN_HOVER_V;
         }
@@ -166,14 +166,14 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
 
     private boolean checkClick(double mouseX, double mouseY, int button) {
         if (button == 0) {
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + BUTTON_X, this.topPos + BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + BUTTON_X, this.topPos + BUTTON_Y, BUTTON_WIDTH, BUTTON_HEIGHT)) {
                 this.menu.bubbleVisible = !this.menu.bubbleVisible;
                 ClientPlayNetworking.send(new BubbleVisibilityPayload(this.menu.bubbleVisible));
                 this.playButtonSound();
                 return true;
             }
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_UP_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_UP_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize != Byte.MAX_VALUE) {
                     this.menu.targetSize = ((byte) (this.menu.targetSize + 1));
                     textField.setValue(String.valueOf(this.menu.targetSize));
@@ -183,7 +183,7 @@ public class OxygenBubbleDistributorScreen extends MachineScreen<OxygenBubbleDis
                 }
             }
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_DOWN_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + ARROW_X, this.topPos + ARROW_DOWN_Y, ARROW_VERTICAL_WIDTH, ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.targetSize > 1) {
                     this.menu.targetSize = (byte) (this.menu.targetSize - 1);
                     textField.setValue(String.valueOf(this.menu.targetSize));
