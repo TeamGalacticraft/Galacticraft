@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.v2.WrapWithCondition;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.client.render.block.entity.FlagBlockEntityRenderer;
 import net.minecraft.client.model.geom.ModelPart;
@@ -30,14 +31,11 @@ import net.minecraft.world.level.block.entity.BannerBlockEntity;
 import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 @Mixin(BannerRenderer.class)
 public abstract class BannerRendererMixin {
-    @Redirect(method = "render(Lnet/minecraft/world/level/block/entity/BannerBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", opcode = Opcodes.PUTFIELD))
-    private void galacticraft$disableSwayingWithNoAtmosphere(ModelPart instance, float value, @Local(argsOnly = true) BannerBlockEntity banner) {
-        if (FlagBlockEntityRenderer.shouldSway(banner.getLevel(), banner.getBlockPos())) {
-            instance.xRot = value;
-        }
+    @WrapWithCondition(method = "render(Lnet/minecraft/world/level/block/entity/BannerBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", opcode = Opcodes.PUTFIELD))
+    private boolean galacticraft$disableSwayingWithNoAtmosphere(ModelPart instance, float value, @Local(argsOnly = true) BannerBlockEntity banner) {
+        return FlagBlockEntityRenderer.shouldSway(banner.getLevel(), banner.getBlockPos());
     }
 }

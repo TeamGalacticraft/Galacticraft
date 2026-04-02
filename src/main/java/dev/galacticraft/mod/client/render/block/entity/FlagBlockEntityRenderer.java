@@ -81,7 +81,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
 
         matrices.mulPose(Axis.YN.rotationDegrees(flag.getYaw()));
 
-        matrices.scale((float) 2 /3, (float) 2 /3, (float) 2 /3);
+        matrices.scale(2f/3f, 2f/3f, 2f/3f);
         renderPatterns(
                 matrices, vertexConsumers, light, overlay, this.flag, ModelBakery.BANNER_BASE, flag.getBaseColor(), flag.getPatterns()
         );

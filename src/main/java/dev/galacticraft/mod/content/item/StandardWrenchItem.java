@@ -143,8 +143,9 @@ public class StandardWrenchItem extends Item {
                     handled = true;
                 }
             } else if (FlagBlock.getBaseBlockEntity(world, pos) instanceof FlagBlockEntity flag) {
+                int rotation = player.isShiftKeyDown() ? -1 : 1;
                 float yaw = flag.getYaw();
-                yaw = (Math.round(yaw / 22.5) + 1) * 22.5f;
+                yaw = (Math.round(yaw / 22.5) + rotation) * 22.5f;
                 flag.setYaw(yaw % 360);
                 handled = true;
             }
