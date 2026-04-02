@@ -167,13 +167,12 @@ public class FlagBlock extends AbstractBannerBlock {
         return super.getCloneItemStack(level, pos, state);
     }
 
-    public static BlockPos getBaseBlockPos(BlockGetter blockGetter, BlockPos pos) {
-        BlockState state = blockGetter.getBlockState(pos);
+    public static BlockPos getBaseBlockPos(BlockState state, BlockPos pos) {
         return state.getOptionalValue(SECTION).map(Section::ordinal).map(pos::below).orElse(pos);
     }
 
     public static @Nullable BlockEntity getBaseBlockEntity(BlockGetter blockGetter, BlockPos pos) {
-        return blockGetter.getBlockEntity(getBaseBlockPos(blockGetter, pos));
+        return blockGetter.getBlockEntity(getBaseBlockPos(blockGetter.getBlockState(pos), pos));
     }
 
     @Override

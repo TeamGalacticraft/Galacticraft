@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.compat.waila;
 
+import dev.galacticraft.mod.compat.waila.provider.FlagNameProvider;
 import dev.galacticraft.mod.compat.waila.provider.FuelLevelProvider;
 import dev.galacticraft.mod.compat.waila.provider.OxygenLevelProvider;
+import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import mcp.mobius.waila.api.IClientRegistrar;
 import mcp.mobius.waila.api.IWailaClientPlugin;
@@ -32,7 +34,8 @@ import net.minecraft.world.entity.LivingEntity;
 public class GalacticraftWailaClientPlugin implements IWailaClientPlugin {
     @Override
     public void register(IClientRegistrar registrar) {
-        registrar.body(OxygenLevelProvider.INSTANCE, LivingEntity.class, 1050);
+        registrar.redirect(FlagNameProvider.INSTANCE, FlagBlock.class);
         registrar.body(FuelLevelProvider.INSTANCE, RocketEntity.class, 1050);
+        registrar.body(OxygenLevelProvider.INSTANCE, LivingEntity.class, 1050);
     }
 }

@@ -26,6 +26,7 @@ import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.saveddata.maps.MapBanner;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -35,8 +36,9 @@ import org.spongepowered.asm.mixin.injection.ModifyVariable;
 public abstract class MapBannerMixin {
     @ModifyVariable(method = "fromWorld", at = @At("HEAD"), argsOnly = true)
     private static BlockPos galacticraft$findFlagBase(BlockPos pos, @Local(argsOnly = true) BlockGetter level) {
-        if (level.getBlockState(pos).getBlock() instanceof FlagBlock) {
-            return FlagBlock.getBaseBlockPos(level, pos);
+        BlockState state = level.getBlockState(pos);
+        if (state.getBlock() instanceof FlagBlock) {
+            return FlagBlock.getBaseBlockPos(state, pos);
         }
         return pos;
     }
