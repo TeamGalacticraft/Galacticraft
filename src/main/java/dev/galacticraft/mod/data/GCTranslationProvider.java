@@ -646,6 +646,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
+        this.tag(GCItemTags.FLAGS, "Flags");
+
         this.tag(GCItemTags.BATTERIES, "Batteries");
 
         this.tag(GCItemTags.SILICONS, "Silicon");

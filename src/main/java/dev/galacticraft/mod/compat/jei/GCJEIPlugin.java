@@ -191,6 +191,7 @@ public class GCJEIPlugin implements IModPlugin {
     @Override
     public void registerAdvanced(IAdvancedRegistration registration) {
         registration.addTypedRecipeManagerPlugin(GCJEIRecipeTypes.CANNING, new CanningRecipeManagerPlugin());
+        registration.addTypedRecipeManagerPlugin(RecipeTypes.CRAFTING, new FlagRecipeManagerPlugin());
     }
 
     private static List<RecipeHolder<CraftingRecipe>> replaceSpecialCraftingRecipes(List<RecipeHolder<CraftingRecipe>> unhandledCraftingRecipes, IJeiHelpers jeiHelpers) {

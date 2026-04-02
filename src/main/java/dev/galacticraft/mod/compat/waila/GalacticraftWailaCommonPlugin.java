@@ -29,7 +29,7 @@ import mcp.mobius.waila.api.IWailaCommonPlugin;
 public class GalacticraftWailaCommonPlugin implements IWailaCommonPlugin {
     @Override
     public void register(ICommonRegistrar registrar) {
-        registrar.featureConfig(Options.OXYGEN_LEVEL, true);
         registrar.featureConfig(Options.FUEL_LEVEL, true);
+        registrar.featureConfig(Options.OXYGEN_LEVEL, true);
     }
 }

@@ -23,13 +23,7 @@
 package dev.galacticraft.mod.compat.rei.common;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCanningDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultFabricationDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricCompressingDisplay;
-import dev.galacticraft.mod.compat.rei.common.display.ElectricFurnaceDisplay;
+import dev.galacticraft.mod.compat.rei.common.display.*;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
