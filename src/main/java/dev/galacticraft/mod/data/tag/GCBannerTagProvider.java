@@ -43,27 +43,27 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
                 .add(GCBannerPatterns.ROCKET);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_CREEPER)
-                .add(GCBannerPatterns.CREEPER_ROTATED);
+                .add(GCBannerPatterns.CREEPER_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_FLOW)
-                .add(GCBannerPatterns.FLOW_ROTATED);
+                .add(GCBannerPatterns.FLOW_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_FLOWER)
-                .add(GCBannerPatterns.FLOWER_ROTATED);
+                .add(GCBannerPatterns.FLOWER_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_GLOBE)
-                .add(GCBannerPatterns.GLOBE_ROTATED);
+                .add(GCBannerPatterns.GLOBE_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_GUSTER)
-                .add(GCBannerPatterns.GUSTER_ROTATED);
+                .add(GCBannerPatterns.GUSTER_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_MOJANG)
-                .add(GCBannerPatterns.MOJANG_ROTATED);
+                .add(GCBannerPatterns.MOJANG_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_PIGLIN)
-                .add(GCBannerPatterns.PIGLIN_ROTATED);
+                .add(GCBannerPatterns.PIGLIN_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_SKULL)
-                .add(GCBannerPatterns.SKULL_ROTATED);
+                .add(GCBannerPatterns.SKULL_SIDEWAYS);
     }
 }

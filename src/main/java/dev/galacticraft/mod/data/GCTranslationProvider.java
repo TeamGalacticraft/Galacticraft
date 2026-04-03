@@ -813,35 +813,17 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateBannerPatternTranslations() {
-        Map<String, String> colorMap = Map.ofEntries(
-                Map.entry(".white", "White"),
-                Map.entry(".orange", "Orange"),
-                Map.entry(".magenta", "Magenta"),
-                Map.entry(".light_blue", "Light Blue"),
-                Map.entry(".yellow", "Yellow"),
-                Map.entry(".lime", "Lime"),
-                Map.entry(".pink", "Pink"),
-                Map.entry(".gray", "Gray"),
-                Map.entry(".light_gray", "Light Gray"),
-                Map.entry(".cyan", "Cyan"),
-                Map.entry(".purple", "Purple"),
-                Map.entry(".blue", "Blue"),
-                Map.entry(".brown", "Brown"),
-                Map.entry(".red", "Red"),
-                Map.entry(".green", "Green"),
-                Map.entry(".black", "Black")
-        );
-
-        for (var entry : colorMap.entrySet()) {
-            this.add(BannerPattern.ROCKET + entry.getKey(), entry.getValue() + " Rocket");
-            this.add(BannerPattern.CREEPER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Creeper Charge");
-            this.add(BannerPattern.FLOW_ROTATED + entry.getKey(), entry.getValue() + " Rotated Flow");
-            this.add(BannerPattern.FLOWER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Flower");
-            this.add(BannerPattern.GLOBE_ROTATED + entry.getKey(), entry.getValue() + " Rotated Globe");
-            this.add(BannerPattern.GUSTER_ROTATED + entry.getKey(), entry.getValue() + " Rotated Guster");
-            this.add(BannerPattern.MOJANG_ROTATED + entry.getKey(), entry.getValue() + " Rotated Thing");
-            this.add(BannerPattern.PIGLIN_ROTATED + entry.getKey(), entry.getValue() + " Rotated Snout");
-            this.add(BannerPattern.SKULL_ROTATED + entry.getKey(), entry.getValue() + " Rotated Skull Charge");
+        for (DyeColor color : DyeColor.values()) {
+            String normalized = TranslationProvider.normalizeName(color.getName());
+            this.add(BannerPattern.ROCKET + "." + color.getName(), normalized + " Rocket");
+            this.add(BannerPattern.CREEPER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Creeper Charge");
+            this.add(BannerPattern.FLOW_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flow");
+            this.add(BannerPattern.FLOWER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flower");
+            this.add(BannerPattern.GLOBE_SIDEWAYS + "." + color.getName(), normalized + " Sideways Globe");
+            this.add(BannerPattern.GUSTER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Guster");
+            this.add(BannerPattern.MOJANG_SIDEWAYS + "." + color.getName(), normalized + " Sideways Thing");
+            this.add(BannerPattern.PIGLIN_SIDEWAYS + "." + color.getName(), normalized + " Sideways Snout");
+            this.add(BannerPattern.SKULL_SIDEWAYS + "." + color.getName(), normalized + " Sideways Skull Charge");
         }
     }
 
