@@ -93,6 +93,7 @@ public interface Translations {
 
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
+        String ROCKET_SIDEWAYS = "block.galacticraft.banner.rocket_sideways";
         String CREEPER_SIDEWAYS = "block.galacticraft.banner.creeper_sideways";
         String FLOW_SIDEWAYS = "block.galacticraft.banner.flow_sideways";
         String FLOWER_SIDEWAYS = "block.galacticraft.banner.flower_sideways";

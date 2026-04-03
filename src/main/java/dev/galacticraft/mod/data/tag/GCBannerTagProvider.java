@@ -40,7 +40,8 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
-                .add(GCBannerPatterns.ROCKET);
+                .add(GCBannerPatterns.ROCKET)
+                .add(GCBannerPatterns.ROCKET_SIDEWAYS);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_CREEPER)
                 .add(GCBannerPatterns.CREEPER_SIDEWAYS);
