@@ -39,6 +39,7 @@ import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteUpdatePayload;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -846,55 +847,20 @@ public class CelestialSelectionScreen extends CelestialScreen {
             int i = 0;
             for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
                 Ingredient ingredient = pair.getFirst();
+                ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
+
                 final int xPos = x + 7 + 21 * (i % 4);
                 final int yPos = createSpaceStationButtonY - 3 + rowHeight * (i / 4 - rows);
 
-                boolean showTooltip = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
                 Lighting.setupFor3DItems();
-                ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-
                 graphics.cleanupState();
                 gui.renderItem(stack, xPos, yPos);
-                gui.renderItemDecorations(font, stack, xPos, yPos, null);
+                gui.renderItemDecorations(this.font, stack, xPos, yPos, null);
                 Lighting.setupForFlatItems();
                 RenderSystem.enableBlend();
 
-                if (showTooltip) {
-                    RenderSystem.depthMask(true);
-                    RenderSystem.enableDepthTest();
-                    gui.pose().pushPose();
-                    gui.pose().translate(0, 0, BORDER_Z + 1);
-                    int k = this.font.width(stack.getHoverName());
-                    int j2 = mousePosX - k / 2;
-                    int k2 = mousePosY - 12;
-                    int i1 = 8;
-
-                    if (j2 + k > this.width) {
-                        j2 -= (j2 - this.width + k);
-                    }
-
-                    if (k2 + i1 + 6 > this.height) {
-                        k2 = this.height - i1 - 6;
-                    }
-
-                    try (Graphics.Fill fill = graphics.fill()) {
-                        int j1 = FastColor.ARGB32.color(190, 0, 153, 255);
-                        fill.fillGradientRaw(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-                        fill.fillGradientRaw(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-                        fill.fillGradientRaw(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-                        fill.fillGradientRaw(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-                        fill.fillGradientRaw(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-                        int k1 = FastColor.ARGB32.color(170, 0, 153, 255);
-                        int l1 = (k1 & 0xfefefe) >> 1 | k1 & 0xff000000;
-                        fill.fillGradientRaw(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-                        fill.fillGradientRaw(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-                        fill.fillGradientRaw(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-                        fill.fillGradientRaw(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-                    }
-
-                    graphics.cleanupState();
-                    gui.drawString(this.font, stack.getHoverName(), j2, k2, WHITE, false);
-                    gui.pose().popPose();
+                if (DrawableUtil.mouseIn(mousePosX, mousePosY, xPos, yPos, 16, 16)) {
+                    this.renderCelestialScreenTooltip(gui, graphics, mousePosX, mousePosY, stack.getHoverName());
                 }
 
                 str = pair.getSecond().toString();
@@ -969,6 +935,43 @@ public class CelestialSelectionScreen extends CelestialScreen {
             }
         }
         return yOffset;
+    }
+
+    protected void renderCelestialScreenTooltip(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY, Component text) {
+        int textWidth = this.font.width(text);
+        int tooltipWidth = textWidth + 7;
+        int tooltipHeight = 16;
+
+        int x1 = Mth.clamp(0, mousePosX - textWidth / 2 - 4, this.width - tooltipWidth);
+        int y1 = Mth.clamp(0, mousePosY - tooltipHeight, this.height - tooltipHeight);
+        int x2 = x1 + tooltipWidth;
+        int y2 = y1 + tooltipHeight;
+
+        int colorA = FastColor.ARGB32.color(190, 0, 153, 255);
+        int colorB = FastColor.ARGB32.color(170, 0, 153, 255);
+        int colorC = (colorB & 0xfefefe) >> 1 | colorB & 0xff000000;
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        gui.pose().pushPose();
+        gui.pose().translate(0, 0, BORDER_Z + 1);
+
+        try (Graphics.Fill fill = graphics.fill()) {
+            // Draw the tooltip base which is a rectangle missing the corners
+            fill.fillGradientRaw(x1 + 1, y1, x2 - 1, y2, colorA, colorA);
+            fill.fillGradientRaw(x1, y1 + 1, x1 + 1, y2 - 1, colorA, colorA);
+            fill.fillGradientRaw(x2 - 1, y1 + 1, x2, y2 - 1, colorA, colorA);
+
+            // Inner border: left, right, top, bottom (lighter at the top, darker at the bottom)
+            fill.fillGradientRaw(x1 + 1, y1 + 1, x1 + 2, y2 - 1, colorB, colorC);
+            fill.fillGradientRaw(x2 - 2, y1 + 1, x2 - 1, y2 - 1, colorB, colorC);
+            fill.fillGradientRaw(x1 + 2, y1 + 1, x2 - 2, y1 + 2, colorB, colorB);
+            fill.fillGradientRaw(x1 + 2, y2 - 2, x2 - 2, y2 - 1, colorC, colorC);
+        }
+
+        graphics.cleanupState();
+        gui.drawString(this.font, text, x1 + 4, y1 + 4, WHITE, false);
+        gui.pose().popPose();
     }
 
     protected int getAmountInInventory(Ingredient ingredient) {
