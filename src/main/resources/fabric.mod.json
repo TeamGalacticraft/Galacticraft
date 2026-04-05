@@ -100,6 +100,12 @@
       }
     },
     {
+      "name": "maxryan008",
+      "contact": {
+        "homepage": "https://github.com/maxryan008"
+      }
+    },
+    {
       "name": "supersimple33",
       "contact": {
         "homepage": "https://github.com/supersimple33"
@@ -115,12 +121,6 @@
       "name": "Littledog1229",
       "contact": {
         "homepage": "https://github.com/Littledog1229"
-      }
-    },
-    {
-      "name": "maxryan008",
-      "contact": {
-        "homepage": "https://github.com/maxryan008"
       }
     },
     {
@@ -160,15 +160,15 @@
       }
     },
     {
-      "name": "sebasphereda",
+      "name": "davo899",
       "contact": {
-        "homepage": "https://github.com/sebasphereda"
+        "homepage": "https://github.com/davo899"
       }
     },
     {
-      "name": "Dragon-Seeker",
+      "name": "sebasphereda",
       "contact": {
-        "homepage": "https://github.com/Dragon-Seeker"
+        "homepage": "https://github.com/sebasphereda"
       }
     },
     {
@@ -178,33 +178,9 @@
       }
     },
     {
-      "name": "davo899",
+      "name": "Dragon-Seeker",
       "contact": {
-        "homepage": "https://github.com/davo899"
-      }
-    },
-    {
-      "name": "Domza64",
-      "contact": {
-        "homepage": "https://github.com/Domza64"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
-      }
-    },
-    {
-      "name": "Geolykt",
-      "contact": {
-        "homepage": "https://github.com/Geolykt"
-      }
-    },
-    {
-      "name": "IMS212",
-      "contact": {
-        "homepage": "https://github.com/IMS212"
+        "homepage": "https://github.com/Dragon-Seeker"
       }
     },
     {
@@ -238,6 +214,12 @@
       }
     },
     {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
       "name": "CoderFroty",
       "contact": {
         "homepage": "https://github.com/CoderFroty"
@@ -250,9 +232,9 @@
       }
     },
     {
-      "name": "MaverXka",
+      "name": "GalacticraftDev",
       "contact": {
-        "homepage": "https://github.com/MaverXka"
+        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -265,6 +247,24 @@
       "name": "danilwhale",
       "contact": {
         "homepage": "https://github.com/danilwhale"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
+      }
+    },
+    {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "MaverXka",
+      "contact": {
+        "homepage": "https://github.com/MaverXka"
       }
     }
   ],

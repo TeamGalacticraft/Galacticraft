@@ -46,7 +46,7 @@ import net.minecraft.world.entity.animal.Cat;
 import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_GEAR);
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_TANKS);
     private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
 

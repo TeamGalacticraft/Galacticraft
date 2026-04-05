@@ -208,7 +208,8 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_TOO_FAR_AWAY), true);
                         break;
                     default:
-                        player.displayClientMessage(problem.getMessage(), true);
+                        if (problem.getMessage() != null)
+                            player.displayClientMessage(problem.getMessage(), true);
                 }
 
                 player.endCryoSleep();
