@@ -1,0 +1,6 @@
+{
+  "parent": "galacticraft:item/template_walkway_inventory",
+  "textures": {
+    "texture": "galacticraft:block/heavy_aluminum_wire"
+  }
+}

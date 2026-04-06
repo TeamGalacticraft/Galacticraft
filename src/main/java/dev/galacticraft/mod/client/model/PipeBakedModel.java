@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.model;
 
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -54,14 +55,24 @@ import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
 public class PipeBakedModel implements BakedModel {
+    private static final float EDGE_FACE_DEPTH = 0.001f;
+
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;
     private final float radius;
+    private final float yOffset;
+    private final Mesh topConnectionMesh;
 
     public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
+        this(textureGetter, texture, radius, 0.0f);
+    }
+
+    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, float yOffset) {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
         this.meshes = new EnumMap<>(Direction.class);
         this.radius = radius;
+        this.yOffset = yOffset;
+        this.topConnectionMesh = yOffset < 0.0f ? this.buildUpMesh(0.5f + radius + yOffset, 1.0f) : null;
 
         MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
         QuadEmitter emitter = meshBuilder.getEmitter();
@@ -239,20 +250,92 @@ public class PipeBakedModel implements BakedModel {
         if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
             for (Direction direction : Direction.values()) {
                 if (pipe.isConnected(direction)) {
-                    this.meshes.get(direction).outputTo(emitter);
+                    Mesh mesh = direction == Direction.UP && this.topConnectionMesh != null ? this.topConnectionMesh : this.meshes.get(direction);
+                    this.emitWithOptionalYOffset(context, direction != Direction.UP, () -> mesh.outputTo(emitter));
+                    this.emitWithOptionalYOffset(context, direction != Direction.UP, () -> this.renderReducerCap(getter, blockPos, direction, emitter));
                 } else {
-                    emitter
-                        .square(direction, 0.5f-this.radius, 0.5f-this.radius, 0.5f+this.radius, 0.5f+this.radius, 0.5f-this.radius)
-                        .uv(0, 0, 6)
-                        .uv(1, 0, 10)
-                        .uv(2, 4, 10)
-                        .uv(3, 4, 6)
-                        .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                        .color(-1, -1, -1, -1).emit();
+                    this.emitWithOptionalYOffset(context, true, () -> this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius));
                 }
             }
         }
+
     }
+
+    private Mesh buildUpMesh(float minY, float maxY) {
+        MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
+        QuadEmitter emitter = meshBuilder.getEmitter();
+
+        for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            emitter
+                    .square(direction, 0.5f - this.radius, minY, 0.5f + this.radius, maxY, 0.5f - this.radius)
+                    .uv(0, 0, 0)
+                    .uv(1, 0, 6)
+                    .uv(2, 4, 6)
+                    .uv(3, 4, 0)
+                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                    .color(-1, -1, -1, -1).emit();
+        }
+
+        return meshBuilder.build();
+    }
+
+    private void emitWithOptionalYOffset(RenderContext context, boolean applyYOffset, Runnable emitterAction) {
+        if (!applyYOffset || this.yOffset == 0.0f) {
+            emitterAction.run();
+            return;
+        }
+
+        context.pushTransform(quad -> {
+            for (int i = 0; i < 4; i++) {
+                quad.pos(i, quad.x(i), quad.y(i) + this.yOffset, quad.z(i));
+            }
+            return true;
+        });
+        emitterAction.run();
+        context.popTransform();
+    }
+
+    private void renderReducerCap(BlockAndTintGetter getter, BlockPos blockPos, Direction direction, QuadEmitter emitter) {
+        BlockState neighborState = getter.getBlockState(blockPos.relative(direction));
+        if (!(neighborState.getBlock() instanceof PipeShapedBlock<?> neighborPipe)) {
+            return;
+        }
+
+        float neighborRadius = neighborPipe.getRadius();
+        if (neighborRadius >= this.radius) {
+            return;
+        }
+
+        float minOuter = 0.5f - this.radius;
+        float maxOuter = 0.5f + this.radius;
+        float minInner = 0.5f - neighborRadius;
+        float maxInner = 0.5f + neighborRadius;
+
+        this.emitCapQuad(emitter, direction, minOuter, minOuter, maxOuter, minInner, EDGE_FACE_DEPTH);
+        this.emitCapQuad(emitter, direction, minOuter, maxInner, maxOuter, maxOuter, EDGE_FACE_DEPTH);
+        this.emitCapQuad(emitter, direction, minOuter, minInner, minInner, maxInner, EDGE_FACE_DEPTH);
+        this.emitCapQuad(emitter, direction, maxInner, minInner, maxOuter, maxInner, EDGE_FACE_DEPTH);
+    }
+
+    private void emitCapQuad(QuadEmitter emitter, Direction direction, float minX, float minY, float maxX, float maxY, float depth) {
+        emitter
+                .square(direction, minX, minY, maxX, maxY, depth)
+                .uv(0, this.capU(minX), this.capV(minY))
+                .uv(1, this.capU(minX), this.capV(maxY))
+                .uv(2, this.capU(maxX), this.capV(maxY))
+                .uv(3, this.capU(maxX), this.capV(minY))
+                .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+    }
+
+    private float capU(float value) {
+        return (value - (0.5f - this.radius)) * (4.0f / (this.radius * 2.0f));
+    }
+
+    private float capV(float value) {
+        return 6.0f + (value - (0.5f - this.radius)) * (4.0f / (this.radius * 2.0f));
+    }
+
     @Override
     public void emitItemQuads(ItemStack itemStack, Supplier<RandomSource> randomSupplier, RenderContext context) {
     }

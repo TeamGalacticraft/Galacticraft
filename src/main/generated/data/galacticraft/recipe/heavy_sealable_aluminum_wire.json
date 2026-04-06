@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "T": {
+      "item": "galacticraft:tin_decoration"
+    },
+    "W": {
+      "item": "galacticraft:heavy_aluminum_wire"
+    }
+  },
+  "pattern": [
+    "TWT"
+  ],
+  "result": {
+    "count": 6,
+    "id": "galacticraft:heavy_sealable_aluminum_wire"
+  }
+}

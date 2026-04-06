@@ -173,6 +173,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.WALKWAY);
         this.dropSelf(GCBlocks.FLUID_PIPE_WALKWAY);
         this.dropSelf(GCBlocks.WIRE_WALKWAY);
+        this.dropSelf(GCBlocks.HEAVY_WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.IRON_GRATING);
 
@@ -201,6 +202,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         }
 
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
+    this.dropSelf(GCBlocks.HEAVY_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 

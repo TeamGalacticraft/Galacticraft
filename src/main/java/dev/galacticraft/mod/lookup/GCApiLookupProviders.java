@@ -60,7 +60,7 @@ public class GCApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
             GCBlockEntityTypes.WIRE_T1,
-//            GCBlocksEntityType.WIRE_T2,
+            GCBlockEntityTypes.WIRE_T2,
     };
 
     @SuppressWarnings("rawtypes")

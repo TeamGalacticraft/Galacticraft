@@ -362,11 +362,30 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_ALUMINUM_WIRE, 6)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
+                .define('L', ItemTags.WOOL)
+                .pattern(" A ")
+                .pattern(" W ")
+                .pattern(" L ")
+                .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
+                .emiDefaultRecipe(true)
+                .save(output);
+
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
                 .define('T', GCBlocks.TIN_DECORATION)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("TWT")
                 .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
+                .emiDefaultRecipe(true)
+                .save(output);
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, 6)
+                .define('T', GCBlocks.TIN_DECORATION)
+                .define('W', GCBlocks.HEAVY_ALUMINUM_WIRE)
+                .pattern("TWT")
+                .unlockedBy(getHasName(GCBlocks.HEAVY_ALUMINUM_WIRE), has(GCBlocks.HEAVY_ALUMINUM_WIRE))
                 .emiDefaultRecipe(true)
                 .save(output);
 
@@ -392,6 +411,21 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .requires(GCBlocks.ALUMINUM_WIRE)
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.WIRE_WALKWAY).withSuffix("_shapeless"));
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_WIRE_WALKWAY, 5)
+                .define('T', GCItems.COMPRESSED_TITANIUM)
+                .define('W', GCBlocks.HEAVY_ALUMINUM_WIRE)
+                .pattern("TTT")
+                .pattern("WTW")
+                .pattern("WWW")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
+                .save(output);
+
+        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_WIRE_WALKWAY)
+                .requires(GCBlocks.WALKWAY)
+                .requires(GCBlocks.HEAVY_ALUMINUM_WIRE)
+                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.HEAVY_WIRE_WALKWAY).withSuffix("_shapeless"));
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY, 5)
                 .define('T', GCItems.COMPRESSED_TITANIUM)
