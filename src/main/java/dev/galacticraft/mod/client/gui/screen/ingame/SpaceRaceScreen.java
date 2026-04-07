@@ -287,7 +287,16 @@ public class SpaceRaceScreen extends Screen {
                                     .writeByte(color & 0xFF);
                         }
                     }
-                    ClientPlayNetworking.send(new FlagDataPayload(buf.array()));
+
+                    byte[] data;
+                    if (buf.hasArray()) {
+                        data = buf.array();
+                    } else {
+                        data = new byte[buf.readableBytes()];
+                        buf.getBytes(buf.readerIndex(), data);
+                    }
+
+                    ClientPlayNetworking.send(new FlagDataPayload(data));
                     this.minecraft.getTextureManager().register(this.teamFlag, texture);
                 } else {
                     finalImage.close();

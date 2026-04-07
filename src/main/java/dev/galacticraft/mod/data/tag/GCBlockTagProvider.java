@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -40,6 +41,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,6 +73,19 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         map.put(DyeColor.RED, ConventionalBlockTags.RED_DYED);
         map.put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED);
     });
+
+    protected<T extends Block> void addColorSet(GCRegistry.ColorSet<T> set, @Nullable TagKey<Block> blockTag) {
+        for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
+            this.tag(entry.getValue()).add(set.get(entry.getKey()));
+            if (blockTag != null) {
+                this.tag(blockTag).add(set.get(entry.getKey()));
+            }
+        }
+    }
+
+    protected<T extends Block> void addColorSet(GCRegistry.ColorSet<T> set) {
+        this.addColorSet(set, null);
+    }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -398,6 +413,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
         }
 
+        this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
+
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
@@ -539,6 +556,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(slabs)
                 .add(walls)
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
+                .add(GCBlocks.FLAGS.colorMap().values().toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,

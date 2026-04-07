@@ -50,6 +50,8 @@ public class GCItemTags {
     public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
 
+    public static final TagKey<Item> FLAGS = galacticraftTag("flags");
+
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 
     public static final TagKey<Item> SILICONS = commonTag("silicon");

@@ -27,6 +27,7 @@ import dev.galacticraft.mod.content.entity.vehicle.AdvancedVehicle;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.content.item.RocketItem;
 import net.minecraft.client.model.AnimationUtils;
+import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.model.HumanoidModel;
 import net.minecraft.client.model.geom.ModelPart;
 import net.minecraft.core.Holder;
@@ -42,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidModel.class)
-public class HumanoidModelMixin<T extends LivingEntity> {
+public abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T> {
     @Shadow
     @Final
     public ModelPart head;
@@ -71,16 +72,10 @@ public class HumanoidModelMixin<T extends LivingEntity> {
     @Final
     public ModelPart hat;
 
-    @Shadow
-    public HumanoidModel.ArmPose leftArmPose;
-
-    @Shadow
-    public HumanoidModel.ArmPose rightArmPose;
-
     @Inject(at = @At("HEAD"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
     private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
-        if (((HumanoidModel<T>) (Object) this).riding && livingEntity.getVehicle() instanceof RocketEntity) {
-            ((HumanoidModel<T>) (Object) this).riding = false;
+        if (this.riding && livingEntity.getVehicle() instanceof RocketEntity) {
+            this.riding = false;
         }
     }
 
@@ -135,7 +130,7 @@ public class HumanoidModelMixin<T extends LivingEntity> {
         }
 
         if (entity.isInCryoSleep()) {
-            this.head.setRotation(45.0F, 0.0F, 0.0F);
+            this.head.setRotation(Mth.PI / 8, 0.0F, 0.0F);
             this.hat.copyFrom(this.head);
             this.body.resetPose();
             this.leftArm.resetPose();
