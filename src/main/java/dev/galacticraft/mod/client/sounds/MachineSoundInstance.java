@@ -28,41 +28,37 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
+import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 
-public class MachineSoundInstance extends AbstractTickableSoundInstance {
+public class MachineSoundInstance extends GCSoundInstance {
     private final MachineBlockEntity machine;
     private MachineStatus status;
 
-    public MachineSoundInstance(MachineBlockEntity machine) {
-        super(GCSounds.MACHINE_BUZZ, SoundSource.BLOCKS,SoundInstance.createUnseededRandom());
+    public MachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
+        super(machine, event, SoundSource.BLOCKS, callback);
+        
         this.machine = machine;
-        this.looping = true;
-        this.delay = 0;
-        this.volume = 0.00001F; // if it is 0 nothing will play
-        this.pitch = 1.0F;
-        this.delay = 0;
-        this.x = machine.getBlockPos().getX();
-        this.y = machine.getBlockPos().getY();
-        this.z = machine.getBlockPos().getZ();
     }
+
 
     @Override
     public void tick() {
-        if (!this.machine.isRemoved()) {
-            status = this.machine.getState().getStatus();
-            if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
-                this.volume = 1.0F;
-            } else {
-                this.volume = 0.00001F;
-            }
-            if (this.machine.isActive()) {
-                System.out.println("Active!");
-            }
+
+        if (machine instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
+            this.end();
+        }
+        super.tick();
+        status = this.machine.getState().getStatus();
+
+        if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
+            this.volume = 1.0F;
         } else {
-            stop();
+            this.volume = 0.00001F;
         }
 
     }
+
+
 }
