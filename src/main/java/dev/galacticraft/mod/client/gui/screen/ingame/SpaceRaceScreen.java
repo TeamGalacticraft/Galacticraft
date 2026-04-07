@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -287,7 +287,16 @@ public class SpaceRaceScreen extends Screen {
                                     .writeByte(color & 0xFF);
                         }
                     }
-                    ClientPlayNetworking.send(new FlagDataPayload(buf.array()));
+
+                    byte[] data;
+                    if (buf.hasArray()) {
+                        data = buf.array();
+                    } else {
+                        data = new byte[buf.readableBytes()];
+                        buf.getBytes(buf.readerIndex(), data);
+                    }
+
+                    ClientPlayNetworking.send(new FlagDataPayload(data));
                     this.minecraft.getTextureManager().register(this.teamFlag, texture);
                 } else {
                     finalImage.close();

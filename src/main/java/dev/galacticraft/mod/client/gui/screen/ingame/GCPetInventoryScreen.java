@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.screen.GCPetInventoryMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
@@ -52,7 +53,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 18, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + 128, this.topPos + 17, Constant.ScreenTexture.OXYGEN_TANK_WIDTH + 2, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT + 2)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(2)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
@@ -97,7 +98,7 @@ public class GCPetInventoryScreen extends AbstractContainerScreen<GCPetInventory
             }
 
             if (capacity > 0) {
-                DrawableUtil.drawOxygenBuffer(graphics.pose(), this.leftPos + 129, this.topPos + 18, amount, capacity);
+                GraphicsUtil.drawCapacitor(graphics, this.leftPos + 129, this.topPos + 18, capacity, amount, true);
             }
         }
 

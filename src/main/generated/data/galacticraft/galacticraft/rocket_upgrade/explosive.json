@@ -1,0 +1,20 @@
+{
+  "type": "galacticraft:explosive",
+  "config": {
+    "recipe": {
+      "type": "galacticraft:centered_patterned",
+      "config": {
+        "height": 18,
+        "slots": [
+          {
+            "ingredient": {
+              "item": "minecraft:tnt"
+            },
+            "x": -9,
+            "y": 0
+          }
+        ]
+      }
+    }
+  }
+}

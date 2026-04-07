@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.item.GCItems;
@@ -47,6 +48,7 @@ import net.minecraft.world.level.storage.loot.LootPool;
 import net.minecraft.world.level.storage.loot.LootTable;
 import net.minecraft.world.level.storage.loot.entries.LootItem;
 import net.minecraft.world.level.storage.loot.functions.ApplyBonusCount;
+import net.minecraft.world.level.storage.loot.functions.CopyComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetComponentsFunction;
 import net.minecraft.world.level.storage.loot.functions.SetItemCountFunction;
 import net.minecraft.world.level.storage.loot.predicates.LootItemBlockStatePropertyCondition;
@@ -175,6 +177,28 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.IRON_GRATING);
 
         this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
+
+        // Only drop from the bottom section of a flag, and copy a few components (same ones that banner loot tables copy)
+        for (Block flag : GCBlocks.FLAGS.colorMap().values()) {
+            this.add(
+                flag,
+                LootTable.lootTable().withPool(
+                    this.applyExplosionCondition(
+                        flag,
+                        LootPool.lootPool()
+                            .setRolls(ConstantValue.exactly(1.0F))
+                            .add(LootItem.lootTableItem(flag)
+                                    .when(LootItemBlockStatePropertyCondition.hasBlockStateProperties(flag)
+                                            .setProperties(StatePropertiesPredicate.Builder.properties().hasProperty(FlagBlock.SECTION, FlagBlock.Section.BOTTOM)))
+                                    .apply(CopyComponentsFunction.copyComponents(CopyComponentsFunction.Source.BLOCK_ENTITY)
+                                            .include(DataComponents.CUSTOM_NAME)
+                                            .include(DataComponents.ITEM_NAME)
+                                            .include(DataComponents.HIDE_ADDITIONAL_TOOLTIP)
+                                            .include(DataComponents.BANNER_PATTERNS)))
+                    )
+                )
+            );
+        }
 
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);

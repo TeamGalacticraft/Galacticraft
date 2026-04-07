@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -40,6 +40,7 @@ public class GCModelTemplates {
     public static final ModelTemplate ROCKET_LAUNCH_PAD_PART = create("block/rocket_launch_pad_part", TextureSlot.PARTICLE, TextureSlot.TOP, TextureSlot.BOTTOM, TextureSlot.SIDE);
     public static final ModelTemplate PIPE_INVENTORY = create("item/template_pipe", TextureSlot.LAYER0);
     public static final ModelTemplate WALKWAY_INVENTORY = create("item/template_walkway_inventory", TextureSlot.TEXTURE);
+    public static final ModelTemplate FLAG_INVENTORY = create("item/template_flag");
 
     private static ModelTemplate create(String name, TextureSlot... textureSlots) {
         return new ModelTemplate(Optional.of(Constant.id(name)), Optional.empty(), textureSlots);

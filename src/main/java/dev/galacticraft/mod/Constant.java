@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -234,6 +234,8 @@ public interface Constant {
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
+
+        String FLAG = "flag";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -608,18 +610,18 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
-        ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
-        ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+
+        int OXYGEN_TANK_WIDTH = 16;
+        int OXYGEN_TANK_HEIGHT = 48;
     }
 
     interface CircuitFabricator {
@@ -777,6 +779,45 @@ public interface Constant {
         int EMI_HEIGHT = 38;
     }
 
+    interface FoodCanner {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/food_canner_screen.png");
+
+        int INPUT_X = 62;
+        int INPUT_Y = 13;
+        int CURRENT_X = 62;
+        int CURRENT_Y = 40;
+        int OUTPUT_X = 62;
+        int OUTPUT_Y = 67;
+        int GRID_X = 98;
+        int GRID_Y = 13;
+
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 19;
+        int PROGRESS_WIDTH = 29;
+        int PROGRESS_HEIGHT = 57;
+        int PROGRESS_BACKGROUND_U = 180;
+        int PROGRESS_BACKGROUND_V = 80;
+
+        int TRANSFER_INPUT = 9;
+        int START_ROW_1 = TRANSFER_INPUT + 1;
+        int START_ROW_2 = START_ROW_1 + 28;
+        int SKIP_ROW_2 = START_ROW_2 + 9;
+        int START_ROW_4 = START_ROW_2 + 21;
+        int START_ROW_3 = START_ROW_4 + 27;
+        int SKIP_ROW_3 = START_ROW_3 + 8;
+        int FINAL_PROGRESS = START_ROW_3 + 21;
+        int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
+        int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
+
+        int[] ROW_ORDER = {0, 1, 3, 2};
+        int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
+
+        int RECIPE_VIEWER_X = 61;
+        int RECIPE_VIEWER_Y = 12;
+        int RECIPE_VIEWER_WIDTH = 108;
+        int RECIPE_VIEWER_HEIGHT = 72;
+    }
+
     interface RocketWorkbench {
         ResourceLocation SCREEN_TEXTURE = id("textures/gui/rocket_workbench.png");
 
@@ -822,6 +863,57 @@ public interface Constant {
         int RECIPE_VIEWER_Y = 26;
         int RECIPE_VIEWER_WIDTH = 149;
         int RECIPE_VIEWER_HEIGHT = 134;
+    }
+
+    interface BubbleDistributor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/oxygen_bubble_distributor_screen.png");
+
+        int BUTTON_X = 156;
+        int BUTTON_Y = 16;
+        int BUTTON_WIDTH = 13;
+        int BUTTON_HEIGHT = 13;
+
+        int BUTTON_RED_U = 178;
+        int BUTTON_RED_V = 0;
+        int BUTTON_RED_HOVER_U = 191;
+        int BUTTON_RED_HOVER_V = 0;
+
+        int BUTTON_GREEN_U = 178;
+        int BUTTON_GREEN_V = 13;
+        int BUTTON_GREEN_HOVER_U = 191;
+        int BUTTON_GREEN_HOVER_V = 13;
+
+        int BUTTON_NORMAL_U = 204;
+        int BUTTON_NORMAL_V = 13;
+        int BUTTON_NORMAL_HOVER_U = 204;
+        int BUTTON_NORMAL_HOVER_V = 0;
+
+        int TEXT_X = 60;
+        int VISIBILITY_LABEL_Y = 19;
+        int STATUS_LABEL_Y = 34;
+        int STATUS_Y = 44;
+        int CURRENT_SIZE_Y = 59;
+
+        int TEXT_FIELD_X = 132;
+        int TEXT_FIELD_Y = 69;
+        int TEXT_FIELD_WIDTH = 26;
+        int TEXT_FIELD_HEIGHT = 20;
+
+        int ARROW_X = 158;
+        int ARROW_VERTICAL_WIDTH = 11;
+        int ARROW_VERTICAL_HEIGHT = 10;
+
+        int ARROW_UP_Y = 69;
+        int ARROW_UP_U = 206;
+        int ARROW_UP_V = 0;
+        int ARROW_UP_HOVER_U = 217;
+        int ARROW_UP_HOVER_V = 0;
+
+        int ARROW_DOWN_Y = 79;
+        int ARROW_DOWN_U = 206;
+        int ARROW_DOWN_V = 10;
+        int ARROW_DOWN_HOVER_U = 217;
+        int ARROW_DOWN_HOVER_V = 10;
     }
 
     interface CelestialScreen {
@@ -1070,56 +1162,6 @@ public interface Constant {
         String ILLAGER_GEAR = "textures/entity/gear/illager_gear.png";
     }
 
-    interface TextureCoordinate {
-        int OVERLAY_WIDTH = 16;
-        int OVERLAY_HEIGHT = 48;
-
-        int ENERGY_DARK_X = 0;
-        int ENERGY_DARK_Y = 0;
-        int ENERGY_LIGHT_X = 16;
-        int ENERGY_LIGHT_Y = 0;
-
-        int OXYGEN_DARK_X = 0;
-        int OXYGEN_DARK_Y = 50;
-        int OXYGEN_LIGHT_X = 16;
-        int OXYGEN_LIGHT_Y = 50;
-
-        int FLUID_TANK_WIDTH = 18;
-
-        int BASE_FLUID_TANK_Y = 49;
-
-        int BUTTON_WIDTH = 13;
-        int BUTTON_HEIGHT = 13;
-
-        int BUTTON_RED_X = 0;
-        int BUTTON_RED_Y = 115;
-        int BUTTON_RED_HOVER_X = 0;
-        int BUTTON_RED_HOVER_Y = 102;
-
-        int BUTTON_GREEN_X = 13;
-        int BUTTON_GREEN_Y = 115;
-        int BUTTON_GREEN_HOVER_X = 13;
-        int BUTTON_GREEN_HOVER_Y = 102;
-
-        int BUTTON_NORMAL_X = 26;
-        int BUTTON_NORMAL_Y = 115;
-        int BUTTON_NORMAL_HOVER_X = 26;
-        int BUTTON_NORMAL_HOVER_Y = 102;
-
-        int ARROW_VERTICAL_WIDTH = 11;
-        int ARROW_VERTICAL_HEIGHT = 10;
-
-        int ARROW_UP_X = 39;
-        int ARROW_UP_Y = 108;
-        int ARROW_UP_HOVER_X = 50;
-        int ARROW_UP_HOVER_Y = 108;
-
-        int ARROW_DOWN_X = 39;
-        int ARROW_DOWN_Y = 118;
-        int ARROW_DOWN_HOVER_X = 50;
-        int ARROW_DOWN_HOVER_Y = 118;
-    }
-
     interface Menu {
         String COAL_GENERATOR_MENU = "coal_generator_menu";
         String BASIC_SOLAR_PANEL_MENU = "basic_solar_panel_menu";
@@ -1264,16 +1306,20 @@ public interface Constant {
 
     interface Recipe {
         String FABRICATION = "fabrication";
+        String FLAG = "flag";
         String COMPRESSING = "compressing";
         String ELECTRIC_COMPRESSING = "electric_compressing";
         String ELECTRIC_SMELTING = "electric_smelting";
         String ELECTRIC_BLASTING = "electric_blasting";
+        String CANNING = "canning";
         String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
+            String FLAG = "flag";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String CANNING = "canning";
             String ROCKET = "rocket";
             String EMERGENCY_KIT = "crafting_special_emergencykit";
         }

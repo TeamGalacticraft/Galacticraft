@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,6 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.resources.ResourceLocation;
 
 public final class Options {
-    public static final ResourceLocation OXYGEN_LEVEL = Constant.id("oxygen_level.enabled");
     public static final ResourceLocation FUEL_LEVEL = Constant.id("fuel_level.enabled");
+    public static final ResourceLocation OXYGEN_LEVEL = Constant.id("oxygen_level.enabled");
 }
