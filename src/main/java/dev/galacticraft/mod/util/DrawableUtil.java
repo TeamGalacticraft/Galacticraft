@@ -48,8 +48,8 @@ public class DrawableUtil {
         return Component.literal(String.valueOf(amount)); //todo
     }
 
-    public static boolean isWithin(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
+    public static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
 
     public static void drawProgressTexture(PoseStack matrices, float x, float y, float u, float v, float width, float height) {

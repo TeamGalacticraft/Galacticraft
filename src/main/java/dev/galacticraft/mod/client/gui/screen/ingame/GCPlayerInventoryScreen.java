@@ -50,7 +50,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
 
     @Override
     protected void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 129, this.topPos + 8, Constant.ScreenTexture.OXYGEN_TANK_WIDTH, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + 128, this.topPos + 7, Constant.ScreenTexture.OXYGEN_TANK_WIDTH + 2, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT + 2)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_1_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;
@@ -63,7 +63,7 @@ public class GCPlayerInventoryScreen extends AbstractContainerScreen<GCPlayerInv
                 }
                 graphics.renderTooltip(this.font, Component.translatable(Translations.Ui.OXYGEN_TANK_1_LEVEL, TooltipUtil.formatFluidRemaining(amount, capacity)), mouseX, mouseY);
             }
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + 152, this.topPos + 8, Constant.ScreenTexture.OXYGEN_TANK_WIDTH, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT)) {
+        } else if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + 151, this.topPos + 7, Constant.ScreenTexture.OXYGEN_TANK_WIDTH + 2, Constant.ScreenTexture.OXYGEN_TANK_HEIGHT + 2)) {
             Storage<FluidVariant> storage = ContainerItemContext.withConstant(this.menu.inventory.getItem(GCAccessorySlots.OXYGEN_TANK_2_SLOT)).find(FluidStorage.ITEM);
             if (storage != null) {
                 long capacity = 0;

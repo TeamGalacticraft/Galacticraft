@@ -178,6 +178,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
             this.tag(entry.getValue()).add(pipe);
         }
 
+        this.copy(GCBlockTags.FLAGS, GCItemTags.FLAGS);
+        this.addColorSet(GCItems.FLAGS);
+
         // Oxygen equipment
         this.tag(GCItemTags.OXYGEN_MASKS)
                 .add(GCItems.OXYGEN_MASK);
