@@ -603,6 +603,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.SOLAR_PANEL_PART,
                         GCBlocks.AIR_LOCK_FRAME,
                         GCBlocks.AIR_LOCK_CONTROLLER,
+                        GCBlocks.ALUMINUM_WIRE,
                         GCBlocks.HEAVY_ALUMINUM_WIRE,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,

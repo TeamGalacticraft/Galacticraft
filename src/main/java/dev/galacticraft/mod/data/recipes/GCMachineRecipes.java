@@ -362,16 +362,26 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_ALUMINUM_WIRE, 6)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_ALUMINUM_WIRE)
                 .define('A', GCItemTags.ALUMINUM_INGOTS)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .define('L', ItemTags.WOOL)
-                .pattern(" A ")
-                .pattern(" W ")
-                .pattern(" L ")
+                .pattern("A")
+                .pattern("W")
+                .pattern("L")
                 .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
                 .emiDefaultRecipe(true)
                 .save(output);
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_ALUMINUM_WIRE)
+                .define('A', GCItemTags.ALUMINUM_INGOTS)
+                .define('W', GCBlocks.ALUMINUM_WIRE)
+                .define('L', ItemTags.WOOL)
+                .pattern("L")
+                .pattern("W")
+                .pattern("A")
+                .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
+                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.HEAVY_ALUMINUM_WIRE).withSuffix("_mirrored"));
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
                 .define('T', GCBlocks.TIN_DECORATION)
@@ -381,7 +391,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, 6)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE)
                 .define('T', GCBlocks.TIN_DECORATION)
                 .define('W', GCBlocks.HEAVY_ALUMINUM_WIRE)
                 .pattern("TWT")

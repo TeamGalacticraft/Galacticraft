@@ -13,9 +13,9 @@
     }
   },
   "pattern": [
-    "A",
+    "L",
     "W",
-    "L"
+    "A"
   ],
   "result": {
     "count": 1,

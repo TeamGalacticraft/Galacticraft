@@ -486,10 +486,10 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {
-                createWalkway(generator, walkway, pipeModel, centerModel, Constant.id("block/walkway"));
-        }
+        createWalkway(generator, walkway, pipeModel, centerModel, Constant.id("block/walkway"));
+    }
 
-        private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel, ResourceLocation walkwayPlatform) {
+    private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel, ResourceLocation walkwayPlatform) {
         MultiPartGenerator blockState = MultiPartGenerator.multiPart(walkway)
                 .with(Variant.variant().with(VariantProperties.MODEL, pipeModel))
                 .with(Variant.variant().with(VariantProperties.MODEL, centerModel))
@@ -698,7 +698,7 @@ public class GCModelProvider extends FabricModelProvider {
         }
 
         GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.ALUMINUM_WIRE), generator.output);
-        generator.generateFlatItem(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem(), ModelTemplates.FLAT_ITEM);
+        GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.HEAVY_ALUMINUM_WIRE), generator.output);
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);
         }

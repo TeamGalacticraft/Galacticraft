@@ -202,7 +202,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         }
 
         this.dropSelf(GCBlocks.ALUMINUM_WIRE);
-    this.dropSelf(GCBlocks.HEAVY_ALUMINUM_WIRE);
+        this.dropSelf(GCBlocks.HEAVY_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
 

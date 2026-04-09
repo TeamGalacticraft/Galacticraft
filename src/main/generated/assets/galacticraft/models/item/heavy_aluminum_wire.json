@@ -1,6 +1,6 @@
 {
-  "parent": "minecraft:item/generated",
+  "parent": "galacticraft:item/template_pipe",
   "textures": {
-    "layer0": "galacticraft:item/heavy_aluminum_wire"
+    "layer0": "galacticraft:block/heavy_aluminum_wire"
   }
 }
