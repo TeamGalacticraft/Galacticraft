@@ -222,6 +222,3 @@ src/main/generated/.cache/
 
 # Python 
 .github/scripts/__pycache__
-
-# Local-only localization override
-src/main/resources/assets/galacticraft/lang/hu_hu.json

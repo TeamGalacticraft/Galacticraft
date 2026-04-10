@@ -698,7 +698,7 @@ public class GCModelProvider extends FabricModelProvider {
         }
 
         GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.ALUMINUM_WIRE), generator.output);
-        GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.HEAVY_ALUMINUM_WIRE), generator.output);
+                GCModelTemplates.HEAVY_PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.HEAVY_ALUMINUM_WIRE), generator.output);
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);
         }
@@ -706,7 +706,7 @@ public class GCModelProvider extends FabricModelProvider {
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/walkway_connector")), generator.output);
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.FLUID_PIPE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/glass_fluid_pipe")), generator.output);
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/aluminum_wire")), generator.output);
-        GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/heavy_aluminum_wire")), generator.output);
+                GCModelTemplates.HEAVY_WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/heavy_aluminum_wire")), generator.output);
 
         // FOOD
         generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
