@@ -116,7 +116,7 @@ public class PipeBakedModel implements BakedModel {
                 .uv(0, 0, 0)
                 .uv(1, crossSectionWidth, 0)
                 .uv(2, crossSectionWidth, centerStart)
-            .uv(3, 0, centerStart)
+                .uv(3, 0, centerStart)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -158,7 +158,7 @@ public class PipeBakedModel implements BakedModel {
                 .uv(0, 0, 0)
                 .uv(1, crossSectionWidth, 0)
                 .uv(2, crossSectionWidth, centerStart)
-            .uv(3, 0, centerStart)
+                .uv(3, 0, centerStart)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -184,7 +184,7 @@ public class PipeBakedModel implements BakedModel {
                 .uv(0, 0, 0)
                 .uv(1, crossSectionWidth, 0)
                 .uv(2, crossSectionWidth, centerStart)
-            .uv(3, 0, centerStart)
+                .uv(3, 0, centerStart)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
@@ -226,7 +226,7 @@ public class PipeBakedModel implements BakedModel {
                 .uv(0, 0, 0)
                 .uv(1, crossSectionWidth, 0)
                 .uv(2, crossSectionWidth, centerStart)
-            .uv(3, 0, centerStart)
+                .uv(3, 0, centerStart)
                 .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                 .color(-1, -1, -1, -1).emit();
         emitter
