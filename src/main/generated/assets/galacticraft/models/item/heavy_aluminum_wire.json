@@ -1,5 +1,5 @@
 {
-  "parent": "galacticraft:item/template_pipe",
+  "parent": "galacticraft:item/template_heavy_pipe",
   "textures": {
     "layer0": "galacticraft:block/heavy_aluminum_wire"
   }
