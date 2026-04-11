@@ -68,7 +68,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Shadow @Nullable private Slot destroyItemSlot;
     @Shadow @Final private static SimpleContainer CONTAINER;
-    @Unique private final List<AccessorySlot> gc$slots = new ArrayList<>();
+    @Unique private final List<CreativeModeInventoryScreen.SlotWrapper> gc$slots = new ArrayList<>();
 
     @Unique private RadioButton creativeSwitchButton;
 
@@ -171,7 +171,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
                 if (gcTryQuickStackToGCInv(slot)) {
                     ci.cancel();
                 }
-            } else if (slot != null && slot instanceof AccessorySlot) {
+            } else if (slot != null && slot.container == this.minecraft.player.galacticraft$getGearInv()) {
                 if (clickType == ClickType.THROW && slot.hasItem()) {
                     ItemStack dropped = slot.remove(button == 0 ? 1 : slot.getItem().getMaxStackSize());
                     ItemStack remaining = slot.getItem();
@@ -227,14 +227,19 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Unique
     private void generateGCSlot(int x, int y, int idx) {
-        gc$slots.add(new AccessorySlot(
-                minecraft.player.galacticraft$getGearInv(),
-                minecraft.player,
+        gc$slots.add(new CreativeModeInventoryScreen.SlotWrapper(
+                new AccessorySlot(
+                        minecraft.player.galacticraft$getGearInv(),
+                        minecraft.player,
+                        idx,
+                        x,
+                        y,
+                        GCAccessorySlots.SLOT_TAGS.get(idx),
+                        GCAccessorySlots.SLOT_SPRITES.get(idx)
+                ),
                 idx,
                 x,
-                y,
-                GCAccessorySlots.SLOT_TAGS.get(idx),
-                GCAccessorySlots.SLOT_SPRITES.get(idx)
+                y
         ));
     }
 
