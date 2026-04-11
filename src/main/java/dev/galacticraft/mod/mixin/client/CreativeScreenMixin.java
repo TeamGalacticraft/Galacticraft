@@ -139,33 +139,27 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-
-        //Item duplication support
-        if (button == 2) {
+        if (isGCInventoryEnabled() && selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             Slot slot = gc$findSlot(mouseX, mouseY);
             if (slot != null) {
-                getMenu().setCarried(slot.getItem().copy());
-            }
-            return;
-        }
-
-        if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
-            if (isGCInventoryEnabled()) {
                 ItemStack carried = getMenu().getCarried();
-                Slot slot = gc$findSlot(mouseX, mouseY);
-                if (slot != null) {
-                    //Quick stack
-                    if (Screen.hasShiftDown()) {
-                        gcTryQuickStackToPlayerInv(slot);
-                    } else if (carried.isEmpty() || slot.mayPlace(carried)) {
-                        getMenu().setCarried(slot.getItem());
-                        slot.set(carried);
-                        slot.setChanged();
-                        ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), carried.isEmpty() ? 0 : 1, carried));
+
+                if (this.minecraft.options.keyPickItem.matchesMouse(button) && this.minecraft.gameMode.hasInfiniteItems()) {
+                    // Item duplication support
+                    if (carried.isEmpty()) {
+                        ItemStack itemStack = slot.getItem();
+                        getMenu().setCarried(itemStack.copyWithCount(itemStack.getMaxStackSize()));
                     }
-                    cir.setReturnValue(true);
-                    return;
+                } else if (Screen.hasShiftDown()) {
+                    gcTryQuickStackToPlayerInv(slot);
+                } else if (carried.isEmpty() || slot.mayPlace(carried)) {
+                    getMenu().setCarried(slot.getItem());
+                    slot.set(carried);
+                    slot.setChanged();
+                    ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), carried.isEmpty() ? 0 : 1, carried));
                 }
+
+                cir.setReturnValue(true);
             }
         }
     }
@@ -206,7 +200,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Unique
     private Slot gc$findSlot(double x, double y) {
         for (int i = 0; i < gc$slots.size(); ++i) {
-            Slot slot = (Slot) gc$slots.get(i);
+            Slot slot = gc$slots.get(i);
             if (isHovering(slot.x, slot.y, 16, 16, x, y) && slot.isActive()) {
                 return slot;
             }
