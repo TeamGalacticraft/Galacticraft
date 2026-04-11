@@ -69,7 +69,7 @@ public interface AbstractWalkwayBlock {
 
             for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
                 for (Direction platformDirection : Direction.values()) {
-                    int withCenterWire = pipeAabb | (1 << platformDirection.getOpposite().ordinal());
+                    int withCenterWire = pipeAabb | (1 << platformDirection.ordinal());
                     map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
                             pipeShapes[withCenterWire],
                             ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
