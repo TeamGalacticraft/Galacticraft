@@ -33,9 +33,15 @@ import net.fabricmc.fabric.api.renderer.v1.mesh.MeshBuilder;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
-import net.minecraft.client.renderer.block.model.*;
+import net.minecraft.client.renderer.block.model.BakedQuad;
+import net.minecraft.client.renderer.block.model.ItemOverrides;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.client.resources.model.*;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.resources.model.Material;
+import net.minecraft.client.resources.model.ModelBaker;
+import net.minecraft.client.resources.model.ModelState;
+import net.minecraft.client.resources.model.UnbakedModel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
@@ -57,9 +63,15 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class WalkwayCenterModel implements UnbakedModel {
     private final ResourceLocation texture;
+    private final float radius;
 
     public WalkwayCenterModel(ResourceLocation texture) {
+        this(texture, 0.125f);
+    }
+
+    public WalkwayCenterModel(ResourceLocation texture, float radius) {
         this.texture = texture;
+        this.radius = radius;
     }
 
     @Override
@@ -69,227 +81,231 @@ public class WalkwayCenterModel implements UnbakedModel {
 
     @Override
     public void resolveParents(Function<ResourceLocation, UnbakedModel> modelLoader) {
-
     }
 
     @Override
     public @Nullable BakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        return new Baked(textureGetter, this.texture);
+        return new Baked(textureGetter, this.texture, this.radius);
     }
 
     public static class Baked implements BakedModel {
         private final TextureAtlasSprite sprite;
         private final Map<Direction, Mesh> meshes;
+        private final float radius;
 
-        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture) {
+        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
             this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
             this.meshes = new EnumMap<>(Direction.class);
+            this.radius = radius;
+
+            float min = 0.5f - radius;
+            float max = 0.5f + radius;
+            float edgeMin = 0.0625f;
+            float edgeMax = 0.9375f;
+            float centerStart = this.centerStart();
+            float centerEnd = this.centerEnd();
+            float crossSectionWidth = this.crossSectionWidth();
 
             Renderer renderer = RendererAccess.INSTANCE.getRenderer();
             MeshBuilder meshBuilder = renderer.meshBuilder();
             QuadEmitter emitter = meshBuilder.getEmitter();
 
-            for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
                 emitter
-                        .square(direction, 0.375f, 0.0625f, 0.625f, 0.375f, 0.375f)
-                        .uv(0, 0, 10)
+                        .square(direction, min, edgeMin, max, min, min)
+                        .uv(0, 0, centerEnd)
                         .uv(1, 0, 15)
-                        .uv(2, 4, 15)
-                        .uv(3, 4, 10)
+                        .uv(2, crossSectionWidth, 15)
+                        .uv(3, crossSectionWidth, centerEnd)
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
             }
-            emitter.square(Direction.DOWN, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.DOWN, min, min, max, max, edgeMin);
             this.meshes.put(Direction.DOWN, meshBuilder.build());
 
-            for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
                 emitter
-                        .square(direction, 0.375f, 0.625f, 0.625f, 0.9375f, 0.375f)
+                        .square(direction, min, max, max, edgeMax, min)
                         .uv(0, 0, 1)
-                        .uv(1, 0, 6)
-                        .uv(2, 4, 6)
-                        .uv(3, 4, 1)
+                        .uv(1, 0, centerStart)
+                        .uv(2, crossSectionWidth, centerStart)
+                        .uv(3, crossSectionWidth, 1)
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
             }
-            emitter.square(Direction.UP, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.UP, min, min, max, max, edgeMin);
             this.meshes.put(Direction.UP, meshBuilder.build());
 
             emitter
-                    .square(Direction.WEST, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
+                    .square(Direction.WEST, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
-                    .uv(1, 4, 1)
-                    .uv(2, 4, 6)
-                    .uv(3, 0, 6)
+                    .uv(1, crossSectionWidth, 1)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.UP, 0.375f, 0.625f, 0.625f,0.9375f, 0.375f)
+                    .square(Direction.UP, min, max, max, edgeMax, min)
                     .uv(0, 0, 1)
-                    .uv(1, 0, 6)
-                    .uv(2, 4, 6)
-                    .uv(3, 4, 1)
+                    .uv(1, 0, centerStart)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, crossSectionWidth, 1)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.EAST, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 0, 10)
-                    .uv(1, 4, 10)
-                    .uv(2, 4, 15)
+                    .square(Direction.EAST, max, min, edgeMax, max, min)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
+                    .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.DOWN, 0.375f, 0.0625f, 0.625f, 0.375f, 0.375f)
-                    .uv(0, 0, 10)
+                    .square(Direction.DOWN, min, edgeMin, max, min, min)
+                    .uv(0, 0, centerEnd)
                     .uv(1, 0, 15)
-                    .uv(2, 4, 15)
-                    .uv(3, 4, 10)
+                    .uv(2, crossSectionWidth, 15)
+                    .uv(3, crossSectionWidth, centerEnd)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            emitter.square(Direction.NORTH, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.NORTH, min, min, max, max, edgeMin);
             this.meshes.put(Direction.NORTH, meshBuilder.build());
 
             emitter
-                    .square(Direction.WEST, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 0, 10)
-                    .uv(1, 4, 10)
-                    .uv(2, 4, 15)
+                    .square(Direction.WEST, max, min, edgeMax, max, min)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
+                    .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.EAST, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
+                    .square(Direction.EAST, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
-                    .uv(1, 4, 1)
-                    .uv(2, 4, 6)
-                    .uv(3, 0, 6)
+                    .uv(1, crossSectionWidth, 1)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.UP, 0.375f, 0.0625f, 0.625f, 0.375f, 0.375f)
-                    .uv(0, 0, 10)
+                    .square(Direction.UP, min, edgeMin, max, min, min)
+                    .uv(0, 0, centerEnd)
                     .uv(1, 0, 15)
-                    .uv(2, 4, 15)
-                    .uv(3, 4, 10)
+                    .uv(2, crossSectionWidth, 15)
+                    .uv(3, crossSectionWidth, centerEnd)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.DOWN, 0.375f, 0.625f, 0.625f,0.9375f, 0.375f)
+                    .square(Direction.DOWN, min, max, max, edgeMax, min)
                     .uv(0, 0, 1)
-                    .uv(1, 0, 6)
-                    .uv(2, 4, 6)
-                    .uv(3, 4, 1)
+                    .uv(1, 0, centerStart)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, crossSectionWidth, 1)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            emitter.square(Direction.SOUTH, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.SOUTH, min, min, max, max, edgeMin);
             this.meshes.put(Direction.SOUTH, meshBuilder.build());
 
             emitter
-                    .square(Direction.NORTH, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
+                    .square(Direction.NORTH, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
-                    .uv(1, 4, 1)
-                    .uv(2, 4, 6)
-                    .uv(3, 0, 6)
+                    .uv(1, crossSectionWidth, 1)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.SOUTH, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 0, 10)
-                    .uv(1, 4, 10)
-                    .uv(2, 4, 15)
+                    .square(Direction.SOUTH, max, min, edgeMax, max, min)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
+                    .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.UP, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 4, 10)
-                    .uv(1, 0, 10)
+                    .square(Direction.UP, max, min, edgeMax, max, min)
+                    .uv(0, crossSectionWidth, centerEnd)
+                    .uv(1, 0, centerEnd)
                     .uv(2, 0, 15)
-                    .uv(3, 4, 15)
+                    .uv(3, crossSectionWidth, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.DOWN, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 4, 10)
-                    .uv(1, 0, 10)
+                    .square(Direction.DOWN, max, min, edgeMax, max, min)
+                    .uv(0, crossSectionWidth, centerEnd)
+                    .uv(1, 0, centerEnd)
                     .uv(2, 0, 15)
-                    .uv(3, 4, 15)
+                    .uv(3, crossSectionWidth, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            emitter.square(Direction.EAST, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.EAST, min, min, max, max, edgeMin);
             this.meshes.put(Direction.EAST, meshBuilder.build());
 
             emitter
-                    .square(Direction.NORTH, 0.625f, 0.375f,0.9375f, 0.625f, 0.375f)
-                    .uv(0, 0, 10)
-                    .uv(1, 4, 10)
-                    .uv(2, 4, 15)
+                    .square(Direction.NORTH, max, min, edgeMax, max, min)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
+                    .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.SOUTH, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
+                    .square(Direction.SOUTH, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
-                    .uv(1, 4, 1)
-                    .uv(2, 4, 6)
-                    .uv(3, 0, 6)
+                    .uv(1, crossSectionWidth, 1)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.UP, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
-                    .uv(0, 4, 1)
+                    .square(Direction.UP, edgeMin, min, min, max, min)
+                    .uv(0, crossSectionWidth, 1)
                     .uv(1, 0, 1)
-                    .uv(2, 0, 6)
-                    .uv(3, 4, 6)
+                    .uv(2, 0, centerStart)
+                    .uv(3, crossSectionWidth, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
-                    .square(Direction.DOWN, 0.0625f, 0.375f, 0.375f, 0.625f, 0.375f)
-                    .uv(0, 4, 1)
+                    .square(Direction.DOWN, edgeMin, min, min, max, min)
+                    .uv(0, crossSectionWidth, 1)
                     .uv(1, 0, 1)
-                    .uv(2, 0, 6)
-                    .uv(3, 4, 6)
+                    .uv(2, 0, centerStart)
+                    .uv(3, crossSectionWidth, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            emitter.square(Direction.WEST, 0.375f, 0.375f, 0.625f, 0.625f, 0.0625f)
-                    .uv(0, 0, 6)
-                    .uv(1, 0, 10)
-                    .uv(2, 4, 10)
-                    .uv(3, 4, 6)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
+            this.emitCapQuad(emitter, Direction.WEST, min, min, max, max, edgeMin);
             this.meshes.put(Direction.WEST, meshBuilder.build());
+        }
+
+        private void emitCapQuad(QuadEmitter emitter, Direction direction, float minX, float minY, float maxX, float maxY, float depth) {
+            emitter
+                    .square(direction, minX, minY, maxX, maxY, depth)
+                    .uv(0, this.capU(minX), this.capV(minY))
+                    .uv(1, this.capU(minX), this.capV(maxY))
+                    .uv(2, this.capU(maxX), this.capV(maxY))
+                    .uv(3, this.capU(maxX), this.capV(minY))
+                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                    .color(-1, -1, -1, -1).emit();
+        }
+
+        private float capU(float value) {
+            return (value - (0.5f - this.radius)) * 16.0f;
+        }
+
+        private float capV(float value) {
+            return value * 16.0f;
+        }
+
+        private float centerStart() {
+            return (0.5f - this.radius) * 16.0f;
+        }
+
+        private float centerEnd() {
+            return (0.5f + this.radius) * 16.0f;
+        }
+
+        private float crossSectionWidth() {
+            return this.centerEnd() - this.centerStart();
         }
 
         @Override

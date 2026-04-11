@@ -236,11 +236,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.WALKWAY, "Walkway");
         this.block(GCBlocks.FLUID_PIPE_WALKWAY, "Fluid Pipe Walkway");
         this.block(GCBlocks.WIRE_WALKWAY, "Wire Walkway");
+        this.block(GCBlocks.HEAVY_WIRE_WALKWAY, "Heavy Wire Walkway");
         this.block(GCBlocks.TIN_LADDER, "Tin Ladder");
         this.block(GCBlocks.IRON_GRATING, "Iron Grating");
 
         // SPECIAL
         this.block(GCBlocks.ALUMINUM_WIRE, "Aluminum Wire");
+        this.block(GCBlocks.HEAVY_ALUMINUM_WIRE, "Heavy Aluminum Wire");
         this.block(GCBlocks.SEALABLE_ALUMINUM_WIRE, "Sealable Aluminum Wire");
         this.block(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, "Heavy Sealable Aluminum Wire");
         this.block(GCBlocks.GLASS_FLUID_PIPE, "Glass Fluid Pipe");
