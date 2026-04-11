@@ -64,20 +64,14 @@ import java.util.function.Supplier;
 public class WalkwayCenterModel implements UnbakedModel {
     private final ResourceLocation texture;
     private final float radius;
-    private final float yOffset;
 
     public WalkwayCenterModel(ResourceLocation texture) {
         this(texture, 0.125f);
     }
 
     public WalkwayCenterModel(ResourceLocation texture, float radius) {
-        this(texture, radius, 0.0f);
-    }
-
-    public WalkwayCenterModel(ResourceLocation texture, float radius, float yOffset) {
         this.texture = texture;
         this.radius = radius;
-        this.yOffset = yOffset;
     }
 
     @Override
@@ -91,20 +85,18 @@ public class WalkwayCenterModel implements UnbakedModel {
 
     @Override
     public @Nullable BakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        return new Baked(textureGetter, this.texture, this.radius, this.yOffset);
+        return new Baked(textureGetter, this.texture, this.radius);
     }
 
     public static class Baked implements BakedModel {
         private final TextureAtlasSprite sprite;
         private final Map<Direction, Mesh> meshes;
         private final float radius;
-        private final float yOffset;
 
-        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, float yOffset) {
+        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
             this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
             this.meshes = new EnumMap<>(Direction.class);
             this.radius = radius;
-            this.yOffset = yOffset;
 
             float min = 0.5f - radius;
             float max = 0.5f + radius;
@@ -301,7 +293,7 @@ public class WalkwayCenterModel implements UnbakedModel {
         }
 
         private float capV(float value) {
-            return this.centerStart() + (value - (0.5f - this.radius)) * 16.0f;
+            return value * 16.0f;
         }
 
         private float centerStart() {
@@ -318,15 +310,6 @@ public class WalkwayCenterModel implements UnbakedModel {
 
         @Override
         public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-            if (this.yOffset != 0.0f) {
-                context.pushTransform(quad -> {
-                    for (int vertex = 0; vertex < 4; vertex++) {
-                        quad.pos(vertex, quad.x(vertex), quad.y(vertex) + this.yOffset, quad.z(vertex));
-                    }
-                    return true;
-                });
-            }
-
             if (blockView.getBlockEntity(pos) instanceof Connected connected) {
                 Direction facing = state.getValue(BlockStateProperties.FACING);
                 if (!connected.isConnected(facing)) {
@@ -334,10 +317,6 @@ public class WalkwayCenterModel implements UnbakedModel {
                 }
             } else {
                 Constant.LOGGER.warn("Walkway center model loaded for block that's not a Connected entity");
-            }
-
-            if (this.yOffset != 0.0f) {
-                context.popTransform();
             }
         }
 

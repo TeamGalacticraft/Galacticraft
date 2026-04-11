@@ -35,16 +35,10 @@ import java.util.function.Function;
 public class PipeUnbakedModel implements UnbakedModel {
     private final ResourceLocation texture;
     private final float radius;
-    private final float yOffset;
 
     public PipeUnbakedModel(ResourceLocation texture, float radius) {
-        this(texture, radius, 0.0f);
-    }
-
-    public PipeUnbakedModel(ResourceLocation texture, float radius, float yOffset) {
         this.texture = texture;
         this.radius = radius;
-        this.yOffset = yOffset;
     }
 
     @Override
@@ -59,6 +53,6 @@ public class PipeUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
-        return new PipeBakedModel(textureGetter, this.texture, this.radius, this.yOffset);
+        return new PipeBakedModel(textureGetter, this.texture, this.radius);
     }
 }

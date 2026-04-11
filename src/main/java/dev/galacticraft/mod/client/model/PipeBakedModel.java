@@ -59,24 +59,15 @@ import java.util.function.Supplier;
 @Environment(EnvType.CLIENT)
 public class PipeBakedModel implements BakedModel {
     private static final float EDGE_FACE_DEPTH = 0.001f;
-    private static final float REDUCER_CENTER_THICKNESS = 1.0f / 16.0f;
 
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;
     private final float radius;
-    private final float yOffset;
-    private final Mesh topConnectionMesh;
 
     public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
-        this(textureGetter, texture, radius, 0.0f);
-    }
-
-    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, float yOffset) {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
         this.meshes = new EnumMap<>(Direction.class);
         this.radius = radius;
-        this.yOffset = yOffset;
-        this.topConnectionMesh = yOffset < 0.0f ? this.buildUpMesh(0.5f + radius + yOffset, 1.0f) : null;
 
         float min = 0.5f - this.radius;
         float max = 0.5f + this.radius;
@@ -260,52 +251,13 @@ public class PipeBakedModel implements BakedModel {
         if (getter.getBlockEntity(blockPos) instanceof Connected pipe) {
             for (Direction direction : Direction.values()) {
                 if (pipe.isConnected(direction)) {
-                    Mesh mesh = direction == Direction.UP && this.topConnectionMesh != null ? this.topConnectionMesh : this.meshes.get(direction);
-                    this.emitWithOptionalYOffset(context, direction != Direction.UP, () -> mesh.outputTo(emitter));
-                    this.emitWithOptionalYOffset(context, direction != Direction.UP, () -> this.renderReducerCap(getter, blockPos, direction, emitter));
+                    this.meshes.get(direction).outputTo(emitter);
+                    this.renderReducerCap(getter, blockPos, direction, emitter);
                 } else {
-                    this.emitWithOptionalYOffset(context, true, () -> this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius));
+                    this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius);
                 }
             }
         }
-    }
-
-    private Mesh buildUpMesh(float minY, float maxY) {
-        MeshBuilder meshBuilder = RendererAccess.INSTANCE.getRenderer().meshBuilder();
-        QuadEmitter emitter = meshBuilder.getEmitter();
-        float min = 0.5f - this.radius;
-        float max = 0.5f + this.radius;
-        float centerStart = this.centerStart();
-        float crossSectionWidth = this.crossSectionWidth();
-
-        for (Direction direction : Direction.Plane.HORIZONTAL) {
-            emitter
-                    .square(direction, min, minY, max, maxY, min)
-                    .uv(0, 0, 0)
-                    .uv(1, 0, centerStart)
-                    .uv(2, crossSectionWidth, centerStart)
-                    .uv(3, crossSectionWidth, 0)
-                    .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
-                    .color(-1, -1, -1, -1).emit();
-        }
-
-        return meshBuilder.build();
-    }
-
-    private void emitWithOptionalYOffset(RenderContext context, boolean applyYOffset, Runnable emitterAction) {
-        if (!applyYOffset || this.yOffset == 0.0f) {
-            emitterAction.run();
-            return;
-        }
-
-        context.pushTransform(quad -> {
-            for (int i = 0; i < 4; i++) {
-                quad.pos(i, quad.x(i), quad.y(i) + this.yOffset, quad.z(i));
-            }
-            return true;
-        });
-        emitterAction.run();
-        context.popTransform();
     }
 
     private void renderReducerCap(BlockAndTintGetter getter, BlockPos blockPos, Direction direction, QuadEmitter emitter) {
@@ -323,12 +275,7 @@ public class PipeBakedModel implements BakedModel {
         float maxOuter = 0.5f + this.radius;
         float minInner = 0.5f - neighborRadius;
         float maxInner = 0.5f + neighborRadius;
-        float centerInset = Math.min(REDUCER_CENTER_THICKNESS, this.radius - neighborRadius);
-
         this.emitCapQuad(emitter, direction, minInner, minInner, maxInner, maxInner, EDGE_FACE_DEPTH);
-        if (centerInset > 0.0f) {
-            this.emitCapQuad(emitter, direction, minInner, minInner, maxInner, maxInner, EDGE_FACE_DEPTH + centerInset);
-        }
         this.emitCapQuad(emitter, direction, minOuter, minOuter, maxOuter, minInner, EDGE_FACE_DEPTH);
         this.emitCapQuad(emitter, direction, minOuter, maxInner, maxOuter, maxOuter, EDGE_FACE_DEPTH);
         this.emitCapQuad(emitter, direction, minOuter, minInner, minInner, maxInner, EDGE_FACE_DEPTH);
@@ -351,7 +298,7 @@ public class PipeBakedModel implements BakedModel {
     }
 
     private float capV(float value) {
-        return this.centerStart() + (value - (0.5f - this.radius)) * 16.0f;
+        return value * 16.0f;
     }
 
     private float centerStart() {
