@@ -20,28 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.network;
+package dev.galacticraft.impl.network.c2s;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.impl.network.c2s.FlagDataPayload;
-import dev.galacticraft.impl.network.c2s.RequestSpaceRaceStatsPayload;
-import dev.galacticraft.impl.network.c2s.TeamNamePayload;
-import dev.galacticraft.impl.network.c2s.UpdateSpaceRaceVisibilityPayload;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.spacerace.SpaceRaceAdvancementManager;
+import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import org.jetbrains.annotations.NotNull;
 
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCApiServerPacketReceivers {
-    public static void register() {
-        registerPacket(FlagDataPayload.TYPE);
-        registerPacket(RequestSpaceRaceStatsPayload.TYPE);
-        registerPacket(TeamNamePayload.TYPE);
-        registerPacket(UpdateSpaceRaceVisibilityPayload.TYPE);
+public record RequestSpaceRaceStatsPayload() implements C2SPayload {
+    public static final RequestSpaceRaceStatsPayload INSTANCE = new RequestSpaceRaceStatsPayload();
+    public static final ResourceLocation ID = Constant.id("request_space_race_stats");
+    public static final Type<RequestSpaceRaceStatsPayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<ByteBuf, RequestSpaceRaceStatsPayload> CODEC = StreamCodec.unit(INSTANCE);
+
+    @Override
+    public @NotNull Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
+    @Override
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+        context.server().execute(() -> SpaceRaceAdvancementManager.sendServerStats(context.player()));
     }
 }
