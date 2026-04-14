@@ -16,7 +16,9 @@
     "CakeBlockMixin",
     "DimensionTransitionMixin",
     "DimensionTypeMixin",
+    "DoorBlockMixin",
     "EntityMixin",
+    "EntityTypeMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
@@ -30,6 +32,8 @@
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",
     "ServerLevelMixin",
+    "VillagerMixin",
+    "WalkNodeEvaluatorMixin",
     "ServerPlayerMixin",
     "SpiderMixin"
   ],

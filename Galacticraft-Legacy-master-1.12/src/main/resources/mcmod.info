@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "galacticraftcore",
+    "name": "Galacticraft",
+    "description": "An advanced space travel mod for Minecraft!",
+    "version": "${version}",
+    "mcversion": "1.12.2",
+    "logoFile": "assets/galacticraftcore/core-logo.png",
+    "authorList": [
+      "micdoodle8",
+      "radfast",
+      "EzerArch",
+      "fishtaco",
+      "SpaceViking",
+      "SteveKunG",
+      "ROMVoid95"
+    ]
+  }
+]

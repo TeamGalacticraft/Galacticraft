@@ -1,0 +1,39 @@
+{
+  "artifactId": "galacticraft-legacy",
+  "name": "Galacticraft-Legacy",
+  "url": "https://github.com/TeamGalacticraft/Galacticraft-Legacy",
+  "description": "An advanced space exploration mod for Minecraft",
+  "inceptionYear": "2021",
+  "organization": {
+    "name": "TeamGalacticraft",
+    "url": "https://github.com/TeamGalacticraft"
+  },
+  "licenses": [
+    {
+      "name": "MIT",
+      "url": "https://github.com/TeamGalacticraft/Galacticraft-Legacy/blob/master/LICENSE",
+      "distribution": "repo"
+    }
+  ],
+  "issueManagement": {
+    "system": "github",
+    "url": "https://github.com/TeamGalacticraft/Galacticraft-Legacy/issues"
+  },
+  "scm": {
+    "connection": "scm:git:git://github.com/TeamGalacticraft/Galacticraft-Legacy.git",
+    "developerConnection": "scm:git:git@github.com:TeamGalacticraft/Galacticraft-Legacy.git",
+    "url": "https://github.com/TeamGalacticraft/Galacticraft-Legacy"
+  },
+  "developers": [
+    {
+      "id": "rom",
+      "name": "ROMVoid95",
+      "email": "rom.void95@gmail.com",
+      "roles": [
+        "developer"
+      ],
+      "timezone": "CST/CDT"
+    }
+    
+  ]
+}

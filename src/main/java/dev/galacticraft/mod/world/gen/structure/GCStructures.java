@@ -48,13 +48,16 @@ import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraft.world.level.levelgen.structure.Structure;
 import net.minecraft.world.level.levelgen.structure.StructureSpawnOverride;
 import net.minecraft.world.level.levelgen.structure.TerrainAdjustment;
+import net.minecraft.world.level.levelgen.structure.pools.DimensionPadding;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.structures.JigsawStructure;
+import net.minecraft.world.level.levelgen.structure.templatesystem.LiquidSettings;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collections;
+import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 
 public class GCStructures {
     public static final class Moon {
@@ -86,14 +89,26 @@ public class GCStructures {
         ));
         context.register(Moon.VILLAGE, new JigsawStructure(
                 new Structure.StructureSettings(biomeLookup.get(GCBiomeTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE).orElseGet(() -> createEmptyTag(GCBiomeTags.MOON_VILLAGE_HIGHLANDS_HAS_STRUCTURE)),
-                        Collections.emptyMap(),
+                Map.of(MobCategory.CREATURE,
+                    new StructureSpawnOverride(StructureSpawnOverride.BoundingBoxType.STRUCTURE,
+                        WeightedRandomList.create(
+                            new MobSpawnSettings.SpawnerData(GCEntityTypes.MOON_COW, 6, 4, 6),
+                            new MobSpawnSettings.SpawnerData(GCEntityTypes.MOON_SHEEP, 8, 4, 6),
+                            new MobSpawnSettings.SpawnerData(GCEntityTypes.MOON_CHICKEN, 10, 5, 8)
+                        )
+                    )),
                         GenerationStep.Decoration.SURFACE_STRUCTURES,
-                        TerrainAdjustment.BEARD_THIN),
+                        TerrainAdjustment.BEARD_BOX),
                 templatePoolLookup.getOrThrow(GCStructureTemplatePools.Moon.Village.STARTS),
-                6,
+                Optional.empty(),
+                10,
                 ConstantHeight.of(VerticalAnchor.absolute(0)),
                 true,
-                Heightmap.Types.WORLD_SURFACE_WG
+                Optional.of(Heightmap.Types.WORLD_SURFACE_WG),
+                96,
+                List.of(),
+                DimensionPadding.ZERO,
+                LiquidSettings.IGNORE_WATERLOGGING
         ));
         context.register(Moon.BOSS, new DungeonStructure(new Structure.StructureSettings(biomeLookup.getOrThrow(GCBiomeTags.MOON_BOSS_HAS_STRUCTURE)), new DungeonConfiguration(GCBlocks.MOON_DUNGEON_BRICK.defaultBlockState(), 25, 8, 16,
                 5, 6, GCStructurePieceTypes.ROOM_BOSS, GCStructurePieceTypes.ROOM_TREASURE)));

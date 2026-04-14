@@ -1,0 +1,14 @@
+{
+  "forge_marker": 1,
+  "defaults": {
+     "model": "galacticraftplanets:miner_base",
+     "custom": { "flip-v": true },
+     "textures": { 
+        "particle": "galacticraftplanets:blocks/machineframe"
+	}
+     },
+  "variants": {
+      "normal" : [{}],
+      "inventory": [{}]
+  }
+}

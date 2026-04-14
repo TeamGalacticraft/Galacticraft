@@ -1,0 +1,12 @@
+{
+  "result": {
+    "item": "galacticraftcore:compact_workbench"
+  },
+  "ingredients": [
+    {
+      "item": "galacticraftcore:rocket_workbench",
+      "data": 0
+    }
+  ],
+  "type": "minecraft:crafting_shapeless"
+}

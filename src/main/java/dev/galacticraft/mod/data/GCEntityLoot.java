@@ -27,7 +27,9 @@ import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.data.loot.GCEntityLootSubProvider;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.minecraft.advancements.critereon.EntityPredicate;
+import net.minecraft.advancements.critereon.NbtPredicate;
 import net.minecraft.core.HolderLookup;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.tags.EntityTypeTags;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.flag.FeatureFlags;
@@ -56,6 +58,72 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
 
     @Override
     public void generate() {
+        CompoundTag unshearedMoonSheep = new CompoundTag();
+        unshearedMoonSheep.putBoolean("Sheared", false);
+
+        add(GCEntityTypes.MOON_COW,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.LEATHER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.BEEF)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 3.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                                        .apply(SmeltItemFunction.smelted().when(this.shouldSmeltLoot()))
+                                        )
+                        )
+        );
+        add(GCEntityTypes.MOON_SHEEP,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(LootItem.lootTableItem(Items.WHITE_WOOL))
+                                        .when(LootItemEntityPropertyCondition.hasProperties(LootContext.EntityTarget.THIS, EntityPredicate.Builder.entity().nbt(new NbtPredicate(unshearedMoonSheep))))
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.MUTTON)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                                        .apply(SmeltItemFunction.smelted().when(this.shouldSmeltLoot()))
+                                        )
+                        )
+        );
+        add(GCEntityTypes.MOON_CHICKEN,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.FEATHER)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(0.0F, 2.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                        )
+                        )
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(ConstantValue.exactly(1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(Items.CHICKEN)
+                                                        .apply(SetItemCountFunction.setCount(UniformGenerator.between(1.0F, 1.0F)))
+                                                        .apply(EnchantedCountIncreaseFunction.lootingMultiplier(this.lookup, UniformGenerator.between(0.0F, 1.0F)))
+                                                        .apply(SmeltItemFunction.smelted().when(this.shouldSmeltLoot()))
+                                        )
+                        )
+        );
         add(GCEntityTypes.EVOLVED_ZOMBIE,
                 LootTable.lootTable()
                         .withPool(

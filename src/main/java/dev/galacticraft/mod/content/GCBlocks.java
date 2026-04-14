@@ -49,10 +49,12 @@ import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.util.valueproviders.ConstantInt;
 import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -95,6 +97,12 @@ public class GCBlocks {
 
     public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.METAL).noOcclusion().forceSolidOn().pushReaction(PushReaction.DESTROY)));
     public static final GCRegistry.ColorSet<Block> FLAGS = BLOCKS.registerColored(Constant.Block.FLAG, color -> new FlagBlock(color, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5f, 0.5f)));
+    public static final Block METEORIC_IRON_DOOR_TOP = BLOCKS.register(Constant.Block.METEORIC_IRON_DOOR_TOP,
+            new MeteoricIronDoorTopBlock(BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON)
+                    .strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops(), Constant.id(Constant.Block.METEORIC_IRON_DOOR)));
+    public static final Block METEORIC_IRON_DOOR = BLOCKS.registerWithItem(Constant.Block.METEORIC_IRON_DOOR,
+            new MeteoricIronDoorBlock(BlockSetType.IRON, BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON)
+                    .strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops(), Constant.id(Constant.Block.METEORIC_IRON_DOOR_TOP)));
 
     // MOON NATURAL
     public static final Block MOON_TURF = BLOCKS.registerWithItem(Constant.Block.MOON_TURF, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F)));
@@ -263,6 +271,11 @@ public class GCBlocks {
 
     // MOON VILLAGER SPECIAL
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
+    public static final Block LUNAR_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.LUNAR_WORKBENCH, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+    public static final Block LUNAR_SMITHING_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_SMITHING_TABLE, new SmithingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMITHING_TABLE)));
+    public static final Block LUNAR_CHEESE_PRESS = BLOCKS.registerWithItem(Constant.Block.LUNAR_CHEESE_PRESS, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+    public static final Block LUNAR_HERBALIST_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_HERBALIST_TABLE, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+    public static final Block LUNAR_HOME_ANCHOR = BLOCKS.registerWithItem(Constant.Block.LUNAR_HOME_ANCHOR, new LunarHomeAnchorBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
 
     // SPECIAL
     public static final Block ROCKET_LAUNCH_PAD = BLOCKS.registerWithItem(Constant.Block.ROCKET_LAUNCH_PAD, new LaunchPadBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 10.0F).requiresCorrectToolForDrops()));
@@ -325,6 +338,12 @@ public class GCBlocks {
     public static final Block VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
     public static final Block CLEAR_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.CLEAR_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
     public static final Block STRONG_VACUUM_GLASS = BLOCKS.registerWithItem(Constant.Block.STRONG_VACUUM_GLASS, new VacuumGlassBlock(BlockBehaviour.Properties.of().noOcclusion().sound(SoundType.GLASS)));
+
+    // MOON GLASSES
+    public static final Block OLIVINE_GLASS = BLOCKS.registerWithItem(Constant.Block.OLIVINE_GLASS, new StainedGlassBlock(DyeColor.LIME, BlockBehaviour.Properties.ofFullCopy(Blocks.OBSIDIAN).noOcclusion().sound(SoundType.AMETHYST)));
+    public static final Block OLIVINE_GLASS_PANE = BLOCKS.registerWithItem(Constant.Block.OLIVINE_GLASS_PANE, new StainedGlassPaneBlock(DyeColor.LIME, BlockBehaviour.Properties.ofFullCopy(OLIVINE_GLASS)));
+    public static final Block MOON_GLASS = BLOCKS.registerWithItem(Constant.Block.MOON_GLASS, new StainedGlassBlock(DyeColor.WHITE, BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
+    public static final Block MOON_GLASS_PANE = BLOCKS.registerWithItem(Constant.Block.MOON_GLASS_PANE, new StainedGlassPaneBlock(DyeColor.WHITE, BlockBehaviour.Properties.ofFullCopy(Blocks.GLASS)));
 
     // MISC WORLD GEN
     public static final Block CAVERNOUS_VINES = BLOCKS.registerWithItem(Constant.Block.CAVERNOUS_VINES, new CavernousVinesBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GREEN).randomTicks().noCollission().lightLevel(CavernousVines.emission(8)).instabreak().sound(SoundType.CAVE_VINES).pushReaction(PushReaction.DESTROY)));

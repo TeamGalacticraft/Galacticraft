@@ -1,0 +1,136 @@
+plugins {
+    id 'java'
+    id 'eclipse'
+//    id 'org.cadixdev.licenser' version '0.6.1'
+//    id 'com.diffplug.spotless' version '6.13.0'
+    id 'net.minecraftforge.gradle' version '6.+'
+    id 'net.galacticraft.changelog' version '1.0.4'
+    id 'net.galacticraft.internal.legacy' version '1.0.5'
+    id 'nexus-publishing' version '2.1'
+}
+
+group = "dev.galacticraft"
+archivesBaseName = "Galacticraft"
+version = "${mod_version}${version_suffix}"
+
+java.toolchain.languageVersion = JavaLanguageVersion.of(8)
+
+repositories {
+    mavenCentral()
+    maven {
+        name 'galacticraft'
+        url 'https://maven.galacticraft.net/repository/legacy-common/'
+    }
+}
+
+dependencies {
+    minecraft "net.minecraftforge:forge:${MC_VERSION}-${forge_version}"
+
+    compileRequired fg.deobf('mod.dependency:mekanism:9.8.3.390')
+    compileRequired fg.deobf('mod.dependency:industrialcraft-2:2.8.222-ex112')
+    compileRequired fg.deobf('mod.dependency:buildcraft-api:7.99.24.8')
+    compileOnly fg.deobf('mod.dependency:biomes-o-plenty:7.0.1.2445')
+    compileOnly fg.deobf('mod.dependency:appliedenergistics2:rv6-stable-7')
+    compileOnly fg.deobf('mod.dependency:redstoneflux:2.1.1.1')
+    compileOnly fg.deobf('mod.dependency:actuallyadditions:r152')
+    compileOnly fg.deobf('mod.dependency:playerapi:1.1')
+    compileOnly fg.deobf('mod.dependency:journeymap:5.7.1')
+    compileOnly fg.deobf('mod.dependency:jei:4.16.1.302:api')
+    runtimeOnly fg.deobf('mod.dependency:jei:4.16.1.302')
+    
+    // Project lombok
+    compileOnly 'org.projectlombok:lombok:1.18.24'
+    annotationProcessor 'org.projectlombok:lombok:1.18.24'
+    testCompileOnly 'org.projectlombok:lombok:1.18.24'
+    testAnnotationProcessor 'org.projectlombok:lombok:1.18.24'
+}
+
+spotless {
+	enforceCheck false
+    java {
+        target 'src/*/java/micdoodle8/mods/**/*.java'
+        endWithNewline()
+        trimTrailingWhitespace()
+        removeUnusedImports()
+        indentWithSpaces()
+    }
+}
+
+license {
+    header = project.file('etc/HEADER')
+    properties {
+        company = 'Team Galacticraft'
+        year = Calendar.getInstance().get(Calendar.YEAR);
+    }
+    ignoreFailures = true
+    include '**/*.java'
+}
+
+clean {
+    def filteredDelete = new HashSet<>()
+    for (def toDelete : getDelete()) {
+        for (def f : file(toDelete).listFiles()) {
+            if (f.getName() != "fg_cache") {
+                filteredDelete.add(f)
+            }
+        }
+    }
+    setDelete(filteredDelete)
+}
+
+tokens {
+    replace('version', version)
+}
+
+changelog {
+	fromTag('4.0.5')
+}
+
+maven {
+	excludeDependencies('forge', 'jei')
+	artifacts(mavenJar, deobfJar, sourcesJar)
+}
+
+
+modpublishing {
+
+	changelogPath(changelog.changelogFile)
+
+    curseforge('564236') {
+    	if (System.getenv().CI)
+    		apiKey = 'none'
+	    relations {
+	        optional(
+	        	'mekanism',
+	        	'jei', 
+	        	'journeymap',
+	        	'playerapi', 
+	        	'actually-additions',
+	        	'redstone-flux', 
+	        	'applied-energistics-2',
+	        	'biomes-o-plenty', 
+	        	'buildcraft',
+	        	'industrial-craft'
+	        )
+	        incompatible(
+	        	'betterportals' ,
+	        	'vics-modern-warfare-mod'
+	        )
+	    }
+	}
+
+	modrinth('ZnmdXAk2') {
+		if (System.getenv().CI)
+    		token('none')
+		dependencies {
+			// Mekanism
+			optional.version 'KIzASRO5'
+			// JourneyMap
+			optional.version 'vacvhRKp'
+		}
+	}
+}
+
+tasks.withType(GenerateModuleMetadata).configureEach {
+    enabled = false
+}

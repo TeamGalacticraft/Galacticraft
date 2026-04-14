@@ -1,0 +1,66 @@
+def resourceTargets = [ 'mcmod.info' ]
+def intoTargets = [ 
+	"$rootDir/out/production/resources/", 
+	"$rootDir/out/production/${project.name}.main/", 
+	"$rootDir/bin/main/" 
+]
+def replaceProperties = [ mod_version: version.toString(), minecraft_version: "${mc_version}" ]
+
+processResources {
+    inputs.properties replaceProperties
+    replaceProperties.put 'project', project
+
+    filesMatching(resourceTargets) {
+        expand replaceProperties
+    }
+
+    intoTargets.each { target ->
+        if (file(target).exists()) {
+            copy {
+                from(sourceSets.main.resources) {
+                    include resourceTargets
+                    expand replaceProperties
+                }
+                into target
+            }
+        }
+    }
+}
+
+def modFileTokens = [ 
+	gcVersion: version.toString()
+]
+def included = [ "micdoodle8/mods/galacticraft/core/Constants.java" ]
+def includedPaths = included.collect { java.nio.file.Paths.get(it) }
+def expandedSrc = new File(project.buildDir, 'expandedSrc')
+def srcMainJava = project.file('src/main/java').toPath()
+
+task javaReplaceTokens(type: Copy) {
+    inputs.property 'tokens', modFileTokens
+    from(srcMainJava) {
+        include included
+    }
+    into expandedSrc
+    filter(org.apache.tools.ant.filters.ReplaceTokens, beginToken: '${', endToken: '}', tokens: modFileTokens)
+}
+
+compileJava {
+    dependsOn javaReplaceTokens
+    exclude {
+        srcMainJava.relativize(it.file.toPath()) in includedPaths
+    }
+    source expandedSrc
+    
+    options.compilerArgs << "-Xlint:none"
+    options.encoding = 'UTF-8'
+    options.fork = true
+    options.incremental = true
+}
+
+tasks.withType(Javadoc) {
+      failOnError false
+      options.memberLevel = JavadocMemberLevel.PUBLIC
+      options.encoding = 'UTF-8'
+      options.charSet = 'UTF-8'
+      options.links = ["https://docs.oracle.com/javase/8/docs/api/".toString()]
+}

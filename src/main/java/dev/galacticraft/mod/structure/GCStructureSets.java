@@ -40,6 +40,7 @@ import java.util.Optional;
 
 public class GCStructureSets {
     public static final class Moon {
+        public static final ResourceKey<StructureSet> VILLAGE = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_village"));
         public static final ResourceKey<StructureSet> PILLAGER_BASE = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_pillager_bases"));
         public static final ResourceKey<StructureSet> RUINS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_ruins"));
         public static final ResourceKey<StructureSet> BOSS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_boss"));
@@ -49,6 +50,10 @@ public class GCStructureSets {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
 
+        context.register(Moon.VILLAGE, new StructureSet(
+            structureLookup.getOrThrow(GCStructures.Moon.VILLAGE),
+            new RandomSpreadStructurePlacement(24, 20, RandomSpreadType.LINEAR, 10387312)
+        ));
         context.register(Moon.BOSS, new StructureSet(
                 structureLookup.getOrThrow(GCStructures.Moon.BOSS),
                 new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 52532672)

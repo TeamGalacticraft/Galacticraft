@@ -2,7 +2,7 @@
   "elements": [
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/oak",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -11,7 +11,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/birch",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -20,7 +20,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/spruce",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -29,7 +29,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/dark_oak",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -38,7 +38,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/jungle",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -47,7 +47,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/acacia",
         "processors": "minecraft:empty",
         "projection": "rigid"
@@ -56,7 +56,7 @@
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/misc/saplings/dead",
         "processors": "minecraft:empty",
         "projection": "rigid"

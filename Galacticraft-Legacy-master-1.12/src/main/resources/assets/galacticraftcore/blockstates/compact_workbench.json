@@ -1,0 +1,9 @@
+{
+    "forge_marker": 1,
+    "variants": {
+        "facing=north": { "model": "galacticraftcore:compact_workbench" },
+        "facing=east":  { "model": "galacticraftcore:compact_workbench", "y": 90 },
+        "facing=west":  { "model": "galacticraftcore:compact_workbench", "y": 270 },
+        "facing=south": { "model": "galacticraftcore:compact_workbench", "y": 180 }
+    }
+}

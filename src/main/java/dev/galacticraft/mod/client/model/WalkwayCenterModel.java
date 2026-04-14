@@ -64,20 +64,14 @@ import java.util.function.Supplier;
 public class WalkwayCenterModel implements UnbakedModel {
     private final ResourceLocation texture;
     private final float radius;
-    private final float yOffset;
 
     public WalkwayCenterModel(ResourceLocation texture) {
         this(texture, 0.125f);
     }
 
     public WalkwayCenterModel(ResourceLocation texture, float radius) {
-        this(texture, radius, 0.0f);
-    }
-
-    public WalkwayCenterModel(ResourceLocation texture, float radius, float yOffset) {
         this.texture = texture;
         this.radius = radius;
-        this.yOffset = yOffset;
     }
 
     @Override
@@ -91,50 +85,50 @@ public class WalkwayCenterModel implements UnbakedModel {
 
     @Override
     public @Nullable BakedModel bake(ModelBaker modelBaker, Function<Material, TextureAtlasSprite> textureGetter, ModelState rotationContainer) {
-        return new Baked(textureGetter, this.texture, this.radius, this.yOffset);
+        return new Baked(textureGetter, this.texture, this.radius);
     }
 
     public static class Baked implements BakedModel {
         private final TextureAtlasSprite sprite;
         private final Map<Direction, Mesh> meshes;
         private final float radius;
-        private final float yOffset;
 
-        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, float yOffset) {
+        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
             this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
             this.meshes = new EnumMap<>(Direction.class);
             this.radius = radius;
-            this.yOffset = yOffset;
 
             float min = 0.5f - radius;
             float max = 0.5f + radius;
             float edgeMin = 0.0625f;
             float edgeMax = 0.9375f;
-            float crossSectionWidth = this.capPixelWidth();
+            float centerStart = this.centerStart();
+            float centerEnd = this.centerEnd();
+            float crossSectionWidth = this.crossSectionWidth();
 
             Renderer renderer = RendererAccess.INSTANCE.getRenderer();
             MeshBuilder meshBuilder = renderer.meshBuilder();
             QuadEmitter emitter = meshBuilder.getEmitter();
 
-            for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
                 emitter
                         .square(direction, min, edgeMin, max, min, min)
-                        .uv(0, 0, 10)
+                        .uv(0, 0, centerEnd)
                         .uv(1, 0, 15)
                         .uv(2, crossSectionWidth, 15)
-                        .uv(3, crossSectionWidth, 10)
+                        .uv(3, crossSectionWidth, centerEnd)
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
             }
             this.emitCapQuad(emitter, Direction.DOWN, min, min, max, max, edgeMin);
             this.meshes.put(Direction.DOWN, meshBuilder.build());
 
-            for (Direction direction : new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.EAST, Direction.WEST}) {
+            for (Direction direction : Direction.Plane.HORIZONTAL) {
                 emitter
                         .square(direction, min, max, max, edgeMax, min)
                         .uv(0, 0, 1)
-                        .uv(1, 0, 6)
-                        .uv(2, crossSectionWidth, 6)
+                        .uv(1, 0, centerStart)
+                        .uv(2, crossSectionWidth, centerStart)
                         .uv(3, crossSectionWidth, 1)
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
@@ -146,32 +140,32 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .square(Direction.WEST, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
                     .uv(1, crossSectionWidth, 1)
-                    .uv(2, crossSectionWidth, 6)
-                    .uv(3, 0, 6)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.UP, min, max, max, edgeMax, min)
                     .uv(0, 0, 1)
-                    .uv(1, 0, 6)
-                    .uv(2, crossSectionWidth, 6)
+                    .uv(1, 0, centerStart)
+                    .uv(2, crossSectionWidth, centerStart)
                     .uv(3, crossSectionWidth, 1)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.EAST, max, min, edgeMax, max, min)
-                    .uv(0, 0, 10)
-                    .uv(1, crossSectionWidth, 10)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
                     .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.DOWN, min, edgeMin, max, min, min)
-                    .uv(0, 0, 10)
+                    .uv(0, 0, centerEnd)
                     .uv(1, 0, 15)
                     .uv(2, crossSectionWidth, 15)
-                    .uv(3, crossSectionWidth, 10)
+                    .uv(3, crossSectionWidth, centerEnd)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             this.emitCapQuad(emitter, Direction.NORTH, min, min, max, max, edgeMin);
@@ -179,8 +173,8 @@ public class WalkwayCenterModel implements UnbakedModel {
 
             emitter
                     .square(Direction.WEST, max, min, edgeMax, max, min)
-                    .uv(0, 0, 10)
-                    .uv(1, crossSectionWidth, 10)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
                     .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
@@ -189,23 +183,23 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .square(Direction.EAST, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
                     .uv(1, crossSectionWidth, 1)
-                    .uv(2, crossSectionWidth, 6)
-                    .uv(3, 0, 6)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.UP, min, edgeMin, max, min, min)
-                    .uv(0, 0, 10)
+                    .uv(0, 0, centerEnd)
                     .uv(1, 0, 15)
                     .uv(2, crossSectionWidth, 15)
-                    .uv(3, crossSectionWidth, 10)
+                    .uv(3, crossSectionWidth, centerEnd)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.DOWN, min, max, max, edgeMax, min)
                     .uv(0, 0, 1)
-                    .uv(1, 0, 6)
-                    .uv(2, crossSectionWidth, 6)
+                    .uv(1, 0, centerStart)
+                    .uv(2, crossSectionWidth, centerStart)
                     .uv(3, crossSectionWidth, 1)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
@@ -216,30 +210,30 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .square(Direction.NORTH, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
                     .uv(1, crossSectionWidth, 1)
-                    .uv(2, crossSectionWidth, 6)
-                    .uv(3, 0, 6)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.SOUTH, max, min, edgeMax, max, min)
-                    .uv(0, 0, 10)
-                    .uv(1, crossSectionWidth, 10)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
                     .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.UP, max, min, edgeMax, max, min)
-                    .uv(0, crossSectionWidth, 10)
-                    .uv(1, 0, 10)
+                    .uv(0, crossSectionWidth, centerEnd)
+                    .uv(1, 0, centerEnd)
                     .uv(2, 0, 15)
                     .uv(3, crossSectionWidth, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.DOWN, max, min, edgeMax, max, min)
-                    .uv(0, crossSectionWidth, 10)
-                    .uv(1, 0, 10)
+                    .uv(0, crossSectionWidth, centerEnd)
+                    .uv(1, 0, centerEnd)
                     .uv(2, 0, 15)
                     .uv(3, crossSectionWidth, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
@@ -249,8 +243,8 @@ public class WalkwayCenterModel implements UnbakedModel {
 
             emitter
                     .square(Direction.NORTH, max, min, edgeMax, max, min)
-                    .uv(0, 0, 10)
-                    .uv(1, crossSectionWidth, 10)
+                    .uv(0, 0, centerEnd)
+                    .uv(1, crossSectionWidth, centerEnd)
                     .uv(2, crossSectionWidth, 15)
                     .uv(3, 0, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
@@ -259,24 +253,24 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .square(Direction.SOUTH, edgeMin, min, min, max, min)
                     .uv(0, 0, 1)
                     .uv(1, crossSectionWidth, 1)
-                    .uv(2, crossSectionWidth, 6)
-                    .uv(3, 0, 6)
+                    .uv(2, crossSectionWidth, centerStart)
+                    .uv(3, 0, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.UP, edgeMin, min, min, max, min)
                     .uv(0, crossSectionWidth, 1)
                     .uv(1, 0, 1)
-                    .uv(2, 0, 6)
-                    .uv(3, crossSectionWidth, 6)
+                    .uv(2, 0, centerStart)
+                    .uv(3, crossSectionWidth, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             emitter
                     .square(Direction.DOWN, edgeMin, min, min, max, min)
                     .uv(0, crossSectionWidth, 1)
                     .uv(1, 0, 1)
-                    .uv(2, 0, 6)
-                    .uv(3, crossSectionWidth, 6)
+                    .uv(2, 0, centerStart)
+                    .uv(3, crossSectionWidth, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
             this.emitCapQuad(emitter, Direction.WEST, min, min, max, max, edgeMin);
@@ -295,28 +289,27 @@ public class WalkwayCenterModel implements UnbakedModel {
         }
 
         private float capU(float value) {
-            return (value - (0.5f - this.radius)) * (this.capPixelWidth() / (this.radius * 2.0f));
+            return (value - (0.5f - this.radius)) * 16.0f;
         }
 
         private float capV(float value) {
-            return 6.0f + (value - (0.5f - this.radius)) * (this.capPixelWidth() / (this.radius * 2.0f));
+            return value * 16.0f;
         }
 
-        private float capPixelWidth() {
-            return this.radius * 32.0f;
+        private float centerStart() {
+            return (0.5f - this.radius) * 16.0f;
+        }
+
+        private float centerEnd() {
+            return (0.5f + this.radius) * 16.0f;
+        }
+
+        private float crossSectionWidth() {
+            return this.centerEnd() - this.centerStart();
         }
 
         @Override
         public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
-            if (this.yOffset != 0.0f) {
-                context.pushTransform(quad -> {
-                    for (int vertex = 0; vertex < 4; vertex++) {
-                        quad.pos(vertex, quad.x(vertex), quad.y(vertex) + this.yOffset, quad.z(vertex));
-                    }
-                    return true;
-                });
-            }
-
             if (blockView.getBlockEntity(pos) instanceof Connected connected) {
                 Direction facing = state.getValue(BlockStateProperties.FACING);
                 if (!connected.isConnected(facing)) {
@@ -324,10 +317,6 @@ public class WalkwayCenterModel implements UnbakedModel {
                 }
             } else {
                 Constant.LOGGER.warn("Walkway center model loaded for block that's not a Connected entity");
-            }
-
-            if (this.yOffset != 0.0f) {
-                context.popTransform();
             }
         }
 

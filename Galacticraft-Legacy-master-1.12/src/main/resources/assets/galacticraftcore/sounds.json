@@ -1,0 +1,43 @@
+{
+  "galacticraft.music_space": {
+    "category": "music",
+    "sounds": [
+      {
+        "name": "galacticraftcore:music/mars_jc",
+        "stream": true
+      },
+      {
+        "name": "galacticraftcore:music/mimas_jc",
+        "stream": true
+      },
+      {
+        "name": "galacticraftcore:music/orbit_jc",
+        "stream": true
+      },
+      {
+        "name": "galacticraftcore:music/scary_ambience",
+        "stream": true
+      },
+      {
+        "name": "galacticraftcore:music/spacerace_jc",
+        "stream": true
+      }
+    ]
+  },
+  "player.unlockchest": { "category":"master", "sounds":[{"name": "galacticraftcore:player/unlockchest", "stream": false }]},
+  "player.parachute": { "category":"master", "sounds":[{"name": "galacticraftcore:player/parachute", "stream": false }]},
+  "player.openairlock": { "category":"master", "sounds":[{"name": "galacticraftcore:player/openairlock", "stream": false }]},
+  "player.closeairlock": { "category":"master", "sounds":[{"name": "galacticraftcore:player/closeairlock", "stream": false }]},
+  "entity.slime_death": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/slime_death", "stream": false }]},
+  "entity.ooh": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/ooh", "stream": false }]},
+  "entity.ouch": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/ouch", "stream": false }]},
+  "entity.bosslaugh": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/bosslaugh", "stream": false }]},
+  "entity.bossdeath": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/bossdeath", "stream": false }]},
+  "entity.astrominer": { "category":"master", "sounds":[{"name": "galacticraftcore:entity/astrominer", "stream": false }]},
+  "ambience.singledrip": { "category":"master", "sounds":[ "galacticraftcore:ambience/singledrip1", "galacticraftcore:ambience/singledrip2", "galacticraftcore:ambience/singledrip3", "galacticraftcore:ambience/singledrip4", "galacticraftcore:ambience/singledrip5", "galacticraftcore:ambience/singledrip6", "galacticraftcore:ambience/singledrip7", "galacticraftcore:ambience/singledrip8" ]},
+  "ambience.scaryscape": { "category":"master", "sounds":[{"name": "galacticraftcore:ambience/scaryscape", "stream": false }]},
+  "shuttle.shuttle": { "category":"master", "sounds":[{"name": "galacticraftcore:shuttle/shuttle", "stream": false }]},
+  "block.deconstructor": { "category":"master", "sounds":[{"name": "galacticraftcore:deconstructor", "stream": false }]},
+  "laser.charge": { "category":"master", "sounds":[{"name": "galacticraftcore:laser/charge", "stream": false }]},
+  "laser.shoot": { "category":"master", "sounds":[{"name": "galacticraftcore:laser/shoot", "stream": false }]}
+}

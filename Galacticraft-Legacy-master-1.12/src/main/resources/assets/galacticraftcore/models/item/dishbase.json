@@ -1,0 +1,14 @@
+{
+    "parent": "builtin/generated",
+    "textures": {
+        "layer0": "galacticraftcore:items/dishicon"
+    },
+    "display": {
+        "thirdperson_righthand": {
+            "scale": [ 0.55, 0.55, 0.55 ]
+        },
+        "firstperson_righthand": {
+            "scale": [ 0.6, 0.6, 0.6 ]
+        }
+    }
+}
