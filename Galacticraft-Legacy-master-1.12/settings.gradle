@@ -1,6 +1,0 @@
-pluginManagement {
-    repositories {
-		maven { url = 'https://maven.galacticraft.net/repository/internal-plugins/' }
-        maven { url = 'https://maven.galacticraft.net/repository/gradle/' }
-    }
-}

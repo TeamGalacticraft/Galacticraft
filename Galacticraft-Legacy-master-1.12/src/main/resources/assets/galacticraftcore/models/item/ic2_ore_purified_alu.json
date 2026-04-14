@@ -1,7 +1,0 @@
-{
-    "parent": "minecraft:item/generated",
-    "textures": {
-        "layer0": "galacticraftcore:items/ic2/ore_purified_alu"
-    },
-    "display": { }
-}

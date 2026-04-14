@@ -1,7 +1,0 @@
-{
-    "forge_marker": 1,
-    "variants": {
-        "normal": { "model": "galacticraftcore:dummy" },
-        "inventory": { "model": "galacticraftcore:dummy" }
-    }
-}

@@ -1,8 +1,0 @@
-{
-    "parent": "block/half_slab",
-    "textures": {
-        "bottom": "galacticraftcore:blocks/deco_block",
-        "top": "galacticraftcore:blocks/deco_block",
-        "side": "galacticraftcore:blocks/deco_block"
-    }
-}

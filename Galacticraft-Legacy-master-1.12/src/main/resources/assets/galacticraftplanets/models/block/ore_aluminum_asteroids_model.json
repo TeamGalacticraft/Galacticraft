@@ -1,6 +1,0 @@
-{
-    "parent": "block/cube_all",
-    "textures": {
-        "all": "galacticraftplanets:blocks/ore_aluminum_asteroids"
-    }
-}
