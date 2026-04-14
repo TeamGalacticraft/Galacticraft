@@ -142,15 +142,15 @@
       }
     },
     {
-      "name": "BeetMacol",
-      "contact": {
-        "homepage": "https://github.com/BeetMacol"
-      }
-    },
-    {
       "name": "ROMVoid95",
       "contact": {
         "homepage": "https://github.com/ROMVoid95"
+      }
+    },
+    {
+      "name": "BeetMacol",
+      "contact": {
+        "homepage": "https://github.com/BeetMacol"
       }
     },
     {
@@ -160,21 +160,15 @@
       }
     },
     {
-      "name": "davo899",
-      "contact": {
-        "homepage": "https://github.com/davo899"
-      }
-    },
-    {
       "name": "sebasphereda",
       "contact": {
         "homepage": "https://github.com/sebasphereda"
       }
     },
     {
-      "name": "LeMayday",
+      "name": "davo899",
       "contact": {
-        "homepage": "https://github.com/LeMayday"
+        "homepage": "https://github.com/davo899"
       }
     },
     {
@@ -184,21 +178,9 @@
       }
     },
     {
-      "name": "christopherweinhardt",
+      "name": "LeMayday",
       "contact": {
-        "homepage": "https://github.com/christopherweinhardt"
-      }
-    },
-    {
-      "name": "JunePrimavera",
-      "contact": {
-        "homepage": "https://github.com/JunePrimavera"
-      }
-    },
-    {
-      "name": "benreid24",
-      "contact": {
-        "homepage": "https://github.com/benreid24"
+        "homepage": "https://github.com/LeMayday"
       }
     },
     {
@@ -214,9 +196,15 @@
       }
     },
     {
-      "name": "IMS212",
+      "name": "benreid24",
       "contact": {
-        "homepage": "https://github.com/IMS212"
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
       }
     },
     {
@@ -232,9 +220,9 @@
       }
     },
     {
-      "name": "GalacticraftDev",
+      "name": "christopherweinhardt",
       "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
+        "homepage": "https://github.com/christopherweinhardt"
       }
     },
     {
@@ -250,9 +238,15 @@
       }
     },
     {
-      "name": "Domza64",
+      "name": "MaverXka",
       "contact": {
-        "homepage": "https://github.com/Domza64"
+        "homepage": "https://github.com/MaverXka"
+      }
+    },
+    {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
       }
     },
     {
@@ -262,9 +256,21 @@
       }
     },
     {
-      "name": "MaverXka",
+      "name": "GalacticraftDev",
       "contact": {
-        "homepage": "https://github.com/MaverXka"
+        "homepage": "https://github.com/GalacticraftDev"
+      }
+    },
+    {
+      "name": "gregorixG",
+      "contact": {
+        "homepage": "https://github.com/gregorixG"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
       }
     }
   ],
