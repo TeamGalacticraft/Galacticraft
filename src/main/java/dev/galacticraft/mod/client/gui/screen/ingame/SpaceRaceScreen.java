@@ -29,6 +29,19 @@ import dev.galacticraft.impl.network.c2s.RequestSpaceRaceStatsPayload;
 import dev.galacticraft.impl.network.c2s.TeamNamePayload;
 import dev.galacticraft.impl.network.c2s.UpdateSpaceRaceVisibilityPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.gui.widget.ColorSlider;
+import dev.galacticraft.mod.client.gui.widget.CustomizeFlagButton;
+import dev.galacticraft.mod.client.gui.widget.SpaceRaceButton;
+import dev.galacticraft.mod.client.gui.widget.TeamColorButton;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.GlobalItemsColumn;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.GlobalStatsSection;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.PlayerClickArea;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarAxis;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarInfo;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarType;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ServerStatsMode;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.TeamClickArea;
+import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.TreeNodeRenderInfo;
 import dev.galacticraft.mod.client.spacerace.SpaceRaceClientStats;
 import dev.galacticraft.mod.util.Translations;
 import io.netty.buffer.ByteBuf;
@@ -37,19 +50,15 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.AbstractButton;
-import net.minecraft.client.gui.components.AbstractSliderButton;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.components.EditBox;
 import net.minecraft.client.gui.components.PlayerFaceRenderer;
-import net.minecraft.client.gui.narration.NarrationElementOutput;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.renderer.texture.DynamicTexture;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.FormattedCharSequence;
@@ -66,7 +75,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.function.Consumer;
 
 public class SpaceRaceScreen extends Screen {
     private static final int STATS_PANEL_PADDING = 8;
@@ -82,9 +90,8 @@ public class SpaceRaceScreen extends Screen {
     private static final int ADVANCEMENT_TEXT_ICON_SPACING = 6;
     private static final int STATS_TOGGLE_BUTTON_WIDTH = 170;
     private static final int STATS_TOGGLE_BUTTON_HEIGHT = 16;
-    private static final int COMPACT_TOGGLE_BUTTON_HEIGHT = 12;
+    private static final int COMPACT_TOGGLE_BUTTON_HEIGHT = 16;
     private static final int COMPACT_TOGGLE_BUTTON_SPACING = 4;
-    private static final float COMPACT_BUTTON_TEXT_SCALE = 0.75F;
     private static final int SERVER_BOTTOM_CONTROL_RESERVED = COMPACT_TOGGLE_BUTTON_HEIGHT + 8;
     private static final int SERVER_BOTTOM_CONTROL_RESERVED_SERVER_TAB = COMPACT_TOGGLE_BUTTON_HEIGHT + 5;
     private static final int SERVER_MODE_BUTTON_HEIGHT = 16;
@@ -112,9 +119,9 @@ public class SpaceRaceScreen extends Screen {
     private static final int GLOBAL_ITEMS_ICON_COLUMN_WIDTH = 22;
     private static final int GLOBAL_ITEMS_MIN_CELL_WIDTH = 48;
     private static final int GLOBAL_ITEMS_MAX_CELL_WIDTH = 72;
-    private static final float GLOBAL_TEXT_SCALE = 0.75F;
+    private static final float GLOBAL_TEXT_SCALE = 1.0F;
     private static final int GLOBAL_HEAD_SIZE = 12;
-    private static final int GLOBAL_ITEM_ICON_SIZE = 12;
+    private static final int GLOBAL_ITEM_ICON_SIZE = 16;
     private static final int SCROLLBAR_WIDTH = 6;
     private static final int SCROLLBAR_SPACING = 2;
     private static final int SCROLLBAR_MIN_THUMB_HEIGHT = 14;
@@ -382,7 +389,7 @@ public class SpaceRaceScreen extends Screen {
         int flagButtonX = this.width / 2 - flagButtonWidth / 2;
         int flagButtonY = this.getTop() + 10;
         this.addRenderableWidget(new CustomizeFlagButton(flagButtonX, flagButtonY, flagButtonWidth, flagButtonHeight, this.teamFlag, () -> setMenu(Menu.TEAM_FLAG)));
-        this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight / 2 - 45 / 2, 45, 45));
+        this.addRenderableWidget(new TeamColorButton(flagButtonX + flagButtonWidth + 10, flagButtonY + flagButtonHeight / 2 - 45 / 2, 45, 45, () -> this.teamColor, () -> setMenu(Menu.TEAM_COLOR)));
         this.addRenderableWidget(this.teamNameInput = new EditBox(this.font, this.getLeft() + (this.backgroundWidth / 2) - 64, flagButtonY + 70, 128, 15, this.teamNameInput, Component.empty()) {
             private String prevText;
 
@@ -457,21 +464,21 @@ public class SpaceRaceScreen extends Screen {
         int modeButtonAreaWidth = Math.max(0, panelRight - STATS_PANEL_PADDING - modeStartX);
         int modeButtonWidth = Math.max(1, (modeButtonAreaWidth - SERVER_MODE_BUTTON_SPACING * 2) / 3);
         int modeButtonY = this.getTop() + 5;
-        this.serverPlayerTabButton = addButton(Component.literal("Player"), modeStartX, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.PLAYER));
-        this.serverTeamTabButton = addButton(Component.literal("Team"), modeStartX + modeButtonWidth + SERVER_MODE_BUTTON_SPACING, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.TEAM));
-        this.serverTreeTabButton = addButton(Component.literal("Server"), modeStartX + (modeButtonWidth + SERVER_MODE_BUTTON_SPACING) * 2, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.SERVER));
+        this.serverPlayerTabButton = addButton(Component.translatable(Translations.SpaceRace.TAB_PLAYER), modeStartX, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.PLAYER));
+        this.serverTeamTabButton = addButton(Component.translatable(Translations.SpaceRace.TAB_TEAM), modeStartX + modeButtonWidth + SERVER_MODE_BUTTON_SPACING, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.TEAM));
+        this.serverTreeTabButton = addButton(Component.translatable(Translations.SpaceRace.TAB_SERVER), modeStartX + (modeButtonWidth + SERVER_MODE_BUTTON_SPACING) * 2, modeButtonY, modeButtonWidth, SERVER_MODE_BUTTON_HEIGHT, button -> this.setServerStatsMode(ServerStatsMode.SERVER));
         this.updateServerModeButtons();
 
         int hideButtonWidth = this.getCompactButtonWidth(
-                Component.literal("Hide my advancements"),
-                Component.literal("Show my advancements")
+                Component.translatable(Translations.SpaceRace.HIDE_MY_ADVANCEMENTS),
+                Component.translatable(Translations.SpaceRace.SHOW_MY_ADVANCEMENTS)
         );
         int progressionButtonWidth = this.getCompactButtonWidth(
-                Component.literal("Show simple progression"),
-                Component.literal("Show full progression")
+                Component.translatable(Translations.SpaceRace.SHOW_SIMPLE_PROGRESSION),
+                Component.translatable(Translations.SpaceRace.SHOW_FULL_PROGRESSION)
         );
 
-        this.serverHideAdvancementsButton = this.addRenderableWidget(new CompactTextButton(
+        this.serverHideAdvancementsButton = this.addRenderableWidget(new SpaceRaceButton(
                 this.getServerVisibilityButtonText(),
                 0,
                 0,
@@ -479,7 +486,7 @@ public class SpaceRaceScreen extends Screen {
                 COMPACT_TOGGLE_BUTTON_HEIGHT,
                 button -> this.toggleServerAdvancementVisibility()
         ));
-        this.serverVisibilityButton = this.addRenderableWidget(new CompactTextButton(
+        this.serverVisibilityButton = this.addRenderableWidget(new SpaceRaceButton(
                 this.getServerProgressionButtonText(),
                 0,
                 0,
@@ -523,9 +530,9 @@ public class SpaceRaceScreen extends Screen {
         int contentWidth = panelWidth - STATS_PANEL_PADDING * 2;
         int tabWidth = Math.max(60, (contentWidth - GLOBAL_TAB_SPACING * 2) / 3);
         int tabY = this.getBottom() - STATS_PANEL_PADDING - GLOBAL_TAB_HEIGHT - GLOBAL_TAB_BOTTOM_PADDING;
-        this.globalGeneralTabButton = addButton(Component.literal("General"), contentX, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.GENERAL));
-        this.globalItemsTabButton = addButton(Component.literal("Items"), contentX + tabWidth + GLOBAL_TAB_SPACING, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.ITEMS));
-        this.globalMobsTabButton = addButton(Component.literal("Mobs"), contentX + (tabWidth + GLOBAL_TAB_SPACING) * 2, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.MOBS));
+        this.globalGeneralTabButton = addButton(Component.translatable(Translations.SpaceRace.GLOBAL_TAB_GENERAL), contentX, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.GENERAL));
+        this.globalItemsTabButton = addButton(Component.translatable(Translations.SpaceRace.GLOBAL_TAB_ITEMS), contentX + tabWidth + GLOBAL_TAB_SPACING, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.ITEMS));
+        this.globalMobsTabButton = addButton(Component.translatable(Translations.SpaceRace.GLOBAL_TAB_MOBS), contentX + (tabWidth + GLOBAL_TAB_SPACING) * 2, tabY, tabWidth, GLOBAL_TAB_HEIGHT, button -> setGlobalStatsSection(GlobalStatsSection.MOBS));
         this.updateGlobalTabButtonState();
 
         this.addRenderableOnly((graphics, mouseX, mouseY, delta) -> this.renderGlobalStatsPanel(graphics, mouseX, mouseY));
@@ -551,23 +558,23 @@ public class SpaceRaceScreen extends Screen {
 
     private Component getServerProgressionButtonText() {
         if (this.importantProgressionOnly) {
-            return Component.literal("Show full progression");
+            return Component.translatable(Translations.SpaceRace.SHOW_FULL_PROGRESSION);
         }
-        return Component.literal("Show simple progression");
+        return Component.translatable(Translations.SpaceRace.SHOW_SIMPLE_PROGRESSION);
     }
 
     private Component getServerVisibilityButtonText() {
         if (SpaceRaceClientStats.isHideServerAdvancements()) {
-            return Component.literal("Show my advancements");
+            return Component.translatable(Translations.SpaceRace.SHOW_MY_ADVANCEMENTS);
         }
-        return Component.literal("Hide my advancements");
+        return Component.translatable(Translations.SpaceRace.HIDE_MY_ADVANCEMENTS);
     }
 
     private Component getGlobalVisibilityButtonText() {
         if (SpaceRaceClientStats.isHideGlobalLeaderboard()) {
-            return Component.literal("Show me on leaderboard");
+            return Component.translatable(Translations.SpaceRace.SHOW_ME_ON_LEADERBOARD);
         }
-        return Component.literal("Hide me from leaderboard");
+        return Component.translatable(Translations.SpaceRace.HIDE_ME_FROM_LEADERBOARD);
     }
 
     private void setGlobalStatsSection(GlobalStatsSection section) {
@@ -617,8 +624,8 @@ public class SpaceRaceScreen extends Screen {
         int buttonY = this.getBottom() - COMPACT_TOGGLE_BUTTON_HEIGHT - 4;
 
         int hideButtonWidth = this.getCompactButtonWidth(
-                Component.literal("Hide my advancements"),
-                Component.literal("Show my advancements")
+                Component.translatable(Translations.SpaceRace.HIDE_MY_ADVANCEMENTS),
+                Component.translatable(Translations.SpaceRace.SHOW_MY_ADVANCEMENTS)
         );
         if (this.serverHideAdvancementsButton != null) {
             this.serverHideAdvancementsButton.setX(buttonRight - hideButtonWidth);
@@ -630,8 +637,8 @@ public class SpaceRaceScreen extends Screen {
         boolean showProgressionButton = this.serverStatsMode != ServerStatsMode.SERVER;
         if (this.serverVisibilityButton != null) {
             int progressionButtonWidth = this.getCompactButtonWidth(
-                    Component.literal("Show simple progression"),
-                    Component.literal("Show full progression")
+                    Component.translatable(Translations.SpaceRace.SHOW_SIMPLE_PROGRESSION),
+                    Component.translatable(Translations.SpaceRace.SHOW_FULL_PROGRESSION)
             );
             this.serverVisibilityButton.setX(buttonRight - hideButtonWidth - COMPACT_TOGGLE_BUTTON_SPACING - progressionButtonWidth);
             this.serverVisibilityButton.setY(buttonY);
@@ -723,12 +730,12 @@ public class SpaceRaceScreen extends Screen {
         int contentX = panelX + STATS_PANEL_PADDING;
         int contentY = panelY + STATS_PANEL_PADDING;
         int contentWidth = panelWidth - STATS_PANEL_PADDING * 2;
-        String header = switch (this.serverStatsMode) {
-            case PLAYER -> this.selectedServerPlayerId == null ? "Race Advancements - Player" : "Race Advancements - Player Progress";
-            case TEAM -> this.selectedServerTeamId == null ? "Race Advancements - Team" : "Race Advancements - Team Members";
-            case SERVER -> "Race Advancements - Server";
+        Component header = switch (this.serverStatsMode) {
+            case PLAYER -> this.selectedServerPlayerId == null ? Component.translatable(Translations.SpaceRace.HEADER_PLAYER) : Component.translatable(Translations.SpaceRace.HEADER_PLAYER_PROGRESS);
+            case TEAM -> this.selectedServerTeamId == null ? Component.translatable(Translations.SpaceRace.HEADER_TEAM) : Component.translatable(Translations.SpaceRace.HEADER_TEAM_MEMBERS);
+            case SERVER -> Component.translatable(Translations.SpaceRace.HEADER_SERVER);
         };
-        graphics.drawString(this.font, Component.literal(header), contentX, contentY, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, header, contentX, contentY, 0xFFFFFFFF, false);
 
         int headerSpacing = this.serverStatsMode == ServerStatsMode.SERVER ? 5 : STATS_PANEL_PADDING;
         int bodyTop = contentY + this.font.lineHeight + headerSpacing;
@@ -759,7 +766,7 @@ public class SpaceRaceScreen extends Screen {
     private void renderPlayerOverviewPanel(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int width, int height) {
         List<SpaceRaceClientStats.PlayerStatsEntry> entries = SpaceRaceClientStats.getServerStatsEntries();
         if (entries.isEmpty()) {
-            graphics.drawCenteredString(this.font, Component.literal("No player progression data available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_PLAYER_DATA), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -799,7 +806,7 @@ public class SpaceRaceScreen extends Screen {
         this.renderScrollbar(graphics, this.serverScrollbar, mouseX, mouseY);
 
         if (rowsToRender == 0) {
-            graphics.drawCenteredString(this.font, Component.literal("No player progression data available."), x + listWidth / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_PLAYER_DATA), x + listWidth / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -865,7 +872,7 @@ public class SpaceRaceScreen extends Screen {
     private void renderPlayerDetailPanel(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int width, int height) {
         SpaceRaceClientStats.PlayerStatsEntry entry = SpaceRaceClientStats.getServerStatsEntry(this.selectedServerPlayerId);
         if (entry == null) {
-            graphics.drawCenteredString(this.font, Component.literal("Selected player data is no longer available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_SELECTED_PLAYER), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -884,7 +891,7 @@ public class SpaceRaceScreen extends Screen {
 
         List<SpaceRaceClientStats.AdvancementIconData> advancements = this.getFilteredAdvancements(entry.advancementIcons());
         if (advancements.isEmpty()) {
-            graphics.drawCenteredString(this.font, Component.literal("No matching advancements."), x + listWidth / 2, listTop + listHeight / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_MATCHING_ADVANCEMENTS), x + listWidth / 2, listTop + listHeight / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -929,7 +936,7 @@ public class SpaceRaceScreen extends Screen {
     private void renderTeamOverviewPanel(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int width, int height) {
         List<SpaceRaceClientStats.TeamStatsEntry> entries = SpaceRaceClientStats.getTeamStatsEntries();
         if (entries.isEmpty()) {
-            graphics.drawCenteredString(this.font, Component.literal("No team progression data available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_TEAM_DATA), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -969,7 +976,7 @@ public class SpaceRaceScreen extends Screen {
         this.renderScrollbar(graphics, this.serverScrollbar, mouseX, mouseY);
 
         if (rowsToRender == 0) {
-            graphics.drawCenteredString(this.font, Component.literal("No team progression data available."), x + listWidth / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_TEAM_DATA), x + listWidth / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1024,7 +1031,7 @@ public class SpaceRaceScreen extends Screen {
     private void renderTeamDetailPanel(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int width, int height) {
         SpaceRaceClientStats.TeamStatsEntry entry = SpaceRaceClientStats.getTeamStatsEntry(this.selectedServerTeamId);
         if (entry == null) {
-            graphics.drawCenteredString(this.font, Component.literal("Selected team data is no longer available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_SELECTED_TEAM), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1043,7 +1050,7 @@ public class SpaceRaceScreen extends Screen {
 
         List<SpaceRaceClientStats.TeamMemberEntry> members = entry.members();
         if (members.isEmpty()) {
-            graphics.drawCenteredString(this.font, Component.literal("No visible team members."), x + listWidth / 2, listTop + listHeight / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_TEAM_MEMBERS), x + listWidth / 2, listTop + listHeight / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1138,7 +1145,7 @@ public class SpaceRaceScreen extends Screen {
     private void renderServerTreePanel(GuiGraphics graphics, int mouseX, int mouseY, int x, int y, int width, int height) {
         List<SpaceRaceClientStats.ServerAdvancementNode> nodes = SpaceRaceClientStats.getServerAdvancementNodes();
         if (nodes.isEmpty()) {
-            graphics.drawCenteredString(this.font, Component.literal("No server advancement tree data available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.EMPTY_SERVER_TREE), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1219,14 +1226,15 @@ public class SpaceRaceScreen extends Screen {
             graphics.renderItem(node.icon(), nodeX + 2, nodeY + 2);
 
             if (mouseX >= nodeX && mouseX < nodeX + TREE_NODE_SIZE && mouseY >= nodeY && mouseY < nodeY + TREE_NODE_SIZE) {
-                Component status = Component.literal(node.complete() ? "Complete" : "Incomplete").withStyle(style -> style.withColor(node.complete() ? 0x8DDB6B : 0xC97B7B));
+                Component status = Component.translatable(node.complete() ? Translations.SpaceRace.STATUS_COMPLETE : Translations.SpaceRace.STATUS_INCOMPLETE)
+                        .withStyle(style -> style.withColor(node.complete() ? 0x8DDB6B : 0xC97B7B));
                 List<Component> nodeTooltip = new ArrayList<>();
                 nodeTooltip.add(Component.literal(node.title()).withStyle(style -> style.withColor(node.color())).append(Component.literal(" - ")).append(status));
                 if (node.complete()) {
                     if (node.firstUnlockers().isEmpty()) {
-                        nodeTooltip.add(Component.literal("First unlockers hidden or unavailable.").withStyle(ChatFormatting.DARK_GRAY));
+                        nodeTooltip.add(Component.translatable(Translations.SpaceRace.FIRST_UNLOCKERS_UNAVAILABLE).withStyle(ChatFormatting.DARK_GRAY));
                     } else {
-                        nodeTooltip.add(Component.literal("First unlocked by:").withStyle(ChatFormatting.GRAY));
+                        nodeTooltip.add(Component.translatable(Translations.SpaceRace.FIRST_UNLOCKED_BY).withStyle(ChatFormatting.GRAY));
                         for (String firstUnlocker : node.firstUnlockers()) {
                             nodeTooltip.add(Component.literal("- " + firstUnlocker));
                         }
@@ -1372,7 +1380,7 @@ public class SpaceRaceScreen extends Screen {
             return tooltip;
         }
 
-        tooltip.add(Component.literal("First unlocked by:").withStyle(ChatFormatting.GRAY));
+        tooltip.add(Component.translatable(Translations.SpaceRace.FIRST_UNLOCKED_BY).withStyle(ChatFormatting.GRAY));
         for (String firstUnlocker : advancementIcon.firstUnlockers()) {
             tooltip.add(Component.literal("- " + firstUnlocker));
         }
@@ -1382,7 +1390,7 @@ public class SpaceRaceScreen extends Screen {
     private int getCompactButtonWidth(Component... labels) {
         int width = 0;
         for (Component label : labels) {
-            width = Math.max(width, Mth.ceil(this.font.width(label) * COMPACT_BUTTON_TEXT_SCALE) + 10);
+            width = Math.max(width, this.font.width(label) + 10);
         }
         return Math.max(64, width);
     }
@@ -1420,7 +1428,7 @@ public class SpaceRaceScreen extends Screen {
         List<SpaceRaceClientStats.GeneralStatRow> rows = SpaceRaceClientStats.getGeneralStatRows();
         if (rows.isEmpty()) {
             this.globalGeneralScrollbar = null;
-            graphics.drawCenteredString(this.font, Component.literal("No Galacticraft general stats available."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.GLOBAL_EMPTY_GENERAL), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1461,7 +1469,7 @@ public class SpaceRaceScreen extends Screen {
             if (leader != null) {
                 this.renderPlayerHead(graphics, leader.playerId(), headX, headY, GLOBAL_HEAD_SIZE);
                 if (mouseX >= headX && mouseX < headX + GLOBAL_HEAD_SIZE && mouseY >= headY && mouseY < headY + GLOBAL_HEAD_SIZE) {
-                    tooltip = Component.literal(leader.playerName() + ": " + leader.value());
+                    tooltip = Component.translatable(Translations.SpaceRace.LEADER_VALUE, leader.playerName(), leader.value());
                 }
             } else {
                 this.drawScaledCenteredString(graphics, "-", headX + GLOBAL_HEAD_SIZE / 2, textY, 0xFF9E9E9E, GLOBAL_TEXT_SCALE);
@@ -1489,7 +1497,7 @@ public class SpaceRaceScreen extends Screen {
         List<SpaceRaceClientStats.ItemStatRow> rows = SpaceRaceClientStats.getItemStatRows();
         if (rows.isEmpty()) {
             this.globalItemsScrollbar = null;
-            graphics.drawCenteredString(this.font, Component.literal("No item stats recorded yet."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.GLOBAL_EMPTY_ITEMS), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1570,7 +1578,7 @@ public class SpaceRaceScreen extends Screen {
                     int headY = rowY + 2;
                     this.renderPlayerHead(graphics, leader.playerId(), headX, headY, GLOBAL_HEAD_SIZE);
                     if (mouseX >= headX && mouseX < headX + GLOBAL_HEAD_SIZE && mouseY >= headY && mouseY < headY + GLOBAL_HEAD_SIZE) {
-                        tooltip = Component.literal(leader.playerName() + ": " + leader.value());
+                        tooltip = Component.translatable(Translations.SpaceRace.LEADER_VALUE, leader.playerName(), leader.value());
                     }
                 } else {
                     this.drawScaledCenteredString(graphics, "-", cellX + cellWidth / 2, rowY + 2, 0xFF9E9E9E, GLOBAL_TEXT_SCALE);
@@ -1602,7 +1610,7 @@ public class SpaceRaceScreen extends Screen {
         List<SpaceRaceClientStats.MobStatRow> rows = SpaceRaceClientStats.getMobStatRows();
         if (rows.isEmpty()) {
             this.globalMobsScrollbar = null;
-            graphics.drawCenteredString(this.font, Component.literal("No mob kills recorded yet."), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
+            graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.GLOBAL_EMPTY_MOBS), x + width / 2, y + height / 2 - this.font.lineHeight / 2, 0xFF9E9E9E);
             return;
         }
 
@@ -1628,9 +1636,9 @@ public class SpaceRaceScreen extends Screen {
         graphics.fill(dividerOneX, y, dividerOneX + 1, y + GLOBAL_MOBS_ROW_HEIGHT, 0x773D3D3D);
         graphics.fill(dividerTwoX, y, dividerTwoX + 1, y + GLOBAL_MOBS_ROW_HEIGHT, 0x773D3D3D);
         int headerTextY = y + (GLOBAL_MOBS_ROW_HEIGHT - scaledLineHeight) / 2;
-        this.drawScaledString(graphics, "Mob", x + 4, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
-        this.drawScaledCenteredString(graphics, "Killed", killedCenterX, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
-        this.drawScaledCenteredString(graphics, "Kill Leader", leaderLeftX + leaderWidth / 2, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
+        this.drawScaledString(graphics, Component.translatable(Translations.SpaceRace.GLOBAL_MOBS_COLUMN_MOB).getString(), x + 4, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
+        this.drawScaledCenteredString(graphics, Component.translatable(Translations.SpaceRace.GLOBAL_MOBS_COLUMN_KILLED).getString(), killedCenterX, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
+        this.drawScaledCenteredString(graphics, Component.translatable(Translations.SpaceRace.GLOBAL_MOBS_COLUMN_KILL_LEADER).getString(), leaderLeftX + leaderWidth / 2, headerTextY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
 
         int rowsTop = y + GLOBAL_MOBS_ROW_HEIGHT;
         int rowsHeight = Math.max(0, height - GLOBAL_MOBS_ROW_HEIGHT);
@@ -1666,7 +1674,7 @@ public class SpaceRaceScreen extends Screen {
                 this.drawScaledString(graphics, leaderName, leaderLeftX + 2, textY, 0xFFFFFFFF, GLOBAL_TEXT_SCALE);
                 this.renderPlayerHead(graphics, leader.playerId(), headX, headY, GLOBAL_HEAD_SIZE);
                 if (mouseX >= headX && mouseX < headX + GLOBAL_HEAD_SIZE && mouseY >= headY && mouseY < headY + GLOBAL_HEAD_SIZE) {
-                    tooltip = Component.literal(leader.playerName() + ": " + leader.value());
+                    tooltip = Component.translatable(Translations.SpaceRace.LEADER_VALUE, leader.playerName(), leader.value());
                 }
             } else {
                 this.drawScaledCenteredString(graphics, "-", leaderLeftX + leaderWidth / 2, textY, 0xFF9E9E9E, GLOBAL_TEXT_SCALE);
@@ -1993,124 +2001,6 @@ public class SpaceRaceScreen extends Screen {
         }
     }
 
-    private enum ScrollbarType {
-        NONE,
-        SERVER_PLAYER_LIST,
-        SERVER_PLAYER_DETAIL,
-        SERVER_TEAM_LIST,
-        SERVER_TEAM_DETAIL,
-        SERVER_TREE_VERTICAL,
-        SERVER_TREE_HORIZONTAL,
-        GLOBAL_GENERAL,
-        GLOBAL_ITEMS,
-        GLOBAL_MOBS
-    }
-
-    private enum ScrollbarAxis {
-        VERTICAL,
-        HORIZONTAL
-    }
-
-    private record ScrollbarInfo(
-            ScrollbarType type,
-            ScrollbarAxis axis,
-            int x,
-            int y,
-            int length,
-            int totalEntries,
-            int visibleEntries,
-            int scroll
-    ) {
-        public int maxScroll() {
-            return Math.max(0, this.totalEntries - this.visibleEntries);
-        }
-
-        public boolean isInteractive() {
-            return this.maxScroll() > 0 && this.length > 0;
-        }
-
-        public int thumbLength() {
-            if (!this.isInteractive()) {
-                return Math.max(1, this.length);
-            }
-            int calculated = (int) Math.round((this.visibleEntries / (double) this.totalEntries) * this.length);
-            return Mth.clamp(calculated, SCROLLBAR_MIN_THUMB_HEIGHT, this.length);
-        }
-
-        public int thumbPosition() {
-            int maxScroll = this.maxScroll();
-            if (maxScroll <= 0) {
-                return this.trackStart();
-            }
-            int thumbLength = this.thumbLength();
-            int travelRange = Math.max(0, this.length - thumbLength);
-            return this.trackStart() + (int) Math.round((this.scroll / (double) maxScroll) * travelRange);
-        }
-
-        public int trackStart() {
-            return this.axis == ScrollbarAxis.VERTICAL ? this.y : this.x;
-        }
-
-        public boolean contains(double mouseX, double mouseY) {
-            if (this.axis == ScrollbarAxis.VERTICAL) {
-                return mouseX >= this.x && mouseX < this.x + SCROLLBAR_WIDTH && mouseY >= this.y && mouseY < this.y + this.length;
-            }
-            return mouseX >= this.x && mouseX < this.x + this.length && mouseY >= this.y && mouseY < this.y + SCROLLBAR_WIDTH;
-        }
-    }
-
-    private enum ServerStatsMode {
-        PLAYER,
-        TEAM,
-        SERVER
-    }
-
-    private record PlayerClickArea(int x1, int y1, int x2, int y2, UUID playerId) {
-        public boolean contains(double mouseX, double mouseY) {
-            return mouseX >= this.x1 && mouseX < this.x2 && mouseY >= this.y1 && mouseY < this.y2;
-        }
-    }
-
-    private record TeamClickArea(int x1, int y1, int x2, int y2, String teamId) {
-        public boolean contains(double mouseX, double mouseY) {
-            return mouseX >= this.x1 && mouseX < this.x2 && mouseY >= this.y1 && mouseY < this.y2;
-        }
-    }
-
-    private record TreeNodeRenderInfo(SpaceRaceClientStats.ServerAdvancementNode node, int nodeX, int nodeY) {
-    }
-
-    private enum GlobalStatsSection {
-        GENERAL,
-        ITEMS,
-        MOBS
-    }
-
-    private enum GlobalItemsColumn {
-        MINED("Mined", new ItemStack(Items.DIAMOND_PICKAXE)),
-        CRAFTED("Crafted", new ItemStack(Items.CRAFTING_TABLE)),
-        USED("Used", new ItemStack(Items.IRON_SWORD)),
-        BROKEN("Broken", new ItemStack(Items.CHIPPED_ANVIL)),
-        PICKED_UP("Picked Up", new ItemStack(Items.CHEST)),
-        DROPPED("Dropped", new ItemStack(Items.DROPPER));
-
-        private final Component tooltip;
-        private final ItemStack icon;
-
-        GlobalItemsColumn(String tooltipText, ItemStack icon) {
-            this.tooltip = Component.literal(tooltipText);
-            this.icon = icon;
-        }
-
-        public Component tooltip() {
-            return this.tooltip;
-        }
-
-        public ItemStack icon() {
-            return this.icon;
-        }
-    }
-
     private enum Menu {
         MAIN,
         ADD_PLAYERS,
@@ -2121,156 +2011,4 @@ public class SpaceRaceScreen extends Screen {
         TEAM_FLAG
     }
 
-    private static class SpaceRaceButton extends Button {
-
-        public SpaceRaceButton(Component component, int x, int y, int width, int height, OnPress onPress) {
-            super(x, y, width, height, component, onPress, DEFAULT_NARRATION);
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            int x = this.getX();
-            int y = this.getY();
-            int backgroundColor = this.isHoveredOrFocused() ? 0xAA1e1e1e : 0xAA000000;
-            int lineColor = this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d;
-            graphics.fill(x, y, x + width, y + height, backgroundColor);
-            graphics.renderOutline(x, y, width, height, lineColor);
-            Font font = Minecraft.getInstance().font;
-            int textPadding = 4;
-            int maxLineWidth = Math.max(0, this.width - textPadding * 2);
-            List<FormattedCharSequence> lines = font.split(this.getMessage(), maxLineWidth);
-            if (lines.isEmpty()) {
-                return;
-            }
-
-            int lineSpacing = 1;
-            int maxLines = Math.max(1, (this.height - textPadding * 2 + lineSpacing) / (font.lineHeight + lineSpacing));
-            int lineCount = Math.min(lines.size(), maxLines);
-            int totalTextHeight = lineCount * font.lineHeight + (lineCount - 1) * lineSpacing;
-            int textY = y + (this.height - totalTextHeight) / 2;
-            int centerX = x + this.width / 2;
-
-            for (int i = 0; i < lineCount; i++) {
-                graphics.drawCenteredString(font, lines.get(i), centerX, textY + i * (font.lineHeight + lineSpacing), 0xFFFFFFFF);
-            }
-        }
-    }
-
-    private static class CompactTextButton extends SpaceRaceButton {
-        public CompactTextButton(Component component, int x, int y, int width, int height, OnPress onPress) {
-            super(component, x, y, width, height, onPress);
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            int x = this.getX();
-            int y = this.getY();
-            int width = this.getWidth();
-            int height = this.getHeight();
-            int backgroundColor = this.isHoveredOrFocused() ? 0xAA1E1E1E : 0xAA000000;
-            int lineColor = this.isHoveredOrFocused() ? 0xFF3C3C3C : 0xFF2D2D2D;
-            graphics.fill(x, y, x + width, y + height, backgroundColor);
-            graphics.renderOutline(x, y, width, height, lineColor);
-
-            Font font = Minecraft.getInstance().font;
-            int maxUnscaledWidth = Math.max(0, Mth.floor((width - 8) / COMPACT_BUTTON_TEXT_SCALE));
-            String text = font.plainSubstrByWidth(this.getMessage().getString(), maxUnscaledWidth);
-            int scaledWidth = Mth.ceil(font.width(text) * COMPACT_BUTTON_TEXT_SCALE);
-            int scaledHeight = Mth.ceil(font.lineHeight * COMPACT_BUTTON_TEXT_SCALE);
-            int textX = x + (width - scaledWidth) / 2;
-            int textY = y + (height - scaledHeight) / 2;
-
-            PoseStack pose = graphics.pose();
-            pose.pushPose();
-            pose.translate(textX, textY, 0);
-            pose.scale(COMPACT_BUTTON_TEXT_SCALE, COMPACT_BUTTON_TEXT_SCALE, 1.0F);
-            graphics.drawString(font, text, 0, 0, 0xFFFFFFFF, false);
-            pose.popPose();
-        }
-    }
-
-    private static class CustomizeFlagButton extends AbstractButton {
-        private final Runnable onPress;
-        private final ResourceLocation imageLocation;
-
-        public CustomizeFlagButton(int x, int y, int width, int height, ResourceLocation imageLocation, Runnable onPress) {
-            super(x, y, width, height, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG));
-            this.onPress = onPress;
-            this.imageLocation = imageLocation;
-        }
-
-        @Override
-        public void onPress() {
-            this.onPress.run();
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            graphics.blit(this.imageLocation, this.getX(), this.getY(), this.width, this.height, 0, 0, 48, 32, 48, 32);
-
-            graphics.renderOutline(this.getX(), this.getY(), this.width, this.height, this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
-
-            Font font = Minecraft.getInstance().font;
-            graphics.drawCenteredString(font, Component.translatable(Translations.SpaceRace.CUSTOMIZE_FLAG), this.getX() + this.width / 2, this.getY() + this.height / 2 - font.lineHeight / 2, 0xFFFFFFFF);
-        }
-
-        @Override
-        protected void updateWidgetNarration(NarrationElementOutput builder) {
-            this.defaultButtonNarrationText(builder);
-        }
-    }
-
-    private class TeamColorButton extends AbstractButton {
-        private static final MutableComponent line1 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_1);
-        private static final MutableComponent line2 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_2);
-        private static final MutableComponent line3 = Component.translatable(Translations.SpaceRace.TEAM_COLOR_3);
-
-        public TeamColorButton(int x, int y, int width, int height) {
-            super(x, y, width, height, line1.copy().append(line2).append(line3));
-        }
-
-        @Override
-        public void onPress() {
-            setMenu(Menu.TEAM_COLOR);
-        }
-
-        @Override
-        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-            Font font = Minecraft.getInstance().font;
-            graphics.fill(this.getX(), this.getY(), this.getX() + this.getWidth(), this.getY() + this.getHeight(), teamColor);
-            int centerX = this.getX() + this.getWidth() / 2;
-            int centerY = this.getY() + this.getHeight() / 2 - font.lineHeight / 2;
-            graphics.drawCenteredString(font, line1, centerX, centerY - font.lineHeight, 0xFFFFFFFF);
-            graphics.drawCenteredString(font, line2, centerX, centerY, 0xFFFFFFFF);
-            graphics.drawCenteredString(font, line3, centerX, centerY + font.lineHeight, 0xFFFFFFFF);
-
-            graphics.renderOutline(this.getX(), this.getY(), this.getWidth(), this.getHeight(), this.isHoveredOrFocused() ? 0xFF3c3c3c : 0xFF2d2d2d);
-        }
-
-        @Override
-        protected void updateWidgetNarration(NarrationElementOutput builder) {
-            this.defaultButtonNarrationText(builder);
-        }
-    }
-
-    private static class ColorSlider extends AbstractSliderButton {
-        private final Consumer<Integer> consumer;
-        private final Component colorName;
-
-        public ColorSlider(int x, int y, int width, int height, Component colorName, int value, Consumer<Integer> consumer) {
-            super(x, y, width, height, Component.translatable("options.percent_value", colorName, (int) (value / 255.0 * 100.0)), value / 255.0);
-            this.consumer = consumer;
-            this.colorName = colorName;
-        }
-
-        @Override
-        protected void updateMessage() {
-            this.setMessage(Component.translatable("options.percent_value", this.colorName, (int) (this.value * 100.0)));
-        }
-
-        @Override
-        protected void applyValue() {
-            this.consumer.accept((int) (this.value * 255.0));
-        }
-    }
 }

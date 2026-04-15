@@ -49,13 +49,13 @@ import net.minecraft.server.ServerAdvancementManager;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.stats.Stats;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.item.DyeColor;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.storage.LevelResource;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.DyeColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.storage.LevelResource;
 import net.minecraft.world.scores.PlayerTeam;
 import org.jetbrains.annotations.Nullable;
 
@@ -630,6 +630,7 @@ public final class SpaceRaceAdvancementManager {
                 }
             }
         } catch (IOException | JsonParseException exception) {
+            //in case of sadge moments like these
             Constant.LOGGER.warn("Failed to read advancement file {}", file.getFileName(), exception);
         }
         return completed;
@@ -705,10 +706,11 @@ public final class SpaceRaceAdvancementManager {
             }
         }
 
+        SpaceRaceStatFilters.Filters filters = SpaceRaceStatFilters.load();
         return new GlobalLeaderboardData(
-                buildGeneralRows(allPlayers, visiblePlayers),
-                buildItemRows(allPlayers, visiblePlayers),
-                buildMobRows(allPlayers, visiblePlayers)
+                buildGeneralRows(allPlayers, visiblePlayers, filters.generalStats()),
+                buildItemRows(allPlayers, visiblePlayers, filters.itemIds()),
+                buildMobRows(allPlayers, visiblePlayers, filters.mobIds())
         );
     }
 
@@ -932,9 +934,17 @@ public final class SpaceRaceAdvancementManager {
         return winner == null ? null : new StatWinner(winner, winnerValue);
     }
 
-    private static List<SpaceRaceStatsPayload.GeneralStatRow> buildGeneralRows(List<PlayerStatsSource> allPlayers, List<PlayerStatsSource> visiblePlayers) {
+    private static List<SpaceRaceStatsPayload.GeneralStatRow> buildGeneralRows(
+            List<PlayerStatsSource> allPlayers,
+            List<PlayerStatsSource> visiblePlayers,
+            List<ResourceLocation> configuredStatIds
+    ) {
+        if (configuredStatIds.isEmpty()) {
+            return List.of();
+        }
+
         List<SpaceRaceStatsPayload.GeneralStatRow> rows = new ArrayList<>();
-        for (ResourceLocation statId : GCStats.getAllStatIds()) {
+        for (ResourceLocation statId : configuredStatIds) {
             int total = sumStat(allPlayers, statId, PlayerStatsSource::getCustomStat);
             StatWinner winner = findWinner(visiblePlayers, statId, PlayerStatsSource::getCustomStat);
             rows.add(new SpaceRaceStatsPayload.GeneralStatRow(
@@ -944,13 +954,21 @@ public final class SpaceRaceAdvancementManager {
             ));
         }
 
-        rows.sort(Comparator.comparing(SpaceRaceStatsPayload.GeneralStatRow::label, String.CASE_INSENSITIVE_ORDER));
         return List.copyOf(rows);
     }
 
-    private static List<SpaceRaceStatsPayload.ItemStatRow> buildItemRows(List<PlayerStatsSource> allPlayers, List<PlayerStatsSource> visiblePlayers) {
-        List<SortableItemRow> sortableRows = new ArrayList<>();
-        for (Item item : BuiltInRegistries.ITEM) {
+    private static List<SpaceRaceStatsPayload.ItemStatRow> buildItemRows(
+            List<PlayerStatsSource> allPlayers,
+            List<PlayerStatsSource> visiblePlayers,
+            List<ResourceLocation> configuredItemIds
+    ) {
+        if (configuredItemIds.isEmpty()) {
+            return List.of();
+        }
+
+        List<SpaceRaceStatsPayload.ItemStatRow> rows = new ArrayList<>(configuredItemIds.size());
+        for (ResourceLocation itemId : configuredItemIds) {
+            Item item = BuiltInRegistries.ITEM.getOptional(itemId).orElse(Items.AIR);
             if (item == Items.AIR) {
                 continue;
             }
@@ -985,38 +1003,28 @@ public final class SpaceRaceAdvancementManager {
             int droppedTotal = sumStat(allPlayers, item, PlayerStatsSource::getDroppedStat);
             StatWinner droppedWinner = findWinner(visiblePlayers, item, PlayerStatsSource::getDroppedStat);
             cells.add(new SpaceRaceStatsPayload.ItemStatCell(droppedTotal, toLeaderData(droppedWinner)));
-
-            boolean hasData = false;
-            for (SpaceRaceStatsPayload.ItemStatCell cell : cells) {
-                if (cell.total() > 0) {
-                    hasData = true;
-                    break;
-                }
-            }
-            if (!hasData) {
-                continue;
-            }
-
-            String label = Component.translatable(item.getDescriptionId()).getString();
-            sortableRows.add(new SortableItemRow(label, new SpaceRaceStatsPayload.ItemStatRow(new ItemStack(item), cells)));
-        }
-
-        sortableRows.sort(Comparator.comparing(SortableItemRow::label, String.CASE_INSENSITIVE_ORDER));
-        List<SpaceRaceStatsPayload.ItemStatRow> rows = new ArrayList<>(sortableRows.size());
-        for (SortableItemRow row : sortableRows) {
-            rows.add(row.payload());
+            rows.add(new SpaceRaceStatsPayload.ItemStatRow(new ItemStack(item), cells));
         }
         return List.copyOf(rows);
     }
 
-    private static List<SpaceRaceStatsPayload.MobStatRow> buildMobRows(List<PlayerStatsSource> allPlayers, List<PlayerStatsSource> visiblePlayers) {
+    private static List<SpaceRaceStatsPayload.MobStatRow> buildMobRows(
+            List<PlayerStatsSource> allPlayers,
+            List<PlayerStatsSource> visiblePlayers,
+            List<ResourceLocation> configuredMobIds
+    ) {
+        if (configuredMobIds.isEmpty()) {
+            return List.of();
+        }
+
         List<SpaceRaceStatsPayload.MobStatRow> rows = new ArrayList<>();
-        for (EntityType<?> entityType : BuiltInRegistries.ENTITY_TYPE) {
-            int totalKilled = sumStat(allPlayers, entityType, PlayerStatsSource::getKilledStat);
-            if (totalKilled <= 0) {
+        for (ResourceLocation entityId : configuredMobIds) {
+            EntityType<?> entityType = BuiltInRegistries.ENTITY_TYPE.getOptional(entityId).orElse(null);
+            if (entityType == null) {
                 continue;
             }
 
+            int totalKilled = sumStat(allPlayers, entityType, PlayerStatsSource::getKilledStat);
             StatWinner winner = findWinner(visiblePlayers, entityType, PlayerStatsSource::getKilledStat);
             rows.add(new SpaceRaceStatsPayload.MobStatRow(
                     entityType.getDescription().getString(),
@@ -1024,7 +1032,6 @@ public final class SpaceRaceAdvancementManager {
                     toLeaderData(winner)
             ));
         }
-        rows.sort(Comparator.comparing(SpaceRaceStatsPayload.MobStatRow::mobName, String.CASE_INSENSITIVE_ORDER));
         return List.copyOf(rows);
     }
 
@@ -1055,9 +1062,6 @@ public final class SpaceRaceAdvancementManager {
     }
 
     private record StatWinner(PlayerStatsSource player, int value) {
-    }
-
-    private record SortableItemRow(String label, SpaceRaceStatsPayload.ItemStatRow payload) {
     }
 
     private record PlayerAdvancementSource(
