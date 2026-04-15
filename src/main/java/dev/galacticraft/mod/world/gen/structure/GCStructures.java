@@ -98,7 +98,7 @@ public class GCStructures {
                         )
                     )),
                         GenerationStep.Decoration.SURFACE_STRUCTURES,
-                        TerrainAdjustment.BEARD_BOX),
+                        TerrainAdjustment.BEARD_THIN),
                 templatePoolLookup.getOrThrow(GCStructureTemplatePools.Moon.Village.STARTS),
                 Optional.empty(),
                 10,

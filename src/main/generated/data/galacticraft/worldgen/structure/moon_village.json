@@ -35,5 +35,6 @@
   },
   "start_pool": "galacticraft:village/moon/highlands/starts",
   "step": "surface_structures",
+  "terrain_adaptation": "beard_thin",
   "use_expansion_hack": true
 }

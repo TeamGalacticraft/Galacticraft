@@ -10,6 +10,7 @@
     "AbstractHorseMixin",
     "AbstractSkeletonEntityAccessor",
     "AnimalMixin",
+    "BeardifierMixin",
     "BlockBehaviourMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
