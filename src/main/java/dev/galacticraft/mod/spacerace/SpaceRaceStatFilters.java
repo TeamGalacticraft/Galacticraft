@@ -22,6 +22,12 @@
 
 package dev.galacticraft.mod.spacerace;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonElement;
+import com.mojang.serialization.Codec;
+import com.mojang.serialization.JsonOps;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCStats;
 import net.fabricmc.loader.api.FabricLoader;
@@ -32,29 +38,34 @@ import net.minecraft.world.item.Items;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.IOException;
-import java.lang.reflect.Field;
-import java.lang.reflect.Modifier;
+import java.io.Reader;
+import java.io.Writer;
 import java.nio.charset.StandardCharsets;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.StandardOpenOption;
 import java.util.ArrayList;
 import java.util.Comparator;
-import java.util.LinkedHashMap;
 import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Locale;
-import java.util.Map;
 import java.util.Set;
-import java.util.function.Function;
 
 public final class SpaceRaceStatFilters {
+    private static final Gson GSON = new GsonBuilder().setPrettyPrinting().disableHtmlEscaping().create();
     private static final Path CONFIG_DIRECTORY = FabricLoader.getInstance().getConfigDir().resolve("galacticraft").resolve("space_race_stats");
-    private static final Path GENERAL_FILE = CONFIG_DIRECTORY.resolve("general.cfg");
-    private static final Path ITEMS_FILE = CONFIG_DIRECTORY.resolve("items.cfg");
-    private static final Path MOBS_FILE = CONFIG_DIRECTORY.resolve("mobs.cfg");
-    private static final Map<String, ResourceLocation> GENERAL_STATS_BY_NAME = collectGeneralStatsByName();
-    private static final Set<ResourceLocation> GENERAL_STAT_IDS = Set.copyOf(GCStats.getAllStatIds());
+    private static final Path GENERAL_FILE = CONFIG_DIRECTORY.resolve("general.json");
+    private static final Path ITEMS_FILE = CONFIG_DIRECTORY.resolve("items.json");
+    private static final Path MOBS_FILE = CONFIG_DIRECTORY.resolve("mobs.json");
+    private static final List<ResourceLocation> GENERAL_STAT_IDS = List.of(
+            GCStats.CLEAN_PARACHUTE,
+            GCStats.OPEN_PARACHEST,
+            GCStats.INTERACT_WITH_ROCKET_WORKBENCH,
+            GCStats.LAUNCH_ROCKET,
+            GCStats.CRASH_LANDING,
+            GCStats.SAFE_LANDING,
+            GCStats.EAT_CHEESE_WHEEL_SLICE,
+            GCStats.CHEESE_SLICED
+    );
 
     private SpaceRaceStatFilters() {
     }
@@ -62,139 +73,96 @@ public final class SpaceRaceStatFilters {
     public static Filters load() {
         ensureFilesExist();
         return new Filters(
-                loadConfiguredIds(GENERAL_FILE, SpaceRaceStatFilters::resolveGeneralStat),
-                loadConfiguredIds(ITEMS_FILE, SpaceRaceStatFilters::tryParseResourceLocation),
-                loadConfiguredIds(MOBS_FILE, SpaceRaceStatFilters::tryParseResourceLocation)
+                loadConfiguredIds(GENERAL_FILE, GENERAL_STAT_IDS),
+                loadConfiguredIds(ITEMS_FILE, collectItemIds()),
+                loadConfiguredIds(MOBS_FILE, collectEntityIds())
         );
     }
 
     private static void ensureFilesExist() {
         try {
             Files.createDirectories(CONFIG_DIRECTORY);
-            writeTemplateIfMissing(GENERAL_FILE, "general", new ArrayList<>(GENERAL_STATS_BY_NAME.keySet()));
-            writeTemplateIfMissing(ITEMS_FILE, "items", collectItemIds());
-            writeTemplateIfMissing(MOBS_FILE, "mobs", collectEntityIds());
+            writeTemplateIfMissing(GENERAL_FILE, new FilterFile(List.of(), stringifyIds(GENERAL_STAT_IDS)));
+            writeTemplateIfMissing(ITEMS_FILE, new FilterFile(List.of(), stringifyIds(collectItemIds())));
+            writeTemplateIfMissing(MOBS_FILE, new FilterFile(List.of(), stringifyIds(collectEntityIds())));
         } catch (IOException exception) {
             Constant.LOGGER.warn("Failed to create space race stat filter files", exception);
         }
     }
 
-    private static void writeTemplateIfMissing(Path file, String sectionName, List<String> entries) throws IOException {
+    private static void writeTemplateIfMissing(Path file, FilterFile filterFile) throws IOException {
         if (Files.exists(file)) {
             return;
         }
 
-        List<String> lines = new ArrayList<>(entries.size() + 3);
-        lines.add("# Uncomment entries to include them in the Space Race " + sectionName + " tab.");
-        lines.add(sectionName + " {");
-        for (String entry : entries) {
-            lines.add("    #" + entry);
+        JsonElement json = FilterFile.CODEC.encodeStart(JsonOps.INSTANCE, filterFile)
+                .getOrThrow(error -> new IllegalStateException("Failed to encode space race stat filters: " + error));
+        try (Writer writer = Files.newBufferedWriter(file, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW)) {
+            GSON.toJson(json, writer);
         }
-        lines.add("}");
-        Files.write(file, lines, StandardCharsets.UTF_8, StandardOpenOption.CREATE_NEW);
     }
 
-    private static List<String> collectItemIds() {
-        List<String> itemIds = new ArrayList<>();
+    private static List<ResourceLocation> collectItemIds() {
+        List<ResourceLocation> itemIds = new ArrayList<>();
         for (Item item : BuiltInRegistries.ITEM) {
             if (item == Items.AIR) {
                 continue;
             }
-            itemIds.add(BuiltInRegistries.ITEM.getKey(item).toString());
+            itemIds.add(BuiltInRegistries.ITEM.getKey(item));
         }
-        itemIds.sort(String.CASE_INSENSITIVE_ORDER);
+        itemIds.sort(Comparator.comparing(ResourceLocation::toString, String.CASE_INSENSITIVE_ORDER));
         return itemIds;
     }
 
-    private static List<String> collectEntityIds() {
-        List<String> entityIds = new ArrayList<>();
-        for (ResourceLocation id : BuiltInRegistries.ENTITY_TYPE.keySet()) {
-            entityIds.add(id.toString());
-        }
-        entityIds.sort(String.CASE_INSENSITIVE_ORDER);
+    private static List<ResourceLocation> collectEntityIds() {
+        List<ResourceLocation> entityIds = new ArrayList<>(BuiltInRegistries.ENTITY_TYPE.keySet());
+        entityIds.sort(Comparator.comparing(ResourceLocation::toString, String.CASE_INSENSITIVE_ORDER));
         return entityIds;
     }
 
-    private static Map<String, ResourceLocation> collectGeneralStatsByName() {
-        Map<String, ResourceLocation> generalStats = new LinkedHashMap<>();
-        List<Field> fields = new ArrayList<>();
-        for (Field field : GCStats.class.getDeclaredFields()) {
-            if (field.getType() == ResourceLocation.class && Modifier.isStatic(field.getModifiers())) {
-                fields.add(field);
-            }
+    private static List<String> stringifyIds(List<ResourceLocation> ids) {
+        List<String> values = new ArrayList<>(ids.size());
+        for (ResourceLocation id : ids) {
+            values.add(id.toString());
         }
-        fields.sort(Comparator.comparing(Field::getName, String.CASE_INSENSITIVE_ORDER));
-
-        for (Field field : fields) {
-            try {
-                ResourceLocation statId = (ResourceLocation) field.get(null);
-                if (statId != null) {
-                    generalStats.put(field.getName().toUpperCase(Locale.ROOT), statId);
-                }
-            } catch (IllegalAccessException ignored) {
-            }
-        }
-        return generalStats;
+        return values;
     }
 
-    private static List<ResourceLocation> loadConfiguredIds(Path file, Function<String, @Nullable ResourceLocation> resolver) {
-        LinkedHashSet<ResourceLocation> configuredIds = new LinkedHashSet<>();
+    private static List<ResourceLocation> loadConfiguredIds(Path file, List<ResourceLocation> availableIds) {
         if (!Files.exists(file)) {
             return List.of();
         }
 
-        try {
-            for (String line : Files.readAllLines(file, StandardCharsets.UTF_8)) {
-                String token = extractToken(line);
-                if (token == null) {
-                    continue;
-                }
+        FilterFile filterFile = readFilterFile(file);
+        if (filterFile == null) {
+            return List.of();
+        }
 
-                ResourceLocation id = resolver.apply(token);
-                if (id != null) {
-                    configuredIds.add(id);
-                } else {
-                    Constant.LOGGER.warn("Ignoring unknown space race stat filter entry '{}' in {}", token, file);
-                }
+        Set<ResourceLocation> availableIdSet = Set.copyOf(availableIds);
+        LinkedHashSet<ResourceLocation> configuredIds = new LinkedHashSet<>();
+        for (String entry : filterFile.enabled()) {
+            ResourceLocation id = tryParseResourceLocation(entry);
+            if (id == null || !availableIdSet.contains(id)) {
+                Constant.LOGGER.warn("Ignoring unknown space race stat filter entry '{}' in {}", entry, file);
+                continue;
             }
-        } catch (IOException exception) {
-            Constant.LOGGER.warn("Failed to read space race stat filter file {}", file, exception);
+            configuredIds.add(id);
         }
         return List.copyOf(configuredIds);
     }
 
-    private static @Nullable String extractToken(String line) {
-        String trimmed = line.trim();
-        if (trimmed.isEmpty() || trimmed.startsWith("#") || trimmed.endsWith("{") || trimmed.equals("}")) {
+    private static @Nullable FilterFile readFilterFile(Path file) {
+        try (Reader reader = Files.newBufferedReader(file, StandardCharsets.UTF_8)) {
+            JsonElement json = GSON.fromJson(reader, JsonElement.class);
+            if (json == null) {
+                return null;
+            }
+            return FilterFile.CODEC.parse(JsonOps.INSTANCE, json)
+                    .getOrThrow(error -> new IllegalStateException("Failed to parse space race stat filters in " + file + ": " + error));
+        } catch (Exception exception) {
+            Constant.LOGGER.warn("Failed to read space race stat filter file {}", file, exception);
             return null;
         }
-
-        int commentIndex = trimmed.indexOf('#');
-        if (commentIndex >= 0) {
-            trimmed = trimmed.substring(0, commentIndex).trim();
-        }
-        if (trimmed.isEmpty() || trimmed.endsWith("{") || trimmed.equals("}")) {
-            return null;
-        }
-        return trimmed;
-    }
-
-    private static @Nullable ResourceLocation resolveGeneralStat(String token) {
-        ResourceLocation statId = GENERAL_STATS_BY_NAME.get(token.toUpperCase(Locale.ROOT));
-        if (statId != null) {
-            return statId;
-        }
-
-        ResourceLocation parsed = tryParseResourceLocation(token);
-        if (parsed != null && GENERAL_STAT_IDS.contains(parsed)) {
-            return parsed;
-        }
-
-        ResourceLocation implicitGalacticraftId = Constant.id(token.toLowerCase(Locale.ROOT));
-        if (GENERAL_STAT_IDS.contains(implicitGalacticraftId)) {
-            return implicitGalacticraftId;
-        }
-        return null;
     }
 
     private static @Nullable ResourceLocation tryParseResourceLocation(String token) {
@@ -202,6 +170,18 @@ public final class SpaceRaceStatFilters {
             return ResourceLocation.parse(token);
         } catch (IllegalArgumentException exception) {
             return null;
+        }
+    }
+
+    private record FilterFile(List<String> enabled, List<String> available) {
+        private static final Codec<FilterFile> CODEC = RecordCodecBuilder.create(instance -> instance.group(
+                Codec.STRING.listOf().optionalFieldOf("enabled", List.of()).forGetter(FilterFile::enabled),
+                Codec.STRING.listOf().optionalFieldOf("available", List.of()).forGetter(FilterFile::available)
+        ).apply(instance, FilterFile::new));
+
+        private FilterFile {
+            enabled = List.copyOf(enabled);
+            available = List.copyOf(available);
         }
     }
 
