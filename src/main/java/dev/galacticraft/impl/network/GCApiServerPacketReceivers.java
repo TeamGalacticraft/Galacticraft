@@ -22,11 +22,7 @@
 
 package dev.galacticraft.impl.network;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.impl.network.c2s.FlagDataPayload;
-import dev.galacticraft.impl.network.c2s.RequestSpaceRaceStatsPayload;
-import dev.galacticraft.impl.network.c2s.TeamNamePayload;
-import dev.galacticraft.impl.network.c2s.UpdateSpaceRaceVisibilityPayload;
+import dev.galacticraft.impl.network.c2s.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
