@@ -165,12 +165,12 @@ public class SpaceRaceScreen extends Screen {
         // 5% of width
         int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
         if (backgroundWidth < maxWidth) {
-            backgroundWidth += (int) Math.min(60 * delta, maxWidth - backgroundWidth);
+            backgroundWidth += (int) Math.min(120 * delta, maxWidth - backgroundWidth);
         }
 
         int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
         if (backgroundHeight < maxHeight) {
-            backgroundHeight += (int) Math.min(40 * delta, maxHeight - backgroundHeight);
+            backgroundHeight += (int) Math.min(80 * delta, maxHeight - backgroundHeight);
         }
 
         if (!this.animationCompleted && this.isAnimationComplete()) {
