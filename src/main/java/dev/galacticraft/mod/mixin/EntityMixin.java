@@ -32,6 +32,7 @@ import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.misc.footprint.FootprintType;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -137,6 +138,9 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract Level level();
 
     @Shadow
+    public abstract float getBbWidth();
+
+    @Shadow
     public abstract @Nullable Entity getVehicle();
 
     @Shadow
@@ -227,40 +231,66 @@ public abstract class EntityMixin implements EntityAccessor {
         }
         // The entity has footprints, is not flying and is not riding anything
 
-        double motionSqrd = motion.horizontalDistanceSqr();
         Holder<DimensionType> dimensionType = this.level.dimensionTypeRegistration();
+        FootprintType footprintType = this.galacticraft$getFootprintType();
+        if (footprintType != FootprintType.HUMAN && this.level.isClientSide()) {
+            return;
+        }
+
+        double motionAmount = footprintType.linearStepDistance() ? motion.horizontalDistance() : motion.horizontalDistanceSqr();
 
         // Check that the entity is moving fast enough and is in a footprint dimension
-        if (motionSqrd > 0.001D && dimensionType.is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)) {
+        if (motionAmount > 0.001D && dimensionType.is(GCDimensionTypeTags.FOOTPRINTS_DIMENSIONS)) {
+            double nextStepDistance = this.galacticraft$getDistanceSinceLastStep() + motionAmount;
             // If it has been long enough since the last step
-            if (this.galacticraft$getDistanceSinceLastStep() > 0.35D) {
+            if (nextStepDistance > footprintType.stepDistance()) {
                 float rotation = this.getYRot() * Mth.DEG_TO_RAD;
-
-                // Set the footprint position to the block below
-                Vector3d pos = new Vector3d(
-                        this.getX() + this.galacticraft$getLastStep() * Mth.cos(rotation) * 0.25D,
-                        Math.floor(this.getY()),
-                        this.getZ() + this.galacticraft$getLastStep() * Mth.sin(rotation) * 0.25D
-                );
-                pos = Footprint.getFootprintPosition(this.level, rotation - Mth.PI, pos, this.position());
-
-                BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
-                BlockState state = this.level.getBlockState(blockPos);
-
-                // If the block below is the moon block
-                if (state.is(GCBlockTags.FOOTPRINTS)) {
-                    long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
-                    short age = (short) (this.level.getGameTime() % 20);
-                    this.level.galacticraft$getFootprintManager().addFootprint(chunkKey, new Footprint(dimensionType.unwrapKey().get().location(), pos, rotation, age, this.getUUID()));
+                double sideOffset = this.galacticraft$getLastStep() * Math.max(footprintType.sideOffset(), this.getBbWidth() * 0.24D);
+                if (footprintType.paired()) {
+                    this.galacticraft$placeFootprint(dimensionType, footprintType, rotation, sideOffset, -footprintType.pairOffset());
+                    this.galacticraft$placeFootprint(dimensionType, footprintType, rotation, sideOffset, footprintType.pairOffset());
+                } else {
+                    this.galacticraft$placeFootprint(dimensionType, footprintType, rotation, sideOffset, 0.0D);
                 }
 
                 // Change the sign of the lastStep variable
                 this.galacticraft$swapLastStep();
                 this.galacticraft$setDistanceSinceLastStep(0);
             } else {
-                this.galacticraft$setDistanceSinceLastStep(this.galacticraft$getDistanceSinceLastStep() + motionSqrd);
+                this.galacticraft$setDistanceSinceLastStep(nextStepDistance);
             }
         }
+    }
+
+    @Unique
+    private FootprintType galacticraft$getFootprintType() {
+        EntityType<?> entityType = this.getType();
+        if (entityType == EntityType.WOLF) {
+            return FootprintType.DOG;
+        } else if (entityType == EntityType.CAT) {
+            return FootprintType.CAT;
+        }
+        return FootprintType.HUMAN;
+    }
+
+    @Unique
+    private void galacticraft$placeFootprint(Holder<DimensionType> dimensionType, FootprintType footprintType, float rotation, double sideOffset, double forwardOffset) {
+        Vector3d pos = new Vector3d(
+                this.getX() + sideOffset * Mth.cos(rotation) - forwardOffset * Mth.sin(rotation),
+                Math.floor(this.getY()),
+                this.getZ() + sideOffset * Mth.sin(rotation) + forwardOffset * Mth.cos(rotation)
+        );
+        pos = Footprint.getFootprintPosition(footprintType, rotation - Mth.PI, pos);
+
+        BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
+        BlockState state = this.level.getBlockState(blockPos);
+        if (!state.is(GCBlockTags.FOOTPRINTS)) {
+            return;
+        }
+
+        long chunkKey = ChunkPos.asLong(SectionPos.blockToSectionCoord(pos.x), SectionPos.blockToSectionCoord(pos.z));
+        short age = (short) (this.level.getGameTime() % 20);
+        this.level.galacticraft$getFootprintManager().addFootprint(this.level, chunkKey, new Footprint(dimensionType.unwrapKey().get().location(), pos, rotation, age, this.getUUID(), footprintType));
     }
 
     @Override
