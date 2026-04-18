@@ -146,6 +146,12 @@ public class SpaceRaceScreen extends Screen {
     }
 
     @Override
+    public void onClose() {
+        this.openingStartTime = -1;
+        super.onClose();
+    }
+
+    @Override
     public void resize(Minecraft client, int width, int height) {
         this.backgroundWidth = (int) (width - ((this.getMarginPercent() * width) * 1.5D));
         this.backgroundHeight = (int) (height - ((this.getMarginPercent() * height) * 1.5D));
@@ -166,30 +172,26 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        long elapsed = System.currentTimeMillis() - this.openingStartTime;
-        long duration = 1000; // This is how long (ms) it will take to open the GUI
-        float progress = Math.min(1.0f, (float) elapsed / duration);
+        if (!this.animationCompleted) {
+            int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+            int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
 
-        float smoothedProgress = 1.0f - (float) Math.pow(1.0f - progress, 3);
+            if (this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight) {
+                this.repositionElements();
+                this.animationCompleted = true;
+            }
 
-        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
-        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+            long elapsed = System.currentTimeMillis() - this.openingStartTime;
+            long duration = 1000; // This is how long (ms) it will take to open the GUI
+            float progress = Math.min(1.0f, (float) elapsed / duration);
 
-        this.backgroundWidth = (int) (maxWidth * smoothedProgress);
-        this.backgroundHeight = (int) (maxHeight * smoothedProgress);
+            float smoothedProgress = 1.01f - (float) Math.pow(1.0f - progress, 3);
 
-        if (!this.animationCompleted && progress >= 1.0f) {
-            this.repositionElements();
-            this.animationCompleted = true;
+            this.backgroundWidth = (int) (maxWidth * smoothedProgress);
+            this.backgroundHeight = (int) (maxHeight * smoothedProgress);
         }
 
-        graphics.fill(getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
-    }
-
-    @Override
-    public void onClose() {
-        this.openingStartTime = -1;
-        super.onClose();
+        graphics.fill(getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
     }
 
     private void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
