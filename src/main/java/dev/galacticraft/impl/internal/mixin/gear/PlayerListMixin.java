@@ -25,6 +25,8 @@ package dev.galacticraft.impl.internal.mixin.gear;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
+import dev.galacticraft.impl.network.s2c.TeamFlagSyncPayload;
+import dev.galacticraft.mod.attachments.GCServerPlayer;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.Connection;
@@ -58,6 +60,9 @@ public abstract class PlayerListMixin {
         for (ServerPlayer remote : tracking) {
             ServerPlayNetworking.send(remote, gearInvPayload);
         }
+
+        byte[] teamFlagData = GCServerPlayer.get(player).getTeamFlagData();
+        ServerPlayNetworking.send(player, new TeamFlagSyncPayload(teamFlagData == null ? new byte[0] : teamFlagData));
 
         // Sync the list of satellites with new players
         ((SatelliteAccessor) player.server).galacticraft$getSatellites().forEach((id, satellite) -> {
