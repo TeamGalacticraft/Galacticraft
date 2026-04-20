@@ -53,6 +53,7 @@ import java.util.List;
 import java.util.function.Consumer;
 
 public class SpaceRaceScreen extends Screen {
+    private long openingStartTime = -1;
     private int backgroundWidth = 0;
     private int backgroundHeight = 0;
     private Menu menu = Menu.MAIN;
@@ -138,7 +139,16 @@ public class SpaceRaceScreen extends Screen {
     @Override
     protected void init() {
         super.init();
+        if (this.openingStartTime == -1) {
+            this.openingStartTime = System.currentTimeMillis();
+        }
         createMenu(this.menu);
+    }
+
+    @Override
+    public void onClose() {
+        this.openingStartTime = -1;
+        super.onClose();
     }
 
     @Override
@@ -162,23 +172,26 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        // 5% of width
-        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
-        if (backgroundWidth < maxWidth) {
-            backgroundWidth += (int) Math.min(60 * delta, maxWidth - backgroundWidth);
+        if (!this.animationCompleted) {
+            int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+            int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+
+            if (this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight) {
+                this.repositionElements();
+                this.animationCompleted = true;
+            }
+
+            long elapsed = System.currentTimeMillis() - this.openingStartTime;
+            long duration = 1000; // This is how long (ms) it will take to open the GUI
+            float progress = Math.min(1.0f, (float) elapsed / duration);
+
+            float smoothedProgress = 1.01f - (float) Math.pow(1.0f - progress, 3);
+
+            this.backgroundWidth = (int) (maxWidth * smoothedProgress);
+            this.backgroundHeight = (int) (maxHeight * smoothedProgress);
         }
 
-        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
-        if (backgroundHeight < maxHeight) {
-            backgroundHeight += (int) Math.min(40 * delta, maxHeight - backgroundHeight);
-        }
-
-        if (!this.animationCompleted && this.isAnimationComplete()) {
-            this.repositionElements();
-            this.animationCompleted = true;
-        }
-
-        graphics.fill(getLeft(), getTop(), getLeft() + backgroundWidth, getTop() + backgroundHeight, 0x80000000);
+        graphics.fill(getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
     }
 
     private void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -235,13 +248,6 @@ public class SpaceRaceScreen extends Screen {
             case TEAM_FLAG -> teamFlagMenu();
             case TEAM_COLOR -> teamColorMenu();
         }
-    }
-
-    private boolean isAnimationComplete() {
-        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
-        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
-
-        return backgroundWidth >= maxWidth && backgroundHeight >= maxHeight;
     }
 
     private int getYMargins() {

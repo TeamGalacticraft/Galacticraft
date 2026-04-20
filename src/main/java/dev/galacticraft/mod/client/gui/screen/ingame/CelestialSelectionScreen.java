@@ -942,8 +942,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
         int tooltipWidth = textWidth + 7;
         int tooltipHeight = 16;
 
-        int x1 = Mth.clamp(0, mousePosX - textWidth / 2 - 4, this.width - tooltipWidth);
-        int y1 = Mth.clamp(0, mousePosY - tooltipHeight, this.height - tooltipHeight);
+        int x1 = Mth.clamp(mousePosX - textWidth / 2 - 4, 0, this.width - tooltipWidth);
+        int y1 = Mth.clamp(mousePosY - tooltipHeight, 0, this.height - tooltipHeight);
         int x2 = x1 + tooltipWidth;
         int y2 = y1 + tooltipHeight;
 
