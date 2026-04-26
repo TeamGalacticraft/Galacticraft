@@ -93,10 +93,10 @@ public class MeteoricIronDoorTopBlock extends Block {
         boolean open = state.getValue(OPEN);
         boolean rightHinge = state.getValue(HINGE) == DoorHingeSide.RIGHT;
         return switch (direction) {
-            case EAST -> open ? (rightHinge ? SOUTH_AABB : NORTH_AABB) : EAST_AABB;
-            case SOUTH -> open ? (rightHinge ? WEST_AABB : EAST_AABB) : SOUTH_AABB;
-            case WEST -> open ? (rightHinge ? NORTH_AABB : SOUTH_AABB) : WEST_AABB;
-            default -> open ? (rightHinge ? EAST_AABB : WEST_AABB) : NORTH_AABB;
+            case EAST -> open ? (rightHinge ? NORTH_AABB : SOUTH_AABB) : EAST_AABB;
+            case SOUTH -> open ? (rightHinge ? EAST_AABB : WEST_AABB) : SOUTH_AABB;
+            case WEST -> open ? (rightHinge ? SOUTH_AABB : NORTH_AABB) : WEST_AABB;
+            default -> open ? (rightHinge ? WEST_AABB : EAST_AABB) : NORTH_AABB;
         };
     }
 
