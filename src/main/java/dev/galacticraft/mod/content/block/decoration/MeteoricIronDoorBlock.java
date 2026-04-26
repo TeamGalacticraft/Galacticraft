@@ -137,6 +137,11 @@ public class MeteoricIronDoorBlock extends DoorBlock {
     }
 
     @Override
+    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block sourceBlock, BlockPos sourcePos, boolean notify) {
+        // Ignore redstone power updates; this door is intentionally player-operated only.
+    }
+
+    @Override
     protected BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor level, BlockPos pos, BlockPos neighborPos) {
         BlockState updated = super.updateShape(state, direction, neighborState, level, pos, neighborPos);
         if (!updated.isAir() && updated.getValue(HALF) == DoubleBlockHalf.UPPER && direction == Direction.UP && !neighborState.is(this.getTopBlock())) {
