@@ -20,31 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.compat.waila.provider;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.nbt.CompoundTag;
-import net.minecraft.nbt.Tag;
-import net.minecraft.world.entity.EntityType;
+import dev.galacticraft.mod.content.block.decoration.MeteoricIronDoorBlock;
+import mcp.mobius.waila.api.IBlockAccessor;
+import mcp.mobius.waila.api.IBlockComponentProvider;
+import mcp.mobius.waila.api.IPluginConfig;
+import mcp.mobius.waila.api.ITargetRedirector;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.Level;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
+import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.Nullable;
 
-import java.util.Optional;
+public enum MeteoricIronDoorTopRedirectProvider implements IBlockComponentProvider {
+    INSTANCE;
 
-@Mixin(EntityType.class)
-public class EntityTypeMixin {
-    @Inject(method = "create(Lnet/minecraft/nbt/CompoundTag;Lnet/minecraft/world/level/Level;)Ljava/util/Optional;", at = @At("HEAD"))
-    private static void gc$upgradeMoonVillageVillagers(CompoundTag tag, Level level, CallbackInfoReturnable<Optional<?>> cir) {
-        if (!"minecraft:villager".equals(tag.getString("id")) || !tag.contains("VillagerData", Tag.TAG_COMPOUND)) {
-            return;
+    @SuppressWarnings("UnstableApiUsage")
+    @Override
+    public ITargetRedirector.@Nullable Result redirect(ITargetRedirector redirect, IBlockAccessor accessor, IPluginConfig config) {
+        Level level = accessor.getWorld();
+        BlockPos basePos = accessor.getPosition().below(2);
+        if (level.getBlockState(basePos).getBlock() instanceof MeteoricIronDoorBlock) {
+            BlockHitResult hitResult = new BlockHitResult(basePos.getCenter(), accessor.getSide(), basePos, accessor.getBlockHitResult().isInside());
+            return redirect.to(hitResult);
         }
-
-        CompoundTag villagerData = tag.getCompound("VillagerData");
-        if (Constant.id("moon_highlands").toString().equals(villagerData.getString("type"))) {
-            tag.putString("id", Constant.id(Constant.Entity.MOON_VILLAGER).toString());
-        }
+        return null;
     }
 }

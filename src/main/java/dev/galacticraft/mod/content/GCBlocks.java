@@ -54,7 +54,6 @@ import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.block.state.properties.BlockSetType;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.block.state.properties.NoteBlockInstrument;
 import net.minecraft.world.level.material.MapColor;
@@ -101,7 +100,7 @@ public class GCBlocks {
             new MeteoricIronDoorTopBlock(BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON)
                     .strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops(), Constant.id(Constant.Block.METEORIC_IRON_DOOR)));
     public static final Block METEORIC_IRON_DOOR = BLOCKS.registerWithItem(Constant.Block.METEORIC_IRON_DOOR,
-            new MeteoricIronDoorBlock(BlockSetType.IRON, BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON)
+            new MeteoricIronDoorBlock(MeteoricIronDoorBlock.BLOCK_SET_TYPE, BlockBehaviour.Properties.of().mapColor(MapColor.RAW_IRON)
                     .strength(5.0F, 6.0F).sound(SoundType.METAL).noOcclusion().requiresCorrectToolForDrops(), Constant.id(Constant.Block.METEORIC_IRON_DOOR_TOP)));
 
     // MOON NATURAL

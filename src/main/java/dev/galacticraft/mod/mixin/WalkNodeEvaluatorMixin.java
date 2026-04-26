@@ -22,11 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.content.block.decoration.MeteoricIronDoorBlock;
 import dev.galacticraft.mod.content.block.decoration.MeteoricIronDoorTopBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.block.DoorBlock;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.pathfinder.PathType;
 import net.minecraft.world.level.pathfinder.WalkNodeEvaluator;
@@ -40,9 +38,7 @@ public class WalkNodeEvaluatorMixin {
     @Inject(method = "getPathTypeFromState(Lnet/minecraft/world/level/BlockGetter;Lnet/minecraft/core/BlockPos;)Lnet/minecraft/world/level/pathfinder/PathType;", at = @At("HEAD"), cancellable = true)
     private static void gc$meteoricIronDoorPathType(BlockGetter level, BlockPos pos, CallbackInfoReturnable<PathType> cir) {
         BlockState state = level.getBlockState(pos);
-        if (state.getBlock() instanceof MeteoricIronDoorBlock) {
-            cir.setReturnValue(state.getValue(DoorBlock.OPEN) ? PathType.DOOR_OPEN : PathType.DOOR_WOOD_CLOSED);
-        } else if (state.getBlock() instanceof MeteoricIronDoorTopBlock) {
+        if (state.getBlock() instanceof MeteoricIronDoorTopBlock) {
             cir.setReturnValue(state.getValue(MeteoricIronDoorTopBlock.OPEN) ? PathType.DOOR_OPEN : PathType.DOOR_WOOD_CLOSED);
         }
     }

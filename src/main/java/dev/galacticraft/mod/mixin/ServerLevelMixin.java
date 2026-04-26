@@ -24,8 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
 import dev.galacticraft.mod.accessor.GCLevelAccessor;
-import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.MoonGolemEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
@@ -49,13 +47,10 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.level.storage.WritableLevelData;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.animal.IronGolem;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
@@ -73,8 +68,6 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
     public abstract ServerLevel getLevel();
 
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
-    @Unique
-    private boolean gc$convertingMoonGolem;
 
     protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
         super(levelData, dimension, registryAccess, dimensionTypeRegistration, profiler, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
@@ -106,37 +99,6 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
         profiler.push("footprints");
         footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
         profiler.pop();
-    }
-
-    @Inject(method = "addFreshEntity(Lnet/minecraft/world/entity/Entity;)Z", at = @At("HEAD"), cancellable = true)
-    private void gc$convertMoonIronGolems(Entity entity, CallbackInfoReturnable<Boolean> cir) {
-        if (this.gc$convertingMoonGolem
-                || !this.dimension().equals(GCDimensions.MOON)
-                || !(entity instanceof IronGolem ironGolem)
-                || entity instanceof MoonGolemEntity
-                || ironGolem.isPlayerCreated()) {
-            return;
-        }
-
-        MoonGolemEntity moonGolem = GCEntityTypes.MOON_GOLEM.create(this.getLevel());
-        if (moonGolem == null) {
-            return;
-        }
-
-        moonGolem.moveTo(entity.getX(), entity.getY(), entity.getZ(), entity.getYRot(), entity.getXRot());
-        moonGolem.setYBodyRot(ironGolem.yBodyRot);
-        moonGolem.setYHeadRot(ironGolem.getYHeadRot());
-        moonGolem.setDeltaMovement(ironGolem.getDeltaMovement());
-        moonGolem.setHealth(ironGolem.getHealth());
-        moonGolem.setPlayerCreated(false);
-        moonGolem.setPersistenceRequired();
-
-        this.gc$convertingMoonGolem = true;
-        try {
-            cir.setReturnValue(((ServerLevel) (Object) this).addFreshEntity(moonGolem));
-        } finally {
-            this.gc$convertingMoonGolem = false;
-        }
     }
 
     @Override

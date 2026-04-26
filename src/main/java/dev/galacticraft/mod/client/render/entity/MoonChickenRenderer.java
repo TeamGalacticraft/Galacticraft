@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.MoonAnimalOxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.MoonAnimalOxygenTanksRenderLayer;
 import dev.galacticraft.mod.content.entity.MoonChickenEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -40,8 +38,6 @@ public class MoonChickenRenderer extends MobRenderer<MoonChickenEntity, ChickenM
 
     public MoonChickenRenderer(EntityRendererProvider.Context context) {
         super(context, new ChickenModel<>(context.bakeLayer(ModelLayers.CHICKEN)), 0.3F);
-        this.addLayer(new MoonAnimalOxygenMaskRenderLayer<>(this, MoonAnimalOxygenMaskRenderLayer.CHICKEN));
-        this.addLayer(new MoonAnimalOxygenTanksRenderLayer<>(this, MoonAnimalOxygenTanksRenderLayer.CHICKEN));
     }
 
     @Override

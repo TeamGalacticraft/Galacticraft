@@ -62,7 +62,7 @@ public final class GCStructureTemplatePools {
             public static final ResourceKey<StructureTemplatePool> ANIMALS = key("village/moon/highlands/animals");
             public static final ResourceKey<StructureTemplatePool> DECOR = key("village/moon/highlands/decor");
             public static final ResourceKey<StructureTemplatePool> HOUSES = key("village/moon/highlands/houses");
-                        public static final ResourceKey<StructureTemplatePool> HOUSES_LARGE = key("village/moon/highlands/houses_large");
+            public static final ResourceKey<StructureTemplatePool> HOUSES_LARGE = key("village/moon/highlands/houses_large");
             public static final ResourceKey<StructureTemplatePool> TERMINATORS = key("village/moon/highlands/terminators");
             public static final ResourceKey<StructureTemplatePool> IRON_GOLEM = key("village/moon/highlands/iron_golem");
             public static final ResourceKey<StructureTemplatePool> SAPLINGS = key("village/moon/highlands/saplings");
@@ -305,6 +305,7 @@ public final class GCStructureTemplatePools {
         return StructurePoolElement.single(id.toString(), list);
     }
 
+        // Legacy means that air CAN be replaced by worldgen.
     public static Function<Projection, LegacySinglePoolElement> legacy(ResourceLocation id, Holder<StructureProcessorList> list) {
         return StructurePoolElement.legacy(id.toString(), list);
     }

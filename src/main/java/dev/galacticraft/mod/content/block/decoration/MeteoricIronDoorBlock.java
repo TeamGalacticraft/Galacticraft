@@ -31,6 +31,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.Container;
 import net.minecraft.world.InteractionResult;
@@ -42,6 +43,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.DoorBlock;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockSetType;
@@ -49,7 +51,23 @@ import net.minecraft.world.level.block.state.properties.DoubleBlockHalf;
 import net.minecraft.world.phys.BlockHitResult;
 
 public class MeteoricIronDoorBlock extends DoorBlock {
-    public static final MapCodec<MeteoricIronDoorBlock> CODEC = simpleCodec(properties -> new MeteoricIronDoorBlock(BlockSetType.IRON, properties, Constant.id(Constant.Block.METEORIC_IRON_DOOR_TOP)));
+    public static final BlockSetType BLOCK_SET_TYPE = new BlockSetType(
+            "meteoric_iron",
+            true,
+            false,
+            false,
+            BlockSetType.PressurePlateSensitivity.EVERYTHING,
+            SoundType.METAL,
+            SoundEvents.IRON_DOOR_CLOSE,
+            SoundEvents.IRON_DOOR_OPEN,
+            SoundEvents.IRON_TRAPDOOR_CLOSE,
+            SoundEvents.IRON_TRAPDOOR_OPEN,
+            SoundEvents.METAL_PRESSURE_PLATE_CLICK_OFF,
+            SoundEvents.METAL_PRESSURE_PLATE_CLICK_ON,
+            SoundEvents.STONE_BUTTON_CLICK_OFF,
+            SoundEvents.STONE_BUTTON_CLICK_ON
+    );
+    public static final MapCodec<MeteoricIronDoorBlock> CODEC = simpleCodec(properties -> new MeteoricIronDoorBlock(BLOCK_SET_TYPE, properties, Constant.id(Constant.Block.METEORIC_IRON_DOOR_TOP)));
 
     private final ResourceLocation topBlockId;
 

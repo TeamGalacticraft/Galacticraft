@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
-import dev.galacticraft.mod.client.render.entity.feature.MoonAnimalOxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.MoonAnimalOxygenTanksRenderLayer;
 import dev.galacticraft.mod.content.entity.MoonCowEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -39,8 +37,6 @@ public class MoonCowRenderer extends MobRenderer<MoonCowEntity, CowModel<MoonCow
 
     public MoonCowRenderer(EntityRendererProvider.Context context) {
         super(context, new CowModel<>(context.bakeLayer(ModelLayers.COW)), 0.7F);
-        this.addLayer(new MoonAnimalOxygenMaskRenderLayer<>(this, MoonAnimalOxygenMaskRenderLayer.COW));
-        this.addLayer(new MoonAnimalOxygenTanksRenderLayer<>(this, MoonAnimalOxygenTanksRenderLayer.QUADRUPED));
     }
 
     @Override

@@ -30,6 +30,7 @@ import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
@@ -124,6 +125,11 @@ public class MeteoricIronDoorTopBlock extends Block {
             return doorBlock.useTopPart(upperDoorState, level, upperDoorPos, player, hitResult);
         }
         return InteractionResult.PASS;
+    }
+
+    @Override
+    public ItemStack getCloneItemStack(LevelReader level, BlockPos pos, BlockState state) {
+        return new ItemStack(this.getBaseDoor());
     }
 
     @Override
