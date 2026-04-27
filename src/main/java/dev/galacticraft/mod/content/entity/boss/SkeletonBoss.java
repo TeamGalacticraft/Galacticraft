@@ -282,6 +282,11 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         }
 
         ItemStack itemInHand = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        if (itemInHand.isEmpty()) {
+            // Prevent "Invalid weapon firing an arrow" crash
+            itemInHand = new ItemStack(Items.BOW);
+        }
+
         ItemStack arrowItem = this.getProjectile(itemInHand);
         AbstractArrow arrow = getArrow(arrowItem, pullProgress, itemInHand);
         double d0 = target.getX() - this.getX();
