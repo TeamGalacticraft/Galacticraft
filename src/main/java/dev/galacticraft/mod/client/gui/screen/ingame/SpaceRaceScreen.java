@@ -45,7 +45,10 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.util.List;
 
-public class SpaceRaceScreen extends AbstractSpaceRaceScreen {
+public class SpaceRaceScreen extends Screen {
+    private long openingStartTime = -1;
+    private int backgroundWidth = 0;
+    private int backgroundHeight = 0;
     private Menu menu = Menu.MAIN;
     private EditBox teamNameInput;
     private int teamColor = 0xFF000000;
@@ -110,13 +113,101 @@ public class SpaceRaceScreen extends AbstractSpaceRaceScreen {
         this.addRenderableWidget(new ColorSlider(sliderX, this.getBottom() - 30, sliderWidth, 20, Component.translatable(Translations.SpaceRace.BLUE), FastColor.ARGB32.blue(this.teamColor), value -> this.teamColor = (this.teamColor & 0xFFFFFF00) + value));
     }
 
-    private void teamFlagMenu() {
-        this.addBackButton();
-        this.addRenderableOnly((graphics, mouseX, mouseY, delta) -> graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.DRAG_AND_DROP_FLAG), this.width / 2, this.height / 2 - this.font.lineHeight / 2, 0xFFFFFFFF));
+    @Override
+    protected void init() {
+        super.init();
+        if (this.openingStartTime == -1) {
+            this.openingStartTime = System.currentTimeMillis();
+        }
+        createMenu(this.menu);
+    }
+
+    @Override
+    public void onClose() {
+        this.openingStartTime = -1;
+        super.onClose();
+    }
+
+    @Override
+    public void resize(Minecraft client, int width, int height) {
+        this.backgroundWidth = (int) (width - ((this.getMarginPercent() * width) * 1.5D));
+        this.backgroundHeight = (int) (height - ((this.getMarginPercent() * height) * 1.5D));
+        super.resize(client, width, height);
+    }
+
+    private void addButton(Component text, int x, int y, int width, int height, Button.OnPress onPress) {
+        this.addRenderableWidget(new SpaceRaceButton(text, x, y, width, height, onPress));
+    }
+
+    private void addComingSoonButton(Component text, int x, int y, int width, int height) {
+        this.addRenderableWidget(new ComingSoonButton(text, x, y, width, height));
     }
 
     private void addBackButton() {
-        this.addButton(Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> this.setMenu(Menu.MAIN));
+        addButton(Component.translatable(Translations.SpaceRace.BACK), this.getLeft() + 5, this.getTop() + 5, 40, 14, button -> setMenu(Menu.MAIN));
+    }
+
+    @Override
+    public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        if (!this.animationCompleted) {
+            int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+            int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+
+            if (this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight) {
+                this.repositionElements();
+                this.animationCompleted = true;
+            }
+
+            long elapsed = System.currentTimeMillis() - this.openingStartTime;
+            long duration = 1000; // This is how long (ms) it will take to open the GUI
+            float progress = Math.min(1.0f, (float) elapsed / duration);
+
+            float smoothedProgress = 1.01f - (float) Math.pow(1.0f - progress, 3);
+
+            this.backgroundWidth = (int) (maxWidth * smoothedProgress);
+            this.backgroundHeight = (int) (maxHeight * smoothedProgress);
+        }
+
+        graphics.fill(getLeft(), getTop(), getRight(), getBottom(), 0x80000000);
+    }
+
+    private void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
+        graphics.drawCenteredString(this.font, Component.translatable(Translations.SpaceRace.SPACE_RACE_MANAGER), this.width / 2, getTop() - 20, 0xFFFFFF);
+    }
+
+    @Override
+    public void render(GuiGraphics graphics, int x, int y, float delta) {
+        if (this.animationCompleted) {
+            super.render(graphics, x, y, delta);
+            this.renderForeground(graphics, x, y);
+            this.drawMouseoverTooltip(graphics, x, y);
+        } else {
+            this.renderBackground(graphics, x, y, delta);
+        }
+    }
+
+    private void drawMouseoverTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
+
+    }
+
+    private int getBottom() {
+        return this.getTop() + this.backgroundHeight;
+    }
+
+    private int getLeft() {
+        return (this.width / 2) - (this.backgroundWidth / 2);
+    }
+
+    private int getTop() {
+        return (this.height / 2) - (this.backgroundHeight / 2);
+    }
+
+    private int getRight() {
+        return this.getLeft() + this.backgroundWidth;
+    }
+
+    private float getMarginPercent() {
+        return 0.17F;
     }
 
     private void setMenu(Menu menu) {
@@ -134,6 +225,14 @@ public class SpaceRaceScreen extends AbstractSpaceRaceScreen {
             case TEAM_COLOR -> this.teamColorMenu();
             case TEAM_FLAG -> this.teamFlagMenu();
         }
+    }
+
+    private int getYMargins() {
+        return (int) (this.height * this.getMarginPercent());
+    }
+
+    private int getXMargins() {
+        return (int) (this.width * this.getMarginPercent());
     }
 
     @Override
