@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.accessor.SatelliteAccessor;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.satellite.Satellite;
@@ -38,8 +39,8 @@ import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteUpdatePayload;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -71,7 +72,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     protected final CelestialBody<?, ?> fromBody;
     public final boolean canCreateStations;
 
-    protected int canCreateOffset = 24;
+    protected int createSpaceStationButtonY;
     protected int zoomTooltipPos = 0;
     protected String selectedStationOwner = "";
     protected int spaceStationListOffset = 0;
@@ -287,13 +288,13 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
 
         if (!this.mapMode) {
-            if (x >= RHS - 95 && x < RHS && y > LHS + 181 + canCreateOffset && y < LHS + 182 + 12 + canCreateOffset) {
+            if (x >= RHS - CREATE_SS_PANEL_WIDTH - 2 && x < RHS - 2 && y > createSpaceStationButtonY && y < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
                 if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/) {
                     SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
                     if (recipe != null && this.canCreateSpaceStation(this.selectedBody)) {
                         assert this.minecraft != null;
                         assert this.minecraft.player != null;
-                        if (recipe.test(this.minecraft.player.getInventory()) || this.minecraft.player.isCreative()) {
+                        if (this.minecraft.player.hasInfiniteMaterials() || recipe.test(this.minecraft.player.getInventory())) {
                             SatelliteCreationPayload payload = new SatelliteCreationPayload(this.selectedBody.getKey(this.celestialBodies));
                             ClientPlayNetworking.send(payload);
                             //Zoom in on planet to show the new SpaceStation if not already zoomed
@@ -615,7 +616,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     this.drawSpaceStationDetails(graphics);
                 } else {
                     try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                        texture.blit(RHS - 96, LHS, 96, 139, SIDE_PANEL_U, SIDE_PANEL_V, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, BLUE);
+                        texture.blit(RHS - SIDE_PANEL_WIDTH, LHS, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, SIDE_PANEL_U, SIDE_PANEL_V, BLUE);
                     }
                 }
 
@@ -782,118 +783,95 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     private void drawSpaceStationCreationPrompt(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY) {
-        String str;
-        if (this.canCreateSpaceStation(this.selectedBody) && (!(this.isSatellite(this.selectedBody)))) {
-            try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                int canCreateLength = Math.max(0, texture.getSplitStringLines(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), 91) - 2);
-                canCreateOffset = canCreateLength * this.font.lineHeight;
+        if (!this.canCreateSpaceStation(this.selectedBody) || this.isSatellite(this.selectedBody)) {
+            return;
+        }
 
-                texture.blit(RHS - 79, LHS + 129, 61, 4, CREATE_SS_PANEL_CAP_U, CREATE_SS_PANEL_CAP_V, CREATE_SS_PANEL_CAP_WIDTH, CREATE_SS_PANEL_CAP_HEIGHT, BLUE);
+        SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
 
-                texture.blit(RHS - 95, LHS + 134, 93, 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V, CREATE_SS_PANEL_WIDTH, 4, BLUE);
-                for (int barY = 0; barY < canCreateLength; ++barY) {
-                    texture.blit(RHS - 95, LHS + 138 + barY * this.font.lineHeight, 93, this.font.lineHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, BLUE);
-                }
-                texture.blit(RHS - 95, LHS + 138 + canCreateOffset, 93, 43, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, BLUE);
+        List<Boolean> hasIngredients = recipe == null ? List.of() : recipe.ingredients().stream()
+                .map(pair -> this.getAmountInInventory(pair.getFirst()) >= pair.getSecond())
+                .toList();
+
+        boolean validInputMaterials = this.minecraft.player.hasInfiniteMaterials() || !hasIngredients.contains(false);
+
+        final int rows = (int) Math.ceil(Math.max(hasIngredients.size(), 1) / 4.0);
+        final int rowHeight = 25;
+
+        final int x = RHS - CREATE_SS_PANEL_WIDTH - 2;
+        final int centerX = x + (int) Math.ceil(CREATE_SS_PANEL_WIDTH / 2.0);
+        final int y = LHS + 134;
+
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
+            int canCreateLength = Math.max(0, texture.getSplitStringLines(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), 91) - 2);
+
+            texture.blit(RHS - 79, y - CREATE_SS_PANEL_CAP_HEIGHT - 1, CREATE_SS_PANEL_CAP_WIDTH, CREATE_SS_PANEL_CAP_HEIGHT, CREATE_SS_PANEL_CAP_U, CREATE_SS_PANEL_CAP_V, CREATE_SS_PANEL_CAP_WIDTH, CREATE_SS_PANEL_CAP_HEIGHT, BLUE);
+
+            texture.blit(x, y, CREATE_SS_PANEL_WIDTH, 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V, CREATE_SS_PANEL_WIDTH, 4, BLUE);
+
+            int backgroundY = y + 4;
+            for (int i = 0; i < canCreateLength; i++) {
+                texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, BLUE);
+                backgroundY += this.font.lineHeight;
             }
 
-            SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
+            for (int i = 1; i < rows; i++) {
+                texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, rowHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, rowHeight, BLUE);
+                backgroundY += rowHeight;
+            }
+
+            texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, BLUE);
+            backgroundY += CREATE_SS_PANEL_HEIGHT - 4;
+
             if (recipe != null) {
-                boolean validInputMaterials = true;
+                int color = validInputMaterials ? GREEN1 : RED;
 
-                int i = 0;
-                for (Int2ObjectMap.Entry<Ingredient> entry : recipe.ingredients().int2ObjectEntrySet()) {
-                    Ingredient ingredient = entry.getValue();
-                    int xPos = (int) (RHS - 95 + i * 93 / (double) recipe.ingredients().size() + 5);
-                    int yPos = LHS + 154 + canCreateOffset;
-
-                    boolean b = mousePosX >= xPos && mousePosX <= xPos + 16 && mousePosY >= yPos && mousePosY <= yPos + 16;
-                    int amount = this.getAmountInInventory(ingredient);
-                    Lighting.setupFor3DItems();
-                    ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-
-                    graphics.cleanupState();
-                    gui.renderItem(stack, xPos, yPos);
-                    gui.renderItemDecorations(font, stack, xPos, yPos, null);
-                    Lighting.setupForFlatItems();
-                    RenderSystem.enableBlend();
-
-                    if (b) {
-                        RenderSystem.depthMask(true);
-                        RenderSystem.enableDepthTest();
-                        gui.pose().pushPose();
-                        gui.pose().translate(0, 0, 300);
-                        int k = this.font.width(stack.getHoverName());
-                        int j2 = mousePosX - k / 2;
-                        int k2 = mousePosY - 12;
-                        int i1 = 8;
-
-                        if (j2 + k > this.width) {
-                            j2 -= (j2 - this.width + k);
-                        }
-
-                        if (k2 + i1 + 6 > this.height) {
-                            k2 = this.height - i1 - 6;
-                        }
-
-                        try (Graphics.Fill fill = graphics.fill()) {
-                            int j1 = FastColor.ARGB32.color(190, 0, 153, 255);
-                            fill.fillGradientRaw(j2 - 3, k2 - 4, j2 + k + 3, k2 - 3, j1, j1);
-                            fill.fillGradientRaw(j2 - 3, k2 + i1 + 3, j2 + k + 3, k2 + i1 + 4, j1, j1);
-                            fill.fillGradientRaw(j2 - 3, k2 - 3, j2 + k + 3, k2 + i1 + 3, j1, j1);
-                            fill.fillGradientRaw(j2 - 4, k2 - 3, j2 - 3, k2 + i1 + 3, j1, j1);
-                            fill.fillGradientRaw(j2 + k + 3, k2 - 3, j2 + k + 4, k2 + i1 + 3, j1, j1);
-                            int k1 = FastColor.ARGB32.color(170, 0, 153, 255);
-                            int l1 = (k1 & 0xfefefe) >> 1 | k1 & 0xff000000;
-                            fill.fillGradientRaw(j2 - 3, k2 - 3 + 1, j2 - 3 + 1, k2 + i1 + 3 - 1, k1, l1);
-                            fill.fillGradientRaw(j2 + k + 2, k2 - 3 + 1, j2 + k + 3, k2 + i1 + 3 - 1, k1, l1);
-                            fill.fillGradientRaw(j2 - 3, k2 - 3, j2 + k + 3, k2 - 3 + 1, k1, k1);
-                            fill.fillGradientRaw(j2 - 3, k2 + i1 + 2, j2 + k + 3, k2 + i1 + 3, l1, l1);
-                        }
-
-                        graphics.cleanupState();
-                        gui.drawString(this.font, stack.getHoverName(), j2, k2, WHITE, false);
-                        gui.pose().popPose();
-                    }
-
-                    str = "" + entry.getIntKey();
-                    boolean valid = amount >= entry.getIntKey();
-                    if (!valid && validInputMaterials) {
-                        validInputMaterials = false;
-                    }
-                    int color = valid | this.minecraft.player.getAbilities().instabuild ? GREEN : RED;
-                    gui.drawString(this.font, str, xPos + 8 - this.font.width(str) / 2, LHS + 170 + canCreateOffset, color, false);
-
-                    i++;
+                createSpaceStationButtonY = backgroundY + 1;
+                if (!this.mapMode && mousePosX >= x && mousePosX < RHS - 2 && mousePosY >= createSpaceStationButtonY && mousePosY < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
+                    texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
                 }
 
-                try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                    int color;
-                    if (validInputMaterials || this.minecraft.player.getAbilities().instabuild) {
-                        color = GREEN1;
-                    } else {
-                        color = RED;
-                    }
+                texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
 
-                    if (!this.mapMode) {
-                        if (mousePosX >= RHS - 95 && mousePosX <= RHS && mousePosY >= LHS + 182 + canCreateOffset && mousePosY <= LHS + 182 + 12 + canCreateOffset) {
-                            texture.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, color);
-                        }
-                    }
+                color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), centerX, y + 3, CREATE_SS_PANEL_WIDTH - 2, FastColor.ARGB32.color(255, color, 255, color));
 
-                    texture.blit(RHS - 95, LHS + 182 + canCreateOffset, 93, 12, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, color);
-
-                    color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                    texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), RHS - 48, LHS + 137, 91, FastColor.ARGB32.color(255, color, 255, color));
-
-                    if (!mapMode) {
-                        texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), RHS - 48, LHS + 185 + canCreateOffset, 91, WHITE);
-                    }
+                if (!mapMode) {
+                    texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), centerX, createSpaceStationButtonY + 2, CREATE_SS_PANEL_WIDTH - 2, WHITE);
                 }
-            } else {
-                try (Graphics.Text text = graphics.text()) {
-                    text.drawSplitText(Component.translatable(Translations.CelestialSelection.CANNOT_CREATE_SPACE_STATION), RHS - 48, LHS + 138, 91, WHITE);
+            }
+        }
+
+        if (recipe != null) {
+            String str;
+            int i = 0;
+            for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
+                Ingredient ingredient = pair.getFirst();
+                ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
+
+                final int xPos = x + 7 + 21 * (i % 4);
+                final int yPos = createSpaceStationButtonY - 3 + rowHeight * (i / 4 - rows);
+
+                Lighting.setupFor3DItems();
+                graphics.cleanupState();
+                gui.renderItem(stack, xPos, yPos);
+                gui.renderItemDecorations(this.font, stack, xPos, yPos, null);
+                Lighting.setupForFlatItems();
+                RenderSystem.enableBlend();
+
+                if (DrawableUtil.mouseIn(mousePosX, mousePosY, xPos, yPos, 16, 16)) {
+                    this.renderCelestialScreenTooltip(gui, graphics, mousePosX, mousePosY, stack.getHoverName());
                 }
+
+                str = pair.getSecond().toString();
+                int color = validInputMaterials || hasIngredients.get(i) ? GREEN : RED;
+                gui.drawString(this.font, str, xPos + 9 - this.font.width(str) / 2, yPos + 17, color, false);
+
+                i++;
+            }
+        } else {
+            try (Graphics.Text text = graphics.text()) {
+                text.drawSplitText(Component.translatable(Translations.CelestialSelection.CANNOT_CREATE_SPACE_STATION), centerX, y + 4, 91, WHITE);
             }
         }
     }
@@ -957,6 +935,43 @@ public class CelestialSelectionScreen extends CelestialScreen {
             }
         }
         return yOffset;
+    }
+
+    protected void renderCelestialScreenTooltip(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY, Component text) {
+        int textWidth = this.font.width(text);
+        int tooltipWidth = textWidth + 7;
+        int tooltipHeight = 16;
+
+        int x1 = Mth.clamp(mousePosX - textWidth / 2 - 4, 0, this.width - tooltipWidth);
+        int y1 = Mth.clamp(mousePosY - tooltipHeight, 0, this.height - tooltipHeight);
+        int x2 = x1 + tooltipWidth;
+        int y2 = y1 + tooltipHeight;
+
+        int colorA = FastColor.ARGB32.color(190, 0, 153, 255);
+        int colorB = FastColor.ARGB32.color(170, 0, 153, 255);
+        int colorC = (colorB & 0xfefefe) >> 1 | colorB & 0xff000000;
+
+        RenderSystem.depthMask(true);
+        RenderSystem.enableDepthTest();
+        gui.pose().pushPose();
+        gui.pose().translate(0, 0, BORDER_Z + 1);
+
+        try (Graphics.Fill fill = graphics.fill()) {
+            // Draw the tooltip base which is a rectangle missing the corners
+            fill.fillGradientRaw(x1 + 1, y1, x2 - 1, y2, colorA, colorA);
+            fill.fillGradientRaw(x1, y1 + 1, x1 + 1, y2 - 1, colorA, colorA);
+            fill.fillGradientRaw(x2 - 1, y1 + 1, x2, y2 - 1, colorA, colorA);
+
+            // Inner border: left, right, top, bottom (lighter at the top, darker at the bottom)
+            fill.fillGradientRaw(x1 + 1, y1 + 1, x1 + 2, y2 - 1, colorB, colorC);
+            fill.fillGradientRaw(x2 - 2, y1 + 1, x2 - 1, y2 - 1, colorB, colorC);
+            fill.fillGradientRaw(x1 + 2, y1 + 1, x2 - 2, y1 + 2, colorB, colorB);
+            fill.fillGradientRaw(x1 + 2, y2 - 2, x2 - 2, y2 - 1, colorC, colorC);
+        }
+
+        graphics.cleanupState();
+        gui.drawString(this.font, text, x1 + 4, y1 + 4, WHITE, false);
+        gui.pose().popPose();
     }
 
     protected int getAmountInInventory(Ingredient ingredient) {
