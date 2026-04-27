@@ -40,6 +40,7 @@ import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
+import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.data.OxygenBlockDataManager;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -90,8 +91,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state, SPEC);
+<<<<<<< Updated upstream
         Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
 
+=======
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
+>>>>>>> Stashed changes
     }
 
     @Override

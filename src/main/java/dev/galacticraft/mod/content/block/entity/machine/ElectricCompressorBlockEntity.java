@@ -39,6 +39,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
+import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -92,7 +93,12 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
+<<<<<<< Updated upstream
         Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
+=======
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
+>>>>>>> Stashed changes
     }
 
 

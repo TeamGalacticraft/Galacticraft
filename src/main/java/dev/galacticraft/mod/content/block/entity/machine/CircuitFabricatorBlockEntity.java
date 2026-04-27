@@ -38,7 +38,12 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+<<<<<<< Updated upstream
 import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
+=======
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
+>>>>>>> Stashed changes
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -112,7 +117,17 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
+<<<<<<< Updated upstream
         Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
+=======
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        System.out.println("soundmanager made");
+        if (this.getLevel()==null) {
+            System.out.println("null");
+        }
+        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager), this);
+        System.out.println("new sound added");
+>>>>>>> Stashed changes
     }
 
 

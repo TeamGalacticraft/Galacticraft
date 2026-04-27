@@ -39,6 +39,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.entity.Dockable;
 import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
+import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
@@ -119,7 +120,12 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
         Direction.stream().forEach(direction -> this.check.add(direction));
+<<<<<<< Updated upstream
         Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
+=======
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
+>>>>>>> Stashed changes
     }
 
     @NotNull
