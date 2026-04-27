@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.networked;
 
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
@@ -54,11 +55,11 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     public static WireBlockEntity createT1(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, 240);
+        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.wireTransferLimit());
     }
 
     public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, 480);
+        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.heavyWireTransferLimit());
     }
 
     @Override

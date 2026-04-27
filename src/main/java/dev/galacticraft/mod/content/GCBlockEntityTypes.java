@@ -44,7 +44,7 @@ public class GCBlockEntityTypes {
 
     // WIRES, PIPES, WALKWAYS
     public static final BlockEntityType<WireBlockEntity> WIRE_T1 = register(Constant.Block.ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY);
-    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = register(Constant.Block.HEAVY_ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = register(Constant.Block.HEAVY_ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), GCBlocks.HEAVY_ALUMINUM_WIRE, GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, GCBlocks.HEAVY_WIRE_WALKWAY);
     public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = register(Constant.Block.GLASS_FLUID_PIPE, GlassFluidPipeBlockEntity::new, GlassFluidPipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0]));
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = register(Constant.Block.WALKWAY, WalkwayBlockEntity::new, GCBlocks.WALKWAY);
 
