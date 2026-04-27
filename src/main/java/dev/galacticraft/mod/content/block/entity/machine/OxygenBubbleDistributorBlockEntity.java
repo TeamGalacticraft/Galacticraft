@@ -38,8 +38,6 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
-import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.network.s2c.BubbleSizePayload;
@@ -107,11 +105,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
-<<<<<<< Updated upstream
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
-=======
-        GCSoundManager soundManager = GCSoundManager.getInstance();
-        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
+
     }
 
     @Override

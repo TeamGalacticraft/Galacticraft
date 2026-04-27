@@ -40,8 +40,6 @@ import dev.galacticraft.machinelib.api.util.FluidSource;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
-import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
@@ -98,11 +96,6 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
 
     public OxygenDecompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_DECOMPRESSOR, pos, state, SPEC);
-<<<<<<< Updated upstream
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
-=======
-        GCSoundManager soundManager = GCSoundManager.getInstance();
-        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
     }
 
     @Override
