@@ -22,42 +22,6 @@
 
 package dev.galacticraft.mod.client.sounds;
 
-import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundSource;
-
-
-public class MachineSoundInstance extends GCSoundInstance {
-    private final MachineBlockEntity machine;
-    private MachineStatus status;
-
-    public MachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
-        super(machine, event, SoundSource.BLOCKS, callback);
-        
-        this.machine = machine;
-    }
-
-
-    @Override
-    public void tick() {
-
-        if (machine instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
-            this.end();
-        }
-        super.tick();
-        status = this.getStatus();
-
-        if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
-            this.volume = 1.0F;
-        } else {
-            this.volume = 0.00001F;
-        }
-
-    }
-
-    public MachineStatus getStatus() {
-        return this.machine.getState().getStatus();
-    }
+public interface SoundInstanceCallback {
+	<T extends GCSoundInstance> void onFinished(T soundInstance);
 }
