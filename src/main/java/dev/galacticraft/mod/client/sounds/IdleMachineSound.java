@@ -23,29 +23,13 @@
 package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.sounds.SoundEvent;
 
-public class OxygenMachineSoundInstance extends MachineSoundInstance {
-    private final MachineBlockEntity machine;
-    private MachineStatus status;
+public class IdleMachineSound extends MachineSound {
 
-    public OxygenMachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
-        super(machine, event, callback);
-        
-        this.machine = machine;
+    public IdleMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
+        super(machine, GCSounds.MACHINE_BUZZ, callback, activeSound);
     }
-
-
-    @Override
-    public void tick() {
-
-        super.tick();
-        status = this.machine.getState().getStatus();
-
-
-    }
-
 
 }

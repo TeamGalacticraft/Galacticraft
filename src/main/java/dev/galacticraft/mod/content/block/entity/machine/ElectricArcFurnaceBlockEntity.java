@@ -38,9 +38,11 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
-import dev.galacticraft.mod.client.sounds.PoweredMachineSoundInstance;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.MachineSound;
+import dev.galacticraft.mod.client.sounds.IdleMachineSound;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.client.Minecraft;
@@ -91,11 +93,9 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
-<<<<<<< Updated upstream
-        Minecraft.getInstance().getSoundManager().play(new MachineSoundInstance(this));
-=======
+
         GCSoundManager soundManager = GCSoundManager.getInstance();
-        soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
+        soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager),this);
 
     }
 

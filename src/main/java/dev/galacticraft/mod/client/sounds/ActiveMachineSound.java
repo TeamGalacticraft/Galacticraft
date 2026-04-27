@@ -25,25 +25,12 @@ package dev.galacticraft.mod.client.sounds;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import net.minecraft.sounds.SoundEvent;
 
-public class ActiveMachineSoundInstance extends MachineSoundInstance {
-    private final MachineBlockEntity machine;
+public class ActiveMachineSound extends MachineSound {
 
-    public ActiveMachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
-        super(machine, event, callback);
-        
-        this.machine = machine;
+    public ActiveMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
+        super(machine, activeSound, callback, activeSound);
     }
 
-    @Override
-    public void tick() {
-        super.tick();
-        if (this.machine.getState().isActive()) {
-            this.volume = 1.0F;
-        } else {
-            this.volume = 0.00001F;
-        }
-
-    }
 
 
 }

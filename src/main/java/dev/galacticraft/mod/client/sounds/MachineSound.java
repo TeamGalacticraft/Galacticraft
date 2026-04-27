@@ -24,40 +24,62 @@ package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.machinelib.api.machine.MachineStatus.Type;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 
-public class MachineSoundInstance extends GCSoundInstance {
-    private final MachineBlockEntity machine;
-    private MachineStatus status;
+public abstract class MachineSound extends GCSound {
+    protected final MachineBlockEntity machine;
+    protected final SoundEvent activeSound;
+    private Type statustype;
 
-    public MachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
+    public MachineSound(MachineBlockEntity machine, SoundEvent event, SoundCallback callback, SoundEvent activeSound) {
         super(machine, event, SoundSource.BLOCKS, callback);
         
         this.machine = machine;
+        this.statustype = this.getStatus().getType();
+        this.activeSound = activeSound;
     }
-
 
     @Override
     public void tick() {
 
-        if (machine instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
+        if (this.machine instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
             this.end();
         }
         super.tick();
-        status = this.getStatus();
+        Type newstatus;
+        newstatus = this.getStatus().getType();
 
-        if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
-            this.volume = 1.0F;
+        if (newstatus != this.statustype) {
+            GCSound newsound;
+            switch (newstatus) {
+                case MISSING_ENERGY:
+                    this.volume = 0.0F;
+                    break;
+                case WORKING:
+                    newsound = new ActiveMachineSound(machine, activeSound, callback);
+                    callback.onSwapped(this,newsound, this.machine);
+                    break;
+                case PARTIALLY_WORKING:
+                    newsound = new ActiveMachineSound(machine, activeSound, callback);
+                    callback.onSwapped(this,newsound, this.machine);
+                    break;
+                default:
+                    newsound = new IdleMachineSound(machine, activeSound, callback);
+                    callback.onSwapped(this,newsound, this.machine);
+                    break;
+            }
+            this.statustype = newstatus;
         } else {
-            this.volume = 0.00001F;
+            this.volume = 1.0F;
         }
-
     }
 
     public MachineStatus getStatus() {
         return this.machine.getState().getStatus();
     }
+
+
 }

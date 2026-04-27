@@ -22,6 +22,9 @@
 
 package dev.galacticraft.mod.client.sounds;
 
-public interface SoundInstanceCallback {
-	<T extends GCSoundInstance> void onFinished(T soundInstance);
+import net.minecraft.world.level.block.entity.BlockEntity;
+
+public interface SoundCallback {
+	<T extends GCSound> void onFinished(T soundInstance);
+	<T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound, BlockEntity entity);
 }

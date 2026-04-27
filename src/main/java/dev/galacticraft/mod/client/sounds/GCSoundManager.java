@@ -32,11 +32,11 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
-public class GCSoundManager implements SoundInstanceCallback {
+public class GCSoundManager implements SoundCallback {
 
     private static final Minecraft client = Minecraft.getInstance();
     private static GCSoundManager instance;
-    private final List<GCSoundInstance> activeSounds = new ArrayList<>();
+    private final List<GCSound> activeSounds = new ArrayList<>();
 
     private GCSoundManager() {
 
@@ -50,12 +50,19 @@ public class GCSoundManager implements SoundInstanceCallback {
     }
 
     @Override
-    public <T extends GCSoundInstance> void onFinished(T soundInstance) {
+    public <T extends GCSound> void onFinished(T soundInstance) {
         this.stop(soundInstance);
     }
 
+    @Override
+    public <T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound, BlockEntity entity) {
+        this.play(newSound, entity);
+        this.onFinished(oldSound);
+
+    }
+
     // Plays a sound instance, if it doesn't already exist in the list
-    public <T extends GCSoundInstance> void play(T soundInstance, BlockEntity entity) {
+    public <T extends GCSound> void play(T soundInstance, BlockEntity entity) {
 	    if (this.activeSounds.contains(soundInstance)) return;
         // TODO: override setlevel
         
@@ -67,14 +74,14 @@ public class GCSoundManager implements SoundInstanceCallback {
 
     // Stops a sound immediately. in most cases it is preferred to use
     // the sound's ending phase, which will clean it up after completion
-    public <T extends GCSoundInstance> void stop(T soundInstance) {
+    public <T extends GCSound> void stop(T soundInstance) {
         client.getSoundManager().stop(soundInstance);
         this.activeSounds.remove(soundInstance);
         System.out.println(this.activeSounds.size());
     }
 
     // Finds a SoundInstance from a SoundEvent, if it exists and is currently playing
-    public Optional<GCSoundInstance> getPlayingSoundInstance(SoundEvent soundEvent) {
+    public Optional<GCSound> getPlayingSoundInstance(SoundEvent soundEvent) {
         for (var activeSound : this.activeSounds) {
             // SoundInstances use their SoundEvent's id by default
             if (activeSound.getLocation().equals(soundEvent.getLocation())) {
