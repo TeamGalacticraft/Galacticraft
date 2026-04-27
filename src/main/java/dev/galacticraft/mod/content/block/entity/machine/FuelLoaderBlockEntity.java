@@ -125,7 +125,6 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
 =======
         GCSoundManager soundManager = GCSoundManager.getInstance();
         soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
->>>>>>> Stashed changes
     }
 
     @NotNull

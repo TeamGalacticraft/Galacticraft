@@ -91,7 +91,6 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 =======
         GCSoundManager soundManager = GCSoundManager.getInstance();
         soundManager.play(new PoweredMachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager),this);
->>>>>>> Stashed changes
     }
 
 

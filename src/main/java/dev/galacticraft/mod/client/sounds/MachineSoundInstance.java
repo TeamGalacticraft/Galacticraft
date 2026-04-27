@@ -24,21 +24,10 @@ package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-<<<<<<< Updated upstream
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.mod.content.GCSounds;
-import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
-import net.minecraft.client.resources.sounds.SoundInstance;
-import net.minecraft.sounds.SoundSource;
-
-
-public class MachineSoundInstance extends AbstractTickableSoundInstance {
-=======
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 public abstract class MachineSoundInstance extends GCSoundInstance {
->>>>>>> Stashed changes
     private final MachineBlockEntity machine;
 
 <<<<<<< Updated upstream
@@ -47,7 +36,6 @@ public abstract class MachineSoundInstance extends GCSoundInstance {
 =======
     public MachineSoundInstance(MachineBlockEntity machine, SoundEvent event, SoundInstanceCallback callback) {
         super(machine, event, SoundSource.BLOCKS, callback);
->>>>>>> Stashed changes
         this.machine = machine;
         this.looping = true;
         this.delay = 0;
@@ -61,23 +49,6 @@ public abstract class MachineSoundInstance extends GCSoundInstance {
 
     @Override
     public void tick() {
-<<<<<<< Updated upstream
-        if (!this.machine.isRemoved()) {
-            status = this.machine.getState().getStatus();
-            if (status != MachineStatuses.NOT_ENOUGH_ENERGY && status != null) {
-                this.volume = 1.0F;
-            } else {
-                this.volume = 0.00001F;
-            }
-            if (this.machine.isActive()) {
-                System.out.println("Active!");
-            }
-        } else {
-            stop();
-        }
-
-    }
-=======
         if (machine instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
             this.end();
         }
@@ -89,5 +60,4 @@ public abstract class MachineSoundInstance extends GCSoundInstance {
 
     }
 
->>>>>>> Stashed changes
 }
