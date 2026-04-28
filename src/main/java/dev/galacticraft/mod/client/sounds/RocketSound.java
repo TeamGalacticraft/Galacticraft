@@ -38,7 +38,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
         super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.level().getRandom());
         this.rocket = rocket;
         this.attenuation = SoundInstance.Attenuation.NONE;
-        this.volume = 0.00001F;  //If it's zero it won't start playing
+        this.volume = 0.0F;  //Will play as long as canStartSilent() == True
         this.pitch = 0.0F;  //pitch
         this.looping = true;
         this.delay = 0;  //repeat delay
@@ -91,5 +91,11 @@ public class RocketSound extends AbstractTickableSoundInstance {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    // Allows for sound to start at 0.0F volume
+    @Override
+    public boolean canStartSilent() {
+        return true;
     }
 }

@@ -42,7 +42,7 @@ public class MoonDirtPathBlock extends DirtPathBlock {
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        world.setBlockAndUpdate(pos, pushEntitiesUp(state, GCBlocks.MOON_DIRT.defaultBlockState(), world, pos));
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        level.setBlockAndUpdate(pos, pushEntitiesUp(state, GCBlocks.MOON_DIRT.defaultBlockState(), level, pos));
     }
 }
