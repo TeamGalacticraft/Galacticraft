@@ -122,13 +122,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     public void setLevel(Level level) {
         super.setLevel(level);
         GCSoundManager soundManager = GCSoundManager.getInstance();
-        System.out.println("soundmanager made");
-        if (this.getLevel()==null) {
-            System.out.println("null");
-        }
         soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager));
         soundManager.play(new ActiveMachineSound(this,GCSounds.MACHINE_HUM,soundManager));
-        System.out.println("new sound added");
     }
     
     @Override
@@ -136,7 +131,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
-        System.out.println(world);
     }
 
     @Override
