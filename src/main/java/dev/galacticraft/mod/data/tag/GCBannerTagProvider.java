@@ -40,6 +40,31 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
-                .add(GCBannerPatterns.ROCKET);
+                .add(GCBannerPatterns.ROCKET)
+                .add(GCBannerPatterns.ROCKET_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_CREEPER)
+                .add(GCBannerPatterns.CREEPER_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_FLOW)
+                .add(GCBannerPatterns.FLOW_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_FLOWER)
+                .add(GCBannerPatterns.FLOWER_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_GLOBE)
+                .add(GCBannerPatterns.GLOBE_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_GUSTER)
+                .add(GCBannerPatterns.GUSTER_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_MOJANG)
+                .add(GCBannerPatterns.MOJANG_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_PIGLIN)
+                .add(GCBannerPatterns.PIGLIN_SIDEWAYS);
+
+        this.tag(BannerPatternTags.PATTERN_ITEM_SKULL)
+                .add(GCBannerPatterns.SKULL_SIDEWAYS);
     }
 }
