@@ -2,21 +2,120 @@
   "elements": [
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/houses/house_1",
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/cheese_low_done",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
-      "weight": 4
+      "weight": 10
     },
     {
       "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
+        "element_type": "minecraft:single_pool_element",
         "location": "galacticraft:village/moon/highlands/houses/greenhouse",
         "processors": "minecraft:empty",
         "projection": "rigid"
       },
       "weight": 2
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/lowland_tower_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 10
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/low_rocket_02_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 10
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/low_schematic_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 10
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/oblique_big_house_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 10
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/round_medium_house_01_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/round_medium_house_02_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/small_half_half_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 7
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/small_long_house_done_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/small_round_house_01_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/small_round_house_02_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:single_pool_element",
+        "location": "galacticraft:village/moon/highlands/houses/small_three_three_done",
+        "processors": "minecraft:empty",
+        "projection": "rigid"
+      },
+      "weight": 6
     },
     {
       "element": {

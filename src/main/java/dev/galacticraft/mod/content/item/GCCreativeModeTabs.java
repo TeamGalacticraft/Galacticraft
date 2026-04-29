@@ -199,6 +199,11 @@ public class GCCreativeModeTabs {
 
                 // MOON VILLAGER SPECIAL
                 output.accept(LUNAR_CARTOGRAPHY_TABLE);
+                output.accept(LUNAR_WORKBENCH);
+                output.accept(LUNAR_SMITHING_TABLE);
+                output.accept(LUNAR_CHEESE_PRESS);
+                output.accept(LUNAR_HERBALIST_TABLE);
+                output.accept(LUNAR_HOME_ANCHOR);
 
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
@@ -249,6 +254,10 @@ public class GCCreativeModeTabs {
                 output.accept(VACUUM_GLASS);
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
+                output.accept(OLIVINE_GLASS);
+                output.accept(OLIVINE_GLASS_PANE);
+                output.accept(MOON_GLASS);
+                output.accept(MOON_GLASS_PANE);
 
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
@@ -306,6 +315,7 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_GEAR);
                 output.accept(FREQUENCY_MODULE);
                 output.accept(SHIELD_CONTROLLER);
+                output.accept(VILLAGE_ACCESS_KEY);
 
                 output.accept(PARACHUTE);
                 for (DyeColor color : GCBlockRegistry.COLOR_ORDER) {
@@ -505,6 +515,9 @@ public class GCCreativeModeTabs {
 
     public static void registerSpawnEggs() {
         ItemGroupEvents.modifyEntriesEvent(CreativeModeTabs.SPAWN_EGGS).register(content -> {
+            content.addAfter(ItemStack.EMPTY, MOON_COW_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, MOON_SHEEP_SPAWN_EGG);
+            content.addAfter(ItemStack.EMPTY, MOON_CHICKEN_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, MOON_VILLAGER_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_ZOMBIE_SPAWN_EGG);
             content.addAfter(ItemStack.EMPTY, EVOLVED_CREEPER_SPAWN_EGG);

@@ -34,6 +34,7 @@ import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
+import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -263,6 +264,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
 
+        // MOON GLASS
+        this.block(GCBlocks.OLIVINE_GLASS, "Olivine Glass");
+        this.block(GCBlocks.OLIVINE_GLASS_PANE, "Olivine Glass Pane");
+        this.block(GCBlocks.MOON_GLASS, "Moon Glass");
+        this.block(GCBlocks.MOON_GLASS_PANE, "Moon Glass Pane");
+
         // ORES
         this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
         this.block(GCBlocks.ASTEROID_IRON_ORE, "Asteroid Iron Ore");
@@ -306,6 +313,7 @@ public class GCTranslationProvider extends TranslationProvider {
         // COMPACT MINERAL BLOCKS
         this.block(GCBlocks.SILICON_BLOCK, "Block of Silicon");
         this.block(GCBlocks.METEORIC_IRON_BLOCK, "Block of Meteoric Iron");
+        this.block(GCBlocks.METEORIC_IRON_DOOR, "Meteoric Iron Door");
         this.block(GCBlocks.DESH_BLOCK, "Block of Desh");
         this.block(GCBlocks.ALUMINUM_BLOCK, "Block of Aluminum");
         this.block(GCBlocks.TIN_BLOCK, "Block of Tin");
@@ -346,6 +354,11 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // MOON VILLAGER SPECIAL
         this.block(GCBlocks.LUNAR_CARTOGRAPHY_TABLE, "Lunar Cartography Table");
+        this.block(GCBlocks.LUNAR_WORKBENCH, "Lunar Workbench");
+        this.block(GCBlocks.LUNAR_SMITHING_TABLE, "Lunar Smithing Table");
+        this.block(GCBlocks.LUNAR_CHEESE_PRESS, "Lunar Cheese Press");
+        this.block(GCBlocks.LUNAR_HERBALIST_TABLE, "Lunar Herbalist Table");
+        this.block(GCBlocks.LUNAR_HOME_ANCHOR, "Lunar Home Anchor");
 
         // MISC WORLD GEN
         this.block(GCBlocks.CAVERNOUS_VINES, "Cavernous Vines");
@@ -391,6 +404,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.RAW_METEORIC_IRON, "Raw Meteoric Iron");
         this.item(GCItems.METEORIC_IRON_INGOT, "Meteoric Iron Ingot");
         this.item(GCItems.METEORIC_IRON_NUGGET, "Meteoric Iron Nugget");
+        this.add("item.galacticraft.moon_ruins_explorer_map", "Moon Ruins Explorer Map");
         this.item(GCItems.COMPRESSED_METEORIC_IRON, "Compressed Meteoric Iron");
 
         this.item(GCItems.OLIVINE_SHARD, "Olivine Shard");
@@ -557,6 +571,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.item(GCItems.SHIELD_CONTROLLER, "Shield Controller");
         this.item(GCItems.FREQUENCY_MODULE, "Frequency Module");
+        this.item(GCItems.VILLAGE_ACCESS_KEY, "Village Access Key");
 
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.THERMAL_PADDING_CHESTPIECE, "Thermal Padding Chestpiece");
@@ -609,6 +624,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(JukeboxSong.LEGACY_SPACERACE, "Jackson Cordes - Space Race");
 
         // SPAWN EGGS
+        this.item(GCItems.MOON_COW_SPAWN_EGG, "Moon Cow Spawn Egg");
+        this.item(GCItems.MOON_SHEEP_SPAWN_EGG, "Moon Sheep Spawn Egg");
+        this.item(GCItems.MOON_CHICKEN_SPAWN_EGG, "Moon Chicken Spawn Egg");
         this.item(GCItems.MOON_VILLAGER_SPAWN_EGG, "Moon Villager Spawn Egg");
         this.item(GCItems.EVOLVED_ZOMBIE_SPAWN_EGG, "Evolved Zombie Spawn Egg");
         this.item(GCItems.EVOLVED_CREEPER_SPAWN_EGG, "Evolved Creeper Spawn Egg");
@@ -642,6 +660,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.PARACHUTES, "Parachutes");
         this.tag(GCItemTags.FREQUENCY_MODULES, "Frequency Modules");
         this.tag(GCItemTags.SHIELD_CONTROLLERS, "Shield Controllers");
+        this.tag(GCItemTags.VILLAGE_ACCESS_KEYS, "Village Access Keys");
 
         this.tag(GCItemTags.ACID_RESISTANT, "Sulfuric Acid Resistant Items");
 
@@ -821,13 +840,28 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.GAZER, "Gazer");
         this.entity(GCEntityTypes.GREY, "Grey");
         this.entity(GCEntityTypes.LANDER, "Lander");
+        this.entity(GCEntityTypes.MOON_CHICKEN, "Moon Chicken");
+        this.entity(GCEntityTypes.MOON_COW, "Moon Cow");
+        this.entity(GCEntityTypes.MOON_GOLEM, "Moon Golem");
+        this.entity(GCEntityTypes.MOON_SHEEP, "Moon Sheep");
         this.entity(GCEntityTypes.MOON_VILLAGER, "Moon Villager");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".baby", "Baby Moon Villager");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_cartographer", "Moon Cartographer");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_engineer", "Moon Engineer");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_mechanic", "Moon Mechanic");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_cheese_maker", "Moon Cheese Maker");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_provisioner", "Moon Provisioner");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".lunar_botanist", "Moon Botanist");
+        this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".nitwit", "Moon Nitwit");
         this.add(GCEntityTypes.MOON_VILLAGER.getDescriptionId() + ".none", "Moon Villager");
         this.entity(GCEntityTypes.OLI_GRUB, "Oli Grub");
         this.entity(GCEntityTypes.PARACHEST, "Parachest");
         this.entity(GCEntityTypes.ROCKET, "Rocket");
         this.entity(GCEntityTypes.RUMBLER, "Rumbler");
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
+        this.add(Translations.Chat.MOON_VILLAGER_NO_FREQUENCY_MODULE, "You need a Frequency Module to understand Moon Villagers.");
+        this.add(Translations.Chat.METEORIC_DOOR_LOCKED, "This door requires a Village Access Key to open.");
+        this.add(Translations.Chat.VILLAGE_PROTECTION_ALERT, "The village golems have noticed your actions!");
     }
 
     protected void generateCelestialBodyTranslations() {

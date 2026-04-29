@@ -219,6 +219,7 @@ public class GCItems {
 
     public static final Item FREQUENCY_MODULE = ITEMS.register(Constant.Item.FREQUENCY_MODULE, new AccessoryItem(new Item.Properties()));
     public static final Item SHIELD_CONTROLLER = ITEMS.register(Constant.Item.SHIELD_CONTROLLER, new AccessoryItem(new Item.Properties()));
+    public static final Item VILLAGE_ACCESS_KEY = ITEMS.register(Constant.Item.VILLAGE_ACCESS_KEY, new AccessoryItem(new Item.Properties()));
 
     public static final ParachuteItem PARACHUTE = ITEMS.register(Constant.Item.PARACHUTE, new ParachuteItem(null, new Item.Properties().stacksTo(1)));
     public static final GCRegistry.ColorSet<ParachuteItem> DYED_PARACHUTES = ITEMS.registerColored(Constant.Item.PARACHUTE, color -> new ParachuteItem(color, new Item.Properties().stacksTo(1)));
@@ -292,6 +293,9 @@ public class GCItems {
     public static final CannedFoodItem CANNED_FOOD = ITEMS.register(Constant.Item.CANNED_FOOD, new CannedFoodItem(new Item.Properties().food(new FoodProperties.Builder().nutrition(0).saturationModifier(0).build()).stacksTo(1)));
 
     // SPAWN EGGS
+        public static final Item MOON_COW_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_COW, new SpawnEggItem(GCEntityTypes.MOON_COW, 0x6a625d, 0xd8d2c6, new Item.Properties()));
+        public static final Item MOON_SHEEP_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_SHEEP, new SpawnEggItem(GCEntityTypes.MOON_SHEEP, 0xf1eee6, 0xbec2c7, new Item.Properties()));
+        public static final Item MOON_CHICKEN_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_CHICKEN, new SpawnEggItem(GCEntityTypes.MOON_CHICKEN, 0xf3efe5, 0xd17630, new Item.Properties()));
     public static final Item MOON_VILLAGER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.MOON_VILLAGER, new SpawnEggItem(GCEntityTypes.MOON_VILLAGER, 0x74a3cf, 0xba2500, new Item.Properties()));
     public static final Item EVOLVED_ZOMBIE_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_ZOMBIE, new SpawnEggItem(GCEntityTypes.EVOLVED_ZOMBIE, 0x00afaf, 0x463aa5, new Item.Properties()));
     public static final Item EVOLVED_CREEPER_SPAWN_EGG = ITEMS.register(Constant.SpawnEgg.EVOLVED_CREEPER, new SpawnEggItem(GCEntityTypes.EVOLVED_CREEPER, 0x0da70b, 0xa8d0d9, new Item.Properties()));
@@ -318,6 +322,9 @@ public class GCItems {
         DispenserBlock.registerBehavior(CRUDE_OIL_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
         DispenserBlock.registerBehavior(SULFURIC_ACID_BUCKET, DispenserBlock.DISPENSER_REGISTRY.get(Items.WATER_BUCKET));
 
+        DispenserBlock.registerBehavior(MOON_COW_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(MOON_SHEEP_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
+        DispenserBlock.registerBehavior(MOON_CHICKEN_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(MOON_VILLAGER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(EVOLVED_ZOMBIE_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));
         DispenserBlock.registerBehavior(EVOLVED_CREEPER_SPAWN_EGG, DispenserBlock.DISPENSER_REGISTRY.get(Items.CREEPER_SPAWN_EGG));

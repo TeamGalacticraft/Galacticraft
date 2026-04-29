@@ -34,10 +34,30 @@ import net.fabricmc.fabric.api.object.builder.v1.entity.FabricDefaultAttributeRe
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.MobCategory;
+import net.minecraft.world.entity.SpawnPlacementTypes;
+import net.minecraft.world.entity.SpawnPlacements;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.Animal;
+import net.minecraft.world.level.levelgen.Heightmap;
 
 public class GCEntityTypes {
     public static final GCRegistry<EntityType<?>> ENTITIES = new GCRegistry<>(BuiltInRegistries.ENTITY_TYPE);
+    public static final EntityType<MoonCowEntity> MOON_COW = ENTITIES.register(Entity.MOON_COW, EntityType.Builder.of(MoonCowEntity::new, MobCategory.CREATURE)
+            .sized(0.9F, 1.4F)
+            .clientTrackingRange(10)
+            .build());
+    public static final EntityType<MoonSheepEntity> MOON_SHEEP = ENTITIES.register(Entity.MOON_SHEEP, EntityType.Builder.of(MoonSheepEntity::new, MobCategory.CREATURE)
+            .sized(0.9F, 1.3F)
+            .clientTrackingRange(10)
+            .build());
+    public static final EntityType<MoonChickenEntity> MOON_CHICKEN = ENTITIES.register(Entity.MOON_CHICKEN, EntityType.Builder.of(MoonChickenEntity::new, MobCategory.CREATURE)
+            .sized(0.4F, 0.7F)
+            .clientTrackingRange(10)
+            .build());
+    public static final EntityType<MoonGolemEntity> MOON_GOLEM = ENTITIES.register(Entity.MOON_GOLEM, EntityType.Builder.of(MoonGolemEntity::new, MobCategory.MISC)
+            .sized(1.4F, 2.7F)
+            .clientTrackingRange(10)
+            .build());
     public static final EntityType<MoonVillagerEntity> MOON_VILLAGER = ENTITIES.register(Entity.MOON_VILLAGER, EntityType.Builder.of(MoonVillagerEntity::new, MobCategory.MISC)
             .sized(0.6F, 2.5F)
             .eyeHeight(1.72F)
@@ -179,6 +199,10 @@ public class GCEntityTypes {
             .build());
 
     public static void register() {
+                FabricDefaultAttributeRegistry.register(MOON_COW, MoonCowEntity.createAttributes());
+                FabricDefaultAttributeRegistry.register(MOON_SHEEP, MoonSheepEntity.createAttributes());
+                FabricDefaultAttributeRegistry.register(MOON_CHICKEN, MoonChickenEntity.createAttributes());
+        FabricDefaultAttributeRegistry.register(MOON_GOLEM, MoonGolemEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(MOON_VILLAGER, MoonVillagerEntity.createMobAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_ZOMBIE, EvolvedZombieEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MOVEMENT_SPEED, 0.35D).add(Attributes.MAX_HEALTH, 25.0D));
         FabricDefaultAttributeRegistry.register(EVOLVED_CREEPER, EvolvedCreeperEntity.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D).add(Attributes.MAX_HEALTH, 25.0D));
@@ -196,5 +220,9 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(GREY, GreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
+
+                SpawnPlacements.register(MOON_COW, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+                SpawnPlacements.register(MOON_SHEEP, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
+                SpawnPlacements.register(MOON_CHICKEN, SpawnPlacementTypes.ON_GROUND, Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, Animal::checkAnimalSpawnRules);
     }
 }

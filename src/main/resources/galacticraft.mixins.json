@@ -28,8 +28,10 @@
     "MapItemMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
+    "NoiseBasedChunkGeneratorMixin",
     "PlayerMixin",
     "ServerLevelMixin",
+    "WalkNodeEvaluatorMixin",
     "ServerPlayerMixin",
     "SpiderMixin"
   ],

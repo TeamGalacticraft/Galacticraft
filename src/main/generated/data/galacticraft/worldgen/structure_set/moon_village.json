@@ -1,0 +1,14 @@
+{
+  "placement": {
+    "type": "minecraft:random_spread",
+    "salt": 10387312,
+    "separation": 20,
+    "spacing": 24
+  },
+  "structures": [
+    {
+      "structure": "galacticraft:moon_village",
+      "weight": 1
+    }
+  ]
+}
