@@ -41,7 +41,9 @@ public class GCEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProv
     @Override
     protected void addTags(HolderLookup.Provider arg) {
         this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_FOOTPRINTS)
-                .add(EntityType.PLAYER);
+                .add(EntityType.PLAYER)
+                .add(EntityType.WOLF)
+                .add(EntityType.CAT);
 
         this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_OXYGEN_SETUP)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE)
