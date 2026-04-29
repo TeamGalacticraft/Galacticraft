@@ -20,27 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.network;
+package dev.galacticraft.mod.client.gui.widget;
 
-import dev.galacticraft.impl.network.s2c.*;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.client.gui.components.AbstractSliderButton;
+import net.minecraft.network.chat.Component;
 
-/**
- * Handles client-bound (S2C) packets.
- */
-public class GCApiClientPacketReceivers {
-    public static void register() {
-        registerPacket(AddSatellitePayload.TYPE);
-        registerPacket(GearInvPayload.TYPE);
-        registerPacket(OxygenUpdatePayload.TYPE);
-        registerPacket(RemoveSatellitePayload.TYPE);
-        registerPacket(ResearchUpdatePayload.TYPE);
-        registerPacket(SpaceRaceStatsPayload.TYPE);
-        registerPacket(UpdateSatellitePayload.TYPE);
+import java.util.function.Consumer;
+
+public class ColorSlider extends AbstractSliderButton {
+    private final Consumer<Integer> consumer;
+    private final Component colorName;
+
+    public ColorSlider(int x, int y, int width, int height, Component colorName, int value, Consumer<Integer> consumer) {
+        super(x, y, width, height, Component.translatable("options.percent_value", colorName, (int) (value / 255.0 * 100.0)), value / 255.0);
+        this.consumer = consumer;
+        this.colorName = colorName;
     }
 
-    public static <P extends S2CPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.client().execute(payload.handle(context)));
+    @Override
+    protected void updateMessage() {
+        this.setMessage(Component.translatable("options.percent_value", this.colorName, (int) (this.value * 100.0)));
+    }
+
+    @Override
+    protected void applyValue() {
+        this.consumer.accept((int) (this.value * 255.0));
     }
 }
