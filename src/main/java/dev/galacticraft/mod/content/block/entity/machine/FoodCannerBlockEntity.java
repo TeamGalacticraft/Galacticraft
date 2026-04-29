@@ -35,7 +35,10 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -133,6 +136,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     public FoodCannerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FOOD_CANNER, pos, state, SPEC);
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new MachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager));
     }
 
     @Override

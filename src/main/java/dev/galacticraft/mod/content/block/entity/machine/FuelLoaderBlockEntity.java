@@ -38,9 +38,12 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.entity.Dockable;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
@@ -117,6 +120,8 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
         Direction.stream().forEach(direction -> this.check.add(direction));
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new MachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager));
     }
 
     @NotNull
@@ -186,6 +191,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             return GCMachineStatuses.FUEL_TANK_FULL;
         }
     }
+
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {

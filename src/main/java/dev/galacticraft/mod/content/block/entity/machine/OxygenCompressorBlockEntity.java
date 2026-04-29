@@ -38,7 +38,10 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.MachineSoundInstance;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.util.FluidUtil;
@@ -90,6 +93,8 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
 
     public OxygenCompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_COMPRESSOR, pos, state, SPEC);
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new MachineSoundInstance(this,GCSounds.MACHINE_BUZZ,soundManager));
     }
 
     @Override
