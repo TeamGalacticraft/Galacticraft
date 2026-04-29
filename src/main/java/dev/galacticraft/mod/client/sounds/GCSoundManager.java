@@ -23,12 +23,17 @@
 package dev.galacticraft.mod.client.sounds;
 
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
-
+import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+
+import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 
 public class GCSoundManager implements SoundCallback {
 
@@ -86,5 +91,12 @@ public class GCSoundManager implements SoundCallback {
         }
 
         return Optional.empty();
+    }
+
+    public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldstatus) {
+        BlockEntity entity = minecraft.level.getBlockEntity(pos);
+        if (entity instanceof MachineBlockEntity) {
+
+        }
     }
 }
