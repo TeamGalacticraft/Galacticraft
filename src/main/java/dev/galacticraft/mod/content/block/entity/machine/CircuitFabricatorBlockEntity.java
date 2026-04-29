@@ -115,7 +115,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
-        
+
     }
 
     @Override
@@ -125,10 +125,10 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager));
         soundManager.play(new ActiveMachineSound(this,GCSounds.MACHINE_HUM,soundManager));
     }
-    
+
     public void workingSounds(MachineStatus status) {
         RandomSource randomSource=RandomSource.create();
-        if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) { 
+        if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) {
             level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
         }
     }

@@ -59,7 +59,7 @@ public class GCSoundManager implements SoundCallback {
 
     // Plays a sound instance, if it doesn't already exist in the list
     public <T extends GCSound> void play(T soundInstance) {
-	    if (this.activeSounds.contains(soundInstance)) return;
+        if (this.activeSounds.contains(soundInstance)) return;
 
         if (soundInstance.entity.getLevel().isClientSide) {
             client.getSoundManager().play(soundInstance);
