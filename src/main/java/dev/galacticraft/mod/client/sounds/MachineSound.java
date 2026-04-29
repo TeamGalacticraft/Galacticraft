@@ -34,8 +34,8 @@ public abstract class MachineSound extends GCSound {
     GCSound newsound;
     MachineStatus status;
 
-    public MachineSound(MachineBlockEntity machine, SoundEvent event, SoundCallback callback) {
-        super(machine, event, SoundSource.BLOCKS, callback);
+    public MachineSound(MachineBlockEntity machine, SoundEvent event, SoundCallback callback, float maxVolume) {
+        super(machine, event, SoundSource.BLOCKS, callback, maxVolume);
         this.machine = machine;
     }
 
@@ -43,7 +43,7 @@ public abstract class MachineSound extends GCSound {
     public void tick() {
 
         if (this.entity instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
-            this.end();
+            this.callback.onFinished(this);
         }
         super.tick();
         if (this.getStatus() != null) {

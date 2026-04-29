@@ -26,13 +26,18 @@ import net.minecraft.client.resources.sounds.AbstractTickableSoundInstance;
 import net.minecraft.client.resources.sounds.SoundInstance;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 public abstract class GCSound extends AbstractTickableSoundInstance {
     protected final BlockEntity entity;
     protected final SoundCallback callback;
+    protected TransitionState transitionState;
+    protected final int startTransitionTicks, endTransitionTicks;
+    protected int transitionTick = 0;
+    protected final float maxVolume;
 
-    public GCSound(BlockEntity entity, SoundEvent event, SoundSource source, SoundCallback callback) {
+    public GCSound(BlockEntity entity, SoundEvent event, SoundSource source, SoundCallback callback, float maxVolume) {
         super(event, source, SoundInstance.createUnseededRandom());
         // references to other objects
         this.entity = entity;
@@ -44,16 +49,42 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
         this.volume = 0.0F; // will still work if canStartSilent() == true
         this.pitch = 1.0F;
         this.setPosition();
+        this.transitionState = TransitionState.STARTING;
+        // constants
+        this.startTransitionTicks = 30;
+        this.endTransitionTicks = 20;
+        this.maxVolume = maxVolume;
     }
 
 
     @Override
     public void tick() {
         if (this.entity == null) {
-            this.end();
+            this.callback.onFinished(this);
         }
 
-    }
+        switch (this.transitionState) {
+            case STARTING:
+                this.transitionTick++;
+                if (this.transitionTick > this.startTransitionTicks) {
+                    this.transitionTick = 0;
+                    this.transitionState = TransitionState.RUNNING;
+                }
+                break;
+            case ENDING:
+                this.transitionTick++;
+                if (this.transitionTick > this.endTransitionTicks) {
+                    this.transitionTick = 0;
+                    this.transitionState = TransitionState.ENDED;
+                }
+                break;
+            default:
+                break;
+            }
+
+        }
+
+    
 
     protected void setPosition() {
         this.x = entity.getBlockPos().getX();
@@ -62,11 +93,28 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
     }
 
     public void end() {
-        this.callback.onFinished(this);
+        this.transitionState = TransitionState.ENDING;
+    }
+    
+    public void start() {
+        this.transitionState = TransitionState.STARTING;
     }
 
     @Override
     public boolean canStartSilent() {
         return true;
+    }
+
+    protected void transitionSound() {
+        float normTick = switch (transitionState) {
+            case STARTING -> (float) this.transitionTick/this.startTransitionTicks;
+            case ENDING -> 1.0F-((float) this.transitionTick/this.endTransitionTicks);
+            default -> 1.0F;
+        };
+        this.volume = Mth.lerp(normTick,0.0F,this.maxVolume);
+    }
+
+    public void stableState() {
+
     }
 }

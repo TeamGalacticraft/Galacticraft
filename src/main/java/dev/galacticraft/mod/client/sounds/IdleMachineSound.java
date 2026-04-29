@@ -29,7 +29,7 @@ import net.minecraft.sounds.SoundEvent;
 public class IdleMachineSound extends MachineSound {
 
     public IdleMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
-        super(machine, GCSounds.MACHINE_BUZZ, callback);
+        super(machine, GCSounds.MACHINE_BUZZ, callback,0.2F);
     }
 
     @Override
@@ -37,7 +37,7 @@ public class IdleMachineSound extends MachineSound {
         super.tick();
         switch(this.status.getType()) {
             case MISSING_ENERGY:
-                volume=0.0F;
+                volume = 0.0F;
                 break;
             case WORKING:
                 volume = 0.0F;
