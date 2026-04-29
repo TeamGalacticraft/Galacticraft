@@ -1,0 +1,27 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "equipment",
+  "key": {
+    "C": {
+      "item": "galacticraft:tin_canister"
+    },
+    "G": {
+      "item": "minecraft:glass"
+    },
+    "S": {
+      "item": "galacticraft:compressed_steel"
+    },
+    "T": {
+      "item": "galacticraft:compressed_tin"
+    }
+  },
+  "pattern": [
+    "TST",
+    "TGT",
+    "TCT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:fluid_canister"
+  }
+}
