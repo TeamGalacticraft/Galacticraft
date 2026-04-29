@@ -117,6 +117,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
         Direction.stream().forEach(direction -> this.check.add(direction));
+
     }
 
     @NotNull
@@ -186,6 +187,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
             return GCMachineStatuses.FUEL_TANK_FULL;
         }
     }
+
 
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {

@@ -83,7 +83,9 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, OUTPUT_SLOT);
+
     }
+
 
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {

@@ -92,6 +92,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
         super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
     }
 
+
     @Override
     protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);

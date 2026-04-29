@@ -38,7 +38,11 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.client.sounds.ActiveMachineSound;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
+import dev.galacticraft.mod.client.sounds.IdleMachineSound;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -46,6 +50,8 @@ import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -53,6 +59,7 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -108,6 +115,22 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
+
+    }
+
+    @Override
+    public void setLevel(Level level) {
+        super.setLevel(level);
+        GCSoundManager soundManager = GCSoundManager.getInstance();
+        soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager));
+        soundManager.play(new ActiveMachineSound(this,GCSounds.MACHINE_HUM,soundManager));
+    }
+
+    public void workingSounds(MachineStatus status) {
+        RandomSource randomSource=RandomSource.create();
+        if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) {
+            level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
+        }
     }
 
     @Override
@@ -115,7 +138,14 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
-        profiler.pop();
+    }
+
+    @Override
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        MachineStatus status = super.tick(level, pos, state, profiler);
+        System.out.println(status);
+        workingSounds(status);
+        return status;
     }
 
     @Override
@@ -208,4 +238,5 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                 this
         );
     }
+
 }
