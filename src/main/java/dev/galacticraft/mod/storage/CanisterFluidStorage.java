@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.storage;
 
 import dev.galacticraft.api.fluid.FluidData;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
@@ -73,5 +74,14 @@ public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant>
         }
 
         return ItemVariant.of(stack);
+    }
+
+    @Override
+    protected boolean canInsert(FluidVariant resource) {
+        if (resource.getFluid().is(GCFluidTags.FLUID_CANISTER_EXCLUDED)) {
+            return false;
+        }
+
+        return super.canInsert(resource);
     }
 }
