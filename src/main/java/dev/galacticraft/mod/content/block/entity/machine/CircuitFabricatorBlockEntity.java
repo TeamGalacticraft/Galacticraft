@@ -51,6 +51,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -117,7 +118,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         
     }
 
-
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
@@ -126,6 +126,14 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         soundManager.play(new ActiveMachineSound(this,GCSounds.MACHINE_HUM,soundManager));
     }
     
+    public void workingSounds(MachineStatus status) {
+        RecipeHolder<FabricationRecipe> recipe = this.getActiveRecipe();
+        RandomSource randomSource=RandomSource.create();
+        if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) { 
+            level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
+        }
+    }
+
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
@@ -135,15 +143,12 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        RecipeHolder<FabricationRecipe> recipe = this.getActiveRecipe();
-        if (recipe != null && this.getState().isActive()) {
-            int maxProgress = this.getProcessingTime(recipe);
-            if (this.getProgress() % (maxProgress / 5) == 0 && this.getProgress() > maxProgress / 2) {
-                level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
-            }
-        }
-        return super.tick(level, pos, state, profiler);
+        MachineStatus status = super.tick(level, pos, state, profiler);
+        System.out.println(status);
+        workingSounds(status);
+        return status;
     }
+
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
         return this.energyStorage().canExtract(Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
