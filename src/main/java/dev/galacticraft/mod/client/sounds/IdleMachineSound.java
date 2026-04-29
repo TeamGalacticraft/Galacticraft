@@ -46,7 +46,7 @@ public class IdleMachineSound extends MachineSound {
                 volume = 0.0F;
                 break;
             default:
-                volume = 1.0F;
+                volume = 0.2F;
                 break;
         }
     }
