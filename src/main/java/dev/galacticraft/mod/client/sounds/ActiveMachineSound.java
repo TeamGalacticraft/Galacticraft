@@ -28,9 +28,23 @@ import net.minecraft.sounds.SoundEvent;
 public class ActiveMachineSound extends MachineSound {
 
     public ActiveMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
-        super(machine, activeSound, callback, activeSound);
+        super(machine, activeSound, callback);
     }
 
-
+    @Override
+    public void tick() {
+        super.tick();
+        switch(this.status.getType()) {
+            case WORKING:
+                volume = 1.0F;
+                break;
+            case PARTIALLY_WORKING:
+                volume = 1.0F;
+                break;
+            default:
+                volume = 0.0F;
+                break;
+        }
+    }
 
 }

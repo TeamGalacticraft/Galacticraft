@@ -93,10 +93,6 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
 
     public ElectricArcFurnaceBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.ELECTRIC_ARC_FURNACE, pos, state, RecipeType.BLASTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOTS, OUTPUT_LENGTH);
-
-        GCSoundManager soundManager = GCSoundManager.getInstance();
-        soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager),this);
-
     }
 
     @Override

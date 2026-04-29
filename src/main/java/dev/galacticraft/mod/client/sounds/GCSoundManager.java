@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.client.sounds;
 
 import net.minecraft.client.Minecraft;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.entity.BlockEntity;
+
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,21 +53,19 @@ public class GCSoundManager implements SoundCallback {
     }
 
     @Override
-    public <T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound, BlockEntity entity) {
-        this.play(newSound, entity);
-        this.onFinished(oldSound);
-
+    public <T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound) {
+        this.play(newSound);
     }
 
     // Plays a sound instance, if it doesn't already exist in the list
-    public <T extends GCSound> void play(T soundInstance, BlockEntity entity) {
+    public <T extends GCSound> void play(T soundInstance) {
 	    if (this.activeSounds.contains(soundInstance)) return;
-        // TODO: override setlevel
         
-	    client.getSoundManager().play(soundInstance);
-	    this.activeSounds.add(soundInstance);
-        System.out.println(this.activeSounds.size());
-        System.out.println(this.activeSounds);
+        if (soundInstance.entity.getLevel().isClientSide) {
+            client.getSoundManager().play(soundInstance);
+            this.activeSounds.add(soundInstance);
+        }
+
     }
 
     // Stops a sound immediately. in most cases it is preferred to use

@@ -50,7 +50,7 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
     @Override
     public void tick() {
         if (this.entity == null) {
-            this.callback.onFinished(this);
+            this.end();
         }
 
     }
