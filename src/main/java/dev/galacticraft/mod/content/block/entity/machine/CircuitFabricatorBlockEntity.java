@@ -111,7 +111,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     public CircuitFabricatorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
-
     }
 
     public void workingSounds(MachineStatus status) {

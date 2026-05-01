@@ -24,5 +24,4 @@ package dev.galacticraft.mod.client.sounds;
 
 public enum TransitionState {
     STARTING, RUNNING, ENDING
-
 }

@@ -26,7 +26,6 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import net.minecraft.sounds.SoundEvent;
 
 public class ActiveMachineSound extends MachineSound {
-
     public ActiveMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
         super(machine, activeSound, callback, 1.0F);
     }

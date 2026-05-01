@@ -42,9 +42,7 @@ public class GCSoundManager implements SoundCallback {
     private static GCSoundManager instance;
     private final List<GCSound> activeSounds = new ArrayList<>();
 
-    private GCSoundManager() {
-
-    }
+    private GCSoundManager() {}
 
     public static GCSoundManager getInstance() {
         if (instance == null) {
@@ -63,12 +61,10 @@ public class GCSoundManager implements SoundCallback {
     public <T extends GCSound> void play(T soundInstance) {
         if (this.activeSounds.contains(soundInstance)) return;
         BlockEntity entity = soundInstance.entity;
-
         if (entity.getLevel().isClientSide) {
             client.getSoundManager().play(soundInstance);
             this.activeSounds.add(soundInstance);
         }
-
     }
 
     // Stops a sound immediately. in most cases it is preferred to use
@@ -86,7 +82,6 @@ public class GCSoundManager implements SoundCallback {
                 return Optional.of(activeSound);
             }
         }
-
         return Optional.empty();
     }
 
@@ -133,8 +128,6 @@ public class GCSoundManager implements SoundCallback {
                 break;
             default:
                 break;
-
         }
-
     }
 }

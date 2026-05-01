@@ -26,7 +26,6 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
-
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
