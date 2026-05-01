@@ -117,7 +117,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
 
     }
-
+/* 
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
@@ -125,7 +125,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         soundManager.play(new IdleMachineSound(this,GCSounds.MACHINE_BUZZ,soundManager));
         soundManager.play(new ActiveMachineSound(this,GCSounds.MACHINE_HUM,soundManager));
     }
-
+*/
     public void workingSounds(MachineStatus status) {
         RandomSource randomSource=RandomSource.create();
         if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) {
@@ -143,7 +143,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         MachineStatus status = super.tick(level, pos, state, profiler);
-        System.out.println(status);
         workingSounds(status);
         return status;
     }

@@ -46,12 +46,12 @@ public abstract class MachineSound extends GCSound {
             this.callback.onFinished(this);
         }
         super.tick();
-        if (this.getStatus() != null) {
+/*         if (this.getStatus() != null) {
             this.status = this.getStatus();
         } else {
             this.status = MachineStatuses.NOT_ENOUGH_ENERGY;
         }
-
+ */
     }
 
     public MachineStatus getStatus() {

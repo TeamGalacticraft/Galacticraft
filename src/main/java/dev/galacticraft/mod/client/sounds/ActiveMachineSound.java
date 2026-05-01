@@ -31,7 +31,7 @@ public class ActiveMachineSound extends MachineSound {
         super(machine, activeSound, callback, 1.0F);
     }
 
-    @Override
+/*     @Override
     public void tick() {
         super.tick();
         switch(this.status.getType()) {
@@ -45,6 +45,6 @@ public class ActiveMachineSound extends MachineSound {
                 volume = 0.0F;
                 break;
         }
-    }
+    } */
 
 }

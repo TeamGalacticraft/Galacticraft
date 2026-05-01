@@ -32,7 +32,7 @@ public class IdleMachineSound extends MachineSound {
         super(machine, GCSounds.MACHINE_BUZZ, callback,0.2F);
     }
 
-    @Override
+/*     @Override
     public void tick() {
         super.tick();
         switch(this.status.getType()) {
@@ -49,6 +49,6 @@ public class IdleMachineSound extends MachineSound {
                 volume = 0.2F;
                 break;
         }
-    }
+    } */
 
 }

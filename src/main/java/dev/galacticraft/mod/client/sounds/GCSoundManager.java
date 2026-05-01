@@ -29,11 +29,16 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Objects;
 import java.util.Optional;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 
 public class GCSoundManager implements SoundCallback {
 
@@ -52,6 +57,7 @@ public class GCSoundManager implements SoundCallback {
         return instance;
     }
 
+    // for removing the sound but not the entity
     @Override
     public <T extends GCSound> void onFinished(T soundInstance) {
         this.stop(soundInstance);
@@ -59,14 +65,15 @@ public class GCSoundManager implements SoundCallback {
 
     @Override
     public <T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound) {
+        this.onFinished(oldSound);
         this.play(newSound);
     }
-
     // Plays a sound instance, if it doesn't already exist in the list
     public <T extends GCSound> void play(T soundInstance) {
         if (this.activeSounds.contains(soundInstance)) return;
+        BlockEntity entity = soundInstance.entity;
 
-        if (soundInstance.entity.getLevel().isClientSide) {
+        if (entity.getLevel().isClientSide) {
             client.getSoundManager().play(soundInstance);
             this.activeSounds.add(soundInstance);
         }
@@ -93,10 +100,56 @@ public class GCSoundManager implements SoundCallback {
         return Optional.empty();
     }
 
-    public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldstatus) {
-        BlockEntity entity = minecraft.level.getBlockEntity(pos);
-        if (entity instanceof MachineBlockEntity) {
-
+    public Optional<GCSound> getSoundFromEntity(BlockEntity entity, MachineStatus status) {
+        for (var activeSound : this.activeSounds) {
+            if (activeSound.entity == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(status),activeSound.event)) {
+                return Optional.of(activeSound);
+            }
         }
+        return Optional.empty();
+    }
+
+    public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldStatus) {
+        System.out.println("status changed!");
+        MachineBlockEntity machine = (MachineBlockEntity) minecraft.level.getBlockEntity(pos);
+        GCSoundManager manager = GCSoundManager.getInstance();
+        // Stop old sound (if there is one)
+        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound->{manager.onFinished(oldSound);});
+        // Play new sound (if there is one)
+        System.out.println(oldStatus);
+        System.out.println(status);
+        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(status);
+        System.out.println(newSound);
+        switch (status.getType()) {
+            case MISSING_ENERGY:
+                break;
+            case MISSING_FLUIDS:
+                manager.play(new IdleMachineSound(machine,newSound, manager));
+                break;
+            case MISSING_ITEMS:
+                manager.play(new IdleMachineSound(machine,newSound, manager));
+                System.out.println(manager.activeSounds);
+                System.out.println("missing items");
+                break;
+            case MISSING_RESOURCE:
+                manager.play(new IdleMachineSound(machine,newSound, manager));
+                break;
+            case OTHER:
+                manager.play(new IdleMachineSound(machine,newSound, manager));
+                break;
+            case OUTPUT_FULL:
+                manager.play(new IdleMachineSound(machine,newSound, manager));
+                break;
+            case PARTIALLY_WORKING:
+                manager.play(new ActiveMachineSound(machine,newSound, manager));
+                break;
+            case WORKING:
+                manager.play(new ActiveMachineSound(machine,newSound, manager));
+                break;
+            default:
+                break;
+            
+        }
+ 
     }
 }

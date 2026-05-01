@@ -36,17 +36,19 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
     protected final int startTransitionTicks, endTransitionTicks;
     protected int transitionTick = 0;
     protected final float maxVolume;
+    protected final SoundEvent event;
 
     public GCSound(BlockEntity entity, SoundEvent event, SoundSource source, SoundCallback callback, float maxVolume) {
         super(event, source, SoundInstance.createUnseededRandom());
         // references to other objects
         this.entity = entity;
         this.callback = callback;
+        this.event = event;
         // important behavior
         this.looping = true;
         this.delay = 0;
         // starting values
-        this.volume = 0.0F; // will still work if canStartSilent() == true
+        this.volume = maxVolume; // will still work if canStartSilent() == true
         this.pitch = 1.0F;
         this.setPosition();
         this.transitionState = TransitionState.STARTING;
@@ -114,7 +116,4 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
         this.volume = Mth.lerp(normTick,0.0F,this.maxVolume);
     }
 
-    public void stableState() {
-
-    }
 }
