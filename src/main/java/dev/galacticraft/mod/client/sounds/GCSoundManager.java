@@ -29,16 +29,12 @@ import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.Optional;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 
 public class GCSoundManager implements SoundCallback {
 
@@ -85,7 +81,6 @@ public class GCSoundManager implements SoundCallback {
     public <T extends GCSound> void stop(T soundInstance) {
         client.getSoundManager().stop(soundInstance);
         this.activeSounds.remove(soundInstance);
-        System.out.println(this.activeSounds.size());
     }
 
     // Finds a SoundInstance from a SoundEvent, if it exists and is currently playing
@@ -110,16 +105,13 @@ public class GCSoundManager implements SoundCallback {
     }
 
     public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldStatus) {
-        System.out.println("status changed!");
         MachineBlockEntity machine = (MachineBlockEntity) minecraft.level.getBlockEntity(pos);
         GCSoundManager manager = GCSoundManager.getInstance();
+        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(status);
+
         // Stop old sound (if there is one)
         manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound->{oldSound.end();});
         // Play new sound (if there is one)
-        System.out.println(oldStatus);
-        System.out.println(status);
-        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(status);
-        System.out.println(newSound);
         switch (status.getType()) {
             case MISSING_ENERGY:
                 break;

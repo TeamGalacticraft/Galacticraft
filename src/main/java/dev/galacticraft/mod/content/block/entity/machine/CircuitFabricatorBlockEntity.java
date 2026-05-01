@@ -38,9 +38,6 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.client.sounds.ActiveMachineSound;
-import dev.galacticraft.mod.client.sounds.GCSoundManager;
-import dev.galacticraft.mod.client.sounds.IdleMachineSound;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
@@ -59,7 +56,6 @@ import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -117,7 +113,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
 
     }
-    
+
     public void workingSounds(MachineStatus status) {
         RandomSource randomSource=RandomSource.create();
         if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) {
