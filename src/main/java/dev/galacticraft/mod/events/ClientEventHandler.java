@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.machinelib.client.api.event.MachineStatusEvents;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
@@ -38,6 +37,7 @@ import dev.galacticraft.mod.client.sounds.GCSoundManager;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.machinelib.client.api.event.MachineStatusEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientTickEvents;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientWorldEvents;
 import net.fabricmc.fabric.api.client.rendering.v1.DimensionRenderingRegistry;
@@ -90,5 +90,4 @@ public class ClientEventHandler {
             footprintManager.tick(level, packedPos);
         });
     }
-
 }

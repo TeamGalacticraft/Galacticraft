@@ -226,5 +226,4 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                 this
         );
     }
-
 }
