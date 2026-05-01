@@ -48,7 +48,7 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
         this.looping = true;
         this.delay = 0;
         // starting values
-        this.volume = maxVolume; // will still work if canStartSilent() == true
+        this.volume = 0.0F; // will still work if canStartSilent() == true
         this.pitch = 1.0F;
         this.setPosition();
         this.transitionState = TransitionState.STARTING;
@@ -76,8 +76,7 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
             case ENDING:
                 this.transitionTick++;
                 if (this.transitionTick > this.endTransitionTicks) {
-                    this.transitionTick = 0;
-                    this.transitionState = TransitionState.ENDED;
+                    this.callback.onFinished(this);
                 }
                 break;
             default:
@@ -85,8 +84,6 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
             }
 
         }
-
-    
 
     protected void setPosition() {
         this.x = entity.getBlockPos().getX();
@@ -96,10 +93,6 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
 
     public void end() {
         this.transitionState = TransitionState.ENDING;
-    }
-    
-    public void start() {
-        this.transitionState = TransitionState.STARTING;
     }
 
     @Override

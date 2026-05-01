@@ -43,15 +43,10 @@ public abstract class MachineSound extends GCSound {
     public void tick() {
 
         if (this.entity instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
-            this.callback.onFinished(this);
+            this.end();
         }
         super.tick();
-/*         if (this.getStatus() != null) {
-            this.status = this.getStatus();
-        } else {
-            this.status = MachineStatuses.NOT_ENOUGH_ENERGY;
-        }
- */
+        this.transitionSound();
     }
 
     public MachineStatus getStatus() {

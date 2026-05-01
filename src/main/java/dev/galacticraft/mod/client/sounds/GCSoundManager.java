@@ -114,7 +114,7 @@ public class GCSoundManager implements SoundCallback {
         MachineBlockEntity machine = (MachineBlockEntity) minecraft.level.getBlockEntity(pos);
         GCSoundManager manager = GCSoundManager.getInstance();
         // Stop old sound (if there is one)
-        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound->{manager.onFinished(oldSound);});
+        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound->{oldSound.end();});
         // Play new sound (if there is one)
         System.out.println(oldStatus);
         System.out.println(status);
@@ -128,8 +128,6 @@ public class GCSoundManager implements SoundCallback {
                 break;
             case MISSING_ITEMS:
                 manager.play(new IdleMachineSound(machine,newSound, manager));
-                System.out.println(manager.activeSounds);
-                System.out.println("missing items");
                 break;
             case MISSING_RESOURCE:
                 manager.play(new IdleMachineSound(machine,newSound, manager));

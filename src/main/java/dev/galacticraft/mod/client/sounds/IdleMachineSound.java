@@ -31,24 +31,4 @@ public class IdleMachineSound extends MachineSound {
     public IdleMachineSound(MachineBlockEntity machine, SoundEvent activeSound, SoundCallback callback) {
         super(machine, GCSounds.MACHINE_BUZZ, callback,0.2F);
     }
-
-/*     @Override
-    public void tick() {
-        super.tick();
-        switch(this.status.getType()) {
-            case MISSING_ENERGY:
-                volume = 0.0F;
-                break;
-            case WORKING:
-                volume = 0.0F;
-                break;
-            case PARTIALLY_WORKING:
-                volume = 0.0F;
-                break;
-            default:
-                volume = 0.2F;
-                break;
-        }
-    } */
-
 }
