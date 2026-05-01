@@ -133,7 +133,6 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
 
     public FoodCannerBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FOOD_CANNER, pos, state, SPEC);
-
     }
 
     @Override

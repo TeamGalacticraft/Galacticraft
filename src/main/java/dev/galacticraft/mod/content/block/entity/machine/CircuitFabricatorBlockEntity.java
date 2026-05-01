@@ -126,6 +126,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
+        profiler.pop();
     }
 
     @Override

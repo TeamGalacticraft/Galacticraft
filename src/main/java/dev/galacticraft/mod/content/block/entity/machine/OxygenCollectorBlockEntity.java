@@ -88,7 +88,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
 
     public OxygenCollectorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_COLLECTOR, pos, state, SPEC);
-
     }
 
     @Override

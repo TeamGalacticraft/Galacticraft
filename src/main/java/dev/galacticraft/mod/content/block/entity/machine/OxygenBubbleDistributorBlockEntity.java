@@ -104,7 +104,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
     public OxygenBubbleDistributorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, pos, state, SPEC);
-
     }
 
     @Override
@@ -112,7 +111,6 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         super.setLevel(level);
         this.oxygenWorld = level.getDefaultBreathable();
     }
-
 
     @Override
     protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
