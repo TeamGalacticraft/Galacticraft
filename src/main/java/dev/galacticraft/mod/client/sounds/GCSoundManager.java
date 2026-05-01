@@ -59,11 +59,6 @@ public class GCSoundManager implements SoundCallback {
         this.stop(soundInstance);
     }
 
-    @Override
-    public <T extends GCSound, U extends GCSound> void onSwapped(T oldSound, U newSound) {
-        this.onFinished(oldSound);
-        this.play(newSound);
-    }
     // Plays a sound instance, if it doesn't already exist in the list
     public <T extends GCSound> void play(T soundInstance) {
         if (this.activeSounds.contains(soundInstance)) return;
@@ -138,8 +133,8 @@ public class GCSoundManager implements SoundCallback {
                 break;
             default:
                 break;
-            
+
         }
- 
+
     }
 }

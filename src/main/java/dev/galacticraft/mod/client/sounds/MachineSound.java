@@ -40,16 +40,14 @@ public abstract class MachineSound extends GCSound {
 
     @Override
     public void tick() {
-
         if (this.entity instanceof MachineBlockEntity blockEntity && blockEntity.isRemoved()) {
             this.end();
         }
         super.tick();
-        this.transitionSound();
+        this.modulateSoundforTransition();
     }
 
     public MachineStatus getStatus() {
         return this.machine.getState().getStatus();
     }
-
 }

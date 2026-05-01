@@ -42,29 +42,26 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
         super(event, source, SoundInstance.createUnseededRandom());
         // references to other objects
         this.entity = entity;
-        this.callback = callback;
         this.event = event;
-        // important behavior
+        this.callback = callback;
+        // important constants
+        this.maxVolume = maxVolume;
         this.looping = true;
         this.delay = 0;
+        this.startTransitionTicks = 30;
+        this.endTransitionTicks = 20;
         // starting values
         this.volume = 0.0F; // will still work if canStartSilent() == true
         this.pitch = 1.0F;
         this.setPosition();
         this.transitionState = TransitionState.STARTING;
-        // constants
-        this.startTransitionTicks = 30;
-        this.endTransitionTicks = 20;
-        this.maxVolume = maxVolume;
     }
-
 
     @Override
     public void tick() {
         if (this.entity == null) {
             this.callback.onFinished(this);
         }
-
         switch (this.transitionState) {
             case STARTING:
                 this.transitionTick++;
@@ -79,10 +76,9 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
                     this.callback.onFinished(this);
                 }
                 break;
-            default:
+            case RUNNING:
                 break;
             }
-
         }
 
     protected void setPosition() {
@@ -100,13 +96,12 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
         return true;
     }
 
-    protected void transitionSound() {
+    protected void modulateSoundforTransition() {
         float normTick = switch (transitionState) {
             case STARTING -> (float) this.transitionTick/this.startTransitionTicks;
             case ENDING -> 1.0F-((float) this.transitionTick/this.endTransitionTicks);
-            default -> 1.0F;
+            case RUNNING -> 1.0F;
         };
         this.volume = Mth.lerp(normTick,0.0F,this.maxVolume);
     }
-
 }
