@@ -63,8 +63,12 @@ public class ClientEventHandler {
     }
 
     public static void rocketLaunchSound(Rocket rocket, LaunchStage oldStage) {
-        if (rocket instanceof RocketEntity rocketEntity && rocket.getLaunchStage() == LaunchStage.IGNITED)
-            Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
+        if (rocket instanceof RocketEntity rocketEntity) {
+            LaunchStage launchStage = rocketEntity.getLaunchStage();
+            if (launchStage == LaunchStage.IGNITED || (launchStage == LaunchStage.LAUNCHED && oldStage == LaunchStage.IDLE)) {
+                Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
+            }
+        }
     }
 
     public static void initializeSatelliteSkybox(Minecraft minecraft, ClientLevel level) {
