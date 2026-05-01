@@ -62,7 +62,7 @@ public class GCSoundMap {
         // Oxygen
         INTERNAL.put(GCMachineStatuses.NOT_ENOUGH_OXYGEN,GCSounds.MACHINE_BUZZ);
         // Oxygen - Collector
-        INTERNAL.put(GCMachineStatuses.COLLECTING,GCSounds.MACHINE_HUM);
+        INTERNAL.put(GCMachineStatuses.COLLECTING,GCSounds.OXYGEN_FAN);
         // Oxygen - (De)compressor
         INTERNAL.put(GCMachineStatuses.COMPRESSING_OXYGEN,GCSounds.MACHINE_HUM);
         INTERNAL.put(GCMachineStatuses.DECOMPRESSING,GCSounds.MACHINE_HUM);
@@ -74,7 +74,7 @@ public class GCSoundMap {
         INTERNAL.put(GCMachineStatuses.AREA_TOO_LARGE,GCSounds.MACHINE_BUZZ);
         INTERNAL.put(GCMachineStatuses.SEALED,GCSounds.MACHINE_BUZZ);
         // Oxygen - Bubble Distributor
-        INTERNAL.put(GCMachineStatuses.DISTRIBUTING,GCSounds.MACHINE_HUM);
+        INTERNAL.put(GCMachineStatuses.DISTRIBUTING,GCSounds.OXYGEN_FAN);
         // Refinery
         INTERNAL.put(GCMachineStatuses.REFINING,GCSounds.MACHINE_BUZZ);
         INTERNAL.put(GCMachineStatuses.MISSING_OIL,GCSounds.MACHINE_BUZZ);
