@@ -1,0 +1,16 @@
+{
+  "base_gravity": [
+    0.0,
+    -10.01,
+    0.0
+  ],
+  "base_pressure": 92.0,
+  "dimension": "galacticraft:venus",
+  "magnetic_north": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "priority": 1001,
+  "universal_drag": 0.09
+}

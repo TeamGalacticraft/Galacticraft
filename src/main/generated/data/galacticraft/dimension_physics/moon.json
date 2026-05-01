@@ -1,0 +1,16 @@
+{
+  "base_gravity": [
+    0.0,
+    -1.826,
+    0.0
+  ],
+  "base_pressure": 0.0,
+  "dimension": "galacticraft:moon",
+  "magnetic_north": [
+    0.0,
+    0.0,
+    0.0
+  ],
+  "priority": 1001,
+  "universal_drag": 0.0
+}
