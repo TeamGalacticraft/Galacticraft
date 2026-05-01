@@ -31,6 +31,7 @@ import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback;
 import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
+import dev.galacticraft.impl.universe.dimension_properties.SpaceDimensionProperties;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
 import net.minecraft.core.RegistryAccess;
@@ -135,7 +136,7 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
                     this.galacticraft$addSatellite(satellite, false);
 
                     LevelStem levelStem = satellite.config().getOptions();
-                    dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());
+                    dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value(), new SpaceDimensionProperties(), (MinecraftServer) (Object) this);
                 }
             } catch (Throwable exception) {
                 throw new RuntimeException("Failed to read satellite data!", exception);

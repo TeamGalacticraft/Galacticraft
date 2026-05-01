@@ -40,6 +40,7 @@ import dev.galacticraft.dynamicdimensions.api.DynamicDimensionRegistry;
 import dev.galacticraft.impl.network.s2c.AddSatellitePayload;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.impl.universe.celestialbody.config.StarConfig;
+import dev.galacticraft.impl.universe.dimension_properties.SpaceDimensionProperties;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
 import dev.galacticraft.impl.universe.display.config.ring.DefaultCelestialRingDisplayConfig;
 import dev.galacticraft.impl.universe.display.type.IconCelestialDisplayType;
@@ -156,7 +157,8 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
         ((SatelliteAccessor) server).galacticraft$addSatellite(satellite, true);
-        DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type);
+
+        DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type, new SpaceDimensionProperties());
 
         server.getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), true)));
         return satellite;

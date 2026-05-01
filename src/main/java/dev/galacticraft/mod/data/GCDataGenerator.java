@@ -120,6 +120,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Jukebox Songs", GCJukeboxSongs::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Banner Patterns", GCBannerPatterns::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Damage Types", GCDamageTypes::bootstrapRegistries));
+        pack.addProvider(GCDimensionPhysicsProvider::new);
 
         // rocket parts
         pack.addProvider(BootstrapDataProvider.create("Rocket Cones", GCRocketParts::bootstrapCone));
