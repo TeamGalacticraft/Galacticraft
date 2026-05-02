@@ -30,7 +30,6 @@ import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
@@ -42,7 +41,7 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.screen.CircuitFabricatorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -201,11 +200,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
-        return new RecipeMachineMenu<>(
-                GCMenuTypes.CIRCUIT_FABRICATOR,
-                syncId,
-                player,
-                this
-        );
+        return new CircuitFabricatorMenu(syncId, player, this);
     }
 }
