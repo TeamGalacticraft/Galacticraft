@@ -99,7 +99,7 @@ public class GCSoundManager implements SoundCallback {
         SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(status);
 
         // Stop old sound (if there is one)
-        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound->{oldSound.end();});
+        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound -> oldSound.end());
         // Play new sound (if there is one)
         switch (status.getType()) {
             case MISSING_ENERGY:
