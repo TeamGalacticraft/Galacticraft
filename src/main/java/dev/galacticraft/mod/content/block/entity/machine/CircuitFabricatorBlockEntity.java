@@ -114,8 +114,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     public void workingSounds(MachineStatus status) {
-        RandomSource randomSource=RandomSource.create();
-        if (randomSource.nextDouble() < 0.05 && status==GCMachineStatuses.FABRICATING) {
+        if (level.random.nextDouble() < 0.05 && status == GCMachineStatuses.FABRICATING) {
             level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
         }
     }
