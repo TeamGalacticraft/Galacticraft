@@ -26,10 +26,11 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import net.minecraft.sounds.SoundEvent;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import net.minecraft.sounds.SoundEvent;
 
 public class GCSoundMap {
     private static final Map<MachineStatus,SoundEvent> INTERNAL = new HashMap<>();
