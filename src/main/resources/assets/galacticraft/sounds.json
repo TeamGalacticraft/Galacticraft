@@ -183,8 +183,8 @@
   "machine.circuitscritch": {
   "sounds": [
     "galacticraft:machine/circuitscritch1",
-    "galacticraft:machine/circuitscritch3",
-    "galacticraft:machine/circuitscritch4"
+    "galacticraft:machine/circuitscritch2",
+    "galacticraft:machine/circuitscritch3"
   ]
 },
     "machine.machinebuzz": {
