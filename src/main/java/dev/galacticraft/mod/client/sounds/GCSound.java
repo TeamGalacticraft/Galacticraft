@@ -78,8 +78,8 @@ public abstract class GCSound extends AbstractTickableSoundInstance {
                 break;
             case RUNNING:
                 break;
-            }
         }
+    }
 
     protected void setPosition() {
         this.x = entity.getBlockPos().getX();

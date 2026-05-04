@@ -23,15 +23,12 @@
 package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundSource;
 
 
-public abstract class MachineSound extends GCSound {
+public class MachineSound extends GCSound {
     protected final MachineBlockEntity machine;
-    GCSound newsound;
-    MachineStatus status;
 
     public MachineSound(MachineBlockEntity machine, SoundEvent event, SoundCallback callback, float maxVolume) {
         super(machine, event, SoundSource.BLOCKS, callback, maxVolume);
@@ -45,9 +42,5 @@ public abstract class MachineSound extends GCSound {
         }
         super.tick();
         this.modulateSoundforTransition();
-    }
-
-    public MachineStatus getStatus() {
-        return this.machine.getState().getStatus();
     }
 }

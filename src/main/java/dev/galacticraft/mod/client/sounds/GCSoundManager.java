@@ -109,11 +109,11 @@ public class GCSoundManager implements SoundCallback {
             case MISSING_RESOURCE:
             case OTHER:
             case OUTPUT_FULL:
-                manager.play(new IdleMachineSound(machine, newSound, manager));
+                manager.play(new MachineSound(machine, newSound, manager, 0.2F));
                 break;
             case PARTIALLY_WORKING:
             case WORKING:
-                manager.play(new ActiveMachineSound(machine, newSound, manager));
+                manager.play(new MachineSound(machine, newSound, manager, 1.0F));
                 break;
             default:
                 break;
