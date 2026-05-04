@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.client.model.vacuum_glass.*;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.renderer.v1.mesh.MutableQuadView;
 import net.fabricmc.fabric.api.renderer.v1.mesh.QuadEmitter;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
@@ -40,6 +42,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Collections;
@@ -47,619 +50,545 @@ import java.util.List;
 import java.util.function.Function;
 import java.util.function.Supplier;
 
+/**
+ * Baked model implementation for the vacuum glass block.
+ * <p>
+ * This model emits custom frame geometry based on the six directional connection
+ * properties present on the block state. Depending on the active connections,
+ * the model selects and emits one of several shapes such as stub, cap, straight,
+ * corner, T-junction, tri-corner, cross, or saddle geometry.
+ * <p>
+ * The implementation intentionally performs all geometry generation at render time
+ * and relies on helper methods throughout this class to build quads for the
+ * different connection combinations.
+ */
 public class VacuumGlassBakedModel implements BakedModel {
+    // CONFIGURABLE
+    public static final float FRAME_INSET = 4.0f / 16.0f;
+    public static final float INNER_FRAME_INSET = 5.0f / 16.0f;
+    public static final float PANE_INSET = 6.0f / 16.0f;
+    public static final float FRAME_THICKNESS = 3.0f / 16.0f;
+    public static final float INNER_FRAME_THICKNESS = 2.0f / 16.0f;
 
-    private static final float PANE_INSET = 6.0f / 16.0f;
-    private static final float INNER_FRAME_INSET = 5.0f / 16.0f;
-    private static final float INNER_FRAME_THICKNESS = 3.0f / 16.0f;
-    private static final float FRAME_INSET = 4.0f / 16.0f;
-    private static final float FRAME_THICKNESS = 2.0f / 16.0f;
+    // NON-CONFIGURABLE
+    public static final float INVERTED_FRAME_INSET = 1.0f - FRAME_INSET;
 
     private final TextureAtlasSprite glass;
     private final TextureAtlasSprite frame;
 
+    // ---------------------------------------------------------------------
+    // Construction
+    // ---------------------------------------------------------------------
+
+    /**
+     * Creates a new baked model instance and resolves the sprites used for the
+     * glass pane and aluminum frame surfaces.
+     *
+     * @param textureGetter function used to resolve atlas materials into sprites
+     */
     public VacuumGlassBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
         this.glass = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/vacuum_glass_vanilla")));
         this.frame = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/aluminum_decoration")));
     }
 
+    // ---------------------------------------------------------------------
+    // BakedModel implementation
+    // ---------------------------------------------------------------------
+
+    /**
+     * Returns vanilla baked quads for this model.
+     * <p>
+     * This implementation returns an empty list because block geometry is emitted
+     * through Fabric Renderer API callbacks instead.
+     *
+     * @param state block state being rendered
+     * @param face optional cull face
+     * @param random random source supplied by the renderer
+     * @return an empty quad list
+     */
     @Override
-    public List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
+    public @NotNull List<BakedQuad> getQuads(@Nullable BlockState state, @Nullable Direction face, RandomSource random) {
         return Collections.emptyList();
     }
 
+    /**
+     * Indicates that this model should participate in ambient occlusion.
+     *
+     * @return {@code true}
+     */
     @Override
     public boolean useAmbientOcclusion() {
         return true;
     }
 
+    /**
+     * Indicates that this model should render as a 3D model in GUIs.
+     *
+     * @return {@code true}
+     */
     @Override
     public boolean isGui3d() {
         return true;
     }
 
+    /**
+     * Indicates that this model uses block lighting.
+     *
+     * @return {@code true}
+     */
     @Override
     public boolean usesBlockLight() {
         return true;
     }
 
+    /**
+     * Indicates that this model does not use a special item renderer.
+     *
+     * @return {@code false}
+     */
     @Override
     public boolean isCustomRenderer() {
         return false;
     }
 
+    /**
+     * Returns the particle texture used for this model.
+     *
+     * @return the frame sprite used as the particle icon
+     */
     @Override
-    public TextureAtlasSprite getParticleIcon() {
-        return this.glass;
+    public @NotNull TextureAtlasSprite getParticleIcon() {
+        return this.frame;
     }
 
+    /**
+     * Returns the item transform set for this model.
+     *
+     * @return the default no-transform configuration
+     */
     @Override
-    public ItemTransforms getTransforms() {
+    public @NotNull ItemTransforms getTransforms() {
         return ItemTransforms.NO_TRANSFORMS;
     }
 
+    /**
+     * Returns the item override table for this model.
+     *
+     * @return the empty override table
+     */
     @Override
-    public ItemOverrides getOverrides() {
+    public @NotNull ItemOverrides getOverrides() {
         return ItemOverrides.EMPTY;
     }
 
+    /**
+     * Indicates that this model is not a vanilla adapter model.
+     *
+     * @return {@code false}
+     */
     @Override
     public boolean isVanillaAdapter() {
         return false;
     }
 
+    /**
+     * Emits the block quads for the vacuum glass model.
+     * <p>
+     * The method inspects all six directional connection properties and dispatches
+     * to the appropriate shape emitter for the current configuration.
+     *
+     * @param blockView world access used for adjacent block checks
+     * @param state current block state
+     * @param pos block position being rendered
+     * @param randomSupplier random source supplier
+     * @param context render emission context
+     */
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         QuadEmitter emitter = context.getEmitter();
+
         boolean up = state.getValue(BlockStateProperties.UP);
         boolean down = state.getValue(BlockStateProperties.DOWN);
         boolean north = state.getValue(BlockStateProperties.NORTH);
         boolean east = state.getValue(BlockStateProperties.EAST);
         boolean south = state.getValue(BlockStateProperties.SOUTH);
         boolean west = state.getValue(BlockStateProperties.WEST);
-        int horizontal = (north ? 1 : 0) + (east ? 1 : 0) + (south ? 1 : 0) + (west ? 1 : 0);
+
         RenderContext.QuadTransform glassTransform = quad -> {
-            quad.spriteBake(this.glass, MutableQuadView.BAKE_LOCK_UV); //todo glass UVs
+            quad.spriteBake(this.glass, MutableQuadView.BAKE_LOCK_UV); // TODO glass UVs
             return true;
         };
+
         RenderContext.QuadTransform aluminumTransform = quad -> {
             quad.spriteBake(this.frame, MutableQuadView.BAKE_LOCK_UV);
             return true;
         };
+
+        // Force white tint
         context.pushTransform(quad -> {
             quad.color(-1, -1, -1, -1);
             return true;
         });
-        switch (horizontal) {
-            case 0 -> {
-                Direction.Axis axis = state.getValue(BlockStateProperties.HORIZONTAL_AXIS);
-                switch (axis) {
-                    case X -> {
-                        context.pushTransform(glassTransform);
-                        emitPane(emitter, Direction.NORTH, false, false, down, up);
-                        emitPane(emitter, Direction.SOUTH, false, false, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.NORTH, down, up);
-                        emitSides(emitter, Direction.NORTH, false, false);
-                        context.popTransform();
-                    }
-                    case Z -> {
-                        context.pushTransform(glassTransform);
-                        emitPane(emitter, Direction.EAST, false, false, down, up);
-                        emitPane(emitter, Direction.WEST, false, false, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.EAST, down, up);
-                        emitSides(emitter, Direction.EAST, false, false);
-                        context.popTransform();
-                    }
-                }
-            }
-            case 1 -> {
-                if (east || west) {
-                    context.pushTransform(glassTransform);
-                    emitPane(emitter, Direction.NORTH, east, west, down, up);
-                    emitPane(emitter, Direction.SOUTH, west, east, down, up);
-                    context.popTransform();
-                    context.pushTransform(aluminumTransform);
-                    emitBasePlate(emitter, Direction.NORTH, down, up);
-                    emitSides(emitter, Direction.NORTH, east, west);
-                    context.popTransform();
-                } else {
-                    context.pushTransform(glassTransform);
-                    emitPane(emitter, Direction.EAST, south, north, down, up);
-                    emitPane(emitter, Direction.WEST, north, south, down, up);
-                    context.popTransform();
-                    context.pushTransform(aluminumTransform);
-                    emitBasePlate(emitter, Direction.EAST, down, up);
-                    emitSides(emitter, Direction.EAST, south, north);
-                    context.popTransform();
-                }
-            }
-            case 2 -> {
-                if (east && west) {
-                    context.pushTransform(glassTransform);
-                    emitPane(emitter, Direction.NORTH, true, true, down, up);
-                    emitPane(emitter, Direction.SOUTH, true, true, down, up);
-                    context.popTransform();
-                    context.pushTransform(aluminumTransform);
-                    emitBasePlate(emitter, Direction.NORTH, down, up);
-                    context.popTransform();
-                } else if (north && south) {
-                    context.pushTransform(glassTransform);
-                    emitPane(emitter, Direction.EAST, true, true, down, up);
-                    emitPane(emitter, Direction.WEST, true, true, down, up);
-                    context.popTransform();
-                    context.pushTransform(aluminumTransform);
-                    emitBasePlate(emitter, Direction.EAST, down, up);
-                    context.popTransform();
-                } else {
-                    context.pushTransform(quad -> {
-                        quad.spriteBake(this.glass, MutableQuadView.BAKE_ROTATE_NONE);
-                        return true;
-                    });
-                    emitCornerPane(emitter, east, down, north, up);
-                    context.popTransform();
-                    context.pushTransform(quad -> {
-                        quad.spriteBake(this.frame, MutableQuadView.BAKE_LOCK_UV);
-                        return true;
-                    });
-                    emitCornerBasePlate(emitter, east, north, down, up);
-                    context.popTransform();
-                }
-            }
-            case 3 -> {
-                if (east && west) {
-                    if (north) {
-                        context.pushTransform(glassTransform);
-                        emitBrokenPane(emitter, Direction.NORTH, down, up);
-                        emitPane(emitter, Direction.SOUTH, true, true, down, up);
-                        emitCenterPane(emitter, Direction.NORTH, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.NORTH, down, up);
-                        emitCenterBasePlate(emitter, Direction.NORTH, down, up);
-                        context.popTransform();
-                    } else {
-                        context.pushTransform(glassTransform);
-                        emitBrokenPane(emitter, Direction.SOUTH, down, up);
-                        emitPane(emitter, Direction.NORTH, true, true, down, up);
-                        emitCenterPane(emitter, Direction.SOUTH, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.SOUTH, down, up);
-                        emitCenterBasePlate(emitter, Direction.SOUTH, down, up);
-                        context.popTransform();
-                    }
-                } else {
-                    if (east) {
-                        context.pushTransform(glassTransform);
-                        emitBrokenPane(emitter, Direction.EAST, down, up);
-                        emitPane(emitter, Direction.WEST, true, true, down, up);
-                        emitCenterPane(emitter, Direction.EAST, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.EAST, down, up);
-                        emitCenterBasePlate(emitter, Direction.EAST, down, up);
-                        context.popTransform();
-                    } else {
-                        context.pushTransform(glassTransform);
-                        emitBrokenPane(emitter, Direction.WEST, down, up);
-                        emitPane(emitter, Direction.EAST, true, true, down, up);
-                        emitCenterPane(emitter, Direction.WEST, down, up);
-                        context.popTransform();
-                        context.pushTransform(aluminumTransform);
-                        emitBasePlate(emitter, Direction.WEST, down, up);
-                        emitCenterBasePlate(emitter, Direction.WEST, down, up);
-                        context.popTransform();
-                    }
-                }
-            }
-            case 4 -> {
-                context.pushTransform(glassTransform);
-                emitCenterPane(emitter, Direction.NORTH, down, up);
-                emitCenterPane(emitter, Direction.EAST, down, up);
-                emitCenterPane(emitter, Direction.SOUTH, down, up);
-                emitCenterPane(emitter, Direction.WEST, down, up);
-                context.popTransform();
-                context.pushTransform(aluminumTransform);
 
-                emitCenterBasePlate(emitter, Direction.NORTH, down, up);
-                emitCenterBasePlate(emitter, Direction.EAST, down, up);
-                emitCenterBasePlate(emitter, Direction.SOUTH, down, up);
-                emitCenterBasePlate(emitter, Direction.WEST, down, up);
-
-                if (!down) {
-                    emitter.square(Direction.DOWN, FRAME_INSET, FRAME_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
-                if (!up) {
-                    emitter.square(Direction.UP, FRAME_INSET, FRAME_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
-                context.popTransform();
-            }
+        // FULL shape: render nothing
+        if (up && down && north && east && south && west) {
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
         }
-        context.popTransform();
 
+        // STUB shape
+        if (!up && !down && !north && !east && !south && !west) {
+            context.pushTransform(aluminumTransform);
+            Stub.emitStub(emitter);
+            context.popTransform();
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
+        }
+
+        // CAP shape
+        Direction singleConnectedDirection = getSingleConnectedDirection(north, south, east, west, up, down);
+        if (singleConnectedDirection != null) {
+            context.pushTransform(aluminumTransform);
+            Cap.emitCap(emitter, singleConnectedDirection);
+            context.popTransform();
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
+        }
+
+        // STRAIGHT or CORNER
+        DirectionPair doubleConnectedDirection = getDoubleConnectedDirection(north, south, east, west, up, down);
+        if (doubleConnectedDirection != null) {
+            context.pushTransform(aluminumTransform);
+
+            if (doubleConnectedDirection.a().getOpposite() == doubleConnectedDirection.b()) {
+                Straight.emitStraight(emitter, doubleConnectedDirection);
+            } else {
+                boolean outerCorner = shouldUseOuterCorner(blockView, pos, doubleConnectedDirection);
+                Corner.emitCorner(emitter, doubleConnectedDirection, !outerCorner);
+            }
+
+            context.popTransform();
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
+        }
+
+        // T or TRI_CORNER shape
+        DirectionTriple tripleConnectedDirection = getTripleConnectedDirection(north, south, east, west, up, down);
+        if (tripleConnectedDirection != null) {
+            context.pushTransform(aluminumTransform);
+            emitTripleConnection(emitter, blockView, pos, tripleConnectedDirection);
+            context.popTransform();
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
+        }
+
+        // CROSS or SADDLE shape
+        DirectionQuad quadConnectedDirection = getQuadConnectedDirection(north, south, east, west, up, down);
+        if (quadConnectedDirection != null) {
+            context.pushTransform(aluminumTransform);
+            emitQuadConnection(emitter, blockView, pos, quadConnectedDirection);
+            context.popTransform();
+            finish(blockView, state, pos, randomSupplier, context);
+            return;
+        }
+
+        // MISSING_ONE shape
+
+        finish(blockView, state, pos, randomSupplier, context);
+    }
+
+    private void finish(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
+        context.popTransform();
         BakedModel.super.emitBlockQuads(blockView, state, pos, randomSupplier, context);
     }
 
-    private static void emitSides(QuadEmitter emitter, Direction direction, boolean left, boolean right) {
-        if (!left) {
-            // OUTER FRAME
-            emitter.square(direction.getClockWise(), FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, 1.0f, 0.0f).emit();
+    /**
+     * Emits the shape for a three-direction connection.
+     *
+     * @param emitter quad emitter
+     * @param blockView world access used for diagonal checks
+     * @param pos block position being rendered
+     * @param triple triple of connected directions
+     */
+    private static void emitTripleConnection(
+            QuadEmitter emitter,
+            BlockAndTintGetter blockView,
+            BlockPos pos,
+            DirectionTriple triple
+    ) {
+        Direction[] dirs = triple.asArray();
 
-            // INNER FRAME PANE
-            emitter.square(direction, 0.0f, 0.0f, FRAME_THICKNESS, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction, FRAME_THICKNESS, 0.0f, INNER_FRAME_THICKNESS, 1.0f, INNER_FRAME_INSET).emit();
-
-            // INNER FRAME PANE CONNECTOR
-            emitter.square(direction.getCounterClockWise(), FRAME_INSET, 0.0f, INNER_FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-
-            // INNER FRAME PANE (BACK)
-            emitter.square(direction.getOpposite(), 1.0f - FRAME_THICKNESS, 0.0f, 1.0f, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), 1.0f - INNER_FRAME_THICKNESS, 0.0f, 1.0f - FRAME_THICKNESS, 1.0f, INNER_FRAME_INSET).emit();
-
-            // INNER FRAME PANE CONNECTOR (BACK)
-            emitter.square(direction.getCounterClockWise(), 1.0f - INNER_FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-
-            // INNER FRAME
-            emitter.square(direction.getCounterClockWise(), INNER_FRAME_INSET, 0.0f, 1.0f - INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_THICKNESS).emit();
-        }
-        if (!right) {
-            // OUTER FRAME
-            emitter.square(direction.getCounterClockWise(), FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, 1.0f, 0.0f).emit();
-
-            // INNER FRAME PANE
-            emitter.square(direction.getOpposite(), 0.0f, 0.0f, FRAME_THICKNESS, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), FRAME_THICKNESS, 0.0f, INNER_FRAME_THICKNESS, 1.0f, INNER_FRAME_INSET).emit();
-
-            // INNER FRAME PANE CONNECTOR
-            emitter.square(direction.getClockWise(), FRAME_INSET, 0.0f, INNER_FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-
-            // INNER FRAME PANE (BACK)
-            emitter.square(direction, 1.0f - FRAME_THICKNESS, 0.0f, 1.0f, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction, 1.0f - INNER_FRAME_THICKNESS, 0.0f, 1.0f - FRAME_THICKNESS, 1.0f, INNER_FRAME_INSET).emit();
-
-            // INNER FRAME PANE CONNECTOR (BACK)
-            emitter.square(direction.getClockWise(), 1.0f - INNER_FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-
-            // INNER FRAME
-            emitter.square(direction.getClockWise(), INNER_FRAME_INSET, 0.0f, 1.0f - INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_THICKNESS).emit();
+        DirectionPair oppositePair = HelperMethods.findOppositePair(dirs);
+        if (oppositePair != null) {
+            Direction branch = HelperMethods.findRemainingDirection(dirs, oppositePair.a(), oppositePair.b());
+            TConnection.emitTConnection(emitter, blockView, pos, oppositePair, branch);
+        } else {
+            TriCorner.emitTriCornerConnection(emitter, blockView, pos, triple.a(), triple.b(), triple.c());
         }
     }
 
-    private static void emitCornerPane(QuadEmitter emitter, boolean east, boolean down, boolean north, boolean up) {
-        // A D <- quad order
-        // B C
+    /**
+     * Emits the shape for a four-direction connection.
+     *
+     * @param emitter quad emitter
+     * @param blockView world access used for diagonal checks
+     * @param pos block position being rendered
+     * @param quad set of four connected directions
+     */
+    private static void emitQuadConnection(
+            QuadEmitter emitter,
+            BlockAndTintGetter blockView,
+            BlockPos pos,
+            DirectionQuad quad
+    ) {
+        Direction[] dirs = quad.asArray();
 
-        emitter
-                .pos(0, east ? PANE_INSET : 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .pos(1, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
-                .pos(2, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
-                .pos(3, east ? PANE_INSET : 1.0f - PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .uv(0, 0, down ? 0 : 3)
-                .uv(1, 13, down ? 0 : 3)
-                .uv(2, 13, 13 + (up ? 3 : 0))
-                .uv(3, 0, 13 + (up ? 3 : 0))
-                .emit();
-        emitter
-                .pos(0, east ? 1.0f - PANE_INSET : PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .pos(1, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
-                .pos(2, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
-                .pos(3, east ? 1.0f - PANE_INSET : PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .uv(0, 0, down ? 0 : 3)
-                .uv(1, 8, down ? 0 : 3)
-                .uv(2, 8, 13 + (up ? 3 : 0))
-                .uv(3, 0, 13 + (up ? 3 : 0))
-                .emit();
+        boolean hasX = containsAxisPair(dirs, Direction.WEST, Direction.EAST);
+        boolean hasY = containsAxisPair(dirs, Direction.DOWN, Direction.UP);
+        boolean hasZ = containsAxisPair(dirs, Direction.NORTH, Direction.SOUTH);
 
-        emitter
-                .pos(3, east ? PANE_INSET : 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .pos(2, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
-                .pos(1, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 1.0f - PANE_INSET : PANE_INSET)
-                .pos(0, east ? PANE_INSET : 1.0f - PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .uv(0, 0, down ? 0 : 3)
-                .uv(1, 13, down ? 0 : 3)
-                .uv(2, 13, 13 + (up ? 3 : 0))
-                .uv(3, 0, 13 + (up ? 3 : 0))
-                .emit();
-        emitter
-                .pos(3, east ? 1.0f - PANE_INSET : PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .pos(2, east ? 1.0f : 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
-                .pos(1, east ? 1.0f : 0.0f, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? PANE_INSET : 1.0f - PANE_INSET)
-                .pos(0, east ? 1.0f - PANE_INSET : PANE_INSET, up ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                .uv(0, 0, down ? 0 : 3)
-                .uv(1, 8, down ? 0 : 3)
-                .uv(2, 8, 13 + (up ? 3 : 0))
-                .uv(3, 0, 13 + (up ? 3 : 0))
-                .emit();
-    }
+        int oppositeAxes = 0;
+        if (hasX) oppositeAxes++;
+        if (hasY) oppositeAxes++;
+        if (hasZ) oppositeAxes++;
 
-    private static void emitCornerBasePlate(QuadEmitter emitter, boolean east, boolean north, boolean down, boolean up) {
-        if (!up) {
-            // OUTER FRAME
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, 1.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(2, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
-                    .pos(3, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
-                    .cullFace(Direction.UP)
-                    .emit();
-
-            // OUTER FRAME SIDE
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(1, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(2, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
-                    .pos(3, east ? 1.0f : 0.0f, 1.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .uv(0, 4, 14)
-                    .uv(1, 9, 14)
-                    .uv(2, 9, 16)
-                    .uv(3, 4, 16)
-                    .emit();
-
-            // OUTER FRAME IN
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(2, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(3, north ? 1.0f - FRAME_INSET : FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .nominalFace(Direction.DOWN)
-                    .emit();
-
-            // INNER FRAME CONNECTOR
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(2, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(3, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .uv(0, 4, 13)
-                    .uv(1, 4 + 5.65f, 14) //sqrt(32)
-                    .uv(2, 4 + 5.65f, 14)
-                    .uv(3, 4, 13)
-                    .emit();
-
-            // INNER FRAME
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(3, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .uv(0, 7, 13)
-                    .uv(1, 7 + 7.07f, 14) //sqrt(50)
-                    .uv(2, 7 + 7.07f, 14)
-                    .uv(3, 7, 13)
-                    .nominalFace(Direction.DOWN)
-                    .emit();
-
-            // OUTER FRAME SIDE (REV)
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(2, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(1, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f, north ? 0.0f : 1.0f)
-                    .pos(0, east ? 1.0f : 0.0f, 1.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .uv(0, 4, 16)
-                    .uv(1, 9, 16)
-                    .uv(2, 9, 14)
-                    .uv(3, 4, 14)
-                    .emit();
-
-            // OUTER FRAME IN (REV)
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(0, north ? FRAME_INSET : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .nominalFace(Direction.DOWN)
-                    .emit();
-
-            // INNER FRAME CONNECTOR (REV)
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, 1.0f - FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, 1.0f - INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(0, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, 1.0f - FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .uv(0, 4, 13)
-                    .uv(1, 4 + 5.65f, 14) //sqrt(32)
-                    .uv(2, 4 + 5.65f, 14)
-                    .uv(3, 4, 13)
-                    .emit();
-        }
-        if (!down) {
-            // OUTER FRAME
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, 0.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, 0.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(1, north ? 1.0f - FRAME_INSET : FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
-                    .pos(0, north ? FRAME_INSET : 1.0f - FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
-                    .cullFace(Direction.DOWN)
-                    .emit();
-
-            // OUTER FRAME SIDE
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(2, north ? 1.0f - FRAME_INSET : FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(1, north ? 1.0f - FRAME_INSET : FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
-                    .pos(0, east ? 1.0f : 0.0f, 0.0f, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .uv(0, 4, 0)
-                    .uv(1, 9, 0)
-                    .uv(2, 9, 2)
-                    .uv(3, 4, 2)
-                    .emit();
-
-            // OUTER FRAME IN
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? FRAME_INSET : 1.0f - FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(1, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(0, north ? 1.0f - FRAME_INSET : FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .nominalFace(Direction.UP)
-                    .emit();
-
-            // INNER FRAME CONNECTOR
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(1, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(0, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .uv(0, 4, 2)
-                    .uv(1, 10, 2)
-                    .uv(2, 10, 3)
-                    .uv(3, 4, 3)
-                    .emit();
-
-            // INNER FRAME
-            emitter
-                    .pos(3, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET)
-                    .pos(2, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(1, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(0, north ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .nominalFace(Direction.UP)
-                    .emit();
-
-            // OUTER FRAME SIDE (REV)
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(1, north ? FRAME_INSET : 1.0f - FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(2, north ? FRAME_INSET : 1.0f - FRAME_INSET, 0.0f, north ? 0.0f : 1.0f)
-                    .pos(3, east ? 1.0f : 0.0f, 0.0f, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .uv(0, 4, 2)
-                    .uv(1, 9, 2)
-                    .uv(2, 9, 0)
-                    .uv(3, 4, 0)
-                    .emit();
-
-            // OUTER FRAME IN (REV)
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? 1.0f - FRAME_INSET : FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(3, north ? FRAME_INSET : 1.0f - FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .nominalFace(Direction.UP)
-                    .emit();
-
-            // INNER FRAME CONNECTOR (REV)
-            emitter
-                    .pos(0, east ? 1.0f : 0.0f, FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(1, east ? 1.0f : 0.0f, INNER_FRAME_THICKNESS, east ? 1.0f - INNER_FRAME_INSET : INNER_FRAME_INSET)
-                    .pos(2, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, INNER_FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .pos(3, north ? INNER_FRAME_INSET : 1.0f - INNER_FRAME_INSET, FRAME_THICKNESS, north ? 0.0f : 1.0f)
-                    .uv(0, 4, 2)
-                    .uv(1, 10, 2)
-                    .uv(2, 10, 3)
-                    .uv(3, 4, 3)
-                    .emit();
+        if (oppositeAxes == 2) {
+            Cross.emitCrossConnection(emitter, blockView, pos, quad.a(), quad.b(), quad.c(), quad.d());
+        } else {
+            Saddle.emitSaddleConnection(emitter, blockView, pos, quad.a(), quad.b(), quad.c(), quad.d());
         }
     }
 
-    private static void emitBasePlate(QuadEmitter emitter, Direction direction, boolean down, boolean up) {
-        boolean side = direction.getAxis() == Direction.Axis.X;
-        if (!down) {
-            emitter.square(direction, 0.0f, 0.0f, 1.0f, FRAME_THICKNESS, FRAME_INSET).emit();
-            emitter.square(direction, 0.0f, 0.0f, 1.0f, INNER_FRAME_THICKNESS, INNER_FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), 0.0f, 0.0f, 1.0f, FRAME_THICKNESS, FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), 0.0f, 0.0f, 1.0f, INNER_FRAME_THICKNESS, INNER_FRAME_INSET).emit();
+    /**
+     * Checks whether a direction array contains both directions for a given axis.
+     *
+     * @param dirs directions to inspect
+     * @param a first direction to look for
+     * @param b second direction to look for
+     * @return {@code true} if both directions are present
+     */
+    private static boolean containsAxisPair(Direction[] dirs, Direction a, Direction b) {
+        boolean foundA = false;
+        boolean foundB = false;
 
-            emitter.square(Direction.UP, side ? FRAME_INSET : 0.0f, side ? 0.0f : FRAME_INSET, side ? 1.0f - FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-            emitter.square(Direction.UP, side ? INNER_FRAME_INSET : 0.0f, side ? 0.0f : INNER_FRAME_INSET, side ? 1.0f - INNER_FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-            emitter.square(Direction.DOWN, side ? FRAME_INSET : 0.0f, side ? 0.0f : FRAME_INSET, side ? 1.0f - FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - FRAME_INSET, 0.0f).emit();
+        for (Direction dir : dirs) {
+            if (dir == a) foundA = true;
+            else if (dir == b) foundB = true;
         }
-        if (!up) {
-            emitter.square(direction, 0.0f, 1.0f - FRAME_THICKNESS, 1.0f, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction, 0.0f, 1.0f - INNER_FRAME_THICKNESS, 1.0f, 1.0f, INNER_FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), 0.0f, 1.0f - FRAME_THICKNESS, 1.0f, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction.getOpposite(), 0.0f, 1.0f - INNER_FRAME_THICKNESS, 1.0f, 1.0f, INNER_FRAME_INSET).emit();
 
-            emitter.square(Direction.DOWN, side ? FRAME_INSET : 0.0f, side ? 0.0f : FRAME_INSET, side ? 1.0f - FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-            emitter.square(Direction.DOWN, side ? INNER_FRAME_INSET : 0.0f, side ? 0.0f : INNER_FRAME_INSET, side ? 1.0f - INNER_FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-            emitter.square(Direction.UP, side ? FRAME_INSET : 0.0f, side ? 0.0f : FRAME_INSET, side ? 1.0f - FRAME_INSET : 1.0f, side ? 1.0f : 1.0f - FRAME_INSET, 0.0f).emit();
+        return foundA && foundB;
+    }
+
+    /**
+     * Determines whether a perpendicular connection pair should render as an outer
+     * corner based on adjacent occupancy.
+     *
+     * @param blockView world access
+     * @param pos block position being rendered
+     * @param pair connection pair to inspect
+     * @return {@code true} if the outer-corner variant should be used
+     */
+    private static boolean shouldUseOuterCorner(BlockAndTintGetter blockView, BlockPos pos, DirectionPair pair) {
+        BlockState stateA = blockView.getBlockState(pos.relative(pair.a()));
+        BlockState stateB = blockView.getBlockState(pos.relative(pair.b()));
+        if (stateA.isSolidRender(blockView, pos.relative(pair.a())) && stateB.isSolidRender(blockView, pos.relative(pair.b()))) return true;
+        BlockPos diagonal = pos.relative(pair.a()).relative(pair.b());
+        BlockState diagonalState = blockView.getBlockState(diagonal);
+
+        return diagonalState.isSolidRender(blockView, diagonal) || diagonalState.is(GCBlocks.VACUUM_GLASS);
+    }
+
+    public static @Nullable Direction getSingleConnectedDirection(
+            boolean north, boolean south,
+            boolean east, boolean west,
+            boolean up, boolean down
+    ) {
+        Direction found = null;
+
+        if (north) {
+            found = Direction.NORTH;
+        }
+        if (south) {
+            if (found != null) return null;
+            found = Direction.SOUTH;
+        }
+        if (east) {
+            if (found != null) return null;
+            found = Direction.EAST;
+        }
+        if (west) {
+            if (found != null) return null;
+            found = Direction.WEST;
+        }
+        if (up) {
+            if (found != null) return null;
+            found = Direction.UP;
+        }
+        if (down) {
+            if (found != null) return null;
+            found = Direction.DOWN;
+        }
+
+        return found;
+    }
+
+    public record DirectionPair(Direction a, Direction b) {
+        public boolean contains(Direction face) {
+            return this.a == face || this.b == face;
         }
     }
 
-    private static void emitCenterBasePlate(QuadEmitter emitter, Direction direction, boolean down, boolean up) {
-        if (!down) {
-            emitter.square(direction.getClockWise(), 1.0f - FRAME_INSET, 0.0f, 1.0f, FRAME_THICKNESS, FRAME_INSET).emit();
-            emitter.square(direction.getClockWise(), 1.0f - INNER_FRAME_INSET, 0.0f, 1.0f, INNER_FRAME_THICKNESS, INNER_FRAME_INSET).emit();
-            emitter.square(direction.getCounterClockWise(), 0.0f, 0.0f, FRAME_INSET, FRAME_THICKNESS, FRAME_INSET).emit();
-            emitter.square(direction.getCounterClockWise(), 0.0f, 0.0f, INNER_FRAME_INSET, INNER_FRAME_THICKNESS, INNER_FRAME_INSET).emit();
+    public record DirectionTriple(Direction a, Direction b, Direction c) {
+        public boolean contains(Direction face) {
+            return this.a == face || this.b == face || this.c == face;
+        }
 
-            switch (direction) {
-                case NORTH -> {
-                    emitter.square(Direction.UP, FRAME_INSET, 1.0f - PANE_INSET, 1.0f - FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, INNER_FRAME_INSET, 1.0f - PANE_INSET, 1.0f - INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, FRAME_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_INSET, 1.0f, 0.0f).emit();
-                }
-                case SOUTH -> {
-                    emitter.square(Direction.UP, FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, PANE_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, INNER_FRAME_INSET, 0.0f, 1.0f - INNER_FRAME_INSET, PANE_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, FRAME_INSET, 0.0f).emit();
-                }
-                case WEST -> {
-                    emitter.square(Direction.UP, 0.0f, FRAME_INSET, PANE_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, 0.0f, INNER_FRAME_INSET, PANE_INSET, 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, 0.0f, FRAME_INSET, FRAME_INSET, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
-                case EAST -> {
-                    emitter.square(Direction.UP, 1.0f - PANE_INSET, FRAME_INSET, 1.0f, 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, 1.0f - PANE_INSET, INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, 1.0f - FRAME_INSET, FRAME_INSET, 1.0f, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
+        public Direction[] asArray() {
+            return new Direction[] { a, b, c };
+        }
+    }
+
+    public record DirectionQuad(Direction a, Direction b, Direction c, Direction d) {
+        public boolean contains(Direction face) {
+            return this.a == face || this.b == face || this.c == face || this.d == face;
+        }
+
+        public Direction[] asArray() {
+            return new Direction[] { a, b, c, d };
+        }
+    }
+
+    public static @Nullable DirectionPair getDoubleConnectedDirection(
+            boolean north, boolean south,
+            boolean east, boolean west,
+            boolean up, boolean down
+    ) {
+        Direction firstFound = null;
+        Direction secondFound = null;
+
+        if (north) {
+            firstFound = Direction.NORTH;
+        }
+        if (south) {
+            if (firstFound == null) {
+                firstFound = Direction.SOUTH;
+            } else {
+                secondFound = Direction.SOUTH;
+            }
+        }
+        if (east) {
+            if (secondFound != null) return null;
+            if (firstFound == null) {
+                firstFound = Direction.EAST;
+            } else {
+                secondFound = Direction.EAST;
+            }
+        }
+        if (west) {
+            if (secondFound != null) return null;
+            if (firstFound == null) {
+                firstFound = Direction.WEST;
+            } else {
+                secondFound = Direction.WEST;
+            }
+        }
+        if (up) {
+            if (secondFound != null) return null;
+            if (firstFound == null) {
+                firstFound = Direction.UP;
+            } else {
+                secondFound = Direction.UP;
+            }
+        }
+        if (down) {
+            if (secondFound != null) return null;
+            if (firstFound == null) {
+                firstFound = Direction.DOWN;
+            } else {
+                secondFound = Direction.DOWN;
             }
         }
 
-        if (!up) {
-            emitter.square(direction.getClockWise(), 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS, 1.0f, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction.getClockWise(), 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS, 1.0f, 1.0f, INNER_FRAME_INSET).emit();
-            emitter.square(direction.getCounterClockWise(), 0.0f, 1.0f - FRAME_THICKNESS, FRAME_INSET, 1.0f, FRAME_INSET).emit();
-            emitter.square(direction.getCounterClockWise(), 0.0f, 1.0f - INNER_FRAME_THICKNESS, INNER_FRAME_INSET, 1.0f, INNER_FRAME_INSET).emit();
-
-            switch (direction) {
-                case SOUTH -> {
-                    emitter.square(Direction.DOWN, FRAME_INSET, 1.0f - PANE_INSET, 1.0f - FRAME_INSET, 1.0f, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, INNER_FRAME_INSET, 1.0f - PANE_INSET, 1.0f - INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, FRAME_INSET, 0.0f).emit();
-                }
-                case NORTH -> {
-                    emitter.square(Direction.DOWN, FRAME_INSET, 0.0f, 1.0f - FRAME_INSET, PANE_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, INNER_FRAME_INSET, 0.0f, 1.0f - INNER_FRAME_INSET, PANE_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, FRAME_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_INSET, 1.0f, 0.0f).emit();
-                }
-                case WEST -> {
-                    emitter.square(Direction.DOWN, 0.0f, FRAME_INSET, PANE_INSET, 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, 0.0f, INNER_FRAME_INSET, PANE_INSET, 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, 0.0f, FRAME_INSET, FRAME_INSET, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
-                case EAST -> {
-                    emitter.square(Direction.DOWN, 1.0f - PANE_INSET, FRAME_INSET, 1.0f, 1.0f - FRAME_INSET, 1.0f - FRAME_THICKNESS).emit();
-                    emitter.square(Direction.DOWN, 1.0f - PANE_INSET, INNER_FRAME_INSET, 1.0f, 1.0f - INNER_FRAME_INSET, 1.0f - INNER_FRAME_THICKNESS).emit();
-                    emitter.square(Direction.UP, 1.0f - FRAME_INSET, FRAME_INSET, 1.0f, 1.0f - FRAME_INSET, 0.0f).emit();
-                }
-            }
+        if (secondFound == null) {
+            return null;
         }
+
+        return new DirectionPair(firstFound, secondFound);
     }
 
-    private static void emitCenterPane(QuadEmitter emitter, Direction direction, boolean down, boolean up) {
-        emitter.square(direction.getClockWise(), 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, 1.0f, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), PANE_INSET).emit();
-        emitter.square(direction.getCounterClockWise(), 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, PANE_INSET, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), PANE_INSET).emit();
 
-        emitter.square(direction.getCounterClockWise(), 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, PANE_INSET, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), 1.0f - PANE_INSET).emit();
-        emitter.square(direction.getClockWise(), 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, 1.0f, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), 1.0f - PANE_INSET).emit();
+    public static @Nullable DirectionTriple getTripleConnectedDirection(
+            boolean north, boolean south,
+            boolean east, boolean west,
+            boolean up, boolean down
+    ) {
+        Direction[] found = new Direction[3];
+        int count = 0;
+
+        if (north) found[count++] = Direction.NORTH;
+        if (south) {
+            if (count >= 3) return null;
+            found[count++] = Direction.SOUTH;
+        }
+        if (east) {
+            if (count >= 3) return null;
+            found[count++] = Direction.EAST;
+        }
+        if (west) {
+            if (count >= 3) return null;
+            found[count++] = Direction.WEST;
+        }
+        if (up) {
+            if (count >= 3) return null;
+            found[count++] = Direction.UP;
+        }
+        if (down) {
+            if (count >= 3) return null;
+            found[count++] = Direction.DOWN;
+        }
+
+        if (count != 3) return null;
+        return new DirectionTriple(found[0], found[1], found[2]);
     }
 
-    private static void emitPane(QuadEmitter emitter, Direction direction, boolean left, boolean right, boolean down, boolean up) {
-        emitter.square(direction, left ? 0.0f : INNER_FRAME_THICKNESS, down ? 0.0f : INNER_FRAME_THICKNESS, right ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), PANE_INSET).emit();
-        emitter.square(direction.getOpposite(), right ? 0.0f : INNER_FRAME_THICKNESS, down ? 0.0f : INNER_FRAME_THICKNESS, left ? 1.0f : 1.0f - INNER_FRAME_THICKNESS, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), 1.0f - (PANE_INSET)).emit();
+    public static @Nullable DirectionQuad getQuadConnectedDirection(
+            boolean north, boolean south,
+            boolean east, boolean west,
+            boolean up, boolean down
+    ) {
+        Direction[] found = new Direction[4];
+        int count = 0;
+
+        if (north) found[count++] = Direction.NORTH;
+        if (south) {
+            found[count++] = Direction.SOUTH;
+        }
+        if (east) {
+            found[count++] = Direction.EAST;
+        }
+        if (west) {
+            found[count++] = Direction.WEST;
+        }
+        if (up) {
+            if (count >= 4) return null;
+            found[count++] = Direction.UP;
+        }
+        if (down) {
+            if (count >= 4) return null;
+            found[count++] = Direction.DOWN;
+        }
+
+        if (count != 4) return null;
+        return new DirectionQuad(found[0], found[1], found[2], found[3]);
     }
 
-    private static void emitBrokenPane(QuadEmitter emitter, Direction direction, boolean down, boolean up) {
-        emitter.square(direction, 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, PANE_INSET, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), PANE_INSET).emit();
-        emitter.square(direction, 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, 1.0f, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), PANE_INSET).emit();
-
-        emitter.square(direction.getOpposite(), 0.0f, down ? 0.0f : INNER_FRAME_THICKNESS, PANE_INSET, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), 1.0f - PANE_INSET).emit();
-        emitter.square(direction.getOpposite(), 1.0f - PANE_INSET, down ? 0.0f : INNER_FRAME_THICKNESS, 1.0f, up ? 1.0f : (1.0f - INNER_FRAME_THICKNESS), 1.0f - PANE_INSET).emit();
-    }
-
+    /**
+     * Emits item quads for the inventory representation of the model.
+     *
+     * @param stack item stack being rendered
+     * @param randomSupplier random source supplier
+     * @param context render context
+     */
     @Override
     public void emitItemQuads(ItemStack stack, Supplier<RandomSource> randomSupplier, RenderContext context) {
         BakedModel.super.emitItemQuads(stack, randomSupplier, context);
