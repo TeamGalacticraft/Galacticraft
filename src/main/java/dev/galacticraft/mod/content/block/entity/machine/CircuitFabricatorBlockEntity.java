@@ -110,8 +110,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    public void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
