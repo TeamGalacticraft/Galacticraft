@@ -23,5 +23,5 @@
 package dev.galacticraft.mod.client.sounds;
 
 public interface SoundCallback {
-    <T extends GCSound> void onFinished(T soundInstance);
+    <T extends MachineSound> void onFinished(T soundInstance);
 }

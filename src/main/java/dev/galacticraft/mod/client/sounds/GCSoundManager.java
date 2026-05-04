@@ -39,7 +39,7 @@ public class GCSoundManager implements SoundCallback {
 
     private static final Minecraft client = Minecraft.getInstance();
     private static GCSoundManager instance;
-    private final List<GCSound> activeSounds = new ArrayList<>();
+    private final List<MachineSound> activeSounds = new ArrayList<>();
 
     private GCSoundManager() {}
 
@@ -52,14 +52,14 @@ public class GCSoundManager implements SoundCallback {
 
     // for removing the sound but not the entity
     @Override
-    public <T extends GCSound> void onFinished(T soundInstance) {
+    public <T extends MachineSound> void onFinished(T soundInstance) {
         this.stop(soundInstance);
     }
 
     // Plays a sound instance, if it doesn't already exist in the list
-    public <T extends GCSound> void play(T soundInstance) {
+    public <T extends MachineSound> void play(T soundInstance) {
         if (this.activeSounds.contains(soundInstance)) return;
-        BlockEntity entity = soundInstance.entity;
+        BlockEntity entity = soundInstance.machine;
         if (entity.getLevel().isClientSide) {
             client.getSoundManager().play(soundInstance);
             this.activeSounds.add(soundInstance);
@@ -68,13 +68,13 @@ public class GCSoundManager implements SoundCallback {
 
     // Stops a sound immediately. in most cases it is preferred to use
     // the sound's ending phase, which will clean it up after completion
-    public <T extends GCSound> void stop(T soundInstance) {
+    public <T extends MachineSound> void stop(T soundInstance) {
         client.getSoundManager().stop(soundInstance);
         this.activeSounds.remove(soundInstance);
     }
 
     // Finds a SoundInstance from a SoundEvent, if it exists and is currently playing
-    public Optional<GCSound> getPlayingSoundInstance(SoundEvent soundEvent) {
+    public Optional<MachineSound> getPlayingSoundInstance(SoundEvent soundEvent) {
         for (var activeSound : this.activeSounds) {
             // SoundInstances use their SoundEvent's id by default
             if (activeSound.getLocation().equals(soundEvent.getLocation())) {
@@ -84,9 +84,9 @@ public class GCSoundManager implements SoundCallback {
         return Optional.empty();
     }
 
-    public Optional<GCSound> getSoundFromEntity(BlockEntity entity, MachineStatus status) {
+    public Optional<MachineSound> getSoundFromEntity(BlockEntity entity, MachineStatus status) {
         for (var activeSound : this.activeSounds) {
-            if (activeSound.entity == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(status),activeSound.event)) {
+            if (activeSound.machine == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(status),activeSound.event)) {
                 return Optional.of(activeSound);
             }
         }
