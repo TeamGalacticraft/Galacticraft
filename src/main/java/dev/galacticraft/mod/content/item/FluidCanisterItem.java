@@ -25,7 +25,10 @@ package dev.galacticraft.mod.content.item;
 import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.util.Translations.Items;
+import dev.galacticraft.mod.util.Translations.Tooltip;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
@@ -35,17 +38,25 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
 import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
+import static dev.galacticraft.mod.content.item.GCItems.FLUID_CANISTER;
 
 public class FluidCanisterItem extends Item {
     public static StorageView<FluidVariant> getStorage(ItemStack stack) {
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
         assert storage != null;
         return storage;
+    }
+
+    public static ItemStack getFilledCanister(Fluid fluid) {
+        ItemStack stack = new ItemStack(FLUID_CANISTER);
+        stack.set(FLUID_DATA, new FluidData(FluidVariant.of(fluid), FluidConstants.BUCKET));
+        return stack;
     }
 
     public FluidCanisterItem(Properties properties) {
@@ -56,32 +67,36 @@ public class FluidCanisterItem extends Item {
     public @NotNull Component getName(ItemStack stack) {
         FluidData data = stack.get(FLUID_DATA);
 
-        if (data == null || data.variant().isBlank()) {
-            return Component.translatable("item.galacticraft.fluid_canister");
+        if (data != null && !data.variant().isBlank()) {
+            Component fluidName = FluidVariantAttributes.getName(data.variant()).plainCopy();
+            return Component.translatable(Items.FLUID_CANISTER_FILLED, fluidName);
         }
 
-        Component fluidName = FluidVariantAttributes.getName(data.variant()).plainCopy();
-
-        return Component.translatable("item.galacticraft.fluid_canister.filled", fluidName);
+        return super.getName(stack);
     }
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
+        this.appendFluidCanisterTooltip(stack, context, tooltip, flag);
+        super.appendHoverText(stack, context, tooltip, flag);
+    }
+
+    protected void appendFluidCanisterTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         FluidData data = stack.get(FLUID_DATA);
 
         if (data != null && !data.variant().isBlank()) {
             Component fluidName;
             if (data.variant().getFluid().isSame(GCFluids.LIQUID_OXYGEN)) {
-                fluidName = Component.literal("LOX");
+                fluidName = Component.translatable(Tooltip.FLUID_CANISTER_LOX);
             } else {
                 fluidName = FluidVariantAttributes.getName(data.variant()).plainCopy();
             }
             long amountMb = data.amount() / 81; // Convert Fabric droplets to mB
 
-            tooltip.add(Component.translatable("tooltip.galacticraft.fluid_canister.fluid_info", fluidName, amountMb)
+            tooltip.add(Component.translatable(Tooltip.FLUID_CANISTER_FLUID_INFO, fluidName, amountMb)
                     .withStyle(ChatFormatting.GRAY));
         } else {
-            tooltip.add(Component.translatable("tooltip.galacticraft.fluid_canister.empty").withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable(Tooltip.FLUID_CANISTER_EMPTY).withStyle(ChatFormatting.DARK_GRAY));
         }
     }
 
@@ -93,7 +108,7 @@ public class FluidCanisterItem extends Item {
     @Override
     public int getBarWidth(ItemStack stack) {
         StorageView<FluidVariant> storage = FluidCanisterItem.getStorage(stack);
-        return Math.round(13.0F - (float) (storage.getCapacity() - storage.getAmount()) * 13.0F / (float) storage.getCapacity());
+        return Math.round(13.0F * ((float) storage.getAmount() / (float) storage.getCapacity()));
     }
 
     @Override

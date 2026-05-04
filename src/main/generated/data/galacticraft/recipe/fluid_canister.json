@@ -3,10 +3,10 @@
   "category": "equipment",
   "key": {
     "C": {
-      "item": "galacticraft:tin_canister"
+      "tag": "c:canisters/tin"
     },
     "G": {
-      "item": "minecraft:glass"
+      "tag": "c:glass_blocks/colorless"
     },
     "S": {
       "item": "galacticraft:compressed_steel"

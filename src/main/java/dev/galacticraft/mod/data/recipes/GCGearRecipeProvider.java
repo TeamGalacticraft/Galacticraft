@@ -38,7 +38,6 @@ import net.minecraft.data.recipes.RecipeOutput;
 import net.minecraft.data.recipes.SmithingTransformRecipeBuilder;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.ItemLike;
 
@@ -328,8 +327,8 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
         GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.FLUID_CANISTER)
                 .define('T', GCItems.COMPRESSED_TIN)
                 .define('S', GCItems.COMPRESSED_STEEL)
-                .define('G', Items.GLASS)
-                .define('C', GCItems.TIN_CANISTER)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
+                .define('C', GCItemTags.TIN_CANISTERS)
                 .pattern("TST")
                 .pattern("TGT")
                 .pattern("TCT")

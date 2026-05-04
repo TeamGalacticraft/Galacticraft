@@ -269,6 +269,7 @@ public interface Translations {
 
         String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
         String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
+        String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
     }
 
     interface Gas {

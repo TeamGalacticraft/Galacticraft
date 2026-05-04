@@ -957,10 +957,11 @@ public class GCModelProvider extends FabricModelProvider {
 
     public void generateFluidCanisterModels(ItemModelGenerators generator) {
         for (int i = 1; i <= 6; i++) {
+            ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER);
             generator.generateLayeredItem(
-                    ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER).withSuffix("_"+i),
-                    Constant.id("item/fluid_canister_base"),
-                    Constant.id("item/fluid_canister_overlay_"+i)
+                    resourceLocation.withSuffix("_" + i),
+                    resourceLocation.withSuffix("_base"),
+                    resourceLocation.withSuffix("_overlay_" + i)
             );
         }
     }

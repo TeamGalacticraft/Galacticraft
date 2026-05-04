@@ -81,7 +81,6 @@ public class Galacticraft implements ModInitializer {
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
         GCItemSubPredicates.init();
-        GCFluidStorageProviders.register();
         GCTriggers.register();
         GCCreativeModeTabs.register();
         GCApiLookupProviders.register();

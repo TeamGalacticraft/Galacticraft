@@ -934,6 +934,7 @@
   "tooltip.galacticraft.energy_remaining": "Energy Remaining: %s",
   "tooltip.galacticraft.fluid_canister.empty": "Empty",
   "tooltip.galacticraft.fluid_canister.fluid_info": "%s: %d/1000mB",
+  "tooltip.galacticraft.fluid_canister.lox": "LOX",
   "tooltip.galacticraft.incorrect_number_of_slots": "Incorrect number of slots in the workstation for this recipe.",
   "tooltip.galacticraft.infinite": "Infinite",
   "tooltip.galacticraft.oxygen_remaining": "Oxygen Remaining: %s",

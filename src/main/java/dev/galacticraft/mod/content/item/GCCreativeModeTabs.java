@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
@@ -33,14 +32,12 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.core.Registry;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.*;
 
-import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 import static dev.galacticraft.mod.content.GCBlocks.*;
 import static dev.galacticraft.mod.content.item.GCItems.*;
 
@@ -300,21 +297,11 @@ public class GCCreativeModeTabs {
 
                 // FLUID CANISTERS
                 output.accept(FLUID_CANISTER);
-                ItemStack oilCanister = new ItemStack(FLUID_CANISTER);
-                oilCanister.set(FLUID_DATA, new FluidData(FluidVariant.of(GCFluids.CRUDE_OIL), 81000));
-                output.accept(oilCanister);
-                ItemStack fuelCanister = new ItemStack(FLUID_CANISTER);
-                fuelCanister.set(FLUID_DATA, new FluidData(FluidVariant.of(GCFluids.FUEL), 81000));
-                output.accept(fuelCanister);
-                ItemStack methaneCanister = new ItemStack(FLUID_CANISTER);
-                methaneCanister.set(FLUID_DATA, new FluidData(FluidVariant.of(Gases.METHANE), 81000));
-                output.accept(methaneCanister);
-                ItemStack liquidOxygenCanister = new ItemStack(FLUID_CANISTER);
-                liquidOxygenCanister.set(FLUID_DATA, new FluidData(FluidVariant.of(GCFluids.LIQUID_OXYGEN), 81000));
-                output.accept(liquidOxygenCanister);
-                //ItemStack liquidNitrogenCanister = new ItemStack(FLUID_CANISTER);
-                //liquidNitrogenCanister.set(FLUID_DATA, new FluidData(FluidVariant.of(GCFluids.LIQUID_NITROGEN), 81000)); // Liquid nitrogen not added yet
-                //output.accept(liquidNitrogenCanister);
+                output.accept(FluidCanisterItem.getFilledCanister(GCFluids.CRUDE_OIL));
+                output.accept(FluidCanisterItem.getFilledCanister(GCFluids.FUEL));
+                output.accept(FluidCanisterItem.getFilledCanister(Gases.METHANE));
+                output.accept(FluidCanisterItem.getFilledCanister(GCFluids.LIQUID_OXYGEN));
+                //output.accept(FluidCanisterItem.getFilledCanister(GCFluids.LIQUID_NITROGEN)); // Liquid nitrogen not added yet
 
                 output.accept(SMALL_OXYGEN_TANK);
                 output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));

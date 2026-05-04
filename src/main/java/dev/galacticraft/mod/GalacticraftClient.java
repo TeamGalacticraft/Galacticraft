@@ -64,6 +64,7 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.util.TextureUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -78,6 +79,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.particle.SplashParticle;
@@ -85,6 +87,7 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
 import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
@@ -96,12 +99,16 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.HashMap;
+import java.util.Map;
+
 import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
     private boolean colorsInitialized = false;
+    private static final Map<FluidVariant, Integer> FLUID_CANISTER_COLOR_CACHE = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -245,20 +252,27 @@ public class GalacticraftClient implements ClientModInitializer {
             FluidData data = stack.get(FLUID_DATA);
             if (data == null || data.variant().isBlank()) return -1;
 
-            int color = FluidVariantRendering.getColor(data.variant());
+            return FLUID_CANISTER_COLOR_CACHE.computeIfAbsent(data.variant(), variant -> {
+                // Try the tint
+                int color = FluidVariantRendering.getColor(data.variant());
+                if (color != -1) return color;
 
-            if (color == -1) {
-                if (data.variant().isOf(Fluids.WATER)) return 0xFF3F76E4;
+                // Manual colors
                 if (data.variant().isOf(GCFluids.CRUDE_OIL)) return 0xFF171313;
                 if (data.variant().isOf(GCFluids.FUEL)) return 0xFFB8D200;
                 if (data.variant().isOf(Gases.METHANE)) return 0xFF80FFFF;
                 if (data.variant().isOf(GCFluids.LIQUID_OXYGEN)) return 0xFFD76453;
                 //if (data.variant().isOf(GCFluids.LIQUID_NITROGEN)) return 0xFF002BD2; // Not added yet
-                if (data.variant().isOf(GCFluids.SULFURIC_ACID)) return 0xFF99FF33;
-            }
 
-            return color;
+                // Try to average the texture color
+                TextureAtlasSprite sprite = FluidVariantRendering.getSprite(variant);
+                if (sprite != null) {
+                    return FastColor.ARGB32.opaque(TextureUtils.calculateAverageColor(sprite));
+                }
+                return -1;
+            });
         }, GCItems.FLUID_CANISTER);
+        InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
 
         ItemProperties.register(GCItems.FLUID_CANISTER, Constant.id("fill_level"), (stack, world, entity, seed) -> {
             FluidData data = stack.get(FLUID_DATA);

@@ -34,11 +34,11 @@ import net.minecraft.world.item.ItemStack;
 import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 
 public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant> {
-    private final ContainerItemContext itemContext;
+    private final FluidData fluidData;
 
     public CanisterFluidStorage(ContainerItemContext context) {
         super(context);
-        this.itemContext = context;
+        this.fluidData = context.getItemVariant().toStack().get(FLUID_DATA);;
     }
 
     @Override
@@ -48,14 +48,12 @@ public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant>
 
     @Override
     protected FluidVariant getResource(ItemVariant currentVariant) {
-        FluidData data = itemContext.getItemVariant().toStack().get(FLUID_DATA);
-        return data != null ? data.variant() : getBlankResource();
+        return this.fluidData != null ? this.fluidData.variant() : getBlankResource();
     }
 
     @Override
     protected long getAmount(ItemVariant currentVariant) {
-        FluidData data = itemContext.getItemVariant().toStack().get(FLUID_DATA);
-        return data != null ? data.amount() : 0;
+        return this.fluidData != null ? this.fluidData.amount() : 0;
     }
 
     @Override
@@ -78,7 +76,7 @@ public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant>
 
     @Override
     protected boolean canInsert(FluidVariant resource) {
-        if (resource.getFluid().is(GCFluidTags.FLUID_CANISTER_EXCLUDED)) {
+        if (resource.getFluid().is(GCFluidTags.FLUID_CANISTER_EXCLUSIONS)) {
             return false;
         }
 

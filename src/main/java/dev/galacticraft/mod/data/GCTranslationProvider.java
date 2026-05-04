@@ -981,6 +981,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Tooltip.FLUID_CANISTER_EMPTY, "Empty");
         this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %d/1000mB");
+        this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
     }
 
     protected void generateConfigTranslations() {

@@ -30,6 +30,7 @@ import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
+import dev.galacticraft.mod.storage.CanisterFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -86,5 +87,7 @@ public class GCApiLookupProviders {
             return new SingleVariantFixedItemBackedFluidStorage(itemStack, context, capacity / 100, capacity / 100, capacity, FluidVariant.of(Gases.OXYGEN));
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
         FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
+
+        FluidStorage.ITEM.registerForItems((itemStack, context) -> new CanisterFluidStorage(context), GCItems.FLUID_CANISTER);
     }
 }

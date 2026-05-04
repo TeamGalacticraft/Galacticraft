@@ -521,7 +521,6 @@ public interface Constant {
         String INFINITE_BATTERY = "infinite_battery";
         String INFINITE_INDICATOR = "infinite_indicator";
         String FLUID_CANISTER = "fluid_canister";
-        String FlUID_CANISTER_WINDOW = "fluid_canister_window";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
