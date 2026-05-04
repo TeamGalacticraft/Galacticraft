@@ -1,5 +1,7 @@
 {
   "values": [
-    "minecraft:player"
+    "minecraft:player",
+    "minecraft:wolf",
+    "minecraft:cat"
   ]
 }
