@@ -64,6 +64,7 @@ public class MachineSound extends AbstractTickableSoundInstance {
         }
         if (this.machine == null) {
             this.callback.onFinished(this);
+            return;
         }
         switch (this.transitionState) {
             case STARTING:
@@ -102,15 +103,15 @@ public class MachineSound extends AbstractTickableSoundInstance {
 
     protected void modulateSoundforTransition() {
         float normTick = switch (transitionState) {
-            case STARTING -> (float) this.transitionTick/this.startTransitionTicks;
-            case ENDING -> 1.0F - ((float) this.transitionTick/this.endTransitionTicks);
+            case STARTING -> (float) this.transitionTick / this.startTransitionTicks;
+            case ENDING -> 1.0F - ((float) this.transitionTick / this.endTransitionTicks);
             case RUNNING -> 1.0F;
         };
         this.volume = Mth.lerp(normTick, 0.0F, this.maxVolume);
     }
 
-    public enum TransitionState {
-    STARTING, RUNNING, ENDING
-    }
+        public enum TransitionState {
+        STARTING, RUNNING, ENDING
+        }
 
 }
