@@ -1,0 +1,64 @@
+{
+  "variants": {
+    "facing=east,hinge=left,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left"
+    },
+    "facing=east,hinge=left,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left_open",
+      "y": 90
+    },
+    "facing=east,hinge=right,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right"
+    },
+    "facing=east,hinge=right,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right_open",
+      "y": 270
+    },
+    "facing=north,hinge=left,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left",
+      "y": 270
+    },
+    "facing=north,hinge=left,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left_open"
+    },
+    "facing=north,hinge=right,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right",
+      "y": 270
+    },
+    "facing=north,hinge=right,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right_open",
+      "y": 180
+    },
+    "facing=south,hinge=left,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left",
+      "y": 90
+    },
+    "facing=south,hinge=left,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left_open",
+      "y": 180
+    },
+    "facing=south,hinge=right,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right",
+      "y": 90
+    },
+    "facing=south,hinge=right,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right_open"
+    },
+    "facing=west,hinge=left,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left",
+      "y": 180
+    },
+    "facing=west,hinge=left,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_left_open",
+      "y": 270
+    },
+    "facing=west,hinge=right,open=false": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right",
+      "y": 180
+    },
+    "facing=west,hinge=right,open=true": {
+      "model": "galacticraft:block/meteoric_iron_door_top_cap_right_open",
+      "y": 90
+    }
+  }
+}

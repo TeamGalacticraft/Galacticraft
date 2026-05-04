@@ -44,6 +44,9 @@ public class GCEntityTypeTagProvider extends FabricTagProvider.EntityTypeTagProv
                 .add(EntityType.PLAYER);
 
         this.getOrCreateTagBuilder(GCEntityTypeTags.HAS_OXYGEN_SETUP)
+                .add(GCEntityTypes.MOON_COW)
+                .add(GCEntityTypes.MOON_SHEEP)
+                .add(GCEntityTypes.MOON_CHICKEN)
                 .add(GCEntityTypes.EVOLVED_ZOMBIE)
                 .add(GCEntityTypes.EVOLVED_CREEPER)
                 .add(GCEntityTypes.EVOLVED_SKELETON)

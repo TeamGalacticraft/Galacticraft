@@ -237,6 +237,12 @@ public interface Constant {
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
         String FLAG = "flag";
+        String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String METEORIC_IRON_DOOR_TOP = "meteoric_iron_door_top";
+        String OLIVINE_GLASS = "olivine_glass";
+        String OLIVINE_GLASS_PANE = "olivine_glass_pane";
+        String MOON_GLASS = "moon_glass";
+        String MOON_GLASS_PANE = "moon_glass_pane";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -379,6 +385,11 @@ public interface Constant {
         String SOLAR_ARRAY_MODULE = "solar_array_module";
         String OXYGEN_DISTRIBUTOR_BUBBLE_DUMMY_BLOCK = "oxygen_distributor_bubble_dummy_block";
         String LUNAR_CARTOGRAPHY_TABLE = "lunar_cartography_table";
+        String LUNAR_WORKBENCH = "lunar_workbench";
+        String LUNAR_SMITHING_TABLE = "lunar_smithing_table";
+        String LUNAR_CHEESE_PRESS = "lunar_cheese_press";
+        String LUNAR_HERBALIST_TABLE = "lunar_herbalist_table";
+        String LUNAR_HOME_ANCHOR = "lunar_home_anchor";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
         String CANNED_FOOD = "canned_food";
@@ -534,6 +545,7 @@ public interface Constant {
 
         String SHIELD_CONTROLLER = "shield_controller";
         String FREQUENCY_MODULE = "frequency_module";
+        String VILLAGE_ACCESS_KEY = "village_access_key";
 
         String SMALL_OXYGEN_TANK = "small_oxygen_tank";
         String MEDIUM_OXYGEN_TANK = "medium_oxygen_tank";
@@ -1094,6 +1106,10 @@ public interface Constant {
     }
 
     interface Entity {
+        String MOON_COW = "moon_cow";
+        String MOON_SHEEP = "moon_sheep";
+        String MOON_CHICKEN = "moon_chicken";
+        String MOON_GOLEM = "moon_golem";
         String MOON_VILLAGER = "moon_villager";
         String EVOLVED_ZOMBIE = "evolved_zombie";
         String EVOLVED_CREEPER = "evolved_creeper";
@@ -1121,6 +1137,9 @@ public interface Constant {
     }
 
     interface SpawnEgg {
+        String MOON_COW = "moon_cow_spawn_egg";
+        String MOON_SHEEP = "moon_sheep_spawn_egg";
+        String MOON_CHICKEN = "moon_chicken_spawn_egg";
         String MOON_VILLAGER = "moon_villager_spawn_egg";
         String EVOLVED_ZOMBIE = "evolved_zombie_spawn_egg";
         String EVOLVED_CREEPER = "evolved_creeper_spawn_egg";

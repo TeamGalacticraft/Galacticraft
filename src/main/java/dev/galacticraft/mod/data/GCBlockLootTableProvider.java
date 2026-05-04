@@ -213,6 +213,10 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.VACUUM_GLASS);
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);
         this.dropSelf(GCBlocks.STRONG_VACUUM_GLASS);
+        this.dropSelf(GCBlocks.OLIVINE_GLASS);
+        this.dropSelf(GCBlocks.OLIVINE_GLASS_PANE);
+        this.dropSelf(GCBlocks.MOON_GLASS);
+        this.dropSelf(GCBlocks.MOON_GLASS_PANE);
 
         // --ORES-- (alphabetical)
         //ALUMINUM
@@ -260,6 +264,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         this.dropSelf(GCBlocks.SILICON_BLOCK);
         this.dropSelf(GCBlocks.METEORIC_IRON_BLOCK);
+        this.add(GCBlocks.METEORIC_IRON_DOOR, this.createDoorTable(GCBlocks.METEORIC_IRON_DOOR));
+        this.add(GCBlocks.METEORIC_IRON_DOOR_TOP, noDrop());
         this.dropSelf(GCBlocks.DESH_BLOCK);
         this.dropSelf(GCBlocks.ALUMINUM_BLOCK);
         this.dropSelf(GCBlocks.TIN_BLOCK);
@@ -298,6 +304,11 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.BLACK_CANDLE_MOON_CHEESE_WHEEL, createCandleCakeDrops(Blocks.BLACK_CANDLE));
 
         this.dropSelf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+        this.dropSelf(GCBlocks.LUNAR_WORKBENCH);
+        this.dropSelf(GCBlocks.LUNAR_SMITHING_TABLE);
+        this.dropSelf(GCBlocks.LUNAR_CHEESE_PRESS);
+        this.dropSelf(GCBlocks.LUNAR_HERBALIST_TABLE);
+        this.add(GCBlocks.LUNAR_HOME_ANCHOR, noDrop());
 
         this.add(GCBlocks.CAVERNOUS_VINES, BlockLootSubProvider::createShearsOnlyDrop);
         this.add(GCBlocks.BOSS_SPAWNER, noDrop());
