@@ -22,46 +22,32 @@
 
 package dev.galacticraft.mod.client.gui.widget;
 
-import dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.components.Button;
+import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 
-import java.util.function.Supplier;
-
-public class SpaceRaceButtonWidget extends Button {
+public class SpaceRaceButtonWidget extends SpaceRaceButton {
     private final Font textRenderer;
-    private final int screenWidth;
-    private final int screenHeight;
 
     public SpaceRaceButtonWidget(Minecraft minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(x, y, buttonWidth, buttonHeight, Component.empty(), (button) -> minecraft.setScreen(new SpaceRaceScreen()), Supplier::get);
+        super(CommonComponents.EMPTY, x, y, buttonWidth, buttonHeight, (button) -> minecraft.setScreen(new dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen()));
         this.textRenderer = minecraft.font;
-        this.screenWidth = screenWidth;
-        this.screenHeight = screenHeight;
     }
 
     @Override
     public void renderWidget(GuiGraphics graphics, int i, int j, float f) {
-        int screenWidth = this.screenWidth;
-        int screenHeight = this.screenHeight;
-        int buttonWidth = 100;
-        int buttonHeight = 35;
-        int x = screenWidth - buttonWidth;
-        int y = screenHeight - buttonHeight;
+        this.renderFrame(graphics);
 
         int spaceBetweenLines = 1;
-        int lineHeight = textRenderer.lineHeight;
-        int textYOffset = 9;
+        int lineHeight = this.textRenderer.lineHeight;
+        int totalTextHeight = lineHeight * 2 + spaceBetweenLines;
+        int textY = this.getY() + (this.getHeight() - totalTextHeight) / 2 + 1;
+        int centerX = this.getX() + this.getWidth() / 2;
 
-        graphics.fillGradient(x, y, x + buttonWidth, y + buttonHeight, 0xF0151515, 0xF00C0C0C);
-        graphics.hLine(x, screenWidth, y, 0xFF000000);
-        graphics.vLine(x, screenHeight, y, 0xFF000000);
-
-        graphics.drawCenteredString(textRenderer, Component.translatable(Translations.SpaceRace.BUTTON), x + buttonWidth / 2, y + textYOffset, 0xFFFFFFFF);
-        graphics.drawCenteredString(textRenderer, Component.translatable(Translations.SpaceRace.BUTTON_2), x + buttonWidth / 2, y + textYOffset + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.textRenderer, Component.translatable(Translations.SpaceRace.BUTTON), centerX, textY, 0xFFFFFFFF);
+        graphics.drawCenteredString(this.textRenderer, Component.translatable(Translations.SpaceRace.BUTTON_2), centerX, textY + lineHeight + spaceBetweenLines, 0xFFFFFFFF);
     }
 }

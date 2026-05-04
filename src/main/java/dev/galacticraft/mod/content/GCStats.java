@@ -29,6 +29,12 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 
+import java.lang.reflect.Field;
+import java.lang.reflect.Modifier;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
+
 public class GCStats {
     public static final ResourceLocation CLEAN_PARACHUTE = register("clean_parachute", StatFormatter.DEFAULT);
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
@@ -38,6 +44,7 @@ public class GCStats {
     public static final ResourceLocation SAFE_LANDING = register("safe_landing", StatFormatter.DEFAULT);
     public static final ResourceLocation EAT_CHEESE_WHEEL_SLICE = register("eat_cheese_wheel_slice", StatFormatter.DEFAULT);
     public static final ResourceLocation CHEESE_SLICED = register("cheese_cut", StatFormatter.DEFAULT);
+    private static final List<ResourceLocation> ALL_STAT_IDS = List.copyOf(collectStatIds());
 
     public static ResourceLocation register(String id, StatFormatter formatter) {
         ResourceLocation resourceLocation = Constant.id(id);
@@ -46,6 +53,29 @@ public class GCStats {
         return resourceLocation;
     }
 
+    private static List<ResourceLocation> collectStatIds() {
+        List<ResourceLocation> statIds = new ArrayList<>();
+        for (Field field : GCStats.class.getDeclaredFields()) {
+            if (field.getType() != ResourceLocation.class || !Modifier.isStatic(field.getModifiers())) {
+                continue;
+            }
+            try {
+                ResourceLocation statId = (ResourceLocation) field.get(null);
+                if (statId != null) {
+                    statIds.add(statId);
+                }
+            } catch (IllegalAccessException ignored) {
+            }
+        }
+        statIds.sort(Comparator.comparing(ResourceLocation::toString));
+        return statIds;
+    }
+
+    public static List<ResourceLocation> getAllStatIds() {
+        return ALL_STAT_IDS;
+    }
+
     public static void register() {
+        getAllStatIds();
     }
 }
