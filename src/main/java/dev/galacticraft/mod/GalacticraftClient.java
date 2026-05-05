@@ -24,6 +24,8 @@ package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.fluid.FluidData;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -51,6 +53,7 @@ import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapeRegistry;
@@ -62,6 +65,7 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.util.TextureUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -74,12 +78,16 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.FastColor;
 import net.minecraft.world.item.Item;
@@ -91,10 +99,16 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
+
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
     private boolean colorsInitialized = false;
+    private static final Map<FluidVariant, Integer> FLUID_CANISTER_COLOR_CACHE = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
@@ -229,6 +243,41 @@ public class GalacticraftClient implements ClientModInitializer {
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : FastColor.ARGB32.opaque(stack.getOrDefault(GCDataComponents.COLOR, 0xFFFFFF)), GCItems.CANNED_FOOD);
+
+        // Fluids can be added to the list below to give them a colour for the Fluid Canister
+        // Fluids that use a tint are handled automatically
+        ColorProviderRegistry.ITEM.register((stack, layer) -> {
+            if (layer != 1) return -1;
+
+            FluidData data = stack.get(FLUID_DATA);
+            if (data == null || data.variant().isBlank()) return -1;
+
+            return FLUID_CANISTER_COLOR_CACHE.computeIfAbsent(data.variant(), variant -> {
+                // Try the tint
+                int color = FluidVariantRendering.getColor(data.variant());
+                if (color != -1) return color;
+
+                // Manual colors
+                if (data.variant().isOf(Gases.METHANE)) return 0xFF80FFFF;
+                if (data.variant().isOf(GCFluids.LIQUID_OXYGEN)) return 0xFFD76453;
+
+                // Try to average the texture color
+                TextureAtlasSprite sprite = FluidVariantRendering.getSprite(variant);
+                if (sprite != null) {
+                    return FastColor.ARGB32.opaque(TextureUtils.calculateAverageColor(sprite));
+                }
+                return -1;
+            });
+        }, GCItems.FLUID_CANISTER);
+        InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
+
+        ItemProperties.register(GCItems.FLUID_CANISTER, Constant.id("fill_level"), (stack, world, entity, seed) -> {
+            FluidData data = stack.get(FLUID_DATA);
+            if (data == null || data.amount() <= 0) return 0.0f;
+
+            double percentage = (double) data.amount() / (double) ((FluidCanisterItem) stack.getItem()).capacity;
+            return (float) (Math.ceil(percentage * 6.0) / 6.0);
+        });
 
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
         for (Item flag : GCItems.FLAGS.colorMap().values()) {

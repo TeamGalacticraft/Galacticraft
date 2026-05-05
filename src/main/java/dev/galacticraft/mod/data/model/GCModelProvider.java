@@ -761,6 +761,8 @@ public class GCModelProvider extends FabricModelProvider {
 
         generator.generateFlatItem(GCItems.STANDARD_WRENCH, ModelTemplates.FLAT_HANDHELD_ITEM);
 
+        this.generateFluidCanisterModels(generator);
+
         // SMITHING TEMPLATES
         generator.generateFlatItem(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, ModelTemplates.FLAT_HANDHELD_ITEM);
 
@@ -951,6 +953,17 @@ public class GCModelProvider extends FabricModelProvider {
                                                         .with(VariantProperties.MODEL, horizontalModel))
                                 )
                 );
+    }
+
+    public void generateFluidCanisterModels(ItemModelGenerators generator) {
+        for (int i = 1; i <= 6; i++) {
+            ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER);
+            generator.generateLayeredItem(
+                    resourceLocation.withSuffix("_" + i),
+                    resourceLocation.withSuffix("_base"),
+                    resourceLocation.withSuffix("_overlay_" + i)
+            );
+        }
     }
 
     private static TextureMapping rocketLaunchPadPart(Block block, String suffix) {

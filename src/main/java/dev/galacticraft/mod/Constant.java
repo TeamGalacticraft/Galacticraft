@@ -520,6 +520,7 @@ public interface Constant {
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
         String INFINITE_INDICATOR = "infinite_indicator";
+        String FLUID_CANISTER = "fluid_canister";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";

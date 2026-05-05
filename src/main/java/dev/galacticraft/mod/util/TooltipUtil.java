@@ -22,9 +22,13 @@
 
 package dev.galacticraft.mod.util;
 
+import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.content.GCFluids;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
@@ -78,6 +82,10 @@ public class TooltipUtil {
         tooltip.add(Component.translatable(resourceId, value).setStyle(Constant.Text.GRAY_STYLE));
     }
 
+    public static void appendLabeledTooltip(String resourceId, Component value1, Component value2, List<Component> tooltip) {
+        tooltip.add(Component.translatable(resourceId, value1, value2).setStyle(Constant.Text.GRAY_STYLE));
+    }
+
     public static Component formatRemaining(long amount, long capacity) {
         return Component.literal(NUMBER_FORMAT.format(amount) + "/" + NUMBER_FORMAT.format(capacity))
                 .setStyle(Constant.Text.getStorageLevelStyle(1.0 - ((double) amount / (double) capacity)));
@@ -104,6 +112,20 @@ public class TooltipUtil {
 
     public static void appendFluidRemainingTooltip(String resourceId, long amount, long capacity, List<Component> tooltip) {
         appendLabeledTooltip(resourceId, TooltipUtil.formatFluidRemaining(amount, capacity), tooltip);
+    }
+
+    public static void appendCanisterRemainingTooltip(String resourceId, FluidData data, long capacity, List<Component> tooltip) {
+        if (data != null && !data.variant().isBlank()) {
+            Component fluidName;
+            if (data.variant().getFluid().isSame(GCFluids.LIQUID_OXYGEN)) {
+                fluidName = Component.translatable(Translations.Tooltip.FLUID_CANISTER_LOX);
+            } else {
+                fluidName = FluidVariantAttributes.getName(data.variant()).plainCopy();
+            }
+            appendLabeledTooltip(resourceId, fluidName, TooltipUtil.formatFluidRemaining(data.amount(), capacity), tooltip);
+        } else {
+            tooltip.add(Component.translatable(Translations.Tooltip.FLUID_CANISTER_EMPTY).withStyle(ChatFormatting.DARK_GRAY));
+        }
     }
 
     public static void appendInfiniteCapacityTooltip(String resourceId, List<Component> tooltip) {

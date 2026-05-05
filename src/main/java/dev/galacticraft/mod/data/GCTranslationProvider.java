@@ -516,6 +516,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.item(GCItems.STANDARD_WRENCH, "Standard Wrench");
 
+        this.item(GCItems.FLUID_CANISTER, "Empty Canister");
+        this.add(Items.FLUID_CANISTER_FILLED, "%s Canister");
+
         // SMITHING TEMPLATES
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
 
@@ -975,6 +978,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
         this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
+
+        this.add(Tooltip.FLUID_CANISTER_EMPTY, "Empty");
+        this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %d");
+        this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
     }
 
     protected void generateConfigTranslations() {
@@ -983,6 +990,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.CLIENT, "Client");
         this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
+        this.add(Config.FLUID_CANISTER_CAPACITY, "Fluid Canister Capacity");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.PLAYER, "Player");
 

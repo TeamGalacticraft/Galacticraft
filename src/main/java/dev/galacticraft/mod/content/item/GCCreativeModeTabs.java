@@ -23,10 +23,12 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -292,6 +294,14 @@ public class GCCreativeModeTabs {
                 BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
                 output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
+
+                // FLUID CANISTERS
+                output.accept(FLUID_CANISTER);
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.CRUDE_OIL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.FUEL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, Gases.METHANE));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_OXYGEN));
+                //output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_NITROGEN)); // Liquid nitrogen not added yet
 
                 output.accept(SMALL_OXYGEN_TANK);
                 output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));

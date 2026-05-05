@@ -153,6 +153,7 @@ public interface Translations {
 
         String CLIENT = "config.galacticraft.client";
         String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
+        String FLUID_CANISTER_CAPACITY = "config.galacticraft.client.fluid_canister_capacity";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 
@@ -223,6 +224,8 @@ public interface Translations {
     interface Items {
         String EMPTY_CAN = "item.galacticraft.empty_can";
         String CANNED_FOOD_TEMPLATE = "item.galacticraft.canned_food.template";
+
+        String FLUID_CANISTER_FILLED = "item.galacticraft.fluid_canister.filled";
     }
 
     interface CelestialBody {
@@ -264,6 +267,10 @@ public interface Translations {
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
         String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
+
+        String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
+        String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
+        String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
     }
 
     interface Gas {
