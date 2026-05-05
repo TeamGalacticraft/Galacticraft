@@ -24,16 +24,14 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations.Items;
 import dev.galacticraft.mod.util.Translations.Tooltip;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -44,23 +42,26 @@ import org.jetbrains.annotations.NotNull;
 import java.util.List;
 
 import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
-import static dev.galacticraft.mod.content.item.GCItems.FLUID_CANISTER;
 
 public class FluidCanisterItem extends Item {
+    public final long capacity;
+
     public static StorageView<FluidVariant> getStorage(ItemStack stack) {
         StorageView<FluidVariant> storage = (StorageView<FluidVariant>) ContainerItemContext.withConstant(stack).find(FluidStorage.ITEM);
         assert storage != null;
         return storage;
     }
 
-    public static ItemStack getFilledCanister(Fluid fluid) {
-        ItemStack stack = new ItemStack(FLUID_CANISTER);
-        stack.set(FLUID_DATA, new FluidData(FluidVariant.of(fluid), FluidConstants.BUCKET));
+    public static ItemStack getFilledCanister(Item item, Fluid fluid) {
+        FluidCanisterItem canisterItem = (FluidCanisterItem) item.asItem();
+        ItemStack stack = new ItemStack(item);
+        stack.set(FLUID_DATA, new FluidData(FluidVariant.of(fluid), canisterItem.capacity));
         return stack;
     }
 
-    public FluidCanisterItem(Properties properties) {
+    public FluidCanisterItem(Properties properties, long capacity) {
         super(properties);
+        this.capacity = capacity;
     }
 
     @Override
@@ -83,21 +84,7 @@ public class FluidCanisterItem extends Item {
 
     protected void appendFluidCanisterTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         FluidData data = stack.get(FLUID_DATA);
-
-        if (data != null && !data.variant().isBlank()) {
-            Component fluidName;
-            if (data.variant().getFluid().isSame(GCFluids.LIQUID_OXYGEN)) {
-                fluidName = Component.translatable(Tooltip.FLUID_CANISTER_LOX);
-            } else {
-                fluidName = FluidVariantAttributes.getName(data.variant()).plainCopy();
-            }
-            long amountMb = data.amount() / 81; // Convert Fabric droplets to mB
-
-            tooltip.add(Component.translatable(Tooltip.FLUID_CANISTER_FLUID_INFO, fluidName, amountMb)
-                    .withStyle(ChatFormatting.GRAY));
-        } else {
-            tooltip.add(Component.translatable(Tooltip.FLUID_CANISTER_EMPTY).withStyle(ChatFormatting.DARK_GRAY));
-        }
+        TooltipUtil.appendCanisterRemainingTooltip(Tooltip.FLUID_CANISTER_FLUID_INFO, data, capacity, tooltip);
     }
 
     @Override

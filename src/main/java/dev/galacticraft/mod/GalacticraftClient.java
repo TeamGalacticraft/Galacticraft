@@ -53,6 +53,7 @@ import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
 import dev.galacticraft.mod.misc.cape.CapeRegistry;
@@ -78,7 +79,6 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.EntityModel;
@@ -258,11 +258,8 @@ public class GalacticraftClient implements ClientModInitializer {
                 if (color != -1) return color;
 
                 // Manual colors
-                if (data.variant().isOf(GCFluids.CRUDE_OIL)) return 0xFF171313;
-                if (data.variant().isOf(GCFluids.FUEL)) return 0xFFB8D200;
                 if (data.variant().isOf(Gases.METHANE)) return 0xFF80FFFF;
                 if (data.variant().isOf(GCFluids.LIQUID_OXYGEN)) return 0xFFD76453;
-                //if (data.variant().isOf(GCFluids.LIQUID_NITROGEN)) return 0xFF002BD2; // Not added yet
 
                 // Try to average the texture color
                 TextureAtlasSprite sprite = FluidVariantRendering.getSprite(variant);
@@ -278,7 +275,7 @@ public class GalacticraftClient implements ClientModInitializer {
             FluidData data = stack.get(FLUID_DATA);
             if (data == null || data.amount() <= 0) return 0.0f;
 
-            double percentage = (double) data.amount() / (double) FluidConstants.BUCKET;
+            double percentage = (double) data.amount() / (double) ((FluidCanisterItem) stack.getItem()).capacity;
             return (float) (Math.ceil(percentage * 6.0) / 6.0);
         });
 

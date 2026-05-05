@@ -31,7 +31,7 @@
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:tin_canister"
+            "items": "#c:canisters/tin"
           }
         ]
       },

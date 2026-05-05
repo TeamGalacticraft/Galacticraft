@@ -153,6 +153,7 @@ public interface Translations {
 
         String CLIENT = "config.galacticraft.client";
         String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
+        String FLUID_CANISTER_CAPACITY = "config.galacticraft.client.fluid_canister_capacity";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 

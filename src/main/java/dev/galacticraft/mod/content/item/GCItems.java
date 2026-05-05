@@ -175,7 +175,7 @@ public class GCItems {
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
 
-    public static final Item FLUID_CANISTER = ITEMS.register(Constant.Item.FLUID_CANISTER, new FluidCanisterItem(new Item.Properties().stacksTo(1)));
+    public static final Item FLUID_CANISTER = ITEMS.register(Constant.Item.FLUID_CANISTER, new FluidCanisterItem(new Item.Properties().stacksTo(1), Galacticraft.CONFIG.fluidCanisterCapacity()));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));

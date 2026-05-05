@@ -88,6 +88,6 @@ public class GCApiLookupProviders {
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
         FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
 
-        FluidStorage.ITEM.registerForItems((itemStack, context) -> new CanisterFluidStorage(context), GCItems.FLUID_CANISTER);
+        FluidStorage.ITEM.registerForItems((itemStack, context) -> new CanisterFluidStorage(itemStack, context), GCItems.FLUID_CANISTER);
     }
 }

@@ -23,9 +23,9 @@
 package dev.galacticraft.mod.storage;
 
 import dev.galacticraft.api.fluid.FluidData;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
-import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.base.SingleVariantItemStorage;
@@ -35,10 +35,12 @@ import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 
 public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant> {
     private final FluidData fluidData;
+    private final long capacity;
 
-    public CanisterFluidStorage(ContainerItemContext context) {
+    public CanisterFluidStorage(ItemStack stack, ContainerItemContext context) {
         super(context);
-        this.fluidData = context.getItemVariant().toStack().get(FLUID_DATA);;
+        this.fluidData = context.getItemVariant().toStack().get(FLUID_DATA);
+        this.capacity = ((FluidCanisterItem) stack.getItem()).capacity;
     }
 
     @Override
@@ -58,7 +60,7 @@ public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant>
 
     @Override
     protected long getCapacity(FluidVariant variant) {
-        return FluidConstants.BUCKET;
+        return this.capacity;
     }
 
     @Override
