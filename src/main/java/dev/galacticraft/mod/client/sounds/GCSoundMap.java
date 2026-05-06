@@ -33,7 +33,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GCSoundMap {
-    
+
     public static final Map<Boolean, Map<MachineStatus, SoundEvent>> GC_SOUND_MAP;
     static {
         final Map<Boolean, Map<MachineStatus, SoundEvent>> INTERNAL = new HashMap<>();
