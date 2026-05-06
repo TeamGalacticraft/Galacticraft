@@ -110,8 +110,8 @@ public class MachineSound extends AbstractTickableSoundInstance {
         this.volume = Mth.lerp(normTick, 0.0F, this.maxVolume);
     }
 
-        public enum TransitionState {
+    public enum TransitionState {
         STARTING, RUNNING, ENDING
-        }
+    }
 
 }
