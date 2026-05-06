@@ -101,7 +101,6 @@ public class GCSoundManager implements SoundCallback {
         float maxVolume = isActive ? 1.0F : 0.2F;
         // Stop old sound (if there is one)
         manager.getSoundFromEntity(machine, oldStatus, isActive).ifPresent(oldSound -> oldSound.end());
-        System.out.println(oldStatus);
         // Play new sound (if there is one)
         SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(isActive).getOrDefault(status, GCSounds.MACHINE_BUZZ);
         manager.play(new MachineSound(machine, newSound, manager, maxVolume));
