@@ -187,7 +187,7 @@
       "galacticraft:machine/circuitscritch3"
     ]
   },
-    "machine.machinebuzz": {
+  "machine.machinebuzz": {
     "sounds": [
       {
         "name": "galacticraft:machine/machinebuzz",
