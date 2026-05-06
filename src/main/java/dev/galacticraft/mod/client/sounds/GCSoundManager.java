@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -84,9 +85,9 @@ public class GCSoundManager implements SoundCallback {
         return Optional.empty();
     }
 
-    public Optional<MachineSound> getSoundFromEntity(BlockEntity entity, MachineStatus status) {
+    public Optional<MachineSound> getSoundFromEntity(BlockEntity entity, MachineStatus status, boolean isActive) {
         for (var activeSound : this.activeSounds) {
-            if (activeSound.machine == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(status),activeSound.event)) {
+            if (activeSound.machine == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(isActive).getOrDefault(status, GCSounds.MACHINE_BUZZ), activeSound.event)) {
                 return Optional.of(activeSound);
             }
         }
@@ -96,27 +97,13 @@ public class GCSoundManager implements SoundCallback {
     public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldStatus) {
         MachineBlockEntity machine = (MachineBlockEntity) minecraft.level.getBlockEntity(pos);
         GCSoundManager manager = GCSoundManager.getInstance();
-        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(status);
-
+        boolean isActive = status.getType().isActive();
+        float maxVolume = isActive ? 1.0F : 0.2F;
         // Stop old sound (if there is one)
-        manager.getSoundFromEntity(machine, oldStatus).ifPresent(oldSound -> oldSound.end());
+        manager.getSoundFromEntity(machine, oldStatus, isActive).ifPresent(oldSound -> oldSound.end());
+        System.out.println(oldStatus);
         // Play new sound (if there is one)
-        switch (status.getType()) {
-            case MISSING_ENERGY:
-                break;
-            case MISSING_FLUIDS:
-            case MISSING_ITEMS:
-            case MISSING_RESOURCE:
-            case OTHER:
-            case OUTPUT_FULL:
-                manager.play(new MachineSound(machine, newSound, manager, 0.2F));
-                break;
-            case PARTIALLY_WORKING:
-            case WORKING:
-                manager.play(new MachineSound(machine, newSound, manager, 1.0F));
-                break;
-            default:
-                break;
-        }
+        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(isActive).getOrDefault(status, GCSounds.MACHINE_BUZZ);
+        manager.play(new MachineSound(machine, newSound, manager, maxVolume));
     }
 }

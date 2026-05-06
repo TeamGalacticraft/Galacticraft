@@ -33,68 +33,23 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GCSoundMap {
-    private static final Map<MachineStatus, SoundEvent> INTERNAL = new HashMap<>();
-    public static final Map<MachineStatus, SoundEvent> GC_SOUND_MAP;
+    
+    public static final Map<Boolean, Map<MachineStatus, SoundEvent>> GC_SOUND_MAP;
     static {
-        // MachineStatuses
-        INTERNAL.put(MachineStatuses.NOT_ENOUGH_ENERGY, null);
-        INTERNAL.put(MachineStatuses.INVALID_RECIPE, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(MachineStatuses.OUTPUT_FULL, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(MachineStatuses.CAPACITOR_FULL, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(MachineStatuses.IDLE, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(MachineStatuses.ACTIVE, GCSounds.MACHINE_BUZZ);
-
-        // GCMachineStatuses
-        // Energy Generation
-        INTERNAL.put(GCMachineStatuses.GENERATING, null);
-        // Energy Generation - Coal Generator
-        INTERNAL.put(GCMachineStatuses.NO_FUEL, null);
-        INTERNAL.put(GCMachineStatuses.WARMING_UP, null);
-        INTERNAL.put(GCMachineStatuses.COOLING_DOWN, null);
-        // Energy Generation - Solar Panels
-        INTERNAL.put(GCMachineStatuses.PARTIALLY_GENERATING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.NOT_GENERATING, null);
-        INTERNAL.put(GCMachineStatuses.BLOCKED, null);
-
-        INTERNAL.put(GCMachineStatuses.FABRICATING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.COMPRESSING, null);
-        INTERNAL.put(GCMachineStatuses.SMELTING, null);
-        // Oxygen
-        INTERNAL.put(GCMachineStatuses.NOT_ENOUGH_OXYGEN, GCSounds.MACHINE_BUZZ);
-        // Oxygen - Collector
-        INTERNAL.put(GCMachineStatuses.COLLECTING, GCSounds.MACHINE_HUM);
-        // Oxygen - (De)compressor
-        INTERNAL.put(GCMachineStatuses.COMPRESSING_OXYGEN, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.DECOMPRESSING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.MISSING_OXYGEN_TANK, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.OXYGEN_TANK_FULL, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.EMPTY_OXYGEN_TANK, GCSounds.MACHINE_BUZZ);
-        // Oxygen - Sealer
-        INTERNAL.put(GCMachineStatuses.ALREADY_SEALED, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.AREA_TOO_LARGE, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.SEALED, GCSounds.MACHINE_BUZZ);
-        // Oxygen - Bubble Distributor
-        INTERNAL.put(GCMachineStatuses.DISTRIBUTING, GCSounds.MACHINE_HUM);
-        // Refinery
-        INTERNAL.put(GCMachineStatuses.REFINING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.MISSING_OIL, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.FUEL_TANK_FULL, GCSounds.MACHINE_BUZZ);
-        // Fuel Loader
-        INTERNAL.put(GCMachineStatuses.PREPARING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.LOADING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.NOT_ENOUGH_FUEL, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.NO_ROCKET, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.ROCKET_IS_FULL, GCSounds.MACHINE_BUZZ);
-        // Food Canner
-        INTERNAL.put(GCMachineStatuses.CANNING, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.TRANSFERRING_CAN, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.NO_FOOD, GCSounds.MACHINE_BUZZ);
-        INTERNAL.put(GCMachineStatuses.MISSING_EMPTY_CAN, GCSounds.MACHINE_BUZZ);
-
-        INTERNAL.put(null, null);
-
-
+        final Map<Boolean, Map<MachineStatus, SoundEvent>> INTERNAL = new HashMap<>();
+        final Map<MachineStatus, SoundEvent> IDLE = new HashMap<>();
+        final Map<MachineStatus, SoundEvent> ACTIVE = new HashMap<>();
+        // Idle/unpowered sounds
+        IDLE.put(GCMachineStatuses.BLOCKED, null);
+        IDLE.put(GCMachineStatuses.NO_FUEL, null);
+        IDLE.put(MachineStatuses.NOT_ENOUGH_ENERGY, null);
+        IDLE.put(GCMachineStatuses.NOT_GENERATING, null);
+        // Active sounds
+        ACTIVE.put(GCMachineStatuses.COLLECTING, GCSounds.MACHINE_HUM);
+        ACTIVE.put(GCMachineStatuses.DISTRIBUTING, GCSounds.MACHINE_HUM);
+        // All sounds
+        INTERNAL.put(false, IDLE);
+        INTERNAL.put(true, ACTIVE);
         GC_SOUND_MAP = Collections.unmodifiableMap(INTERNAL);
     }
-
 }
