@@ -203,7 +203,7 @@
       }
     ]
   },
-      "machine.oxygenfan": {
+  "machine.oxygenfan": {
     "sounds": [
       {
         "name": "galacticraft:machine/oxygenfan",
