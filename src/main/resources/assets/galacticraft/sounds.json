@@ -195,7 +195,7 @@
       }
     ]
   },
-    "machine.machinehum": {
+  "machine.machinehum": {
     "sounds": [
       {
         "name": "galacticraft:machine/machinehum",
