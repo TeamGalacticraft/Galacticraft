@@ -26,30 +26,32 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
 import net.minecraft.sounds.SoundEvent;
-
-import java.util.Collections;
-import java.util.HashMap;
 import java.util.Map;
 
 public class GCSoundMap {
+    private static final Map<MachineStatus.Type, SoundEvent> DEFAULTS = Map.ofEntries(
+            Map.entry(MachineStatus.Type.WORKING, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.PARTIALLY_WORKING, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.MISSING_RESOURCE, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.MISSING_FLUIDS, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.MISSING_ENERGY, null),
+            Map.entry(MachineStatus.Type.MISSING_ITEMS, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.OUTPUT_FULL, GCSounds.MACHINE_BUZZ),
+            Map.entry(MachineStatus.Type.OTHER, GCSounds.MACHINE_BUZZ)
+    );
 
-    public static final Map<Boolean, Map<MachineStatus, SoundEvent>> GC_SOUND_MAP;
-    static {
-        final Map<Boolean, Map<MachineStatus, SoundEvent>> INTERNAL = new HashMap<>();
-        final Map<MachineStatus, SoundEvent> IDLE = new HashMap<>();
-        final Map<MachineStatus, SoundEvent> ACTIVE = new HashMap<>();
-        // Idle/unpowered sounds
-        IDLE.put(GCMachineStatuses.BLOCKED, null);
-        IDLE.put(GCMachineStatuses.NO_FUEL, null);
-        IDLE.put(MachineStatuses.NOT_ENOUGH_ENERGY, null);
-        IDLE.put(GCMachineStatuses.NOT_GENERATING, null);
-        // Active sounds
-        ACTIVE.put(GCMachineStatuses.COLLECTING, GCSounds.MACHINE_HUM);
-        ACTIVE.put(GCMachineStatuses.DISTRIBUTING, GCSounds.MACHINE_HUM);
-        // All sounds
-        INTERNAL.put(false, IDLE);
-        INTERNAL.put(true, ACTIVE);
-        GC_SOUND_MAP = Collections.unmodifiableMap(INTERNAL);
+    private static final Map<MachineStatus, SoundEvent> EXCEPTIONS = Map.ofEntries(
+            Map.entry(MachineStatuses.NOT_ENOUGH_ENERGY, null),
+            Map.entry(GCMachineStatuses.BLOCKED, null),
+            Map.entry(GCMachineStatuses.NO_FUEL, null),
+            Map.entry(GCMachineStatuses.NOT_GENERATING, null),
+            Map.entry(GCMachineStatuses.COLLECTING, GCSounds.MACHINE_HUM),
+            Map.entry(GCMachineStatuses.DISTRIBUTING, GCSounds.MACHINE_HUM)
+    );
+
+    public static @Nullable SoundEvent get(MachineStatus status) {
+        return EXCEPTIONS.getOrDefault(status, DEFAULTS.get(status.getType()));
     }
 }
