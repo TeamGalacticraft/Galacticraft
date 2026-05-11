@@ -29,12 +29,15 @@ import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.block.entity.LunarCheesePressBlockEntity;
+import dev.galacticraft.mod.content.block.special.LunarCheesePressBlock;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
@@ -61,6 +64,7 @@ import net.minecraft.world.item.trading.MerchantOffers;
 import net.minecraft.util.SpawnUtil;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.pathfinder.Path;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
@@ -70,6 +74,7 @@ public class MoonVillagerEntity extends Villager {
     private static final int GC_MOON_HOME_SEARCH_RANGE = 48;
     private static final int GC_MOON_JOB_SITE_SEARCH_RANGE = 48;
     private static final int GC_HOME_REPATH_INTERVAL = 20;
+    private static final int GC_DAYTIME_JOB_SITE_CHECK_INTERVAL = 20;
     private static final int GC_DAYTIME_OUTDOOR_CHECK_INTERVAL = 80;
     private static final int GC_BELL_SEARCH_RANGE = 24;
     private static final int GC_BELL_VERTICAL_RANGE = 6;
@@ -84,6 +89,7 @@ public class MoonVillagerEntity extends Villager {
     private static final int GC_MOON_MAX_RESTOCKS_PER_WINDOW = 4;
     private static final int GC_MOON_RESTOCK_REPATH_INTERVAL = 20;
     private static final double GC_MOON_RESTOCK_JOB_SITE_DISTANCE_SQR = 9.0D;
+    private static final double GC_MOON_JOB_SITE_WORK_SPOT_DISTANCE_SQR = 0.75D;
 
     private Vec3 gc$lastMovementCheckPos = Vec3.ZERO;
     private int gc$stationaryTicks;
@@ -312,14 +318,14 @@ public class MoonVillagerEntity extends Villager {
             return null;
         }
 
-        serverLevel.getPoiManager().ensureLoadedAndValid(serverLevel, this.blockPosition(), GC_MOON_JOB_SITE_RANGE + 1);
+        serverLevel.getPoiManager().ensureLoadedAndValid(serverLevel, this.blockPosition(), GC_MOON_JOB_SITE_SEARCH_RANGE + 1);
 
         for (GCVillagerProfessions.MoonProfessionData professionData : GCVillagerProfessions.moonProfessions()) {
             boolean claimed = serverLevel.getPoiManager()
                     .take(holder -> holder.is(professionData.poiKey()),
                             (holder, pos) -> professionData.matches(this.level().getBlockState(pos)),
                             this.blockPosition(),
-                            GC_MOON_JOB_SITE_RANGE)
+                            GC_MOON_JOB_SITE_SEARCH_RANGE)
                     .map(pos -> {
                         this.getBrain().setMemory(MemoryModuleType.JOB_SITE, GlobalPos.of(serverLevel.dimension(), pos));
                         this.getBrain().eraseMemory(MemoryModuleType.POTENTIAL_JOB_SITE);
@@ -397,9 +403,7 @@ public class MoonVillagerEntity extends Villager {
                 }
             }
             if (stillValid) {
-                this.getNavigation().moveTo(
-                        this.gc$pendingJobSiteTarget.getX() + 0.5D, this.gc$pendingJobSiteTarget.getY(),
-                        this.gc$pendingJobSiteTarget.getZ() + 0.5D, this.isBaby() ? 0.6D : 0.5D);
+                this.gc$moveToJobSite(this.gc$pendingJobSiteTarget, this.isBaby() ? 0.6D : 0.5D);
                 return;
             }
             this.gc$pendingJobSiteTarget = null;
@@ -428,7 +432,7 @@ public class MoonVillagerEntity extends Villager {
 
         if (bestPos != null) {
             this.gc$pendingJobSiteTarget = bestPos;
-            this.getNavigation().moveTo(bestPos.getX() + 0.5D, bestPos.getY(), bestPos.getZ() + 0.5D, this.isBaby() ? 0.6D : 0.5D);
+            this.gc$moveToJobSite(bestPos, this.isBaby() ? 0.6D : 0.5D);
         }
     }
 
@@ -506,9 +510,9 @@ public class MoonVillagerEntity extends Villager {
             return;
         }
 
-        if (jobSitePos.distSqr(this.blockPosition()) > GC_MOON_RESTOCK_JOB_SITE_DISTANCE_SQR) {
+        if (!this.gc$isAtJobSiteWorkingSpot(jobSitePos)) {
             if (this.tickCount % GC_MOON_RESTOCK_REPATH_INTERVAL == 0 || this.getNavigation().isDone()) {
-                this.getNavigation().moveTo(jobSitePos.getX() + 0.5D, jobSitePos.getY(), jobSitePos.getZ() + 0.5D, this.isBaby() ? 0.6D : 0.5D);
+                this.gc$moveToJobSite(jobSitePos, this.isBaby() ? 0.6D : 0.5D);
             }
             return;
         }
@@ -585,6 +589,10 @@ public class MoonVillagerEntity extends Villager {
             return;
         }
 
+        if (this.gc$updateCheeseMakerWorkBehavior()) {
+            return;
+        }
+
         if (this.gc$pendingJobSiteTarget != null || this.gc$pendingHomeTarget != null) {
             return;
         }
@@ -594,6 +602,34 @@ public class MoonVillagerEntity extends Villager {
         }
 
         this.gc$moveTowardDaytimeOutdoorTarget();
+    }
+
+    private boolean gc$updateCheeseMakerWorkBehavior() {
+        GCVillagerProfessions.MoonProfessionData professionData = GCVillagerProfessions.getMoonProfessionData(this.getVillagerData().getProfession());
+        if (professionData == null || professionData.profession() != GCVillagerProfessions.LUNAR_CHEESE_MAKER) {
+            return false;
+        }
+
+        BlockPos jobSitePos = this.gc$getClaimedMoonJobSitePos(professionData);
+        if (jobSitePos == null) {
+            return false;
+        }
+
+        if (!(this.level().getBlockEntity(jobSitePos) instanceof LunarCheesePressBlockEntity press) || !press.shouldVillagerApproachForWork()) {
+            return false;
+        }
+
+        if (this.gc$isAtJobSiteWorkingSpot(jobSitePos)) {
+            this.getNavigation().stop();
+            this.getLookControl().setLookAt(jobSitePos.getX() + 0.5D, jobSitePos.getY() + 0.9D, jobSitePos.getZ() + 0.5D);
+            return true;
+        }
+
+        if (this.tickCount % GC_DAYTIME_JOB_SITE_CHECK_INTERVAL == 0 || this.getNavigation().isDone()) {
+            this.gc$moveToJobSite(jobSitePos, this.isBaby() ? 0.6D : 0.5D);
+        }
+
+        return true;
     }
 
     private void gc$unstickIfIdle() {
@@ -649,9 +685,54 @@ public class MoonVillagerEntity extends Villager {
         return this.getBrain().getMemory(MemoryModuleType.JOB_SITE)
                 .filter(this::gc$isCurrentDimensionJobSite)
                 .map(GlobalPos::pos)
-                .filter(pos -> pos.distSqr(this.blockPosition()) > 9.0D)
-                .map(pos -> this.getNavigation().moveTo(pos.getX() + 0.5D, pos.getY(), pos.getZ() + 0.5D, 0.6D))
+                .filter(pos -> !this.gc$isAtJobSiteWorkingSpot(pos))
+                .map(pos -> this.gc$moveToJobSite(pos, 0.6D))
                 .orElse(false);
+    }
+
+    private boolean gc$moveToJobSite(BlockPos jobSitePos, double speed) {
+        Vec3 target = this.gc$getJobSiteNavigationTarget(jobSitePos);
+        return this.getNavigation().moveTo(target.x, target.y, target.z, speed);
+    }
+
+    private boolean gc$isAtJobSiteWorkingSpot(BlockPos jobSitePos) {
+        Vec3 target = this.gc$getJobSiteNavigationTarget(jobSitePos);
+        return this.position().distanceToSqr(target) <= GC_MOON_JOB_SITE_WORK_SPOT_DISTANCE_SQR;
+    }
+
+    private Vec3 gc$getJobSiteNavigationTarget(BlockPos jobSitePos) {
+        var jobSiteState = this.level().getBlockState(jobSitePos);
+        if (!jobSiteState.is(GCBlocks.LUNAR_CHEESE_PRESS)) {
+            return Vec3.atBottomCenterOf(jobSitePos);
+        }
+
+        BlockPos frontPos = jobSitePos.relative(jobSiteState.getValue(LunarCheesePressBlock.FACING));
+        Path frontPath = this.getNavigation().createPath(frontPos, 0);
+        if (frontPath != null && frontPath.canReach()) {
+            return Vec3.atBottomCenterOf(frontPos);
+        }
+
+        BlockPos bestCandidate = null;
+        int bestNodeCount = Integer.MAX_VALUE;
+        double bestDistance = Double.MAX_VALUE;
+
+        for (Direction direction : Direction.Plane.HORIZONTAL) {
+            BlockPos candidate = jobSitePos.relative(direction);
+            Path path = this.getNavigation().createPath(candidate, 0);
+            if (path == null || !path.canReach()) {
+                continue;
+            }
+
+            int nodeCount = path.getNodeCount();
+            double distance = candidate.distSqr(this.blockPosition());
+            if (nodeCount < bestNodeCount || (nodeCount == bestNodeCount && distance < bestDistance)) {
+                bestCandidate = candidate;
+                bestNodeCount = nodeCount;
+                bestDistance = distance;
+            }
+        }
+
+        return bestCandidate != null ? Vec3.atBottomCenterOf(bestCandidate) : Vec3.atBottomCenterOf(jobSitePos);
     }
 
     private @Nullable BlockPos gc$getClaimedMoonJobSitePos(GCVillagerProfessions.MoonProfessionData professionData) {

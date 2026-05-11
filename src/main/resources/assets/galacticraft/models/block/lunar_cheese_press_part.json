@@ -1,0 +1,35 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "frame_top": "galacticraft:block/lunar_cheese_press_frame_top",
+    "frame_side": "galacticraft:block/lunar_cheese_press_frame_side",
+    "frame_bottom": "galacticraft:block/lunar_cheese_press_frame_side",
+    "particle": "galacticraft:block/lunar_cheese_press_frame_side"
+  },
+  "elements": [
+    {
+      "from": [0, 14, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": { "uv": [0, 0, 16, 2], "texture": "#frame_side" },
+        "east": { "uv": [0, 0, 16, 2], "texture": "#frame_side" },
+        "south": { "uv": [0, 0, 16, 2], "texture": "#frame_side" },
+        "west": { "uv": [0, 0, 16, 2], "texture": "#frame_side" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "#frame_top" },
+        "down": { "uv": [0, 0, 16, 16], "texture": "#frame_bottom" }
+      }
+    },
+    {
+      "from": [0, 0, 14],
+      "to": [16, 14, 16],
+      "faces": {
+        "north": { "uv": [0, 0, 16, 14], "texture": "#frame_side" },
+        "east": { "uv": [0, 0, 2, 14], "texture": "#frame_side" },
+        "south": { "uv": [0, 0, 16, 14], "texture": "#frame_side" },
+        "west": { "uv": [0, 0, 2, 14], "texture": "#frame_side" },
+        "up": { "uv": [0, 0, 16, 2], "texture": "#frame_top" },
+        "down": { "uv": [0, 0, 16, 2], "texture": "#frame_bottom" }
+      }
+    }
+  ]
+}

@@ -281,7 +281,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.copyModel(Blocks.CARTOGRAPHY_TABLE, GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
         generator.copyModel(Blocks.CRAFTING_TABLE, GCBlocks.LUNAR_WORKBENCH);
         generator.copyModel(Blocks.SMITHING_TABLE, GCBlocks.LUNAR_SMITHING_TABLE);
-        generator.copyModel(Blocks.CRAFTING_TABLE, GCBlocks.LUNAR_CHEESE_PRESS);
         generator.copyModel(Blocks.CRAFTING_TABLE, GCBlocks.LUNAR_HERBALIST_TABLE);
         generator.copyModel(GCBlocks.TIN_DECORATION.block(), GCBlocks.LUNAR_HOME_ANCHOR);
 

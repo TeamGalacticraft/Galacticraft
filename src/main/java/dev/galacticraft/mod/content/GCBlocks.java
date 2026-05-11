@@ -272,7 +272,7 @@ public class GCBlocks {
     public static final Block LUNAR_CARTOGRAPHY_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_CARTOGRAPHY_TABLE, new LunarCartographyTableBlock(BlockBehaviour.Properties.of().mapColor(MapColor.WOOD).ignitedByLava().instrument(NoteBlockInstrument.BASS).strength(2.5F).sound(SoundType.WOOD)));
     public static final Block LUNAR_WORKBENCH = BLOCKS.registerWithItem(Constant.Block.LUNAR_WORKBENCH, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
     public static final Block LUNAR_SMITHING_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_SMITHING_TABLE, new SmithingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.SMITHING_TABLE)));
-    public static final Block LUNAR_CHEESE_PRESS = BLOCKS.registerWithItem(Constant.Block.LUNAR_CHEESE_PRESS, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
+    public static final Block LUNAR_CHEESE_PRESS = BLOCKS.registerWithItem(Constant.Block.LUNAR_CHEESE_PRESS, new LunarCheesePressBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).noOcclusion()));
     public static final Block LUNAR_HERBALIST_TABLE = BLOCKS.registerWithItem(Constant.Block.LUNAR_HERBALIST_TABLE, new CraftingTableBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE)));
     public static final Block LUNAR_HOME_ANCHOR = BLOCKS.registerWithItem(Constant.Block.LUNAR_HOME_ANCHOR, new LunarHomeAnchorBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
 
@@ -352,6 +352,7 @@ public class GCBlocks {
     // MUTLIBLOCK PARTS
     public static final BaseEntityBlock SOLAR_PANEL_PART = BLOCKS.register(Constant.Block.SOLAR_PANEL_PART, new SolarPanelPartBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_BLUE).strength(-1.0F, 5.0F).noLootTable().sound(SoundType.METAL)));
     public static final BaseEntityBlock CRYOGENIC_CHAMBER_PART = BLOCKS.register(Constant.Block.CRYOGENIC_CHAMBER_PART, new CryogenicChamberPart(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).noLootTable().sound(SoundType.METAL).requiresCorrectToolForDrops()));
+    public static final BaseEntityBlock LUNAR_CHEESE_PRESS_PART = BLOCKS.register(Constant.Block.LUNAR_CHEESE_PRESS_PART, new LunarCheesePressPartBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.CRAFTING_TABLE).noOcclusion().noLootTable()));
 
     // MISC MACHINES
     public static final Block CRYOGENIC_CHAMBER = BLOCKS.registerWithItem(Constant.Block.CRYOGENIC_CHAMBER, new CryogenicChamberBlock(BlockBehaviour.Properties.of().noOcclusion().isSuffocating(GCBlocks::never).isViewBlocking(GCBlocks::never).mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops()));

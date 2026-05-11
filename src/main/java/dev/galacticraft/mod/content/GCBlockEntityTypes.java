@@ -77,6 +77,8 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = register(Constant.Block.SOLAR_PANEL_PART, SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART);
     public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = register(Constant.Block.CRYOGENIC_CHAMBER, CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER);
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = register(Constant.Block.CRYOGENIC_CHAMBER_PART, CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART);
+    public static final BlockEntityType<LunarCheesePressBlockEntity> LUNAR_CHEESE_PRESS = register(Constant.Block.LUNAR_CHEESE_PRESS, LunarCheesePressBlockEntity::new, GCBlocks.LUNAR_CHEESE_PRESS);
+    public static final BlockEntityType<LunarCheesePressPartBlockEntity> LUNAR_CHEESE_PRESS_PART = register(Constant.Block.LUNAR_CHEESE_PRESS_PART, LunarCheesePressPartBlockEntity::new, GCBlocks.LUNAR_CHEESE_PRESS_PART);
     public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = register(Constant.Block.BOSS_SPAWNER, DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER);
 
     // DECORATION

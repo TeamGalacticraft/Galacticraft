@@ -388,6 +388,7 @@ public interface Constant {
         String LUNAR_WORKBENCH = "lunar_workbench";
         String LUNAR_SMITHING_TABLE = "lunar_smithing_table";
         String LUNAR_CHEESE_PRESS = "lunar_cheese_press";
+        String LUNAR_CHEESE_PRESS_PART = "lunar_cheese_press_part";
         String LUNAR_HERBALIST_TABLE = "lunar_herbalist_table";
         String LUNAR_HOME_ANCHOR = "lunar_home_anchor";
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
@@ -1363,6 +1364,7 @@ public interface Constant {
         String SOLAR_PANEL_PANEL_VERTICAL_1 = "solar_panel_panel_vertical_1";
         String SOLAR_PANEL_PANEL_VERTICAL_2 = "solar_panel_panel_vertical_2";
         String SOLAR_PANEL_PANEL_VERTICAL_3 = "solar_panel_panel_vertical_3";
+        String LUNAR_CHEESE_PRESS_HEAD = "lunar_cheese_press_head";
         String ROCKET_WORKBENCH_TOP = "rocket_workbench_top";
         String ROCKET_WORKBENCH_PLIER_TOOL = "rocket_workbench_plier_tool";
         String ROCKET_WORKBENCH_PLIER_TOOL_ARM = "rocket_workbench_plier_tool_arm";
