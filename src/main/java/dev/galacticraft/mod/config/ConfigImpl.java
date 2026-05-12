@@ -79,6 +79,7 @@ public class ConfigImpl implements Config {
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private boolean squareCannedFood = false;
+    private long fluidCanisterCapacity = FluidConstants.BUCKET;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -315,6 +316,15 @@ public class ConfigImpl implements Config {
             Constant.LOGGER.info("Reload resource packs");
             Minecraft.getInstance().reloadResourcePacks();
         }
+    }
+
+    @Override
+    public long fluidCanisterCapacity() {
+        return this.fluidCanisterCapacity;
+    }
+
+    public void setFluidCanisterCapacity(long capacity) {
+        this.fluidCanisterCapacity = capacity;
     }
 
     @Override
@@ -795,7 +805,21 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
+            ConfigCategory misc = b.getOrCreateCategory(Component.translatable(Translations.Config.MISC));
+
+            misc.addEntry(creative.build());
+
+            misc.addEntry(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
+                    config.fluidCanisterCapacity())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
+                    .setSaveConsumer(config::setFluidCanisterCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
 
             // --- LIFE SUPPORT CONFIG ---
 

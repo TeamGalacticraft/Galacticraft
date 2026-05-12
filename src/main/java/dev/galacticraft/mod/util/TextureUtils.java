@@ -36,7 +36,7 @@ public class TextureUtils {
         return calculateAverageColor(textureAtlasSprite);
     }
 
-    private static int calculateAverageColor(TextureAtlasSprite image) {
+    public static int calculateAverageColor(TextureAtlasSprite image) {
         long sumRed = 0;
         long sumGreen = 0;
         long sumBlue = 0;
