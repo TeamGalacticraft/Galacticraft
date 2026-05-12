@@ -124,7 +124,7 @@ public class TooltipUtil {
             }
             appendLabeledTooltip(resourceId, fluidName, TooltipUtil.formatFluidRemaining(data.amount(), capacity), tooltip);
         } else {
-            tooltip.add(Component.translatable(Translations.Tooltip.FLUID_CANISTER_EMPTY).withStyle(ChatFormatting.DARK_GRAY));
+            tooltip.add(Component.translatable(Translations.Tooltip.FLUID_CANISTER_EMPTY).setStyle(Constant.Text.DARK_GRAY_STYLE));
         }
     }
 

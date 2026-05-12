@@ -980,7 +980,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
 
         this.add(Tooltip.FLUID_CANISTER_EMPTY, "Empty");
-        this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %d");
+        this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %s");
         this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
     }
 

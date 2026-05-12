@@ -788,18 +788,6 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            client.addEntry(new LongFieldBuilder(
-                    Component.translatable(Translations.Config.RESET),
-                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
-                    config.fluidCanisterCapacity())
-                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
-                    .setSaveConsumer(config::setFluidCanisterCapacity)
-                    .setDefaultValue(FluidConstants.BUCKET)
-                    .setMin(0)
-                    .setMax(Long.MAX_VALUE)
-                    .build()
-            );
-
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
@@ -817,7 +805,21 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
+            ConfigCategory misc = b.getOrCreateCategory(Component.translatable(Translations.Config.MISC));
+
+            misc.addEntry(creative.build());
+
+            misc.addEntry(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
+                    config.fluidCanisterCapacity())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
+                    .setSaveConsumer(config::setFluidCanisterCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
 
             // --- LIFE SUPPORT CONFIG ---
 

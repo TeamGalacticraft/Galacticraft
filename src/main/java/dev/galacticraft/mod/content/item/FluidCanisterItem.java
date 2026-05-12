@@ -78,13 +78,9 @@ public class FluidCanisterItem extends Item {
 
     @Override
     public void appendHoverText(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag flag) {
-        this.appendFluidCanisterTooltip(stack, context, tooltip, flag);
-        super.appendHoverText(stack, context, tooltip, flag);
-    }
-
-    protected void appendFluidCanisterTooltip(ItemStack stack, TooltipContext context, List<Component> tooltip, TooltipFlag type) {
         FluidData data = stack.get(FLUID_DATA);
         TooltipUtil.appendCanisterRemainingTooltip(Tooltip.FLUID_CANISTER_FLUID_INFO, data, capacity, tooltip);
+        super.appendHoverText(stack, context, tooltip, flag);
     }
 
     @Override

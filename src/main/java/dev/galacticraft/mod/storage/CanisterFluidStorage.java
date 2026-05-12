@@ -39,7 +39,7 @@ public class CanisterFluidStorage extends SingleVariantItemStorage<FluidVariant>
 
     public CanisterFluidStorage(ItemStack stack, ContainerItemContext context) {
         super(context);
-        this.fluidData = context.getItemVariant().toStack().get(FLUID_DATA);
+        this.fluidData = stack.get(FLUID_DATA);
         this.capacity = ((FluidCanisterItem) stack.getItem()).capacity;
     }
 
