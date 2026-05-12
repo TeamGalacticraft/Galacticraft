@@ -33,6 +33,7 @@ import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariantAttributes;
 import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -44,6 +45,8 @@ import java.util.List;
 import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 
 public class FluidCanisterItem extends Item {
+    public static final ResourceLocation FILL_LEVEL = Constant.id("fill_level");
+
     public final long capacity;
 
     public static StorageView<FluidVariant> getStorage(ItemStack stack) {

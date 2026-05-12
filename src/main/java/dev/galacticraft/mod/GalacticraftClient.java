@@ -271,7 +271,7 @@ public class GalacticraftClient implements ClientModInitializer {
         }, GCItems.FLUID_CANISTER);
         InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
 
-        ItemProperties.register(GCItems.FLUID_CANISTER, Constant.id("fill_level"), (stack, world, entity, seed) -> {
+        ItemProperties.register(GCItems.FLUID_CANISTER, FluidCanisterItem.FILL_LEVEL, (stack, world, entity, seed) -> {
             FluidData data = stack.get(FLUID_DATA);
             if (data == null || data.amount() <= 0) return 0.0f;
 

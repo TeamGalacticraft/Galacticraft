@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
@@ -40,6 +42,7 @@ import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -61,6 +64,7 @@ import org.jetbrains.annotations.Contract;
 
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
 
 public class GCModelProvider extends FabricModelProvider {
@@ -956,14 +960,42 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     public void generateFluidCanisterModels(ItemModelGenerators generator) {
+        ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER);
+        ResourceLocation resourceLocationBase = resourceLocation.withSuffix("_base");
+
+        ModelTemplates.FLAT_ITEM.create(
+                resourceLocation,
+                TextureMapping.layer0(resourceLocationBase),
+                generator.output,
+                (id, textures) -> this.generateFluidCanisterBase(id, textures)
+        );
+
         for (int i = 1; i <= 6; i++) {
-            ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER);
             generator.generateLayeredItem(
                     resourceLocation.withSuffix("_" + i),
-                    resourceLocation.withSuffix("_base"),
+                    resourceLocationBase,
                     resourceLocation.withSuffix("_overlay_" + i)
             );
         }
+    }
+
+    public JsonObject generateFluidCanisterBase(ResourceLocation id, Map<TextureSlot, ResourceLocation> textures) {
+        JsonObject baseTemplate = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(id, textures);
+        JsonArray overrides = new JsonArray();
+        String fillLevel = FluidCanisterItem.FILL_LEVEL.toString();
+
+        for (int i = 1; i <= 6; i++) {
+            JsonObject override = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            float value = (float) (Math.floor(i * 100.0 / 6.0) / 100.0);
+            predicate.addProperty(fillLevel, value);
+            override.add("predicate", predicate);
+            override.addProperty("model", id.withSuffix("_" + i).toString());
+            overrides.add(override);
+        }
+
+        baseTemplate.add("overrides", overrides);
+        return baseTemplate;
     }
 
     private static TextureMapping rocketLaunchPadPart(Block block, String suffix) {
