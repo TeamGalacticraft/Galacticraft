@@ -114,6 +114,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.FOOTPRINTS)
                 .add(GCBlocks.MOON_TURF);
 
+        this.tag(BlockTags.ANIMALS_SPAWNABLE_ON)
+                .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.MOON_DIRT)
+                .add(GCBlocks.MOON_DIRT_PATH);
+
         this.tag(GCBlockTags.INFINIBURN_MOON)
                 .add(GCBlocks.MOON_BASALT_BRICK);
         this.tag(GCBlockTags.BASE_STONE_MOON)
@@ -416,7 +421,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
 
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
-                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE)
+                .add(GCBlocks.LUNAR_WORKBENCH)
+                .add(GCBlocks.LUNAR_SMITHING_TABLE)
+                .add(GCBlocks.LUNAR_CHEESE_PRESS);
 
         this.tag(BlockTags.CLIMBABLE)
                 .add(GCBlocks.TIN_LADDER)
@@ -550,6 +558,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
                 .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
+        this.tag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_DOOR);
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCBlockTags.MACHINES)
                 .add(stairs)
@@ -672,6 +683,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.MOON_BASALT,
                         GCBlocks.MOON_BASALT_BRICK,
                         GCBlocks.CRACKED_MOON_BASALT_BRICK,
+                        GCBlocks.LUNAR_HOME_ANCHOR,
                         GCBlocks.MARS_STONE,
                         GCBlocks.MARS_COBBLESTONE
                 );
@@ -680,6 +692,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_CHEESE_BLOCK)
                 .add(GCBlocks.MOON_CHEESE_LOG)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE)
+                .add(GCBlocks.LUNAR_WORKBENCH)
+                .add(GCBlocks.LUNAR_SMITHING_TABLE)
+                .add(GCBlocks.LUNAR_CHEESE_PRESS)
                 .add(GCBlocks.PARACHEST);
 
         this.tag(BlockTags.MINEABLE_WITH_SHOVEL)

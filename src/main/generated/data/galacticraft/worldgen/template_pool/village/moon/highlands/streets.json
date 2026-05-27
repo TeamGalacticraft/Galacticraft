@@ -3,83 +3,11 @@
     {
       "element": {
         "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/corner_01",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/corner_02",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/corner_03",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/straight_01",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 4
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/straight_02",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 4
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/straight_03",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 7
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/straight_04",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 7
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/straight_05",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 3
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
         "location": "galacticraft:village/moon/highlands/streets/straight_06",
         "processors": "minecraft:empty",
         "projection": "terrain_matching"
       },
-      "weight": 4
+      "weight": 20
     },
     {
       "element": {
@@ -88,52 +16,25 @@
         "processors": "minecraft:empty",
         "projection": "terrain_matching"
       },
-      "weight": 1
+      "weight": 15
     },
     {
       "element": {
         "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/crossroad_02",
+        "location": "galacticraft:village/moon/highlands/streets/straight_03",
         "processors": "minecraft:empty",
         "projection": "terrain_matching"
       },
-      "weight": 2
+      "weight": 12
     },
     {
       "element": {
         "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/crossroad_03",
+        "location": "galacticraft:village/moon/highlands/streets/straight_05",
         "processors": "minecraft:empty",
         "projection": "terrain_matching"
       },
-      "weight": 1
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/crossroad_04",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/crossroad_05",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
-    },
-    {
-      "element": {
-        "element_type": "minecraft:legacy_single_pool_element",
-        "location": "galacticraft:village/moon/highlands/streets/crossroad_06",
-        "processors": "minecraft:empty",
-        "projection": "terrain_matching"
-      },
-      "weight": 2
+      "weight": 10
     },
     {
       "element": {
@@ -142,13 +43,61 @@
         "processors": "minecraft:empty",
         "projection": "terrain_matching"
       },
+      "weight": 6
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/crossroad_02",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
+      },
+      "weight": 4
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/corner_01",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
+      },
       "weight": 3
     },
     {
       "element": {
-        "element_type": "minecraft:empty_pool_element"
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/corner_02",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
       },
       "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/straight_02",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/straight_04",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
+      },
+      "weight": 3
+    },
+    {
+      "element": {
+        "element_type": "minecraft:legacy_single_pool_element",
+        "location": "galacticraft:village/moon/highlands/streets/crossroad_03",
+        "processors": "minecraft:empty",
+        "projection": "terrain_matching"
+      },
+      "weight": 2
     }
   ],
   "fallback": "galacticraft:village/moon/highlands/terminators"

@@ -108,7 +108,10 @@ public interface Translations {
         String CHAMBER_OBSTRUCTED = "chat.galacticraft.chamber_obstructed";
         String CHAMBER_OCCUPIED = "chat.galacticraft.chamber_occupied";
         String CHAMBER_TOO_FAR_AWAY = "chat.galacticraft.chamber_too_far_away";
+        String MOON_VILLAGER_NO_FREQUENCY_MODULE = "chat.galacticraft.moon_villager.no_frequency_module";
         String ROCKET_WARNING = "chat.galacticraft.rocket.warning";
+        String METEORIC_DOOR_LOCKED = "chat.galacticraft.meteoric_door.locked";
+        String VILLAGE_PROTECTION_ALERT = "chat.galacticraft.village_protection.alert";
         String CANNOT_EAT_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_eat_in_no_atmosphere";
         String CANNOT_EAT_WITH_MASK = "chat.galacticraft.cannot_eat_with_mask";
         String CANNOT_FEED_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_feed_in_no_atmosphere";

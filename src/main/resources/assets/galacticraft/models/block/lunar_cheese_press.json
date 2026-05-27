@@ -1,0 +1,25 @@
+{
+  "parent": "minecraft:block/block",
+  "textures": {
+    "top": "galacticraft:block/lunar_cheese_press_top",
+    "front": "galacticraft:block/lunar_cheese_press_front",
+    "side": "galacticraft:block/lunar_cheese_press_side",
+    "back": "galacticraft:block/lunar_cheese_press_back",
+    "bottom": "galacticraft:block/lunar_cheese_press_side",
+    "particle": "galacticraft:block/lunar_cheese_press_front"
+  },
+  "elements": [
+    {
+      "from": [0, 0, 0],
+      "to": [16, 16, 16],
+      "faces": {
+        "north": { "uv": [0, 0, 16, 16], "texture": "#front" },
+        "east": { "uv": [0, 0, 16, 16], "texture": "#side" },
+        "south": { "uv": [0, 0, 16, 16], "texture": "#back" },
+        "west": { "uv": [0, 0, 16, 16], "texture": "#side" },
+        "up": { "uv": [0, 0, 16, 16], "texture": "#top" },
+        "down": { "uv": [0, 0, 16, 16], "texture": "#bottom" }
+      }
+    }
+  ]
+}

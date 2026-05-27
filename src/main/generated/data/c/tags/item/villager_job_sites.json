@@ -1,5 +1,7 @@
 {
   "values": [
-    "galacticraft:lunar_cartography_table"
+    "galacticraft:lunar_cartography_table",
+    "galacticraft:lunar_workbench",
+    "galacticraft:lunar_smithing_table"
   ]
 }

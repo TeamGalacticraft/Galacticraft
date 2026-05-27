@@ -2,6 +2,7 @@
   "values": [
     "#galacticraft:frequency_modules",
     "#galacticraft:parachutes",
-    "#galacticraft:shield_controllers"
+    "#galacticraft:shield_controllers",
+    "#galacticraft:village_access_keys"
   ]
 }

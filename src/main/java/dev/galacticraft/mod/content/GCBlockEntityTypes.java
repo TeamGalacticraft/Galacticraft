@@ -77,11 +77,14 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<SolarPanelPartBlockEntity> SOLAR_PANEL_PART = register(Constant.Block.SOLAR_PANEL_PART, SolarPanelPartBlockEntity::new, GCBlocks.SOLAR_PANEL_PART);
     public static final BlockEntityType<CryogenicChamberBlockEntity> CRYOGENIC_CHAMBER = register(Constant.Block.CRYOGENIC_CHAMBER, CryogenicChamberBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER);
     public static final BlockEntityType<CryogenicChamberPartBlockEntity> CRYOGENIC_CHAMBER_PART = register(Constant.Block.CRYOGENIC_CHAMBER_PART, CryogenicChamberPartBlockEntity::new, GCBlocks.CRYOGENIC_CHAMBER_PART);
+    public static final BlockEntityType<LunarCheesePressBlockEntity> LUNAR_CHEESE_PRESS = register(Constant.Block.LUNAR_CHEESE_PRESS, LunarCheesePressBlockEntity::new, GCBlocks.LUNAR_CHEESE_PRESS);
+    public static final BlockEntityType<LunarCheesePressPartBlockEntity> LUNAR_CHEESE_PRESS_PART = register(Constant.Block.LUNAR_CHEESE_PRESS_PART, LunarCheesePressPartBlockEntity::new, GCBlocks.LUNAR_CHEESE_PRESS_PART);
     public static final BlockEntityType<DungeonSpawnerBlockEntity> DUNGEON_BOSS_SPAWNER = register(Constant.Block.BOSS_SPAWNER, DungeonSpawnerBlockEntity::new, GCBlocks.BOSS_SPAWNER);
 
     // DECORATION
     public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = register(Constant.Block.CANNED_FOOD, CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD);
     public static final BlockEntityType<FlagBlockEntity> FLAG = register(Constant.Block.FLAG, FlagBlockEntity::new, GCBlocks.FLAGS.colorMap().values().toArray(new Block[0]));
+    public static final BlockEntityType<LunarHomeAnchorBlockEntity> LUNAR_HOME_ANCHOR = register(Constant.Block.LUNAR_HOME_ANCHOR, LunarHomeAnchorBlockEntity::new, GCBlocks.LUNAR_HOME_ANCHOR);
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER);
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = register(Constant.Block.ROCKET_WORKBENCH, RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH);

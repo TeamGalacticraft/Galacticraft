@@ -44,6 +44,7 @@ public class GCItemTags {
     public static final TagKey<Item> PARACHUTES = galacticraftTag("parachutes");
     public static final TagKey<Item> FREQUENCY_MODULES = galacticraftTag("frequency_modules");
     public static final TagKey<Item> SHIELD_CONTROLLERS = galacticraftTag("shield_controllers");
+    public static final TagKey<Item> VILLAGE_ACCESS_KEYS = galacticraftTag("village_access_keys");
 
     public static final TagKey<Item> ACID_RESISTANT = galacticraftTag("acid_resistant");
 

@@ -32,7 +32,9 @@ public class GCBlockEntityRenderer {
         BlockEntityRenderers.register(GCBlockEntityTypes.GLASS_FLUID_PIPE, FluidPipeBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.OXYGEN_BUBBLE_DISTRIBUTOR, BubbleDistributorRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.LUNAR_CHEESE_PRESS, LunarCheesePressBlockEntityRenderer::new);
         BlockEntityRenderers.register(GCBlockEntityTypes.FLAG, FlagBlockEntityRenderer::new);
+        BlockEntityRenderers.register(GCBlockEntityTypes.LUNAR_HOME_ANCHOR, LunarHomeAnchorBlockEntityRenderer::new);
         //BlockEntityRenderers.register(GCBlockEntityTypes.CANNED_FOOD, CannedFoodBlockEntityRenderer::new);
     }
 }

@@ -35,6 +35,11 @@ import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import dev.galacticraft.mod.world.dimension.GCDimensions;
+import dev.galacticraft.mod.world.gen.spawner.MoonVillageAnimalSpawner;
+import dev.galacticraft.mod.world.gen.spawner.MoonVillageGolemSpawner;
+import dev.galacticraft.mod.world.gen.spawner.MoonVillageVillagerSpawner;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerChunkEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -54,9 +59,21 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class GCEventHandlers {
+    private static final MoonVillageAnimalSpawner MOON_VILLAGE_ANIMAL_SPAWNER = new MoonVillageAnimalSpawner();
+    private static final MoonVillageGolemSpawner MOON_VILLAGE_GOLEM_SPAWNER = new MoonVillageGolemSpawner();
+    private static final MoonVillageVillagerSpawner MOON_VILLAGE_VILLAGER_SPAWNER = new MoonVillageVillagerSpawner();
+
     public static void init() {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
+        GCVillageProtectionHandler.init();
+        ServerChunkEvents.CHUNK_LOAD.register((level, chunk) -> {
+            if (level.dimension().equals(GCDimensions.MOON)) {
+                MOON_VILLAGE_ANIMAL_SPAWNER.enqueueChunk(level, chunk);
+                MOON_VILLAGE_GOLEM_SPAWNER.enqueueChunk(level, chunk);
+                MOON_VILLAGE_VILLAGER_SPAWNER.enqueueChunk(level, chunk);
+            }
+        });
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
     }
@@ -84,6 +101,13 @@ public class GCEventHandlers {
 
             footprintManager.footprintBlockChanges.clear();
         }
+
+        if (level.dimension().equals(GCDimensions.MOON)) {
+            MOON_VILLAGE_ANIMAL_SPAWNER.tick(level);
+            MOON_VILLAGE_GOLEM_SPAWNER.tick(level);
+            MOON_VILLAGE_VILLAGER_SPAWNER.tick(level);
+        }
+
         level.galacticraft$getSealerManager().tick();
     }
 

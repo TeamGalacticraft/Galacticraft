@@ -34,6 +34,12 @@ import net.minecraft.world.level.block.state.BlockState;
 
 public class GCPointOfInterestTypes {
     public static final ResourceKey<PoiType> LUNAR_CARTOGRAPHER = register(Constant.id("lunar_cartographer"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_ENGINEER = register(Constant.id("lunar_engineer"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_WORKBENCH.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_MECHANIC = register(Constant.id("lunar_mechanic"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_SMITHING_TABLE.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_CHEESE_MAKER = register(Constant.id("lunar_cheese_maker"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_CHEESE_PRESS.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_PROVISIONER = register(Constant.id("lunar_provisioner"), 1, 1, ImmutableSet.copyOf(GCBlocks.FOOD_CANNER.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_BOTANIST = register(Constant.id("lunar_botanist"), 1, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_HERBALIST_TABLE.getStateDefinition().getPossibleStates()));
+    public static final ResourceKey<PoiType> LUNAR_HOME = register(Constant.id("lunar_home"), 2, 1, ImmutableSet.copyOf(GCBlocks.LUNAR_HOME_ANCHOR.getStateDefinition().getPossibleStates()));
 
     public static void register() {
     }

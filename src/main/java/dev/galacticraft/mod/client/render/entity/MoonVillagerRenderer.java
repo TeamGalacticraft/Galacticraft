@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.render.entity;
 
+import com.mojang.blaze3d.vertex.PoseStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.model.MoonVillagerModel;
@@ -38,6 +39,17 @@ public class MoonVillagerRenderer extends MobRenderer<MoonVillagerEntity, MoonVi
 
     public MoonVillagerRenderer(EntityRendererProvider.Context context) {
         super(context, new MoonVillagerModel(context.bakeLayer(GCEntityModelLayer.MOON_VILLAGER)), 0.5f);
+    }
+
+    @Override
+    protected void scale(MoonVillagerEntity entity, PoseStack poseStack, float partialTickTime) {
+        float scale = entity.isBaby() ? 0.46875F : 0.9375F;
+        poseStack.scale(scale, scale, scale);
+    }
+
+    @Override
+    protected float getShadowRadius(MoonVillagerEntity entity) {
+        return entity.isBaby() ? 0.25F : 0.5F;
     }
 
     @Override

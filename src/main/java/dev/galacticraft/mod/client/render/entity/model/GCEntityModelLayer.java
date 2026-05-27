@@ -25,6 +25,7 @@ package dev.galacticraft.mod.client.render.entity.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
 import dev.galacticraft.mod.client.render.block.entity.FlagBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.LunarCheesePressBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
@@ -49,6 +50,7 @@ public class GCEntityModelLayer {
     // Block Entity Renderers
     public static final ModelLayerLocation FLAG = registerModelLayer("flag");
     public static final ModelLayerLocation SOLAR_PANEL = registerModelLayer("solar_panel");
+    public static final ModelLayerLocation LUNAR_CHEESE_PRESS = registerModelLayer("lunar_cheese_press");
     public static final ModelLayerLocation ROCKET_WORKBENCH = registerModelLayer("rocket_workbench");
 
     private static ModelLayerLocation registerModelLayer(String id) {
@@ -70,6 +72,7 @@ public class GCEntityModelLayer {
 
         EntityModelLayerRegistry.registerModelLayer(FLAG, FlagBlockEntityRenderer::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(SOLAR_PANEL, SolarPanelBlockEntityRenderer::getTexturedModelData);
+        EntityModelLayerRegistry.registerModelLayer(LUNAR_CHEESE_PRESS, LunarCheesePressBlockEntityRenderer::createBodyLayer);
         EntityModelLayerRegistry.registerModelLayer(ROCKET_WORKBENCH, RocketWorkbenchBlockEntityRenderer::getTexturedModelData);
     }
 }

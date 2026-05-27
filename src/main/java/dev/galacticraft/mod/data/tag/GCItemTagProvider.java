@@ -200,10 +200,13 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.FREQUENCY_MODULE);
         this.tag(GCItemTags.SHIELD_CONTROLLERS)
                 .add(GCItems.SHIELD_CONTROLLER);
+        this.tag(GCItemTags.VILLAGE_ACCESS_KEYS)
+                .add(GCItems.VILLAGE_ACCESS_KEY);
         this.tag(GCItemTags.ACCESSORIES)
                 .addTag(GCItemTags.FREQUENCY_MODULES)
                 .addTag(GCItemTags.PARACHUTES)
-                .addTag(GCItemTags.SHIELD_CONTROLLERS);
+                .addTag(GCItemTags.SHIELD_CONTROLLERS)
+                .addTag(GCItemTags.VILLAGE_ACCESS_KEYS);
 
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
@@ -530,7 +533,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.ASTEROID_ROCK_2.asItem());
 
         this.tag(ConventionalItemTags.VILLAGER_JOB_SITES)
-                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem());
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE.asItem())
+                .add(GCBlocks.LUNAR_WORKBENCH.asItem())
+                .add(GCBlocks.LUNAR_SMITHING_TABLE.asItem());
     }
 
     protected FabricTagProvider<Item>.@NotNull FabricTagBuilder tag(TagKey<Item> tag) {

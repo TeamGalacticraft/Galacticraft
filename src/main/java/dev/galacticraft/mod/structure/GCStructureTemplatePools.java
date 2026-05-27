@@ -33,6 +33,7 @@ import net.minecraft.data.worldgen.ProcessorLists;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.level.levelgen.structure.pools.LegacySinglePoolElement;
+import net.minecraft.world.level.levelgen.structure.pools.SinglePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructurePoolElement;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool;
 import net.minecraft.world.level.levelgen.structure.pools.StructureTemplatePool.Projection;
@@ -61,6 +62,7 @@ public final class GCStructureTemplatePools {
             public static final ResourceKey<StructureTemplatePool> ANIMALS = key("village/moon/highlands/animals");
             public static final ResourceKey<StructureTemplatePool> DECOR = key("village/moon/highlands/decor");
             public static final ResourceKey<StructureTemplatePool> HOUSES = key("village/moon/highlands/houses");
+            public static final ResourceKey<StructureTemplatePool> HOUSES_LARGE = key("village/moon/highlands/houses_large");
             public static final ResourceKey<StructureTemplatePool> TERMINATORS = key("village/moon/highlands/terminators");
             public static final ResourceKey<StructureTemplatePool> IRON_GOLEM = key("village/moon/highlands/iron_golem");
             public static final ResourceKey<StructureTemplatePool> SAPLINGS = key("village/moon/highlands/saplings");
@@ -112,9 +114,9 @@ public final class GCStructureTemplatePools {
         context.register(Moon.PillagerOutpost.CONNECTOR, new StructureTemplatePool(
                 templateLookup.getOrThrow(Moon.PillagerOutpost.CONNECTOR_TERMINATORS),
                 ImmutableList.of(
-                        Pair.of(single(Constant.id("moon_pillager_outpost/connector/connector_1"), emptyList), 3),
-                        Pair.of(single(Constant.id("moon_pillager_outpost/connector/connector_2"), emptyList), 4),
-                        Pair.of(single(Constant.id("moon_pillager_outpost/connector/connector_3"), emptyList), 3)
+                        Pair.of(legacy(Constant.id("moon_pillager_outpost/connector/connector_1"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("moon_pillager_outpost/connector/connector_2"), emptyList), 4),
+                        Pair.of(legacy(Constant.id("moon_pillager_outpost/connector/connector_3"), emptyList), 3)
                 ),
                 Projection.TERRAIN_MATCHING
         ));
@@ -177,9 +179,9 @@ public final class GCStructureTemplatePools {
         context.register(Moon.Village.STARTS, new StructureTemplatePool(
                 empty,
                 ImmutableList.of(
-                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_1"), emptyList), 3),
-                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_2"), emptyList), 4),
-                        Pair.of(single(Constant.id("village/moon/highlands/starts/start_3"), emptyList), 5),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/starts/start_1"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/starts/start_2"), emptyList), 4),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/starts/start_3"), emptyList), 5),
                         Pair.of(StructurePoolElement.empty(), 1)
                 ),
                 Projection.RIGID
@@ -203,9 +205,33 @@ public final class GCStructureTemplatePools {
         context.register(Moon.Village.HOUSES, new StructureTemplatePool(
                 templateLookup.getOrThrow(Moon.Village.TERMINATORS),
                 ImmutableList.of(
-                        Pair.of(single(Constant.id("village/moon/highlands/houses/house_1"), emptyList), 4),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/cheese_low_done"), emptyList), 10),
                         Pair.of(single(Constant.id("village/moon/highlands/houses/greenhouse"), emptyList), 2),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/lowland_tower_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/low_rocket_02_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/low_schematic_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/oblique_big_house_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/round_medium_house_01_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/round_medium_house_02_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/small_half_half_done"), emptyList), 7),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/small_long_house_done_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/small_round_house_01_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/small_round_house_02_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/small_three_three_done"), emptyList), 6),
                         Pair.of(StructurePoolElement.empty(), 1)
+                ),
+                Projection.RIGID
+        ));
+        context.register(Moon.Village.HOUSES_LARGE, new StructureTemplatePool(
+                templateLookup.getOrThrow(Moon.Village.TERMINATORS),
+                ImmutableList.of(
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/cheese_low_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/lowland_tower_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/low_rocket_02_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/low_schematic_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/oblique_big_house_done"), emptyList), 10),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/round_medium_house_01_done"), emptyList), 6),
+                        Pair.of(single(Constant.id("village/moon/highlands/houses/round_medium_house_02_done"), emptyList), 6)
                 ),
                 Projection.RIGID
         ));
@@ -232,33 +258,27 @@ public final class GCStructureTemplatePools {
         context.register(Moon.Village.STREETS, new StructureTemplatePool(
                 templateLookup.getOrThrow(Moon.Village.TERMINATORS),
                 ImmutableList.of(
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_01"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_02"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/corner_03"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_01"), emptyList), 4),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_02"), emptyList), 4),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_03"), emptyList), 7),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_04"), emptyList), 7),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_05"), emptyList), 3),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/straight_06"), emptyList), 4),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_01"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_02"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_03"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_04"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_05"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/crossroad_06"), emptyList), 2),
-                        Pair.of(single(Constant.id("village/moon/highlands/streets/turn_01"), emptyList), 3),
-                        Pair.of(StructurePoolElement.empty(), 3)
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/straight_06"), emptyList), 20),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/crossroad_01"), emptyList), 15),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/straight_03"), emptyList), 12),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/straight_05"), emptyList), 10),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/turn_01"), emptyList), 6),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/crossroad_02"), emptyList), 4),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/corner_01"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/corner_02"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/straight_02"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/straight_04"), emptyList), 3),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/streets/crossroad_03"), emptyList), 2)
                 ),
                 Projection.TERRAIN_MATCHING
         ));
         context.register(Moon.Village.TERMINATORS, new StructureTemplatePool(
                 empty,
                 ImmutableList.of(
-                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_01"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_02"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_03"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/terminators/terminator_04"), emptyList), 1)
+                        Pair.of(legacy(Constant.id("village/moon/highlands/terminators/terminator_01"), emptyList), 1),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/terminators/terminator_02"), emptyList), 1),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/terminators/terminator_03"), emptyList), 1),
+                        Pair.of(legacy(Constant.id("village/moon/highlands/terminators/terminator_04"), emptyList), 1)
                 ),
                 Projection.TERRAIN_MATCHING
         ));
@@ -272,15 +292,21 @@ public final class GCStructureTemplatePools {
         context.register(Moon.Village.VILLAGERS, new StructureTemplatePool(
                 empty,
                 ImmutableList.of(
+                        Pair.of(StructurePoolElement.empty(), 4),
                         Pair.of(single(Constant.id("village/moon/highlands/villagers/nitwit"), emptyList), 2),
                         Pair.of(single(Constant.id("village/moon/highlands/villagers/baby"), emptyList), 1),
-                        Pair.of(single(Constant.id("village/moon/highlands/villagers/unemployed"), emptyList), 10)
+                        Pair.of(single(Constant.id("village/moon/highlands/villagers/unemployed"), emptyList), 8)
                 ),
                 Projection.RIGID
         ));
     }
 
-    public static Function<Projection, LegacySinglePoolElement> single(ResourceLocation id, Holder<StructureProcessorList> list) { // Legacy means that air CAN be replaced by worldgen.
+    public static Function<Projection, SinglePoolElement> single(ResourceLocation id, Holder<StructureProcessorList> list) {
+        return StructurePoolElement.single(id.toString(), list);
+    }
+
+        // Legacy means that air CAN be replaced by worldgen.
+    public static Function<Projection, LegacySinglePoolElement> legacy(ResourceLocation id, Holder<StructureProcessorList> list) {
         return StructurePoolElement.legacy(id.toString(), list);
     }
 }
