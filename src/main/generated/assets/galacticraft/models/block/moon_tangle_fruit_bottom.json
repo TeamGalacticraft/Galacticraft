@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cross",
+  "textures": {
+    "cross": "galacticraft:block/moon_tangle_fruit_bottom"
+  }
+}

@@ -1,0 +1,88 @@
+{
+  "variants": {
+    "part=end": [
+      {
+        "model": "galacticraft:block/moon_tangle_end",
+        "uvlock": true
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_end",
+        "uvlock": true,
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_end",
+        "uvlock": true,
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_end",
+        "uvlock": true,
+        "y": 270
+      }
+    ],
+    "part=fruit_bottom": [
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_bottom",
+        "uvlock": true
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_bottom",
+        "uvlock": true,
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_bottom",
+        "uvlock": true,
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_bottom",
+        "uvlock": true,
+        "y": 270
+      }
+    ],
+    "part=fruit_top": [
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_top",
+        "uvlock": true
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_top",
+        "uvlock": true,
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_top",
+        "uvlock": true,
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_fruit_top",
+        "uvlock": true,
+        "y": 270
+      }
+    ],
+    "part=middle": [
+      {
+        "model": "galacticraft:block/moon_tangle_middle",
+        "uvlock": true
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_middle",
+        "uvlock": true,
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_middle",
+        "uvlock": true,
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_tangle_middle",
+        "uvlock": true,
+        "y": 270
+      }
+    ]
+  }
+}

@@ -63,8 +63,12 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_TURF);
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
-                output.accept(MOON_SURFACE_ROCK);
                 output.accept(MOON_DUNGEON_BRICK);
+
+                output.accept(MOON_SURFACE_ROCK);
+                output.accept(MOON_SURFACE_ROCK_STAIRS);
+                output.accept(MOON_SURFACE_ROCK_SLAB);
+                output.accept(MOON_SURFACE_ROCK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
@@ -118,6 +122,12 @@ public class GCCreativeModeTabs {
                 output.accept(CRACKED_MOON_BASALT_BRICK_STAIRS);
                 output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
+
+                // MOON PLANTS
+                output.accept(MOON_WEED);
+                output.accept(MOON_SHRUBS);
+                output.accept(MOON_MOSS);
+                output.accept(MOON_TANGLE);
 
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);
@@ -185,6 +195,7 @@ public class GCCreativeModeTabs {
                 output.accept(SILICON_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
                 output.accept(OLIVINE_BLOCK);
+                output.accept(BUDDING_OLIVINE);
                 output.accept(OLIVINE_CLUSTER);
 
                 output.accept(TIN_BLOCK);
@@ -224,6 +235,7 @@ public class GCCreativeModeTabs {
                 output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
+                output.accept(METEORIC_IRON_DOOR);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);
@@ -251,6 +263,12 @@ public class GCCreativeModeTabs {
                 output.accept(VACUUM_GLASS);
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
+
+                // MOON GLASSES
+                output.accept(OLIVINE_GLASS);
+                output.accept(OLIVINE_GLASS_PANE);
+                output.accept(MOON_GLASS);
+                output.accept(MOON_GLASS_PANE);
 
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
@@ -403,6 +421,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);
                 output.accept(CHEESEBURGER);
+                output.accept(MOON_TANGLE_FRUIT);
 
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
