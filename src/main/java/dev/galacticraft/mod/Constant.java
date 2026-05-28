@@ -396,6 +396,7 @@ public interface Constant {
         String MOON_MOSS = "moon_moss";
         String MOON_TANGLE = "moon_tangle";
         String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String BUDDING_OLIVINE = "budding_olivine";
     }
 
     interface Fluid {
