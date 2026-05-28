@@ -147,8 +147,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_TURF, "Moon Turf");
         this.block(GCBlocks.MOON_DIRT, "Moon Dirt");
         this.block(GCBlocks.MOON_DIRT_PATH, "Moon Dirt Path");
-        this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
         this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick");
+
+        this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_SLAB, "Moon Surface Rock Slab");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_STAIRS, "Moon Surface Rock Stairs");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_WALL, "Moon Surface Rock Wall");
 
         this.block(GCBlocks.MOON_ROCK, "Moon Rock");
         this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
@@ -203,6 +207,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, "Cracked Moon Basalt Brick Stairs");
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, "Cracked Moon Basalt Brick Wall");
 
+        // MOON PLANTS
+
+        this.block(GCBlocks.MOON_WEED, "Moon Weed");
+        this.block(GCBlocks.MOON_SHRUBS, "Moon Shrubs");
+        this.block(GCBlocks.MOON_MOSS, "Moon Moss");
+        this.block(GCBlocks.MOON_TANGLE, "Moon Tangle");
+
         this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
 
         // MARS NATURAL
@@ -239,6 +250,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.HEAVY_WIRE_WALKWAY, "Heavy Wire Walkway");
         this.block(GCBlocks.TIN_LADDER, "Tin Ladder");
         this.block(GCBlocks.IRON_GRATING, "Iron Grating");
+        this.block(GCBlocks.METEORIC_IRON_DOOR, "Meteoric Iron Door");
 
         // SPECIAL
         this.block(GCBlocks.ALUMINUM_WIRE, "Aluminum Wire");
@@ -262,6 +274,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
+
+        // MOON GLASSES
+        this.block(GCBlocks.OLIVINE_GLASS, "Olivine Glass");
+        this.block(GCBlocks.OLIVINE_GLASS_PANE, "Olivine Glass Pane");
+        this.block(GCBlocks.MOON_GLASS, "Moon Glass");
+        this.block(GCBlocks.MOON_GLASS_PANE, "Moon Glass Pane");
 
         // ORES
         this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
@@ -467,6 +485,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
         this.item(GCItems.CHEESEBURGER, "Cheeseburger");
+        this.item(GCItems.MOON_TANGLE_FRUIT, "Moon Tangle Fruit");
 
         // ROCKET PLATES
         this.item(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Heavy Plating");

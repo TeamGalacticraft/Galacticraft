@@ -50,6 +50,11 @@ public class GCBlockFamilies {
     public static final DecorationFamily DARK_DECORATIONS = decoration(DARK_DECORATION);
 
     // STONES
+    public static final BlockFamily MOON_SURFACE_ROCKS = builder(MOON_SURFACE_ROCK)
+            .slab(MOON_SURFACE_ROCK_SLAB)
+            .stairs(MOON_SURFACE_ROCK_STAIRS)
+            .wall(MOON_SURFACE_ROCK_WALL)
+            .getFamily();
     public static final BlockFamily MOON_ROCKS = builder(MOON_ROCK)
             .slab(MOON_ROCK_SLAB)
             .stairs(MOON_ROCK_STAIRS)
