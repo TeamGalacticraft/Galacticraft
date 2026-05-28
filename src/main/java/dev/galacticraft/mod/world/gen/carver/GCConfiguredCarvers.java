@@ -24,7 +24,6 @@ package dev.galacticraft.mod.world.gen.carver;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.tag.GCBlockTags;
-import dev.galacticraft.mod.world.dimension.MoonConstants;
 import dev.galacticraft.mod.world.gen.carver.config.CraterCarverConfig;
 import net.minecraft.core.HolderSet;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -35,7 +34,11 @@ import net.minecraft.util.valueproviders.ConstantFloat;
 import net.minecraft.util.valueproviders.TrapezoidFloat;
 import net.minecraft.util.valueproviders.UniformFloat;
 import net.minecraft.world.level.levelgen.VerticalAnchor;
-import net.minecraft.world.level.levelgen.carver.*;
+import net.minecraft.world.level.levelgen.carver.CarverDebugSettings;
+import net.minecraft.world.level.levelgen.carver.CanyonCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.CaveCarverConfiguration;
+import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
+import net.minecraft.world.level.levelgen.carver.WorldCarver;
 import net.minecraft.world.level.levelgen.heightproviders.ConstantHeight;
 import net.minecraft.world.level.levelgen.heightproviders.UniformHeight;
 import org.jetbrains.annotations.Contract;
@@ -46,11 +49,7 @@ public class GCConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_CRATER_CARVER = key(Constant.Carver.MOON_CRATER_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = key(Constant.Carver.MOON_MARE_CAVE_CARVER);
-
-    // --- OLIVINE BIOME CARVER ---
-    public static final ResourceKey<ConfiguredWorldCarver<?>> OLIVINE_CAVE_CARVER = key(Constant.Carver.OLIVINE_CAVE_CARVER);
-
-    public static final ResourceKey<ConfiguredWorldCarver<?>> GLACIAL_CAVERN_CARVER = key(Constant.Carver.GLACIAL_CAVE_CARVER);
+    public static final ResourceKey<ConfiguredWorldCarver<?>> PLANNED_MOON_CAVE_CARVER = key("planned_moon_cave_carver");
 
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
@@ -72,8 +71,10 @@ public class GCConfiguredCarvers {
                         3,
                         UniformFloat.of(0.75f, 1.0f),
                         1.0f,
-                        0.0f)
+                        0.0f
+                )
         )));
+
         context.register(MOON_CRATER_CARVER, GCCarvers.CRATERS.configured(new CraterCarverConfig(
                 0.05f,
                 ConstantHeight.of(VerticalAnchor.absolute(128)),
@@ -83,6 +84,7 @@ public class GCConfiguredCarvers {
                 8,
                 8
         )));
+
         context.register(MOON_HIGHLANDS_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
                 0.15f,
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
@@ -93,6 +95,7 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(0.8f, 1.3f),
                 UniformFloat.of(-1.0f, -0.4f)
         )));
+
         context.register(MOON_MARE_CAVE_CARVER, GCCarvers.LUNAR_CAVE.configured(new CaveCarverConfiguration(
                 0.18f,
                 UniformHeight.of(VerticalAnchor.aboveBottom(8), VerticalAnchor.absolute(180)),
@@ -104,29 +107,15 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(-1.0f, -0.4f)
         )));
 
-        context.register(OLIVINE_CAVE_CARVER, GCCarvers.OLIVINE_CAVE.configured(new CaveCarverConfiguration(
-                MoonConstants.OlivineCaves.PROBABILITY,
-                UniformHeight.of(VerticalAnchor.aboveBottom(MoonConstants.OlivineCaves.MIN_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT), VerticalAnchor.aboveBottom(MoonConstants.OlivineCaves.MAX_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT)),
-                UniformFloat.of(MoonConstants.OlivineCaves.Y_SCALE_MIN, MoonConstants.OlivineCaves.Y_SCALE_MAX),
-                VerticalAnchor.bottom(), //overridden inside the cave carver class
-                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES),
-                UniformFloat.of(1.5f, 4.0f), // horizontal
-                UniformFloat.of(1.5f, 4.0f), // vertical (was 0.6f–3.0f)
-                UniformFloat.of(-1f, -0.5f)
-        )));
-
-        context.register(GLACIAL_CAVERN_CARVER, GCCarvers.GLACIAL_CAVERN.configured(new CaveCarverConfiguration(
-                MoonConstants.GlacialCaverns.PROBABILITY,
-                UniformHeight.of(
-                        VerticalAnchor.aboveBottom(MoonConstants.GlacialCaverns.MIN_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT),
-                        VerticalAnchor.aboveBottom(MoonConstants.GlacialCaverns.MAX_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT)
-                ),
-                UniformFloat.of(MoonConstants.GlacialCaverns.Y_SCALE_MIN, MoonConstants.GlacialCaverns.Y_SCALE_MAX),
+        context.register(PLANNED_MOON_CAVE_CARVER, GCCarvers.PLANNED_MOON_CAVE.configured(new CaveCarverConfiguration(
+                1.0F,
+                UniformHeight.of(VerticalAnchor.absolute(-52), VerticalAnchor.absolute(52)),
+                UniformFloat.of(0.99F, 1.01F),
                 VerticalAnchor.bottom(),
                 BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CARVER_REPLACEABLES),
-                UniformFloat.of(1.8f, 4.2f),
-                UniformFloat.of(1.0f, 2.8f),
-                UniformFloat.of(-0.9f, -0.25f)
+                UniformFloat.of(0.99F, 1.01F),
+                UniformFloat.of(0.99F, 1.01F),
+                UniformFloat.of(-0.01F, 0.01F)
         )));
     }
 }

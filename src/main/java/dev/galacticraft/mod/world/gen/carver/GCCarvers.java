@@ -32,18 +32,11 @@ import net.minecraft.world.level.levelgen.carver.WorldCarver;
 public class GCCarvers {
     public static final WorldCarver<CaveCarverConfiguration> LUNAR_CAVE = new LunarCaveCarver(CaveCarverConfiguration.CODEC);
     public static final WorldCarver<CraterCarverConfig> CRATERS = new CraterCarver(CraterCarverConfig.CRATER_CODEC);
-
-    // --- OLIVINE BIOME CARVER ---
-    public static final WorldCarver<CaveCarverConfiguration> OLIVINE_CAVE = new OlivineCaveCarver(CaveCarverConfiguration.CODEC);
-
-    public static final WorldCarver<CaveCarverConfiguration> GLACIAL_CAVERN = new GlacialCavernCarver(CaveCarverConfiguration.CODEC);
+    public static final WorldCarver<CaveCarverConfiguration> PLANNED_MOON_CAVE = new PlannedMoonCaveCarver(CaveCarverConfiguration.CODEC);
 
     public static void register() {
         Registry.register(BuiltInRegistries.CARVER, Constant.id("lunar_cave"), LUNAR_CAVE);
         Registry.register(BuiltInRegistries.CARVER, Constant.id("craters"), CRATERS);
-
-        Registry.register(BuiltInRegistries.CARVER, Constant.id("olivine_cave"), OLIVINE_CAVE);
-
-        Registry.register(BuiltInRegistries.CARVER, Constant.id("glacial_cavern"), GLACIAL_CAVERN);
+        Registry.register(BuiltInRegistries.CARVER, Constant.id("planned_moon_cave"), PLANNED_MOON_CAVE);
     }
 }

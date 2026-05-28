@@ -1,39 +1,39 @@
 {
-  "type": "galacticraft:glacial_cavern",
+  "type": "galacticraft:planned_moon_cave",
   "config": {
     "floor_level": {
       "type": "minecraft:uniform",
-      "max_exclusive": -0.25,
-      "min_inclusive": -0.9
+      "max_exclusive": 0.01,
+      "min_inclusive": -0.01
     },
     "horizontal_radius_multiplier": {
       "type": "minecraft:uniform",
-      "max_exclusive": 4.2,
-      "min_inclusive": 1.8
+      "max_exclusive": 1.01,
+      "min_inclusive": 0.99
     },
     "lava_level": {
       "above_bottom": 0
     },
-    "probability": 0.018,
+    "probability": 1.0,
     "replaceable": "#galacticraft:moon_carver_replaceables",
     "vertical_radius_multiplier": {
       "type": "minecraft:uniform",
-      "max_exclusive": 2.8,
-      "min_inclusive": 1.0
+      "max_exclusive": 1.01,
+      "min_inclusive": 0.99
     },
     "y": {
       "type": "minecraft:uniform",
       "max_inclusive": {
-        "above_bottom": 99
+        "absolute": 52
       },
       "min_inclusive": {
-        "above_bottom": 19
+        "absolute": -52
       }
     },
     "yScale": {
       "type": "minecraft:uniform",
-      "max_exclusive": 2.6,
-      "min_inclusive": 1.2
+      "max_exclusive": 1.01,
+      "min_inclusive": 0.99
     }
   }
 }
