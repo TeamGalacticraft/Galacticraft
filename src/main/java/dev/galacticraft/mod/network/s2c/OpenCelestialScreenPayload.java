@@ -64,11 +64,6 @@ public record OpenCelestialScreenPayload(
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> context.client().setScreen(new CelestialSelectionScreen(
-                false,
-                this.data(),
-                this.canCreateStations(),
-                this.celestialBody().value()
-        ));
+        return () -> ClientPayloadHandlers.openCelestialScreen(this);
     }
 }
