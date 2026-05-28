@@ -36,6 +36,7 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Locale;
 
 public record CapeAssignmentsPacket(List<Entry> entries) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("cape_assignments");
@@ -81,9 +82,14 @@ public record CapeAssignmentsPacket(List<Entry> entries) implements S2CPayload {
     public Runnable handle(@NotNull ClientPlayNetworking.Context context) {
         return () -> {
             var map = new HashMap<String, CapesClientState.Entry>(entries.size());
+
             for (var e : entries) {
-                map.put(e.uuid.toLowerCase(), new CapesClientState.Entry(e.mode, e.gcCapeId));
+                map.put(
+                        e.uuid.toLowerCase(java.util.Locale.ROOT),
+                        new CapesClientState.Entry(e.mode, e.gcCapeId)
+                );
             }
+
             CapesClientState.apply(map);
         };
     }

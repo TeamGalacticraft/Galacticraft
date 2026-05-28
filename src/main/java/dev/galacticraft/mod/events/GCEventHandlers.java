@@ -32,11 +32,14 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
+import dev.galacticraft.mod.misc.cape.ServerCapeManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -57,8 +60,18 @@ public class GCEventHandlers {
     public static void init() {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
+
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            CapeSelectionPayload.sendCapeSnapshot(handler.player);
+        });
+
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ServerCapeManager.remove(handler.player);
+            CapeSelectionPayload.broadcastCapeSnapshot(server);
+        });
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
