@@ -23,10 +23,7 @@
 package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.gen.feature.custom.BasaltBeamFeature;
-import dev.galacticraft.mod.world.gen.feature.custom.OliFlyEggPlacedFeature;
-import dev.galacticraft.mod.world.gen.feature.custom.OlivineBeamFeature;
-import dev.galacticraft.mod.world.gen.feature.custom.PillarSpikeFeature;
+import dev.galacticraft.mod.world.gen.feature.custom.*;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;
@@ -39,16 +36,19 @@ public class GCFeatures {
     public static Feature<NoneFeatureConfiguration> BASALT_BEAM;
     public static Feature<NoneFeatureConfiguration> OLIGRUB_EGG;
     public static Feature<NoneFeatureConfiguration> OLIVINE_PILLAR_SPIKE;
+    public static Feature<NoneFeatureConfiguration> GLACIAL_ICE_SPIKE;
 
     public static final ResourceKey<Feature<?>> OLIVINE_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("olivine_beam"));
     public static final ResourceKey<Feature<?>> BASALT_BEAM_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("basalt_beam"));
     public static final ResourceKey<Feature<?>> OLIGRUB_EGG_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("oligrub_egg"));
     public static final ResourceKey<Feature<?>> OLIVINE_PILLAR_SPIKE_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("olivine_pillar_spike"));
+    public static final ResourceKey<Feature<?>> GLACIAL_ICE_SPIKE_KEY = ResourceKey.create(Registries.FEATURE, Constant.id("glacial_ice_spike"));
 
     public static void register() {
         OLIVINE_BEAM = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_BEAM_KEY, new OlivineBeamFeature(NoneFeatureConfiguration.CODEC));
         BASALT_BEAM = Registry.register(BuiltInRegistries.FEATURE, BASALT_BEAM_KEY, new BasaltBeamFeature(NoneFeatureConfiguration.CODEC));
         OLIGRUB_EGG = Registry.register(BuiltInRegistries.FEATURE, OLIGRUB_EGG_KEY, new OliFlyEggPlacedFeature(NoneFeatureConfiguration.CODEC));
         OLIVINE_PILLAR_SPIKE = Registry.register(BuiltInRegistries.FEATURE, OLIVINE_PILLAR_SPIKE_KEY, new PillarSpikeFeature(NoneFeatureConfiguration.CODEC, 100));
+        GLACIAL_ICE_SPIKE = Registry.register(BuiltInRegistries.FEATURE, GLACIAL_ICE_SPIKE_KEY, new GlacialIceSpikeFeature(NoneFeatureConfiguration.CODEC, 28));
     }
 }

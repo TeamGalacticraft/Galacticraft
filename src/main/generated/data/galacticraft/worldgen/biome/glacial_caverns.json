@@ -1,10 +1,13 @@
 {
   "carvers": {
-    "air": "galacticraft:moon_crater_carver"
+    "air": [
+      "galacticraft:glacial_cavern_carver",
+      "galacticraft:moon_crater_carver"
+    ]
   },
   "downfall": 0.0,
   "effects": {
-    "fog_color": 10518688,
+    "fog_color": 14085375,
     "mood_sound": {
       "block_search_extent": 8,
       "offset": 2.0,
@@ -18,8 +21,8 @@
       "sound": "galacticraft:music.moon"
     },
     "sky_color": 0,
-    "water_color": 4159204,
-    "water_fog_color": 329011
+    "water_color": 12117759,
+    "water_fog_color": 11065584
   },
   "features": [
     [],
@@ -37,6 +40,9 @@
       "galacticraft:ore_cheese_moon",
       "galacticraft:ore_cheese_large_moon",
       "galacticraft:ore_lunar_sapphire_moon"
+    ],
+    [
+      "galacticraft:glacial_ice_spike"
     ]
   ],
   "has_precipitation": false,
@@ -57,13 +63,13 @@
         "type": "galacticraft:evolved_zombie",
         "maxCount": 4,
         "minCount": 4,
-        "weight": 95
+        "weight": 75
       },
       {
         "type": "galacticraft:evolved_skeleton",
         "maxCount": 4,
         "minCount": 4,
-        "weight": 100
+        "weight": 65
       },
       {
         "type": "galacticraft:evolved_creeper",

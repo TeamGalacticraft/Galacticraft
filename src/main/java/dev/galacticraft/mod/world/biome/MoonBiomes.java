@@ -180,18 +180,20 @@ public class MoonBiomes {
 
     public static Biome createGlacialCaverns(HolderGetter<PlacedFeature> features, HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(features, carvers);
-        //generation.addCarver(GenerationStep.Carving.AIR, carvers.getOrThrow(Constant.key(Registries.CONFIGURED_CARVER, "glacial_cavern_carver")));
 
-        MoonBiomes.addDefaultMoonOres(generation);
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.GLACIAL_CAVERN_CARVER);
         generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
 
+        MoonBiomes.addDefaultMoonOres(generation);
+        generation.addFeature(GenerationStep.Decoration.UNDERGROUND_DECORATION, GCPlacedFeatures.GLACIAL_ICE_SPIKE);
+
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
-        MoonBiomes.monsters(spawns, 95, 5, 100);
+        MoonBiomes.monsters(spawns, 75, 5, 65);
 
         BiomeSpecialEffects effects = new BiomeSpecialEffects.Builder()
-                .fogColor(10518688)
-                .waterColor(4159204)
-                .waterFogColor(329011)
+                .fogColor(0xD6ECFF)
+                .waterColor(0xB8E6FF)
+                .waterFogColor(0xA8D8F0)
                 .skyColor(0)
                 .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
                 .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_MOON))

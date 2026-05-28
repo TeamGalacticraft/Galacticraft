@@ -42,6 +42,7 @@ public class GCConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> BASALT_BEAM = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("basalt_beam"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> OLIGRUB_EGG = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("oligrub_egg"));
     public static final ResourceKey<ConfiguredFeature<?, ?>> OLIVINE_PILLAR_SPIKE = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("olivine_pillar_spike"));
+    public static final ResourceKey<ConfiguredFeature<?, ?>> GLACIAL_ICE_SPIKE = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("glacial_ice_spike"));
 
     public static void bootstrapRegistries(BootstrapContext<ConfiguredFeature<?, ?>> context) {
         context.register(OIL_LAKE, new ConfiguredFeature<>(
@@ -69,6 +70,11 @@ public class GCConfiguredFeatures {
 
         context.register(OLIVINE_PILLAR_SPIKE, new ConfiguredFeature<>(
                 GCFeatures.OLIVINE_PILLAR_SPIKE,
+                NoneFeatureConfiguration.INSTANCE
+        ));
+
+        context.register(GLACIAL_ICE_SPIKE, new ConfiguredFeature<>(
+                GCFeatures.GLACIAL_ICE_SPIKE,
                 NoneFeatureConfiguration.INSTANCE
         ));
     }

@@ -45,6 +45,7 @@ public class GCPlacedFeatures {
     // --- OLIVINE BIOME ---
     public static final ResourceKey<PlacedFeature> OLIGRUB_EGG = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("oligrub_egg"));
     public static final ResourceKey<PlacedFeature> OLIVINE_PILLAR_SPIKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("olivine_pillar_spike"));
+    public static final ResourceKey<PlacedFeature> GLACIAL_ICE_SPIKE = ResourceKey.create(Registries.PLACED_FEATURE, Constant.id("glacial_ice_spike"));
 
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
@@ -68,6 +69,16 @@ public class GCPlacedFeatures {
 
         context.register(OLIVINE_PILLAR_SPIKE, new PlacedFeature(
                 configuredFeatureLookup.getOrThrow(GCConfiguredFeatures.OLIVINE_PILLAR_SPIKE),
+                List.of(
+                        RarityFilter.onAverageOnceEvery(1),
+                        InSquarePlacement.spread(),
+                        PlacementUtils.FULL_RANGE,
+                        BiomeFilter.biome()
+                )
+        ));
+
+        context.register(GLACIAL_ICE_SPIKE, new PlacedFeature(
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeatures.GLACIAL_ICE_SPIKE),
                 List.of(
                         RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),

@@ -25,6 +25,7 @@ package dev.galacticraft.mod.world.gen.feature.custom;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.dimension.MoonConstants;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -59,6 +60,10 @@ public class PillarSpikeFeature extends Feature<NoneFeatureConfiguration> {
         for (int i = 0; i < attempts; i++) {
             BlockPos start = findAirInCave(level, origin.offset(random.nextInt(16), 0, random.nextInt(16)), random);
             if (start == null || !inChunk(placeChunk, start)) continue;
+
+            if (!level.getBiome(start).is(GCBiomes.Moon.OLIVINE_CAVES)) {
+                continue;
+            }
 
             Vec3 direction = randomUnitDirection(random);
             BlockPos end = raycastUntilSolid(level, Vec3.atCenterOf(start), direction, 100);

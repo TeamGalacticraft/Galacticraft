@@ -65,6 +65,16 @@ public interface MoonConstants {
         int MIN_FEATURE_SPAWN = -30;
     }
 
+    interface GlacialCaverns {
+        float PROBABILITY = 0.018f;
+        int MAX_HEIGHT = 35;
+        int MIN_HEIGHT = -45;
+        float Y_SCALE_MAX = 2.6f;
+        float Y_SCALE_MIN = 1.2f;
+        int MAX_FEATURE_SPAWN = 45;
+        int MIN_FEATURE_SPAWN = -45;
+    }
+
     interface LunarHighLands {
         double NOISE_SCALE_XZ = 3;
     }

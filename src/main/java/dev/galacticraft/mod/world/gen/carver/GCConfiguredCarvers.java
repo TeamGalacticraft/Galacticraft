@@ -50,6 +50,8 @@ public class GCConfiguredCarvers {
     // --- OLIVINE BIOME CARVER ---
     public static final ResourceKey<ConfiguredWorldCarver<?>> OLIVINE_CAVE_CARVER = key(Constant.Carver.OLIVINE_CAVE_CARVER);
 
+    public static final ResourceKey<ConfiguredWorldCarver<?>> GLACIAL_CAVERN_CARVER = key(Constant.Carver.GLACIAL_CAVE_CARVER);
+
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
         return Constant.key(Registries.CONFIGURED_CARVER, s);
@@ -111,6 +113,20 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(1.5f, 4.0f), // horizontal
                 UniformFloat.of(1.5f, 4.0f), // vertical (was 0.6f–3.0f)
                 UniformFloat.of(-1f, -0.5f)
+        )));
+
+        context.register(GLACIAL_CAVERN_CARVER, GCCarvers.GLACIAL_CAVERN.configured(new CaveCarverConfiguration(
+                MoonConstants.GlacialCaverns.PROBABILITY,
+                UniformHeight.of(
+                        VerticalAnchor.aboveBottom(MoonConstants.GlacialCaverns.MIN_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT),
+                        VerticalAnchor.aboveBottom(MoonConstants.GlacialCaverns.MAX_HEIGHT - MoonConstants.Dimension.MIN_DIMENSION_HEIGHT)
+                ),
+                UniformFloat.of(MoonConstants.GlacialCaverns.Y_SCALE_MIN, MoonConstants.GlacialCaverns.Y_SCALE_MAX),
+                VerticalAnchor.bottom(),
+                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CARVER_REPLACEABLES),
+                UniformFloat.of(1.8f, 4.2f),
+                UniformFloat.of(1.0f, 2.8f),
+                UniformFloat.of(-0.9f, -0.25f)
         )));
     }
 }
