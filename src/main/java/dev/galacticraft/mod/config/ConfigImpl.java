@@ -51,6 +51,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -95,6 +97,8 @@ public class ConfigImpl implements Config {
     private boolean enableGcHouston = true;
     private boolean enableCreativeGearInv = true;
     private boolean enableSpaceStationCreation = true;
+
+    private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -452,6 +456,17 @@ public class ConfigImpl implements Config {
 
     public void setEnableSpaceStationCreation(boolean enableSpaceStationCreation) {
         this.enableSpaceStationCreation = enableSpaceStationCreation;
+    }
+
+    @Override
+    public List<String> disabledCelestialScreenDimensions() {
+        return this.disabledCelestialScreenDimensions;
+    }
+
+    public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
+        this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
+                ? new ArrayList<>()
+                : disabledCelestialScreenDimensions;
     }
 
     public void load() {

@@ -12,7 +12,8 @@ public final class ClientPayloadHandlers {
                 false,
                 payload.data(),
                 payload.canCreateStations(),
-                payload.celestialBody().value()
+                payload.celestialBody().value(),
+                payload.disabledDestinations()
         ));
     }
 

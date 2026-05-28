@@ -1152,6 +1152,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.CLICK_AGAIN_MOONS, "Click again to zoom (view moons)");
         this.add(CelestialSelection.CLICK_AGAIN_SATELLITES, "Click again to zoom (view satellites)");
         this.add(CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES, "Click again to zoom (view moons & satellites)");
+        this.add(CelestialSelection.DISABLED, "Disabled");
     }
 
     protected void generateUiTranslations() {

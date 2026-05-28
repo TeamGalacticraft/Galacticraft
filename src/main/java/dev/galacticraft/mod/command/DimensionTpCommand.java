@@ -31,6 +31,8 @@ import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.util.Translations;
@@ -119,7 +121,8 @@ public class DimensionTpCommand {
         ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(
                 null,
                 body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH),
-                dev.galacticraft.mod.Galacticraft.CONFIG.enableSpaceStationCreation()
+                Galacticraft.CONFIG.enableSpaceStationCreation(),
+                GCConfigUtil.disabledCelestialScreenDestinations()
         ));
         return Command.SINGLE_SUCCESS;
     }

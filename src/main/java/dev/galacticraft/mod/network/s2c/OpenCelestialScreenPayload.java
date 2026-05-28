@@ -39,10 +39,13 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.List;
+
 public record OpenCelestialScreenPayload(
         @Nullable RocketData data,
         Holder<CelestialBody<?, ?>> celestialBody,
-        boolean canCreateStations
+        boolean canCreateStations,
+        List<ResourceLocation> disabledDestinations
 ) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
@@ -51,6 +54,8 @@ public record OpenCelestialScreenPayload(
             OpenCelestialScreenPayload::celestialBody,
             ByteBufCodecs.BOOL,
             OpenCelestialScreenPayload::canCreateStations,
+            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            OpenCelestialScreenPayload::disabledDestinations,
             OpenCelestialScreenPayload::new
     );
 

@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.api.config;
 
+import java.util.List;
+
 public interface Config {
     boolean isAlphaWarningHidden();
 
@@ -98,6 +100,8 @@ public interface Config {
     boolean enableCreativeGearInv();
 
     boolean enableSpaceStationCreation();
+
+    List<String> disabledCelestialScreenDimensions();
 
     void load();
 
