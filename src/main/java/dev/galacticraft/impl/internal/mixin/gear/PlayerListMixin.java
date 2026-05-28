@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -61,7 +61,7 @@ public abstract class PlayerListMixin {
 
         // Sync the list of satellites with new players
         ((SatelliteAccessor) player.server).galacticraft$getSatellites().forEach((id, satellite) -> {
-            connection.send(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(id, satellite.config(), false)));
+            connection.send(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), false)));
         });
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,11 +22,9 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
-import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.DefaultRocketDisplay;
-import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.recipe.RocketRecipe;
@@ -54,6 +52,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
+import static dev.galacticraft.mod.content.GCBlocks.ROCKET_WORKBENCH;
 
 @Environment(EnvType.CLIENT)
 public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDisplay> {
@@ -72,7 +71,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
 
     @Override
     public Renderer getIcon() {
-        return EntryStacks.of(new ItemStack(GCBlocks.ROCKET_WORKBENCH));
+        return EntryStacks.of(new ItemStack(ROCKET_WORKBENCH));
     }
 
     @Override
@@ -85,30 +84,34 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         List<Widget> widgets = new ArrayList<>();
         widgets.add(Widgets.createRecipeBase(bounds));
         List<EntryIngredient> input = recipeDisplay.getInputEntries();
-        List<Slot> slots = Lists.newArrayList();
 
+        final int n = input.size();
+        int i = 0;
         for (RocketRecipe.RocketSlotData data : RocketRecipe.slotData(recipeDisplay.bodyHeight, recipeDisplay.hasBoosters)) {
-            slots.add(Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput());
+            Slot inputSlot = Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput();
+            if (i < n && !input.get(i).isEmpty()) {
+                if (data.mirror()) {
+                    inputSlot.entries(input.get(i).stream().map(
+                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
+                    ).toList());
+                } else {
+                    inputSlot.entries(input.get(i));
+                }
+            }
+            widgets.add(inputSlot);
+            ++i;
         }
 
         // Chest
         final Point chestPoint = new Point(startPoint.x + CHEST_X, startPoint.y + CHEST_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, chestPoint.x - 2, chestPoint.y - 2, CHEST_U, CHEST_V, CHEST_WIDTH, CHEST_HEIGHT));
-        slots.add(new SlotSpriteWidget(chestPoint, CHEST_SLOT_SPRITE).markInput());
-
-        for (int i = 0; i < input.size(); ++i) {
-            if (!input.get(i).isEmpty()) {
-                if (i == 11 || i == 12) {
-                    slots.get(i).entries(input.get(i).stream().map(
-                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
-                    ).toList());
-                } else {
-                    slots.get(i).entries(input.get(i));
-                }
-            }
+        Slot chestSlot = Widgets.createSlot(chestPoint).markInput();
+        if (i < n && !input.get(i).isEmpty()) {
+            chestSlot.entries(input.get(i));
+        } else {
+            chestSlot.entry(EntryStack.empty().copy().withRenderer(new SlotSpriteEntryRenderer(CHEST_SLOT_SPRITE)));
         }
-
-        widgets.addAll(slots);
+        widgets.add(chestSlot);
 
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, outputPoint.x - OUTPUT_X_OFFSET, outputPoint.y - OUTPUT_Y_OFFSET, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT));
@@ -120,8 +123,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     }
 
     @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
+    public int getDisplayWidth(DefaultRocketDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
@@ -130,7 +133,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     }
 
     @Override
-    public int getDisplayWidth(DefaultRocketDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
+    public int getMaximumDisplaysPerPage() {
+        return 99;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -74,6 +74,9 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCMiscRecipeProvider::new);
         pack.addProvider(GCOreRecipeProvider::new);
         pack.addProvider(GCRocketRecipes::new);
+
+        // EMI default recipes (must be after recipes)
+        pack.addProvider(EmiDefaultRecipeProvider::new);
 
         // tags
         GCBlockTagProvider blockTags = pack.addProvider(GCBlockTagProvider::new);

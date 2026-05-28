@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.*;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
+import dev.galacticraft.mod.content.block.entity.decoration.FlagBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
@@ -43,7 +44,7 @@ public class GCBlockEntityTypes {
 
     // WIRES, PIPES, WALKWAYS
     public static final BlockEntityType<WireBlockEntity> WIRE_T1 = register(Constant.Block.ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT1(GCBlockEntityTypes.WIRE_T1, pos, state), GCBlocks.ALUMINUM_WIRE, GCBlocks.SEALABLE_ALUMINUM_WIRE, GCBlocks.WIRE_WALKWAY);
-    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = register(Constant.Block.HEAVY_ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), /*GCBlocks.HEAVY_ALUMINUM_WIRE,*/ GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+    public static final BlockEntityType<WireBlockEntity> WIRE_T2 = register(Constant.Block.HEAVY_ALUMINUM_WIRE, (pos, state) -> WireBlockEntity.createT2(GCBlockEntityTypes.WIRE_T2, pos, state), GCBlocks.HEAVY_ALUMINUM_WIRE, GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, GCBlocks.HEAVY_WIRE_WALKWAY);
     public static final BlockEntityType<GlassFluidPipeBlockEntity> GLASS_FLUID_PIPE = register(Constant.Block.GLASS_FLUID_PIPE, GlassFluidPipeBlockEntity::new, GlassFluidPipeBlockEntity.COMPATIBLE_BLOCKS.toArray(new Block[0]));
     public static final BlockEntityType<WalkwayBlockEntity> WALKWAY = register(Constant.Block.WALKWAY, WalkwayBlockEntity::new, GCBlocks.WALKWAY);
 
@@ -82,6 +83,7 @@ public class GCBlockEntityTypes {
 
     // DECORATION
     public static final BlockEntityType<CannedFoodBlockEntity> CANNED_FOOD = register(Constant.Block.CANNED_FOOD, CannedFoodBlockEntity::new, GCBlocks.CANNED_FOOD);
+    public static final BlockEntityType<FlagBlockEntity> FLAG = register(Constant.Block.FLAG, FlagBlockEntity::new, GCBlocks.FLAGS.colorMap().values().toArray(new Block[0]));
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER);
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = register(Constant.Block.ROCKET_WORKBENCH, RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH);

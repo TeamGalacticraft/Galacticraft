@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,6 +57,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
+
 public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
@@ -71,11 +73,11 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(44, 35),
+                            .pos(INPUT_X, INPUT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(108, 35),
+                            .pos(OUTPUT_X_1, OUTPUT_Y_1),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(134, 35)
+                            .pos(OUTPUT_X_2, OUTPUT_Y_2)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),

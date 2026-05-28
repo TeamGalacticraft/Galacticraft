@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public class RocketRecipeBuilder extends GCRecipeBuilder {
+public class RocketRecipeBuilder extends GCRecipeBuilder<RocketRecipeBuilder> {
     private int bodyHeight;
     private Ingredient body, cone, engine, fins;
     private Ingredient boosters = Ingredient.EMPTY;
@@ -41,7 +41,7 @@ public class RocketRecipeBuilder extends GCRecipeBuilder {
     private RocketData rocketData;
 
     protected RocketRecipeBuilder(ItemLike result, int count) {
-        super("rocket", result, count);
+        super("rocket/", null, result, count);
     }
 
     public static RocketRecipeBuilder create(ItemLike result) {

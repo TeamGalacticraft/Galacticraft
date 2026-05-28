@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -79,13 +79,13 @@ public class OxygenTankItem extends AccessoryItem {
     @Override
     public int getBarWidth(ItemStack stack) {
         StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
-        return Math.round(13.0F - (float) (storage.getCapacity() - storage.getAmount()) * 13.0F / (float) storage.getCapacity());
+        return Math.round(13.0F * ((float) storage.getAmount() / (float) storage.getCapacity()));
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
         StorageView<FluidVariant> storage = OxygenTankItem.getStorage(stack);
-        float scale = 1.0F - ((float) storage.getAmount() / (float) storage.getCapacity());
+        double scale = 1.0F - ((double) storage.getAmount() / (double) storage.getCapacity());
         return Constant.Text.getStorageLevelColor(scale);
     }
 

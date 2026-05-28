@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -78,6 +78,8 @@ public class ConfigImpl implements Config {
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private boolean squareCannedFood = false;
+    private long fluidCanisterCapacity = FluidConstants.BUCKET;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -91,6 +93,7 @@ public class ConfigImpl implements Config {
     private double bossHealthMultiplier = 1.0;
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
+    private boolean enableCreativeGearInv = true;
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -302,6 +305,29 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public boolean squareCannedFood() {
+        return this.squareCannedFood;
+    }
+
+    public void setSquareCannedFood(boolean squareCannedFood) {
+        boolean reload = this.squareCannedFood != squareCannedFood;
+        this.squareCannedFood = squareCannedFood;
+        if (reload) {
+            Constant.LOGGER.info("Reload resource packs");
+            Minecraft.getInstance().reloadResourcePacks();
+        }
+    }
+
+    @Override
+    public long fluidCanisterCapacity() {
+        return this.fluidCanisterCapacity;
+    }
+
+    public void setFluidCanisterCapacity(long capacity) {
+        this.fluidCanisterCapacity = capacity;
+    }
+
+    @Override
     public long smallOxygenTankCapacity() {
         return this.smallOxygenTankCapacity;
     }
@@ -407,6 +433,15 @@ public class ConfigImpl implements Config {
 
     public void setEnableGcHouston(boolean enableGcHouston) {
         this.enableGcHouston = enableGcHouston;
+    }
+
+    @Override
+    public boolean enableCreativeGearInv() {
+        return this.enableCreativeGearInv;
+    }
+
+    public void setCreativeGearInv(boolean enableCreativeGearInv) {
+        this.enableCreativeGearInv = enableCreativeGearInv;
     }
 
     public void load() {
@@ -739,9 +774,52 @@ public class ConfigImpl implements Config {
 
             b.getOrCreateCategory(Component.translatable(Translations.Config.ENERGY)).addEntry(wires.build()).addEntry(machines.build());
 
+            // --- CLIENT CONFIG ---
+
+            ConfigCategory client = b.getOrCreateCategory(Component.translatable(Translations.Config.CLIENT));
+
+            client.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.SQUARE_CANNED_FOOD),
+                    config.squareCannedFood())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.SQUARE_CANNED_FOOD))
+                    .setSaveConsumer(config::setSquareCannedFood)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
+
+            // --- CREATIVE CONFIG ---
+
+            SubCategoryBuilder creative = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.CREATIVE));
+
+            creative.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    Component.translatable(Translations.Config.ENABLE_CREATIVE_GEARINV),
+                    config.enableCreativeGearInv)
+                    .setSaveConsumer(config::setCreativeGearInv)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            ConfigCategory misc = b.getOrCreateCategory(Component.translatable(Translations.Config.MISC));
+
+            misc.addEntry(creative.build());
+
+            misc.addEntry(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
+                    config.fluidCanisterCapacity())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
+                    .setSaveConsumer(config::setFluidCanisterCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
 
             // --- LIFE SUPPORT CONFIG ---
 

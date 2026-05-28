@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -282,6 +282,11 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         }
 
         ItemStack itemInHand = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        if (itemInHand.isEmpty()) {
+            // Prevent "Invalid weapon firing an arrow" crash
+            itemInHand = new ItemStack(Items.BOW);
+        }
+
         ItemStack arrowItem = this.getProjectile(itemInHand);
         AbstractArrow arrow = getArrow(arrowItem, pullProgress, itemInHand);
         double d0 = target.getX() - this.getX();

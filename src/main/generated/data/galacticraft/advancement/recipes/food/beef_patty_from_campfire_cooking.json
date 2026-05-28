@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:beef_patty_from_campfire_cooking"
+        "recipe": "galacticraft:beef_patty_from_campfire_cooking"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:beef_patty_from_campfire_cooking"
+      "galacticraft:beef_patty_from_campfire_cooking"
     ]
   }
 }

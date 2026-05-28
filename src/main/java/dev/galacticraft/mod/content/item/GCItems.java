@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.Direction;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
@@ -37,6 +38,7 @@ import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.*;
 import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.block.DispenserBlock;
+import net.minecraft.world.level.block.entity.BannerPatternLayers;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -55,6 +57,11 @@ public class GCItems {
     public static final Item GLOWSTONE_LANTERN = ITEMS.register(Constant.Block.GLOWSTONE_LANTERN, new BlockItem(GCBlocks.GLOWSTONE_LANTERN, new Item.Properties()));
     public static final Item UNLIT_LANTERN = ITEMS.register(Constant.Block.UNLIT_LANTERN, new BlockItem(GCBlocks.UNLIT_LANTERN, new Item.Properties()));
     public static final Item UNLIT_SOUL_LANTERN = ITEMS.register(Constant.Block.UNLIT_SOUL_LANTERN, new BlockItem(GCBlocks.UNLIT_SOUL_LANTERN, new Item.Properties()));
+
+    // DECORATION
+    public static final GCRegistry.ColorSet<Item> FLAGS =  ITEMS.registerColored(Constant.Block.FLAG,
+            color -> new FlagItem(GCBlocks.FLAGS.get(color), new Item.Properties().stacksTo(1).component(DataComponents.BANNER_PATTERNS, BannerPatternLayers.EMPTY))
+    );
 
     // MATERIALS
     public static final Item SILICON = registerGeneric(Constant.Item.SILICON);
@@ -168,6 +175,8 @@ public class GCItems {
     public static final Item TITANIUM_HOE = ITEMS.register(Constant.Item.TITANIUM_HOE, new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -3.0F, -1.0F))));
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
+
+    public static final Item FLUID_CANISTER = ITEMS.register(Constant.Item.FLUID_CANISTER, new FluidCanisterItem(new Item.Properties().stacksTo(1), Galacticraft.CONFIG.fluidCanisterCapacity()));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,11 +76,8 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
                     a.mode == CapeMode.GC ? a.gcCapeId : null
             ));
         }
-        var payload = new CapeAssignmentsPacket(list);
 
-        for (var p : context.server().getPlayerList().getPlayers()) {
-            ServerPlayNetworking.send(p, payload);
-        }
+        context.server().getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new CapeAssignmentsPacket(list)));
     }
 
     @Override

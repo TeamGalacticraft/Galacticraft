@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
@@ -58,13 +59,13 @@ public class BatteryItem extends Item implements SimpleEnergyItem {
 
     @Override
     public int getBarWidth(ItemStack stack) {
-        return (int) Math.round(((double) getStoredEnergy(stack) / (double) this.getEnergyCapacity(stack)) * 13.0);
+        return Math.round(13.0F * ((float) getStoredEnergy(stack) / (float) this.getEnergyCapacity(stack)));
     }
 
     @Override
     public int getBarColor(ItemStack stack) {
         double scale = 1.0 - Math.max(0.0, (double) getStoredEnergy(stack) / (double) this.getEnergyCapacity(stack));
-        return ((int) (255 * scale) << 16) + (((int) (255 * (1.0 - scale))) << 8);
+        return Constant.Text.getStorageLevelColor(scale);
     }
 
     @Override

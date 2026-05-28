@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -68,12 +68,21 @@ public interface Translations {
     }
 
     interface RecipeCategory {
-        String CIRCUIT_FABRICATOR = "category.recipe_viewer.circuit_fabricator";
-        String COMPRESSOR = "category.recipe_viewer.compressing";
-        String ROCKET_WORKBENCH = "category.recipe_viewer.rocket";
+        String PREFIX = "category.recipe_viewer.";
+        String CIRCUIT_FABRICATOR = PREFIX + "fabrication";
+        String COMPRESSOR = PREFIX + "compressing";
+        String ELECTRIC_COMPRESSOR = PREFIX + "compressing.electric";
+        String ELECTRIC_FURNACE = PREFIX + "smelting.electric";
+        String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
+        String CANNING = PREFIX + "canning";
+        String ROCKET_WORKBENCH = PREFIX + "rocket";
 
         String REI_TIME = "category.rei.campfire.time";
+        String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
         String JEI_TIME = "gui.jei.category.smelting.time.seconds";
+        String JEI_XP = "gui.jei.category.smelting.experience";
+        String EMI_TIME = "emi.cooking.time";
+        String EMI_XP = "emi.cooking.experience";
     }
 
     interface Waila {
@@ -143,11 +152,17 @@ public interface Translations {
         String RESET = "config.galacticraft.reset";
 
         String CLIENT = "config.galacticraft.client";
+        String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
+        String FLUID_CANISTER_CAPACITY = "config.galacticraft.misc.fluid_canister_capacity";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 
         String COMMANDS = "config.galacticraft.commands";
         String ENABLE_GC_HOUSTON = "config.galacticraft.commands.enable_gc_houston";
+
+        String MISC = "config.galacticraft.misc";
+        String CREATIVE = "config.galacticraft.misc.creative";
+        String ENABLE_CREATIVE_GEARINV = "config.galacticraft.misc.creative.enable_gearinv";
 
         String DEBUG = "config.galacticraft.debug";
         String DEBUG_LOGGING = "config.galacticraft.debug.logging";
@@ -209,6 +224,8 @@ public interface Translations {
     interface Items {
         String EMPTY_CAN = "item.galacticraft.empty_can";
         String CANNED_FOOD_TEMPLATE = "item.galacticraft.canned_food.template";
+
+        String FLUID_CANISTER_FILLED = "item.galacticraft.fluid_canister.filled";
     }
 
     interface CelestialBody {
@@ -243,14 +260,17 @@ public interface Translations {
     interface Tooltip {
         String CREATIVE_ONLY = "tooltip.galacticraft.creative_only";
         String ENERGY_REMAINING = "tooltip.galacticraft.energy_remaining";
-        String GLOWSTONE_LANTERN = "tooltip.galacticraft.glowstone_lantern";
-        String GLOWSTONE_TORCH = "tooltip.galacticraft.glowstone_torch";
         String INFINITE = "tooltip.galacticraft.infinite";
         String OXYGEN_REMAINING = "tooltip.galacticraft.oxygen_remaining";
         String PRESS_SHIFT = "tooltip.galacticraft.press_shift";
         String STANDARD_WRENCH = "tooltip.galacticraft.standard_wrench";
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
+        String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
+
+        String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
+        String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
+        String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
     }
 
     interface Gas {

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,6 +34,7 @@ public class GCApiPackets {
         PayloadTypeRegistry.playS2C().register(OxygenUpdatePayload.TYPE, OxygenUpdatePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(RemoveSatellitePayload.TYPE, RemoveSatellitePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(ResearchUpdatePayload.TYPE, ResearchUpdatePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(UpdateSatellitePayload.TYPE, UpdateSatellitePayload.CODEC);
 
         PayloadTypeRegistry.playC2S().register(FlagDataPayload.TYPE, FlagDataPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(TeamNamePayload.TYPE, TeamNamePayload.CODEC);

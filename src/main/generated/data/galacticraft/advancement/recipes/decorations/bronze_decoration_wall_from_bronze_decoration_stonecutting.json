@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:bronze_decoration_wall_from_bronze_decoration_stonecutting"
+        "recipe": "galacticraft:bronze_decoration_wall_from_bronze_decoration_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:bronze_decoration_wall_from_bronze_decoration_stonecutting"
+      "galacticraft:bronze_decoration_wall_from_bronze_decoration_stonecutting"
     ]
   }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,7 +27,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
 /**
- * Handles server-bound (C2S) packets.
+ * Handles client-bound (S2C) packets.
  */
 public class GCApiClientPacketReceivers {
     public static void register() {
@@ -36,6 +36,7 @@ public class GCApiClientPacketReceivers {
         registerPacket(OxygenUpdatePayload.TYPE);
         registerPacket(RemoveSatellitePayload.TYPE);
         registerPacket(ResearchUpdatePayload.TYPE);
+        registerPacket(UpdateSatellitePayload.TYPE);
     }
 
     public static <P extends S2CPayload> void registerPacket(CustomPacketPayload.Type<P> type) {

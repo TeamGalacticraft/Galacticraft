@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,12 +29,15 @@ import dev.galacticraft.api.rocket.part.RocketPart;
 import dev.galacticraft.api.rocket.part.RocketPartTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCEntityTypes;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlockEntity;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
@@ -114,8 +117,29 @@ public class RocketItem extends Item {
             list.add(RocketPartTypes.BOOSTER.name.copy().append(": ").append(RocketPart.getName(data.booster().get().key())).withStyle(style));
         if (data.engine().isPresent())
             list.add(RocketPartTypes.ENGINE.name.copy().append(": ").append(RocketPart.getName(data.engine().get().key())).withStyle(style));
-        if (data.upgrade().isPresent())
-            list.add(RocketPartTypes.UPGRADE.name.copy().append(": ").append(RocketPart.getName(data.upgrade().get().key())).withStyle(style));
+        if (data.upgrade().isPresent()) {
+            var upgradeKey = data.upgrade().get().key();
+            Component upgradeName = RocketPart.getName(upgradeKey);
+            list.add(
+                    RocketPartTypes.UPGRADE.name.copy()
+                            .append(": ")
+                            .append(upgradeName)
+                            .withStyle(style)
+            );
+
+            if (upgradeKey.equals(GCRocketParts.EXPLOSIVE_UPGRADE)) {
+                data.getUpgradeData(ExplosiveRocketData.class).ifPresent(explosiveRocketData -> {
+                    var block = BuiltInRegistries.BLOCK.get(explosiveRocketData.explosiveBlock());
+                    Component blockName = block.getName();
+
+                    list.add(
+                            Component.literal("       ")
+                                    .append(blockName)
+                                    .withStyle(style)
+                    );
+                });
+            }
+        }
 
         TooltipUtil.appendLshiftTooltip(list, tooltip);
         super.appendHoverText(stack, context, tooltip, options);

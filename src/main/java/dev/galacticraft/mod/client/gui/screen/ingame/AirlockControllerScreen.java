@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,8 @@
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.widget.CheckboxButton;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
-import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -46,13 +44,11 @@ public class AirlockControllerScreen extends AbstractContainerScreen<AirlockCont
     @Override
     protected void init() {
         super.init();
-        addRenderableWidget(new CheckboxButton(this.leftPos + 8, this.topPos + 20));
     }
 
     @Override
     protected void renderBg(GuiGraphics graphics, float partialTicks, int mouseX, int mouseY) {
         graphics.blit(TEXTURE, this.leftPos, this.topPos, 0, 0, 256, 256);
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.AIRLOCK_REDSTONE_SIGNAL), this.leftPos + 25, this.topPos + 23, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 
     @Override

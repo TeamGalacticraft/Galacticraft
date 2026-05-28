@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,7 +34,6 @@ import mezz.jei.api.gui.placement.VerticalAlignment;
 import mezz.jei.api.gui.widgets.IRecipeExtrasBuilder;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.recipe.IFocusGroup;
-import mezz.jei.api.recipe.RecipeIngredientRole;
 import mezz.jei.api.recipe.RecipeType;
 import mezz.jei.api.recipe.category.IRecipeCategory;
 import net.minecraft.client.gui.GuiGraphics;
@@ -91,10 +90,10 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         builder.addInputSlot(SILICON_X_2 - RECIPE_VIEWER_X, SILICON_Y_2 - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(2));
-        builder.addSlot(RecipeIngredientRole.CATALYST, REDSTONE_X - RECIPE_VIEWER_X, REDSTONE_Y - RECIPE_VIEWER_Y)
+        builder.addInputSlot(REDSTONE_X - RECIPE_VIEWER_X, REDSTONE_Y - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(3));
-        builder.addSlot(RecipeIngredientRole.CATALYST, INGREDIENT_X - RECIPE_VIEWER_X, INGREDIENT_Y - RECIPE_VIEWER_Y)
+        builder.addInputSlot(INGREDIENT_X - RECIPE_VIEWER_X, INGREDIENT_Y - RECIPE_VIEWER_Y)
                 .setStandardSlotBackground()
                 .addIngredients(recipe.getIngredients().get(4));
 
@@ -109,11 +108,11 @@ public class JEIFabricationCategory implements IRecipeCategory<FabricationRecipe
         if (processingTime > 0) {
             this.progressBar.setProcessingTime(processingTime);
             Component timeString = Component.translatable(RecipeCategory.JEI_TIME, processingTime / 20);
-            builder.addText(timeString, this.getWidth() - 20, 10)
-                .setPosition(0, 0, this.getWidth(), this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
-                .setTextAlignment(HorizontalAlignment.CENTER)
-                .setTextAlignment(VerticalAlignment.TOP)
-                .setColor(0xFF808080);
+            builder.addText(timeString, 57, 10)
+                    .setPosition(0, 0, this.getWidth(), this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setTextAlignment(HorizontalAlignment.CENTER)
+                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setColor(0xFF808080);
         }
     }
 

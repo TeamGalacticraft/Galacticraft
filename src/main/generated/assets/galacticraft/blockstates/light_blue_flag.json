@@ -1,0 +1,13 @@
+{
+  "variants": {
+    "section=bottom": {
+      "model": "galacticraft:block/flagpole_bottom"
+    },
+    "section=middle": {
+      "model": "galacticraft:block/flagpole_middle"
+    },
+    "section=top": {
+      "model": "galacticraft:block/flagpole_top"
+    }
+  }
+}

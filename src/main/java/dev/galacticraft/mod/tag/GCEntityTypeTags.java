@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,6 +33,7 @@ public class GCEntityTypeTags {
     public static final TagKey<EntityType<?>> HAS_PET_INVENTORY = TagKey.create(Registries.ENTITY_TYPE, Constant.id("has_pet_inventory"));
     public static final TagKey<EntityType<?>> IMMUNE_TO_ACID = TagKey.create(Registries.ENTITY_TYPE, Constant.id("immune_to_acid"));
     public static final TagKey<EntityType<?>> SENSITIVE_TO_ACID = TagKey.create(Registries.ENTITY_TYPE, Constant.id("sensitive_to_acid"));
+    public static final TagKey<EntityType<?>> CAN_REENTER_ATMOSPHERE = TagKey.create(Registries.ENTITY_TYPE, Constant.id("can_reenter_atmosphere"));
 
     public static void register() {
     }

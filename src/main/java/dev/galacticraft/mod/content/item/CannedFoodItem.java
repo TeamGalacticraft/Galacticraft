@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -57,8 +58,6 @@ import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.SoundType;
-import net.minecraft.world.level.block.SupportType;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
@@ -70,6 +69,7 @@ import java.util.Optional;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
+import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
 import static net.minecraft.data.models.model.TextureMapping.getItemTexture;
@@ -90,56 +90,39 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         }
 
         Level level = context.getLevel();
-        BlockPos pos = context.getClickedPos();
-        BlockState clickedState = level.getBlockState(pos);
         Direction face = context.getClickedFace();
-        Block clickedBlock = clickedState.getBlock();
+        BlockPos pos = context.getClickedPos();
+        BlockState oldState = level.getBlockState(pos);
+        Block clickedBlock = oldState.getBlock();
 
         // TODO: prevent can from being placed if the new hitbox would collide with an entity
 
-        if (this.canInsertCan(level, pos, clickedBlock instanceof CannedFoodBlock)) {
-            BlockEntity be = level.getBlockEntity(pos);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
-                if (stack.has(GCDataComponents.COLOR)) {
-                    canEntity.addCanItem(stack.copyWithCount(1));
-                } else {
-                    ItemStack copy = stack.copyWithCount(1);
-                    copy.set(GCDataComponents.COLOR, 0xFFFFFF);
-                    canEntity.addCanItem(copy);
-                }
-                this.playEvent(level, pos, player, clickedState);
-                stack.consume(1, player);
-                return InteractionResult.SUCCESS;
-            }
-        }
-
-        BlockPos below = pos.relative(face).below();
-        BlockState belowState = level.getBlockState(below);
-
-        if (this.canInsertCan(level, below, belowState.getBlock() instanceof CannedFoodBlock)) {
-            return InteractionResult.FAIL;
-        } else if (!belowState.isFaceSturdy(level, below, Direction.UP, SupportType.FULL)) {
-            return InteractionResult.FAIL;
-        }
-        BlockPos placementPos = pos.relative(face);
-        BlockState oldState = level.getBlockState(placementPos);
-        if (oldState.isAir() || oldState.is(GCBlocks.CANNED_FOOD)) {
-            if (!this.canInsertCan(level, placementPos, true)) {
+        if (!this.canInsertCan(level, pos, clickedBlock instanceof CannedFoodBlock)) {
+            pos = pos.relative(face);
+            BlockPos below = pos.below();
+            BlockState belowState = level.getBlockState(below);
+            if (!belowState.isFaceSturdy(level, below, Direction.UP) && this.canInsertCan(level, below, true)) {
                 return InteractionResult.FAIL;
             }
-            BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
-            level.setBlock(placementPos, newState, Block.UPDATE_ALL);
-            this.playEvent(level, placementPos, player, newState);
-            BlockEntity be = level.getBlockEntity(placementPos);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
-                if (stack.has(GCDataComponents.COLOR)) {
-                    canEntity.addCanItem(stack.copyWithCount(1));
-                } else {
-                    ItemStack copy = stack.copyWithCount(1);
-                    copy.set(GCDataComponents.COLOR, 0xFFFFFF);
-                    canEntity.addCanItem(copy);
-                }
+
+            oldState = level.getBlockState(pos);
+            if (!oldState.isAir() && !oldState.is(GCBlocks.CANNED_FOOD) || !this.canInsertCan(level, pos, true)) {
+                return InteractionResult.FAIL;
             }
+        }
+
+        BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState().setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
+        if (level.getBlockEntity(pos) instanceof CannedFoodBlockEntity canEntity) {
+            newState = newState.setValue(CannedFoodBlock.MAX, canEntity.getCanCount() + 1 == MAX_CANS);
+        }
+
+        if (newState != oldState) {
+            level.setBlock(pos, newState, Block.UPDATE_ALL);
+        }
+        this.playEvent(level, pos, player, newState);
+
+        if (level.getBlockEntity(pos) instanceof CannedFoodBlockEntity canEntity) {
+            canEntity.addCanItem(stack);
             stack.consume(1, player);
             return InteractionResult.SUCCESS;
         }
@@ -284,7 +267,12 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     }
 
     public static boolean isCannedFoodItem(ItemStack stack) {
-        return stack.getItem() instanceof CannedFoodItem;
+        return stack.getItem() == CANNED_FOOD && !getContents(stack).isEmpty();
+    }
+
+    public static boolean isEmptyCan(ItemStack stack) {
+        Item item = stack.getItem();
+        return item == EMPTY_CAN || (item == CANNED_FOOD && getContents(stack).isEmpty());
     }
 
     public static void removeOne(ItemStack stack) {
@@ -586,10 +574,23 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         return itemsToBeConsumed;
     }
 
+    public static List<ItemStack> getDefaultCannedFoods() {
+        List<ItemStack> cannedFoods = new ArrayList<>();
+        for (Item item : BuiltInRegistries.ITEM) {
+            if (CannedFoodItem.canAddToCan(item)) {
+                // Create new canned food item with empty components
+                ItemStack cannedFoodItem = CANNED_FOOD.getDefaultInstance();
+                // Add the default itemstack of the edible item into the canned foods components
+                CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
+                cannedFoods.add(cannedFoodItem);
+            }
+        }
+        return cannedFoods;
+    }
+
     private boolean canInsertCan(Level level, BlockPos blockPos, boolean canPlace) {
         if (canPlace) {
-            BlockEntity be = level.getBlockEntity(blockPos);
-            if (be instanceof CannedFoodBlockEntity canEntity) {
+            if (level.getBlockEntity(blockPos) instanceof CannedFoodBlockEntity canEntity) {
                 return canEntity.getCanCount() < MAX_CANS;
             }
             return true;

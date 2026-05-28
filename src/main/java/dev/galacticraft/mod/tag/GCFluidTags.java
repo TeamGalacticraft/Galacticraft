@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -39,6 +39,7 @@ public class GCFluidTags {
     public static final TagKey<Fluid> LIQUID_OXYGEN = commonTag("oxygen");
     public static final TagKey<Fluid> OXYGEN = galacticraftTag("oxygen");
     public static final TagKey<Fluid> NON_BREATHABLE = galacticraftTag("non_breathable");
+    public static final TagKey<Fluid> FLUID_CANISTER_EXCLUSIONS = galacticraftTag("fluid_canister_exclusions");
 
     public static TagKey<Fluid> commonTag(String path) {
         return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

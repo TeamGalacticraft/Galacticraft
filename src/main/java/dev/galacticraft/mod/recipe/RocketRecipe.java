@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -186,7 +186,7 @@ public class RocketRecipe implements Recipe<RecipeInput> {
         int y = 81 - rocketHeight / 2;
 
         // Cone
-        data.add(new RocketSlotData(RocketPartTypes.CONE, CENTER_X - 8, y));
+        data.add(new RocketSlotData(RocketPartTypes.CONE, CENTER_X - 9, y));
 
         // Body
         for (int i = 0; i < bodyHeight; i++) {

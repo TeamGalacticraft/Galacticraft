@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,12 +35,10 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config, boolean newlyCreated) implements S2CPayload {
+public record AddSatellitePayload(SatelliteConfig config, boolean newlyCreated) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("add_satellite");
     public static final Type<AddSatellitePayload> TYPE = new Type<>(ID);
     public static final StreamCodec<RegistryFriendlyByteBuf, AddSatellitePayload> CODEC = StreamCodec.composite(
-            ResourceLocation.STREAM_CODEC,
-            p -> p.id,
             SatelliteConfig.STREAM_CODEC,
             p -> p.config,
             ByteBufCodecs.BOOL,
@@ -54,6 +52,6 @@ public record AddSatellitePayload(ResourceLocation id, SatelliteConfig config, b
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(this.id, new CelestialBody<>(SatelliteType.INSTANCE, this.config), this.newlyCreated);
+        return () -> ((ClientSatelliteAccessor) context.client().player.connection).galacticraft$addSatellite(new CelestialBody<>(SatelliteType.INSTANCE, this.config), this.newlyCreated);
     }
 }

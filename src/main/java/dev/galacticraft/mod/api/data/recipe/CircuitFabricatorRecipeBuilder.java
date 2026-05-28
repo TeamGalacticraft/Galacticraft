@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,13 +31,12 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.Recipe;
 import net.minecraft.world.level.ItemLike;
 
-public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder {
-
+public class CircuitFabricatorRecipeBuilder extends GCRecipeBuilder<CircuitFabricatorRecipeBuilder> {
     private Ingredient ingredient;
     private int time;
 
     public CircuitFabricatorRecipeBuilder(ItemLike result, int count) {
-        super("fabrication", result, count);
+        super("fabrication/", null, result, count);
     }
 
     public static CircuitFabricatorRecipeBuilder create(ItemLike itemLike) {

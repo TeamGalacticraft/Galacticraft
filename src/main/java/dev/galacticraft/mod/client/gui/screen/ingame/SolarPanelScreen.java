@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -76,7 +76,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
                 drawNormal(graphics, this.solarPanelTextures.get(this.menu.getSource()), x, y);
-                if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
+                if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
                     RenderSystem.disableDepthTest();
                     RenderSystem.colorMask(true, true, true, false);
                     graphics.fillGradient(this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH + SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT + SOLAR_PANEL_HEIGHT, 0x80ffffff, 0x80ffffff, 1);
@@ -96,7 +96,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         super.renderTooltip(graphics, mouseX, mouseY);
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
-                if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
+                if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, this.topPos + SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT)) {
                     GraphicsUtil.highlightElement(graphics, this.leftPos, this.topPos, SOLAR_PANEL_X + x * SOLAR_PANEL_WIDTH, SOLAR_PANEL_Y + y * SOLAR_PANEL_HEIGHT, SOLAR_PANEL_WIDTH, SOLAR_PANEL_HEIGHT, 0x80ffffff);
 
                     if (this.menu.getBlockage()[y * 3 + x]) {
@@ -120,7 +120,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
             }
         }
 
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT)) {
             List<Component> tooltip = new ArrayList<Component>();
             LightSource source = this.lightSources.get(this.menu.getSource());
             tooltip.add(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE).setStyle(Constant.Text.AQUA_STYLE).append(source.name()));

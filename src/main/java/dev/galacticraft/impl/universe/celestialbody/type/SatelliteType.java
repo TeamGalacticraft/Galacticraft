@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -118,7 +118,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                 true, // hasSkyLight
                 false, // hasCeiling
                 false, // ultraWarm
-                false, // natural
+                true, // natural
                 1.0, // coordinateScale
                 false, // bedWorks
                 false, // respawnAnchorWorks
@@ -155,13 +155,10 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
         SatelliteConfig config = new SatelliteConfig(id, name, Optional.of(parentResourceKey), position, display, ring, ownershipData, ResourceKey.create(Registries.DIMENSION, id), direct, EMPTY_GAS_COMPOSITION, 1.0f, parent.type() instanceof Tiered<?> ? ((Tiered) parent.type()).accessWeight(parent.config()) : 1, new LevelStem(Holder.direct(type), generator));
         CelestialBody<SatelliteConfig, SatelliteType> satellite = INSTANCE.configure(config);
 
-        ((SatelliteAccessor) server).galacticraft$addSatellite(id, satellite, true);
+        ((SatelliteAccessor) server).galacticraft$addSatellite(satellite, true);
         DynamicDimensionRegistry.from(server).createDynamicDimension(id, generator, type);
 
-        AddSatellitePayload payload = new AddSatellitePayload(id, satellite.config(), true);
-        for (ServerPlayer player : server.getPlayerList().getPlayers()) {
-            ServerPlayNetworking.send(player, payload);
-        }
+        server.getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new AddSatellitePayload(satellite.config(), true)));
         return satellite;
     }
 

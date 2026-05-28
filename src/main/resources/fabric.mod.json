@@ -100,9 +100,9 @@
       }
     },
     {
-      "name": "supersimple33",
+      "name": "maxryan008",
       "contact": {
-        "homepage": "https://github.com/supersimple33"
+        "homepage": "https://github.com/maxryan008"
       }
     },
     {
@@ -112,15 +112,15 @@
       }
     },
     {
-      "name": "Littledog1229",
+      "name": "supersimple33",
       "contact": {
-        "homepage": "https://github.com/Littledog1229"
+        "homepage": "https://github.com/supersimple33"
       }
     },
     {
-      "name": "maxryan008",
+      "name": "Littledog1229",
       "contact": {
-        "homepage": "https://github.com/maxryan008"
+        "homepage": "https://github.com/Littledog1229"
       }
     },
     {
@@ -142,9 +142,9 @@
       }
     },
     {
-      "name": "ChipWolf",
+      "name": "ROMVoid95",
       "contact": {
-        "homepage": "https://github.com/ChipWolf"
+        "homepage": "https://github.com/ROMVoid95"
       }
     },
     {
@@ -154,15 +154,9 @@
       }
     },
     {
-      "name": "ROMVoid95",
+      "name": "ChipWolf",
       "contact": {
-        "homepage": "https://github.com/ROMVoid95"
-      }
-    },
-    {
-      "name": "davo899",
-      "contact": {
-        "homepage": "https://github.com/davo899"
+        "homepage": "https://github.com/ChipWolf"
       }
     },
     {
@@ -172,9 +166,9 @@
       }
     },
     {
-      "name": "LeMayday",
+      "name": "davo899",
       "contact": {
-        "homepage": "https://github.com/LeMayday"
+        "homepage": "https://github.com/davo899"
       }
     },
     {
@@ -184,45 +178,9 @@
       }
     },
     {
-      "name": "Domza64",
+      "name": "LeMayday",
       "contact": {
-        "homepage": "https://github.com/Domza64"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
-      }
-    },
-    {
-      "name": "Geolykt",
-      "contact": {
-        "homepage": "https://github.com/Geolykt"
-      }
-    },
-    {
-      "name": "IMS212",
-      "contact": {
-        "homepage": "https://github.com/IMS212"
-      }
-    },
-    {
-      "name": "christopherweinhardt",
-      "contact": {
-        "homepage": "https://github.com/christopherweinhardt"
-      }
-    },
-    {
-      "name": "JunePrimavera",
-      "contact": {
-        "homepage": "https://github.com/JunePrimavera"
-      }
-    },
-    {
-      "name": "benreid24",
-      "contact": {
-        "homepage": "https://github.com/benreid24"
+        "homepage": "https://github.com/LeMayday"
       }
     },
     {
@@ -238,6 +196,12 @@
       }
     },
     {
+      "name": "benreid24",
+      "contact": {
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
       "name": "CoderFroty",
       "contact": {
         "homepage": "https://github.com/CoderFroty"
@@ -250,6 +214,12 @@
       }
     },
     {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
+      }
+    },
+    {
       "name": "ScottRox",
       "contact": {
         "homepage": "https://github.com/ScottRox"
@@ -259,6 +229,48 @@
       "name": "danilwhale",
       "contact": {
         "homepage": "https://github.com/danilwhale"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
+      }
+    },
+    {
+      "name": "MaverXka",
+      "contact": {
+        "homepage": "https://github.com/MaverXka"
+      }
+    },
+    {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
+      "name": "gregorixG",
+      "contact": {
+        "homepage": "https://github.com/gregorixG"
+      }
+    },
+    {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
+      "name": "GalacticraftDev",
+      "contact": {
+        "homepage": "https://github.com/GalacticraftDev"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
       }
     }
   ],
@@ -286,6 +298,9 @@
     ],
     "jei_mod_plugin": [
       "dev.galacticraft.mod.compat.jei.GCJEIPlugin"
+    ],
+    "emi": [
+      "dev.galacticraft.mod.compat.emi.GalacticraftEmiPlugin"
     ],
     "appleskin": [
       "dev.galacticraft.mod.compat.AppleSkinEventHandler"
@@ -323,8 +338,9 @@
     }
   },
   "depends": {
-    "minecraft": ">=1.21",
-    "fabricloader": ">=0.15.3"
+    "minecraft": "=$minecraftVersion",
+    "fabricloader": ">=0.15.3",
+    "fabric-api": ">=$fabricVersion"
   },
   "suggests": {
     "modmenu": "*",

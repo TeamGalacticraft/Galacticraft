@@ -25,19 +25,24 @@ or the GitHub Actions build number (e.g., #253) in your report.
   * This helps us figure out when a bug may have been introduced,
   or if there are any commit(s) that may have already fixed this bug. 
 
-### Testing with REI/JEI
+### Testing with Different Recipe Viewers
 
-You can easily select between REI and JEI when running Galacticraft in a development environment by providing additional arguments to gradlew.
+You can easily select any combination of REI, JEI and EMI when running Galacticraft in a development environment by providing additional arguments to gradlew.
 
-REI only: `./gradlew runClient [-Prei=true] [-Pjei=false]`
+If no additional arguments are specified REI will be used.
 
-JEI only: `./gradlew runClient [-Prei=false] -Pjei=true`
+```
+./gradlew runClient [-Prei=true/false] [-Pjei=true/false] [-Pemi=true/false]
+```
 
-REI and JEI: `./gradlew runClient -Prei=true -Pjei=true`
+JEI only: `./gradlew runClient -Pjei=true`
 
-Neither: `./gradlew runClient -Prei=false [-Pjei=false]`
+EMI only: `./gradlew runClient -Pemi=true`
 
-*Square brackets indicate optional arguments which have no effect on the behaviour.* \
+JEI and EMI: `./gradlew runClient -Pjei=true -Pemi=true`
+
+None: `./gradlew runClient -Prei=false`
+
 *Use `./gradlew.bat` instead of `./gradlew` on Windows.*
 
 ## Translations
@@ -61,7 +66,10 @@ to keep them small and ensure a quick review process.
 ### Code style
 Mainly:
 * Indent using four spaces
-* Braces `{}` go on the same line
+* A keyword followed by a parenthesis should be separated by a space, e.g. `if (condition)` not `if(condition)`
+* Put a space after each comma in an argument list, e.g. `a, b, c` not `a,b,c`
+* Put spaces around operators, e.g. `y = m * x + c` not `y=m*x+c`
+* Opening braces `{}` go on the same line, not a new line
 
 Overall, follow the style of the file you're in.
 Feel free to use `var` for variables with obvious types.

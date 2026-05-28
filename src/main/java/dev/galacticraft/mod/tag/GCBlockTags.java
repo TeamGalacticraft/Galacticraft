@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -106,6 +106,8 @@ public class GCBlockTags {
     public static final TagKey<Block> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Block> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
 
+    public static final TagKey<Block> FLAGS = galacticraftTag("flags");
+
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");
     public static final TagKey<Block> WALLS = galacticraftTag("walls");
@@ -115,6 +117,9 @@ public class GCBlockTags {
     public static final TagKey<Block> MARS_COBBLESTONES = commonTag("cobblestones/mars");
 
     public static final TagKey<Block> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
+
+    public static final TagKey<Block> OLIVINE_CAVE_REPLACEABLES = galacticraftTag("olivine_cave_replaceables");
+    public static final TagKey<Block> OLIVINE_CAVE_INTERNALS = galacticraftTag("olivine_cave_internals");
 
     public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
     public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");

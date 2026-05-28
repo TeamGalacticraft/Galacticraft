@@ -5,6 +5,7 @@ accessible method net/minecraft/client/particle/DripParticle$DripHangParticle <i
 accessible method net/minecraft/client/particle/DripParticle$FallingParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
 
 # private classes
+accessible class net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen$SlotWrapper
 accessible class net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -93,7 +93,8 @@ public abstract class TranslationProvider implements DataProvider {
     }
 
     protected void tag(TagKey<?> tag, String translation) {
-        this.add(tag.location().toLanguageKey("tag.item").replace("/", "."), translation);
+        String prefix = "tag." + tag.registry().location().getPath();
+        this.add(tag.location().toLanguageKey(prefix).replace("/", "."), translation);
     }
 
     protected void entity(EntityType<?> entity, String translation) {

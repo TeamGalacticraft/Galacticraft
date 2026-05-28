@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod;
 
+import dev.galacticraft.api.component.GCItemSubPredicates;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.api.config.Config;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
@@ -87,12 +89,14 @@ public class Galacticraft implements ModInitializer {
         GCBlocks.register();
         GCFluids.registerFluidVariantAttributes(); // Must be called after GCBlocks.register() so that grates can work
         GCItems.register();
+        GCItemSubPredicates.init();
         GCTriggers.register();
         GCCreativeModeTabs.register();
         GCApiLookupProviders.register();
         GCRecipes.register();
         GCEntityDataSerializers.register();
         GCEntityTypes.register();
+        GCAttachments.init();
         GCFeatures.register();
         GCOrePlacedFeatures.register();
         GCPlacedFeatures.register();

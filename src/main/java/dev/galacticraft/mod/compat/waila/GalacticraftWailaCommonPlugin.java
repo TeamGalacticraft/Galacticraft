@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -29,7 +29,7 @@ import mcp.mobius.waila.api.IWailaCommonPlugin;
 public class GalacticraftWailaCommonPlugin implements IWailaCommonPlugin {
     @Override
     public void register(ICommonRegistrar registrar) {
-        registrar.featureConfig(Options.OXYGEN_LEVEL, true);
         registrar.featureConfig(Options.FUEL_LEVEL, true);
+        registrar.featureConfig(Options.OXYGEN_LEVEL, true);
     }
 }

@@ -26,7 +26,8 @@ import java.time.format.DateTimeFormatter
 // Build Info
 val isCi = (System.getenv("CI") ?: "false") == "true"
 val runJei = project.getProperties().getOrDefault("jei", "false").toString().toBoolean()
-val runRei = project.getProperties().getOrDefault("rei", !runJei).toString().toBoolean()
+val runEmi = project.getProperties().getOrDefault("emi", "false").toString().toBoolean()
+val runRei = project.getProperties().getOrDefault("rei", !runJei && !runEmi).toString().toBoolean()
 
 // Minecraft, Mappings, Loader Versions
 val minecraftVersion         = project.property("minecraft.version").toString()
@@ -46,6 +47,7 @@ val dynamicdimensionsVersion = project.property("dynamicdimensions.version").toS
 val machineLibVersion        = project.property("machinelib.version").toString()
 val reiVersion               = project.property("rei.version").toString()
 val jeiVersion               = project.property("jei.version").toString()
+val emiVersion               = project.property("emi.version").toString()
 val badpacketsVersion        = project.property("badpackets.version").toString()
 val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
@@ -186,6 +188,7 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/") {
         content {
             includeGroup("com.terraformersmc")
+            includeGroup("dev.emi")
         }
     }
     maven("https://maven.bai.lol") {
@@ -256,12 +259,19 @@ dependencies {
         modLocalRuntime("mezz.jei:jei-$minecraftVersion-fabric:$jeiVersion")
     }
 
+	modCompileOnly("dev.emi:emi-fabric:$emiVersion:api")
+    if (runEmi) {
+	    modLocalRuntime("dev.emi:emi-fabric:$emiVersion")
+    }
+
     testImplementation("net.fabricmc:fabric-loader-junit:$loaderVersion")
 }
 
 tasks.processResources {
     val properties = mapOf(
-        "version" to project.version
+        "version" to project.version,
+        "fabricVersion" to project.property("fabric.version"),
+        "minecraftVersion" to project.property("minecraft.version"),
     )
     inputs.properties(properties)
 

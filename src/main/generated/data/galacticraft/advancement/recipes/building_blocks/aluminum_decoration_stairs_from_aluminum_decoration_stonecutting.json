@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:aluminum_decoration_stairs_from_aluminum_decoration_stonecutting"
+        "recipe": "galacticraft:aluminum_decoration_stairs_from_aluminum_decoration_stonecutting"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:aluminum_decoration_stairs_from_aluminum_decoration_stonecutting"
+      "galacticraft:aluminum_decoration_stairs_from_aluminum_decoration_stonecutting"
     ]
   }
 }

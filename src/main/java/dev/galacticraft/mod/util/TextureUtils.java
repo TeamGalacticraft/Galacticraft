@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,7 +36,7 @@ public class TextureUtils {
         return calculateAverageColor(textureAtlasSprite);
     }
 
-    private static int calculateAverageColor(TextureAtlasSprite image) {
+    public static int calculateAverageColor(TextureAtlasSprite image) {
         long sumRed = 0;
         long sumGreen = 0;
         long sumBlue = 0;

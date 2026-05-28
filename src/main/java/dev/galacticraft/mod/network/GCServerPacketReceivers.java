@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -41,7 +41,9 @@ public class GCServerPacketReceivers {
         registerPacket(OpenRocketPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(SatelliteCreationPayload.TYPE);
+        registerPacket(SatelliteUpdatePayload.TYPE);
         registerPacket(CapeSelectionPayload.TYPE);
+        registerPacket(CreativeGcTransferItemPayload.TYPE);
     }
 
     public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {

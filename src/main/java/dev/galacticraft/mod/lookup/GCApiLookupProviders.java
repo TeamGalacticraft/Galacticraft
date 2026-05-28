@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,6 +30,7 @@ import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.OxygenTankItem;
+import dev.galacticraft.mod.storage.CanisterFluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -60,7 +61,7 @@ public class GCApiLookupProviders {
     @SuppressWarnings("rawtypes")
     private static final BlockEntityType[] WIRE_TYPES = new BlockEntityType[]{
             GCBlockEntityTypes.WIRE_T1,
-//            GCBlocksEntityType.WIRE_T2,
+            GCBlockEntityTypes.WIRE_T2,
     };
 
     @SuppressWarnings("rawtypes")
@@ -86,5 +87,7 @@ public class GCApiLookupProviders {
             return new SingleVariantFixedItemBackedFluidStorage(itemStack, context, capacity / 100, capacity / 100, capacity, FluidVariant.of(Gases.OXYGEN));
         }, GCItems.SMALL_OXYGEN_TANK, GCItems.MEDIUM_OXYGEN_TANK, GCItems.LARGE_OXYGEN_TANK);
         FluidStorage.ITEM.registerSelf(GCItems.INFINITE_OXYGEN_TANK);
+
+        FluidStorage.ITEM.registerForItems((itemStack, context) -> new CanisterFluidStorage(itemStack, context), GCItems.FLUID_CANISTER);
     }
 }

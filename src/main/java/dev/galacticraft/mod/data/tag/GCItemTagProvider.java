@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -177,6 +177,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Item pipe = GCBlocks.GLASS_FLUID_PIPES.get(color).asItem();
             this.tag(entry.getValue()).add(pipe);
         }
+
+        this.copy(GCBlockTags.FLAGS, GCItemTags.FLAGS);
+        this.addColorSet(GCItems.FLAGS);
 
         // Oxygen equipment
         this.tag(GCItemTags.OXYGEN_MASKS)

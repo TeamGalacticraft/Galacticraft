@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:silicon_from_blasting_deepslate_silicon_ore"
+        "recipe": "galacticraft:silicon_from_blasting_deepslate_silicon_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:silicon_from_blasting_deepslate_silicon_ore"
+      "galacticraft:silicon_from_blasting_deepslate_silicon_ore"
     ]
   }
 }

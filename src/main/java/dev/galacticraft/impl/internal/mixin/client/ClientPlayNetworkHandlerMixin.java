@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -57,7 +57,8 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
-    public void galacticraft$addSatellite(ResourceLocation id, CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
+    public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
+        ResourceLocation id = satellite.config().getId();
         this.satellites.put(id, satellite);
         if (newlyCreated) {
             RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
@@ -74,6 +75,12 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
         for (SatelliteListener listener : this.listeners) {
             listener.onSatelliteUpdated(removed, false);
         }
+    }
+
+    @Override
+    public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
+        this.galacticraft$removeSatellite(satellite.config().getId());
+        this.galacticraft$addSatellite(satellite, true);
     }
 
     @Override

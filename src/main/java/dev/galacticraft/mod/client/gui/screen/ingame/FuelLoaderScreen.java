@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -87,7 +87,7 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
 
         GraphicsUtil.drawFluid(graphics, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT, this.menu.rocketCapacity, FluidVariant.of(GCFluids.FUEL), this.menu.rocketAmount);
 
-        if (!DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
+        if (!DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             graphics.blit(Constant.ScreenTexture.FUEL_LOADER_SCREEN, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_U, ROCKET_FACE_V, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT);
         }
 
@@ -98,10 +98,10 @@ public class FuelLoaderScreen extends MachineScreen<FuelLoaderBlockEntity, FuelL
     public void renderTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         super.renderTooltip(graphics, mouseX, mouseY);
         List<Component> list = new ArrayList<>();
-        if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + TANK_OVERLAY_X, this.topPos + TANK_OVERLAY_Y, TANK_OVERLAY_WIDTH, TANK_OVERLAY_HEIGHT)) {
             FluidResourceSlot slot = this.menu.fluidStorage.slot(FuelLoaderBlockEntity.FUEL_TANK);
             DisplayUtil.createFluidTooltip(list, slot.getResource(), slot.getComponents(), slot.getAmount(), slot.getCapacity());
-        } else if (DrawableUtil.isWithin(mouseX, mouseY, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
+        } else if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + ROCKET_FACE_X, this.topPos + ROCKET_FACE_Y, ROCKET_FACE_WIDTH, ROCKET_FACE_HEIGHT)) {
             DisplayUtil.createFluidTooltip(list, GCFluids.FUEL, null, this.menu.rocketAmount, this.menu.rocketCapacity);
         }
 

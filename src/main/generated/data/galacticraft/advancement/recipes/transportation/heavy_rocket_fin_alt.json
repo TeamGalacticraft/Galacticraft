@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:heavy_rocket_fin_alt"
+        "recipe": "galacticraft:heavy_rocket_fin_alt"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:heavy_rocket_fin_alt"
+      "galacticraft:heavy_rocket_fin_alt"
     ]
   }
 }

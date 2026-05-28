@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,7 +52,7 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
 
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.FABRICATION;
     }
 
     @Override
@@ -84,24 +84,24 @@ public class DefaultFabricationCategory implements DisplayCategory<DefaultFabric
         // Redstone
         // User ingredients
         // Output
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + DIAMOND_X, startPoint.y + DIAMOND_Y)).entries(recipeDisplay.getInputEntries().get(0)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_1, startPoint.y + SILICON_Y_1)).entries(recipeDisplay.getInputEntries().get(1)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_2, startPoint.y + SILICON_Y_2)).entries(recipeDisplay.getInputEntries().get(2)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).entries(recipeDisplay.getInputEntries().get(3)));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).entries(recipeDisplay.getInputEntries().get(4)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + DIAMOND_X, startPoint.y + DIAMOND_Y)).markInput().entries(recipeDisplay.getInputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_1, startPoint.y + SILICON_Y_1)).markInput().entries(recipeDisplay.getInputEntries().get(1)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + SILICON_X_2, startPoint.y + SILICON_Y_2)).markInput().entries(recipeDisplay.getInputEntries().get(2)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + REDSTONE_X, startPoint.y + REDSTONE_Y)).markInput().entries(recipeDisplay.getInputEntries().get(3)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INGREDIENT_X, startPoint.y + INGREDIENT_Y)).markInput().entries(recipeDisplay.getInputEntries().get(4)));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
         return widgets;
     }
 
     @Override
-    public int getDisplayHeight() {
-        return RECIPE_VIEWER_HEIGHT + 10;
+    public int getDisplayWidth(DefaultFabricationDisplay display) {
+        return RECIPE_VIEWER_WIDTH + 10;
     }
 
     @Override
-    public int getDisplayWidth(DefaultFabricationDisplay display) {
-        return RECIPE_VIEWER_WIDTH + 10;
+    public int getDisplayHeight() {
+        return RECIPE_VIEWER_HEIGHT + 10;
     }
 
     @Override
