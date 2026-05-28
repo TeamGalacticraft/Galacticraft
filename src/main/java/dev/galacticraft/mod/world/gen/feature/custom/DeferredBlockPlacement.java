@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature.features;
+package dev.galacticraft.mod.world.gen.feature.custom;
 
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;

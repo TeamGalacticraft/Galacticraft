@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import dev.galacticraft.mod.world.gen.feature.features.DeferredBlockPlacement;
+import dev.galacticraft.mod.world.gen.feature.custom.DeferredBlockPlacement;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.chunk.LevelChunk;

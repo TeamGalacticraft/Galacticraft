@@ -20,21 +20,22 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature.features;
+package dev.galacticraft.mod.world.gen.feature.custom;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class OlivineBeamFeature extends Feature<NoneFeatureConfiguration> {
-    private static final BlockState OLIVINE_BLOCK = Blocks.BLUE_WOOL.defaultBlockState(); // placeholder
+    private static final BlockState OLIVINE_BLOCK = GCBlocks.OLIVINE_BLOCK.defaultBlockState();
+    private static final int MIN_BEAM_LENGTH = 8;
     private static final int MAX_BEAM_LENGTH = 30;
 
     public OlivineBeamFeature(Codec<NoneFeatureConfiguration> codec) {
@@ -48,26 +49,32 @@ public class OlivineBeamFeature extends Feature<NoneFeatureConfiguration> {
         RandomSource random = context.random();
 
         Direction direction = Direction.Plane.HORIZONTAL.getRandomDirection(random);
-        int length = 8 + random.nextInt(MAX_BEAM_LENGTH - 8);
-        int thickness = 1 + random.nextInt(2);
+        int length = MIN_BEAM_LENGTH + random.nextInt(MAX_BEAM_LENGTH - MIN_BEAM_LENGTH + 1);
+        int radius = 1 + random.nextInt(2);
 
-        BlockPos.MutableBlockPos pos = origin.mutable();
+        boolean placedAny = false;
 
         for (int i = 0; i < length; i++) {
-            for (int dx = -thickness; dx <= thickness; dx++) {
-                for (int dy = -thickness; dy <= thickness; dy++) {
-                    BlockPos target = pos.offset(
-                            direction.getStepX() * i + dx,
-                            dy,
-                            direction.getStepZ() * i + dx
-                    );
-                    if (level.isEmptyBlock(target) || level.getBlockState(target).isAir()) {
-                        level.setBlock(target, OLIVINE_BLOCK, 2);
+            BlockPos center = origin.relative(direction, i);
+
+            for (int dx = -radius; dx <= radius; dx++) {
+                for (int dy = -radius; dy <= radius; dy++) {
+                    for (int dz = -radius; dz <= radius; dz++) {
+                        if ((dx * dx) + (dy * dy) + (dz * dz) > radius * radius) {
+                            continue;
+                        }
+
+                        BlockPos target = center.offset(dx, dy, dz);
+
+                        if (level.isEmptyBlock(target)) {
+                            level.setBlock(target, OLIVINE_BLOCK, 2);
+                            placedAny = true;
+                        }
                     }
                 }
             }
         }
 
-        return true;
+        return placedAny;
     }
 }

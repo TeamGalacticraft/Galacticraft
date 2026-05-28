@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature.features;
+package dev.galacticraft.mod.world.gen.feature.custom;
 
 import com.mojang.serialization.Codec;
 import dev.galacticraft.mod.Constant;

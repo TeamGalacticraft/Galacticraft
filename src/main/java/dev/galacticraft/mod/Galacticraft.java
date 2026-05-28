@@ -57,7 +57,7 @@ import dev.galacticraft.mod.world.gen.feature.GCFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
 import dev.galacticraft.mod.world.gen.structure.GCStructureTypes;
-import dev.galacticraft.mod.world.gen.surfacerule.MoonSurfaceRules;
+import dev.galacticraft.mod.world.gen.surface.MoonSurfaceRules;
 import dev.galacticraft.mod.world.poi.GCPointOfInterestTypes;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;

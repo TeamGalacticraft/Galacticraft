@@ -23,10 +23,10 @@
 package dev.galacticraft.mod.world.gen.feature;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.gen.feature.features.BasaltBeamFeature;
-import dev.galacticraft.mod.world.gen.feature.features.OliFlyEggPlacedFeature;
-import dev.galacticraft.mod.world.gen.feature.features.OlivineBeamFeature;
-import dev.galacticraft.mod.world.gen.feature.features.PillarSpikeFeature;
+import dev.galacticraft.mod.world.gen.feature.custom.BasaltBeamFeature;
+import dev.galacticraft.mod.world.gen.feature.custom.OliFlyEggPlacedFeature;
+import dev.galacticraft.mod.world.gen.feature.custom.OlivineBeamFeature;
+import dev.galacticraft.mod.world.gen.feature.custom.PillarSpikeFeature;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.registries.Registries;

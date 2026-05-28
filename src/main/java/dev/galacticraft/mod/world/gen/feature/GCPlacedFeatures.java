@@ -49,7 +49,7 @@ public class GCPlacedFeatures {
     public static void bootstrapRegistries(BootstrapContext<PlacedFeature> context) {
         HolderGetter<ConfiguredFeature<?, ?>> configuredFeatureLookup = context.lookup(Registries.CONFIGURED_FEATURE);
 
-        context.register(OIL_LAKE, new PlacedFeature(configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OIL_LAKE), List.of(
+        context.register(OIL_LAKE, new PlacedFeature(configuredFeatureLookup.getOrThrow(GCConfiguredFeatures.OIL_LAKE), List.of(
                 PlacementUtils.HEIGHTMAP_WORLD_SURFACE,
                 RarityFilter.onAverageOnceEvery(70),
                 InSquarePlacement.spread(),
@@ -57,7 +57,7 @@ public class GCPlacedFeatures {
         )));
 
         context.register(OLIGRUB_EGG, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLIGRUB_EGG),
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeatures.OLIGRUB_EGG),
                 List.of(
                         RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),
@@ -67,7 +67,7 @@ public class GCPlacedFeatures {
         ));
 
         context.register(OLIVINE_PILLAR_SPIKE, new PlacedFeature(
-                configuredFeatureLookup.getOrThrow(GCConfiguredFeature.OLIVINE_PILLAR_SPIKE),
+                configuredFeatureLookup.getOrThrow(GCConfiguredFeatures.OLIVINE_PILLAR_SPIKE),
                 List.of(
                         RarityFilter.onAverageOnceEvery(1),
                         InSquarePlacement.spread(),

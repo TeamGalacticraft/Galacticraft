@@ -34,7 +34,7 @@ import net.minecraft.world.level.levelgen.feature.LakeFeature;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 import net.minecraft.world.level.levelgen.feature.stateproviders.BlockStateProvider;
 
-public class GCConfiguredFeature {
+public class GCConfiguredFeatures {
     public static final ResourceKey<ConfiguredFeature<?, ?>> OIL_LAKE = ResourceKey.create(Registries.CONFIGURED_FEATURE, Constant.id("oil_lake"));
 
     // --- OLIVINE BIOME ---
@@ -52,15 +52,15 @@ public class GCConfiguredFeature {
                 )
         ));
 
-        context.register(OLIVINE_BEAM, new ConfiguredFeature<>(
-                GCFeatures.OLIVINE_BEAM,
-                NoneFeatureConfiguration.INSTANCE
-        ));
-
-        context.register(BASALT_BEAM, new ConfiguredFeature<>(
-                GCFeatures.BASALT_BEAM,
-                NoneFeatureConfiguration.INSTANCE
-        ));
+//        context.register(OLIVINE_BEAM, new ConfiguredFeature<>(
+//                GCFeatures.OLIVINE_BEAM,
+//                NoneFeatureConfiguration.INSTANCE
+//        ));
+//
+//        context.register(BASALT_BEAM, new ConfiguredFeature<>(
+//                GCFeatures.BASALT_BEAM,
+//                NoneFeatureConfiguration.INSTANCE
+//        ));
 
         context.register(OLIGRUB_EGG, new ConfiguredFeature<>(
                 GCFeatures.OLIGRUB_EGG,

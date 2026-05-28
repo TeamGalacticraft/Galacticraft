@@ -39,7 +39,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
-public class GCOreConfiguredFeature {
+public class GCOreConfiguredFeatures {
     public static final RuleTest BASE_STONE_MOON = new TagMatchTest(GCBlockTags.BASE_STONE_MOON);
     public static final RuleTest STONE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
     public static final RuleTest DEEPSLATE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);

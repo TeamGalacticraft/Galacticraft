@@ -20,25 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.world.gen.feature.features;
+package dev.galacticraft.mod.world.gen.feature.custom;
 
 import com.mojang.serialization.Codec;
+import dev.galacticraft.mod.content.GCBlocks;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.levelgen.feature.Feature;
 import net.minecraft.world.level.levelgen.feature.FeaturePlaceContext;
 import net.minecraft.world.level.levelgen.feature.configurations.NoneFeatureConfiguration;
 
 public class BasaltBeamFeature extends Feature<NoneFeatureConfiguration> {
-    private static final BlockState BASALT_BLOCK = Blocks.BLACK_WOOL.defaultBlockState(); // placeholder for basalt
-    private static final BlockState ORE_BLOCK = Blocks.YELLOW_WOOL.defaultBlockState();   // placeholder for rich olivine basalt
+    private static final BlockState BASALT_BLOCK = GCBlocks.MOON_BASALT.defaultBlockState();
+    private static final BlockState ORE_BLOCK = GCBlocks.RICH_OLIVINE_BASALT.defaultBlockState();
 
-    private static final int MAX_BEAM_LENGTH = 20;
     private static final int MIN_BEAM_LENGTH = 6;
+    private static final int MAX_BEAM_LENGTH = 20;
     private static final int MAX_RADIUS = 2;
 
     public BasaltBeamFeature(Codec<NoneFeatureConfiguration> codec) {
@@ -55,24 +55,30 @@ public class BasaltBeamFeature extends Feature<NoneFeatureConfiguration> {
         int length = MIN_BEAM_LENGTH + random.nextInt(MAX_BEAM_LENGTH - MIN_BEAM_LENGTH + 1);
         int radius = 1 + random.nextInt(MAX_RADIUS);
 
-        BlockPos.MutableBlockPos pos = origin.mutable();
+        boolean placedAny = false;
 
         for (int i = 0; i < length; i++) {
+            BlockPos center = origin.relative(direction, i);
+
             for (int dx = -radius; dx <= radius; dx++) {
                 for (int dy = -radius; dy <= radius; dy++) {
-                    BlockPos target = pos.offset(
-                            direction.getStepX() * i + dx,
-                            dy,
-                            direction.getStepZ() * i + dx
-                    );
-                    if (level.isEmptyBlock(target) || level.getBlockState(target).isAir()) {
-                        BlockState toPlace = random.nextInt(10) == 0 ? ORE_BLOCK : BASALT_BLOCK;
-                        level.setBlock(target, toPlace, 2);
+                    for (int dz = -radius; dz <= radius; dz++) {
+                        if ((dx * dx) + (dy * dy) + (dz * dz) > radius * radius) {
+                            continue;
+                        }
+
+                        BlockPos target = center.offset(dx, dy, dz);
+
+                        if (level.isEmptyBlock(target)) {
+                            BlockState toPlace = random.nextInt(10) == 0 ? ORE_BLOCK : BASALT_BLOCK;
+                            level.setBlock(target, toPlace, 2);
+                            placedAny = true;
+                        }
                     }
                 }
             }
         }
 
-        return true;
+        return placedAny;
     }
 }

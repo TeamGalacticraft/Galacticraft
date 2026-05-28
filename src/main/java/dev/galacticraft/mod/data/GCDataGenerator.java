@@ -97,8 +97,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(BootstrapDataProvider.create("Level Stems", GCLevelStems::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Noise Generator Settings", GCNoiseGeneratorSettings::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Configured Carvers", GCConfiguredCarvers::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Configured Features", GCConfiguredFeature::bootstrapRegistries));
-        pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeature::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Configured Features", GCConfiguredFeatures::bootstrapRegistries));
+        pack.addProvider(BootstrapDataProvider.create("Ore Configured Features", GCOreConfiguredFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Ore Placed Features", GCOrePlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Placed Features", GCPlacedFeatures::bootstrapRegistries));
         pack.addProvider(BootstrapDataProvider.create("Multi Noise Biome Source Parameter Lists", GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries));
@@ -144,8 +144,8 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         builder.add(Registries.DENSITY_FUNCTION, Lifecycle.stable(), GCDensityFunctions::bootstrapRegistries);
         builder.add(Registries.NOISE_SETTINGS, Lifecycle.stable(), GCNoiseGeneratorSettings::bootstrapRegistries);
         builder.add(Registries.CONFIGURED_CARVER, Lifecycle.stable(), GCConfiguredCarvers::bootstrapRegistries);
-        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeature::bootstrapRegistries);
-        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeature::bootstrapRegistries);
+        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCConfiguredFeatures::bootstrapRegistries);
+        builder.add(Registries.CONFIGURED_FEATURE, Lifecycle.stable(), GCOreConfiguredFeatures::bootstrapRegistries);
         builder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCOrePlacedFeatures::bootstrapRegistries);
         builder.add(Registries.PLACED_FEATURE, Lifecycle.stable(), GCPlacedFeatures::bootstrapRegistries);
         builder.add(Registries.MULTI_NOISE_BIOME_SOURCE_PARAMETER_LIST, Lifecycle.stable(), GCMultiNoiseBiomeSourceParameterLists::bootstrapRegistries);

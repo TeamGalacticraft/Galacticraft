@@ -22,14 +22,12 @@
 
 package dev.galacticraft.mod.world.biome;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.world.gen.carver.GCConfiguredCarvers;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
 import net.minecraft.core.HolderGetter;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.Carvers;
 import net.minecraft.sounds.Musics;
 import net.minecraft.world.entity.MobCategory;
@@ -150,7 +148,7 @@ public class MoonBiomes {
 
     public static Biome createOlivineCaves(HolderGetter<PlacedFeature> features, HolderGetter<ConfiguredWorldCarver<?>> carvers) {
         BiomeGenerationSettings.Builder generation = new BiomeGenerationSettings.Builder(features, carvers);
-        generation.addCarver(GenerationStep.Carving.AIR, carvers.getOrThrow(Constant.key(Registries.CONFIGURED_CARVER, "olivine_cave_carver")));
+        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.OLIVINE_CAVE_CARVER);
         generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
 
         // Add features
