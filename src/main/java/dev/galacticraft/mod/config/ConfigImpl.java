@@ -94,6 +94,7 @@ public class ConfigImpl implements Config {
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
     private boolean enableCreativeGearInv = true;
+    private boolean enableSpaceStationCreation = true;
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -442,6 +443,15 @@ public class ConfigImpl implements Config {
 
     public void setCreativeGearInv(boolean enableCreativeGearInv) {
         this.enableCreativeGearInv = enableCreativeGearInv;
+    }
+
+    @Override
+    public boolean enableSpaceStationCreation() {
+        return this.enableSpaceStationCreation;
+    }
+
+    public void setEnableSpaceStationCreation(boolean enableSpaceStationCreation) {
+        this.enableSpaceStationCreation = enableSpaceStationCreation;
     }
 
     public void load() {
@@ -818,6 +828,16 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(FluidConstants.BUCKET)
                     .setMin(0)
                     .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            misc.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
+                    config.enableSpaceStationCreation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
+                    .setSaveConsumer(config::setEnableSpaceStationCreation)
+                    .setDefaultValue(true)
                     .build()
             );
 

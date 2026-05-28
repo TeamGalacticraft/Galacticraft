@@ -39,13 +39,18 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record OpenCelestialScreenPayload(@Nullable RocketData data,
-                                         Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
+public record OpenCelestialScreenPayload(
+        @Nullable RocketData data,
+        Holder<CelestialBody<?, ?>> celestialBody,
+        boolean canCreateStations
+) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
-            p -> p.data,
+            OpenCelestialScreenPayload::data,
             ByteBufCodecs.holderRegistry(AddonRegistries.CELESTIAL_BODY),
-            p -> p.celestialBody,
+            OpenCelestialScreenPayload::celestialBody,
+            ByteBufCodecs.BOOL,
+            OpenCelestialScreenPayload::canCreateStations,
             OpenCelestialScreenPayload::new
     );
 
@@ -59,11 +64,11 @@ public record OpenCelestialScreenPayload(@Nullable RocketData data,
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                context.client().setScreen(new CelestialSelectionScreen(false, OpenCelestialScreenPayload.this.data(), true, OpenCelestialScreenPayload.this.celestialBody.value()));
-            }
-        };
+        return () -> context.client().setScreen(new CelestialSelectionScreen(
+                false,
+                this.data(),
+                this.canCreateStations(),
+                this.celestialBody().value()
+        ));
     }
 }

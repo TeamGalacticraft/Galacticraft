@@ -707,7 +707,11 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         gcPlayer.setRocketItem(rocket);
 
                         serverPlayer.galacticraft$openCelestialScreen(d);
-                        ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(this.getRocketData(), this.level().galacticraft$getCelestialBody()));
+                        ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
+                                this.getRocketData(),
+                                this.level().galacticraft$getCelestialBody(),
+                                dev.galacticraft.mod.Galacticraft.CONFIG.enableSpaceStationCreation()
+                        ));
 
                         remove(RemovalReason.UNLOADED_WITH_PLAYER);
                         break;

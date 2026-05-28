@@ -116,7 +116,11 @@ public class DimensionTpCommand {
 
         player.galacticraft$openCelestialScreen(null);
         Holder<CelestialBody<?, ?>> body = player.level().galacticraft$getCelestialBody();
-        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(null, body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH))); //todo
+        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(
+                null,
+                body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH),
+                dev.galacticraft.mod.Galacticraft.CONFIG.enableSpaceStationCreation()
+        ));
         return Command.SINGLE_SUCCESS;
     }
 

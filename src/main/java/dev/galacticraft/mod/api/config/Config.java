@@ -97,6 +97,8 @@ public interface Config {
 
     boolean enableCreativeGearInv();
 
+    boolean enableSpaceStationCreation();
+
     void load();
 
     void save();

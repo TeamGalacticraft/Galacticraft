@@ -209,6 +209,7 @@ public interface Translations {
         String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
+        String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
     }
 
     interface Galaxy {
