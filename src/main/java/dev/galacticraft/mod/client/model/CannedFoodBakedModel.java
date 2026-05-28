@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
+import dev.galacticraft.mod.content.item.CannedFoodLayout;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
@@ -42,26 +43,13 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
         this.wrapped = bakedModel;
     }
 
-    // Define relative positions for each can layout
-    public static float[][][] POSITIONS = {
-            {}, // 0 cans
-            {{8, 0, 8}}, // 1 can
-            {{4, 0, 8}, {12, 0, 8}}, // 2 cans
-            {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}}, // 3 cans
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}}, // 4 cans
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}}, // 5 cans (layer 2 starts)
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}}, // 6 cans
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}}, // 7 cans
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 4}, {4, 8, 12}, {12, 8, 12}} // 8 cans (full)
-    };
-
     @Override
     public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
         List<ItemStack> contents = (List<ItemStack>) blockView.getBlockEntityRenderData(pos);
         int canCount = contents.size();
 
         for (int i = 0; i < canCount; i++) {
-            float[] position = POSITIONS[canCount][i];
+            float[] position = CannedFoodLayout.POSITIONS[canCount][i];
             float x0 = (position[0] - 8) / 16.0f; // Convert pixel coords to block space
             float y = position[1] / 16.0f;
             float z0 = (position[2] - 8) / 16.0f;

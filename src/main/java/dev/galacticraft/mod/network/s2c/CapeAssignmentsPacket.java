@@ -36,7 +36,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Locale;
 
 public record CapeAssignmentsPacket(List<Entry> entries) implements S2CPayload {
     public static final ResourceLocation ID = Constant.id("cape_assignments");

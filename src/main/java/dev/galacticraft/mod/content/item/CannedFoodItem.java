@@ -39,7 +39,6 @@ import net.minecraft.core.component.DataComponentMap;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.stats.Stats;
@@ -71,8 +70,6 @@ import java.util.stream.Stream;
 
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
-import static dev.galacticraft.mod.util.TextureUtils.getAverageColor;
-import static net.minecraft.data.models.model.TextureMapping.getItemTexture;
 
 public class CannedFoodItem extends Item implements FabricItemStack {
     public static final int MAX_CANS = 8;
@@ -333,34 +330,43 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     private static int calculateCanColor(List<ItemStack> items) {
         if (items.isEmpty()) {
-            return 0xFFFFFF; // Default white color for empty cans
+            return 0xFFFFFF;
         }
 
-        long sumRed = 0, sumGreen = 0, sumBlue = 0;
+        long sumRed = 0;
+        long sumGreen = 0;
+        long sumBlue = 0;
         int count = 0;
 
         for (ItemStack stack : items) {
-            ResourceLocation texture = getItemTexture(stack.getItem());
+            int color = getServerSafeFoodColor(stack);
 
-            // Avoid crashing if the resource manager isn't ready
-            int color = getAverageColor(texture);
-            int red = color >> 16 & 0xFF;
-            int green = color >> 8 & 0xFF;
-            int blue = color & 0xFF;
-
-            sumRed += red;
-            sumGreen += green;
-            sumBlue += blue;
+            sumRed += color >> 16 & 0xFF;
+            sumGreen += color >> 8 & 0xFF;
+            sumBlue += color & 0xFF;
             count++;
         }
 
-        if (count == 0) return 0xFFFFFF;
+        if (count == 0) {
+            return 0xFFFFFF;
+        }
 
         int avgRed = (int) (sumRed / count);
         int avgGreen = (int) (sumGreen / count);
         int avgBlue = (int) (sumBlue / count);
 
         return avgRed << 16 | avgGreen << 8 | avgBlue;
+    }
+
+    private static int getServerSafeFoodColor(ItemStack stack) {
+        String id = BuiltInRegistries.ITEM.getKey(stack.getItem()).toString();
+        int hash = id.hashCode();
+
+        int red = 96 + Math.floorMod(hash, 128);
+        int green = 96 + Math.floorMod(hash >> 8, 128);
+        int blue = 96 + Math.floorMod(hash >> 16, 128);
+
+        return red << 16 | green << 8 | blue;
     }
 
     public static boolean canAddToCan(Item item) {

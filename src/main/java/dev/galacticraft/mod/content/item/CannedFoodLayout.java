@@ -20,27 +20,21 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.config;
+package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
-import net.minecraft.resources.ResourceLocation;
+public final class CannedFoodLayout {
+    public static final float[][][] POSITIONS = {
+            {},
+            {{8, 0, 8}},
+            {{4, 0, 8}, {12, 0, 8}},
+            {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 12}, {4, 8, 12}, {12, 8, 12}}
+    };
 
-import java.util.ArrayList;
-import java.util.List;
-
-public class GCConfigUtil {
-    public static List<ResourceLocation> disabledCelestialScreenDestinations() {
-        List<ResourceLocation> out = new ArrayList<>();
-
-        for (String id : Galacticraft.CONFIG.disabledCelestialScreenDimensions()) {
-            try {
-                out.add(ResourceLocation.parse(id));
-            } catch (Exception e) {
-                Constant.LOGGER.warn("Ignoring invalid disabled celestial screen dimension id '{}'.", id);
-            }
-        }
-
-        return out;
+    private CannedFoodLayout() {
     }
 }

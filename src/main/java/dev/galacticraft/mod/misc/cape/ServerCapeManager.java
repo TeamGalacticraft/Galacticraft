@@ -24,7 +24,6 @@ package dev.galacticraft.mod.misc.cape;
 
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;

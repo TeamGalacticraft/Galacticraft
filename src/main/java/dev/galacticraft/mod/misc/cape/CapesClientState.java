@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.misc.cape;
 
-import dev.galacticraft.mod.Constant;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
