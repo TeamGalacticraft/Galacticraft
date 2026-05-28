@@ -1,0 +1,11 @@
+{
+  "type": "galacticraft:moon",
+  "generator": {
+    "type": "minecraft:noise",
+    "biome_source": {
+      "type": "minecraft:multi_noise",
+      "preset": "galacticraft:moon"
+    },
+    "settings": "galacticraft:moon"
+  }
+}

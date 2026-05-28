@@ -43,11 +43,11 @@ import org.jetbrains.annotations.NotNull;
 
 
 public class MoonSurfaceRules {
-    private static final ConditionSource IS_TUNDRA = continentalnessInRange(-1.2, -0.455);
-    private static final ConditionSource IS_MARE = continentalnessInRange(-0.455, -0.21);
-    private static final ConditionSource MARE_TO_LOWLANDS = continentalnessInRange(-0.21, -0.19);
-    private static final ConditionSource IS_LOWLANDS = continentalnessInRange(-0.21, 0.25);
-    private static final ConditionSource IS_HIGHLANDS = continentalnessInRange(0.25, 1); //todo tweak these until painting works better
+    private static final ConditionSource IS_TUNDRA = continentalnessInRange(-1.0, -0.8);
+    private static final ConditionSource IS_MARE = continentalnessInRange(-0.8, -0.1);
+    private static final ConditionSource MARE_TO_LOWLANDS = continentalnessInRange(-0.1, -0.075);
+    private static final ConditionSource IS_LOWLANDS = continentalnessInRange(-0.1, 0.4);
+    private static final ConditionSource IS_HIGHLANDS = continentalnessInRange(0.4, 1.0);
 
     private static final RuleSource BEDROCK = block(Blocks.BEDROCK);
     private static final RuleSource LUNASLATE = block(GCBlocks.LUNASLATE);
