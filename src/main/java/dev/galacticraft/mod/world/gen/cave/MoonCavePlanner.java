@@ -1,22 +1,28 @@
 package dev.galacticraft.mod.world.gen.cave;
 
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.levelgen.RandomState;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.function.Function;
 
+/**
+ * Deterministic Moon cave planner.
+ *
+ * <p>This class deliberately does not query biomes. Biome lookup during planning can
+ * force generation of unloaded chunks and cause worldgen dependency chains. The planner
+ * only creates deterministic cave plans from cell coordinates and the world seed.</p>
+ *
+ * <p>Actual cave wall material/style is resolved later by {@link MoonCaveStyleResolver}
+ * during chunk-local carving.</p>
+ */
 public final class MoonCavePlanner {
     public static final MoonCavePlanner INSTANCE = new MoonCavePlanner();
 
     public static final int CELL_SIZE_CHUNKS = 8;
     public static final int CELL_SIZE_BLOCKS = CELL_SIZE_CHUNKS * 16;
-    public static final float CAVE_CELL_CHANCE = 0.45F;
 
     private static final int CELL_SEARCH_RADIUS = 1;
     private static final int MIN_Y = -46;
@@ -25,14 +31,21 @@ public final class MoonCavePlanner {
     private MoonCavePlanner() {
     }
 
-    public List<MoonCavePlan> plansForChunk(RandomState randomState, ChunkPos chunk, Function<BlockPos, Holder<Biome>> biomeLookup) {
+    /**
+     * Returns all deterministic cave plans that may intersect the supplied chunk.
+     *
+     * @param randomState random state for deterministic cell-local random creation.
+     * @param chunk current chunk position.
+     * @return cave plans intersecting this chunk.
+     */
+    public List<MoonCavePlan> plansForChunk(RandomState randomState, ChunkPos chunk) {
         MoonCaveCellPos center = MoonCaveCellPos.fromChunk(chunk);
         List<MoonCavePlan> result = new ArrayList<>();
 
         for (int dx = -CELL_SEARCH_RADIUS; dx <= CELL_SEARCH_RADIUS; dx++) {
             for (int dz = -CELL_SEARCH_RADIUS; dz <= CELL_SEARCH_RADIUS; dz++) {
                 MoonCaveCellPos cell = new MoonCaveCellPos(center.x() + dx, center.z() + dz);
-                MoonCavePlan plan = this.acceptedPlan(randomState, cell, biomeLookup);
+                MoonCavePlan plan = this.rawPlan(randomState, cell);
 
                 if (plan != null && plan.bounds().intersectsChunk(chunk)) {
                     result.add(plan);
@@ -43,59 +56,24 @@ public final class MoonCavePlanner {
         return result;
     }
 
-    private MoonCavePlan acceptedPlan(RandomState randomState, MoonCaveCellPos cell, Function<BlockPos, Holder<Biome>> biomeLookup) {
-        MoonCavePlan candidate = this.rawPlan(randomState, cell, biomeLookup);
-
-        if (candidate == null) {
-            return null;
-        }
-
-        for (int dx = -1; dx <= 1; dx++) {
-            for (int dz = -1; dz <= 1; dz++) {
-                if (dx == 0 && dz == 0) {
-                    continue;
-                }
-
-                MoonCavePlan other = this.rawPlan(randomState, new MoonCaveCellPos(cell.x() + dx, cell.z() + dz), biomeLookup);
-
-                if (other == null || !candidate.bounds().intersects(other.bounds())) {
-                    continue;
-                }
-
-                if (other.priority() > candidate.priority()) {
-                    return null;
-                }
-
-                if (other.primaryStyle() != candidate.primaryStyle()) {
-                    candidate.mergeFrom(other);
-                }
-            }
-        }
-
-        return candidate;
-    }
-
-    private MoonCavePlan rawPlan(RandomState randomState, MoonCaveCellPos cell, Function<BlockPos, Holder<Biome>> biomeLookup) {
+    /**
+     * Creates a raw cave plan for one cave cell.
+     *
+     * <p>The selected style here is only a definition-selection fallback. It is not
+     * treated as the final material style for every block inside the cave.</p>
+     */
+    private MoonCavePlan rawPlan(RandomState randomState, MoonCaveCellPos cell) {
         RandomSource random = randomState.aquiferRandom().at(
                 cell.centerBlockX() + 91821,
                 -7137,
                 cell.centerBlockZ() - 44291
         );
 
-        if (random.nextFloat() > CAVE_CELL_CHANCE) {
-            return null;
-        }
-
         BlockPos anchor = randomAnchor(cell, random);
-        MoonCaveStyle style = MoonCaveStyle.fromBiome(biomeLookup.apply(anchor));
-
-        if (style == null) {
-            return null;
-        }
-
+        MoonCaveStyle style = pickFallbackStyle(random);
         MoonCaveDefinition definition = MoonCaveRegistry.pick(style, random);
 
-        if (definition == null || random.nextFloat() > definition.chance()) {
+        if (definition == null) {
             return null;
         }
 
@@ -110,6 +88,17 @@ public final class MoonCavePlanner {
         );
 
         return definition.shape().createPlan(context);
+    }
+
+    /**
+     * Picks a deterministic fallback style for cave shape selection.
+     *
+     * <p>Final cave block materials are resolved from actual generated biomes during
+     * carving. This value only controls which registered cave definition is used.</p>
+     */
+    private static MoonCaveStyle pickFallbackStyle(RandomSource random) {
+        MoonCaveStyle[] styles = MoonCaveStyle.values();
+        return styles[random.nextInt(styles.length)];
     }
 
     private static BlockPos randomAnchor(MoonCaveCellPos cell, RandomSource random) {

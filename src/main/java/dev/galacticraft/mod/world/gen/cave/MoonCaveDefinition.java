@@ -7,6 +7,6 @@ public record MoonCaveDefinition(
         MoonCaveStyle style,
         MoonCaveShape shape,
         int weight,
-        float chance
+        float spawnChance
 ) {
 }

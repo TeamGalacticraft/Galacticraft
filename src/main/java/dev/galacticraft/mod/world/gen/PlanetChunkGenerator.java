@@ -231,7 +231,6 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
                 levelChunkSection.acquire();
                 set.add(levelChunkSection);
             }
-
             ChunkAccess nx;
             try {
                 nx = this.doFill(blender, structureManager, randomState, chunkAccess, j, k);

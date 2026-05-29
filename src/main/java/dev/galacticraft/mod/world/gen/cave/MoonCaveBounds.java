@@ -86,4 +86,9 @@ public class MoonCaveBounds {
     public int maxZ() {
         return this.maxZ;
     }
+
+    @Override
+    public String toString() {
+        return "[" + this.minX + "," + this.minY + "," + this.minZ + " -> " + this.maxX + "," + this.maxY + "," + this.maxZ + "]";
+    }
 }

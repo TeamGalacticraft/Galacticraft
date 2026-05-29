@@ -5,18 +5,22 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.levelgen.RandomState;
 
 import java.util.ArrayList;
-import java.util.EnumSet;
 import java.util.List;
 import java.util.function.Function;
 
 /**
- * Applies planned Moon caves directly to one already-filled terrain chunk.
+ * Chunk-local Moon cave carver and decorator.
+ *
+ * <p>Planning is deterministic and biome-free. Biome styles are resolved only here
+ * from a cached chunk-local style grid, which avoids chunk dependency chains while
+ * still allowing smooth biome transitions at block level.</p>
  */
 public final class MoonCaveChunkGenerator {
     private MoonCaveChunkGenerator() {
@@ -27,67 +31,172 @@ public final class MoonCaveChunkGenerator {
             RandomState randomState,
             int minY,
             int maxY,
-            Function<BlockPos, Holder<Biome>> biomeLookup
+            BiomeSource biomeSource
     ) {
         ChunkPos chunkPos = chunk.getPos();
-        List<MoonCavePlan> plans = MoonCavePlanner.INSTANCE.plansForChunk(randomState, chunkPos, biomeLookup);
+        List<MoonCavePlan> plans = MoonCavePlanner.INSTANCE.plansForChunk(randomState, chunkPos);
 
         if (plans.isEmpty()) {
             return false;
         }
 
+        MoonCaveStyleResolver styleResolver = new MoonCaveStyleResolver(
+                chunkPos,
+                minY,
+                maxY,
+                biomeSource,
+                randomState
+        );
+
         List<CaveSample> samples = new ArrayList<>();
-        boolean changed = carve(chunk, chunkPos, plans, minY, maxY, samples);
+        boolean changed = false;
+
+        /*
+         * Pass 1:
+         * Carve all air first across every plan/element.
+         *
+         * This prevents tunnels and rooms from being separated by shell membranes
+         * created by earlier elements.
+         */
+        for (MoonCavePlan plan : plans) {
+            if (!plan.bounds().intersectsChunk(chunkPos)) {
+                continue;
+            }
+
+            for (MoonCaveElement element : plan.elements()) {
+                if (!element.bounds().intersectsChunk(chunkPos)) {
+                    continue;
+                }
+
+                changed |= carveAir(chunk, chunkPos, plan, element, minY, maxY, styleResolver, samples);
+            }
+        }
+
+        /*
+         * Pass 2:
+         * Paint shell blocks only after all cave interiors are open.
+         */
+        for (MoonCavePlan plan : plans) {
+            if (!plan.bounds().intersectsChunk(chunkPos)) {
+                continue;
+            }
+
+            for (MoonCaveElement element : plan.elements()) {
+                if (!element.bounds().intersectsChunk(chunkPos)) {
+                    continue;
+                }
+
+                changed |= carveShell(chunk, chunkPos, plan, element, minY, maxY, styleResolver);
+            }
+        }
+
         decorate(chunk, chunkPos, samples, chunkPos.toLong());
+        return changed;
+    }
+
+    private static boolean carveAir(
+            ChunkAccess chunk,
+            ChunkPos chunkPos,
+            MoonCavePlan plan,
+            MoonCaveElement element,
+            int minY,
+            int maxY,
+            MoonCaveStyleResolver styleResolver,
+            List<CaveSample> samples
+    ) {
+        boolean changed = false;
+        MoonCaveBounds bounds = element.bounds();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+
+        int minX = Math.max(chunkPos.getMinBlockX(), bounds.minX());
+        int maxX = Math.min(chunkPos.getMaxBlockX(), bounds.maxX());
+        int minZ = Math.max(chunkPos.getMinBlockZ(), bounds.minZ());
+        int maxZ = Math.min(chunkPos.getMaxBlockZ(), bounds.maxZ());
+        int lowY = Math.max(minY, bounds.minY());
+        int highY = Math.min(maxY, bounds.maxY());
+
+        if (minX > maxX || minZ > maxZ || lowY > highY) {
+            return false;
+        }
+
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int y = lowY; y <= highY; y++) {
+                    if (element.zone(x, y, z) != CaveZone.AIR) {
+                        continue;
+                    }
+
+                    pos.set(x, y, z);
+                    BlockState current = chunk.getBlockState(pos);
+
+                    if (!canBecomeAir(current)) {
+                        continue;
+                    }
+
+                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle());
+
+                    chunk.setBlockState(pos, Blocks.AIR.defaultBlockState(), false);
+                    collectSamples(chunk, chunkPos, pos, style, samples);
+                    changed = true;
+                }
+            }
+        }
 
         return changed;
     }
 
-    private static boolean carve(
+    private static boolean carveShell(
             ChunkAccess chunk,
             ChunkPos chunkPos,
-            List<MoonCavePlan> plans,
+            MoonCavePlan plan,
+            MoonCaveElement element,
             int minY,
             int maxY,
-            List<CaveSample> samples
+            MoonCaveStyleResolver styleResolver
     ) {
         boolean changed = false;
+        MoonCaveBounds bounds = element.bounds();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        for (MoonCavePlan plan : plans) {
-            int minX = Math.max(chunkPos.getMinBlockX(), plan.bounds().minX());
-            int maxX = Math.min(chunkPos.getMaxBlockX(), plan.bounds().maxX());
-            int minZ = Math.max(chunkPos.getMinBlockZ(), plan.bounds().minZ());
-            int maxZ = Math.min(chunkPos.getMaxBlockZ(), plan.bounds().maxZ());
-            int lowY = Math.max(minY, plan.bounds().minY());
-            int highY = Math.min(maxY, plan.bounds().maxY());
+        int minX = Math.max(chunkPos.getMinBlockX(), bounds.minX());
+        int maxX = Math.min(chunkPos.getMaxBlockX(), bounds.maxX());
+        int minZ = Math.max(chunkPos.getMinBlockZ(), bounds.minZ());
+        int maxZ = Math.min(chunkPos.getMaxBlockZ(), bounds.maxZ());
+        int lowY = Math.max(minY, bounds.minY());
+        int highY = Math.min(maxY, bounds.maxY());
 
-            for (int x = minX; x <= maxX; x++) {
-                for (int z = minZ; z <= maxZ; z++) {
-                    for (int y = lowY; y <= highY; y++) {
-                        pos.set(x, y, z);
-                        BlockState current = chunk.getBlockState(pos);
+        if (minX > maxX || minZ > maxZ || lowY > highY) {
+            return false;
+        }
 
-                        CaveZone zone = plan.zone(x, y, z);
-                        if (zone == CaveZone.NONE) {
-                            continue;
-                        }
+        for (int x = minX; x <= maxX; x++) {
+            for (int z = minZ; z <= maxZ; z++) {
+                for (int y = lowY; y <= highY; y++) {
+                    CaveZone zone = element.zone(x, y, z);
 
-                        CaveClassification classification = new CaveClassification(zone, EnumSet.copyOf(plan.styles()));
+                    if (zone == CaveZone.NONE || zone == CaveZone.AIR) {
+                        continue;
+                    }
 
-                        if (classification.zone == CaveZone.AIR) {
-                            if (canBecomeAir(current)) {
-                                chunk.setBlockState(pos, Blocks.AIR.defaultBlockState(), false);
-                                changed = true;
-                            }
-                            collectSamples(chunk, chunkPos, pos, classification.styles, samples);
-                        } else if (classification.zone == CaveZone.INNER_SHELL && canReplace(current)) {
-                            chunk.setBlockState(pos, pickInnerWall(classification.styles, x, y, z), false);
-                            changed = true;
-                        } else if (classification.zone == CaveZone.OUTER_SHELL && canReplace(current)) {
-                            chunk.setBlockState(pos, pickOuterWall(classification.styles, x, y, z), false);
-                            changed = true;
-                        }
+                    pos.set(x, y, z);
+                    BlockState current = chunk.getBlockState(pos);
+
+                    /*
+                     * Never paint shell into already-carved cave air.
+                     * This is what keeps joined rooms/tunnels open.
+                     */
+                    if (!canReplace(current)) {
+                        continue;
+                    }
+
+                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle());
+
+                    if (zone == CaveZone.INNER_SHELL) {
+                        chunk.setBlockState(pos, pickInnerWall(style, x, y, z), false);
+                        changed = true;
+                    } else if (zone == CaveZone.OUTER_SHELL) {
+                        chunk.setBlockState(pos, style.outerWall(), false);
+                        changed = true;
                     }
                 }
             }
@@ -96,41 +205,22 @@ public final class MoonCaveChunkGenerator {
         return changed;
     }
 
-    private static CaveClassification classify(List<MoonCavePlan> plans, int x, int y, int z) {
-        CaveZone zone = CaveZone.NONE;
-        EnumSet<MoonCaveStyle> styles = EnumSet.noneOf(MoonCaveStyle.class);
-
-        for (MoonCavePlan plan : plans) {
-            CaveZone planZone = plan.zone(x, y, z);
-
-            if (planZone != CaveZone.NONE) {
-                styles.addAll(plan.styles());
-            }
-
-            if (planZone.ordinal() > zone.ordinal()) {
-                zone = planZone;
-            }
-        }
-
-        return new CaveClassification(zone, styles);
-    }
-
     private static void collectSamples(
             ChunkAccess chunk,
             ChunkPos chunkPos,
             BlockPos pos,
-            EnumSet<MoonCaveStyle> styles,
+            MoonCaveStyle style,
             List<CaveSample> samples
     ) {
         BlockPos above = pos.above();
         BlockPos below = pos.below();
 
         if (insideChunk(chunkPos, above) && !chunk.getBlockState(above).isAir()) {
-            samples.add(new CaveSample(pos.immutable(), CaveSampleType.CEILING, EnumSet.copyOf(styles)));
+            samples.add(new CaveSample(pos.immutable(), CaveSampleType.CEILING, style));
         }
 
         if (insideChunk(chunkPos, below) && !chunk.getBlockState(below).isAir()) {
-            samples.add(new CaveSample(pos.immutable(), CaveSampleType.FLOOR, EnumSet.copyOf(styles)));
+            samples.add(new CaveSample(pos.immutable(), CaveSampleType.FLOOR, style));
         }
     }
 
@@ -138,16 +228,10 @@ public final class MoonCaveChunkGenerator {
         for (CaveSample sample : samples) {
             int hash = hash(seed, sample.pos.getX(), sample.pos.getY(), sample.pos.getZ(), sample.type.ordinal());
 
-            if (sample.styles.contains(MoonCaveStyle.GLACIAL)) {
-                decorateGlacial(chunk, chunkPos, sample, hash);
-            }
-
-            if (sample.styles.contains(MoonCaveStyle.OLIVINE)) {
-                decorateOlivine(chunk, chunkPos, sample, hash);
-            }
-
-            if (sample.styles.contains(MoonCaveStyle.CHEESE)) {
-                decorateCheese(chunk, chunkPos, sample, hash);
+            switch (sample.style) {
+                case GLACIAL -> decorateGlacial(chunk, chunkPos, sample, hash);
+                case OLIVINE -> decorateOlivine(chunk, chunkPos, sample, hash);
+                case CHEESE -> decorateCheese(chunk, chunkPos, sample, hash);
             }
         }
     }
@@ -198,9 +282,8 @@ public final class MoonCaveChunkGenerator {
         }
     }
 
-    private static BlockState pickInnerWall(EnumSet<MoonCaveStyle> styles, int x, int y, int z) {
-        MoonCaveStyle style = pickStyle(styles, x, y, z, 9911);
-        int hash = hash(0, x, y, z, 3319);
+    private static BlockState pickInnerWall(MoonCaveStyle style, int x, int y, int z) {
+        int hash = hash(0L, x, y, z, 3319);
 
         if (Math.floorMod(hash, 29) == 0) {
             return style.accent();
@@ -209,25 +292,26 @@ public final class MoonCaveChunkGenerator {
         return style.innerWall();
     }
 
-    private static BlockState pickOuterWall(EnumSet<MoonCaveStyle> styles, int x, int y, int z) {
-        return pickStyle(styles, x, y, z, 6619).outerWall();
-    }
-
-    private static MoonCaveStyle pickStyle(EnumSet<MoonCaveStyle> styles, int x, int y, int z, int salt) {
-        if (styles.isEmpty()) {
-            return MoonCaveStyle.CHEESE;
-        }
-
-        MoonCaveStyle[] array = styles.toArray(MoonCaveStyle[]::new);
-        return array[Math.floorMod(hash(0, x, y, z, salt), array.length)];
-    }
-
     private static boolean canReplace(BlockState state) {
         return !state.isAir() && state.is(GCBlockTags.MOON_CARVER_REPLACEABLES);
     }
 
     private static boolean canBecomeAir(BlockState state) {
-        return state.isAir() || state.is(GCBlockTags.MOON_CARVER_REPLACEABLES);
+        return state.isAir()
+                || state.is(GCBlockTags.MOON_CARVER_REPLACEABLES)
+                || isCaveShellBlock(state);
+    }
+
+    private static boolean isCaveShellBlock(BlockState state) {
+        for (MoonCaveStyle style : MoonCaveStyle.values()) {
+            if (state.is(style.innerWall().getBlock())
+                    || state.is(style.outerWall().getBlock())
+                    || state.is(style.accent().getBlock())) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static boolean insideChunk(ChunkPos chunkPos, BlockPos pos) {
@@ -249,10 +333,7 @@ public final class MoonCaveChunkGenerator {
         return (int) h;
     }
 
-    private record CaveClassification(CaveZone zone, EnumSet<MoonCaveStyle> styles) {
-    }
-
-    private record CaveSample(BlockPos pos, CaveSampleType type, EnumSet<MoonCaveStyle> styles) {
+    private record CaveSample(BlockPos pos, CaveSampleType type, MoonCaveStyle style) {
     }
 
     private enum CaveSampleType {
