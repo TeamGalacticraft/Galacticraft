@@ -18,11 +18,20 @@ accessible field net/minecraft/world/level/levelgen/SurfaceRules$Context biome L
 # final classes
 extendable class net/minecraft/world/SimpleMenuProvider
 
+# protected classes
+accessible class net/minecraft/world/level/levelgen/DensityFunctions$BeardifierMarker
+
 # static methods
 accessible method net/minecraft/data/models/model/ModelTemplates            createItem (Ljava/lang/String;[Lnet/minecraft/data/models/model/TextureSlot;)Lnet/minecraft/data/models/model/ModelTemplate;
 accessible method net/minecraft/world/level/block/BaseRailBlock             shouldBeRemoved (Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/Level;Lnet/minecraft/world/level/block/state/properties/RailShape;)Z
 accessible method net/minecraft/world/level/storage/loot/BuiltInLootTables  register (Lnet/minecraft/resources/ResourceKey;)Lnet/minecraft/resources/ResourceKey;
 accessible method net/minecraft/stats/Stats                                 makeCustomStat (Ljava/lang/String;Lnet/minecraft/stats/StatFormatter;)Lnet/minecraft/resources/ResourceLocation;
+
+# protected methods
+accessible method net/minecraft/world/level/levelgen/NoiseChunk cachedClimateSampler (Lnet/minecraft/world/level/levelgen/NoiseRouter;Ljava/util/List;)Lnet/minecraft/world/level/biome/Climate$Sampler;
+accessible method net/minecraft/world/level/levelgen/NoiseChunk getInterpolatedState ()Lnet/minecraft/world/level/block/state/BlockState;
+accessible method net/minecraft/world/level/levelgen/NoiseChunk cellWidth ()I
+accessible method net/minecraft/world/level/levelgen/NoiseChunk cellHeight ()I
 
 # private final fields
 accessible field net/minecraft/data/models/BlockModelGenerators texturedModels Ljava/util/Map;

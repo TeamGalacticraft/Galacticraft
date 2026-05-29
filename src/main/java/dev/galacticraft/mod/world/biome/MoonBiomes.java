@@ -159,7 +159,7 @@ public class MoonBiomes {
     }
 
     public static void addPlannedMoonCaveGeneration(BiomeGenerationSettings.Builder generation) {
-        generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.PLANNED_MOON_CAVE_CARVER);
+        //generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.PLANNED_MOON_CAVE_CARVER);
         generation.addCarver(GenerationStep.Carving.AIR, GCConfiguredCarvers.MOON_CRATER_CARVER);
     }
 

@@ -3,6 +3,9 @@ package dev.galacticraft.mod.world.gen.cave;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 
+/**
+ * Axis-aligned bounds for quickly clipping planned caves to chunks.
+ */
 public class MoonCaveBounds {
     private int minX = Integer.MAX_VALUE;
     private int minY = Integer.MAX_VALUE;
@@ -60,11 +63,27 @@ public class MoonCaveBounds {
                 && this.minZ <= other.maxZ;
     }
 
+    public int minX() {
+        return this.minX;
+    }
+
     public int minY() {
         return this.minY;
     }
 
+    public int minZ() {
+        return this.minZ;
+    }
+
+    public int maxX() {
+        return this.maxX;
+    }
+
     public int maxY() {
         return this.maxY;
+    }
+
+    public int maxZ() {
+        return this.maxZ;
     }
 }

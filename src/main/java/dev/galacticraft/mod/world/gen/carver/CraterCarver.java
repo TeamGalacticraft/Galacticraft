@@ -1,25 +1,3 @@
-/*
- * Copyright (c) 2019-2026 Team Galacticraft
- *
- * Permission is hereby granted, free of charge, to any person obtaining a copy
- * of this software and associated documentation files (the "Software"), to deal
- * in the Software without restriction, including without limitation the rights
- * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
- * copies of the Software, and to permit persons to whom the Software is
- * furnished to do so, subject to the following conditions:
- *
- * The above copyright notice and this permission notice shall be included in all
- * copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
- * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
- * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
- * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
- * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
- * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
- * SOFTWARE.
- */
-
 package dev.galacticraft.mod.world.gen.carver;
 
 import com.mojang.serialization.Codec;
@@ -47,74 +25,163 @@ public class CraterCarver extends WorldCarver<CraterCarverConfig> {
     }
 
     @Override
-    public boolean carve(CarvingContext context, CraterCarverConfig config, ChunkAccess chunk, Function<BlockPos, Holder<Biome>> posToBiome, RandomSource random, Aquifer aquiferSampler, ChunkPos pos, CarvingMask carvingMask) {
-        int y = config.y.sample(random, context);
-        //pos = center chunk pos
-        BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), y, random.nextInt(16));
-
+    public boolean carve(
+            CarvingContext context,
+            CraterCarverConfig config,
+            ChunkAccess chunk,
+            Function<BlockPos, Holder<Biome>> posToBiome,
+            RandomSource random,
+            Aquifer aquiferSampler,
+            ChunkPos pos,
+            CarvingMask carvingMask
+    ) {
         if (!chunk.getReferencesForStructure(context.registryAccess().registryOrThrow(Registries.STRUCTURE).getOrThrow(GCStructures.Moon.VILLAGE)).isEmpty()) {
             return false;
         }
 
-        BlockPos.MutableBlockPos mutable = craterCenter.mutable();
+        int centerY = config.y.sample(random, context);
+        BlockPos craterCenter = pos.getBlockAt(random.nextInt(16), centerY, random.nextInt(16));
 
-        double radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
-        if (random.nextBoolean() && radius < (config.minRadius + config.idealRangeOffset) || radius > (config.maxRadius - config.idealRangeOffset))
-            radius = 8 + (random.nextDouble() * (config.maxRadius - config.minRadius));
-        double depthMultiplier = 1 - ((random.nextDouble() - 0.5) * 0.3);
+        double radius = config.minRadius + random.nextDouble() * (config.maxRadius - config.minRadius);
+
+        if ((random.nextBoolean() && radius < config.minRadius + config.idealRangeOffset) || radius > config.maxRadius - config.idealRangeOffset) {
+            radius = config.minRadius + random.nextDouble() * (config.maxRadius - config.minRadius);
+        }
+
+        double depthMultiplier = 1.0D - ((random.nextDouble() - 0.5D) * 0.3D);
         boolean fresh = random.nextInt(16) == 1;
-        for (int innerChunkX = 0; innerChunkX < 16; innerChunkX++) { //iterate through positions in chunk
-            for (int innerChunkZ = 0; innerChunkZ < 16; innerChunkZ++) {
-                double toDig = 0;
+        boolean changed = false;
 
-                double xDev = Math.abs((chunk.getPos().getBlockX(innerChunkX)) - craterCenter.getX());
-                double zDev = Math.abs((chunk.getPos().getBlockZ(innerChunkZ)) - craterCenter.getZ());
-                if (xDev >= 0 && xDev < 32 && zDev >= 0 && zDev < 32) {
-                    if (xDev * xDev + zDev * zDev < radius * radius) { //distance to crater and depth
-                        xDev /= radius;
-                        zDev /= radius;
-                        final double sqrtY = xDev * xDev + zDev * zDev;
-                        double yDev = sqrtY * sqrtY * 6;
-                        double craterDepth = 5 - yDev;
-                        craterDepth *= depthMultiplier;
-                        if (craterDepth > 0.0) {
-                            toDig = craterDepth;
-                        } else continue;
+        int minGenY = context.getMinGenY() + 1;
+        int maxGenY = context.getMinGenY() + context.getGenDepth() - 2;
+
+        BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos belowCheck = new BlockPos.MutableBlockPos();
+
+        for (int localX = 0; localX < 16; localX++) {
+            int worldX = chunk.getPos().getBlockX(localX);
+
+            for (int localZ = 0; localZ < 16; localZ++) {
+                int worldZ = chunk.getPos().getBlockZ(localZ);
+
+                double xDev = Math.abs(worldX - craterCenter.getX());
+                double zDev = Math.abs(worldZ - craterCenter.getZ());
+
+                if (xDev >= radius || zDev >= radius) {
+                    continue;
+                }
+
+                double normalizedX = xDev / radius;
+                double normalizedZ = zDev / radius;
+                double distance = normalizedX * normalizedX + normalizedZ * normalizedZ;
+
+                if (distance >= 1.0D) {
+                    continue;
+                }
+
+                double yCurve = distance * distance * 6.0D;
+                double craterDepth = (5.0D - yCurve) * depthMultiplier;
+
+                if (craterDepth <= 0.0D) {
+                    continue;
+                }
+
+                int toDig = (int) craterDepth;
+
+                if (toDig >= 1) {
+                    toDig++;
+                    if (fresh) {
+                        toDig++;
+                    }
+                }
+
+                int surfaceY = findSurfaceY(chunk, carvingMask, localX, localZ, worldX, worldZ, centerY, minGenY, maxGenY, mutable);
+
+                if (surfaceY <= minGenY) {
+                    continue;
+                }
+
+                BlockState topState = chunk.getBlockState(mutable.set(worldX, surfaceY, worldZ));
+
+                for (int dug = 0; dug < toDig; dug++) {
+                    int y = surfaceY - dug;
+
+                    if (y <= minGenY || y >= maxGenY) {
+                        break;
                     }
 
-                    if (toDig >= 1) {
-                        toDig++; // Increase crater depth, but for sum, not each crater
-                        if (fresh) toDig++; // Dig one more block, because we're not replacing the top with turf
+                    if (!isValidMaskY(context, y)) {
+                        continue;
                     }
 
-                    BlockPos.MutableBlockPos copy = new BlockPos.MutableBlockPos();
-                    mutable.set(innerChunkX, y, innerChunkZ);
-                    BlockState top = chunk.getBlockState(mutable);
-                    BlockState above = chunk.getBlockState(mutable.move(Direction.UP));
-                    while (!above.isAir() && !top.isAir() && !carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ)) {
-                        top = above;
-                        above = chunk.getBlockState(mutable.move(Direction.UP));
+                    mutable.set(worldX, y, worldZ);
+                    BlockState state = chunk.getBlockState(mutable);
+
+                    if (state.isAir() && dug == 0) {
+                        continue;
                     }
-                    for (int dug = 0; dug < toDig; dug++) {
-                        mutable.move(Direction.DOWN);
-                        BlockState state = chunk.getBlockState(mutable);
-                        if (!state.isAir() || carvingMask.get(innerChunkX, mutable.getY(), innerChunkZ) || dug > 0) {
-                            chunk.setBlockState(mutable, AIR, false);
-                            if (dug == 0) {
-                                carvingMask.set(innerChunkX, mutable.getY(), innerChunkZ);
-                                top = state;
+
+                    chunk.setBlockState(mutable, AIR, false);
+                    carvingMask.set(localX, y, localZ);
+                    changed = true;
+
+                    if (!fresh && dug + 1 >= toDig) {
+                        int replacementY = y - 1;
+
+                        if (replacementY > minGenY && isValidMaskY(context, replacementY)) {
+                            belowCheck.set(worldX, replacementY - 1, worldZ);
+
+                            if (!chunk.getBlockState(belowCheck).isAir()) {
+                                mutable.set(worldX, replacementY, worldZ);
+                                chunk.setBlockState(mutable, topState, false);
                             }
-                            if (!fresh && dug + 1 >= toDig && !chunk.getBlockState(copy.set(mutable.getX(), mutable.getY() - 2, mutable.getZ())).isAir()) {
-                                chunk.setBlockState(mutable.move(Direction.DOWN), top, false);
-                            }
-                        } else {
-                            dug--;
                         }
                     }
                 }
             }
         }
-        return true;
+
+        return changed;
+    }
+
+    private static int findSurfaceY(
+            ChunkAccess chunk,
+            CarvingMask carvingMask,
+            int localX,
+            int localZ,
+            int worldX,
+            int worldZ,
+            int startY,
+            int minY,
+            int maxY,
+            BlockPos.MutableBlockPos mutable
+    ) {
+        int y = Math.max(minY, Math.min(maxY, startY));
+
+        mutable.set(worldX, y, worldZ);
+        BlockState top = chunk.getBlockState(mutable);
+        BlockState above = chunk.getBlockState(mutable.move(Direction.UP));
+
+        while (y < maxY && !above.isAir() && !top.isAir() && !safeMaskGet(carvingMask, localX, y, localZ, minY, maxY)) {
+            y++;
+            top = above;
+            mutable.set(worldX, y + 1, worldZ);
+            above = chunk.getBlockState(mutable);
+        }
+
+        return y;
+    }
+
+    private static boolean safeMaskGet(CarvingMask mask, int localX, int y, int localZ, int minY, int maxY) {
+        if (y < minY || y > maxY) {
+            return false;
+        }
+
+        return mask.get(localX, y, localZ);
+    }
+
+    private static boolean isValidMaskY(CarvingContext context, int y) {
+        return y >= context.getMinGenY() && y < context.getMinGenY() + context.getGenDepth();
     }
 
     @Override

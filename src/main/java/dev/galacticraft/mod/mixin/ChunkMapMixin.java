@@ -22,14 +22,33 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.mojang.datafixers.DataFixer;
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.gen.PlanetChunkGenerator;
 import dev.galacticraft.mod.world.gen.feature.custom.DeferredBlockPlacement;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.util.thread.BlockableEventLoop;
+import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.chunk.LevelChunk;
+import net.minecraft.world.level.chunk.LightChunkGetter;
+import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
+import net.minecraft.world.level.levelgen.RandomState;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
+import net.minecraft.world.level.storage.DimensionDataStorage;
+import net.minecraft.world.level.storage.LevelStorageSource;
+import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Mutable;
+import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+
+import java.util.concurrent.Executor;
+import java.util.function.Supplier;
 
 @Mixin(ChunkMap.class)
 public class ChunkMapMixin {
@@ -37,5 +56,38 @@ public class ChunkMapMixin {
     private void flushDeferredBlocks(LevelChunk chunk, CallbackInfo ci) {
         ServerLevel level = (ServerLevel) chunk.getLevel();
         DeferredBlockPlacement.flush(level, chunk.getPos());
+    }
+
+    @Shadow
+    @Mutable
+    private RandomState randomState;
+
+    @Inject(
+            method = "<init>",
+            at = @At("TAIL")
+    )
+    private void galacticraft$replaceRandomState(
+            ServerLevel level,
+            LevelStorageSource.LevelStorageAccess user,
+            DataFixer dataFixer,
+            StructureTemplateManager structureTemplateManager,
+            Executor executor,
+            BlockableEventLoop<Runnable> mainThreadExecutor,
+            LightChunkGetter lightChunkGetter,
+            ChunkGenerator chunkGenerator,
+            ChunkProgressListener chunkProgressListener,
+            ChunkStatusUpdateListener chunkStatusUpdateListener,
+            Supplier<DimensionDataStorage> persistentStateManagerFactory,
+            int viewDistance,
+            boolean dsync,
+            CallbackInfo ci
+    ) {
+        if (chunkGenerator instanceof PlanetChunkGenerator planetGenerator) {
+            this.randomState = RandomState.create(
+                    planetGenerator.generatorSettings().value(),
+                    level.registryAccess().lookupOrThrow(Registries.NOISE),
+                    level.getSeed()
+            );
+        }
     }
 }

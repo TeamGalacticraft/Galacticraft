@@ -4,24 +4,27 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
+/**
+ * Full planned cave system generated from one planning cell.
+ */
 public class MoonCavePlan {
     private static final int PADDING = 5;
 
-    private final MoonCaveRegionPos region;
+    private final MoonCaveCellPos cell;
     private final double priority;
     private final EnumSet<MoonCaveStyle> styles;
     private final MoonCaveBounds bounds = new MoonCaveBounds();
     private final List<MoonCaveRoom> rooms = new ArrayList<>();
     private final List<MoonCaveTunnel> tunnels = new ArrayList<>();
 
-    public MoonCavePlan(MoonCaveRegionPos region, double priority, MoonCaveStyle primaryStyle) {
-        this.region = region;
+    public MoonCavePlan(MoonCaveCellPos cell, double priority, MoonCaveStyle style) {
+        this.cell = cell;
         this.priority = priority;
-        this.styles = EnumSet.of(primaryStyle);
+        this.styles = EnumSet.of(style);
     }
 
-    public MoonCaveRegionPos region() {
-        return this.region;
+    public MoonCaveCellPos cell() {
+        return this.cell;
     }
 
     public double priority() {
@@ -56,55 +59,35 @@ public class MoonCavePlan {
 
     public void mergeFrom(MoonCavePlan other) {
         this.styles.addAll(other.styles);
-        other.rooms.forEach(this::addRoom);
-        other.tunnels.forEach(this::addTunnel);
+        for (MoonCaveRoom room : other.rooms) {
+            this.addRoom(room);
+        }
+        for (MoonCaveTunnel tunnel : other.tunnels) {
+            this.addTunnel(tunnel);
+        }
     }
 
-    public boolean containsAir(double x, double y, double z) {
+    public CaveZone zone(int x, int y, int z) {
+        CaveZone best = CaveZone.NONE;
+
         for (MoonCaveRoom room : this.rooms) {
-            if (room.contains(x, y, z)) {
-                return true;
+            best = max(best, room.zone(x, y, z));
+            if (best == CaveZone.AIR) {
+                return CaveZone.AIR;
             }
         }
 
         for (MoonCaveTunnel tunnel : this.tunnels) {
-            if (tunnel.contains(x, y, z)) {
-                return true;
+            best = max(best, tunnel.zone(x, y, z));
+            if (best == CaveZone.AIR) {
+                return CaveZone.AIR;
             }
         }
 
-        return false;
+        return best;
     }
 
-    public boolean innerShell(double x, double y, double z) {
-        for (MoonCaveRoom room : this.rooms) {
-            if (room.innerShell(x, y, z)) {
-                return true;
-            }
-        }
-
-        for (MoonCaveTunnel tunnel : this.tunnels) {
-            if (tunnel.innerShell(x, y, z)) {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    public boolean outerShell(double x, double y, double z) {
-        for (MoonCaveRoom room : this.rooms) {
-            if (room.outerShell(x, y, z)) {
-                return true;
-            }
-        }
-
-        for (MoonCaveTunnel tunnel : this.tunnels) {
-            if (tunnel.outerShell(x, y, z)) {
-                return true;
-            }
-        }
-
-        return false;
+    private static CaveZone max(CaveZone a, CaveZone b) {
+        return b.ordinal() > a.ordinal() ? b : a;
     }
 }

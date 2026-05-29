@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.gen.GCNoiseGeneratorSettings;
 import dev.galacticraft.mod.world.gen.custom.AsteroidChunkGenerator;
+import dev.galacticraft.mod.world.gen.custom.MoonChunkGenerator;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -51,7 +52,7 @@ public class GCLevelStems {
 
         context.register(MOON, new LevelStem(
                 typeLookup.getOrThrow(GCDimensionTypes.MOON),
-                new NoiseBasedChunkGenerator(
+                new MoonChunkGenerator(
                         MultiNoiseBiomeSource.createFromPreset(biomeNoiseLookup.getOrThrow(GCMultiNoiseBiomeSourceParameterLists.MOON)),
                         noiseLookup.getOrThrow(GCNoiseGeneratorSettings.MOON)
                 )

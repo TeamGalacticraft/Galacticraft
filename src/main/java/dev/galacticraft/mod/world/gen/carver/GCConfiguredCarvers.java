@@ -49,7 +49,7 @@ public class GCConfiguredCarvers {
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_CRATER_CARVER = key(Constant.Carver.MOON_CRATER_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_HIGHLANDS_CAVE_CARVER = key(Constant.Carver.MOON_HIGHLANDS_CAVE_CARVER);
     public static final ResourceKey<ConfiguredWorldCarver<?>> MOON_MARE_CAVE_CARVER = key(Constant.Carver.MOON_MARE_CAVE_CARVER);
-    public static final ResourceKey<ConfiguredWorldCarver<?>> PLANNED_MOON_CAVE_CARVER = key("planned_moon_cave_carver");
+    //public static final ResourceKey<ConfiguredWorldCarver<?>> PLANNED_MOON_CAVE_CARVER = key("planned_moon_cave_carver");
 
     @Contract(pure = true)
     private static @NotNull ResourceKey<ConfiguredWorldCarver<?>> key(String s) {
@@ -107,15 +107,15 @@ public class GCConfiguredCarvers {
                 UniformFloat.of(-1.0f, -0.4f)
         )));
 
-        context.register(PLANNED_MOON_CAVE_CARVER, GCCarvers.PLANNED_MOON_CAVE.configured(new CaveCarverConfiguration(
-                1.0F,
-                UniformHeight.of(VerticalAnchor.absolute(-52), VerticalAnchor.absolute(52)),
-                UniformFloat.of(0.99F, 1.01F),
-                VerticalAnchor.bottom(),
-                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CARVER_REPLACEABLES),
-                UniformFloat.of(0.99F, 1.01F),
-                UniformFloat.of(0.99F, 1.01F),
-                UniformFloat.of(-0.01F, 0.01F)
-        )));
+//        context.register(PLANNED_MOON_CAVE_CARVER, GCCarvers.PLANNED_MOON_CAVE.configured(new CaveCarverConfiguration(
+//                1.0F,
+//                UniformHeight.of(VerticalAnchor.absolute(-52), VerticalAnchor.absolute(52)),
+//                UniformFloat.of(0.99F, 1.01F),
+//                VerticalAnchor.bottom(),
+//                BuiltInRegistries.BLOCK.getOrCreateTag(GCBlockTags.MOON_CARVER_REPLACEABLES),
+//                UniformFloat.of(0.99F, 1.01F),
+//                UniformFloat.of(0.99F, 1.01F),
+//                UniformFloat.of(-0.01F, 0.01F)
+//        )));
     }
 }

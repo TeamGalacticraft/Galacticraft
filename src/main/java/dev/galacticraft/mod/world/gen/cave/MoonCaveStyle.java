@@ -7,6 +7,9 @@ import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 
+/**
+ * Describes the material/decorator identity of a planned Moon cave.
+ */
 public enum MoonCaveStyle {
     GLACIAL(
             Blocks.AIR.defaultBlockState(),
@@ -64,6 +67,12 @@ public enum MoonCaveStyle {
         return this.spike;
     }
 
+    /**
+     * Selects a cave style from the biome at the cave anchor.
+     *
+     * @param biome Biome holder.
+     * @return Matching cave style, or null when this biome should not create planned Moon caves.
+     */
     public static MoonCaveStyle fromBiome(Holder<Biome> biome) {
         if (biome.is(GCBiomes.Moon.GLACIAL_CAVERNS)) {
             return GLACIAL;

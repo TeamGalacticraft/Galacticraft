@@ -5,30 +5,51 @@ import net.minecraft.core.Holder;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.levelgen.carver.CarvingContext;
+import net.minecraft.world.level.levelgen.RandomState;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
 
-public class MoonCavePlanner {
+/**
+ * Deterministically creates Moon cave plans from large cells.
+ */
+public final class MoonCavePlanner {
     public static final MoonCavePlanner INSTANCE = new MoonCavePlanner();
 
     private static final int MIN_Y = -46;
     private static final int MAX_Y = 34;
-    private static final int NEIGHBOR_RADIUS = 2;
+    private static final int CELL_SEARCH_RADIUS = 1;
+
+    /**
+     * Chance that a cave network will generate inside a cave cell.
+     */
+    public static final float CAVE_CHANCE = 0.35F;
+
+    /**
+     * Width/length of a cave cell in chunks.
+     *
+     * Larger values:
+     * - fewer cave systems
+     * - larger spacing
+     *
+     * Smaller values:
+     * - more cave systems
+     * - denser cave distribution
+     */
+    public static final int CELL_SIZE_CHUNKS = 8;
 
     private MoonCavePlanner() {
     }
 
-    public List<MoonCavePlan> plansForChunk(CarvingContext context, ChunkPos chunk, Function<BlockPos, Holder<Biome>> posToBiome) {
-        MoonCaveRegionPos center = MoonCaveRegionPos.fromChunk(chunk);
+    public List<MoonCavePlan> plansForChunk(RandomState randomState, ChunkPos chunk, Function<BlockPos, Holder<Biome>> biomeLookup) {
+        MoonCaveCellPos center = MoonCaveCellPos.fromChunk(chunk);
         List<MoonCavePlan> result = new ArrayList<>();
 
-        for (int dx = -NEIGHBOR_RADIUS; dx <= NEIGHBOR_RADIUS; dx++) {
-            for (int dz = -NEIGHBOR_RADIUS; dz <= NEIGHBOR_RADIUS; dz++) {
-                MoonCaveRegionPos region = new MoonCaveRegionPos(center.x() + dx, center.z() + dz);
-                MoonCavePlan plan = this.acceptedPlan(context, region, posToBiome);
+        for (int dx = -CELL_SEARCH_RADIUS; dx <= CELL_SEARCH_RADIUS; dx++) {
+            for (int dz = -CELL_SEARCH_RADIUS; dz <= CELL_SEARCH_RADIUS; dz++) {
+                MoonCaveCellPos cell = new MoonCaveCellPos(center.x() + dx, center.z() + dz);
+                MoonCavePlan plan = this.acceptedPlan(randomState, cell, biomeLookup);
 
                 if (plan != null && plan.bounds().intersectsChunk(chunk)) {
                     result.add(plan);
@@ -39,8 +60,8 @@ public class MoonCavePlanner {
         return result;
     }
 
-    private MoonCavePlan acceptedPlan(CarvingContext context, MoonCaveRegionPos region, Function<BlockPos, Holder<Biome>> posToBiome) {
-        MoonCavePlan candidate = this.rawPlan(context, region, posToBiome);
+    private MoonCavePlan acceptedPlan(RandomState randomState, MoonCaveCellPos cell, Function<BlockPos, Holder<Biome>> biomeLookup) {
+        MoonCavePlan candidate = this.rawPlan(randomState, cell, biomeLookup);
 
         if (candidate == null) {
             return null;
@@ -52,8 +73,7 @@ public class MoonCavePlanner {
                     continue;
                 }
 
-                MoonCaveRegionPos otherRegion = new MoonCaveRegionPos(region.x() + dx, region.z() + dz);
-                MoonCavePlan other = this.rawPlan(context, otherRegion, posToBiome);
+                MoonCavePlan other = this.rawPlan(randomState, new MoonCaveCellPos(cell.x() + dx, cell.z() + dz), biomeLookup);
 
                 if (other == null || !candidate.bounds().intersects(other.bounds())) {
                     continue;
@@ -72,72 +92,38 @@ public class MoonCavePlanner {
         return candidate;
     }
 
-    private MoonCavePlan rawPlan(CarvingContext context, MoonCaveRegionPos region, Function<BlockPos, Holder<Biome>> posToBiome) {
-        RandomSource random = context.randomState().aquiferRandom().at(region.centerBlockX() + 91821, -7137, region.centerBlockZ() - 44291);
+    private MoonCavePlan rawPlan(RandomState randomState, MoonCaveCellPos cell, Function<BlockPos, Holder<Biome>> biomeLookup) {
+        RandomSource random = randomState.aquiferRandom().at(
+                cell.centerBlockX() + 91821,
+                -7137,
+                cell.centerBlockZ() - 44291
+        );
 
-        if (random.nextFloat() > 0.22F) {
+        if (random.nextFloat() > CAVE_CHANCE) {
             return null;
         }
 
-        int anchorX = region.minBlockX() + 32 + random.nextInt(MoonCaveRegionPos.REGION_SIZE_CHUNKS * 16 - 64);
-        int anchorZ = region.minBlockZ() + 32 + random.nextInt(MoonCaveRegionPos.REGION_SIZE_CHUNKS * 16 - 64);
-        int anchorY = MIN_Y + random.nextInt(MAX_Y - MIN_Y + 1);
-
-        BlockPos anchor = new BlockPos(anchorX, anchorY, anchorZ);
-        MoonCaveStyle style = MoonCaveStyle.fromBiome(posToBiome.apply(anchor));
+        BlockPos anchor = randomAnchor(cell, random);
+        MoonCaveStyle style = MoonCaveStyle.fromBiome(biomeLookup.apply(anchor));
 
         if (style == null) {
             return null;
         }
 
-        MoonCavePlan plan = new MoonCavePlan(region, random.nextDouble(), style);
-
-        int rooms = switch (style) {
-            case GLACIAL -> 2 + random.nextInt(2);
-            case OLIVINE -> 3 + random.nextInt(3);
-            case CHEESE -> 4 + random.nextInt(4);
-        };
-
+        MoonCavePlan plan = new MoonCavePlan(cell, random.nextDouble(), style);
+        int roomCount = roomCount(style, random);
         BlockPos previous = null;
         BlockPos current = anchor;
 
-        for (int i = 0; i < rooms; i++) {
-            current = this.offsetRoom(current, random, style, i == 0);
+        for (int i = 0; i < roomCount; i++) {
+            if (i > 0) {
+                current = offsetRoom(current, style, random);
+            }
 
-            double rx = switch (style) {
-                case GLACIAL -> 13.0D + random.nextDouble() * 10.0D;
-                case OLIVINE -> 7.0D + random.nextDouble() * 6.0D;
-                case CHEESE -> 5.0D + random.nextDouble() * 5.0D;
-            };
-
-            double ry = switch (style) {
-                case GLACIAL -> 5.0D + random.nextDouble() * 5.0D;
-                case OLIVINE -> 4.0D + random.nextDouble() * 4.0D;
-                case CHEESE -> 4.0D + random.nextDouble() * 3.0D;
-            };
-
-            double rz = switch (style) {
-                case GLACIAL -> 13.0D + random.nextDouble() * 10.0D;
-                case OLIVINE -> 7.0D + random.nextDouble() * 6.0D;
-                case CHEESE -> 5.0D + random.nextDouble() * 5.0D;
-            };
-
-            plan.addRoom(new MoonCaveRoom(current, rx, ry, rz, random.nextInt()));
+            addRoom(plan, current, style, random);
 
             if (previous != null) {
-                double tunnelRadius = switch (style) {
-                    case GLACIAL -> 1.3D + random.nextDouble() * 1.0D;
-                    case OLIVINE -> 1.8D + random.nextDouble() * 1.6D;
-                    case CHEESE -> 2.0D + random.nextDouble() * 1.8D;
-                };
-
-                double curve = switch (style) {
-                    case GLACIAL -> 5.0D + random.nextDouble() * 7.0D;
-                    case OLIVINE -> 3.0D + random.nextDouble() * 5.0D;
-                    case CHEESE -> 2.0D + random.nextDouble() * 4.0D;
-                };
-
-                plan.addTunnel(new MoonCaveTunnel(previous, current, tunnelRadius, curve, random.nextInt()));
+                addTunnel(plan, previous, current, style, random);
             }
 
             previous = current;
@@ -146,24 +132,74 @@ public class MoonCavePlanner {
         return plan;
     }
 
-    private BlockPos offsetRoom(BlockPos origin, RandomSource random, MoonCaveStyle style, boolean first) {
-        if (first) {
-            return origin;
-        }
+    private static BlockPos randomAnchor(MoonCaveCellPos cell, RandomSource random) {
+        int margin = 40;
+        int x = cell.minBlockX() + margin + random.nextInt(MoonCaveCellPos.sizeBlocks() - margin * 2);
+        int z = cell.minBlockZ() + margin + random.nextInt(MoonCaveCellPos.sizeBlocks() - margin * 2);
+        int y = MIN_Y + random.nextInt(MAX_Y - MIN_Y + 1);
 
-        int horizontal = switch (style) {
-            case GLACIAL -> 24 + random.nextInt(32);
-            case OLIVINE -> 14 + random.nextInt(24);
-            case CHEESE -> 10 + random.nextInt(20);
+        return new BlockPos(x, y, z);
+    }
+
+    private static int roomCount(MoonCaveStyle style, RandomSource random) {
+        return switch (style) {
+            case GLACIAL -> 2 + random.nextInt(2);
+            case OLIVINE -> 3 + random.nextInt(3);
+            case CHEESE -> 4 + random.nextInt(4);
+        };
+    }
+
+    private static void addRoom(MoonCavePlan plan, BlockPos center, MoonCaveStyle style, RandomSource random) {
+        double rx = switch (style) {
+            case GLACIAL -> 14.0D + random.nextDouble() * 8.0D;
+            case OLIVINE -> 7.0D + random.nextDouble() * 6.0D;
+            case CHEESE -> 5.0D + random.nextDouble() * 5.0D;
+        };
+
+        double ry = switch (style) {
+            case GLACIAL -> 5.0D + random.nextDouble() * 5.0D;
+            case OLIVINE -> 4.0D + random.nextDouble() * 4.0D;
+            case CHEESE -> 3.0D + random.nextDouble() * 3.0D;
+        };
+
+        double rz = switch (style) {
+            case GLACIAL -> 14.0D + random.nextDouble() * 8.0D;
+            case OLIVINE -> 7.0D + random.nextDouble() * 6.0D;
+            case CHEESE -> 5.0D + random.nextDouble() * 5.0D;
+        };
+
+        plan.addRoom(new MoonCaveRoom(center, rx, ry, rz, random.nextInt()));
+    }
+
+    private static void addTunnel(MoonCavePlan plan, BlockPos start, BlockPos end, MoonCaveStyle style, RandomSource random) {
+        double radius = switch (style) {
+            case GLACIAL -> 1.2D + random.nextDouble() * 0.8D;
+            case OLIVINE -> 1.7D + random.nextDouble() * 1.2D;
+            case CHEESE -> 2.0D + random.nextDouble() * 1.5D;
+        };
+
+        double curve = switch (style) {
+            case GLACIAL -> 5.0D + random.nextDouble() * 7.0D;
+            case OLIVINE -> 3.0D + random.nextDouble() * 5.0D;
+            case CHEESE -> 2.0D + random.nextDouble() * 4.0D;
+        };
+
+        plan.addTunnel(new MoonCaveTunnel(start, end, radius, curve, random.nextInt()));
+    }
+
+    private static BlockPos offsetRoom(BlockPos origin, MoonCaveStyle style, RandomSource random) {
+        int distance = switch (style) {
+            case GLACIAL -> 26 + random.nextInt(28);
+            case OLIVINE -> 14 + random.nextInt(22);
+            case CHEESE -> 10 + random.nextInt(18);
         };
 
         double angle = random.nextDouble() * Math.PI * 2.0D;
+        int x = origin.getX() + (int) Math.round(Math.cos(angle) * distance);
+        int z = origin.getZ() + (int) Math.round(Math.sin(angle) * distance);
+        int y = clamp(origin.getY() - 10 + random.nextInt(21), MIN_Y, MAX_Y);
 
-        int dx = (int) Math.round(Math.cos(angle) * horizontal);
-        int dz = (int) Math.round(Math.sin(angle) * horizontal);
-        int dy = -10 + random.nextInt(21);
-
-        return new BlockPos(origin.getX() + dx, clamp(origin.getY() + dy, MIN_Y, MAX_Y), origin.getZ() + dz);
+        return new BlockPos(x, y, z);
     }
 
     private static int clamp(int value, int min, int max) {
