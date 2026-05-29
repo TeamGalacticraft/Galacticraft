@@ -1,9 +1,8 @@
 package dev.galacticraft.mod.world.gen.cave;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.gen.cave.shape.BranchingCaveShape;
-import dev.galacticraft.mod.world.gen.cave.shape.LayeredDiscCaveShape;
-import dev.galacticraft.mod.world.gen.cave.shape.LavaTubeCaveShape;
+import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedBranchingCaveShape;
+import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedLavaTubeCaveShape;
 import net.minecraft.util.RandomSource;
 
 import java.util.ArrayList;
@@ -18,33 +17,89 @@ public final class MoonCaveRegistry {
         register(new MoonCaveDefinition(
                 Constant.id("olivine_branching_cave"),
                 MoonCaveStyle.OLIVINE,
-                new BranchingCaveShape(12, 26, 5.5D, 11.0D, 3.5D, 7.0D, 1.8D, 3.2D, 12, 28),
+                MoonCaveShapeType.BRANCHING,
+                new PathSolvedBranchingCaveShape(
+                        3, 5,
+                        2, 4,
+                        2, 5,
+                        5.5D, 10.5D,
+                        3.2D, 6.8D,
+                        2.0D, 3.5D,
+                        42, 92,
+                        -60, -10
+                ),
                 100,
-                0.35F
+                0.22F,
+                42,
+                58,
+                -60,
+                62
         ));
 
         register(new MoonCaveDefinition(
-                Constant.id("glacial_layered_cavern"),
+                Constant.id("glacial_lava_tube_cave"),
                 MoonCaveStyle.GLACIAL,
-                new LayeredDiscCaveShape(3, 6, 24.0D, 56.0D, 3.0D, 7.0D, 8, 18),
+                MoonCaveShapeType.LAVA_TUBE,
+                new PathSolvedLavaTubeCaveShape(
+                        5, 8,
+                        3, 6,
+                        8, 16,
+                        12, 34,
+                        2.0D, 4.0D,
+                        7.0D, 24.0D,
+                        36, 96,
+                        -10, 10
+                ),
                 100,
-                0.25F
+                0.42F,
+                64,
+                78,
+                -16,
+                82
         ));
 
         register(new MoonCaveDefinition(
                 Constant.id("cheese_lava_tube_cave"),
                 MoonCaveStyle.CHEESE,
-                new LavaTubeCaveShape(4, 8, 24, 40, 2.0D, 4.2D, 4.0D, 18.0D),
+                MoonCaveShapeType.LAVA_TUBE,
+                new PathSolvedLavaTubeCaveShape(
+                        5, 9,
+                        3, 7,
+                        10, 22,
+                        22, 58,
+                        2.2D, 4.5D,
+                        7.0D, 26.0D,
+                        70, 180,
+                        -60, -50
+                ),
                 100,
-                0.30F
+                0.34F,
+                16,
+                26,
+                -60,
+                32
         ));
 
         register(new MoonCaveDefinition(
                 Constant.id("cheese_branching_cave"),
                 MoonCaveStyle.CHEESE,
-                new BranchingCaveShape(10, 22, 4.0D, 8.0D, 3.0D, 5.5D, 2.0D, 4.0D, 9, 22),
+                MoonCaveShapeType.BRANCHING,
+                new PathSolvedBranchingCaveShape(
+                        4, 7,
+                        2, 5,
+                        5, 12,
+                        4.2D, 8.5D,
+                        3.0D, 6.0D,
+                        2.0D, 3.8D,
+                        70, 170,
+                        -60, -50
+                ),
                 60,
-                0.22F
+                0.20F,
+                -4,
+                8,
+                -60,
+                24
         ));
     }
 
@@ -75,6 +130,22 @@ public final class MoonCaveRegistry {
         }
 
         return weightedPick(passedChance, random);
+    }
+
+    public static boolean hasStyleForShapeType(MoonCaveShapeType shapeType, MoonCaveStyle style) {
+        List<MoonCaveDefinition> definitions = DEFINITIONS.get(style);
+
+        if (definitions == null) {
+            return false;
+        }
+
+        for (MoonCaveDefinition definition : definitions) {
+            if (definition.shapeType() == shapeType) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     private static MoonCaveDefinition weightedPick(List<MoonCaveDefinition> definitions, RandomSource random) {

@@ -21,6 +21,8 @@ public class BranchingCaveShape implements dev.galacticraft.mod.world.gen.cave.M
     private final double maxTunnelRadius;
     private final int minRoomDistance;
     private final int maxRoomDistance;
+    private final int maxDownStep;
+    private final int maxUpStep;
 
     public BranchingCaveShape(
             int minRooms,
@@ -32,7 +34,9 @@ public class BranchingCaveShape implements dev.galacticraft.mod.world.gen.cave.M
             double minTunnelRadius,
             double maxTunnelRadius,
             int minRoomDistance,
-            int maxRoomDistance
+            int maxRoomDistance,
+            int maxDownStep,
+            int maxUpStep
     ) {
         this.minRooms = minRooms;
         this.maxRooms = maxRooms;
@@ -44,15 +48,24 @@ public class BranchingCaveShape implements dev.galacticraft.mod.world.gen.cave.M
         this.maxTunnelRadius = maxTunnelRadius;
         this.minRoomDistance = minRoomDistance;
         this.maxRoomDistance = maxRoomDistance;
+        this.maxDownStep = maxDownStep;
+        this.maxUpStep = maxUpStep;
     }
 
     @Override
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();
-        MoonCavePlan plan = new MoonCavePlan(context.definition().id(), context.cell(), random.nextDouble(), context.style());
-        List<BlockPos> rooms = new ArrayList<>();
+        MoonCavePlan plan = new MoonCavePlan(
+                context.definition().id(),
+                context.cell(),
+                random.nextDouble(),
+                context.style(),
+                context.definition().shapeType()
+        );
 
+        List<BlockPos> rooms = new ArrayList<>();
         int roomCount = this.minRooms + random.nextInt(this.maxRooms - this.minRooms + 1);
+
         rooms.add(context.anchor());
         this.addRoom(plan, context.anchor(), random);
 
@@ -64,7 +77,8 @@ public class BranchingCaveShape implements dev.galacticraft.mod.world.gen.cave.M
             this.addRoom(plan, next, random);
 
             double tunnelRadius = randomBetween(random, this.minTunnelRadius, this.maxTunnelRadius);
-            double curve = 2.0D + random.nextDouble() * 6.0D;
+            double curve = 3.0D + random.nextDouble() * 8.0D;
+
             plan.addTunnel(new MoonCaveTunnel(parent, next, tunnelRadius, curve, random.nextInt()));
         }
 
@@ -85,7 +99,10 @@ public class BranchingCaveShape implements dev.galacticraft.mod.world.gen.cave.M
 
         int x = parent.getX() + (int) Math.round(Math.cos(angle) * distance);
         int z = parent.getZ() + (int) Math.round(Math.sin(angle) * distance);
-        int y = context.clampY(parent.getY() - 8 + random.nextInt(17));
+
+        int down = random.nextInt(this.maxDownStep + 1);
+        int up = random.nextInt(this.maxUpStep + 1);
+        int y = context.clampY(parent.getY() - down + up);
 
         return new BlockPos(x, y, z);
     }

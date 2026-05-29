@@ -51,9 +51,14 @@ public final class MoonCaveStyleResolver {
         this.fill(biomeSource, randomState);
     }
 
-    public MoonCaveStyle resolve(int x, int y, int z, MoonCaveStyle fallback) {
+    public MoonCaveStyle resolve(int x, int y, int z, MoonCaveStyle fallback, MoonCaveShapeType shapeType) {
         MoonCaveStyle center = this.sampleNearest(x, y, z, fallback);
-        NearbyStyle nearby = this.findNearestDifferentStyle(x, y, z, center);
+
+        if (!MoonCaveRegistry.hasStyleForShapeType(shapeType, center)) {
+            return fallback;
+        }
+
+        NearbyStyle nearby = this.findNearestDifferentStyle(x, y, z, center, shapeType);
 
         if (nearby == null || nearby.distanceSqr >= TRANSITION_DISTANCE_SQR) {
             return center;
@@ -98,7 +103,7 @@ public final class MoonCaveStyleResolver {
         return style == null ? fallback : style;
     }
 
-    private NearbyStyle findNearestDifferentStyle(int x, int y, int z, MoonCaveStyle center) {
+    private NearbyStyle findNearestDifferentStyle(int x, int y, int z, MoonCaveStyle center, MoonCaveShapeType shapeType) {
         int baseX = this.clampSampleX(Math.floorDiv(x - this.originX + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseY = this.clampSampleY(Math.floorDiv(y - this.originY + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseZ = this.clampSampleZ(Math.floorDiv(z - this.originZ + SAMPLE_SPACING / 2, SAMPLE_SPACING));
@@ -107,23 +112,36 @@ public final class MoonCaveStyleResolver {
 
         for (int dx = -2; dx <= 2; dx++) {
             int sx = baseX + dx;
-            if (sx < 0 || sx >= this.sizeX) continue;
+
+            if (sx < 0 || sx >= this.sizeX) {
+                continue;
+            }
 
             int sampleX = this.originX + sx * SAMPLE_SPACING;
 
             for (int dy = -2; dy <= 2; dy++) {
                 int sy = baseY + dy;
-                if (sy < 0 || sy >= this.sizeY) continue;
+
+                if (sy < 0 || sy >= this.sizeY) {
+                    continue;
+                }
 
                 int sampleY = this.originY + sy * SAMPLE_SPACING;
 
                 for (int dz = -2; dz <= 2; dz++) {
                     int sz = baseZ + dz;
-                    if (sz < 0 || sz >= this.sizeZ) continue;
+
+                    if (sz < 0 || sz >= this.sizeZ) {
+                        continue;
+                    }
 
                     MoonCaveStyle style = this.styles[this.index(sx, sy, sz)];
 
                     if (style == null || style == center) {
+                        continue;
+                    }
+
+                    if (!MoonCaveRegistry.hasStyleForShapeType(shapeType, style)) {
                         continue;
                     }
 

@@ -10,14 +10,16 @@ public class MoonCavePlan {
     private final MoonCaveCellPos cell;
     private final double priority;
     private final MoonCaveStyle primaryStyle;
+    private final MoonCaveShapeType shapeType;
     private final MoonCaveBounds bounds = new MoonCaveBounds();
     private final List<MoonCaveElement> elements = new ArrayList<>();
 
-    public MoonCavePlan(ResourceLocation definitionId, MoonCaveCellPos cell, double priority, MoonCaveStyle primaryStyle) {
+    public MoonCavePlan(ResourceLocation definitionId, MoonCaveCellPos cell, double priority, MoonCaveStyle primaryStyle, MoonCaveShapeType shapeType) {
         this.definitionId = definitionId;
         this.cell = cell;
         this.priority = priority;
         this.primaryStyle = primaryStyle;
+        this.shapeType = shapeType;
     }
 
     public ResourceLocation definitionId() {
@@ -34,6 +36,10 @@ public class MoonCavePlan {
 
     public MoonCaveStyle primaryStyle() {
         return this.primaryStyle;
+    }
+
+    public MoonCaveShapeType shapeType() {
+        return this.shapeType;
     }
 
     public MoonCaveBounds bounds() {

@@ -43,7 +43,13 @@ public class LayeredDiscCaveShape implements dev.galacticraft.mod.world.gen.cave
     @Override
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();
-        MoonCavePlan plan = new MoonCavePlan(context.definition().id(), context.cell(), random.nextDouble(), context.style());
+        MoonCavePlan plan = new MoonCavePlan(
+                context.definition().id(),
+                context.cell(),
+                random.nextDouble(),
+                context.style(),
+                context.definition().shapeType()
+        );
         List<BlockPos> layerCenters = new ArrayList<>();
 
         int layers = this.minLayers + random.nextInt(this.maxLayers - this.minLayers + 1);

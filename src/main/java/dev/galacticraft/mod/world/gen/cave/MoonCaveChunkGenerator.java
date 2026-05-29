@@ -34,7 +34,7 @@ public final class MoonCaveChunkGenerator {
             BiomeSource biomeSource
     ) {
         ChunkPos chunkPos = chunk.getPos();
-        List<MoonCavePlan> plans = MoonCavePlanner.INSTANCE.plansForChunk(randomState, chunkPos);
+        List<MoonCavePlan> plans = MoonCavePlanner.INSTANCE.plansForChunk(randomState, chunkPos, biomeSource);
 
         if (plans.isEmpty()) {
             return false;
@@ -133,7 +133,7 @@ public final class MoonCaveChunkGenerator {
                         continue;
                     }
 
-                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle());
+                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle(), plan.shapeType());
 
                     chunk.setBlockState(pos, Blocks.AIR.defaultBlockState(), false);
                     collectSamples(chunk, chunkPos, pos, style, samples);
@@ -189,7 +189,7 @@ public final class MoonCaveChunkGenerator {
                         continue;
                     }
 
-                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle());
+                    MoonCaveStyle style = styleResolver.resolve(x, y, z, plan.primaryStyle(), plan.shapeType());
 
                     if (zone == CaveZone.INNER_SHELL) {
                         chunk.setBlockState(pos, pickInnerWall(style, x, y, z), false);
@@ -238,9 +238,21 @@ public final class MoonCaveChunkGenerator {
 
     private static void decorateGlacial(ChunkAccess chunk, ChunkPos chunkPos, CaveSample sample, int hash) {
         if (sample.type == CaveSampleType.CEILING && Math.floorMod(hash, 32) == 0) {
-            placeSpike(chunk, chunkPos, sample.pos, -1, 2 + Math.floorMod(hash >> 3, 5), MoonCaveStyle.GLACIAL.spike());
+            int height = 2 + Math.floorMod(hash >> 3, 5);
+
+            if (sample.pos.getY() >= 58) {
+                height *= 2 + Math.floorMod(hash >> 8, 2);
+            }
+
+            placeSpike(chunk, chunkPos, sample.pos, -1, height, MoonCaveStyle.GLACIAL.spike());
         } else if (sample.type == CaveSampleType.FLOOR && Math.floorMod(hash, 52) == 0) {
-            placeSpike(chunk, chunkPos, sample.pos, 1, 2 + Math.floorMod(hash >> 4, 4), MoonCaveStyle.GLACIAL.spike());
+            int height = 2 + Math.floorMod(hash >> 4, 4);
+
+            if (sample.pos.getY() >= 58) {
+                height *= 2 + Math.floorMod(hash >> 8, 2);
+            }
+
+            placeSpike(chunk, chunkPos, sample.pos, 1, height, MoonCaveStyle.GLACIAL.spike());
         }
     }
 

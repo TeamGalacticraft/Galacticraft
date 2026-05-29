@@ -1,8 +1,10 @@
 package dev.galacticraft.mod.world.gen.cave;
 
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.QuartPos;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.level.ChunkPos;
+import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.levelgen.RandomState;
 
 import java.util.ArrayList;
@@ -38,14 +40,14 @@ public final class MoonCavePlanner {
      * @param chunk current chunk position.
      * @return cave plans intersecting this chunk.
      */
-    public List<MoonCavePlan> plansForChunk(RandomState randomState, ChunkPos chunk) {
+    public List<MoonCavePlan> plansForChunk(RandomState randomState, ChunkPos chunk, BiomeSource biomeSource) {
         MoonCaveCellPos center = MoonCaveCellPos.fromChunk(chunk);
         List<MoonCavePlan> result = new ArrayList<>();
 
         for (int dx = -CELL_SEARCH_RADIUS; dx <= CELL_SEARCH_RADIUS; dx++) {
             for (int dz = -CELL_SEARCH_RADIUS; dz <= CELL_SEARCH_RADIUS; dz++) {
                 MoonCaveCellPos cell = new MoonCaveCellPos(center.x() + dx, center.z() + dz);
-                MoonCavePlan plan = this.rawPlan(randomState, cell);
+                MoonCavePlan plan = this.rawPlan(randomState, cell, biomeSource);
 
                 if (plan != null && plan.bounds().intersectsChunk(chunk)) {
                     result.add(plan);
@@ -56,13 +58,7 @@ public final class MoonCavePlanner {
         return result;
     }
 
-    /**
-     * Creates a raw cave plan for one cave cell.
-     *
-     * <p>The selected style here is only a definition-selection fallback. It is not
-     * treated as the final material style for every block inside the cave.</p>
-     */
-    private MoonCavePlan rawPlan(RandomState randomState, MoonCaveCellPos cell) {
+    private MoonCavePlan rawPlan(RandomState randomState, MoonCaveCellPos cell, BiomeSource biomeSource) {
         RandomSource random = randomState.aquiferRandom().at(
                 cell.centerBlockX() + 91821,
                 -7137,
@@ -70,12 +66,25 @@ public final class MoonCavePlanner {
         );
 
         BlockPos anchor = randomAnchor(cell, random);
-        MoonCaveStyle style = pickFallbackStyle(random);
+
+        MoonCaveStyle style = MoonCaveStyle.fromBiome(biomeSource.getNoiseBiome(
+                QuartPos.fromBlock(anchor.getX()),
+                QuartPos.fromBlock(anchor.getY()),
+                QuartPos.fromBlock(anchor.getZ()),
+                randomState.sampler()
+        ));
+
+        if (style == null) {
+            return null;
+        }
+
         MoonCaveDefinition definition = MoonCaveRegistry.pick(style, random);
 
         if (definition == null) {
             return null;
         }
+
+        anchor = randomAnchor(cell, definition, random);
 
         MoonCaveContext context = new MoonCaveContext(
                 cell,
@@ -83,11 +92,22 @@ public final class MoonCavePlanner {
                 style,
                 definition,
                 random,
-                MIN_Y,
-                MAX_Y
+                definition.minY(),
+                definition.maxY()
         );
 
         return definition.shape().createPlan(context);
+    }
+
+    private static BlockPos randomAnchor(MoonCaveCellPos cell, MoonCaveDefinition definition, RandomSource random) {
+        int margin = Math.min(40, Math.max(8, CELL_SIZE_BLOCKS / 4));
+        int usable = Math.max(1, CELL_SIZE_BLOCKS - margin * 2);
+
+        int x = cell.minBlockX() + margin + random.nextInt(usable);
+        int z = cell.minBlockZ() + margin + random.nextInt(usable);
+        int y = definition.minAnchorY() + random.nextInt(definition.maxAnchorY() - definition.minAnchorY() + 1);
+
+        return new BlockPos(x, y, z);
     }
 
     /**

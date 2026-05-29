@@ -107,11 +107,21 @@ public class GCMultiNoiseBiomeSourceParameterLists {
     private static <T> Climate.@NotNull ParameterList<T> generateMoon(Function<ResourceKey<Biome>, T> biomeRegistry) {
         ImmutableList.Builder<Pair<Climate.ParameterPoint, T>> builder = ImmutableList.builder();
 
+        Parameter highlands = Parameter.span(0.36F, 1.0F);
+        Parameter lowlandsCheeseSide = Parameter.span(0.06F, 0.36F);
+        Parameter lowlandsOlivineSide = Parameter.span(-0.1F, 0.06F);
+        Parameter mareOlivineCommon = Parameter.span(-0.72F, -0.1F);
+        Parameter mareGlacialRare = Parameter.span(-0.84F, -0.72F);
+        Parameter tundra = Parameter.span(-1.0F, -0.84F);
+
+        Parameter shallowCaveDepth = Parameter.span(0.015625F, 0.546875F);
+        Parameter deepCaveDepth = Parameter.span(0.015625F, 0.9F);
+
         // Surface biomes
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(0.4F, 1.0F),
+                highlands,
                 FULL_RANGE,
                 FULL_RANGE,
                 SURFACE,
@@ -121,7 +131,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-0.1F, 0.4F),
+                Parameter.span(-0.1F, 0.36F),
                 FULL_RANGE,
                 FULL_RANGE,
                 SURFACE,
@@ -131,7 +141,7 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-0.8F, -0.1F),
+                Parameter.span(-0.84F, -0.1F),
                 FULL_RANGE,
                 FULL_RANGE,
                 SURFACE,
@@ -141,43 +151,76 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-1F, -0.8F),
+                tundra,
                 FULL_RANGE,
                 FULL_RANGE,
                 SURFACE,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.COMET_TUNDRA));
 
-        // Underground biomes
+        // Underground below lunar highlands: cheese only
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-0.8F, -0.1F),
+                highlands,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(0.0390625F, 0.546875F),
+                deepCaveDepth,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Moon.CHEESE_CAVES));
+
+        // Underground below lunar lowlands: cheese + olivine in large split regions
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                lowlandsCheeseSide,
+                FULL_RANGE,
+                FULL_RANGE,
+                deepCaveDepth,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Moon.CHEESE_CAVES));
+
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                lowlandsOlivineSide,
+                FULL_RANGE,
+                FULL_RANGE,
+                deepCaveDepth,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Moon.OLIVINE_CAVES));
+
+        // Underground below basaltic mares: mostly olivine, occasional glacial
+        writeBiomeParameters(builder::add,
+                FULL_RANGE,
+                FULL_RANGE,
+                mareOlivineCommon,
+                FULL_RANGE,
+                FULL_RANGE,
+                deepCaveDepth,
                 0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.OLIVINE_CAVES));
 
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-1F, -0.8F),
+                mareGlacialRare,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(0.0390625F, 0.3125F),
-                0F,
+                shallowCaveDepth,
+                0.0F,
                 biomeRegistry.apply(GCBiomes.Moon.GLACIAL_CAVERNS));
 
+        // Underground below comet tundra: glacial only
         writeBiomeParameters(builder::add,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(-0.1F, 1.0F),
+                tundra,
                 FULL_RANGE,
                 FULL_RANGE,
-                Parameter.span(0.234375F, 0.46875F),
-                0F,
-                biomeRegistry.apply(GCBiomes.Moon.CHEESE_CAVES));
+                deepCaveDepth,
+                0.0F,
+                biomeRegistry.apply(GCBiomes.Moon.GLACIAL_CAVERNS));
 
         return new Climate.ParameterList<>(builder.build());
     }
