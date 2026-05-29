@@ -3,6 +3,7 @@ package dev.galacticraft.mod.world.gen.cave.impl;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.gen.cave.CaveTransitionConfig;
 import dev.galacticraft.mod.world.gen.cave.MoonCaveRegistry;
 import dev.galacticraft.mod.world.gen.cave.MoonCaveShapeType;
 import dev.galacticraft.mod.world.gen.cave.PlanetCave;
@@ -33,7 +34,8 @@ public class OlivineBranchingCave extends PlanetCave {
                 62,
                 GCBlocks.MOON_BASALT.defaultBlockState(),
                 GCBlocks.OLIVINE_BLOCK.defaultBlockState(),
-                GCBlocks.BUDDING_OLIVINE.defaultBlockState()
+                GCBlocks.BUDDING_OLIVINE.defaultBlockState(),
+                CaveTransitionConfig.weak()
         );
     }
 

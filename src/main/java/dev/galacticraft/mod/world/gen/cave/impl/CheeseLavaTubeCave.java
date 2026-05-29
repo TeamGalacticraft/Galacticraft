@@ -2,6 +2,7 @@ package dev.galacticraft.mod.world.gen.cave.impl;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GCBiomes;
+import dev.galacticraft.mod.world.gen.cave.CaveTransitionConfig;
 import dev.galacticraft.mod.world.gen.cave.MoonCaveRegistry;
 import dev.galacticraft.mod.world.gen.cave.MoonCaveShapeType;
 import dev.galacticraft.mod.world.gen.cave.PlanetCave;
@@ -33,7 +34,8 @@ public class CheeseLavaTubeCave extends PlanetCave {
                 32,
                 Blocks.YELLOW_WOOL.defaultBlockState(),
                 Blocks.ORANGE_WOOL.defaultBlockState(),
-                Blocks.GOLD_BLOCK.defaultBlockState()
+                Blocks.GOLD_BLOCK.defaultBlockState(),
+                CaveTransitionConfig.weak()
         );
     }
 

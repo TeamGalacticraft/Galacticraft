@@ -94,6 +94,16 @@ public final class MoonCaveRegistry {
         return caves.get(caves.size() - 1);
     }
 
+    public static PlanetCave firstForBiome(Holder<Biome> biome) {
+        for (PlanetCave cave : CAVES) {
+            if (cave.matchesBiome(biome)) {
+                return cave;
+            }
+        }
+
+        return null;
+    }
+
     public interface BlockStateLikeAccess {
         boolean is(net.minecraft.world.level.block.Block block);
     }

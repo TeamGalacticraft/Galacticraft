@@ -53,21 +53,40 @@ public final class PlanetCaveResolver {
     public PlanetCave resolve(int x, int y, int z, PlanetCave fallback) {
         PlanetCave center = this.sampleNearest(x, y, z, fallback);
 
+        if (center == fallback) {
+            return fallback;
+        }
+
         if (!fallback.canTransitionTo(center)) {
             return fallback;
         }
 
-        NearbyCave nearby = this.findNearestDifferentCave(x, y, z, fallback, center);
+        CaveTransitionStrength fallbackStrength = fallback.transitionConfig().strength();
+        CaveTransitionStrength centerStrength = center.transitionConfig().strength();
 
-        if (nearby == null || nearby.distanceSqr >= TRANSITION_DISTANCE_SQR) {
+        int radius = Math.max(
+                fallbackStrength.transitionRadius(),
+                centerStrength.transitionRadius()
+        );
+
+        NearbyCave nearby = this.findNearestDifferentCave(x, y, z, fallback, center, radius);
+
+        if (nearby == null) {
             return center;
         }
 
-        int hash = hash(83492791L, x, y, z, nearby.cave.id().hashCode());
-        double noise = ((hash & 1023) / 1023.0D) - 0.5D;
-        double blend = 1.0D - Math.sqrt(nearby.distanceSqr / (double) TRANSITION_DISTANCE_SQR);
+        double distance = Math.sqrt(nearby.distanceSqr);
+        double blend = 1.0D - Math.min(1.0D, distance / radius);
 
-        return noise < blend - 0.5D ? nearby.cave : center;
+        double centerPower = centerStrength.dominance();
+        double nearbyPower = nearby.cave.transitionConfig().strength().dominance();
+
+        double threshold = nearbyPower / (centerPower + nearbyPower);
+        double noise = ((hash(83492791L, x, y, z, nearby.cave.id().hashCode()) & 1023) / 1023.0D);
+
+        double transitionPressure = blend * threshold;
+
+        return noise < transitionPressure ? nearby.cave : center;
     }
 
     private void fill(BiomeSource biomeSource, RandomState randomState, PlanetCave fallbackCave) {
@@ -103,14 +122,22 @@ public final class PlanetCaveResolver {
         return cave == null ? fallback : cave;
     }
 
-    private NearbyCave findNearestDifferentCave(int x, int y, int z, PlanetCave fallback, PlanetCave center) {
+    private NearbyCave findNearestDifferentCave(
+            int x,
+            int y,
+            int z,
+            PlanetCave fallback,
+            PlanetCave center,
+            int radius
+    ) {
         int baseX = this.clampSampleX(Math.floorDiv(x - this.originX + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseY = this.clampSampleY(Math.floorDiv(y - this.originY + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseZ = this.clampSampleZ(Math.floorDiv(z - this.originZ + SAMPLE_SPACING / 2, SAMPLE_SPACING));
 
+        int sampleRadius = Math.max(1, radius / SAMPLE_SPACING + 1);
         NearbyCave nearest = null;
 
-        for (int dx = -2; dx <= 2; dx++) {
+        for (int dx = -sampleRadius; dx <= sampleRadius; dx++) {
             int sx = baseX + dx;
 
             if (sx < 0 || sx >= this.sizeX) {
@@ -119,7 +146,7 @@ public final class PlanetCaveResolver {
 
             int sampleX = this.originX + sx * SAMPLE_SPACING;
 
-            for (int dy = -2; dy <= 2; dy++) {
+            for (int dy = -sampleRadius; dy <= sampleRadius; dy++) {
                 int sy = baseY + dy;
 
                 if (sy < 0 || sy >= this.sizeY) {
@@ -128,7 +155,7 @@ public final class PlanetCaveResolver {
 
                 int sampleY = this.originY + sy * SAMPLE_SPACING;
 
-                for (int dz = -2; dz <= 2; dz++) {
+                for (int dz = -sampleRadius; dz <= sampleRadius; dz++) {
                     int sz = baseZ + dz;
 
                     if (sz < 0 || sz >= this.sizeZ) {
@@ -146,6 +173,10 @@ public final class PlanetCaveResolver {
                     int distanceY = y - sampleY;
                     int distanceZ = z - sampleZ;
                     int distanceSqr = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
+
+                    if (distanceSqr > radius * radius) {
+                        continue;
+                    }
 
                     if (nearest == null || distanceSqr < nearest.distanceSqr) {
                         nearest = new NearbyCave(cave, distanceSqr);

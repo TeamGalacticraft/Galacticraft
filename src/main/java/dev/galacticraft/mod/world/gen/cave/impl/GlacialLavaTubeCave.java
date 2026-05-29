@@ -2,10 +2,7 @@ package dev.galacticraft.mod.world.gen.cave.impl;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import dev.galacticraft.mod.world.gen.cave.CaveSampleType;
-import dev.galacticraft.mod.world.gen.cave.MoonCaveRegistry;
-import dev.galacticraft.mod.world.gen.cave.MoonCaveShapeType;
-import dev.galacticraft.mod.world.gen.cave.PlanetCave;
+import dev.galacticraft.mod.world.gen.cave.*;
 import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedLavaTubeCaveShape;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
@@ -38,7 +35,8 @@ public class GlacialLavaTubeCave extends PlanetCave {
                 82,
                 Blocks.LIGHT_BLUE_WOOL.defaultBlockState(),
                 Blocks.BLUE_WOOL.defaultBlockState(),
-                Blocks.WHITE_WOOL.defaultBlockState()
+                Blocks.WHITE_WOOL.defaultBlockState(),
+                CaveTransitionConfig.weak()
         );
     }
 
@@ -152,5 +150,15 @@ public class GlacialLavaTubeCave extends PlanetCave {
                 && pos.getX() <= chunkPos.getMaxBlockX()
                 && pos.getZ() >= chunkPos.getMinBlockZ()
                 && pos.getZ() <= chunkPos.getMaxBlockZ();
+    }
+
+    @Override
+    public boolean paintsSurface() {
+        return true;
+    }
+
+    @Override
+    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
+        return Blocks.RED_WOOL.defaultBlockState();
     }
 }

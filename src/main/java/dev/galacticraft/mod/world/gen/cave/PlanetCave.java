@@ -23,6 +23,7 @@ public abstract class PlanetCave {
     private final BlockState innerWall;
     private final BlockState outerWall;
     private final BlockState accent;
+    private final CaveTransitionConfig transitionConfig;
 
     protected PlanetCave(
             ResourceLocation id,
@@ -36,7 +37,8 @@ public abstract class PlanetCave {
             int maxY,
             BlockState innerWall,
             BlockState outerWall,
-            BlockState accent
+            BlockState accent,
+            CaveTransitionConfig transitionConfig
     ) {
         this.id = id;
         this.shapeType = shapeType;
@@ -51,6 +53,7 @@ public abstract class PlanetCave {
         this.innerWall = innerWall;
         this.outerWall = outerWall;
         this.accent = accent;
+        this.transitionConfig = transitionConfig;
     }
 
     public ResourceLocation id() {
@@ -89,6 +92,10 @@ public abstract class PlanetCave {
         return this.maxY;
     }
 
+    public CaveTransitionConfig transitionConfig() {
+        return this.transitionConfig;
+    }
+
     public abstract boolean matchesBiome(Holder<Biome> biome);
 
     public BlockState air(int x, int y, int z) {
@@ -108,7 +115,10 @@ public abstract class PlanetCave {
     }
 
     public boolean canTransitionTo(PlanetCave other) {
-        return other != null && this.shapeType == other.shapeType();
+        return other != null
+                && this.transitionConfig.enabled()
+                && other.transitionConfig.enabled()
+                && this.shapeType == other.shapeType();
     }
 
     public void decorate(
@@ -118,5 +128,13 @@ public abstract class PlanetCave {
             CaveSampleType type,
             int hash
     ) {
+    }
+
+    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
+        return currentSurface;
+    }
+
+    public boolean paintsSurface() {
+        return false;
     }
 }

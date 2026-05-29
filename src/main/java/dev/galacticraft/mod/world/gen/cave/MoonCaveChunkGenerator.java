@@ -29,7 +29,6 @@ public final class MoonCaveChunkGenerator {
             return false;
         }
 
-        List<CaveSample> samples = new ArrayList<>();
         boolean changed = false;
 
         for (MoonCavePlan plan : plans) {
@@ -37,6 +36,7 @@ public final class MoonCaveChunkGenerator {
                 continue;
             }
 
+            CaveCarvingMask mask = new CaveCarvingMask(minY, maxY);
             PlanetCaveResolver resolver = new PlanetCaveResolver(
                     chunkPos,
                     minY,
@@ -46,52 +46,77 @@ public final class MoonCaveChunkGenerator {
                     plan.cave()
             );
 
-            for (MoonCaveElement element : plan.elements()) {
-                if (element.bounds().intersectsChunk(chunkPos)) {
-                    changed |= carveAir(chunk, chunkPos, plan, element, minY, maxY, resolver, samples);
-                }
-            }
-
-            for (MoonCaveElement element : plan.elements()) {
-                if (element.bounds().intersectsChunk(chunkPos)) {
-                    changed |= carveShell(chunk, chunkPos, plan, element, minY, maxY, resolver);
-                }
-            }
+            buildMask(chunkPos, plan, minY, maxY, mask);
+            changed |= applyAir(chunk, chunkPos, plan, minY, maxY, resolver, mask);
+            changed |= applyShell(chunk, chunkPos, plan, minY, maxY, resolver, mask);
         }
 
-        decorate(chunk, chunkPos, samples);
         return changed;
     }
 
-    private static boolean carveAir(
+    private static void buildMask(
+            ChunkPos chunkPos,
+            MoonCavePlan plan,
+            int minY,
+            int maxY,
+            CaveCarvingMask mask
+    ) {
+        for (MoonCaveElement element : plan.elements()) {
+            if (!element.bounds().intersectsChunk(chunkPos)) {
+                continue;
+            }
+
+            MoonCaveBounds bounds = element.bounds();
+
+            int minX = Math.max(chunkPos.getMinBlockX(), bounds.minX());
+            int maxX = Math.min(chunkPos.getMaxBlockX(), bounds.maxX());
+            int minZ = Math.max(chunkPos.getMinBlockZ(), bounds.minZ());
+            int maxZ = Math.min(chunkPos.getMaxBlockZ(), bounds.maxZ());
+            int lowY = Math.max(minY, bounds.minY());
+            int highY = Math.min(maxY, bounds.maxY());
+
+            if (minX > maxX || minZ > maxZ || lowY > highY) {
+                continue;
+            }
+
+            for (int x = minX; x <= maxX; x++) {
+                int localX = x - chunkPos.getMinBlockX();
+
+                for (int z = minZ; z <= maxZ; z++) {
+                    int localZ = z - chunkPos.getMinBlockZ();
+
+                    for (int y = lowY; y <= highY; y++) {
+                        CaveZone zone = element.zone(x, y, z);
+
+                        if (zone != CaveZone.NONE) {
+                            mask.set(localX, y, localZ, zone);
+                        }
+                    }
+                }
+            }
+        }
+    }
+
+    private static boolean applyAir(
             ChunkAccess chunk,
             ChunkPos chunkPos,
             MoonCavePlan plan,
-            MoonCaveElement element,
             int minY,
             int maxY,
             PlanetCaveResolver resolver,
-            List<CaveSample> samples
+            CaveCarvingMask mask
     ) {
         boolean changed = false;
-        MoonCaveBounds bounds = element.bounds();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        int minX = Math.max(chunkPos.getMinBlockX(), bounds.minX());
-        int maxX = Math.min(chunkPos.getMaxBlockX(), bounds.maxX());
-        int minZ = Math.max(chunkPos.getMinBlockZ(), bounds.minZ());
-        int maxZ = Math.min(chunkPos.getMaxBlockZ(), bounds.maxZ());
-        int lowY = Math.max(minY, bounds.minY());
-        int highY = Math.min(maxY, bounds.maxY());
+        for (int localX = 0; localX < 16; localX++) {
+            int x = chunkPos.getMinBlockX() + localX;
 
-        if (minX > maxX || minZ > maxZ || lowY > highY) {
-            return false;
-        }
+            for (int localZ = 0; localZ < 16; localZ++) {
+                int z = chunkPos.getMinBlockZ() + localZ;
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                for (int y = lowY; y <= highY; y++) {
-                    if (element.zone(x, y, z) != CaveZone.AIR) {
+                for (int y = minY; y <= maxY; y++) {
+                    if (mask.get(localX, y, localZ) != CaveZone.AIR) {
                         continue;
                     }
 
@@ -104,7 +129,6 @@ public final class MoonCaveChunkGenerator {
 
                     PlanetCave cave = resolver.resolve(x, y, z, plan.cave());
                     chunk.setBlockState(pos, cave.air(x, y, z), false);
-                    collectSamples(chunk, chunkPos, pos, cave, samples);
                     changed = true;
                 }
             }
@@ -113,34 +137,27 @@ public final class MoonCaveChunkGenerator {
         return changed;
     }
 
-    private static boolean carveShell(
+    private static boolean applyShell(
             ChunkAccess chunk,
             ChunkPos chunkPos,
             MoonCavePlan plan,
-            MoonCaveElement element,
             int minY,
             int maxY,
-            PlanetCaveResolver resolver
+            PlanetCaveResolver resolver,
+            CaveCarvingMask mask
     ) {
         boolean changed = false;
-        MoonCaveBounds bounds = element.bounds();
+        List<CaveSample> samples = new ArrayList<>();
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
 
-        int minX = Math.max(chunkPos.getMinBlockX(), bounds.minX());
-        int maxX = Math.min(chunkPos.getMaxBlockX(), bounds.maxX());
-        int minZ = Math.max(chunkPos.getMinBlockZ(), bounds.minZ());
-        int maxZ = Math.min(chunkPos.getMaxBlockZ(), bounds.maxZ());
-        int lowY = Math.max(minY, bounds.minY());
-        int highY = Math.min(maxY, bounds.maxY());
+        for (int localX = 0; localX < 16; localX++) {
+            int x = chunkPos.getMinBlockX() + localX;
 
-        if (minX > maxX || minZ > maxZ || lowY > highY) {
-            return false;
-        }
+            for (int localZ = 0; localZ < 16; localZ++) {
+                int z = chunkPos.getMinBlockZ() + localZ;
 
-        for (int x = minX; x <= maxX; x++) {
-            for (int z = minZ; z <= maxZ; z++) {
-                for (int y = lowY; y <= highY; y++) {
-                    CaveZone zone = element.zone(x, y, z);
+                for (int y = minY; y <= maxY; y++) {
+                    CaveZone zone = mask.get(localX, y, localZ);
 
                     if (zone == CaveZone.NONE || zone == CaveZone.AIR) {
                         continue;
@@ -166,25 +183,50 @@ public final class MoonCaveChunkGenerator {
             }
         }
 
+        collectSamples(chunk, chunkPos, plan, minY, maxY, resolver, mask, samples);
+        decorate(chunk, chunkPos, samples);
+
         return changed;
     }
 
     private static void collectSamples(
             ChunkAccess chunk,
             ChunkPos chunkPos,
-            BlockPos pos,
-            PlanetCave cave,
+            MoonCavePlan plan,
+            int minY,
+            int maxY,
+            PlanetCaveResolver resolver,
+            CaveCarvingMask mask,
             List<CaveSample> samples
     ) {
-        BlockPos above = pos.above();
-        BlockPos below = pos.below();
+        BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
+        BlockPos.MutableBlockPos beside = new BlockPos.MutableBlockPos();
 
-        if (insideChunk(chunkPos, above) && !chunk.getBlockState(above).isAir()) {
-            samples.add(new CaveSample(pos.immutable(), CaveSampleType.CEILING, cave));
-        }
+        for (int localX = 0; localX < 16; localX++) {
+            int x = chunkPos.getMinBlockX() + localX;
 
-        if (insideChunk(chunkPos, below) && !chunk.getBlockState(below).isAir()) {
-            samples.add(new CaveSample(pos.immutable(), CaveSampleType.FLOOR, cave));
+            for (int localZ = 0; localZ < 16; localZ++) {
+                int z = chunkPos.getMinBlockZ() + localZ;
+
+                for (int y = minY; y <= maxY; y++) {
+                    if (mask.get(localX, y, localZ) != CaveZone.AIR) {
+                        continue;
+                    }
+
+                    PlanetCave cave = resolver.resolve(x, y, z, plan.cave());
+                    pos.set(x, y, z);
+
+                    beside.set(x, y + 1, z);
+                    if (y + 1 <= maxY && insideChunk(chunkPos, beside) && !chunk.getBlockState(beside).isAir()) {
+                        samples.add(new CaveSample(pos.immutable(), CaveSampleType.CEILING, cave));
+                    }
+
+                    beside.set(x, y - 1, z);
+                    if (y - 1 >= minY && insideChunk(chunkPos, beside) && !chunk.getBlockState(beside).isAir()) {
+                        samples.add(new CaveSample(pos.immutable(), CaveSampleType.FLOOR, cave));
+                    }
+                }
+            }
         }
     }
 

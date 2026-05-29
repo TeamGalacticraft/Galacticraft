@@ -5,6 +5,8 @@ import com.google.common.base.Suppliers;
 import com.google.common.collect.Sets;
 import com.mojang.serialization.MapCodec;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.gen.cave.MoonCaveSurfacePainter;
+import dev.galacticraft.mod.world.gen.custom.MoonChunkGenerator;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -172,6 +174,13 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
         NoiseChunk noiseChunk = chunkAccess.getOrCreateNoiseChunk((chunkx) -> this.createNoiseChunk(chunkx, structureManager, blender, randomState));
         NoiseGeneratorSettings noiseGeneratorSettings = (NoiseGeneratorSettings)this.settings.value();
         randomState.surfaceSystem().buildSurface(randomState, biomeManager, biomeRegistry, noiseGeneratorSettings.useLegacyRandomSource(), worldGenerationContext, chunkAccess, noiseChunk, noiseGeneratorSettings.surfaceRule());
+        if (this instanceof MoonChunkGenerator) {
+            MoonCaveSurfacePainter.paintSurface(
+                    chunkAccess,
+                    randomState,
+                    this.getBiomeSource()
+            );
+        }
     }
 
     @Override
