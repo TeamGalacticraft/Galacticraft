@@ -62,6 +62,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.Set;
 
@@ -101,7 +102,9 @@ public class CelestialSelectionScreen extends CelestialScreen {
         this.data = data;
         this.canCreateStations = canCreateStations;
         this.fromBody = fromBody;
-        this.disabledDestinations = new HashSet<>(disabledDestinations);
+        this.disabledDestinations = new HashSet<>(
+                disabledDestinations == null ? Collections.emptySet() : disabledDestinations
+        );
     }
 
     @Override
@@ -366,7 +369,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
     @Override
     public boolean mouseClicked(double x, double y, int button) {
-        if (this.selectedBody != null && isInside(x, y, LHS, LHS, 88, 13)) {
+        if (this.selectedBody != null && DrawableUtil.mouseIn(x, y, LHS, LHS, 88, 13)) {
             this.unselectCelestialBody();
             return true;
         }
@@ -386,7 +389,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
             return false;
         }
 
-        if (!isInside(x, y, RHS - CREATE_SS_PANEL_WIDTH - 2, createSpaceStationButtonY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT)) {
+        if (!DrawableUtil.mouseIn(x, y, RHS - CREATE_SS_PANEL_WIDTH - 2, createSpaceStationButtonY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT)) {
             return false;
         }
 
@@ -421,7 +424,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     private boolean handleTopRightClick(double x, double y) {
-        boolean clicked = isInside(x, y, RHS - 88, LHS, 88, 13);
+        boolean clicked = DrawableUtil.mouseIn(x, y, RHS - 88, LHS, 88, 13);
 
         if (!clicked) {
             return false;
@@ -457,11 +460,11 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     private boolean handleRenameDialogClick(double x, double y) {
-        if (!isInside(x, y, this.width / 2f - 90, this.height / 2f - 38, 180, 76)) {
+        if (!DrawableUtil.mouseIn(x, y, this.width / 2f - 90, this.height / 2f - 38, 180, 76)) {
             return false;
         }
 
-        if (isInside(x, y, this.width / 2f - 90 + 17, this.height / 2f - 38 + 59, 72, 12)) {
+        if (DrawableUtil.mouseIn(x, y, this.width / 2f - 90 + 17, this.height / 2f - 38 + 59, 72, 12)) {
             CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = selectedSatellite();
             selectedSatellite.type().setCustomName(this.renamingString == null ? "" : this.renamingString, selectedSatellite.config());
             ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config()));
@@ -469,7 +472,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
             return true;
         }
 
-        if (isInside(x, y, this.width / 2f, this.height / 2f - 38 + 59, 72, 12)) {
+        if (DrawableUtil.mouseIn(x, y, this.width / 2f, this.height / 2f - 38 + 59, 72, 12)) {
             this.renamingSpaceStation = false;
             return true;
         }
@@ -478,7 +481,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     private boolean handleRenameButtonClick(double x, double y) {
-        if (!isInside(x, y, this.width / 2f - 47, LHS, 94, 11)) {
+        if (!DrawableUtil.mouseIn(x, y, this.width / 2f - 47, LHS, 94, 11)) {
             return false;
         }
 
@@ -499,14 +502,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
         List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = visibleSatellitesForSelectedSatelliteParent();
         int max = Math.min((this.height / 2) / 14, satellites.size());
 
-        if (isInside(x, y, RHS - 85, LHS + 45, 61, 4)) {
+        if (DrawableUtil.mouseIn(x, y, RHS - 85, LHS + 45, 61, 4)) {
             if (this.spaceStationListOffset > 0) {
                 this.spaceStationListOffset--;
             }
             return true;
         }
 
-        if (isInside(x, y, RHS - 85, LHS + 49 + max * 14, 61, 4)) {
+        if (DrawableUtil.mouseIn(x, y, RHS - 85, LHS + 49 + max * 14, 61, 4)) {
             if (max + this.spaceStationListOffset < satellites.size()) {
                 this.spaceStationListOffset++;
             }
@@ -535,7 +538,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
             String username = satellite.type().ownershipData(satellite.config()).username();
             int xOffset = username.equalsIgnoreCase(this.selectedStationOwner) ? -5 : 0;
 
-            if (isInside(x, y, RHS - 95 + xOffset, LHS + 50 + rendered * 14, 93, 12)) {
+            if (DrawableUtil.mouseIn(x, y, RHS - 95 + xOffset, LHS + 50 + rendered * 14, 93, 12)) {
                 this.selectedStationOwner = username;
                 return true;
             }
@@ -551,14 +554,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
         int yPos = LHS + 10;
         boolean planetZoomedMoon = this.isZoomed() && this.isPlanet(this.selectedParent);
 
-        if (this.selectedParent != null && isInside(x, y, xPos, yPos, 93, 12)) {
+        if (this.selectedParent != null && DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
             this.selectTopParent(planetZoomedMoon);
             return true;
         }
 
         yPos += 22;
 
-        if (isInside(x, y, xPos, yPos, 93, 12)) {
+        if (DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
             if (planetZoomedMoon) {
                 this.selectBody(this.selectedParent, false);
             }
@@ -659,7 +662,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     protected boolean testClicked(CelestialBody<?, ?> body, int xOffset, int yPos, double x, double y, boolean grandchild) {
         int xPos = this.borderSize + this.borderEdgeSize + 2 + xOffset;
 
-        if (!isInside(x, y, xPos, yPos, 93, 12)) {
+        if (!DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
             return false;
         }
 
@@ -1082,7 +1085,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
         return list;
     }
 
-    private java.util.Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites() {
+    private Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites() {
         return ((SatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).galacticraft$getSatellites();
     }
 
@@ -1182,10 +1185,12 @@ public class CelestialSelectionScreen extends CelestialScreen {
         gui.pose().translate(0, 0, BORDER_Z + 1);
 
         try (Graphics.Fill fill = graphics.fill()) {
+            // Draw the tooltip base which is a rectangle missing the corners
             fill.fillGradientRaw(x1 + 1, y1, x2 - 1, y2, colorA, colorA);
             fill.fillGradientRaw(x1, y1 + 1, x1 + 1, y2 - 1, colorA, colorA);
             fill.fillGradientRaw(x2 - 1, y1 + 1, x2, y2 - 1, colorA, colorA);
 
+            // Inner border: left, right, top, bottom (lighter at the top, darker at the bottom)
             fill.fillGradientRaw(x1 + 1, y1 + 1, x1 + 2, y2 - 1, colorB, colorC);
             fill.fillGradientRaw(x2 - 2, y1 + 1, x2 - 1, y2 - 1, colorB, colorC);
             fill.fillGradientRaw(x1 + 2, y1 + 1, x2 - 2, y1 + 2, colorB, colorB);
@@ -1208,9 +1213,5 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
 
         return amount;
-    }
-
-    private static boolean isInside(double mouseX, double mouseY, double x, double y, double width, double height) {
-        return mouseX >= x && mouseX < x + width && mouseY >= y && mouseY < y + height;
     }
 }

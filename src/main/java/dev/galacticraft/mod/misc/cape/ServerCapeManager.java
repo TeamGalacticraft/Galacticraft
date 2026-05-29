@@ -82,8 +82,4 @@ public final class ServerCapeManager {
         if (player == null) return;
         ACTIVE.remove(player.getUUID().toString().toLowerCase(Locale.ROOT));
     }
-
-    public static boolean rolesLoaded() {
-        return CapesLoader.isLoaded();
-    }
 }

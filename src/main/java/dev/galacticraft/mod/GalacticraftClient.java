@@ -23,7 +23,6 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
-import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.client.ClientCapeLoginSync;
@@ -49,10 +48,12 @@ import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.client.util.CannedFoodColorRegistry;
 import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
@@ -244,9 +245,14 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.FUEL, GCFluids.FLOWING_FUEL);
         BlockRenderLayerMap.INSTANCE.putFluids(RenderType.translucent(), GCFluids.SULFURIC_ACID, GCFluids.FLOWING_SULFURIC_ACID);
 
+        CannedFoodItem.setFoodColorProvider(CannedFoodColorRegistry::getColor);
+
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
-        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : FastColor.ARGB32.opaque(stack.getOrDefault(GCDataComponents.COLOR, 0xFFFFFF)), GCItems.CANNED_FOOD);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> {
+            if (layer != 1) return -1;
+            return FastColor.ARGB32.opaque(CannedFoodItem.getCanColor(stack));
+        }, GCItems.CANNED_FOOD);
 
         // Fluids can be added to the list below to give them a colour for the Fluid Canister
         // Fluids that use a tint are handled automatically
@@ -273,7 +279,11 @@ public class GalacticraftClient implements ClientModInitializer {
                 return -1;
             });
         }, GCItems.FLUID_CANISTER);
-        InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
+        InvalidateRenderStateCallback.EVENT.register(() -> {
+            FLUID_CANISTER_COLOR_CACHE.clear();
+            CannedFoodColorRegistry.clear();
+            CannedFoodItem.clearColorCache();
+        });
 
         ItemProperties.register(GCItems.FLUID_CANISTER, FluidCanisterItem.FILL_LEVEL, (stack, world, entity, seed) -> {
             FluidData data = stack.get(FLUID_DATA);

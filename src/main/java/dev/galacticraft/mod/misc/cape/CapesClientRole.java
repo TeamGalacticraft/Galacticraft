@@ -52,9 +52,10 @@ public final class CapesClientRole {
         LOADED.set(true);
 
         new Thread(() -> {
-            try (var in = new URL(Constant.CAPES).openStream();
-                 var r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
-
+            try (
+                var in = new URL(Constant.CAPES).openStream();
+                var r = new InputStreamReader(in, StandardCharsets.UTF_8)
+            ) {
                 List<PlayerRole> list = new Gson().fromJson(r, LIST_TYPE);
 
                 UUID_ROLE.clear();

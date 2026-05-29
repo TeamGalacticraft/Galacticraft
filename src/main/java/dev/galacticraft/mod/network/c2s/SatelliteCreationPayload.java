@@ -29,6 +29,7 @@ import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -50,7 +51,7 @@ public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) im
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        if (!dev.galacticraft.mod.Galacticraft.CONFIG.enableSpaceStationCreation()) {
+        if (!Galacticraft.CONFIG.enableSpaceStationCreation()) {
             Constant.LOGGER.warn(
                     "Blocked space station creation from {} because space station creation is disabled in the server config.",
                     context.player().getScoreboardName()

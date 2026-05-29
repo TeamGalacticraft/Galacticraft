@@ -34,6 +34,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -60,31 +62,28 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         var player = context.player();
 
-        CapeMode rawMode = this.mode == null ? CapeMode.VANILLA : this.mode;
-        String rawId = this.gcCapeId;
+        CapeMode mode = this.mode == null ? CapeMode.VANILLA : this.mode;
+        String gcCapeId = this.gcCapeId;
 
         String playerName = player.getGameProfile().getName();
         String uuid = player.getUUID().toString();
         CapeRole role = CapesLoader.roleFor(uuid);
 
-        CapeMode finalMode = rawMode;
-        String finalId = rawId;
-
-        if (rawMode == CapeMode.GC && !CapesLoader.isLoaded()) {
+        if (mode == CapeMode.GC && !CapesLoader.isLoaded()) {
             return;
         }
 
-        if (!ServerCapeManager.validateSelection(player, finalMode, finalId)) {
-            finalMode = CapeMode.VANILLA;
-            finalId = null;
+        if (!ServerCapeManager.validateSelection(player, mode, gcCapeId)) {
+            mode = CapeMode.VANILLA;
+            gcCapeId = null;
         }
 
-        ServerCapeManager.set(player, finalMode, finalId);
+        ServerCapeManager.set(player, mode, gcCapeId);
 
         broadcastCapeSnapshot(context.server());
     }
 
-    public static void sendCapeSnapshot(net.minecraft.server.level.ServerPlayer target) {
+    public static void sendCapeSnapshot(ServerPlayer target) {
         var snap = ServerCapeManager.snapshot();
         var list = new ArrayList<CapeAssignmentsPacket.Entry>(snap.size());
 
@@ -100,7 +99,7 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
         ServerPlayNetworking.send(target, new CapeAssignmentsPacket(list));
     }
 
-    public static void broadcastCapeSnapshot(net.minecraft.server.MinecraftServer server) {
+    public static void broadcastCapeSnapshot(MinecraftServer server) {
         var snap = ServerCapeManager.snapshot();
         var list = new ArrayList<CapeAssignmentsPacket.Entry>(snap.size());
 

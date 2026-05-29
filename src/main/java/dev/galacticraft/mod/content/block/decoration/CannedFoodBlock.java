@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.decoration;
 
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
-import dev.galacticraft.mod.content.item.CannedFoodLayout;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
@@ -53,6 +52,18 @@ import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 import static net.minecraft.world.level.block.Blocks.AIR;
 
 public class CannedFoodBlock extends Block implements EntityBlock {
+    public static final float[][][] POSITIONS = {
+            {},
+            {{8, 0, 8}},
+            {{4, 0, 8}, {12, 0, 8}},
+            {{4, 0, 4}, {12, 0, 6}, {6, 0, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}},
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 12}, {4, 8, 12}, {12, 8, 12}}
+    };
+
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
     public static final BooleanProperty MAX = BooleanProperty.create("max");
 
@@ -88,7 +99,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
             float a = direction.getStepX();
             float b = direction.getStepZ();
 
-            for (float[] position : CannedFoodLayout.POSITIONS[cannedFoodBlockEntity.getCanCount()]) {
+            for (float[] position : CannedFoodBlock.POSITIONS[cannedFoodBlockEntity.getCanCount()]) {
                 float x = a * (position[2] - 8) + b * (position[0] - 8);
                 float y = position[1];
                 float z = b * (position[2] - 8) - a * (position[0] - 8);
