@@ -1,15 +1,15 @@
 package dev.galacticraft.mod.world.gen.cave;
 
+import net.minecraft.resources.ResourceLocation;
+
 import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.List;
 
-/**
- * Full planned cave system generated from one planning cell.
- */
 public class MoonCavePlan {
     private static final int PADDING = 5;
 
+    private final ResourceLocation definitionId;
     private final MoonCaveCellPos cell;
     private final double priority;
     private final EnumSet<MoonCaveStyle> styles;
@@ -17,10 +17,15 @@ public class MoonCavePlan {
     private final List<MoonCaveRoom> rooms = new ArrayList<>();
     private final List<MoonCaveTunnel> tunnels = new ArrayList<>();
 
-    public MoonCavePlan(MoonCaveCellPos cell, double priority, MoonCaveStyle style) {
+    public MoonCavePlan(ResourceLocation definitionId, MoonCaveCellPos cell, double priority, MoonCaveStyle style) {
+        this.definitionId = definitionId;
         this.cell = cell;
         this.priority = priority;
         this.styles = EnumSet.of(style);
+    }
+
+    public ResourceLocation definitionId() {
+        return this.definitionId;
     }
 
     public MoonCaveCellPos cell() {
@@ -59,9 +64,11 @@ public class MoonCavePlan {
 
     public void mergeFrom(MoonCavePlan other) {
         this.styles.addAll(other.styles);
+
         for (MoonCaveRoom room : other.rooms) {
             this.addRoom(room);
         }
+
         for (MoonCaveTunnel tunnel : other.tunnels) {
             this.addTunnel(tunnel);
         }
@@ -87,7 +94,7 @@ public class MoonCavePlan {
         return best;
     }
 
-    private static CaveZone max(CaveZone a, CaveZone b) {
-        return b.ordinal() > a.ordinal() ? b : a;
+    private static CaveZone max(CaveZone first, CaveZone second) {
+        return second.ordinal() > first.ordinal() ? second : first;
     }
 }

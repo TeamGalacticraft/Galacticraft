@@ -68,7 +68,12 @@ public final class MoonCaveChunkGenerator {
                         pos.set(x, y, z);
                         BlockState current = chunk.getBlockState(pos);
 
-                        CaveClassification classification = classify(plans, x, y, z);
+                        CaveZone zone = plan.zone(x, y, z);
+                        if (zone == CaveZone.NONE) {
+                            continue;
+                        }
+
+                        CaveClassification classification = new CaveClassification(zone, EnumSet.copyOf(plan.styles()));
 
                         if (classification.zone == CaveZone.AIR) {
                             if (canBecomeAir(current)) {
