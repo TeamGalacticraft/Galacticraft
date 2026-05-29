@@ -1,29 +1,23 @@
 package dev.galacticraft.mod.world.gen.cave;
 
-import net.minecraft.resources.ResourceLocation;
-
 import java.util.ArrayList;
 import java.util.List;
 
 public class MoonCavePlan {
-    private final ResourceLocation definitionId;
+    private final PlanetCave cave;
     private final MoonCaveCellPos cell;
     private final double priority;
-    private final MoonCaveStyle primaryStyle;
-    private final MoonCaveShapeType shapeType;
     private final MoonCaveBounds bounds = new MoonCaveBounds();
     private final List<MoonCaveElement> elements = new ArrayList<>();
 
-    public MoonCavePlan(ResourceLocation definitionId, MoonCaveCellPos cell, double priority, MoonCaveStyle primaryStyle, MoonCaveShapeType shapeType) {
-        this.definitionId = definitionId;
+    public MoonCavePlan(PlanetCave cave, MoonCaveCellPos cell, double priority) {
+        this.cave = cave;
         this.cell = cell;
         this.priority = priority;
-        this.primaryStyle = primaryStyle;
-        this.shapeType = shapeType;
     }
 
-    public ResourceLocation definitionId() {
-        return this.definitionId;
+    public PlanetCave cave() {
+        return this.cave;
     }
 
     public MoonCaveCellPos cell() {
@@ -32,14 +26,6 @@ public class MoonCavePlan {
 
     public double priority() {
         return this.priority;
-    }
-
-    public MoonCaveStyle primaryStyle() {
-        return this.primaryStyle;
-    }
-
-    public MoonCaveShapeType shapeType() {
-        return this.shapeType;
     }
 
     public MoonCaveBounds bounds() {

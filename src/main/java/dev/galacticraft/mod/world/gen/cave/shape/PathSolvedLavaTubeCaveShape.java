@@ -75,11 +75,9 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();
         MoonCavePlan plan = new MoonCavePlan(
-                context.definition().id(),
+                context.cave(),
                 context.cell(),
-                random.nextDouble(),
-                context.style(),
-                context.definition().shapeType()
+                random.nextDouble()
         );
 
         List<BlockPos> tunnelNodes = new ArrayList<>();

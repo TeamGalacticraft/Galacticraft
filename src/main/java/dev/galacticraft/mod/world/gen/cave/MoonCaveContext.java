@@ -6,8 +6,7 @@ import net.minecraft.util.RandomSource;
 public record MoonCaveContext(
         MoonCaveCellPos cell,
         BlockPos anchor,
-        MoonCaveStyle style,
-        MoonCaveDefinition definition,
+        PlanetCave cave,
         RandomSource random,
         int minY,
         int maxY

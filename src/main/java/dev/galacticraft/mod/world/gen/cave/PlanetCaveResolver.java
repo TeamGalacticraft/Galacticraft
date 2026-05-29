@@ -8,14 +8,12 @@ import net.minecraft.world.level.biome.BiomeSource;
 import net.minecraft.world.level.levelgen.RandomState;
 
 /**
- * Fast cave style resolver that samples biome noise directly.
+ * Chunk-local cave resolver.
  *
- * <p>This does not use {@code BiomeManager#getBiome}. That method can stall during
- * world generation because it may depend on generated chunk biome data. This resolver
- * uses {@link BiomeSource#getNoiseBiome(int, int, int, net.minecraft.world.level.biome.Climate.Sampler)}
- * instead, which is pure noise sampling and does not load chunks.</p>
+ * <p>This samples biome noise directly using {@link BiomeSource#getNoiseBiome}
+ * and never uses {@code BiomeManager#getBiome}, avoiding chunk-generation stalls.</p>
  */
-public final class MoonCaveStyleResolver {
+public final class PlanetCaveResolver {
     private static final int SAMPLE_SPACING = 8;
     private static final int SAMPLE_PADDING = 24;
     private static final int TRANSITION_DISTANCE_SQR = 20 * 20;
@@ -26,14 +24,15 @@ public final class MoonCaveStyleResolver {
     private final int sizeX;
     private final int sizeY;
     private final int sizeZ;
-    private final MoonCaveStyle[] styles;
+    private final PlanetCave[] caves;
 
-    public MoonCaveStyleResolver(
+    public PlanetCaveResolver(
             ChunkPos chunkPos,
             int minY,
             int maxY,
             BiomeSource biomeSource,
-            RandomState randomState
+            RandomState randomState,
+            PlanetCave fallbackCave
     ) {
         this.originX = chunkPos.getMinBlockX() - SAMPLE_PADDING;
         this.originY = minY - SAMPLE_PADDING;
@@ -46,32 +45,32 @@ public final class MoonCaveStyleResolver {
         this.sizeX = ((endX - this.originX) / SAMPLE_SPACING) + 1;
         this.sizeY = ((endY - this.originY) / SAMPLE_SPACING) + 1;
         this.sizeZ = ((endZ - this.originZ) / SAMPLE_SPACING) + 1;
-        this.styles = new MoonCaveStyle[this.sizeX * this.sizeY * this.sizeZ];
+        this.caves = new PlanetCave[this.sizeX * this.sizeY * this.sizeZ];
 
-        this.fill(biomeSource, randomState);
+        this.fill(biomeSource, randomState, fallbackCave);
     }
 
-    public MoonCaveStyle resolve(int x, int y, int z, MoonCaveStyle fallback, MoonCaveShapeType shapeType) {
-        MoonCaveStyle center = this.sampleNearest(x, y, z, fallback);
+    public PlanetCave resolve(int x, int y, int z, PlanetCave fallback) {
+        PlanetCave center = this.sampleNearest(x, y, z, fallback);
 
-        if (!MoonCaveRegistry.hasStyleForShapeType(shapeType, center)) {
+        if (!fallback.canTransitionTo(center)) {
             return fallback;
         }
 
-        NearbyStyle nearby = this.findNearestDifferentStyle(x, y, z, center, shapeType);
+        NearbyCave nearby = this.findNearestDifferentCave(x, y, z, fallback, center);
 
         if (nearby == null || nearby.distanceSqr >= TRANSITION_DISTANCE_SQR) {
             return center;
         }
 
-        int hash = hash(83492791L, x, y, z, nearby.style.ordinal());
+        int hash = hash(83492791L, x, y, z, nearby.cave.id().hashCode());
         double noise = ((hash & 1023) / 1023.0D) - 0.5D;
         double blend = 1.0D - Math.sqrt(nearby.distanceSqr / (double) TRANSITION_DISTANCE_SQR);
 
-        return noise < blend - 0.5D ? nearby.style : center;
+        return noise < blend - 0.5D ? nearby.cave : center;
     }
 
-    private void fill(BiomeSource biomeSource, RandomState randomState) {
+    private void fill(BiomeSource biomeSource, RandomState randomState, PlanetCave fallbackCave) {
         for (int sx = 0; sx < this.sizeX; sx++) {
             int x = this.originX + sx * SAMPLE_SPACING;
 
@@ -88,27 +87,28 @@ public final class MoonCaveStyleResolver {
                             randomState.sampler()
                     );
 
-                    this.styles[this.index(sx, sy, sz)] = MoonCaveStyle.fromBiome(biome);
+                    PlanetCave transition = MoonCaveRegistry.findTransitionCave(biome, fallbackCave.shapeType());
+                    this.caves[this.index(sx, sy, sz)] = transition;
                 }
             }
         }
     }
 
-    private MoonCaveStyle sampleNearest(int x, int y, int z, MoonCaveStyle fallback) {
+    private PlanetCave sampleNearest(int x, int y, int z, PlanetCave fallback) {
         int sx = this.clampSampleX(Math.floorDiv(x - this.originX + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int sy = this.clampSampleY(Math.floorDiv(y - this.originY + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int sz = this.clampSampleZ(Math.floorDiv(z - this.originZ + SAMPLE_SPACING / 2, SAMPLE_SPACING));
 
-        MoonCaveStyle style = this.styles[this.index(sx, sy, sz)];
-        return style == null ? fallback : style;
+        PlanetCave cave = this.caves[this.index(sx, sy, sz)];
+        return cave == null ? fallback : cave;
     }
 
-    private NearbyStyle findNearestDifferentStyle(int x, int y, int z, MoonCaveStyle center, MoonCaveShapeType shapeType) {
+    private NearbyCave findNearestDifferentCave(int x, int y, int z, PlanetCave fallback, PlanetCave center) {
         int baseX = this.clampSampleX(Math.floorDiv(x - this.originX + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseY = this.clampSampleY(Math.floorDiv(y - this.originY + SAMPLE_SPACING / 2, SAMPLE_SPACING));
         int baseZ = this.clampSampleZ(Math.floorDiv(z - this.originZ + SAMPLE_SPACING / 2, SAMPLE_SPACING));
 
-        NearbyStyle nearest = null;
+        NearbyCave nearest = null;
 
         for (int dx = -2; dx <= 2; dx++) {
             int sx = baseX + dx;
@@ -135,13 +135,9 @@ public final class MoonCaveStyleResolver {
                         continue;
                     }
 
-                    MoonCaveStyle style = this.styles[this.index(sx, sy, sz)];
+                    PlanetCave cave = this.caves[this.index(sx, sy, sz)];
 
-                    if (style == null || style == center) {
-                        continue;
-                    }
-
-                    if (!MoonCaveRegistry.hasStyleForShapeType(shapeType, style)) {
+                    if (cave == null || cave == center || !fallback.canTransitionTo(cave)) {
                         continue;
                     }
 
@@ -152,7 +148,7 @@ public final class MoonCaveStyleResolver {
                     int distanceSqr = distanceX * distanceX + distanceY * distanceY + distanceZ * distanceZ;
 
                     if (nearest == null || distanceSqr < nearest.distanceSqr) {
-                        nearest = new NearbyStyle(style, distanceSqr);
+                        nearest = new NearbyCave(cave, distanceSqr);
                     }
                 }
             }
@@ -189,6 +185,6 @@ public final class MoonCaveStyleResolver {
         return (int) h;
     }
 
-    private record NearbyStyle(MoonCaveStyle style, int distanceSqr) {
+    private record NearbyCave(PlanetCave cave, int distanceSqr) {
     }
 }
