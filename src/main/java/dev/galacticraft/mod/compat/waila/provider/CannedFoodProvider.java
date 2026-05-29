@@ -29,32 +29,40 @@ import mcp.mobius.waila.api.IBlockAccessor;
 import mcp.mobius.waila.api.IBlockComponentProvider;
 import mcp.mobius.waila.api.IPluginConfig;
 import mcp.mobius.waila.api.ITooltip;
+import mcp.mobius.waila.api.ITooltipComponent;
+import mcp.mobius.waila.api.component.ItemComponent;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
 
 public enum CannedFoodProvider implements IBlockComponentProvider {
     INSTANCE;
 
+    @Nullable
     @Override
-    public void appendBody(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
-        if (!(accessor.getBlockEntity() instanceof CannedFoodBlockEntity blockEntity)) {
-            return;
-        }
-
-        ItemStack stack = getTargetedCan(accessor, blockEntity);
-        if (stack.isEmpty() || CannedFoodItem.getSize(stack) <= 0) {
-            return;
-        }
-
-        tooltip.addLine(stack.getHoverName());
+    public ITooltipComponent getIcon(IBlockAccessor accessor, IPluginConfig config) {
+        ItemStack stack = getTargetedCan(accessor);
+        return stack.isEmpty() ? null : new ItemComponent(stack);
     }
 
-    private static ItemStack getTargetedCan(IBlockAccessor accessor, CannedFoodBlockEntity blockEntity) {
+    @Override
+    public void appendBody(ITooltip tooltip, IBlockAccessor accessor, IPluginConfig config) {
+        ItemStack stack = getTargetedCan(accessor);
+        if (!stack.isEmpty()) {
+            tooltip.addLine(stack.getHoverName());
+        }
+    }
+
+    private static ItemStack getTargetedCan(IBlockAccessor accessor) {
+        if (!(accessor.getBlockEntity() instanceof CannedFoodBlockEntity blockEntity)) {
+            return ItemStack.EMPTY;
+        }
+
         BlockPos pos = accessor.getPosition();
         Vec3 location = accessor.getBlockHitResult().getLocation();
         Direction direction = accessor.getBlockState().getValue(CannedFoodBlock.FACING);
@@ -88,6 +96,6 @@ public enum CannedFoodProvider implements IBlockComponentProvider {
             }
         }
 
-        return selected.copy();
+        return CannedFoodItem.getSize(selected) > 0 ? selected.copy() : ItemStack.EMPTY;
     }
 }

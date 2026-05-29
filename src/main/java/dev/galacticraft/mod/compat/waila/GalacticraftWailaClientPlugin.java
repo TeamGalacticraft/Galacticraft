@@ -39,6 +39,7 @@ public class GalacticraftWailaClientPlugin implements IWailaClientPlugin {
         registrar.redirect(FlagNameProvider.INSTANCE, FlagBlock.class);
         registrar.body(FuelLevelProvider.INSTANCE, RocketEntity.class, 1050);
         registrar.body(OxygenLevelProvider.INSTANCE, LivingEntity.class, 1050);
+        registrar.icon(CannedFoodProvider.INSTANCE, CannedFoodBlock.class, 1050);
         registrar.body(CannedFoodProvider.INSTANCE, CannedFoodBlock.class, 1050);
     }
 }
