@@ -109,8 +109,8 @@ public class CannedFoodItem extends Item {
         BlockState newState = GCBlocks.CANNED_FOOD.defaultBlockState()
                 .setValue(CannedFoodBlock.FACING, context.getHorizontalDirection().getOpposite());
 
-        if (level.getBlockEntity(pos) instanceof CannedFoodBlockEntity canEntity) {
-            newState = newState.setValue(CannedFoodBlock.MAX, canEntity.getCanCount() + 1 == MAX_CANS);
+        if (oldState.getBlock() instanceof CannedFoodBlock) {
+            newState = newState.setValue(CannedFoodBlock.COUNT, oldState.getValue(CannedFoodBlock.COUNT) + 1);
         }
 
         if (newState != oldState) {
@@ -626,8 +626,9 @@ public class CannedFoodItem extends Item {
             return false;
         }
 
-        if (level.getBlockEntity(blockPos) instanceof CannedFoodBlockEntity canEntity) {
-            return canEntity.getCanCount() < MAX_CANS;
+        BlockState blockState = level.getBlockState(blockPos);
+        if (blockState.getBlock() instanceof CannedFoodBlock) {
+            return blockState.getValue(CannedFoodBlock.COUNT) < MAX_CANS;
         }
 
         return true;

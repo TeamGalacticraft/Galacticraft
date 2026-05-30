@@ -38,15 +38,14 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
 
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 import static net.minecraft.world.level.block.Blocks.AIR;
@@ -61,29 +60,29 @@ public class CannedFoodBlock extends Block implements EntityBlock {
             {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {8, 8, 8}},
             {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 8}, {12, 8, 8}},
             {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 6}, {6, 8, 12}},
-            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 12}, {4, 8, 12}, {12, 8, 12}}
+            {{4, 0, 4}, {12, 0, 4}, {4, 0, 12}, {12, 0, 12}, {4, 8, 4}, {12, 8, 4}, {4, 8, 12}, {12, 8, 12}}
     };
 
     public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-    public static final BooleanProperty MAX = BooleanProperty.create("max");
+    public static final IntegerProperty COUNT = IntegerProperty.create("count", 1, 8);
 
     public CannedFoodBlock(Properties properties) {
         super(properties);
         this.registerDefaultState(this.stateDefinition.any()
                 .setValue(FACING, Direction.NORTH)
-                .setValue(MAX, false));
+                .setValue(COUNT, 1));
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING).add(MAX);
+        builder.add(FACING).add(COUNT);
     }
 
     @Override
     public @Nullable BlockState getStateForPlacement(BlockPlaceContext ctx) {
         return this.defaultBlockState()
                 .setValue(FACING, ctx.getHorizontalDirection().getOpposite())
-                .setValue(MAX, false);
+                .setValue(COUNT, 1);
     }
 
     @Override
@@ -94,19 +93,18 @@ public class CannedFoodBlock extends Block implements EntityBlock {
     @Override
     public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         VoxelShape shape = Shapes.empty();
-        if (world.getBlockEntity(pos) instanceof CannedFoodBlockEntity cannedFoodBlockEntity) {
-            Direction direction = state.getValue(FACING);
-            float a = direction.getStepX();
-            float b = direction.getStepZ();
+        Direction direction = state.getValue(FACING);
+        float a = direction.getStepX();
+        float b = direction.getStepZ();
 
-            for (float[] position : CannedFoodBlock.POSITIONS[cannedFoodBlockEntity.getCanCount()]) {
-                float x = a * (position[2] - 8) + b * (position[0] - 8);
-                float y = position[1];
-                float z = b * (position[2] - 8) - a * (position[0] - 8);
+        for (float[] position : CannedFoodBlock.POSITIONS[state.getValue(COUNT)]) {
+            float x = a * (position[2] - 8) + b * (position[0] - 8);
+            float y = position[1];
+            float z = b * (position[2] - 8) - a * (position[0] - 8);
 
-                shape = Shapes.join(shape, Block.box(x + 5, y, z + 5, x + 11, y + 8, z + 11), BooleanOp.OR);
-            }
+            shape = Shapes.join(shape, Block.box(x + 5, y, z + 5, x + 11, y + 8, z + 11), BooleanOp.OR);
         }
+
         return shape;
     }
 
@@ -124,7 +122,7 @@ public class CannedFoodBlock extends Block implements EntityBlock {
     protected boolean canSurvive(BlockState blockState, LevelReader levelReader, BlockPos blockPos) {
         BlockPos below = blockPos.below();
         BlockState belowState = levelReader.getBlockState(below);
-        return belowState.isFaceSturdy(levelReader, below, Direction.UP) || (belowState.getBlock() instanceof CannedFoodBlock && belowState.getValue(MAX));
+        return belowState.isFaceSturdy(levelReader, below, Direction.UP) || (belowState.getBlock() instanceof CannedFoodBlock && belowState.getValue(COUNT) == 8);
     }
 
     @Override
