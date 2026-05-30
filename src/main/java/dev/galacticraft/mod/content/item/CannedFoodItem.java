@@ -28,7 +28,6 @@ import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import dev.galacticraft.mod.content.block.entity.decoration.CannedFoodBlockEntity;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.item.v1.FabricItemStack;
 import net.minecraft.ChatFormatting;
 import net.minecraft.advancements.CriteriaTriggers;
 import net.minecraft.core.BlockPos;
@@ -69,7 +68,7 @@ import java.util.stream.Stream;
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
-public class CannedFoodItem extends Item implements FabricItemStack {
+public class CannedFoodItem extends Item {
     public static final int MAX_CANS = 8;
     public static final int MAX_FOOD = 16;
 
@@ -257,10 +256,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
 
     public static List<ItemStack> getContents(ItemStack stack) {
         DataComponentMap components = stack.getComponents();
-
-        if (components.isEmpty()) {
-            return List.of();
-        }
 
         ItemContainerContents contents = components.get(DataComponents.CONTAINER);
         if (contents == null) {
