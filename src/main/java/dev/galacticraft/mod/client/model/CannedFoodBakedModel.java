@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
-import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.client.util.CannedFoodColorCache;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;
@@ -57,7 +57,7 @@ public class CannedFoodBakedModel extends ForwardingBakedModel {
             final float x = direction.getStepX() * z0 + direction.getStepZ() * x0;
             final float z = direction.getStepZ() * z0 - direction.getStepX() * x0;
 
-            final int canColor = CannedFoodItem.getCanColor(contents.get(i));
+            final int canColor = CannedFoodColorCache.getCanColor(contents.get(i));
 
             context.pushTransform(quad -> {
                 quad.pos(0, quad.x(0) + x, quad.y(0) + y, quad.z(0) + z);

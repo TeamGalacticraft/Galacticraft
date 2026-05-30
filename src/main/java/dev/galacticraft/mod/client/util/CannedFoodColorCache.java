@@ -22,58 +22,103 @@
 
 package dev.galacticraft.mod.client.util;
 
+import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.stream.Collectors;
 
-public final class CannedFoodColorRegistry {
+public final class CannedFoodColorCache {
     private static final int FALLBACK_COLOR = 0xFFFFFF;
-    private static final Map<Item, Integer> FOOD_COLORS = new HashMap<>();
+    private static final Map<Item, Integer> FOOD_COLORS = new ConcurrentHashMap<>();
+    private static final Map<CannedFoodColorKey, Integer> COLOR_CACHE = new ConcurrentHashMap<>();
 
-    private CannedFoodColorRegistry() {
+    private CannedFoodColorCache() {
     }
 
-    public static void init() {
+    /**
+     * Clears cached generated food/can colours.
+     *
+     * <p>Call this after resource reloads if item texture colours may have changed.</p>
+     */
+    public static void clear() {
         FOOD_COLORS.clear();
+        COLOR_CACHE.clear();
+    }
 
-        for (Item item : BuiltInRegistries.ITEM) {
-            if (CannedFoodItem.canAddToCan(item)) {
-                FOOD_COLORS.put(item, calculateItemColor(item));
-            }
+    public static int getCanColor(ItemStack stack) {
+        Integer override = stack.get(GCDataComponents.COLOR);
+        if (override != null) {
+            return override;
         }
 
-        CannedFoodItem.clearColorCache();
+        List<ItemStack> contents = CannedFoodItem.getContents(stack);
+        if (contents.isEmpty()) {
+            return FALLBACK_COLOR;
+        }
+
+        CannedFoodColorKey key = CannedFoodColorKey.of(contents);
+        return COLOR_CACHE.computeIfAbsent(key, CannedFoodColorCache::calculateCanColor);
     }
 
-    public static int getColor(Item item) {
+    private static int calculateCanColor(CannedFoodColorKey key) {
+        if (key.entries().isEmpty()) {
+            return FALLBACK_COLOR;
+        }
+
+        long sumRed = 0L;
+        long sumGreen = 0L;
+        long sumBlue = 0L;
+        int totalCount = 0;
+
+        for (CannedFoodColorKey.Entry entry : key.entries()) {
+            int color = getFoodColor(entry.item());
+            int count = entry.count();
+
+            sumRed += (long) ((color >> 16) & 0xFF) * count;
+            sumGreen += (long) ((color >> 8) & 0xFF) * count;
+            sumBlue += (long) (color & 0xFF) * count;
+            totalCount += count;
+        }
+
+        if (totalCount <= 0) {
+            return FALLBACK_COLOR;
+        }
+
+        int avgRed = (int) (sumRed / totalCount);
+        int avgGreen = (int) (sumGreen / totalCount);
+        int avgBlue = (int) (sumBlue / totalCount);
+
+        return avgRed << 16 | avgGreen << 8 | avgBlue;
+    }
+
+    private static int getFoodColor(Item item) {
         if (!CannedFoodItem.canAddToCan(item)) {
             return FALLBACK_COLOR;
         }
 
-        return FOOD_COLORS.computeIfAbsent(item, CannedFoodColorRegistry::calculateItemColor);
-    }
-
-    public static boolean hasColor(Item item) {
-        return FOOD_COLORS.containsKey(item);
-    }
-
-    public static void clear() {
-        FOOD_COLORS.clear();
+        return FOOD_COLORS.computeIfAbsent(item, CannedFoodColorCache::calculateItemColor);
     }
 
     private static int calculateItemColor(Item item) {
-        ItemStack stack = item.getDefaultInstance();
-        TextureAtlasSprite sprite = Minecraft.getInstance()
-                .getItemRenderer()
-                .getModel(stack, null, null, 0)
-                .getParticleIcon();
+        ItemRenderer itemRenderer = Minecraft.getInstance().getItemRenderer();
+        if (itemRenderer == null) {
+            return FALLBACK_COLOR;
+        }
 
+        ItemStack stack = item.getDefaultInstance();
+        TextureAtlasSprite sprite = itemRenderer.getModel(stack, null, null, 0).getParticleIcon();
         if (sprite == null) {
             return FALLBACK_COLOR;
         }
@@ -136,5 +181,27 @@ public final class CannedFoodColorRegistry {
         int blue = (bestBucket & 0xF) * 16 + 8;
 
         return red << 16 | green << 8 | blue;
+    }
+
+    private record CannedFoodColorKey(Set<Entry> entries) {
+        private static CannedFoodColorKey of(List<ItemStack> stacks) {
+            Map<Item, Integer> counts = new HashMap<>();
+
+            for (ItemStack stack : stacks) {
+                if (!stack.isEmpty()) {
+                    counts.merge(stack.getItem(), stack.getCount(), Integer::sum);
+                }
+            }
+
+            Set<Entry> entries = counts.entrySet().stream()
+                    .map(entry -> new Entry(entry.getKey(), entry.getValue()))
+                    .sorted(Comparator.comparing(entry -> BuiltInRegistries.ITEM.getKey(entry.item()).toString()))
+                    .collect(Collectors.toSet());
+
+            return new CannedFoodColorKey(entries);
+        }
+
+        private record Entry(Item item, int count) {
+        }
     }
 }

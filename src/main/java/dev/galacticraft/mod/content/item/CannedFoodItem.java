@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.item;
 
-import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.CannedFoodTooltip;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
@@ -62,12 +61,8 @@ import net.minecraft.world.level.gameevent.GameEvent;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 
@@ -78,33 +73,8 @@ public class CannedFoodItem extends Item implements FabricItemStack {
     public static final int MAX_CANS = 8;
     public static final int MAX_FOOD = 16;
 
-    private static final int DEFAULT_CAN_COLOR = 0xFFFFFF;
-    private static final Map<CannedFoodColorKey, Integer> COLOR_CACHE = new ConcurrentHashMap<>();
-    private static FoodColorProvider foodColorProvider = CannedFoodItem::getServerSafeFoodColor;
-
     public CannedFoodItem(Properties settings) {
         super(settings);
-    }
-
-    /**
-     * Sets the colour provider used for generated can colours.
-     *
-     * <p>This is intended to be called from client initialization with a provider
-     * that reads actual item texture pixels. Dedicated servers keep the default
-     * server-safe hash fallback.</p>
-     */
-    public static void setFoodColorProvider(FoodColorProvider provider) {
-        foodColorProvider = provider == null ? CannedFoodItem::getServerSafeFoodColor : provider;
-        clearColorCache();
-    }
-
-    /**
-     * Clears cached generated can colours.
-     *
-     * <p>Call this after resource reloads if item texture colours may have changed.</p>
-     */
-    public static void clearColorCache() {
-        COLOR_CACHE.clear();
     }
 
     @Override
@@ -283,66 +253,6 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         if (!getContents(stack).isEmpty()) {
             tooltip.add(Component.translatable(Translations.Ui.TOTAL_NUTRITION, getTotalNutrition(stack)).withStyle(ChatFormatting.GRAY));
         }
-    }
-
-    public static int getCanColor(ItemStack stack) {
-        Integer override = stack.get(GCDataComponents.COLOR);
-        if (override != null) {
-            return override;
-        }
-
-        return getGeneratedCanColor(getContents(stack));
-    }
-
-    public static int getGeneratedCanColor(List<ItemStack> contents) {
-        if (contents.isEmpty()) {
-            return DEFAULT_CAN_COLOR;
-        }
-
-        CannedFoodColorKey key = CannedFoodColorKey.of(contents);
-        return COLOR_CACHE.computeIfAbsent(key, CannedFoodItem::calculateCanColor);
-    }
-
-    private static int calculateCanColor(CannedFoodColorKey key) {
-        if (key.entries().isEmpty()) {
-            return DEFAULT_CAN_COLOR;
-        }
-
-        long sumRed = 0L;
-        long sumGreen = 0L;
-        long sumBlue = 0L;
-        int totalCount = 0;
-
-        for (CannedFoodColorKey.Entry entry : key.entries()) {
-            int color = foodColorProvider.getColor(entry.item());
-            int count = entry.count();
-
-            sumRed += (long) ((color >> 16) & 0xFF) * count;
-            sumGreen += (long) ((color >> 8) & 0xFF) * count;
-            sumBlue += (long) (color & 0xFF) * count;
-            totalCount += count;
-        }
-
-        if (totalCount <= 0) {
-            return DEFAULT_CAN_COLOR;
-        }
-
-        int avgRed = (int) (sumRed / totalCount);
-        int avgGreen = (int) (sumGreen / totalCount);
-        int avgBlue = (int) (sumBlue / totalCount);
-
-        return avgRed << 16 | avgGreen << 8 | avgBlue;
-    }
-
-    private static int getServerSafeFoodColor(Item item) {
-        String id = BuiltInRegistries.ITEM.getKey(item).toString();
-        int hash = id.hashCode();
-
-        int red = 96 + Math.floorMod(hash, 128);
-        int green = 96 + Math.floorMod(hash >> 8, 128);
-        int blue = 96 + Math.floorMod(hash >> 16, 128);
-
-        return red << 16 | green << 8 | blue;
     }
 
     public static List<ItemStack> getContents(ItemStack stack) {
@@ -741,32 +651,5 @@ public class CannedFoodItem extends Item implements FabricItemStack {
         );
 
         level.gameEvent(GameEvent.BLOCK_PLACE, blockPos, GameEvent.Context.of(player, blockState));
-    }
-
-    @FunctionalInterface
-    public interface FoodColorProvider {
-        int getColor(Item item);
-    }
-
-    public record CannedFoodColorKey(List<Entry> entries) {
-        public static CannedFoodColorKey of(List<ItemStack> stacks) {
-            Map<Item, Integer> counts = new HashMap<>();
-
-            for (ItemStack stack : stacks) {
-                if (!stack.isEmpty()) {
-                    counts.merge(stack.getItem(), stack.getCount(), Integer::sum);
-                }
-            }
-
-            List<Entry> entries = counts.entrySet().stream()
-                    .map(entry -> new Entry(entry.getKey(), entry.getValue()))
-                    .sorted(Comparator.comparing(entry -> BuiltInRegistries.ITEM.getKey(entry.item()).toString()))
-                    .toList();
-
-            return new CannedFoodColorKey(entries);
-        }
-
-        public record Entry(Item item, int count) {
-        }
     }
 }
