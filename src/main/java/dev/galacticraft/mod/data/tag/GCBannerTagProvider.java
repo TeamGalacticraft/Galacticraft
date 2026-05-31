@@ -41,7 +41,9 @@ public class GCBannerTagProvider extends FabricTagProvider<BannerPattern> {
     protected void addTags(HolderLookup.Provider arg) {
         this.tag(BannerPatternTags.NO_ITEM_REQUIRED)
                 .add(GCBannerPatterns.ROCKET)
-                .add(GCBannerPatterns.ROCKET_SIDEWAYS);
+                .add(GCBannerPatterns.ROCKET_INVERTED)
+                .add(GCBannerPatterns.ROCKET_SINISTER)
+                .add(GCBannerPatterns.ROCKET_SINISTER_INVERTED);
 
         this.tag(BannerPatternTags.PATTERN_ITEM_CREEPER)
                 .add(GCBannerPatterns.CREEPER_SIDEWAYS);

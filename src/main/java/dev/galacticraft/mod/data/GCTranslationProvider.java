@@ -816,7 +816,10 @@ public class GCTranslationProvider extends TranslationProvider {
         for (DyeColor color : DyeColor.values()) {
             String normalized = TranslationProvider.normalizeName(color.getName());
             this.add(BannerPattern.ROCKET + "." + color.getName(), normalized + " Rocket");
-            this.add(BannerPattern.ROCKET_SIDEWAYS + "." + color.getName(), normalized + " Sideways Rocket");
+            this.add(BannerPattern.ROCKET_INVERTED + "." + color.getName(), normalized + " Rocket Inverted");
+            this.add(BannerPattern.ROCKET_SINISTER + "." + color.getName(), normalized + " Rocket Sinister");
+            this.add(BannerPattern.ROCKET_SINISTER_INVERTED + "." + color.getName(), normalized + " Rocket Sinister Inverted");
+
             this.add(BannerPattern.CREEPER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Creeper Charge");
             this.add(BannerPattern.FLOW_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flow");
             this.add(BannerPattern.FLOWER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flower");

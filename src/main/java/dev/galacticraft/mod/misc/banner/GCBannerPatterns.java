@@ -31,7 +31,10 @@ import net.minecraft.world.level.block.entity.BannerPattern;
 
 public class GCBannerPatterns {
     public static final ResourceKey<BannerPattern> ROCKET = Constant.key(Registries.BANNER_PATTERN, "rocket");
-    public static final ResourceKey<BannerPattern> ROCKET_SIDEWAYS = Constant.key(Registries.BANNER_PATTERN, "rocket_sideways");
+    public static final ResourceKey<BannerPattern> ROCKET_INVERTED = Constant.key(Registries.BANNER_PATTERN, "rocket_inverted");
+    public static final ResourceKey<BannerPattern> ROCKET_SINISTER = Constant.key(Registries.BANNER_PATTERN, "rocket_sinister");
+    public static final ResourceKey<BannerPattern> ROCKET_SINISTER_INVERTED = Constant.key(Registries.BANNER_PATTERN, "rocket_sinister_inverted");
+
     public static final ResourceKey<BannerPattern> CREEPER_SIDEWAYS = Constant.key(Registries.BANNER_PATTERN, "creeper_sideways");
     public static final ResourceKey<BannerPattern> FLOW_SIDEWAYS = Constant.key(Registries.BANNER_PATTERN, "flow_sideways");
     public static final ResourceKey<BannerPattern> FLOWER_SIDEWAYS = Constant.key(Registries.BANNER_PATTERN, "flower_sideways");
@@ -43,7 +46,10 @@ public class GCBannerPatterns {
 
     public static void bootstrapRegistries(BootstrapContext<BannerPattern> context) {
         context.register(ROCKET, new BannerPattern(Constant.id("rocket"), Translations.BannerPattern.ROCKET));
-        context.register(ROCKET_SIDEWAYS, new BannerPattern(Constant.id("rocket_sideways"), Translations.BannerPattern.ROCKET_SIDEWAYS));
+        context.register(ROCKET_INVERTED, new BannerPattern(Constant.id("rocket_inverted"), Translations.BannerPattern.ROCKET_INVERTED));
+        context.register(ROCKET_SINISTER, new BannerPattern(Constant.id("rocket_sinister"), Translations.BannerPattern.ROCKET_SINISTER));
+        context.register(ROCKET_SINISTER_INVERTED, new BannerPattern(Constant.id("rocket_sinister_inverted"), Translations.BannerPattern.ROCKET_SINISTER_INVERTED));
+
         context.register(CREEPER_SIDEWAYS, new BannerPattern(Constant.id("creeper_sideways"), Translations.BannerPattern.CREEPER_SIDEWAYS));
         context.register(FLOW_SIDEWAYS, new BannerPattern(Constant.id("flow_sideways"), Translations.BannerPattern.FLOW_SIDEWAYS));
         context.register(FLOWER_SIDEWAYS, new BannerPattern(Constant.id("flower_sideways"), Translations.BannerPattern.FLOWER_SIDEWAYS));
