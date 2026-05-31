@@ -93,6 +93,18 @@ public interface Translations {
 
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
+        String ROCKET_INVERTED = "block.galacticraft.banner.rocket_inverted";
+        String ROCKET_SINISTER = "block.galacticraft.banner.rocket_sinister";
+        String ROCKET_SINISTER_INVERTED = "block.galacticraft.banner.rocket_sinister_inverted";
+
+        String CREEPER_SIDEWAYS = "block.galacticraft.banner.creeper_sideways";
+        String FLOW_SIDEWAYS = "block.galacticraft.banner.flow_sideways";
+        String FLOWER_SIDEWAYS = "block.galacticraft.banner.flower_sideways";
+        String GLOBE_SIDEWAYS = "block.galacticraft.banner.globe_sideways";
+        String GUSTER_SIDEWAYS = "block.galacticraft.banner.guster_sideways";
+        String MOJANG_SIDEWAYS = "block.galacticraft.banner.mojang_sideways";
+        String PIGLIN_SIDEWAYS = "block.galacticraft.banner.piglin_sideways";
+        String SKULL_SIDEWAYS = "block.galacticraft.banner.skull_sideways";
     }
 
     interface JukeboxSong {

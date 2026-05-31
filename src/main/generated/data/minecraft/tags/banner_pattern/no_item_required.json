@@ -1,5 +1,8 @@
 {
   "values": [
-    "galacticraft:rocket"
+    "galacticraft:rocket",
+    "galacticraft:rocket_inverted",
+    "galacticraft:rocket_sinister",
+    "galacticraft:rocket_sinister_inverted"
   ]
 }
