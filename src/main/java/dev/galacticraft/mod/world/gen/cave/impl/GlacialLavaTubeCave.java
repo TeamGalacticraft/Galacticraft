@@ -36,7 +36,9 @@ public class GlacialLavaTubeCave extends PlanetCave {
                 Blocks.LIGHT_BLUE_WOOL.defaultBlockState(),
                 Blocks.BLUE_WOOL.defaultBlockState(),
                 Blocks.WHITE_WOOL.defaultBlockState(),
-                CaveTransitionConfig.weak()
+                CaveTransitionConfig.weak(),
+                java.util.List.of(),
+                0
         );
     }
 

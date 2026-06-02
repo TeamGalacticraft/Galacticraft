@@ -35,7 +35,9 @@ public class CheeseBranchingCave extends PlanetCave {
                 Blocks.YELLOW_WOOL.defaultBlockState(),
                 Blocks.ORANGE_WOOL.defaultBlockState(),
                 Blocks.GOLD_BLOCK.defaultBlockState(),
-                CaveTransitionConfig.weak()
+                CaveTransitionConfig.weak(),
+                java.util.List.of(),
+                0
         );
     }
 

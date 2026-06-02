@@ -24,6 +24,8 @@ public abstract class PlanetCave {
     private final BlockState outerWall;
     private final BlockState accent;
     private final CaveTransitionConfig transitionConfig;
+    private final java.util.List<CaveFeature> features;
+    private final int surfacePainterPriority;
 
     protected PlanetCave(
             ResourceLocation id,
@@ -38,7 +40,9 @@ public abstract class PlanetCave {
             BlockState innerWall,
             BlockState outerWall,
             BlockState accent,
-            CaveTransitionConfig transitionConfig
+            CaveTransitionConfig transitionConfig,
+            java.util.List<CaveFeature> features,
+            int surfacePainterPriority
     ) {
         this.id = id;
         this.shapeType = shapeType;
@@ -54,6 +58,8 @@ public abstract class PlanetCave {
         this.outerWall = outerWall;
         this.accent = accent;
         this.transitionConfig = transitionConfig;
+        this.features = features == null ? java.util.List.of() : java.util.List.copyOf(features);
+        this.surfacePainterPriority = surfacePainterPriority;
     }
 
     public ResourceLocation id() {
@@ -130,11 +136,37 @@ public abstract class PlanetCave {
     ) {
     }
 
-    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
-        return currentSurface;
+    public java.util.List<CaveFeature> features() {
+        return this.features;
+    }
+
+    public int surfacePainterPriority() {
+        return this.surfacePainterPriority;
     }
 
     public boolean paintsSurface() {
         return false;
+    }
+
+    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
+        return currentSurface;
+    }
+
+    public void decorate(CaveFeatureContext context, BlockPos pos, CaveSampleType type, int hash) {
+        if (CaveDebugConfig.DEBUG_DISABLE_DECORATIONS) {
+            return;
+        }
+
+        for (CaveFeature feature : this.features) {
+            feature.decorate(context, pos, type, hash);
+        }
+    }
+
+    public int minBiomeSearchY() {
+        return this.minY();
+    }
+
+    public int maxBiomeSearchY() {
+        return this.maxY();
     }
 }

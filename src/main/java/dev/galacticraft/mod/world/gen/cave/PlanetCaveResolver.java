@@ -51,6 +51,10 @@ public final class PlanetCaveResolver {
     }
 
     public PlanetCave resolve(int x, int y, int z, PlanetCave fallback) {
+        if (CaveDebugConfig.DEBUG_DISABLE_TRANSITIONS) {
+            return fallback;
+        }
+
         PlanetCave center = this.sampleNearest(x, y, z, fallback);
 
         if (center == fallback) {

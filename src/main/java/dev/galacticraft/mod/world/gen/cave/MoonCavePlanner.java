@@ -63,7 +63,12 @@ public final class MoonCavePlanner {
                 continue;
             }
 
-            BlockPos anchor = randomAnchor(cell, cave, random);
+            BlockPos anchor = find3DBiomeAnchor(cell, cave, biomeSource, randomState, random);
+
+            if (anchor == null) {
+                continue;
+            }
+
             Holder<Biome> anchorBiome = biomeSource.getNoiseBiome(
                     QuartPos.fromBlock(anchor.getX()),
                     QuartPos.fromBlock(anchor.getY()),
@@ -101,14 +106,35 @@ public final class MoonCavePlanner {
         return new BlockPos(x, y, z);
     }
 
-    private static BlockPos randomAnchor(MoonCaveCellPos cell, PlanetCave cave, RandomSource random) {
+    private static BlockPos find3DBiomeAnchor(
+            MoonCaveCellPos cell,
+            PlanetCave cave,
+            BiomeSource biomeSource,
+            RandomState randomState,
+            RandomSource random
+    ) {
         int margin = Math.min(40, Math.max(8, CELL_SIZE_BLOCKS / 4));
         int usable = Math.max(1, CELL_SIZE_BLOCKS - margin * 2);
 
-        int x = cell.minBlockX() + margin + random.nextInt(usable);
-        int z = cell.minBlockZ() + margin + random.nextInt(usable);
-        int y = cave.minAnchorY() + random.nextInt(cave.maxAnchorY() - cave.minAnchorY() + 1);
+        for (int attempt = 0; attempt < 32; attempt++) {
+            int x = cell.minBlockX() + margin + random.nextInt(usable);
+            int z = cell.minBlockZ() + margin + random.nextInt(usable);
 
-        return new BlockPos(x, y, z);
+            int yRange = cave.maxBiomeSearchY() - cave.minBiomeSearchY() + 1;
+            int y = cave.minBiomeSearchY() + random.nextInt(yRange);
+
+            Holder<Biome> biome = biomeSource.getNoiseBiome(
+                    QuartPos.fromBlock(x),
+                    QuartPos.fromBlock(y),
+                    QuartPos.fromBlock(z),
+                    randomState.sampler()
+            );
+
+            if (cave.matchesBiome(biome)) {
+                return new BlockPos(x, y, z);
+            }
+        }
+
+        return null;
     }
 }

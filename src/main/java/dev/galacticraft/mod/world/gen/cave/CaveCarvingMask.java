@@ -10,15 +10,17 @@ public final class CaveCarvingMask {
     private final int maxY;
     private final int height;
     private final byte[] zones;
+    private final MoonCavePlan[] owners;
 
     public CaveCarvingMask(int minY, int maxY) {
         this.minY = minY;
         this.maxY = maxY;
         this.height = maxY - minY + 1;
         this.zones = new byte[16 * 16 * this.height];
+        this.owners = new MoonCavePlan[this.zones.length];
     }
 
-    public void set(int localX, int y, int localZ, CaveZone zone) {
+    public void set(int localX, int y, int localZ, CaveZone zone, MoonCavePlan owner) {
         if (localX < 0 || localX > 15 || localZ < 0 || localZ > 15 || y < this.minY || y > this.maxY) {
             return;
         }
@@ -26,8 +28,9 @@ public final class CaveCarvingMask {
         int index = this.index(localX, y, localZ);
         byte next = encode(zone);
 
-        if (next > this.zones[index]) {
+        if (next >= this.zones[index]) {
             this.zones[index] = next;
+            this.owners[index] = owner;
         }
     }
 
@@ -37,6 +40,14 @@ public final class CaveCarvingMask {
         }
 
         return decode(this.zones[this.index(localX, y, localZ)]);
+    }
+
+    public MoonCavePlan owner(int localX, int y, int localZ) {
+        if (localX < 0 || localX > 15 || localZ < 0 || localZ > 15 || y < this.minY || y > this.maxY) {
+            return null;
+        }
+
+        return this.owners[this.index(localX, y, localZ)];
     }
 
     private int index(int localX, int y, int localZ) {

@@ -107,4 +107,20 @@ public final class MoonCaveRegistry {
     public interface BlockStateLikeAccess {
         boolean is(net.minecraft.world.level.block.Block block);
     }
+
+    public static PlanetCave surfacePainterForBiome(Holder<Biome> biome) {
+        PlanetCave best = null;
+
+        for (PlanetCave cave : CAVES) {
+            if (!cave.matchesBiome(biome) || !cave.paintsSurface()) {
+                continue;
+            }
+
+            if (best == null || cave.surfacePainterPriority() > best.surfacePainterPriority()) {
+                best = cave;
+            }
+        }
+
+        return best;
+    }
 }

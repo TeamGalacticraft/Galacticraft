@@ -72,6 +72,27 @@ public class PathSolvedBranchingCaveShape implements dev.galacticraft.mod.world.
         this.maxTargetY = maxTargetY;
     }
 
+    public PathSolvedBranchingCaveShape(PathSolvedBranchingCaveConfig config) {
+        this(
+                config.minMainAnchors(),
+                config.maxMainAnchors(),
+                config.minRoomsBetweenAnchors(),
+                config.maxRoomsBetweenAnchors(),
+                config.minSideBranches(),
+                config.maxSideBranches(),
+                config.minRadius(),
+                config.maxRadius(),
+                config.minHeightRadius(),
+                config.maxHeightRadius(),
+                config.minTunnelRadius(),
+                config.maxTunnelRadius(),
+                config.minAnchorDistance(),
+                config.maxAnchorDistance(),
+                config.minTargetY(),
+                config.maxTargetY()
+        );
+    }
+
     @Override
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();

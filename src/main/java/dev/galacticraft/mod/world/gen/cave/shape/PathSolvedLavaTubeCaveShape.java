@@ -71,6 +71,27 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
         this.maxTargetY = maxTargetY;
     }
 
+    public PathSolvedLavaTubeCaveShape(PathSolvedLavaTubeCaveConfig config) {
+        this(
+                config.minMainAnchors(),
+                config.maxMainAnchors(),
+                config.minSegmentsBetweenAnchors(),
+                config.maxSegmentsBetweenAnchors(),
+                config.minSideBranches(),
+                config.maxSideBranches(),
+                config.minSegmentLength(),
+                config.maxSegmentLength(),
+                config.minRadius(),
+                config.maxRadius(),
+                config.minCurve(),
+                config.maxCurve(),
+                config.minAnchorDistance(),
+                config.maxAnchorDistance(),
+                config.minTargetY(),
+                config.maxTargetY()
+        );
+    }
+
     @Override
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();

@@ -35,7 +35,9 @@ public class OlivineBranchingCave extends PlanetCave {
                 GCBlocks.MOON_BASALT.defaultBlockState(),
                 GCBlocks.OLIVINE_BLOCK.defaultBlockState(),
                 GCBlocks.BUDDING_OLIVINE.defaultBlockState(),
-                CaveTransitionConfig.weak()
+                CaveTransitionConfig.weak(),
+                java.util.List.of(),
+                0
         );
     }
 
