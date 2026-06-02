@@ -1,6 +1,7 @@
 package dev.galacticraft.mod.world.gen.cave.impl;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.gen.cave.*;
 import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedLavaTubeCaveShape;
@@ -38,7 +39,7 @@ public class GlacialLavaTubeCave extends PlanetCave {
                 Blocks.WHITE_WOOL.defaultBlockState(),
                 CaveTransitionConfig.weak(),
                 java.util.List.of(),
-                0
+                100
         );
     }
 
@@ -51,62 +52,97 @@ public class GlacialLavaTubeCave extends PlanetCave {
         return biome.is(GCBiomes.Moon.GLACIAL_CAVERNS);
     }
 
-    private BlockState spikeBlock() {
-        return Blocks.CYAN_WOOL.defaultBlockState();
+    @Override
+    public BlockState wallBlock(CaveZone zone, int x, int y, int z, BlockState current) {
+        int frost = Math.floorMod(blockHash(x >> 2, y >> 1, z >> 2, 6641), 100);
+        int layer = y + layerNoise(x, z, 2201, 4);
+
+        if (zone == CaveZone.INNER_SHELL) {
+            if (frost >= 92) {
+                return Blocks.BLUE_ICE.defaultBlockState();
+            }
+
+            if (frost >= 72) {
+                return Blocks.PACKED_ICE.defaultBlockState();
+            }
+
+            if (Math.floorMod(layer, 15) <= 2) {
+                return Blocks.ICE.defaultBlockState();
+            }
+
+            return GCBlocks.MOON_BASALT.defaultBlockState();
+        }
+
+        if (zone == CaveZone.OUTER_SHELL) {
+            if (frost >= 94) {
+                return Blocks.PACKED_ICE.defaultBlockState();
+            }
+
+            return Math.floorMod(layer, 17) < 7
+                    ? GCBlocks.LUNASLATE.defaultBlockState()
+                    : GCBlocks.MOON_BASALT.defaultBlockState();
+        }
+
+        return current;
     }
 
     @Override
-    public void decorate(
-            ChunkAccess chunk,
-            ChunkPos chunkPos,
-            BlockPos pos,
-            CaveSampleType type,
-            int hash
-    ) {
-        boolean surfaceLike = isSurfaceLikeOpening(pos);
+    public void decorate(CaveFeatureContext context, BlockPos pos, CaveSampleType type, int hash) {
+        ChunkAccess chunk = context.chunk();
+        ChunkPos chunkPos = context.chunkPos();
+        boolean surfaceLike = pos.getY() >= 58;
 
         if (type == CaveSampleType.CEILING) {
-            int chance = surfaceLike ? 10 : 32;
+            int chance = surfaceLike ? 13 : 42;
 
             if (Math.floorMod(hash, chance) != 0) {
                 return;
             }
 
             int height = surfaceLike
-                    ? 6 + Math.floorMod(hash >> 4, 9)
-                    : 2 + Math.floorMod(hash >> 4, 5);
+                    ? 5 + Math.floorMod(hash >> 4, 8)
+                    : 2 + Math.floorMod(hash >> 4, 4);
 
             placeSpike(chunk, chunkPos, pos, -1, height, surfaceLike);
             return;
         }
 
         if (type == CaveSampleType.FLOOR) {
-            int chance = surfaceLike ? 8 : 52;
+            int chance = surfaceLike ? 11 : 64;
 
             if (Math.floorMod(hash, chance) != 0) {
                 return;
             }
 
             int height = surfaceLike
-                    ? 8 + Math.floorMod(hash >> 5, 12)
-                    : 2 + Math.floorMod(hash >> 5, 4);
+                    ? 7 + Math.floorMod(hash >> 5, 10)
+                    : 2 + Math.floorMod(hash >> 5, 3);
 
             placeSpike(chunk, chunkPos, pos, 1, height, surfaceLike);
         }
     }
 
-    private boolean isSurfaceLikeOpening(BlockPos pos) {
-        return pos.getY() >= 58;
+    @Override
+    public boolean paintsSurface() {
+        return true;
     }
 
-    private void placeSpike(
-            ChunkAccess chunk,
-            ChunkPos chunkPos,
-            BlockPos start,
-            int yDir,
-            int height,
-            boolean surfaceLike
-    ) {
+    @Override
+    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
+        int frost = Math.floorMod(blockHash(x >> 3, y >> 1, z >> 3, 8711), 100);
+
+        if (frost >= 75) {
+            return Blocks.SNOW_BLOCK.defaultBlockState();
+        }
+
+        return Blocks.POWDER_SNOW.defaultBlockState();
+    }
+
+    private BlockState spikeBlock() {
+        return Blocks.PACKED_ICE.defaultBlockState();
+    }
+
+    private void placeSpike(ChunkAccess chunk, ChunkPos chunkPos, BlockPos start, int yDir, int height, boolean surfaceLike) {
         BlockPos.MutableBlockPos mutable = new BlockPos.MutableBlockPos();
 
         for (int i = 0; i < height; i++) {
@@ -136,11 +172,11 @@ public class GlacialLavaTubeCave extends PlanetCave {
 
         double progress = layer / (double) Math.max(1, height - 1);
 
-        if (progress < 0.22D && height >= 12) {
+        if (progress < 0.25D && height >= 11) {
             return 2;
         }
 
-        if (progress < 0.55D && height >= 8) {
+        if (progress < 0.58D && height >= 7) {
             return 1;
         }
 
@@ -152,15 +188,5 @@ public class GlacialLavaTubeCave extends PlanetCave {
                 && pos.getX() <= chunkPos.getMaxBlockX()
                 && pos.getZ() >= chunkPos.getMinBlockZ()
                 && pos.getZ() <= chunkPos.getMaxBlockZ();
-    }
-
-    @Override
-    public boolean paintsSurface() {
-        return true;
-    }
-
-    @Override
-    public BlockState surfaceBlock(int x, int y, int z, BlockState currentSurface) {
-        return Blocks.RED_WOOL.defaultBlockState();
     }
 }

@@ -1,15 +1,14 @@
 package dev.galacticraft.mod.world.gen.cave.impl;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
-import dev.galacticraft.mod.world.gen.cave.CaveTransitionConfig;
-import dev.galacticraft.mod.world.gen.cave.MoonCaveRegistry;
-import dev.galacticraft.mod.world.gen.cave.MoonCaveShapeType;
-import dev.galacticraft.mod.world.gen.cave.PlanetCave;
+import dev.galacticraft.mod.world.gen.cave.*;
 import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedLavaTubeCaveShape;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
 
 public class CheeseLavaTubeCave extends PlanetCave {
     public CheeseLavaTubeCave() {
@@ -37,7 +36,7 @@ public class CheeseLavaTubeCave extends PlanetCave {
                 Blocks.GOLD_BLOCK.defaultBlockState(),
                 CaveTransitionConfig.weak(),
                 java.util.List.of(),
-                0
+                10
         );
     }
 
@@ -48,5 +47,33 @@ public class CheeseLavaTubeCave extends PlanetCave {
     @Override
     public boolean matchesBiome(Holder<Biome> biome) {
         return biome.is(GCBiomes.Moon.CHEESE_CAVES);
+    }
+
+    @Override
+    public BlockState wallBlock(CaveZone zone, int x, int y, int z, BlockState current) {
+        int layer = y + layerNoise(x, z, 4418, 6);
+        int pocket = Math.floorMod(blockHash(x >> 2, y >> 1, z >> 2, 1842), 100);
+
+        if (zone == CaveZone.INNER_SHELL) {
+            if (pocket >= 96) {
+                return Blocks.GOLD_BLOCK.defaultBlockState();
+            }
+
+            if (pocket >= 82) {
+                return Blocks.ORANGE_WOOL.defaultBlockState();
+            }
+
+            return Math.floorMod(layer, 11) <= 3
+                    ? Blocks.YELLOW_WOOL.defaultBlockState()
+                    : GCBlocks.MOON_ROCK.defaultBlockState();
+        }
+
+        if (zone == CaveZone.OUTER_SHELL) {
+            return Math.floorMod(layer, 19) < 6
+                    ? GCBlocks.LUNASLATE.defaultBlockState()
+                    : GCBlocks.MOON_ROCK.defaultBlockState();
+        }
+
+        return current;
     }
 }

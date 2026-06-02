@@ -1,10 +1,10 @@
 package dev.galacticraft.mod.world.gen.cave;
 
 public final class CaveCarvingMask {
-    private static final byte NONE = 0;
-    private static final byte OUTER = 1;
-    private static final byte INNER = 2;
-    private static final byte AIR = 3;
+    public static final byte NONE = 0;
+    public static final byte OUTER = 1;
+    public static final byte INNER = 2;
+    public static final byte AIR = 3;
 
     private final int minY;
     private final int maxY;
@@ -21,25 +21,32 @@ public final class CaveCarvingMask {
     }
 
     public void set(int localX, int y, int localZ, CaveZone zone, MoonCavePlan owner) {
+        this.setRaw(localX, y, localZ, encode(zone), owner);
+    }
+
+    public void setRaw(int localX, int y, int localZ, byte zone, MoonCavePlan owner) {
         if (localX < 0 || localX > 15 || localZ < 0 || localZ > 15 || y < this.minY || y > this.maxY) {
             return;
         }
 
         int index = this.index(localX, y, localZ);
-        byte next = encode(zone);
 
-        if (next >= this.zones[index]) {
-            this.zones[index] = next;
+        if (zone >= this.zones[index]) {
+            this.zones[index] = zone;
             this.owners[index] = owner;
         }
     }
 
-    public CaveZone get(int localX, int y, int localZ) {
+    public byte getRaw(int localX, int y, int localZ) {
         if (localX < 0 || localX > 15 || localZ < 0 || localZ > 15 || y < this.minY || y > this.maxY) {
-            return CaveZone.NONE;
+            return NONE;
         }
 
-        return decode(this.zones[this.index(localX, y, localZ)]);
+        return this.zones[this.index(localX, y, localZ)];
+    }
+
+    public CaveZone get(int localX, int y, int localZ) {
+        return decode(this.getRaw(localX, y, localZ));
     }
 
     public MoonCavePlan owner(int localX, int y, int localZ) {
@@ -51,8 +58,7 @@ public final class CaveCarvingMask {
     }
 
     private int index(int localX, int y, int localZ) {
-        int localY = y - this.minY;
-        return (localY * 16 + localZ) * 16 + localX;
+        return ((y - this.minY) * 16 + localZ) * 16 + localX;
     }
 
     private static byte encode(CaveZone zone) {
@@ -64,7 +70,7 @@ public final class CaveCarvingMask {
         };
     }
 
-    private static CaveZone decode(byte value) {
+    public static CaveZone decode(byte value) {
         return switch (value) {
             case OUTER -> CaveZone.OUTER_SHELL;
             case INNER -> CaveZone.INNER_SHELL;

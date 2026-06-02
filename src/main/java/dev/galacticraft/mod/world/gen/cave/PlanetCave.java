@@ -169,4 +169,32 @@ public abstract class PlanetCave {
     public int maxBiomeSearchY() {
         return this.maxY();
     }
+
+    public BlockState wallBlock(CaveZone zone, int x, int y, int z, BlockState current) {
+        if (zone == CaveZone.INNER_SHELL) {
+            return this.innerWall(x, y, z);
+        }
+
+        if (zone == CaveZone.OUTER_SHELL) {
+            return this.outerWall(x, y, z);
+        }
+
+        return current;
+    }
+
+    protected static int blockHash(int x, int y, int z, int salt) {
+        long h = 73428767L;
+        h ^= (long) x * 91227153L;
+        h ^= (long) y * 42317861L;
+        h ^= (long) z * 1376312589L;
+        h ^= (long) salt * 19281173L;
+        h ^= h >>> 33;
+        h *= 0xff51afd7ed558ccdL;
+        h ^= h >>> 33;
+        return (int) h;
+    }
+
+    protected static int layerNoise(int x, int z, int salt, int amplitude) {
+        return Math.floorMod(blockHash(x >> 4, salt, z >> 4, salt), amplitude * 2 + 1) - amplitude;
+    }
 }

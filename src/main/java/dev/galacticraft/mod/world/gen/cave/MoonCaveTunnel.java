@@ -3,17 +3,11 @@ package dev.galacticraft.mod.world.gen.cave;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ChunkPos;
 
-/**
- * Organic worm tunnel made from overlapping blobs plus guaranteed capsule bridges.
- *
- * <p>The blobs create organic cave shape, while the capsule bridge between each
- * node prevents disconnected rooms/tunnel gaps.</p>
- */
 public final class MoonCaveTunnel implements MoonCaveElement {
     private static final int MAX_STEP_HORIZONTAL_DISTANCE = 5;
     private static final double INNER_EXTRA = 1.15D;
     private static final double OUTER_EXTRA = 2.35D;
-    private static final double MIN_CONNECT_RADIUS = 1.65D;
+    private static final double MIN_CONNECT_RADIUS = 1.75D;
 
     private final BlockPos start;
     private final BlockPos end;
@@ -43,23 +37,16 @@ public final class MoonCaveTunnel implements MoonCaveElement {
     @Override
     public void stamp(ChunkPos chunkPos, int minY, int maxY, CaveCarvingMask mask, MoonCavePlan owner) {
         for (Bridge bridge : this.bridges) {
-            this.stampBridge(chunkPos, minY, maxY, mask, owner, bridge);
+            stampBridge(chunkPos, minY, maxY, mask, owner, bridge);
         }
 
         for (Node node : this.nodes) {
-            this.stampNode(chunkPos, minY, maxY, mask, owner, node);
+            stampNode(chunkPos, minY, maxY, mask, owner, node);
         }
     }
 
-    private void stampNode(
-            ChunkPos chunkPos,
-            int minY,
-            int maxY,
-            CaveCarvingMask mask,
-            MoonCavePlan owner,
-            Node node
-    ) {
-        int padding = (int) Math.ceil(node.radius + OUTER_EXTRA + 4.0D);
+    private void stampNode(ChunkPos chunkPos, int minY, int maxY, CaveCarvingMask mask, MoonCavePlan owner, Node node) {
+        int padding = (int) Math.ceil(node.radius + OUTER_EXTRA + 2.0D);
 
         int minX = Math.max(chunkPos.getMinBlockX(), (int) Math.floor(node.x - padding));
         int maxX = Math.min(chunkPos.getMaxBlockX(), (int) Math.ceil(node.x + padding));
@@ -75,25 +62,22 @@ public final class MoonCaveTunnel implements MoonCaveElement {
                 int localZ = z - chunkPos.getMinBlockZ();
 
                 for (int y = lowY; y <= highY; y++) {
-                    CaveZone zone = this.nodeZone(node, x, y, z);
+                    double dx = x + 0.5D - node.x;
+                    double dy = y + 0.5D - node.y;
+                    double dz = z + 0.5D - node.z;
 
-                    if (zone != CaveZone.NONE) {
-                        mask.set(localX, y, localZ, zone, owner);
+                    byte zone = zoneFromDistance(dx * dx + dy * dy + dz * dz, node.radius, x, y, z, node.index);
+
+                    if (zone != CaveCarvingMask.NONE) {
+                        mask.setRaw(localX, y, localZ, zone, owner);
                     }
                 }
             }
         }
     }
 
-    private void stampBridge(
-            ChunkPos chunkPos,
-            int minY,
-            int maxY,
-            CaveCarvingMask mask,
-            MoonCavePlan owner,
-            Bridge bridge
-    ) {
-        int padding = (int) Math.ceil(bridge.radius + OUTER_EXTRA + 3.0D);
+    private void stampBridge(ChunkPos chunkPos, int minY, int maxY, CaveCarvingMask mask, MoonCavePlan owner, Bridge bridge) {
+        int padding = (int) Math.ceil(bridge.radius + OUTER_EXTRA + 2.0D);
 
         int minX = Math.max(chunkPos.getMinBlockX(), (int) Math.floor(Math.min(bridge.a.x, bridge.b.x) - padding));
         int maxX = Math.min(chunkPos.getMaxBlockX(), (int) Math.ceil(Math.max(bridge.a.x, bridge.b.x) + padding));
@@ -109,60 +93,38 @@ public final class MoonCaveTunnel implements MoonCaveElement {
                 int localZ = z - chunkPos.getMinBlockZ();
 
                 for (int y = lowY; y <= highY; y++) {
-                    CaveZone zone = this.bridgeZone(bridge, x, y, z);
+                    double distanceSqr = bridge.distanceSqr(x + 0.5D, y + 0.5D, z + 0.5D);
+                    byte zone = zoneFromDistance(distanceSqr, bridge.radius, x, y, z, bridge.index + 9000);
 
-                    if (zone != CaveZone.NONE) {
-                        mask.set(localX, y, localZ, zone, owner);
+                    if (zone != CaveCarvingMask.NONE) {
+                        mask.setRaw(localX, y, localZ, zone, owner);
                     }
                 }
             }
         }
     }
 
-    private CaveZone nodeZone(Node node, int x, int y, int z) {
-        double warpAmount = node.radius * 0.55D;
+    private byte zoneFromDistance(double distanceSqr, double baseRadius, int x, int y, int z, int salt) {
+        double rough = hashNoise(x >> 1, y >> 1, z >> 1, this.seed + salt) * 0.28D
+                + hashNoise(x >> 2, y >> 2, z >> 2, this.seed + salt + 33) * 0.45D;
 
-        double px = x + 0.5D + CaveNoise.fbm(this.seed + node.index * 17L, x, y, z, 0.075D, 2, 0.5D) * warpAmount;
-        double py = y + 0.5D + CaveNoise.fbm(this.seed + node.index * 23L, x, y, z, 0.075D, 2, 0.5D) * warpAmount * 0.7D;
-        double pz = z + 0.5D + CaveNoise.fbm(this.seed + node.index * 31L, x, y, z, 0.075D, 2, 0.5D) * warpAmount;
+        double radius = Math.max(MIN_CONNECT_RADIUS, baseRadius + rough);
 
-        double dx = px - node.x;
-        double dy = py - node.y;
-        double dz = pz - node.z;
-
-        double large = CaveNoise.warpedFbm(this.seed + node.index * 43L, x, y, z, 0.07D, 6.0D, 2);
-        double detail = CaveNoise.fbm(this.seed + node.index * 47L, x, y, z, 0.20D, 2, 0.45D);
-
-        double localRadius = Math.max(MIN_CONNECT_RADIUS, node.radius + large * 1.05D + detail * 0.35D);
-        return zoneFromDistance(dx * dx + dy * dy + dz * dz, localRadius);
-    }
-
-    private CaveZone bridgeZone(Bridge bridge, int x, int y, int z) {
-        double distanceSqr = bridge.distanceSqr(x + 0.5D, y + 0.5D, z + 0.5D);
-
-        double large = CaveNoise.warpedFbm(this.seed + bridge.index * 101L, x, y, z, 0.065D, 5.0D, 2);
-        double detail = CaveNoise.fbm(this.seed + bridge.index * 103L, x, y, z, 0.18D, 2, 0.45D);
-
-        double localRadius = Math.max(MIN_CONNECT_RADIUS, bridge.radius + large * 0.65D + detail * 0.25D);
-        return zoneFromDistance(distanceSqr, localRadius);
-    }
-
-    private static CaveZone zoneFromDistance(double distanceSqr, double radius) {
         if (distanceSqr <= radius * radius) {
-            return CaveZone.AIR;
+            return CaveCarvingMask.AIR;
         }
 
         double inner = radius + INNER_EXTRA;
         if (distanceSqr <= inner * inner) {
-            return CaveZone.INNER_SHELL;
+            return CaveCarvingMask.INNER;
         }
 
         double outer = radius + OUTER_EXTRA;
         if (distanceSqr <= outer * outer) {
-            return CaveZone.OUTER_SHELL;
+            return CaveCarvingMask.OUTER;
         }
 
-        return CaveZone.NONE;
+        return CaveCarvingMask.NONE;
     }
 
     private Node[] createNodes() {
@@ -171,6 +133,7 @@ public final class MoonCaveTunnel implements MoonCaveElement {
 
         Node[] result = new Node[steps + 1];
         double heading = Math.atan2(this.end.getZ() - this.start.getZ(), this.end.getX() - this.start.getX());
+        double sideAngle = heading + Math.PI / 2.0D;
 
         for (int i = 0; i <= steps; i++) {
             double t = i / (double) steps;
@@ -180,11 +143,9 @@ public final class MoonCaveTunnel implements MoonCaveElement {
             double y = this.start.getY() + (this.end.getY() - this.start.getY()) * t;
             double z = this.start.getZ() + (this.end.getZ() - this.start.getZ()) * t;
 
-            double sideAngle = heading + Math.PI / 2.0D;
-
-            double side = CaveNoise.fbm(this.seed + 100L, i, x, z, 0.31D, 2, 0.5D) * this.curve * fade;
-            double vertical = CaveNoise.fbm(this.seed + 200L, i, x, y, 0.28D, 2, 0.5D) * this.curve * 0.75D * fade;
-            double forward = CaveNoise.fbm(this.seed + 300L, i, y, z, 0.25D, 2, 0.5D) * this.curve * 0.35D * fade;
+            double side = hashNoise(i, this.seed, 0, this.seed + 11) * this.curve * fade;
+            double vertical = hashNoise(i, this.seed, 1, this.seed + 22) * this.curve * 0.65D * fade;
+            double forward = hashNoise(i, this.seed, 2, this.seed + 33) * this.curve * 0.28D * fade;
 
             x += Math.cos(sideAngle) * side + Math.cos(heading) * forward;
             z += Math.sin(sideAngle) * side + Math.sin(heading) * forward;
@@ -192,7 +153,7 @@ public final class MoonCaveTunnel implements MoonCaveElement {
 
             double nodeRadius = Math.max(
                     MIN_CONNECT_RADIUS,
-                    this.radius + CaveNoise.fbm(this.seed + 400L, i, x, z, 0.45D, 2, 0.5D) * 0.75D
+                    this.radius + hashNoise(i, this.seed, 3, this.seed + 44) * 0.55D
             );
 
             result[i] = new Node(i, x + 0.5D, y + 0.5D, z + 0.5D, nodeRadius);
@@ -207,7 +168,7 @@ public final class MoonCaveTunnel implements MoonCaveElement {
         for (int i = 0; i < result.length; i++) {
             Node a = this.nodes[i];
             Node b = this.nodes[i + 1];
-            double radius = Math.max(MIN_CONNECT_RADIUS, Math.min(a.radius, b.radius) * 0.92D);
+            double radius = Math.max(MIN_CONNECT_RADIUS, Math.min(a.radius, b.radius) * 0.96D);
             result[i] = new Bridge(i, a, b, radius);
         }
 
@@ -218,7 +179,7 @@ public final class MoonCaveTunnel implements MoonCaveElement {
         MoonCaveBounds bounds = new MoonCaveBounds();
 
         for (Node node : this.nodes) {
-            int p = (int) Math.ceil(node.radius + OUTER_EXTRA + 6.0D);
+            int p = (int) Math.ceil(node.radius + OUTER_EXTRA + 4.0D);
             bounds.include(
                     (int) Math.floor(node.x - p),
                     (int) Math.floor(node.y - p),
@@ -236,6 +197,21 @@ public final class MoonCaveTunnel implements MoonCaveElement {
         int dx = a.getX() - b.getX();
         int dz = a.getZ() - b.getZ();
         return Math.sqrt(dx * dx + dz * dz);
+    }
+
+    private static double hashNoise(int x, int y, int z, int seed) {
+        return ((hash(seed, x, y, z) & 1023) / 511.5D) - 1.0D;
+    }
+
+    private static int hash(int seed, int x, int y, int z) {
+        long h = seed;
+        h ^= (long) x * 73428767L;
+        h ^= (long) y * 91227153L;
+        h ^= (long) z * 42317861L;
+        h ^= h >>> 33;
+        h *= 0xff51afd7ed558ccdL;
+        h ^= h >>> 33;
+        return (int) h;
     }
 
     private record Node(int index, double x, double y, double z, double radius) {

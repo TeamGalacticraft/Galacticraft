@@ -118,11 +118,10 @@ public final class MoonCaveChunkGenerator {
                         continue;
                     }
 
-                    if (zone == CaveZone.INNER_SHELL) {
-                        chunk.setBlockState(pos, cave.innerWall(x, y, z), false);
-                        changed = true;
-                    } else if (zone == CaveZone.OUTER_SHELL) {
-                        chunk.setBlockState(pos, cave.outerWall(x, y, z), false);
+                    BlockState replacement = cave.wallBlock(zone, x, y, z, current);
+
+                    if (replacement != current) {
+                        chunk.setBlockState(pos, replacement, false);
                         changed = true;
                     }
                 }
