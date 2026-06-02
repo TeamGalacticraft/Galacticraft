@@ -9,15 +9,9 @@ import net.minecraft.util.RandomSource;
 import java.util.ArrayList;
 import java.util.List;
 
-/**
- * Goal-directed spaghetti/lava-tube cave shape.
- *
- * <p>This shape creates cave systems made only from tunnel segments. It has no
- * rooms. Required target anchors force the tunnel network to reach far lateral
- * and vertical locations, while optional branches create a sparse natural
- * spaghetti-cave structure.</p>
- */
 public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.gen.cave.MoonCaveShape {
+    private static final int MAX_HORIZONTAL_TUNNEL_LENGTH = 30;
+
     private final int minMainAnchors;
     private final int maxMainAnchors;
     private final int minSegmentsBetweenAnchors;
@@ -95,28 +89,22 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
     @Override
     public MoonCavePlan createPlan(MoonCaveContext context) {
         RandomSource random = context.random();
-        MoonCavePlan plan = new MoonCavePlan(
-                context.cave(),
-                context.cell(),
-                random.nextDouble()
-        );
+        MoonCavePlan plan = new MoonCavePlan(context.cave(), context.cell(), random.nextDouble());
 
-        List<BlockPos> tunnelNodes = new ArrayList<>();
+        List<BlockPos> nodes = new ArrayList<>();
         List<BlockPos> anchors = this.createAnchors(context, random);
-
-        tunnelNodes.add(anchors.get(0));
+        nodes.add(anchors.get(0));
 
         for (int i = 1; i < anchors.size(); i++) {
-            this.solveTubePath(plan, anchors.get(i - 1), anchors.get(i), tunnelNodes, context, random);
+            this.solveTubePath(plan, anchors.get(i - 1), anchors.get(i), nodes, context, random);
         }
 
         int sideBranches = this.minSideBranches + random.nextInt(this.maxSideBranches - this.minSideBranches + 1);
 
-        for (int i = 0; i < sideBranches && !tunnelNodes.isEmpty(); i++) {
-            BlockPos start = tunnelNodes.get(random.nextInt(tunnelNodes.size()));
+        for (int i = 0; i < sideBranches && !nodes.isEmpty(); i++) {
+            BlockPos start = nodes.get(random.nextInt(nodes.size()));
             BlockPos end = this.randomSideTarget(start, context, random);
-
-            this.solveTubePath(plan, start, end, tunnelNodes, context, random);
+            this.solveTubePath(plan, start, end, nodes, context, random);
         }
 
         return plan;
@@ -127,19 +115,22 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
         anchors.add(context.anchor());
 
         int anchorCount = this.minMainAnchors + random.nextInt(this.maxMainAnchors - this.minMainAnchors + 1);
+        double heading = random.nextDouble() * Math.PI * 2.0D;
+        BlockPos previous = context.anchor();
 
         for (int i = 1; i < anchorCount; i++) {
-            double progress = i / (double) (anchorCount - 1);
-            double angle = random.nextDouble() * Math.PI * 2.0D;
+            heading += randomBetween(random, -0.85D, 0.85D);
+
             int distance = this.minAnchorDistance + random.nextInt(this.maxAnchorDistance - this.minAnchorDistance + 1);
+            int x = previous.getX() + (int) Math.round(Math.cos(heading) * distance);
+            int z = previous.getZ() + (int) Math.round(Math.sin(heading) * distance);
 
-            int x = context.anchor().getX() + (int) Math.round(Math.cos(angle) * distance * i);
-            int z = context.anchor().getZ() + (int) Math.round(Math.sin(angle) * distance * i);
-
+            double progress = i / (double) Math.max(1, anchorCount - 1);
             int targetY = lerp(context.anchor().getY(), randomBetween(random, this.minTargetY, this.maxTargetY), progress);
-            int y = context.clampY(targetY + random.nextInt(11) - 5);
+            int y = context.clampY(targetY + random.nextInt(13) - 6);
 
-            anchors.add(new BlockPos(x, y, z));
+            previous = new BlockPos(x, y, z);
+            anchors.add(previous);
         }
 
         return anchors;
@@ -149,38 +140,49 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
             MoonCavePlan plan,
             BlockPos start,
             BlockPos end,
-            List<BlockPos> tunnelNodes,
+            List<BlockPos> nodes,
             MoonCaveContext context,
             RandomSource random
     ) {
-        int segments = this.minSegmentsBetweenAnchors + random.nextInt(this.maxSegmentsBetweenAnchors - this.minSegmentsBetweenAnchors + 1);
+        int baseSegments = this.minSegmentsBetweenAnchors + random.nextInt(this.maxSegmentsBetweenAnchors - this.minSegmentsBetweenAnchors + 1);
+        int forcedSegments = Math.max(1, (int) Math.ceil(horizontalDistance(start, end) / MAX_HORIZONTAL_TUNNEL_LENGTH));
+        int segments = Math.max(baseSegments, forcedSegments);
+
         BlockPos previous = start;
+        double heading = Math.atan2(end.getZ() - start.getZ(), end.getX() - start.getX());
 
         for (int i = 1; i <= segments; i++) {
-            double t = i / (double) (segments + 1);
-            BlockPos next = this.interpolateTubeNode(start, end, t, context, random);
+            double t = i / (double) segments;
+            boolean last = i == segments;
+
+            BlockPos next = last ? end : this.noisyIntermediateNode(start, end, t, heading, context, random);
 
             this.addTunnel(plan, previous, next, random);
-            tunnelNodes.add(next);
-
+            nodes.add(next);
             previous = next;
         }
-
-        this.addTunnel(plan, previous, end, random);
-        tunnelNodes.add(end);
     }
 
-    private BlockPos interpolateTubeNode(BlockPos start, BlockPos end, double t, MoonCaveContext context, RandomSource random) {
+    private BlockPos noisyIntermediateNode(
+            BlockPos start,
+            BlockPos end,
+            double t,
+            double heading,
+            MoonCaveContext context,
+            RandomSource random
+    ) {
         int x = (int) Math.round(start.getX() + (end.getX() - start.getX()) * t);
         int y = (int) Math.round(start.getY() + (end.getY() - start.getY()) * t);
         int z = (int) Math.round(start.getZ() + (end.getZ() - start.getZ()) * t);
 
-        int horizontalWarp = this.minSegmentLength + random.nextInt(this.maxSegmentLength - this.minSegmentLength + 1);
-        double angle = random.nextDouble() * Math.PI * 2.0D;
+        double sideAngle = heading + Math.PI / 2.0D;
+        double fade = Math.sin(t * Math.PI);
+        double sideWarp = randomBetween(random, -10.0D, 10.0D) * fade;
+        double forwardWarp = randomBetween(random, -5.0D, 5.0D) * fade;
 
-        x += (int) Math.round(Math.cos(angle) * horizontalWarp * 0.45D);
-        z += (int) Math.round(Math.sin(angle) * horizontalWarp * 0.45D);
-        y = context.clampY(y + random.nextInt(13) - 6);
+        x += (int) Math.round(Math.cos(sideAngle) * sideWarp + Math.cos(heading) * forwardWarp);
+        z += (int) Math.round(Math.sin(sideAngle) * sideWarp + Math.sin(heading) * forwardWarp);
+        y = context.clampY(y + (int) Math.round(randomBetween(random, -8.0D, 8.0D) * fade));
 
         return new BlockPos(x, y, z);
     }
@@ -191,7 +193,7 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
 
         int x = start.getX() + (int) Math.round(Math.cos(angle) * distance);
         int z = start.getZ() + (int) Math.round(Math.sin(angle) * distance);
-        int y = context.clampY(start.getY() - random.nextInt(32) + random.nextInt(16));
+        int y = context.clampY(start.getY() - random.nextInt(24) + random.nextInt(14));
 
         return new BlockPos(x, y, z);
     }
@@ -201,6 +203,12 @@ public class PathSolvedLavaTubeCaveShape implements dev.galacticraft.mod.world.g
         double curve = randomBetween(random, this.minCurve, this.maxCurve);
 
         plan.addTunnel(new MoonCaveTunnel(start, end, radius, curve, random.nextInt()));
+    }
+
+    private static double horizontalDistance(BlockPos a, BlockPos b) {
+        int dx = a.getX() - b.getX();
+        int dz = a.getZ() - b.getZ();
+        return Math.sqrt(dx * dx + dz * dz);
     }
 
     private static int lerp(int start, int end, double t) {

@@ -21,9 +21,9 @@ public class CheeseBranchingCave extends PlanetCave {
                         2, 5,
                         5, 12,
                         4.2D, 8.5D,
-                        3.0D, 6.0D,
+                        2.0D, 6.0D,
                         2.0D, 3.8D,
-                        70, 170,
+                        20, 70,
                         -60, -50
                 ),
                 60,

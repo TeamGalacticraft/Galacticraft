@@ -18,12 +18,12 @@ public class OlivineBranchingCave extends PlanetCave {
                 MoonCaveShapeType.BRANCHING,
                 new PathSolvedBranchingCaveShape(
                         3, 5,
+                        3, 5,
                         2, 4,
-                        2, 5,
                         5.5D, 10.5D,
                         3.2D, 6.8D,
-                        2.0D, 3.5D,
-                        42, 92,
+                        1.9D, 3.3D,
+                        16, 34,
                         -60, -10
                 ),
                 100,

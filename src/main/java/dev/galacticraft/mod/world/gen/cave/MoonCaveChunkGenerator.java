@@ -54,11 +54,7 @@ public final class MoonCaveChunkGenerator {
                 continue;
             }
 
-            element.forEachAffectedBlock(chunkPos, minY, maxY, (x, y, z, zone) -> {
-                int localX = x - chunkPos.getMinBlockX();
-                int localZ = z - chunkPos.getMinBlockZ();
-                mask.set(localX, y, localZ, zone, plan);
-            });
+            element.stamp(chunkPos, minY, maxY, mask, plan);
         }
     }
 

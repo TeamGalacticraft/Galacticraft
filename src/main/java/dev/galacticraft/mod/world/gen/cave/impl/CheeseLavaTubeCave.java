@@ -22,8 +22,8 @@ public class CheeseLavaTubeCave extends PlanetCave {
                         10, 22,
                         22, 58,
                         2.2D, 4.5D,
-                        7.0D, 26.0D,
-                        70, 180,
+                        3.5D, 13.0D,
+                        20, 70,
                         -60, -50
                 ),
                 100,
