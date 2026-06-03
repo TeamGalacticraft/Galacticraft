@@ -48,7 +48,6 @@ public class GCSoundMap {
     private static final Map<MachineStatus, Optional<SoundEvent>> EXCEPTIONS = Map.ofEntries(
             Map.entry(MachineStatuses.NOT_ENOUGH_ENERGY, Optional.empty()),
             Map.entry(GCMachineStatuses.BLOCKED, Optional.empty()),
-            Map.entry(GCMachineStatuses.NO_FUEL, Optional.empty()),
             Map.entry(GCMachineStatuses.NOT_GENERATING, Optional.empty()),
             Map.entry(GCMachineStatuses.COLLECTING, Optional.of(GCSounds.MACHINE_HUM)),
             Map.entry(GCMachineStatuses.DISTRIBUTING, Optional.of(GCSounds.MACHINE_HUM)));
