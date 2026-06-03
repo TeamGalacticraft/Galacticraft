@@ -29,9 +29,6 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
-import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 
 import java.util.ArrayList;
 import java.util.List;
