@@ -93,6 +93,18 @@ public interface Translations {
 
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
+        String ROCKET_INVERTED = "block.galacticraft.banner.rocket_inverted";
+        String ROCKET_SINISTER = "block.galacticraft.banner.rocket_sinister";
+        String ROCKET_SINISTER_INVERTED = "block.galacticraft.banner.rocket_sinister_inverted";
+
+        String CREEPER_SIDEWAYS = "block.galacticraft.banner.creeper_sideways";
+        String FLOW_SIDEWAYS = "block.galacticraft.banner.flow_sideways";
+        String FLOWER_SIDEWAYS = "block.galacticraft.banner.flower_sideways";
+        String GLOBE_SIDEWAYS = "block.galacticraft.banner.globe_sideways";
+        String GUSTER_SIDEWAYS = "block.galacticraft.banner.guster_sideways";
+        String MOJANG_SIDEWAYS = "block.galacticraft.banner.mojang_sideways";
+        String PIGLIN_SIDEWAYS = "block.galacticraft.banner.piglin_sideways";
+        String SKULL_SIDEWAYS = "block.galacticraft.banner.skull_sideways";
     }
 
     interface JukeboxSong {
@@ -153,6 +165,7 @@ public interface Translations {
 
         String CLIENT = "config.galacticraft.client";
         String SQUARE_CANNED_FOOD = "config.galacticraft.client.square_canned_food";
+        String FLUID_CANISTER_CAPACITY = "config.galacticraft.misc.fluid_canister_capacity";
         String SKYBOX = "config.galacticraft.client.skybox";
         String PLAYER = "config.galacticraft.player";
 
@@ -223,6 +236,8 @@ public interface Translations {
     interface Items {
         String EMPTY_CAN = "item.galacticraft.empty_can";
         String CANNED_FOOD_TEMPLATE = "item.galacticraft.canned_food.template";
+
+        String FLUID_CANISTER_FILLED = "item.galacticraft.fluid_canister.filled";
     }
 
     interface CelestialBody {
@@ -264,6 +279,10 @@ public interface Translations {
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
         String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
+
+        String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
+        String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
+        String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
     }
 
     interface Gas {

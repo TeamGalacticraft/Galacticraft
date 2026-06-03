@@ -69,6 +69,8 @@ public interface Config {
 
     boolean squareCannedFood();
 
+    long fluidCanisterCapacity();
+
     long smallOxygenTankCapacity();
 
     long mediumOxygenTankCapacity();

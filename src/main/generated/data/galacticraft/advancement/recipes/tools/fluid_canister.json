@@ -1,0 +1,54 @@
+{
+  "parent": "minecraft:recipes/root",
+  "criteria": {
+    "has_compressed_steel": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:compressed_steel"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_compressed_tin": {
+      "conditions": {
+        "items": [
+          {
+            "items": "galacticraft:compressed_tin"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    },
+    "has_the_recipe": {
+      "conditions": {
+        "recipe": "galacticraft:fluid_canister"
+      },
+      "trigger": "minecraft:recipe_unlocked"
+    },
+    "has_tin_canister": {
+      "conditions": {
+        "items": [
+          {
+            "items": "#c:canisters/tin"
+          }
+        ]
+      },
+      "trigger": "minecraft:inventory_changed"
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "has_compressed_tin",
+      "has_compressed_steel",
+      "has_tin_canister"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "galacticraft:fluid_canister"
+    ]
+  }
+}

@@ -1,0 +1,7 @@
+{
+  "parent": "minecraft:block/template_glass_pane_side",
+  "textures": {
+    "edge": "galacticraft:block/moon_glass_pane_top",
+    "pane": "galacticraft:block/moon_glass"
+  }
+}

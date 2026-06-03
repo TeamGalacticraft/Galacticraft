@@ -65,6 +65,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateFluidTagTranslations();
         this.generateGasTranslations();
         this.generateEntityTranslations();
+        this.generateBannerPatternTranslations();
         this.generateCelestialBodyTranslations();
         this.generateBiomeTranslations();
         this.generateChatTranslations();
@@ -94,23 +95,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.CANNING, "Canning");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
-
-        this.add(BannerPattern.ROCKET + ".white", "White Rocket");
-        this.add(BannerPattern.ROCKET + ".orange", "Orange Rocket");
-        this.add(BannerPattern.ROCKET + ".magenta", "Magenta Rocket");
-        this.add(BannerPattern.ROCKET + ".light_blue", "Light Blue Rocket");
-        this.add(BannerPattern.ROCKET + ".yellow", "Yellow Rocket");
-        this.add(BannerPattern.ROCKET + ".lime", "Lime Rocket");
-        this.add(BannerPattern.ROCKET + ".pink", "Pink Rocket");
-        this.add(BannerPattern.ROCKET + ".gray", "Gray Rocket");
-        this.add(BannerPattern.ROCKET + ".light_gray", "Light Gray Rocket");
-        this.add(BannerPattern.ROCKET + ".cyan", "Cyan Rocket");
-        this.add(BannerPattern.ROCKET + ".purple", "Purple Rocket");
-        this.add(BannerPattern.ROCKET + ".blue", "Blue Rocket");
-        this.add(BannerPattern.ROCKET + ".brown", "Brown Rocket");
-        this.add(BannerPattern.ROCKET + ".red", "Red Rocket");
-        this.add(BannerPattern.ROCKET + ".green", "Green Rocket");
-        this.add(BannerPattern.ROCKET + ".black", "Black Rocket");
     }
 
     protected void generateBlockTranslations() {
@@ -147,8 +131,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.MOON_TURF, "Moon Turf");
         this.block(GCBlocks.MOON_DIRT, "Moon Dirt");
         this.block(GCBlocks.MOON_DIRT_PATH, "Moon Dirt Path");
-        this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
         this.block(GCBlocks.MOON_DUNGEON_BRICK, "Moon Dungeon Brick");
+
+        this.block(GCBlocks.MOON_SURFACE_ROCK, "Moon Surface Rock");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_SLAB, "Moon Surface Rock Slab");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_STAIRS, "Moon Surface Rock Stairs");
+        this.block(GCBlocks.MOON_SURFACE_ROCK_WALL, "Moon Surface Rock Wall");
 
         this.block(GCBlocks.MOON_ROCK, "Moon Rock");
         this.block(GCBlocks.MOON_ROCK_SLAB, "Moon Rock Slab");
@@ -203,6 +191,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS, "Cracked Moon Basalt Brick Stairs");
         this.block(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL, "Cracked Moon Basalt Brick Wall");
 
+        // MOON PLANTS
+
+        this.block(GCBlocks.MOON_WEED, "Moon Weed");
+        this.block(GCBlocks.MOON_SHRUBS, "Moon Shrubs");
+        this.block(GCBlocks.MOON_MOSS, "Moon Moss");
+        this.block(GCBlocks.MOON_TANGLE, "Moon Tangle");
+
         this.block(GCBlocks.FALLEN_METEOR, "Fallen Meteor");
 
         // MARS NATURAL
@@ -239,6 +234,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.HEAVY_WIRE_WALKWAY, "Heavy Wire Walkway");
         this.block(GCBlocks.TIN_LADDER, "Tin Ladder");
         this.block(GCBlocks.IRON_GRATING, "Iron Grating");
+        this.block(GCBlocks.METEORIC_IRON_DOOR, "Meteoric Iron Door");
 
         // SPECIAL
         this.block(GCBlocks.ALUMINUM_WIRE, "Aluminum Wire");
@@ -262,6 +258,12 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.VACUUM_GLASS, "Vacuum Glass");
         this.block(GCBlocks.CLEAR_VACUUM_GLASS, "Vacuum Glass (Clear)");
         this.block(GCBlocks.STRONG_VACUUM_GLASS, "Vacuum Glass (Strong)");
+
+        // MOON GLASSES
+        this.block(GCBlocks.OLIVINE_GLASS, "Olivine Glass");
+        this.block(GCBlocks.OLIVINE_GLASS_PANE, "Olivine Glass Pane");
+        this.block(GCBlocks.MOON_GLASS, "Moon Glass");
+        this.block(GCBlocks.MOON_GLASS_PANE, "Moon Glass Pane");
 
         // ORES
         this.block(GCBlocks.MARS_IRON_ORE, "Mars Iron Ore");
@@ -313,6 +315,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.LEAD_BLOCK, "Block of Lead");
         this.block(GCBlocks.LUNAR_SAPPHIRE_BLOCK, "Block of Lunar Sapphire");
         this.block(GCBlocks.OLIVINE_BLOCK, "Block of Olivine");
+        this.block(GCBlocks.BUDDING_OLIVINE, "Budding Olivine");
         this.block(GCBlocks.RAW_METEORIC_IRON_BLOCK, "Block of Raw Meteoric Iron");
         this.block(GCBlocks.RAW_DESH_BLOCK, "Block of Raw Desh");
         this.block(GCBlocks.RAW_ALUMINUM_BLOCK, "Block of Raw Aluminum");
@@ -467,6 +470,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.GROUND_BEEF, "Raw Beef Patty");
         this.item(GCItems.BEEF_PATTY, "Cooked Beef Patty");
         this.item(GCItems.CHEESEBURGER, "Cheeseburger");
+        this.item(GCItems.MOON_TANGLE_FRUIT, "Moon Tangle Fruit");
 
         // ROCKET PLATES
         this.item(GCItems.TIER_1_HEAVY_DUTY_PLATE, "Heavy Plating");
@@ -515,6 +519,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.TITANIUM_HOE, "Titanium Hoe");
 
         this.item(GCItems.STANDARD_WRENCH, "Standard Wrench");
+
+        this.item(GCItems.FLUID_CANISTER, "Empty Canister");
+        this.add(Items.FLUID_CANISTER_FILLED, "%s Canister");
 
         // SMITHING TEMPLATES
         this.item(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, "Smithing Template");
@@ -830,6 +837,25 @@ public class GCTranslationProvider extends TranslationProvider {
         this.entity(GCEntityTypes.THROWABLE_METEOR_CHUNK, "Meteor Chunk");
     }
 
+    protected void generateBannerPatternTranslations() {
+        for (DyeColor color : DyeColor.values()) {
+            String normalized = TranslationProvider.normalizeName(color.getName());
+            this.add(BannerPattern.ROCKET + "." + color.getName(), normalized + " Rocket");
+            this.add(BannerPattern.ROCKET_INVERTED + "." + color.getName(), normalized + " Rocket Inverted");
+            this.add(BannerPattern.ROCKET_SINISTER + "." + color.getName(), normalized + " Rocket Sinister");
+            this.add(BannerPattern.ROCKET_SINISTER_INVERTED + "." + color.getName(), normalized + " Rocket Sinister Inverted");
+
+            this.add(BannerPattern.CREEPER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Creeper Charge");
+            this.add(BannerPattern.FLOW_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flow");
+            this.add(BannerPattern.FLOWER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Flower");
+            this.add(BannerPattern.GLOBE_SIDEWAYS + "." + color.getName(), normalized + " Sideways Globe");
+            this.add(BannerPattern.GUSTER_SIDEWAYS + "." + color.getName(), normalized + " Sideways Guster");
+            this.add(BannerPattern.MOJANG_SIDEWAYS + "." + color.getName(), normalized + " Sideways Thing");
+            this.add(BannerPattern.PIGLIN_SIDEWAYS + "." + color.getName(), normalized + " Sideways Snout");
+            this.add(BannerPattern.SKULL_SIDEWAYS + "." + color.getName(), normalized + " Sideways Skull Charge");
+        }
+    }
+
     protected void generateCelestialBodyTranslations() {
         this.add(Galaxy.MILKY_WAY, "Milky Way");
         this.add(Galaxy.MILKY_WAY_DESCRIPTION, "");
@@ -975,6 +1001,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.TIME_UNTIL_COOL, "Time Until Cool: %s");
         this.add(Tooltip.SECONDS_UNIT, "%ss");
         this.add(Tooltip.INCORRECT_NUMBER_OF_SLOTS, "Incorrect number of slots in the workstation for this recipe.");
+
+        this.add(Tooltip.FLUID_CANISTER_EMPTY, "Empty");
+        this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %s");
+        this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
     }
 
     protected void generateConfigTranslations() {
@@ -983,6 +1013,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.CLIENT, "Client");
         this.add(Config.SQUARE_CANNED_FOOD, "Square Canned Food");
+        this.add(Config.FLUID_CANISTER_CAPACITY, "Fluid Canister Capacity");
         this.add(Config.SKYBOX, "Skybox");
         this.add(Config.PLAYER, "Player");
 

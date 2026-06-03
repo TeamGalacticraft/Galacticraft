@@ -24,6 +24,7 @@ package dev.galacticraft.api.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
@@ -69,6 +70,15 @@ public class GCDataComponents {
                     ResourceKey::location,
                     (r, l) -> ResourceKey.create(ResourceKey.createRegistryKey(r), l)
             )));
+
+    public static final DataComponentType<FluidData> FLUID_DATA = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Constant.id("fluid_data"),
+            DataComponentType.<FluidData>builder()
+                    .persistent(FluidData.CODEC)
+                    .networkSynchronized(FluidData.STREAM_CODEC)
+                    .build()
+    );
 
     private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> op) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Constant.id(id), op.apply(DataComponentType.builder()).build());

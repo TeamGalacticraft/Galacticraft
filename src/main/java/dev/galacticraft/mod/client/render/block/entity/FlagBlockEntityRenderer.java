@@ -74,6 +74,8 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
             long gameTime = level.getGameTime();
             float sway = (tickDelta + Math.floorMod(pos.getX() * 7L + pos.getY() * 9L + pos.getZ() * 13L + gameTime, 100)) / 100;
             this.flag.xRot = 0.01f * Mth.cos(Mth.TWO_PI * sway) * Mth.PI;
+        } else {
+            this.flag.xRot = 0.0f;
         }
 
         matrices.pushPose();
