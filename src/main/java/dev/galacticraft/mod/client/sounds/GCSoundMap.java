@@ -29,10 +29,11 @@ import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import net.minecraft.sounds.SoundEvent;
+import org.jetbrains.annotations.Nullable;
+
 import java.util.Map;
 import java.util.Optional;
-import org.jetbrains.annotations.Nullable;
-import net.minecraft.sounds.SoundEvent;
 
 public class GCSoundMap {
     private static final Map<MachineStatus.Type, Optional<SoundEvent>> DEFAULTS = Map.ofEntries(
