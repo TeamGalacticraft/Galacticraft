@@ -59,7 +59,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.Compressor.*;
 
-public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> {
+public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> implements CoalPoweredMachine {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;

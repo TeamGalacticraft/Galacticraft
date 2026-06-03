@@ -26,8 +26,7 @@ import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.mod.content.GCSounds;
-import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
-import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CoalPoweredMachine;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import net.minecraft.sounds.SoundEvent;
 import org.jetbrains.annotations.Nullable;
@@ -53,11 +52,9 @@ public class GCSoundMap {
             Map.entry(GCMachineStatuses.COLLECTING, Optional.of(GCSounds.MACHINE_HUM)),
             Map.entry(GCMachineStatuses.DISTRIBUTING, Optional.of(GCSounds.MACHINE_HUM)));
 
-    private static final Map<MachineStatus.Type, Optional<SoundEvent>> COALEXCEPTIONS = Map.ofEntries();
-
     public static @Nullable SoundEvent get(MachineStatus status, MachineBlockEntity machine) {
-        if (machine.getClass() == CompressorBlockEntity.class || machine.getClass() == CoalGeneratorBlockEntity.class) {
-            return COALEXCEPTIONS.get(status.getType()).orElse(null);
+        if (machine instanceof CoalPoweredMachine) {
+            return null;
         }
         return EXCEPTIONS.getOrDefault(status, DEFAULTS.get(status.getType())).orElse(null);
     }
