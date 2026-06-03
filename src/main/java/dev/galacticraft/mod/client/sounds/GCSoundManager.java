@@ -29,6 +29,9 @@ import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.level.block.entity.BlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CoalGeneratorBlockEntity;
+import dev.galacticraft.mod.content.block.entity.machine.CompressorBlockEntity;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -75,7 +78,7 @@ public class GCSoundManager implements SoundCallback {
 
     public Optional<MachineSound> getSoundFromEntity(BlockEntity entity, MachineStatus status, boolean isActive) {
         for (var activeSound : this.activeSounds) {
-            if (activeSound.machine == entity && Objects.equals(GCSoundMap.get(status), activeSound.event)) {
+            if (activeSound.machine == entity && Objects.equals(GCSoundMap.get(status, (MachineBlockEntity) entity), activeSound.event)) {
                 return Optional.of(activeSound);
             }
         }
@@ -90,7 +93,7 @@ public class GCSoundManager implements SoundCallback {
         // Stop old sound (if there is one)
         manager.getSoundFromEntity(machine, oldStatus, isActive).ifPresent(oldSound -> oldSound.end());
         // Play new sound (if there is one)
-        SoundEvent newSound = GCSoundMap.get(status);
+        SoundEvent newSound = GCSoundMap.get(status, machine);
         manager.play(new MachineSound(machine, newSound, manager, maxVolume));
     }
 }
