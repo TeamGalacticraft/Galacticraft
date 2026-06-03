@@ -91,6 +91,8 @@ public class GCSoundManager implements SoundCallback {
         manager.getSoundFromEntity(machine, oldStatus, isActive).ifPresent(oldSound -> oldSound.end());
         // Play new sound (if there is one)
         SoundEvent newSound = GCSoundMap.get(status, machine);
+        if (newSound != null) {
         manager.play(new MachineSound(machine, newSound, manager, maxVolume));
+        }
     }
 }
