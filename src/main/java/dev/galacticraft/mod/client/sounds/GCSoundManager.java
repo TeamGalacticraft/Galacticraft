@@ -24,7 +24,6 @@ package dev.galacticraft.mod.client.sounds;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.core.BlockPos;
@@ -76,7 +75,7 @@ public class GCSoundManager implements SoundCallback {
 
     public Optional<MachineSound> getSoundFromEntity(BlockEntity entity, MachineStatus status, boolean isActive) {
         for (var activeSound : this.activeSounds) {
-            if (activeSound.machine == entity && Objects.equals(GCSoundMap.GC_SOUND_MAP.get(isActive).getOrDefault(status, GCSounds.MACHINE_BUZZ), activeSound.event)) {
+            if (activeSound.machine == entity && Objects.equals(GCSoundMap.get(status), activeSound.event)) {
                 return Optional.of(activeSound);
             }
         }
@@ -91,7 +90,7 @@ public class GCSoundManager implements SoundCallback {
         // Stop old sound (if there is one)
         manager.getSoundFromEntity(machine, oldStatus, isActive).ifPresent(oldSound -> oldSound.end());
         // Play new sound (if there is one)
-        SoundEvent newSound = GCSoundMap.GC_SOUND_MAP.get(isActive).getOrDefault(status, GCSounds.MACHINE_BUZZ);
+        SoundEvent newSound = GCSoundMap.get(status);
         manager.play(new MachineSound(machine, newSound, manager, maxVolume));
     }
 }
