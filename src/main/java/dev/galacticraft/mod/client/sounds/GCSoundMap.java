@@ -28,7 +28,7 @@ import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import java.util.Map;
 import java.util.Optional;
-import me.shedaniel.cloth.clothconfig.shadowed.blue.endless.jankson.annotation.Nullable;
+import org.jetbrains.annotations.Nullable;
 import net.minecraft.sounds.SoundEvent;
 
 public class GCSoundMap {
