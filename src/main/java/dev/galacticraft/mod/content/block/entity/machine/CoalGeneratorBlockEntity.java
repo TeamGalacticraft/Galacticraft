@@ -65,7 +65,7 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class CoalGeneratorBlockEntity extends MachineBlockEntity {
+public class CoalGeneratorBlockEntity extends MachineBlockEntity implements CoalPoweredMachine {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     @VisibleForTesting
