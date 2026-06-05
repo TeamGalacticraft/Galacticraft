@@ -43,8 +43,7 @@ public class GCSoundMap {
             Map.entry(MachineStatus.Type.MISSING_ENERGY, Optional.empty()),
             Map.entry(MachineStatus.Type.MISSING_ITEMS, Optional.of(GCSounds.MACHINE_BUZZ)),
             Map.entry(MachineStatus.Type.OUTPUT_FULL, Optional.of(GCSounds.MACHINE_BUZZ)),
-            Map.entry(MachineStatus.Type.OTHER, Optional.of(GCSounds.MACHINE_BUZZ)),
-            Map.entry(null, Optional.empty()));
+            Map.entry(MachineStatus.Type.OTHER, Optional.of(GCSounds.MACHINE_BUZZ)));
 
     private static final Map<MachineStatus, Optional<SoundEvent>> EXCEPTIONS = Map.ofEntries(
             Map.entry(MachineStatuses.NOT_ENOUGH_ENERGY, Optional.empty()),
@@ -57,6 +56,6 @@ public class GCSoundMap {
         if (machine instanceof CoalPoweredMachine) {
             return null;
         }
-        return EXCEPTIONS.getOrDefault(status, DEFAULTS.get(status.getType())).orElse(null);
+        return EXCEPTIONS.getOrDefault(status, DEFAULTS.getOrDefault(status.getType(), Optional.empty())).orElse(null);
     }
 }
