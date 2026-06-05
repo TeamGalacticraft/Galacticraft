@@ -56,6 +56,6 @@ public class GCSoundMap {
         if (machine instanceof CoalPoweredMachine) {
             return null;
         }
-        return EXCEPTIONS.getOrDefault(status, DEFAULTS.get(status.getType())).orElse(null);
+        return EXCEPTIONS.getOrDefault(status, DEFAULTS.get(status.getType())).orElse(Optional.empty());
     }
 }
