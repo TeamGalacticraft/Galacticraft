@@ -144,7 +144,7 @@ public interface Translations {
         String SHUTTLE_SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
         String MACHINE_CIRCUITSCRITCH = "subtitles.galacticraft.machine.circuitscritch";
         String MACHINE_MACHINEBUZZ = "subtitles.galacticraft.machine.machinebuzz";
-        String MACHINE_MACHINEHUM = "subtitles.galacticraft.machine.machinehum";
+        String MACHINE_MACHINEWHIR = "subtitles.galacticraft.machine.machinewhir";
         String MACHINE_OXYGENFAN = "subtitles.galacticraft.machine.oxygenfan";
     }
 

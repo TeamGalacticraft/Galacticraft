@@ -210,11 +210,11 @@
       }
     ]
   },
-  "machine.machinehum": {
-    "subtitle": "subtitles.galacticraft.machine.machinehum",
+  "machine.machinewhir": {
+    "subtitle": "subtitles.galacticraft.machine.machinewhir",
     "sounds": [
       {
-        "name": "galacticraft:machine/machinehum",
+        "name": "galacticraft:machine/machinewhir",
         "stream": false
       }
     ]

@@ -954,7 +954,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
         this.add(Subtitles.MACHINE_CIRCUITSCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_MACHINEBUZZ, "Machine buzzes");
-        this.add(Subtitles.MACHINE_MACHINEHUM, "Machine hums");
+        this.add(Subtitles.MACHINE_MACHINEWHIR, "Machine whirs");
         this.add(Subtitles.MACHINE_OXYGENFAN, "Oxygen Fan hums");
 
         this.add(RegistryDebug.DUMP, "Dumped: %s");
