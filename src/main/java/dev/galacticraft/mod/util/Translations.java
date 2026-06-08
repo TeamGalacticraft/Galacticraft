@@ -128,7 +128,24 @@ public interface Translations {
     }
 
     interface Subtitles {
+        String PLAYER_UNLOCKCHEST = "subtitles.galacticraft.player.unlockchest";
+        String PLAYER_PARACHUTE = "subtitles.galacticraft.player.parachute";
+        String PLAYER_OPENAIRLOCK = "subtitles.galacticraft.player.openairlock";
+        String PLAYER_CLOSEAIRLOCK = "subtitles.galacticraft.player.closeairlock";
+        String ENTITY_SLIME_DEATH = "subtitles.galacticraft.entity.slime_death";
+        String ENTITY_OOH = "subtitles.galacticraft.entity.ooh";
+        String ENTITY_OUCH = "subtitles.galacticraft.entity.ouch";
+        String ENTITY_BOSSLAUGH = "subtitles.galacticraft.entity.bosslaugh";
+        String ENTITY_BOSSDEATH = "subtitles.galacticraft.entity.bossdeath";
+        String ENTITY_ASTROMINER = "subtitles.galacticraft.entity.astrominer";
         String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
+        String AMBIENCE_SINGLEDRIP = "subtitles.galacticraft.ambience.singledrip";
+        String AMBIENCE_SCARYSCAPE = "subtitles.galacticraft.ambience.scaryscape";
+        String SHUTTLE_SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
+        String MACHINE_CIRCUITSCRITCH = "subtitles.galacticraft.machine.circuitscritch";
+        String MACHINE_MACHINEBUZZ = "subtitles.galacticraft.machine.machinebuzz";
+        String MACHINE_MACHINEHUM = "subtitles.galacticraft.machine.machinehum";
+        String MACHINE_OXYGENFAN = "subtitles.galacticraft.machine.oxygenfan";
     }
 
     interface RegistryDebug {

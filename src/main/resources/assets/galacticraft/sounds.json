@@ -73,7 +73,7 @@
     ]
   },
   "player.parachute": {
-    "subtitle": "subtitles.galacticraft.player.unlockchest",
+    "subtitle": "subtitles.galacticraft.player.parachute",
     "sounds": [
       {
         "name": "galacticraft:player/parachute",
