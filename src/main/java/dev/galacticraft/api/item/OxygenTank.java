@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2026 Team Galacticraft
+ * Copyright (c) 2019-2025 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,23 +22,6 @@
 
 package dev.galacticraft.api.item;
 
-import net.minecraft.core.Holder;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.item.ItemStack;
-
-public interface Accessory {
-    default public Holder<SoundEvent> getEquipSound() {
-        return SoundEvents.ARMOR_EQUIP_GENERIC;
-    }
-
-    default boolean enablesHearing() {
-        return false;
-    }
-
-    public boolean canEquipInSlot(ItemStack stack, int slot);
-
-    default void tick(LivingEntity entity) {
-    }
+public interface OxygenTank {
+    public String getTankSize();
 }

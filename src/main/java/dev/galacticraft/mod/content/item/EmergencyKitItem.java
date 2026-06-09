@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.api.item.Accessory;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.GCAccessorySlots;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.stats.Stats;
@@ -89,7 +89,7 @@ public class EmergencyKitItem extends Item {
         DyeColor color = emergencyKit.get(DataComponents.BASE_COLOR);
         for (ItemStack itemStack : getContents(color)) {
             for (int slot = 0; slot < n; ++slot) {
-                if (inv.getItem(slot).isEmpty() && itemStack.is(GCAccessorySlots.SLOT_TAGS.get(slot))) {
+                if (inv.getItem(slot).isEmpty() && itemStack.getItem() instanceof Accessory accessory && accessory.canEquipInSlot(itemStack, slot)) {
                     ItemStack itemStack2 = itemStack.split(1);
                     inv.setItem(slot, itemStack2);
                     player.galacticraft$onEquipAccessory(itemStack, itemStack2);
