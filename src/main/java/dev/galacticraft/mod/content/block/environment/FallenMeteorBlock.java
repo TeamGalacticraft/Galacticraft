@@ -76,19 +76,19 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        this.tick(state, world, pos, random);
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
+        this.tick(state, level, pos, random);
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void tick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
 
         if (i > 0) {
             if (random.nextInt(500) == 0) {
-                world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
+                level.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
             } else {
-                super.tick(state, world, pos, random);
+                super.tick(state, level, pos, random);
             }
         }
     }
@@ -152,11 +152,11 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void spawnAfterBreak(BlockState blockState, ServerLevel serverLevel, BlockPos blockPos, ItemStack itemStack, boolean bl) {
-        if (bl && EnchantmentHelper.getItemEnchantmentLevel(serverLevel.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), itemStack) == 0) {
-            var i = Mth.nextInt(serverLevel.random, 3, 7);
+    public void spawnAfterBreak(BlockState blockState, ServerLevel level, BlockPos blockPos, ItemStack itemStack, boolean bl) {
+        if (bl && EnchantmentHelper.getItemEnchantmentLevel(level.registryAccess().registryOrThrow(Registries.ENCHANTMENT).getHolderOrThrow(Enchantments.SILK_TOUCH), itemStack) == 0) {
+            var i = Mth.nextInt(level.random, 3, 7);
             if (i > 0) {
-                this.popExperience(serverLevel, blockPos, i);
+                this.popExperience(level, blockPos, i);
             }
         }
     }
