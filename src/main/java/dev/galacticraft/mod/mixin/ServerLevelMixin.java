@@ -23,18 +23,23 @@
 package dev.galacticraft.mod.mixin;
 
 import com.google.common.collect.ImmutableList;
+import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
+import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.RegistryAccess;
+import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.progress.ChunkProgressListener;
+import net.minecraft.server.players.PlayerList;
 import net.minecraft.tags.BlockTags;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.RandomSequences;
@@ -66,6 +71,9 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
 
     @Shadow
     public abstract ServerLevel getLevel();
+
+    @Shadow
+    public abstract MinecraftServer getServer();
 
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 
@@ -104,5 +112,23 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
     @Override
     public FootprintManager galacticraft$getFootprintManager() {
         return footprintManager;
+    }
+
+    @WrapMethod(method = "advanceWeatherCycle")
+    private void galacticraft$disableWeatherCycle(Operation<Void> original) {
+        if (this.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.NO_WEATHER)) {
+            if (this.rainLevel > 0.0F || this.thunderLevel > 0.0F) {
+                this.oRainLevel = 0.0F;
+                this.rainLevel = 0.0F;
+                this.oThunderLevel = 0.0F;
+                this.thunderLevel = 0.0F;
+                PlayerList playerList = this.getServer().getPlayerList();
+                playerList.broadcastAll(new ClientboundGameEventPacket(ClientboundGameEventPacket.STOP_RAINING, 0.0F), this.dimension());
+                playerList.broadcastAll(new ClientboundGameEventPacket(ClientboundGameEventPacket.RAIN_LEVEL_CHANGE, this.rainLevel), this.dimension());
+                playerList.broadcastAll(new ClientboundGameEventPacket(ClientboundGameEventPacket.THUNDER_LEVEL_CHANGE, this.thunderLevel), this.dimension());
+            }
+        } else {
+            original.call();
+        }
     }
 }
