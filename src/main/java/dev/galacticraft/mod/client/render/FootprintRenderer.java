@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.render;
 import com.mojang.blaze3d.platform.GlStateManager;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import net.fabricmc.fabric.api.client.rendering.v1.WorldRenderContext;
@@ -41,8 +40,6 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class FootprintRenderer {
-    private static final ResourceLocation FOOTPRINT_TEXTURE = Constant.id("textures/misc/footprint.png");
-
     public static void renderFootprints(WorldRenderContext context) {
         context.profiler().push("footprints");
         PoseStack poseStack = context.matrixStack();
@@ -63,7 +60,6 @@ public class FootprintRenderer {
         }
 
         poseStack.pushPose();
-        RenderSystem.setShaderTexture(0, FootprintRenderer.FOOTPRINT_TEXTURE);
 
         RenderSystem.depthMask(true);
         RenderSystem.enableDepthTest();
@@ -84,6 +80,7 @@ public class FootprintRenderer {
 
         for (Footprint footprint : footprintsToDraw) {
             poseStack.pushPose();
+            RenderSystem.setShaderTexture(0, footprint.type.texture());
 
 //            if (!sensorGlasses) {
 //                int j = footprint.lightmapVal % 65536;
@@ -104,8 +101,8 @@ public class FootprintRenderer {
 
             Matrix4f last = poseStack.last().pose();
             BufferBuilder buffer = Tesselator.getInstance().begin(VertexFormat.Mode.QUADS, DefaultVertexFormat.POSITION_TEX);
-            float footprintScale = 0.5F;
-            float rotation = 45.0F * Mth.DEG_TO_RAD - footprint.rotation;
+            float footprintScale = footprint.type.renderScale();
+            float rotation = 45.0F * Mth.DEG_TO_RAD - footprint.rotation + footprint.type.renderRotationOffset();
             for (int i = 3; i >= 0; i--) {
                 buffer = (BufferBuilder) buffer
                         .addVertex(last, Mth.sin(rotation) * footprintScale, 0, Mth.cos(rotation) * footprintScale)
