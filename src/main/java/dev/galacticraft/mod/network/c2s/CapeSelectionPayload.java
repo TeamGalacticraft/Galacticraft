@@ -25,6 +25,8 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.cape.CapeMode;
+import dev.galacticraft.mod.misc.cape.CapeRole;
+import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.misc.cape.ServerCapeManager;
 import dev.galacticraft.mod.network.s2c.CapeAssignmentsPacket;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -32,6 +34,8 @@ import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.MinecraftServer;
+import net.minecraft.server.level.ServerPlayer;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
@@ -57,17 +61,32 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
         var player = context.player();
-        CapeMode m = this.mode;
-        String id = this.gcCapeId;
 
-        if (!ServerCapeManager.validateSelection(player, m, id)) {
-            m = CapeMode.VANILLA;
-            id = null;
+        CapeMode mode = this.mode == null ? CapeMode.VANILLA : this.mode;
+        String gcCapeId = this.gcCapeId;
+
+        String playerName = player.getGameProfile().getName();
+        String uuid = player.getUUID().toString();
+        CapeRole role = CapesLoader.roleFor(uuid);
+
+        if (mode == CapeMode.GC && !CapesLoader.isLoaded()) {
+            return;
         }
-        ServerCapeManager.set(player, m, id);
 
+        if (!ServerCapeManager.validateSelection(player, mode, gcCapeId)) {
+            mode = CapeMode.VANILLA;
+            gcCapeId = null;
+        }
+
+        ServerCapeManager.set(player, mode, gcCapeId);
+
+        broadcastCapeSnapshot(context.server());
+    }
+
+    public static void sendCapeSnapshot(ServerPlayer target) {
         var snap = ServerCapeManager.snapshot();
         var list = new ArrayList<CapeAssignmentsPacket.Entry>(snap.size());
+
         for (var e : snap.entrySet()) {
             var a = e.getValue();
             list.add(new CapeAssignmentsPacket.Entry(
@@ -77,7 +96,27 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
             ));
         }
 
-        context.server().getPlayerList().broadcastAll(ServerPlayNetworking.createS2CPacket(new CapeAssignmentsPacket(list)));
+        ServerPlayNetworking.send(target, new CapeAssignmentsPacket(list));
+    }
+
+    public static void broadcastCapeSnapshot(MinecraftServer server) {
+        var snap = ServerCapeManager.snapshot();
+        var list = new ArrayList<CapeAssignmentsPacket.Entry>(snap.size());
+
+        for (var e : snap.entrySet()) {
+            var a = e.getValue();
+            list.add(new CapeAssignmentsPacket.Entry(
+                    e.getKey(),
+                    a.mode,
+                    a.mode == CapeMode.GC ? a.gcCapeId : null
+            ));
+        }
+
+        CapeAssignmentsPacket packet = new CapeAssignmentsPacket(list);
+
+        for (var player : server.getPlayerList().getPlayers()) {
+            ServerPlayNetworking.send(player, packet);
+        }
     }
 
     @Override

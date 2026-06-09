@@ -1067,6 +1067,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.METEOR_SPAWN_MULTIPLIER, "Meteor Spawn Multiplier");
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
         this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
+        this.add(Config.ENABLE_SPACE_STATION_CREATION, "Enable Space Station Creation");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1174,6 +1175,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(CelestialSelection.CLICK_AGAIN_MOONS, "Click again to zoom (view moons)");
         this.add(CelestialSelection.CLICK_AGAIN_SATELLITES, "Click again to zoom (view satellites)");
         this.add(CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES, "Click again to zoom (view moons & satellites)");
+        this.add(CelestialSelection.DISABLED, "Disabled");
     }
 
     protected void generateUiTranslations() {

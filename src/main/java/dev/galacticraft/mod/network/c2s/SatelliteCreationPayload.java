@@ -29,6 +29,7 @@ import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -50,21 +51,66 @@ public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) im
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
+        if (!Galacticraft.CONFIG.enableSpaceStationCreation()) {
+            Constant.LOGGER.warn(
+                    "Blocked space station creation from {} because space station creation is disabled in the server config.",
+                    context.player().getScoreboardName()
+            );
+            return;
+        }
+
         try {
-            Registry<CelestialBody<?, ?>> celestialBodies = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+            Registry<CelestialBody<?, ?>> celestialBodies = context.server()
+                    .registryAccess()
+                    .registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+
+            CelestialBody parentBody = celestialBodies.getOrThrow(body);
+
+            if (!(parentBody.type() instanceof Orbitable orbitable)) {
+                Constant.LOGGER.warn(
+                        "Blocked invalid satellite creation request from {} for non-orbitable body {}.",
+                        context.player().getScoreboardName(),
+                        body.location()
+                );
+                return;
+            }
 
             if (!context.player().hasInfiniteMaterials()) {
-                CelestialBody parentBody = celestialBodies.getOrThrow(body);
-                SatelliteRecipe recipe = ((Orbitable) parentBody.type()).satelliteRecipe(parentBody.config());
+                SatelliteRecipe recipe = orbitable.satelliteRecipe(parentBody.config());
+
+                if (recipe == null) {
+                    Constant.LOGGER.warn(
+                            "Blocked satellite creation request from {} because {} has no satellite recipe.",
+                            context.player().getScoreboardName(),
+                            body.location()
+                    );
+                    return;
+                }
+
                 if (!recipe.handle(context.player().getInventory())) {
-                    Constant.LOGGER.error("Unable to remove the required ingredients for the satellite recipe from player {}", context.player().getScoreboardName());
+                    Constant.LOGGER.error(
+                            "Unable to remove the required ingredients for the satellite recipe from player {}.",
+                            context.player().getScoreboardName()
+                    );
+                    return;
                 }
             }
 
-            SatelliteType.registerSatellite(context.server(), context.player(), this.body, context.server().getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow(), celestialBodies);
+            SatelliteType.registerSatellite(
+                    context.server(),
+                    context.player(),
+                    this.body,
+                    context.server().getStructureManager().get(Constant.Structure.SPACE_STATION).orElseThrow(),
+                    celestialBodies
+            );
+
             GCTriggers.CREATE_SPACE_STATION.trigger(context.player());
         } catch (Exception e) {
-            e.printStackTrace();
+            Constant.LOGGER.error(
+                    "Failed to create space station for player {}.",
+                    context.player().getScoreboardName(),
+                    e
+            );
         }
     }
 

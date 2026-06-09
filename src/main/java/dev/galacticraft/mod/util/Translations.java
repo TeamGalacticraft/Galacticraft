@@ -221,6 +221,7 @@ public interface Translations {
         String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
+        String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
     }
 
     interface Galaxy {
@@ -404,11 +405,12 @@ public interface Translations {
         String SURFACE_COMPOSITION = "ui.galacticraft.celestialselection.surface_composition";
         String ATMOSPHERE = "ui.galacticraft.celestialselection.atmosphere";
         String MEAN_SURFACE_TEMP = "ui.galacticraft.celestialselection.mean_surface_temp";
-
         String CLICK_AGAIN = "ui.galacticraft.celestialselection.click_again";
         String CLICK_AGAIN_MOONS = "ui.galacticraft.celestialselection.click_again.moons";
         String CLICK_AGAIN_SATELLITES = "ui.galacticraft.celestialselection.click_again.satellites";
         String CLICK_AGAIN_MOONS_AND_SATELLITES = "ui.galacticraft.celestialselection.click_again.moons_and_satellites";
+        String DISABLED = "ui.galacticraft.celestialselection.disabled";
+
     }
 
     interface Ui {

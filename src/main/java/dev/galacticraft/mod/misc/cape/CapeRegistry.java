@@ -56,8 +56,9 @@ public final class CapeRegistry {
         return out;
     }
 
-    public static void bootstrap() {
-        // Patron capes
+    public static synchronized void bootstrap() {
+        if (!CAPES.isEmpty()) return;
+
         register(Constant.Cape.EARTH, CapeRole.PATRON);
         register(Constant.Cape.JUPITER, CapeRole.PATRON);
         register(Constant.Cape.MARS, CapeRole.PATRON);
@@ -70,7 +71,6 @@ public final class CapeRegistry {
         register(Constant.Cape.URANUS, CapeRole.PATRON);
         register(Constant.Cape.VENUS, CapeRole.PATRON);
 
-        // Developer capes
         register(Constant.Cape.DEVELOPER, CapeRole.DEVELOPER);
         register(Constant.Cape.REWOVEN, CapeRole.DEVELOPER);
         register(Constant.Cape.DEVELOPER_RED, CapeRole.DEVELOPER);
