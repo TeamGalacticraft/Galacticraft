@@ -34,26 +34,26 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.credits");
     public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.orbit");
     public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
-    public static final SoundEvent PLAYER_UNLOCKCHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlockchest"));
-    public static final SoundEvent PLAYER_PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
-    public static final SoundEvent PLAYER_OPENAIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.openairlock"));
-    public static final SoundEvent PLAYER_CLOSEAIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.closeairlock"));
-    public static final SoundEvent ENTITY_SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime_death"));
-    public static final SoundEvent ENTITY_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ooh"));
-    public static final SoundEvent ENTITY_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ouch"));
-    public static final SoundEvent ENTITY_BOSSLAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.bosslaugh"));
-    public static final SoundEvent ENTITY_BOSSDEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.bossdeath"));
-    public static final SoundEvent ENTITY_ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
-    public static final SoundEvent AMBIENCE_SINGLEDRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambience.singledrip"));
-    public static final SoundEvent AMBIENCE_SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambience.scaryscape"));
-    public static final SoundEvent SHUTTLE_SHUTTLE = SoundEvent.createVariableRangeEvent(Constant.id("shuttle.shuttle"));
+    public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
+    public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
+    public static final SoundEvent OPEN_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.open_airlock"));
+    public static final SoundEvent CLOSE_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.close_airlock"));
+    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime_death"));
+    public static final SoundEvent OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ooh"));
+    public static final SoundEvent OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ouch"));
+    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss_laugh"));
+    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss_death"));
+    public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
+    public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambience.single_drip"));
+    public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambience.scaryscape"));
+    public static final SoundEvent SHUTTLE = SoundEvent.createVariableRangeEvent(Constant.id("shuttle.shuttle"));
     public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.throwable_meteor_chunk.throw"));
 
     // Machine Sounds
-    public static final SoundEvent CIRCUIT_SCRITCH = SoundEvent.createVariableRangeEvent(Constant.id("machine.circuitscritch"));
-    public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.machinebuzz"));
-    public static final SoundEvent MACHINE_HUM = SoundEvent.createVariableRangeEvent(Constant.id("machine.machinehum"));
-    public static final SoundEvent OXYGEN_FAN = SoundEvent.createVariableRangeEvent(Constant.id("machine.oxygenfan"));
+    public static final SoundEvent CIRCUIT_SCRITCH = SoundEvent.createVariableRangeEvent(Constant.id("machine.circuit_scritch"));
+    public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.machine_buzz"));
+    public static final SoundEvent MACHINE_WHIR = SoundEvent.createVariableRangeEvent(Constant.id("machine.machine_whir"));
+    public static final SoundEvent OXYGEN_FAN = SoundEvent.createVariableRangeEvent(Constant.id("machine.oxygen_fan"));
 
     // Legacy Discs
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MARS = register("music_disc.legacy.mars");
@@ -66,23 +66,23 @@ public class GCSounds {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_UNLOCKCHEST.getLocation(), PLAYER_UNLOCKCHEST);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_PARACHUTE.getLocation(), PLAYER_PARACHUTE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_OPENAIRLOCK.getLocation(), PLAYER_OPENAIRLOCK);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PLAYER_CLOSEAIRLOCK.getLocation(), PLAYER_CLOSEAIRLOCK);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_SLIME_DEATH.getLocation(), ENTITY_SLIME_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_OOH.getLocation(), ENTITY_OOH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_OUCH.getLocation(), ENTITY_OUCH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_BOSSLAUGH.getLocation(), ENTITY_BOSSLAUGH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_BOSSDEATH.getLocation(), ENTITY_BOSSDEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ENTITY_ASTROMINER.getLocation(), ENTITY_ASTROMINER);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SINGLEDRIP.getLocation(), AMBIENCE_SINGLEDRIP);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENCE_SCARYSCAPE.getLocation(), AMBIENCE_SCARYSCAPE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE_SHUTTLE.getLocation(), SHUTTLE_SHUTTLE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OPEN_AIRLOCK.getLocation(), OPEN_AIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CLOSE_AIRLOCK.getLocation(), CLOSE_AIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OOH.getLocation(), OOH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OUCH.getLocation(), OUCH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_LAUGH.getLocation(), BOSS_LAUGH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_DEATH.getLocation(), BOSS_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE.getLocation(), SHUTTLE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_HUM.getLocation(), MACHINE_HUM);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);
         Registry.register(BuiltInRegistries.SOUND_EVENT, OXYGEN_FAN.getLocation(), OXYGEN_FAN);
     }
 }

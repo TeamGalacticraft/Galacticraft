@@ -71,6 +71,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateChatTranslations();
         this.generateRocketPartTranslations();
         this.generateSmithingTranslations();
+        this.generateSubtitleTranslations();
         this.generateTooltipTranslations();
         this.generateConfigTranslations();
         this.generateSpaceRaceTranslations();
@@ -911,8 +912,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
         this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
-        this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
-
         this.add(RegistryDebug.DUMP, "Dumped: %s");
         this.add(RegistryDebug.ID, "%s - %s: %s");
 
@@ -965,6 +964,30 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION, "Add desh armor, weapon, or tool");
         this.add(Misc.UPGRADE_TITANIUM_DESCRIPTION, "Titanium Upgrade");
         this.add(Misc.UPGRADE_TITANIUM_INGREDIENTS, "Compressed Titanium");
+    }
+
+    protected void generateSubtitleTranslations() {
+        this.add(Subtitles.UNLOCK_CHEST, "Chest unlocks");
+        this.add(Subtitles.PARACHUTE, "Parachute opens");
+        this.add(Subtitles.OPEN_AIRLOCK, "Airlock opens");
+        this.add(Subtitles.CLOSE_AIRLOCK, "Airlock closes");
+
+        this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
+        this.add(Subtitles.OOH, "Ooh");
+        this.add(Subtitles.OUCH, "Ouch");
+        this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
+        this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.ASTROMINER, "Astrominer flies");
+
+        this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
+        this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
+        this.add(Subtitles.SCARYSCAPE, "Eerie noise");
+        this.add(Subtitles.SHUTTLE, "Rocket ignites");
+
+        this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
+        this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
+        this.add(Subtitles.MACHINE_WHIR, "Machine whirs");
+        this.add(Subtitles.OXYGEN_FAN, "Oxygen Fan hums");
     }
 
     protected void generateTooltipTranslations() {
