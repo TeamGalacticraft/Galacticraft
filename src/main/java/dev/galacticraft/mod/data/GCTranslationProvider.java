@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.mod.Constant.Cape;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -33,6 +34,32 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.util.Translations.Advancements;
+import dev.galacticraft.mod.util.Translations.BannerPattern;
+import dev.galacticraft.mod.util.Translations.Boss;
+import dev.galacticraft.mod.util.Translations.CelestialBody;
+import dev.galacticraft.mod.util.Translations.CelestialSelection;
+import dev.galacticraft.mod.util.Translations.Chat;
+import dev.galacticraft.mod.util.Translations.Config;
+import dev.galacticraft.mod.util.Translations.DimensionTp;
+import dev.galacticraft.mod.util.Translations.Galaxy;
+import dev.galacticraft.mod.util.Translations.Gas;
+import dev.galacticraft.mod.util.Translations.GcHouston;
+import dev.galacticraft.mod.util.Translations.ItemGroup;
+import dev.galacticraft.mod.util.Translations.Items;
+import dev.galacticraft.mod.util.Translations.JukeboxSong;
+import dev.galacticraft.mod.util.Translations.Keybindings;
+import dev.galacticraft.mod.util.Translations.MachineStatus;
+import dev.galacticraft.mod.util.Translations.Misc;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
+import dev.galacticraft.mod.util.Translations.RegistryDebug;
+import dev.galacticraft.mod.util.Translations.SetOxygen;
+import dev.galacticraft.mod.util.Translations.SolarPanel;
+import dev.galacticraft.mod.util.Translations.SpaceRace;
+import dev.galacticraft.mod.util.Translations.Subtitles;
+import dev.galacticraft.mod.util.Translations.Tooltip;
+import dev.galacticraft.mod.util.Translations.Ui;
+import dev.galacticraft.mod.util.Translations.Waila;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -71,6 +98,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.generateChatTranslations();
         this.generateRocketPartTranslations();
         this.generateSmithingTranslations();
+        this.generateSubtitleTranslations();
         this.generateTooltipTranslations();
         this.generateConfigTranslations();
         this.generateSpaceRaceTranslations();
@@ -911,25 +939,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Chat.CANNOT_FEED_IN_NO_ATMOSPHERE, "You can't feed a pet that is holding its breath.");
         this.add(Chat.CANNOT_FEED_WITH_MASK, "You can't feed that to your pet while it is wearing a mask.");
 
-        this.add(Subtitles.PLAYER_UNLOCKCHEST, "Chest unlocks");
-        this.add(Subtitles.PLAYER_PARACHUTE, "Parachute opens");
-        this.add(Subtitles.PLAYER_OPENAIRLOCK, "Airlock opens");
-        this.add(Subtitles.PLAYER_CLOSEAIRLOCK, "Airlock closes");
-        this.add(Subtitles.ENTITY_SLIME_DEATH, "Slimeling dies");
-        this.add(Subtitles.ENTITY_OOH, "Ooh");
-        this.add(Subtitles.ENTITY_OUCH, "Ouch");
-        this.add(Subtitles.ENTITY_BOSSLAUGH, "Evolved Skeleton Boss laughs");
-        this.add(Subtitles.ENTITY_BOSSDEATH, "Evolved Skeleton Boss dies");
-        this.add(Subtitles.ENTITY_ASTROMINER, "Astrominer flies");
-        this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
-        this.add(Subtitles.AMBIENCE_SINGLEDRIP, "Liquid drips");
-        this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie noise");
-        this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
-        this.add(Subtitles.MACHINE_CIRCUITSCRITCH, "Circuit Fabricator scritches");
-        this.add(Subtitles.MACHINE_MACHINEBUZZ, "Machine buzzes");
-        this.add(Subtitles.MACHINE_MACHINEWHIR, "Machine whirs");
-        this.add(Subtitles.MACHINE_OXYGENFAN, "Oxygen Fan hums");
-
         this.add(RegistryDebug.DUMP, "Dumped: %s");
         this.add(RegistryDebug.ID, "%s - %s: %s");
 
@@ -982,6 +991,30 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Misc.UPGRADE_TITANIUM_BASE_SLOT_DESCRIPTION, "Add desh armor, weapon, or tool");
         this.add(Misc.UPGRADE_TITANIUM_DESCRIPTION, "Titanium Upgrade");
         this.add(Misc.UPGRADE_TITANIUM_INGREDIENTS, "Compressed Titanium");
+    }
+
+    protected void generateSubtitleTranslations() {
+        this.add(Subtitles.PLAYER_UNLOCKCHEST, "Chest unlocks");
+        this.add(Subtitles.PLAYER_PARACHUTE, "Parachute opens");
+        this.add(Subtitles.PLAYER_OPENAIRLOCK, "Airlock opens");
+        this.add(Subtitles.PLAYER_CLOSEAIRLOCK, "Airlock closes");
+
+        this.add(Subtitles.ENTITY_SLIME_DEATH, "Slimeling dies");
+        this.add(Subtitles.ENTITY_OOH, "Ooh");
+        this.add(Subtitles.ENTITY_OUCH, "Ouch");
+        this.add(Subtitles.ENTITY_BOSSLAUGH, "Evolved Skeleton Boss laughs");
+        this.add(Subtitles.ENTITY_BOSSDEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.ENTITY_ASTROMINER, "Astrominer flies");
+
+        this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
+        this.add(Subtitles.AMBIENCE_SINGLEDRIP, "Liquid drips");
+        this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie noise");
+        this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
+
+        this.add(Subtitles.MACHINE_CIRCUITSCRITCH, "Circuit Fabricator scritches");
+        this.add(Subtitles.MACHINE_MACHINEBUZZ, "Machine buzzes");
+        this.add(Subtitles.MACHINE_MACHINEWHIR, "Machine whirs");
+        this.add(Subtitles.MACHINE_OXYGENFAN, "Oxygen Fan hums");
     }
 
     protected void generateTooltipTranslations() {
