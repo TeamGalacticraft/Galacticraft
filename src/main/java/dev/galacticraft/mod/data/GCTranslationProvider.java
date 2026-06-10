@@ -994,27 +994,27 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateSubtitleTranslations() {
-        this.add(Subtitles.PLAYER_UNLOCKCHEST, "Chest unlocks");
+        this.add(Subtitles.PLAYER_UNLOCK_CHEST, "Chest unlocks");
         this.add(Subtitles.PLAYER_PARACHUTE, "Parachute opens");
-        this.add(Subtitles.PLAYER_OPENAIRLOCK, "Airlock opens");
-        this.add(Subtitles.PLAYER_CLOSEAIRLOCK, "Airlock closes");
+        this.add(Subtitles.PLAYER_OPEN_AIRLOCK, "Airlock opens");
+        this.add(Subtitles.PLAYER_CLOSE_AIRLOCK, "Airlock closes");
 
         this.add(Subtitles.ENTITY_SLIME_DEATH, "Slimeling dies");
         this.add(Subtitles.ENTITY_OOH, "Ooh");
         this.add(Subtitles.ENTITY_OUCH, "Ouch");
-        this.add(Subtitles.ENTITY_BOSSLAUGH, "Evolved Skeleton Boss laughs");
-        this.add(Subtitles.ENTITY_BOSSDEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.ENTITY_BOSS_LAUGH, "Evolved Skeleton Boss laughs");
+        this.add(Subtitles.ENTITY_BOSS_DEATH, "Evolved Skeleton Boss dies");
         this.add(Subtitles.ENTITY_ASTROMINER, "Astrominer flies");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
-        this.add(Subtitles.AMBIENCE_SINGLEDRIP, "Liquid drips");
+        this.add(Subtitles.AMBIENCE_SINGLE_DRIP, "Liquid drips");
         this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie noise");
         this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
 
-        this.add(Subtitles.MACHINE_CIRCUITSCRITCH, "Circuit Fabricator scritches");
-        this.add(Subtitles.MACHINE_MACHINEBUZZ, "Machine buzzes");
-        this.add(Subtitles.MACHINE_MACHINEWHIR, "Machine whirs");
-        this.add(Subtitles.MACHINE_OXYGENFAN, "Oxygen Fan hums");
+        this.add(Subtitles.MACHINE_CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
+        this.add(Subtitles.MACHINE_MACHINE_BUZZ, "Machine buzzes");
+        this.add(Subtitles.MACHINE_MACHINE_WHIR, "Machine whirs");
+        this.add(Subtitles.MACHINE_OXYGEN_FAN, "Oxygen Fan hums");
     }
 
     protected void generateTooltipTranslations() {
