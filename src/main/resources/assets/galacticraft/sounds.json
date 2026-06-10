@@ -165,14 +165,14 @@
   "ambience.single_drip": {
     "subtitle": "subtitles.galacticraft.ambience.single_drip",
     "sounds": [
-      "galacticraft:ambience/singledrip1",
-      "galacticraft:ambience/singledrip2",
-      "galacticraft:ambience/singledrip3",
-      "galacticraft:ambience/singledrip4",
-      "galacticraft:ambience/singledrip5",
-      "galacticraft:ambience/singledrip6",
-      "galacticraft:ambience/singledrip7",
-      "galacticraft:ambience/singledrip8"
+      "galacticraft:ambience/single_drip1",
+      "galacticraft:ambience/single_drip2",
+      "galacticraft:ambience/single_drip3",
+      "galacticraft:ambience/single_drip4",
+      "galacticraft:ambience/single_drip5",
+      "galacticraft:ambience/single_drip6",
+      "galacticraft:ambience/single_drip7",
+      "galacticraft:ambience/single_drip8"
     ]
   },
   "ambience.scaryscape": {
@@ -196,9 +196,9 @@
   "machine.circuit_scritch": {
     "subtitle": "subtitles.galacticraft.machine.circuit_scritch",
     "sounds": [
-      "galacticraft:machine/circuitscritch1",
-      "galacticraft:machine/circuitscritch2",
-      "galacticraft:machine/circuitscritch3"
+      "galacticraft:machine/circuit_scritch1",
+      "galacticraft:machine/circuit_scritch2",
+      "galacticraft:machine/circuit_scritch3"
     ]
   },
   "machine.machine_buzz": {
