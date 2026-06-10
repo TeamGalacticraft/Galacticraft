@@ -52,7 +52,7 @@ public class GCSounds {
     // Machine Sounds
     public static final SoundEvent CIRCUIT_SCRITCH = SoundEvent.createVariableRangeEvent(Constant.id("machine.circuit_scritch"));
     public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.machine_buzz"));
-    public static final SoundEvent MACHINE_HUM = SoundEvent.createVariableRangeEvent(Constant.id("machine.machine_hum"));
+    public static final SoundEvent MACHINE_WHIR = SoundEvent.createVariableRangeEvent(Constant.id("machine.machine_whir"));
     public static final SoundEvent OXYGEN_FAN = SoundEvent.createVariableRangeEvent(Constant.id("machine.oxygen_fan"));
 
     // Legacy Discs
@@ -82,7 +82,7 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_HUM.getLocation(), MACHINE_HUM);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);
         Registry.register(BuiltInRegistries.SOUND_EVENT, OXYGEN_FAN.getLocation(), OXYGEN_FAN);
     }
 }
