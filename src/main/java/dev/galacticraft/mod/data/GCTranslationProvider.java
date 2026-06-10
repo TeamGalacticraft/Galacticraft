@@ -916,14 +916,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.PLAYER_OPENAIRLOCK, "Airlock opens");
         this.add(Subtitles.PLAYER_CLOSEAIRLOCK, "Airlock closes");
         this.add(Subtitles.ENTITY_SLIME_DEATH, "Slimeling dies");
-        this.add(Subtitles.ENTITY_OOH, "ooh");
+        this.add(Subtitles.ENTITY_OOH, "Ooh");
         this.add(Subtitles.ENTITY_OUCH, "Ouch");
         this.add(Subtitles.ENTITY_BOSSLAUGH, "Evolved Skeleton Boss laughs");
         this.add(Subtitles.ENTITY_BOSSDEATH, "Evolved Skeleton Boss dies");
         this.add(Subtitles.ENTITY_ASTROMINER, "Astrominer flies");
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
         this.add(Subtitles.AMBIENCE_SINGLEDRIP, "Liquid drips");
-        this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie Noise");
+        this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie noise");
         this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
         this.add(Subtitles.MACHINE_CIRCUITSCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_MACHINEBUZZ, "Machine buzzes");
