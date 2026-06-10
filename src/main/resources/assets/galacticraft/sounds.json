@@ -63,11 +63,11 @@
       }
     ]
   },
-  "player.unlockchest": {
-    "subtitle": "subtitles.galacticraft.player.unlockchest",
+  "player.unlock_chest": {
+    "subtitle": "subtitles.galacticraft.player.unlock_chest",
     "sounds": [
       {
-        "name": "galacticraft:player/unlockchest",
+        "name": "galacticraft:player/unlock_chest",
         "stream": false
       }
     ]
@@ -81,20 +81,20 @@
       }
     ]
   },
-  "player.openairlock": {
-    "subtitle": "subtitles.galacticraft.player.openairlock",
+  "player.open_airlock": {
+    "subtitle": "subtitles.galacticraft.player.open_airlock",
     "sounds": [
       {
-        "name": "galacticraft:player/openairlock",
+        "name": "galacticraft:player/open_airlock",
         "stream": false
       }
     ]
   },
-  "player.closeairlock": {
-    "subtitle": "subtitles.galacticraft.player.closeairlock",
+  "player.clos_eairlock": {
+    "subtitle": "subtitles.galacticraft.player.clos_eairlock",
     "sounds": [
       {
-        "name": "galacticraft:player/closeairlock",
+        "name": "galacticraft:player/close_airlock",
         "stream": false
       }
     ]
@@ -126,20 +126,20 @@
       }
     ]
   },
-  "entity.bosslaugh": {
-    "subtitle": "subtitles.galacticraft.entity.bosslaugh",
+  "entity.boss_laugh": {
+    "subtitle": "subtitles.galacticraft.entity.boss_laugh",
     "sounds": [
       {
-        "name": "galacticraft:entity/bosslaugh",
+        "name": "galacticraft:entity/boss_laugh",
         "stream": false
       }
     ]
   },
-  "entity.bossdeath": {
-    "subtitle": "subtitles.galacticraft.entity.bossdeath",
+  "entity.boss_death": {
+    "subtitle": "subtitles.galacticraft.entity.boss_death",
     "sounds": [
       {
-        "name": "galacticraft:entity/bossdeath",
+        "name": "galacticraft:entity/boss_death",
         "stream": false
       }
     ]
@@ -162,8 +162,8 @@
       }
     ]
   },
-  "ambience.singledrip": {
-    "subtitle": "subtitles.galacticraft.ambience.singledrip",
+  "ambience.single_drip": {
+    "subtitle": "subtitles.galacticraft.ambience.single_drip",
     "sounds": [
       "galacticraft:ambience/singledrip1",
       "galacticraft:ambience/singledrip2",
@@ -193,37 +193,37 @@
       }
     ]
   },
-  "machine.circuitscritch": {
-    "subtitle": "subtitles.galacticraft.machine.circuitscritch",
+  "machine.circuit_scritch": {
+    "subtitle": "subtitles.galacticraft.machine.circuit_scritch",
     "sounds": [
       "galacticraft:machine/circuitscritch1",
       "galacticraft:machine/circuitscritch2",
       "galacticraft:machine/circuitscritch3"
     ]
   },
-  "machine.machinebuzz": {
-    "subtitle": "subtitles.galacticraft.machine.machinebuzz",
+  "machine.machine_buzz": {
+    "subtitle": "subtitles.galacticraft.machine.machine_buzz",
     "sounds": [
       {
-        "name": "galacticraft:machine/machinebuzz",
+        "name": "galacticraft:machine/machine_buzz",
         "stream": false
       }
     ]
   },
-  "machine.machinewhir": {
-    "subtitle": "subtitles.galacticraft.machine.machinewhir",
+  "machine.machine_whir": {
+    "subtitle": "subtitles.galacticraft.machine.machine_whir",
     "sounds": [
       {
-        "name": "galacticraft:machine/machinewhir",
+        "name": "galacticraft:machine/machine_whir",
         "stream": false
       }
     ]
   },
-  "machine.oxygenfan": {
-    "subtitle": "subtitles.galacticraft.machine.oxygenfan",
+  "machine.oxygen_fan": {
+    "subtitle": "subtitles.galacticraft.machine.oxygen_fan",
     "sounds": [
       {
-        "name": "galacticraft:machine/oxygenfan",
+        "name": "galacticraft:machine/oxygen_fan",
         "stream": false
       }
     ]
