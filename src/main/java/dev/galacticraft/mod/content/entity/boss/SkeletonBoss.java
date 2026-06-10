@@ -107,7 +107,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         super.tickDeath();
 
         if (this.deathTime == 100) {
-            level().playSound(null, getX(), getY(), getZ(), GCSounds.ENTITY_BOSSDEATH, SoundSource.HOSTILE, 10.0F, 1.5F);
+            level().playSound(null, getX(), getY(), getZ(), GCSounds.BOSS_DEATH, SoundSource.HOSTILE, 10.0F, 1.5F);
         }
     }
 
@@ -138,7 +138,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
     @Override
     public void playerTouch(Player player) {
         if (!this.isNoAi() && this.getPassengers().isEmpty() && this.postThrowDelay == 0 && this.throwTimer == 0 && player.equals(this.targetEntity) && this.deathTime == 0) {
-            level().playSound(player, getX(), getY(), getZ(), GCSounds.ENTITY_BOSSLAUGH, SoundSource.HOSTILE, 10.0F, 0.2F);
+            level().playSound(player, getX(), getY(), getZ(), GCSounds.BOSS_LAUGH, SoundSource.HOSTILE, 10.0F, 0.2F);
             if (!this.level().isClientSide) {
                 player.startRiding(this);
             }
