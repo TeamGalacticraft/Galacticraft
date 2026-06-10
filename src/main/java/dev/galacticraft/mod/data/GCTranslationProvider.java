@@ -967,27 +967,27 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateSubtitleTranslations() {
-        this.add(Subtitles.PLAYER_UNLOCK_CHEST, "Chest unlocks");
-        this.add(Subtitles.PLAYER_PARACHUTE, "Parachute opens");
-        this.add(Subtitles.PLAYER_OPEN_AIRLOCK, "Airlock opens");
-        this.add(Subtitles.PLAYER_CLOSE_AIRLOCK, "Airlock closes");
+        this.add(Subtitles.UNLOCK_CHEST, "Chest unlocks");
+        this.add(Subtitles.PARACHUTE, "Parachute opens");
+        this.add(Subtitles.OPEN_AIRLOCK, "Airlock opens");
+        this.add(Subtitles.CLOSE_AIRLOCK, "Airlock closes");
 
-        this.add(Subtitles.ENTITY_SLIME_DEATH, "Slimeling dies");
-        this.add(Subtitles.ENTITY_OOH, "Ooh");
-        this.add(Subtitles.ENTITY_OUCH, "Ouch");
-        this.add(Subtitles.ENTITY_BOSS_LAUGH, "Evolved Skeleton Boss laughs");
-        this.add(Subtitles.ENTITY_BOSS_DEATH, "Evolved Skeleton Boss dies");
-        this.add(Subtitles.ENTITY_ASTROMINER, "Astrominer flies");
+        this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
+        this.add(Subtitles.OOH, "Ooh");
+        this.add(Subtitles.OUCH, "Ouch");
+        this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
+        this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.ASTROMINER, "Astrominer flies");
 
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
-        this.add(Subtitles.AMBIENCE_SINGLE_DRIP, "Liquid drips");
-        this.add(Subtitles.AMBIENCE_SCARYSCAPE, "Eerie noise");
-        this.add(Subtitles.SHUTTLE_SHUTTLE, "Rocket ignites");
+        this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
+        this.add(Subtitles.SCARYSCAPE, "Eerie noise");
+        this.add(Subtitles.SHUTTLE, "Rocket ignites");
 
-        this.add(Subtitles.MACHINE_CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
-        this.add(Subtitles.MACHINE_MACHINE_BUZZ, "Machine buzzes");
-        this.add(Subtitles.MACHINE_MACHINE_WHIR, "Machine whirs");
-        this.add(Subtitles.MACHINE_OXYGEN_FAN, "Oxygen Fan hums");
+        this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
+        this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
+        this.add(Subtitles.MACHINE_WHIR, "Machine whirs");
+        this.add(Subtitles.OXYGEN_FAN, "Oxygen Fan hums");
     }
 
     protected void generateTooltipTranslations() {
