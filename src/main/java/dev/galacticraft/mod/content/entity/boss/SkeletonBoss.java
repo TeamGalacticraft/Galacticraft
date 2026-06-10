@@ -156,7 +156,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        this.playSound(GCSounds.ENTITY_OOH, this.getSoundVolume(), this.getVoicePitch() + 1.0F);
+        this.playSound(GCSounds.OOH, this.getSoundVolume(), this.getVoicePitch() + 1.0F);
         return null;
     }
 
