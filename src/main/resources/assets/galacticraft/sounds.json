@@ -193,37 +193,37 @@
       }
     ]
   },
-  "machine.circuit_fabricator.scritch": {
-    "subtitle": "subtitles.galacticraft.machine.circuit_fabricator.scritch",
+  "machine.circuit.scritch": {
+    "subtitle": "subtitles.galacticraft.machine.circuit.scritch",
     "sounds": [
-      "galacticraft:machine/circuit_fabricator/scritch1",
-      "galacticraft:machine/circuit_fabricator/scritch2",
-      "galacticraft:machine/circuit_fabricator/scritch3"
+      "galacticraft:machine/circuit/scritch1",
+      "galacticraft:machine/circuit/scritch2",
+      "galacticraft:machine/circuit/scritch3"
     ]
   },
-  "machine.machine_buzz": {
-    "subtitle": "subtitles.galacticraft.machine.machine_buzz",
+  "machine.machine.buzz": {
+    "subtitle": "subtitles.galacticraft.machine.buzz",
     "sounds": [
       {
-        "name": "galacticraft:machine/machine_buzz",
+        "name": "galacticraft:machine/buzz",
         "stream": false
       }
     ]
   },
-  "machine.machine_whir": {
-    "subtitle": "subtitles.galacticraft.machine.machine_whir",
+  "machine.machine.whir": {
+    "subtitle": "subtitles.galacticraft.machine.whir",
     "sounds": [
       {
-        "name": "galacticraft:machine/machine_whir",
+        "name": "galacticraft:machine/whir",
         "stream": false
       }
     ]
   },
-  "machine.oxygen_fan": {
-    "subtitle": "subtitles.galacticraft.machine.oxygen_fan",
+  "machine.oxygen.fan": {
+    "subtitle": "subtitles.galacticraft.machine.oxygen.fan",
     "sounds": [
       {
-        "name": "galacticraft:machine/oxygen_fan",
+        "name": "galacticraft:machine/oxygen/fan",
         "stream": false
       }
     ]
