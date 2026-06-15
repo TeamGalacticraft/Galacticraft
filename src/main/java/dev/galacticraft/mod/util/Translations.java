@@ -130,8 +130,8 @@ public interface Translations {
     interface Subtitles {
         String UNLOCK_CHEST = "subtitles.galacticraft.player.unlock_chest";
         String PARACHUTE = "subtitles.galacticraft.player.parachute";
-        String OPEN_AIRLOCK = "subtitles.galacticraft.player.open_airlock";
-        String CLOSE_AIRLOCK = "subtitles.galacticraft.player.close_airlock";
+        String OPEN_AIRLOCK = "subtitles.galacticraft.machine.airlock.open";
+        String CLOSE_AIRLOCK = "subtitles.galacticraft.machine.airlock.close";
         String SLIME_DEATH = "subtitles.galacticraft.entity.slime_death";
         String OOH = "subtitles.galacticraft.entity.ooh";
         String OUCH = "subtitles.galacticraft.entity.ouch";

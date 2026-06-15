@@ -81,20 +81,20 @@
       }
     ]
   },
-  "player.open_airlock": {
-    "subtitle": "subtitles.galacticraft.player.open_airlock",
+  "machine.airlock.open": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.open",
     "sounds": [
       {
-        "name": "galacticraft:player/open_airlock",
+        "name": "galacticraft:machine/airlock/open",
         "stream": false
       }
     ]
   },
-  "player.close_airlock": {
-    "subtitle": "subtitles.galacticraft.player.close_airlock",
+  "player.airlock.close": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.close",
     "sounds": [
       {
-        "name": "galacticraft:player/close_airlock",
+        "name": "galacticraft:machine/airlock/close",
         "stream": false
       }
     ]
