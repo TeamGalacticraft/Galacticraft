@@ -81,24 +81,6 @@
       }
     ]
   },
-  "machine.airlock.open": {
-    "subtitle": "subtitles.galacticraft.machine.airlock.open",
-    "sounds": [
-      {
-        "name": "galacticraft:machine/airlock/open",
-        "stream": false
-      }
-    ]
-  },
-  "machine.airlock.close": {
-    "subtitle": "subtitles.galacticraft.machine.airlock.close",
-    "sounds": [
-      {
-        "name": "galacticraft:machine/airlock/close",
-        "stream": false
-      }
-    ]
-  },
   "entity.slime_death": {
     "subtitle": "subtitles.galacticraft.entity.slime_death",
     "sounds": [
@@ -189,6 +171,24 @@
     "sounds": [
       {
         "name": "galacticraft:shuttle/shuttle",
+        "stream": false
+      }
+    ]
+  },
+  "machine.airlock.open": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.open",
+    "sounds": [
+      {
+        "name": "galacticraft:machine/airlock/open",
+        "stream": false
+      }
+    ]
+  },
+  "machine.airlock.close": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.close",
+    "sounds": [
+      {
+        "name": "galacticraft:machine/airlock/close",
         "stream": false
       }
     ]
