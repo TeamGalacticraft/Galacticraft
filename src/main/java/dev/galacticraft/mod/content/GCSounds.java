@@ -36,7 +36,7 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
     public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
     public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
-    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime_death"));
+    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
     public static final SoundEvent OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
     public static final SoundEvent OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
     public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));

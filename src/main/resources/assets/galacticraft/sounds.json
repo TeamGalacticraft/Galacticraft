@@ -81,11 +81,11 @@
       }
     ]
   },
-  "entity.slime_death": {
-    "subtitle": "subtitles.galacticraft.entity.slime_death",
+  "entity.slime.death": {
+    "subtitle": "subtitles.galacticraft.entity.slime.death",
     "sounds": [
       {
-        "name": "galacticraft:entity/slime_death",
+        "name": "galacticraft:entity/slime/death",
         "stream": false
       }
     ]
@@ -130,7 +130,7 @@
     "subtitle": "subtitles.galacticraft.entity.astrominer",
     "sounds": [
       {
-        "name": "galacticraft:entity/astrominer",
+        "name": "galacticraft:entity/astrominer/astrominer",
         "stream": false
       }
     ]
