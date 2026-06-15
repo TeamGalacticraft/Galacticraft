@@ -90,7 +90,7 @@
       }
     ]
   },
-  "player.clos_eairlock": {
+  "player.close_airlock": {
     "subtitle": "subtitles.galacticraft.player.close_airlock",
     "sounds": [
       {
