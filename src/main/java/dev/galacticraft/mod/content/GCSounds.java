@@ -30,24 +30,18 @@ import net.minecraft.sounds.SoundEvent;
 
 public class GCSounds {
     private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
-    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.moon");
-    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.credits");
-    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.orbit");
-    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
-    public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
-    public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
-    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
+    // Ambient
+    public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
+    public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
+    // Entity
+    public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
+    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
+    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
     public static final SoundEvent BOSS_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
     public static final SoundEvent BOSS_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
-    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
-    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
-    public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
-    // Ambient
-    public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
-    public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
-    public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
     public static final SoundEvent METEOR_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.meteor_chunk.throw"));
-
+    public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
+    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
     // Machine Sounds
     public static final SoundEvent AIRLOCK_OPEN = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
     public static final SoundEvent AIRLOCK_CLOSE = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
@@ -55,12 +49,19 @@ public class GCSounds {
     public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.buzz"));
     public static final SoundEvent MACHINE_WHIR = SoundEvent.createVariableRangeEvent(Constant.id("machine.whir"));
     public static final SoundEvent OXYGEN_FAN = SoundEvent.createVariableRangeEvent(Constant.id("machine.oxygen.fan"));
-
+    // Music
+    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.credits");
+    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
+    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.moon");
+    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.orbit");
     // Legacy Discs
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MARS = register("music_disc.legacy.mars");
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MIMAS = register("music_disc.legacy.mimas");
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_ORBIT = register("music_disc.legacy.orbit");
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = register("music_disc.legacy.spacerace");
+    // Player
+    public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
+    public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
 
     public static Holder.Reference<SoundEvent> register(String id) {
         return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));
