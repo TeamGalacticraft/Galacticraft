@@ -133,10 +133,10 @@ public interface Translations {
         String OPEN_AIRLOCK = "subtitles.galacticraft.machine.airlock.open";
         String CLOSE_AIRLOCK = "subtitles.galacticraft.machine.airlock.close";
         String SLIME_DEATH = "subtitles.galacticraft.entity.slime_death";
-        String OOH = "subtitles.galacticraft.entity.ooh";
-        String OUCH = "subtitles.galacticraft.entity.ouch";
-        String BOSS_LAUGH = "subtitles.galacticraft.entity.boss_laugh";
-        String BOSS_DEATH = "subtitles.galacticraft.entity.boss_death";
+        String OOH = "subtitles.galacticraft.entity.boss.ooh";
+        String OUCH = "subtitles.galacticraft.entity.boss.ouch";
+        String BOSS_LAUGH = "subtitles.galacticraft.entity.boss.laugh";
+        String BOSS_DEATH = "subtitles.galacticraft.entity.boss.death";
         String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
         String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
         String SINGLE_DRIP = "subtitles.galacticraft.ambience.single_drip";

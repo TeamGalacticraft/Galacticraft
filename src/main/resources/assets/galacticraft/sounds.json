@@ -108,38 +108,38 @@
       }
     ]
   },
-  "entity.ooh": {
-    "subtitle": "subtitles.galacticraft.entity.ooh",
+  "entity.boss.ooh": {
+    "subtitle": "subtitles.galacticraft.entity.boss.ooh",
     "sounds": [
       {
-        "name": "galacticraft:entity/ooh",
+        "name": "galacticraft:entity/boss/ooh",
         "stream": false
       }
     ]
   },
-  "entity.ouch": {
-    "subtitle": "subtitles.galacticraft.entity.ouch",
+  "entity.boss.ouch": {
+    "subtitle": "subtitles.galacticraft.entity.boss.ouch",
     "sounds": [
       {
-        "name": "galacticraft:entity/ouch",
+        "name": "galacticraft:entity/boss/ouch",
         "stream": false
       }
     ]
   },
-  "entity.boss_laugh": {
-    "subtitle": "subtitles.galacticraft.entity.boss_laugh",
+  "entity.boss.laugh": {
+    "subtitle": "subtitles.galacticraft.entity.boss.laugh",
     "sounds": [
       {
-        "name": "galacticraft:entity/boss_laugh",
+        "name": "galacticraft:entity/boss/laugh",
         "stream": false
       }
     ]
   },
-  "entity.boss_death": {
-    "subtitle": "subtitles.galacticraft.entity.boss_death",
+  "entity.boss.death": {
+    "subtitle": "subtitles.galacticraft.entity.boss.death",
     "sounds": [
       {
-        "name": "galacticraft:entity/boss_death",
+        "name": "galacticraft:entity/boss/death",
         "stream": false
       }
     ]

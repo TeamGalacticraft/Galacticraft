@@ -39,10 +39,10 @@ public class GCSounds {
     public static final SoundEvent OPEN_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
     public static final SoundEvent CLOSE_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
     public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime_death"));
-    public static final SoundEvent OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ooh"));
-    public static final SoundEvent OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.ouch"));
-    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss_laugh"));
-    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss_death"));
+    public static final SoundEvent OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
+    public static final SoundEvent OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
+    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
+    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
     public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
     public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambience.single_drip"));
     public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambience.scaryscape"));
