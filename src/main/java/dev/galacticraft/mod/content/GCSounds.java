@@ -68,8 +68,6 @@ public class GCSounds {
     public static void register() {
         Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, OPEN_AIRLOCK.getLocation(), OPEN_AIRLOCK);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, CLOSE_AIRLOCK.getLocation(), CLOSE_AIRLOCK);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, OOH.getLocation(), OOH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, OUCH.getLocation(), OUCH);
@@ -80,6 +78,8 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE.getLocation(), SHUTTLE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, OPEN_AIRLOCK.getLocation(), OPEN_AIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CLOSE_AIRLOCK.getLocation(), CLOSE_AIRLOCK);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);

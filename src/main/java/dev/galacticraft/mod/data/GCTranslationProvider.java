@@ -969,8 +969,6 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateSubtitleTranslations() {
         this.add(Subtitles.UNLOCK_CHEST, "Chest unlocks");
         this.add(Subtitles.PARACHUTE, "Parachute opens");
-        this.add(Subtitles.OPEN_AIRLOCK, "Airlock opens");
-        this.add(Subtitles.CLOSE_AIRLOCK, "Airlock closes");
 
         this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
         this.add(Subtitles.OOH, "Ooh");
@@ -984,6 +982,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.SCARYSCAPE, "Eerie noise");
         this.add(Subtitles.SHUTTLE, "Rocket ignites");
 
+        this.add(Subtitles.OPEN_AIRLOCK, "Airlock opens");
+        this.add(Subtitles.CLOSE_AIRLOCK, "Airlock closes");
         this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
         this.add(Subtitles.MACHINE_WHIR, "Machine whirs");
