@@ -131,8 +131,8 @@ public interface Translations {
         String UNLOCK_CHEST = "subtitles.galacticraft.player.unlock_chest";
         String PARACHUTE = "subtitles.galacticraft.player.parachute";
         String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
-        String OOH = "subtitles.galacticraft.entity.boss.ooh";
-        String OUCH = "subtitles.galacticraft.entity.boss.ouch";
+        String BOSS_OOH = "subtitles.galacticraft.entity.boss.ooh";
+        String BOSS_OUCH = "subtitles.galacticraft.entity.boss.ouch";
         String BOSS_LAUGH = "subtitles.galacticraft.entity.boss.laugh";
         String BOSS_DEATH = "subtitles.galacticraft.entity.boss.death";
         String ASTROMINER = "subtitles.galacticraft.entity.astrominer";

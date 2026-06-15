@@ -971,8 +971,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.PARACHUTE, "Parachute opens");
 
         this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
-        this.add(Subtitles.OOH, "Ooh");
-        this.add(Subtitles.OUCH, "Ouch");
+        this.add(Subtitles.BOSS_OOH, "Ooh");
+        this.add(Subtitles.BOSS_OUCH, "Ouch");
         this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
         this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
         this.add(Subtitles.ASTROMINER, "Astrominer flies");

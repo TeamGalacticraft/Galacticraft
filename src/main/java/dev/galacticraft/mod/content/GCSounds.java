@@ -37,8 +37,8 @@ public class GCSounds {
     public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
     public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
     public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
-    public static final SoundEvent OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
-    public static final SoundEvent OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
+    public static final SoundEvent BOSS_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
+    public static final SoundEvent BOSS_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
     public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
     public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
     public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
@@ -69,8 +69,8 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, OOH.getLocation(), OOH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, OUCH.getLocation(), OUCH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OOH.getLocation(), BOSS_OOH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OUCH.getLocation(), BOSS_OUCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_LAUGH.getLocation(), BOSS_LAUGH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_DEATH.getLocation(), BOSS_DEATH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
