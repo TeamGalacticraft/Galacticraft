@@ -91,7 +91,7 @@
     ]
   },
   "player.clos_eairlock": {
-    "subtitle": "subtitles.galacticraft.player.clos_eairlock",
+    "subtitle": "subtitles.galacticraft.player.close_airlock",
     "sounds": [
       {
         "name": "galacticraft:player/close_airlock",
