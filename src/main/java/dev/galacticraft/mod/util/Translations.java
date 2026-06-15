@@ -137,8 +137,8 @@ public interface Translations {
         String BOSS_DEATH = "subtitles.galacticraft.entity.boss.death";
         String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
         String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
-        String SINGLE_DRIP = "subtitles.galacticraft.ambience.single_drip";
-        String SCARYSCAPE = "subtitles.galacticraft.ambience.scaryscape";
+        String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
+        String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
         String SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
         String OPEN_AIRLOCK = "subtitles.galacticraft.machine.airlock.open";
         String CLOSE_AIRLOCK = "subtitles.galacticraft.machine.airlock.close";
