@@ -139,7 +139,7 @@ public interface Translations {
         String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
         String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
-        String SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
+        String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
         String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
         String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
         String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";

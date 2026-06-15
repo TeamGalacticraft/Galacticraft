@@ -980,7 +980,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.THROW_METEOR_CHUNK, "Meteor Chunk flies");
         this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
         this.add(Subtitles.SCARYSCAPE, "Eerie noise");
-        this.add(Subtitles.SHUTTLE, "Rocket ignites");
+        this.add(Subtitles.ROCKET_IGNITE, "Rocket ignites");
 
         this.add(Subtitles.AIRLOCK_OPEN, "Airlock opens");
         this.add(Subtitles.AIRLOCK_CLOSE, "Airlock closes");

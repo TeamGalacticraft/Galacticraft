@@ -166,11 +166,11 @@
       }
     ]
   },
-  "shuttle.shuttle": {
-    "subtitle": "subtitles.galacticraft.shuttle.shuttle",
+  "entity.rocket.ignite": {
+    "subtitle": "subtitles.galacticraft.entity.rocket.ignite",
     "sounds": [
       {
-        "name": "galacticraft:shuttle/shuttle",
+        "name": "galacticraft:entity/rocket/ignite",
         "stream": false
       }
     ]
