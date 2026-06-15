@@ -142,15 +142,15 @@
       }
     },
     {
-      "name": "ChipWolf",
-      "contact": {
-        "homepage": "https://github.com/ChipWolf"
-      }
-    },
-    {
       "name": "ROMVoid95",
       "contact": {
         "homepage": "https://github.com/ROMVoid95"
+      }
+    },
+    {
+      "name": "ChipWolf",
+      "contact": {
+        "homepage": "https://github.com/ChipWolf"
       }
     },
     {
@@ -184,21 +184,15 @@
       }
     },
     {
-      "name": "Geolykt",
+      "name": "GalacticraftDev",
       "contact": {
-        "homepage": "https://github.com/Geolykt"
+        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
       "name": "Domza64",
       "contact": {
         "homepage": "https://github.com/Domza64"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -250,6 +244,12 @@
       }
     },
     {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
       "name": "ScottRox",
       "contact": {
         "homepage": "https://github.com/ScottRox"
@@ -274,15 +274,15 @@
       }
     },
     {
-      "name": "gregorixG",
-      "contact": {
-        "homepage": "https://github.com/gregorixG"
-      }
-    },
-    {
       "name": "MaverXka",
       "contact": {
         "homepage": "https://github.com/MaverXka"
+      }
+    },
+    {
+      "name": "gregorixG",
+      "contact": {
+        "homepage": "https://github.com/gregorixG"
       }
     }
   ],
