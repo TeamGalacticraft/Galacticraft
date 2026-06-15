@@ -162,7 +162,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
         BlockPos pos = new BlockPos(x, y, z);
         if (this.level.getBlockState(pos).isAir()) {
-            this.level.playSound(null, pos, GCSounds.CLOSE_AIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            this.level.playSound(null, pos, GCSounds.AIRLOCK_CLOSE, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         if (this.horizontalModeEnabled) {
@@ -222,7 +222,7 @@ public class AirlockControllerBlockEntity extends BlockEntity implements MenuPro
 
         BlockPos pos = new BlockPos(x, y, z);
         if (this.level.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-            this.level.playSound(null, pos, GCSounds.OPEN_AIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            this.level.playSound(null, pos, GCSounds.AIRLOCK_OPEN, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         boolean sealedSide = false;

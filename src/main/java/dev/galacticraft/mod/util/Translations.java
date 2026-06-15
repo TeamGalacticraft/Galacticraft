@@ -140,8 +140,8 @@ public interface Translations {
         String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
         String SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
-        String OPEN_AIRLOCK = "subtitles.galacticraft.machine.airlock.open";
-        String CLOSE_AIRLOCK = "subtitles.galacticraft.machine.airlock.close";
+        String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
+        String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
         String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
         String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
         String MACHINE_WHIR = "subtitles.galacticraft.machine.whir";

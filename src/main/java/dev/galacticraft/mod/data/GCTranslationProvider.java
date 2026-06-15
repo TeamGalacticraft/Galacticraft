@@ -982,8 +982,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.SCARYSCAPE, "Eerie noise");
         this.add(Subtitles.SHUTTLE, "Rocket ignites");
 
-        this.add(Subtitles.OPEN_AIRLOCK, "Airlock opens");
-        this.add(Subtitles.CLOSE_AIRLOCK, "Airlock closes");
+        this.add(Subtitles.AIRLOCK_OPEN, "Airlock opens");
+        this.add(Subtitles.AIRLOCK_CLOSE, "Airlock closes");
         this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
         this.add(Subtitles.MACHINE_WHIR, "Machine whirs");

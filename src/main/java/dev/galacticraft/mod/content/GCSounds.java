@@ -48,8 +48,8 @@ public class GCSounds {
     public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.throwable_meteor_chunk.throw"));
 
     // Machine Sounds
-    public static final SoundEvent OPEN_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
-    public static final SoundEvent CLOSE_AIRLOCK = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
+    public static final SoundEvent AIRLOCK_OPEN = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
+    public static final SoundEvent AIRLOCK_CLOSE = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
     public static final SoundEvent CIRCUIT_SCRITCH = SoundEvent.createVariableRangeEvent(Constant.id("machine.circuit.scritch"));
     public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.buzz"));
     public static final SoundEvent MACHINE_WHIR = SoundEvent.createVariableRangeEvent(Constant.id("machine.whir"));
@@ -78,8 +78,8 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SHUTTLE.getLocation(), SHUTTLE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, OPEN_AIRLOCK.getLocation(), OPEN_AIRLOCK);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, CLOSE_AIRLOCK.getLocation(), CLOSE_AIRLOCK);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);
