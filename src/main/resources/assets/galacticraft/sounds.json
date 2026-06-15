@@ -93,32 +93,6 @@
       }
     ]
   },
-  "machine.airlock.open": {
-    "subtitle": "subtitles.galacticraft.machine.airlock.open",
-    "sounds": [
-      {
-        "name": "galacticraft:machine/airlock/open",
-        "stream": false
-      }
-    ]
-  },
-  "machine.airlock.close": {
-    "subtitle": "subtitles.galacticraft.machine.airlock.close",
-    "sounds": [
-      {
-        "name": "galacticraft:machine/airlock/close",
-        "stream": false
-      }
-    ]
-  },
-  "machine.circuit.scritch": {
-    "subtitle": "subtitles.galacticraft.machine.circuit.scritch",
-    "sounds": [
-      "galacticraft:machine/circuit/scritch1",
-      "galacticraft:machine/circuit/scritch2",
-      "galacticraft:machine/circuit/scritch3"
-    ]
-  },
   "machine.buzz": {
     "subtitle": "subtitles.galacticraft.machine.buzz",
     "sounds": [
@@ -135,6 +109,32 @@
         "name": "galacticraft:machine/whir",
         "stream": false
       }
+    ]
+  },
+  "machine.airlock.close": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.close",
+    "sounds": [
+      {
+        "name": "galacticraft:machine/airlock/close",
+        "stream": false
+      }
+    ]
+  },
+  "machine.airlock.open": {
+    "subtitle": "subtitles.galacticraft.machine.airlock.open",
+    "sounds": [
+      {
+        "name": "galacticraft:machine/airlock/open",
+        "stream": false
+      }
+    ]
+  },
+  "machine.circuit.scritch": {
+    "subtitle": "subtitles.galacticraft.machine.circuit.scritch",
+    "sounds": [
+      "galacticraft:machine/circuit/scritch1",
+      "galacticraft:machine/circuit/scritch2",
+      "galacticraft:machine/circuit/scritch3"
     ]
   },
   "machine.oxygen.fan": {
@@ -242,20 +242,20 @@
       }
     ]
   },
-  "player.unlock_chest": {
-    "subtitle": "subtitles.galacticraft.player.unlock_chest",
-    "sounds": [
-      {
-        "name": "galacticraft:player/unlock_chest",
-        "stream": false
-      }
-    ]
-  },
   "player.parachute": {
     "subtitle": "subtitles.galacticraft.player.parachute",
     "sounds": [
       {
         "name": "galacticraft:player/parachute",
+        "stream": false
+      }
+    ]
+  },
+  "player.unlock_chest": {
+    "subtitle": "subtitles.galacticraft.player.unlock_chest",
+    "sounds": [
+      {
+        "name": "galacticraft:player/unlock_chest",
         "stream": false
       }
     ]
