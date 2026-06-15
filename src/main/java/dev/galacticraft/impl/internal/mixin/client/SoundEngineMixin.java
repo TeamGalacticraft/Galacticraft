@@ -59,8 +59,8 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean galacticraft_hideSubtitles(boolean original, @Local(ordinal = 2) float f3) {
-        return original || f3 < 0.01f;
+    private boolean galacticraft_hideSubtitles(boolean original) {
+        return original || this.multiplier < 0.01f;
     }
 
     @Override
