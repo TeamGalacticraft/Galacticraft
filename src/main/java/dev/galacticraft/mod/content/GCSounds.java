@@ -42,10 +42,11 @@ public class GCSounds {
     public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
     public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
     public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
+    // Ambient
     public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
     public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
     public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
-    public static final SoundEvent METEOR_CHUNK_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.throwable_meteor_chunk.throw"));
+    public static final SoundEvent METEOR_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.meteor_chunk.throw"));
 
     // Machine Sounds
     public static final SoundEvent AIRLOCK_OPEN = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
@@ -66,23 +67,23 @@ public class GCSounds {
     }
 
     public static void register() {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_DEATH.getLocation(), BOSS_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_LAUGH.getLocation(), BOSS_LAUGH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OOH.getLocation(), BOSS_OOH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OUCH.getLocation(), BOSS_OUCH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_LAUGH.getLocation(), BOSS_LAUGH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_DEATH.getLocation(), BOSS_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_IGNITE.getLocation(), ROCKET_IGNITE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_CHUNK_THROW.getLocation(), METEOR_CHUNK_THROW);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_THROW.getLocation(), METEOR_THROW);
         Registry.register(BuiltInRegistries.SOUND_EVENT, OXYGEN_FAN.getLocation(), OXYGEN_FAN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_IGNITE.getLocation(), ROCKET_IGNITE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
     }
 }

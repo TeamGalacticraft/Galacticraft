@@ -128,24 +128,24 @@ public interface Translations {
     }
 
     interface Subtitles {
-        String UNLOCK_CHEST = "subtitles.galacticraft.player.unlock_chest";
-        String PARACHUTE = "subtitles.galacticraft.player.parachute";
-        String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
+        String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
+        String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
+        String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
+        String BOSS_DEATH = "subtitles.galacticraft.entity.boss.death";
+        String BOSS_LAUGH = "subtitles.galacticraft.entity.boss.laugh";
         String BOSS_OOH = "subtitles.galacticraft.entity.boss.ooh";
         String BOSS_OUCH = "subtitles.galacticraft.entity.boss.ouch";
-        String BOSS_LAUGH = "subtitles.galacticraft.entity.boss.laugh";
-        String BOSS_DEATH = "subtitles.galacticraft.entity.boss.death";
-        String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
-        String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
-        String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
-        String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
-        String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
-        String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
-        String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
         String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
         String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
         String MACHINE_WHIR = "subtitles.galacticraft.machine.whir";
         String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
+        String PARACHUTE = "subtitles.galacticraft.player.parachute";
+        String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
+        String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
+        String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
+        String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
+        String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
+        String UNLOCK_CHEST = "subtitles.galacticraft.player.unlock_chest";
     }
 
     interface RegistryDebug {
