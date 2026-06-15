@@ -193,12 +193,12 @@
       }
     ]
   },
-  "machine.circuit_scritch": {
-    "subtitle": "subtitles.galacticraft.machine.circuit_scritch",
+  "machine.circuit_fabricator.scritch": {
+    "subtitle": "subtitles.galacticraft.machine.circuit_fabricator.scritch",
     "sounds": [
-      "galacticraft:machine/circuit_scritch1",
-      "galacticraft:machine/circuit_scritch2",
-      "galacticraft:machine/circuit_scritch3"
+      "galacticraft:machine/circuit_fabricator/scritch1",
+      "galacticraft:machine/circuit_fabricator/scritch2",
+      "galacticraft:machine/circuit_fabricator/scritch3"
     ]
   },
   "machine.machine_buzz": {

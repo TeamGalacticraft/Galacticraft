@@ -142,7 +142,7 @@ public interface Translations {
         String SINGLE_DRIP = "subtitles.galacticraft.ambience.single_drip";
         String SCARYSCAPE = "subtitles.galacticraft.ambience.scaryscape";
         String SHUTTLE = "subtitles.galacticraft.shuttle.shuttle";
-        String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit_scritch";
+        String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit_fabricator.scritch";
         String MACHINE_BUZZ = "subtitles.galacticraft.machine.machine_buzz";
         String MACHINE_WHIR = "subtitles.galacticraft.machine.machine_whir";
         String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen_fan";
