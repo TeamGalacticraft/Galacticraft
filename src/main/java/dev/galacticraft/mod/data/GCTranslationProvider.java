@@ -967,27 +967,24 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateSubtitleTranslations() {
-        this.add(Subtitles.CHEST_UNLOCK, "Chest unlocks");
-        this.add(Subtitles.PARACHUTE, "Parachute opens");
-
-        this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
+        this.add(Subtitles.AIRLOCK_CLOSE, "Airlock closes");
+        this.add(Subtitles.AIRLOCK_OPEN, "Airlock opens");
+        this.add(Subtitles.ASTROMINER, "Astrominer flies");
+        this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
         this.add(Subtitles.BOSS_OOH, "Ooh");
         this.add(Subtitles.BOSS_OUCH, "Ouch");
-        this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
-        this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
-        this.add(Subtitles.ASTROMINER, "Astrominer flies");
-
-        this.add(Subtitles.METEOR_THROW, "Meteor Chunk flies");
-        this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
-        this.add(Subtitles.SCARYSCAPE, "Eerie noise");
-        this.add(Subtitles.ROCKET_IGNITE, "Rocket ignites");
-
-        this.add(Subtitles.AIRLOCK_OPEN, "Airlock opens");
-        this.add(Subtitles.AIRLOCK_CLOSE, "Airlock closes");
+        this.add(Subtitles.CHEST_UNLOCK, "Chest unlocks");
         this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
         this.add(Subtitles.MACHINE_WHIR, "Machine whirs");
+        this.add(Subtitles.METEOR_THROW, "Meteor Chunk flies");
         this.add(Subtitles.OXYGEN_FAN, "Oxygen Fan hums");
+        this.add(Subtitles.PARACHUTE, "Parachute opens");
+        this.add(Subtitles.ROCKET_IGNITE, "Rocket ignites");
+        this.add(Subtitles.SCARYSCAPE, "Eerie noise");
+        this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
+        this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
     }
 
     protected void generateTooltipTranslations() {

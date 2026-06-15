@@ -135,17 +135,17 @@ public interface Translations {
         String BOSS_LAUGH = "subtitles.galacticraft.entity.boss.laugh";
         String BOSS_OOH = "subtitles.galacticraft.entity.boss.ooh";
         String BOSS_OUCH = "subtitles.galacticraft.entity.boss.ouch";
+        String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
         String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
         String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
         String MACHINE_WHIR = "subtitles.galacticraft.machine.whir";
+        String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
         String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
         String PARACHUTE = "subtitles.galacticraft.player.parachute";
         String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
         String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
         String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
-        String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
-        String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
     }
 
     interface RegistryDebug {
