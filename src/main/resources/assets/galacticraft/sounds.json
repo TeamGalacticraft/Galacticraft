@@ -147,14 +147,14 @@
   "ambient.single_drip": {
     "subtitle": "subtitles.galacticraft.ambient.single_drip",
     "sounds": [
-      "galacticraft:ambient/single_drip1",
-      "galacticraft:ambient/single_drip2",
-      "galacticraft:ambient/single_drip3",
-      "galacticraft:ambient/single_drip4",
-      "galacticraft:ambient/single_drip5",
-      "galacticraft:ambient/single_drip6",
-      "galacticraft:ambient/single_drip7",
-      "galacticraft:ambient/single_drip8"
+      "galacticraft:ambient/single_drip/drip1",
+      "galacticraft:ambient/single_drip/drip2",
+      "galacticraft:ambient/single_drip/drip3",
+      "galacticraft:ambient/single_drip/drip4",
+      "galacticraft:ambient/single_drip/drip5",
+      "galacticraft:ambient/single_drip/drip6",
+      "galacticraft:ambient/single_drip/drip7",
+      "galacticraft:ambient/single_drip/drip8"
     ]
   },
   "ambient.scaryscape": {
