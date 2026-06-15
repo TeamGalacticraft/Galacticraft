@@ -251,11 +251,11 @@
       }
     ]
   },
-  "player.unlock_chest": {
-    "subtitle": "subtitles.galacticraft.player.unlock_chest",
+  "player.chest.unlock": {
+    "subtitle": "subtitles.galacticraft.player.chest.unlock",
     "sounds": [
       {
-        "name": "galacticraft:player/unlock_chest",
+        "name": "galacticraft:player/chest/unlock",
         "stream": false
       }
     ]

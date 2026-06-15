@@ -145,7 +145,7 @@ public interface Translations {
         String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
         String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
-        String UNLOCK_CHEST = "subtitles.galacticraft.player.unlock_chest";
+        String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
     }
 
     interface RegistryDebug {

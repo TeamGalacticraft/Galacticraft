@@ -967,7 +967,7 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateSubtitleTranslations() {
-        this.add(Subtitles.UNLOCK_CHEST, "Chest unlocks");
+        this.add(Subtitles.CHEST_UNLOCK, "Chest unlocks");
         this.add(Subtitles.PARACHUTE, "Parachute opens");
 
         this.add(Subtitles.SLIME_DEATH, "Slimeling dies");

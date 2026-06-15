@@ -60,7 +60,7 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_ORBIT = register("music_disc.legacy.orbit");
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = register("music_disc.legacy.spacerace");
     // Player
-    public static final SoundEvent UNLOCK_CHEST = SoundEvent.createVariableRangeEvent(Constant.id("player.unlock_chest"));
+    public static final SoundEvent CHEST_UNLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.chest.unlock"));
     public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
 
     public static Holder.Reference<SoundEvent> register(String id) {
@@ -85,6 +85,6 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, UNLOCK_CHEST.getLocation(), UNLOCK_CHEST);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, CHEST_UNLOCK.getLocation(), CHEST_UNLOCK);
     }
 }
