@@ -213,7 +213,7 @@
   "music_disc.legacy.mars": {
     "sounds": [
       {
-        "name": "galacticraft:music/records/legacy/mars",
+        "name": "galacticraft:records/legacy/mars",
         "stream": true
       }
     ]
@@ -221,7 +221,7 @@
   "music_disc.legacy.mimas": {
     "sounds": [
       {
-        "name": "galacticraft:music/records/legacy/mimas",
+        "name": "galacticraft:records/legacy/mimas",
         "stream": true
       }
     ]
@@ -229,7 +229,7 @@
   "music_disc.legacy.orbit": {
     "sounds": [
       {
-        "name": "galacticraft:music/records/legacy/orbit",
+        "name": "galacticraft:records/legacy/orbit",
         "stream": true
       }
     ]
@@ -237,7 +237,7 @@
   "music_disc.legacy.spacerace": {
     "sounds": [
       {
-        "name": "galacticraft:music/records/legacy/spacerace",
+        "name": "galacticraft:records/legacy/spacerace",
         "stream": true
       }
     ]
