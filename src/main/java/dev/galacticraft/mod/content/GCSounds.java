@@ -44,8 +44,8 @@ public class GCSounds {
     public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
     public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");
     // Machine Sounds
-    public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
     public static final SoundEvent AIRLOCK_CLOSE = register("machine.airlock.close");
+    public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
     public static final SoundEvent CIRCUIT_SCRITCH = register("machine.circuit.scritch");
     public static final SoundEvent MACHINE_BUZZ = register("machine.buzz");
     public static final SoundEvent MACHINE_WHIR = register("machine.whir");
