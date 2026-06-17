@@ -35,10 +35,10 @@ public class GCSounds {
     public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
     // Entity
     public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
-    public static final SoundEvent BOSS_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.death"));
-    public static final SoundEvent BOSS_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.laugh"));
-    public static final SoundEvent BOSS_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ooh"));
-    public static final SoundEvent BOSS_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.ouch"));
+    public static final SoundEvent BOSS_SKELETON_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.death"));
+    public static final SoundEvent BOSS_SKELETON_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.laugh"));
+    public static final SoundEvent BOSS_SKELETON_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.ooh"));
+    public static final SoundEvent BOSS_SKELETON_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.ouch"));
     public static final SoundEvent METEOR_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.meteor_chunk.throw"));
     public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
     public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
@@ -71,10 +71,10 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
         Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_DEATH.getLocation(), BOSS_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_LAUGH.getLocation(), BOSS_LAUGH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OOH.getLocation(), BOSS_OOH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_OUCH.getLocation(), BOSS_OUCH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_DEATH.getLocation(), BOSS_SKELETON_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_LAUGH.getLocation(), BOSS_SKELETON_LAUGH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_OOH.getLocation(), BOSS_SKELETON_OOH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_OUCH.getLocation(), BOSS_SKELETON_OUCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CHEST_UNLOCK.getLocation(), CHEST_UNLOCK);
         Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);

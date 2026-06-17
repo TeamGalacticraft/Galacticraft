@@ -970,10 +970,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.AIRLOCK_CLOSE, "Airlock closes");
         this.add(Subtitles.AIRLOCK_OPEN, "Airlock opens");
         this.add(Subtitles.ASTROMINER, "Astrominer flies");
-        this.add(Subtitles.BOSS_DEATH, "Evolved Skeleton Boss dies");
-        this.add(Subtitles.BOSS_LAUGH, "Evolved Skeleton Boss laughs");
-        this.add(Subtitles.BOSS_OOH, "Ooh");
-        this.add(Subtitles.BOSS_OUCH, "Ouch");
+        this.add(Subtitles.BOSS_SKELETON_DEATH, "Evolved Skeleton Boss dies");
+        this.add(Subtitles.BOSS_SKELETON_LAUGH, "Evolved Skeleton Boss laughs");
+        this.add(Subtitles.BOSS_SKELETON_OOH, "Ooh");
+        this.add(Subtitles.BOSS_SKELETON_OUCH, "Ouch");
         this.add(Subtitles.CHEST_UNLOCK, "Chest unlocks");
         this.add(Subtitles.CIRCUIT_SCRITCH, "Circuit Fabricator scritches");
         this.add(Subtitles.MACHINE_BUZZ, "Machine buzzes");
