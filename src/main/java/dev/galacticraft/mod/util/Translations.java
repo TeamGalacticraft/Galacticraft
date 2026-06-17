@@ -145,7 +145,7 @@ public interface Translations {
         String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
         String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
         String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
-        String SLIME_DEATH = "subtitles.galacticraft.entity.slime.death";
+        String SLIMELING_DEATH = "subtitles.galacticraft.entity.slimeling.death";
     }
 
     interface RegistryDebug {

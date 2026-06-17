@@ -84,11 +84,11 @@
       }
     ]
   },
-  "entity.slime.death": {
-    "subtitle": "subtitles.galacticraft.entity.slime.death",
+  "entity.slimeling.death": {
+    "subtitle": "subtitles.galacticraft.entity.slimeling.death",
     "sounds": [
       {
-        "name": "galacticraft:entity/slime/death",
+        "name": "galacticraft:entity/slimeling/death",
         "stream": false
       }
     ]

@@ -984,7 +984,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.ROCKET_IGNITE, "Rocket ignites");
         this.add(Subtitles.SCARYSCAPE, "Eerie noise");
         this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
-        this.add(Subtitles.SLIME_DEATH, "Slimeling dies");
+        this.add(Subtitles.SLIMELING_DEATH, "Slimeling dies");
     }
 
     protected void generateTooltipTranslations() {

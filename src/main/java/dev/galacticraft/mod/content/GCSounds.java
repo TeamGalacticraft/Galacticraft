@@ -41,7 +41,7 @@ public class GCSounds {
     public static final SoundEvent BOSS_SKELETON_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.ouch"));
     public static final SoundEvent METEOR_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.meteor_chunk.throw"));
     public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
-    public static final SoundEvent SLIME_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slime.death"));
+    public static final SoundEvent SLIMELING_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slimeling.death"));
     // Machine Sounds
     public static final SoundEvent AIRLOCK_OPEN = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
     public static final SoundEvent AIRLOCK_CLOSE = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
@@ -85,6 +85,6 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_IGNITE.getLocation(), ROCKET_IGNITE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIME_DEATH.getLocation(), SLIME_DEATH);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIMELING_DEATH.getLocation(), SLIMELING_DEATH);
     }
 }
