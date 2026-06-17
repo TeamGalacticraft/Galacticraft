@@ -35,7 +35,7 @@ public class RocketSound extends AbstractTickableSoundInstance {
     private boolean ignition = false;
 
     public RocketSound(RocketEntity rocket) {
-        super(GCSounds.SHUTTLE_SHUTTLE, SoundSource.NEUTRAL, rocket.level().getRandom());
+        super(GCSounds.ROCKET_IGNITE, SoundSource.NEUTRAL, rocket.level().getRandom());
         this.rocket = rocket;
         this.attenuation = SoundInstance.Attenuation.NONE;
         this.volume = 0.00001F;  //If it's zero it won't start playing

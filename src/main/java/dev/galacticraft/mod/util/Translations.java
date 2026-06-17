@@ -128,7 +128,24 @@ public interface Translations {
     }
 
     interface Subtitles {
-        String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
+        String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
+        String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
+        String AMBIENT_SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
+        String AMBIENT_SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
+        String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
+        String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
+        String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
+        String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
+        String MACHINE_WHIR = "subtitles.galacticraft.machine.whir";
+        String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
+        String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
+        String PARACHUTE = "subtitles.galacticraft.player.parachute";
+        String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
+        String SKELETON_BOSS_DEATH = "subtitles.galacticraft.entity.skeleton_boss.death";
+        String SKELETON_BOSS_LAUGH = "subtitles.galacticraft.entity.skeleton_boss.laugh";
+        String SKELETON_BOSS_OOH = "subtitles.galacticraft.entity.skeleton_boss.ooh";
+        String SKELETON_BOSS_OUCH = "subtitles.galacticraft.entity.skeleton_boss.ouch";
+        String SLIMELING_DEATH = "subtitles.galacticraft.entity.slimeling.death";
     }
 
     interface RegistryDebug {
