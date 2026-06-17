@@ -982,8 +982,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Subtitles.OXYGEN_FAN, "Oxygen Fan hums");
         this.add(Subtitles.PARACHUTE, "Parachute opens");
         this.add(Subtitles.ROCKET_IGNITE, "Rocket ignites");
-        this.add(Subtitles.SCARYSCAPE, "Eerie noise");
-        this.add(Subtitles.SINGLE_DRIP, "Liquid drips");
+        this.add(Subtitles.AMBIENT_SCARYSCAPE, "Eerie noise");
+        this.add(Subtitles.AMBIENT_SINGLE_DRIP, "Liquid drips");
         this.add(Subtitles.SLIMELING_DEATH, "Slimeling dies");
     }
 

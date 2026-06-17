@@ -130,6 +130,8 @@ public interface Translations {
     interface Subtitles {
         String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
         String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
+        String AMBIENT_SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
+        String AMBIENT_SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
         String BOSS_SKELETON_DEATH = "subtitles.galacticraft.entity.boss.skeleton.death";
         String BOSS_SKELETON_LAUGH = "subtitles.galacticraft.entity.boss.skeleton.laugh";
@@ -143,8 +145,6 @@ public interface Translations {
         String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
         String PARACHUTE = "subtitles.galacticraft.player.parachute";
         String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
-        String SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
-        String SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String SLIMELING_DEATH = "subtitles.galacticraft.entity.slimeling.death";
     }
 

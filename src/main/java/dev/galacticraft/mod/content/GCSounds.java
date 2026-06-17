@@ -31,8 +31,8 @@ import net.minecraft.sounds.SoundEvent;
 public class GCSounds {
     private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
     // Ambient
-    public static final SoundEvent SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
-    public static final SoundEvent SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
+    public static final SoundEvent AMBIENT_SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
+    public static final SoundEvent AMBIENT_SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
     // Entity
     public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
     public static final SoundEvent BOSS_SKELETON_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.death"));
@@ -70,6 +70,8 @@ public class GCSounds {
     public static void register() {
         Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENT_SCARYSCAPE.getLocation(), AMBIENT_SCARYSCAPE);
+        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENT_SINGLE_DRIP.getLocation(), AMBIENT_SINGLE_DRIP);
         Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_DEATH.getLocation(), BOSS_SKELETON_DEATH);
         Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_LAUGH.getLocation(), BOSS_SKELETON_LAUGH);
@@ -83,8 +85,6 @@ public class GCSounds {
         Registry.register(BuiltInRegistries.SOUND_EVENT, OXYGEN_FAN.getLocation(), OXYGEN_FAN);
         Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
         Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_IGNITE.getLocation(), ROCKET_IGNITE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SCARYSCAPE.getLocation(), SCARYSCAPE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SINGLE_DRIP.getLocation(), SINGLE_DRIP);
         Registry.register(BuiltInRegistries.SOUND_EVENT, SLIMELING_DEATH.getLocation(), SLIMELING_DEATH);
     }
 }
