@@ -36,10 +36,10 @@ public class GCSounds {
     public static final SoundEvent AMBIENT_SINGLE_DRIP = register("ambient.single_drip");
     // Entity
     public static final SoundEvent ASTROMINER = register("entity.astrominer");
-    public static final SoundEvent BOSS_SKELETON_DEATH = register("entity.boss.skeleton.death");
-    public static final SoundEvent BOSS_SKELETON_LAUGH = register("entity.boss.skeleton.laugh");
-    public static final SoundEvent BOSS_SKELETON_OOH = register("entity.boss.skeleton.ooh");
-    public static final SoundEvent BOSS_SKELETON_OUCH = register("entity.boss.skeleton.ouch");
+    public static final SoundEvent SKELETON_BOSS_DEATH = register("entity.skeleton_boss.death");
+    public static final SoundEvent SKELETON_BOSS_LAUGH = register("entity.skeleton_boss.laugh");
+    public static final SoundEvent SKELETON_BOSS_OOH = register("entity.skeleton_boss.ooh");
+    public static final SoundEvent SKELETON_BOSS_OUCH = register("entity.skeleton_boss.ouch");
     public static final SoundEvent METEOR_THROW = register("entity.meteor_chunk.throw");
     public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
     public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");

@@ -133,10 +133,6 @@ public interface Translations {
         String AMBIENT_SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
         String AMBIENT_SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
         String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
-        String BOSS_SKELETON_DEATH = "subtitles.galacticraft.entity.boss.skeleton.death";
-        String BOSS_SKELETON_LAUGH = "subtitles.galacticraft.entity.boss.skeleton.laugh";
-        String BOSS_SKELETON_OOH = "subtitles.galacticraft.entity.boss.skeleton.ooh";
-        String BOSS_SKELETON_OUCH = "subtitles.galacticraft.entity.boss.skeleton.ouch";
         String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
         String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
         String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
@@ -145,6 +141,10 @@ public interface Translations {
         String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
         String PARACHUTE = "subtitles.galacticraft.player.parachute";
         String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
+        String SKELETON_BOSS_DEATH = "subtitles.galacticraft.entity.skeleton_boss.death";
+        String SKELETON_BOSS_LAUGH = "subtitles.galacticraft.entity.skeleton_boss.laugh";
+        String SKELETON_BOSS_OOH = "subtitles.galacticraft.entity.skeleton_boss.ooh";
+        String SKELETON_BOSS_OUCH = "subtitles.galacticraft.entity.skeleton_boss.ouch";
         String SLIMELING_DEATH = "subtitles.galacticraft.entity.slimeling.death";
     }
 
