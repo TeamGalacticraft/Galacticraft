@@ -26,65 +26,55 @@ import dev.galacticraft.mod.Constant;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 
 public class GCSounds {
     private static final GCRegistry<SoundEvent> SOUNDS = new GCRegistry<>(BuiltInRegistries.SOUND_EVENT);
     // Ambient
-    public static final SoundEvent AMBIENT_SCARYSCAPE = SoundEvent.createVariableRangeEvent(Constant.id("ambient.scaryscape"));
-    public static final SoundEvent AMBIENT_SINGLE_DRIP = SoundEvent.createVariableRangeEvent(Constant.id("ambient.single_drip"));
+    public static final SoundEvent AMBIENT_SCARYSCAPE = register("ambient.scaryscape");
+    public static final SoundEvent AMBIENT_SINGLE_DRIP = register("ambient.single_drip");
     // Entity
-    public static final SoundEvent ASTROMINER = SoundEvent.createVariableRangeEvent(Constant.id("entity.astrominer"));
-    public static final SoundEvent BOSS_SKELETON_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.death"));
-    public static final SoundEvent BOSS_SKELETON_LAUGH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.laugh"));
-    public static final SoundEvent BOSS_SKELETON_OOH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.ooh"));
-    public static final SoundEvent BOSS_SKELETON_OUCH = SoundEvent.createVariableRangeEvent(Constant.id("entity.boss.skeleton.ouch"));
-    public static final SoundEvent METEOR_THROW = SoundEvent.createVariableRangeEvent(Constant.id("entity.meteor_chunk.throw"));
-    public static final SoundEvent ROCKET_IGNITE = SoundEvent.createVariableRangeEvent(Constant.id("entity.rocket.ignite"));
-    public static final SoundEvent SLIMELING_DEATH = SoundEvent.createVariableRangeEvent(Constant.id("entity.slimeling.death"));
+    public static final SoundEvent ASTROMINER = register("entity.astrominer");
+    public static final SoundEvent BOSS_SKELETON_DEATH = register("entity.boss.skeleton.death");
+    public static final SoundEvent BOSS_SKELETON_LAUGH = register("entity.boss.skeleton.laugh");
+    public static final SoundEvent BOSS_SKELETON_OOH = register("entity.boss.skeleton.ooh");
+    public static final SoundEvent BOSS_SKELETON_OUCH = register("entity.boss.skeleton.ouch");
+    public static final SoundEvent METEOR_THROW = register("entity.meteor_chunk.throw");
+    public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
+    public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");
     // Machine Sounds
-    public static final SoundEvent AIRLOCK_OPEN = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.open"));
-    public static final SoundEvent AIRLOCK_CLOSE = SoundEvent.createVariableRangeEvent(Constant.id("machine.airlock.close"));
-    public static final SoundEvent CIRCUIT_SCRITCH = SoundEvent.createVariableRangeEvent(Constant.id("machine.circuit.scritch"));
-    public static final SoundEvent MACHINE_BUZZ = SoundEvent.createVariableRangeEvent(Constant.id("machine.buzz"));
-    public static final SoundEvent MACHINE_WHIR = SoundEvent.createVariableRangeEvent(Constant.id("machine.whir"));
-    public static final SoundEvent OXYGEN_FAN = SoundEvent.createVariableRangeEvent(Constant.id("machine.oxygen.fan"));
+    public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
+    public static final SoundEvent AIRLOCK_CLOSE = register("machine.airlock.close");
+    public static final SoundEvent CIRCUIT_SCRITCH = register("machine.circuit.scritch");
+    public static final SoundEvent MACHINE_BUZZ = register("machine.buzz");
+    public static final SoundEvent MACHINE_WHIR = register("machine.whir");
+    public static final SoundEvent OXYGEN_FAN = register("machine.oxygen.fan");
     // Music
-    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = register("music.credits");
-    public static final Holder.Reference<SoundEvent> MUSIC_MARS = register("music.mars");
-    public static final Holder.Reference<SoundEvent> MUSIC_MOON = register("music.moon");
-    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = register("music.orbit");
+    public static final Holder.Reference<SoundEvent> MUSIC_CREDITS = registerForHolder("music.credits");
+    public static final Holder.Reference<SoundEvent> MUSIC_MARS = registerForHolder("music.mars");
+    public static final Holder.Reference<SoundEvent> MUSIC_MOON = registerForHolder("music.moon");
+    public static final Holder.Reference<SoundEvent> MUSIC_ORBIT = registerForHolder("music.orbit");
     // Legacy Discs
-    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MARS = register("music_disc.legacy.mars");
-    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MIMAS = register("music_disc.legacy.mimas");
-    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_ORBIT = register("music_disc.legacy.orbit");
-    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = register("music_disc.legacy.spacerace");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MARS = registerForHolder("music_disc.legacy.mars");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_MIMAS = registerForHolder("music_disc.legacy.mimas");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_ORBIT = registerForHolder("music_disc.legacy.orbit");
+    public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = registerForHolder("music_disc.legacy.spacerace");
     // Player
-    public static final SoundEvent CHEST_UNLOCK = SoundEvent.createVariableRangeEvent(Constant.id("player.chest.unlock"));
-    public static final SoundEvent PARACHUTE = SoundEvent.createVariableRangeEvent(Constant.id("player.parachute"));
+    public static final SoundEvent CHEST_UNLOCK = register("player.chest.unlock");
+    public static final SoundEvent PARACHUTE = register("player.parachute");
 
-    public static Holder.Reference<SoundEvent> register(String id) {
+    private static Holder.Reference<SoundEvent> registerForHolder(String id) {
         return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));
     }
 
-    public static void register() {
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_CLOSE.getLocation(), AIRLOCK_CLOSE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AIRLOCK_OPEN.getLocation(), AIRLOCK_OPEN);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENT_SCARYSCAPE.getLocation(), AMBIENT_SCARYSCAPE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, AMBIENT_SINGLE_DRIP.getLocation(), AMBIENT_SINGLE_DRIP);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ASTROMINER.getLocation(), ASTROMINER);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_DEATH.getLocation(), BOSS_SKELETON_DEATH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_LAUGH.getLocation(), BOSS_SKELETON_LAUGH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_OOH.getLocation(), BOSS_SKELETON_OOH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, BOSS_SKELETON_OUCH.getLocation(), BOSS_SKELETON_OUCH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, CHEST_UNLOCK.getLocation(), CHEST_UNLOCK);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, CIRCUIT_SCRITCH.getLocation(), CIRCUIT_SCRITCH);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_BUZZ.getLocation(), MACHINE_BUZZ);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, MACHINE_WHIR.getLocation(), MACHINE_WHIR);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, METEOR_THROW.getLocation(), METEOR_THROW);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, OXYGEN_FAN.getLocation(), OXYGEN_FAN);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, PARACHUTE.getLocation(), PARACHUTE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, ROCKET_IGNITE.getLocation(), ROCKET_IGNITE);
-        Registry.register(BuiltInRegistries.SOUND_EVENT, SLIMELING_DEATH.getLocation(), SLIMELING_DEATH);
+    private static SoundEvent register(String id) {
+        return register(Constant.id(id));
     }
+
+    private static SoundEvent register(ResourceLocation id) {
+        return Registry.register(BuiltInRegistries.SOUND_EVENT, id, SoundEvent.createVariableRangeEvent(id));
+    }
+
+    public static void register() {}
 }
