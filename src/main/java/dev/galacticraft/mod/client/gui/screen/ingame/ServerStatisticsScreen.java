@@ -26,7 +26,6 @@ import dev.galacticraft.impl.network.c2s.RequestSpaceRaceStatsPayload;
 import dev.galacticraft.impl.network.c2s.UpdateSpaceRaceVisibilityPayload;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.GlobalItemsColumn;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.GlobalStatsSection;
-import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarAxis;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarInfo;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarType;
 import dev.galacticraft.mod.client.gui.widget.SpaceRaceButton;
@@ -43,6 +42,23 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
+    private static final int STATS_TOGGLE_BUTTON_WIDTH = 170;
+    private static final int STATS_TOGGLE_BUTTON_HEIGHT = 16;
+    private static final int GLOBAL_TAB_SPACING = 6;
+    private static final int GLOBAL_TAB_HEIGHT = 20;
+    private static final int GLOBAL_TAB_BOTTOM_PADDING = 6;
+    private static final int GLOBAL_CONTENT_SPACING = 6;
+    private static final int GLOBAL_GENERAL_ROW_HEIGHT = 18;
+    private static final int GLOBAL_GENERAL_TOTAL_WIDTH = 54;
+    private static final int GLOBAL_MOBS_ROW_HEIGHT = 18;
+    private static final int GLOBAL_ITEMS_HEADER_HEIGHT = 20;
+    private static final int GLOBAL_ITEMS_ROW_HEIGHT = 24;
+    private static final int GLOBAL_ITEMS_ICON_COLUMN_WIDTH = 22;
+    private static final int GLOBAL_ITEMS_MIN_CELL_WIDTH = 48;
+    private static final int GLOBAL_ITEMS_MAX_CELL_WIDTH = 72;
+    private static final int GLOBAL_HEAD_SIZE = 12;
+    private static final int GLOBAL_ITEM_ICON_SIZE = 16;
+
     private final Screen parent;
     private GlobalStatsSection statsSection = GlobalStatsSection.GENERAL;
     private SpaceRaceButton visibilityButton;
@@ -58,7 +74,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
     private List<Component> mouseoverTooltip;
 
     public ServerStatisticsScreen(Screen parent) {
-        super(Component.translatable(Translations.SpaceRace.GLOBAL_STATS));
+        super(Component.translatable(Translations.SpaceRace.SERVER_STATS));
         this.parent = parent;
     }
 
@@ -155,7 +171,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
 
             int thumbLength = scrollbar.thumbLength();
             int trackRange = Math.max(0, scrollbar.length() - thumbLength);
-            int mouseAxis = scrollbar.axis() == ScrollbarAxis.VERTICAL ? (int) mouseY : (int) mouseX;
+            int mouseAxis = scrollbar.vertical() ? (int) mouseY : (int) mouseX;
             int trackStart = scrollbar.trackStart();
             int targetThumbPosition = Mth.clamp(mouseAxis - this.activeScrollbarThumbOffset, trackStart, trackStart + trackRange);
             this.setScrollFromThumbPosition(scrollbar, targetThumbPosition);
@@ -216,7 +232,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
         int contentX = panelX + STATS_PANEL_PADDING;
         int contentY = panelY + STATS_PANEL_PADDING;
         int contentWidth = panelWidth - STATS_PANEL_PADDING * 2;
-        graphics.drawString(this.font, Component.translatable(Translations.SpaceRace.GLOBAL_STATS), contentX, contentY, 0xFFFFFFFF, false);
+        graphics.drawString(this.font, Component.translatable(Translations.SpaceRace.SERVER_STATS), contentX, contentY, 0xFFFFFFFF, false);
         int bodyTop = contentY + this.font.lineHeight + GLOBAL_CONTENT_SPACING;
         int tabY = this.getBottom() - STATS_PANEL_PADDING - GLOBAL_TAB_HEIGHT - GLOBAL_TAB_BOTTOM_PADDING;
         int bodyBottom = tabY - GLOBAL_CONTENT_SPACING;
@@ -282,7 +298,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
             }
         }
 
-        this.generalScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_GENERAL, ScrollbarAxis.VERTICAL, scrollbarX, y, rowAreaHeight, rows.size(), visibleRows, this.generalScroll);
+        this.generalScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_GENERAL, true, scrollbarX, y, rowAreaHeight, rows.size(), visibleRows, this.generalScroll);
         this.renderScrollbar(graphics, this.generalScrollbar, mouseX, mouseY);
         this.mouseoverTooltip = hoveredTooltip;
     }
@@ -376,7 +392,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
             }
         }
 
-        this.itemsScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_ITEMS, ScrollbarAxis.VERTICAL, scrollbarX, headerY, GLOBAL_ITEMS_HEADER_HEIGHT + rowAreaHeight, rows.size(), visibleRows, this.itemsScroll);
+        this.itemsScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_ITEMS, true, scrollbarX, headerY, GLOBAL_ITEMS_HEADER_HEIGHT + rowAreaHeight, rows.size(), visibleRows, this.itemsScroll);
         this.renderScrollbar(graphics, this.itemsScrollbar, mouseX, mouseY);
         this.mouseoverTooltip = hoveredTooltip;
     }
@@ -454,7 +470,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
             }
         }
 
-        this.mobsScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_MOBS, ScrollbarAxis.VERTICAL, scrollbarX, y, GLOBAL_MOBS_ROW_HEIGHT + rowAreaHeight, rows.size(), visibleRows, this.mobsScroll);
+        this.mobsScrollbar = new ScrollbarInfo(ScrollbarType.GLOBAL_MOBS, true, scrollbarX, y, GLOBAL_MOBS_ROW_HEIGHT + rowAreaHeight, rows.size(), visibleRows, this.mobsScroll);
         this.renderScrollbar(graphics, this.mobsScrollbar, mouseX, mouseY);
         this.mouseoverTooltip = hoveredTooltip;
     }
@@ -468,7 +484,7 @@ public class ServerStatisticsScreen extends AbstractSpaceRaceScreen {
             int thumbLength = scrollbar.thumbLength();
             int thumbStart = scrollbar.thumbPosition();
             int trackRange = Math.max(0, scrollbar.length() - thumbLength);
-            int mouseAxis = scrollbar.axis() == ScrollbarAxis.VERTICAL ? (int) mouseY : (int) mouseX;
+            int mouseAxis = scrollbar.vertical() ? (int) mouseY : (int) mouseX;
             int trackStart = scrollbar.trackStart();
 
             if (mouseAxis >= thumbStart && mouseAxis < thumbStart + thumbLength) {

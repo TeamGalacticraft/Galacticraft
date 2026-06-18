@@ -33,7 +33,7 @@ public class SpaceRaceButtonWidget extends SpaceRaceButton {
     private final Font textRenderer;
 
     public SpaceRaceButtonWidget(Minecraft minecraft, int x, int y, int buttonWidth, int buttonHeight, int screenWidth, int screenHeight) {
-        super(CommonComponents.EMPTY, x, y, buttonWidth, buttonHeight, (button) -> minecraft.setScreen(new dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen()));
+        super(CommonComponents.EMPTY, x, y, buttonWidth, buttonHeight, button -> minecraft.setScreen(new dev.galacticraft.mod.client.gui.screen.ingame.SpaceRaceScreen()));
         this.textRenderer = minecraft.font;
     }
 

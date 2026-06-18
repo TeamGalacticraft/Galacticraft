@@ -1049,7 +1049,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SpaceRace.BUTTON_2, "Manager");
         this.add(SpaceRace.COMING_SOON, "Coming Soon™");
         this.add(SpaceRace.EXIT, "Exit");
-        this.add(SpaceRace.GLOBAL_STATS, "Server Statistics");
+        this.add(SpaceRace.RACE_ADVANCEMENTS, "Race Advancements");
         this.add(SpaceRace.GLOBAL_TAB_GENERAL, "General");
         this.add(SpaceRace.GLOBAL_TAB_ITEMS, "Items");
         this.add(SpaceRace.GLOBAL_TAB_MOBS, "Mobs");
@@ -1092,7 +1092,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(SpaceRace.FIRST_UNLOCKERS_UNAVAILABLE, "First unlockers hidden or unavailable.");
         this.add(SpaceRace.FIRST_UNLOCKED_BY, "First unlocked by:");
         this.add(SpaceRace.REMOVE_PLAYERS, "Remove Player(s)");
-        this.add(SpaceRace.SERVER_STATS, "Race Advancements");
+        this.add(SpaceRace.SERVER_STATS, "Server Statistics");
         this.add(SpaceRace.FLAG_CONFIRM, "Use this team flag?");
         this.add(SpaceRace.FLAG_CONFIRM_MESSAGE, "");
         this.add(SpaceRace.CUSTOMIZE_FLAG, "Customize Flag");

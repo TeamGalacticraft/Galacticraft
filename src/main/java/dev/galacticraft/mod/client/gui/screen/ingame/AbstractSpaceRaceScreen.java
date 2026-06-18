@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarAxis;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarInfo;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarType;
 import dev.galacticraft.mod.client.gui.widget.SpaceRaceButton;
@@ -34,55 +33,11 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.client.resources.DefaultPlayerSkin;
 import net.minecraft.network.chat.Component;
-import net.minecraft.util.Mth;
 
 import java.util.UUID;
 
 abstract class AbstractSpaceRaceScreen extends Screen {
     protected static final int STATS_PANEL_PADDING = 8;
-    protected static final int STATS_ENTRY_HEIGHT = 22;
-    protected static final int STATS_ENTRY_SPACING = 2;
-    protected static final int STATS_ENTRY_CONTENT_PADDING = 6;
-    protected static final int OVERVIEW_ENTRY_HEIGHT = 20;
-    protected static final int OVERVIEW_ENTRY_SPACING = 2;
-    protected static final int PLAYER_HEAD_SIZE = 16;
-    protected static final int PLAYER_HEAD_SPACING = 8;
-    protected static final int ADVANCEMENT_ICON_SIZE = 16;
-    protected static final int ADVANCEMENT_ICON_SPACING = 2;
-    protected static final int ADVANCEMENT_TEXT_ICON_SPACING = 6;
-    protected static final int STATS_TOGGLE_BUTTON_WIDTH = 170;
-    protected static final int STATS_TOGGLE_BUTTON_HEIGHT = 16;
-    protected static final int COMPACT_TOGGLE_BUTTON_HEIGHT = 16;
-    protected static final int COMPACT_TOGGLE_BUTTON_SPACING = 4;
-    protected static final int SERVER_BOTTOM_CONTROL_RESERVED = COMPACT_TOGGLE_BUTTON_HEIGHT + 8;
-    protected static final int SERVER_BOTTOM_CONTROL_RESERVED_SERVER_TAB = COMPACT_TOGGLE_BUTTON_HEIGHT + 5;
-    protected static final int SERVER_MODE_BUTTON_HEIGHT = 16;
-    protected static final int SERVER_MODE_BUTTON_SPACING = 4;
-    protected static final int ADVANCEMENT_ROW_HEIGHT = 20;
-    protected static final int ADVANCEMENT_ROW_SPACING = 3;
-    protected static final int TREE_NODE_SIZE = 20;
-    protected static final int TREE_NODE_SPACING_X = 30;
-    protected static final int TREE_NODE_SPACING_Y = 26;
-    protected static final int TREE_CANVAS_PADDING = 24;
-    protected static final int TREE_LINE_COLOR = 0xAA5A5A5A;
-    protected static final int TREE_NODE_INCOMPLETE_FILL = 0x55272727;
-    protected static final int TREE_NODE_COMPLETE_FILL = 0x553E6231;
-    protected static final int TREE_NODE_BORDER_INCOMPLETE = 0xAA666666;
-    protected static final int TREE_NODE_BORDER_COMPLETE = 0xAA96C56B;
-    protected static final int GLOBAL_TAB_SPACING = 6;
-    protected static final int GLOBAL_TAB_HEIGHT = 20;
-    protected static final int GLOBAL_TAB_BOTTOM_PADDING = 6;
-    protected static final int GLOBAL_CONTENT_SPACING = 6;
-    protected static final int GLOBAL_GENERAL_ROW_HEIGHT = 18;
-    protected static final int GLOBAL_GENERAL_TOTAL_WIDTH = 54;
-    protected static final int GLOBAL_MOBS_ROW_HEIGHT = 18;
-    protected static final int GLOBAL_ITEMS_HEADER_HEIGHT = 20;
-    protected static final int GLOBAL_ITEMS_ROW_HEIGHT = 24;
-    protected static final int GLOBAL_ITEMS_ICON_COLUMN_WIDTH = 22;
-    protected static final int GLOBAL_ITEMS_MIN_CELL_WIDTH = 48;
-    protected static final int GLOBAL_ITEMS_MAX_CELL_WIDTH = 72;
-    protected static final int GLOBAL_HEAD_SIZE = 12;
-    protected static final int GLOBAL_ITEM_ICON_SIZE = 16;
     protected static final int SCROLLBAR_WIDTH = 6;
     protected static final int SCROLLBAR_SPACING = 2;
 
@@ -91,6 +46,7 @@ abstract class AbstractSpaceRaceScreen extends Screen {
     protected boolean animationCompleted = false;
     protected ScrollbarType activeScrollbar = ScrollbarType.NONE;
     protected int activeScrollbarThumbOffset = 0;
+    private long openingStartTime = -1;
 
     protected AbstractSpaceRaceScreen(Component title) {
         super(title);
@@ -99,6 +55,20 @@ abstract class AbstractSpaceRaceScreen extends Screen {
     @Override
     public boolean isPauseScreen() {
         return false;
+    }
+
+    @Override
+    protected void init() {
+        super.init();
+        if (this.openingStartTime == -1) {
+            this.openingStartTime = System.currentTimeMillis();
+        }
+    }
+
+    @Override
+    public void onClose() {
+        this.openingStartTime = -1;
+        super.onClose();
     }
 
     @Override
@@ -114,22 +84,25 @@ abstract class AbstractSpaceRaceScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        int maxWidth = (int) (this.width - (this.getXMargins() * 1.5D));
-        if (this.backgroundWidth < maxWidth) {
-            this.backgroundWidth += (int) Math.min(60 * delta, maxWidth - this.backgroundWidth);
+        if (!this.animationCompleted) {
+            int maxWidth = (int) (this.width - (this.getXMargins() * 1.5D));
+            int maxHeight = (int) (this.height - (this.getYMargins() * 1.5D));
+
+            if (this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight) {
+                this.repositionElements();
+                this.animationCompleted = true;
+            }
+
+            long elapsed = System.currentTimeMillis() - this.openingStartTime;
+            long duration = 1000;
+            float progress = Math.min(1.0f, (float) elapsed / duration);
+            float smoothedProgress = 1.01f - (float) Math.pow(1.0f - progress, 3);
+
+            this.backgroundWidth = (int) (maxWidth * smoothedProgress);
+            this.backgroundHeight = (int) (maxHeight * smoothedProgress);
         }
 
-        int maxHeight = (int) (this.height - (this.getYMargins() * 1.5D));
-        if (this.backgroundHeight < maxHeight) {
-            this.backgroundHeight += (int) Math.min(40 * delta, maxHeight - this.backgroundHeight);
-        }
-
-        if (!this.animationCompleted && this.isAnimationComplete()) {
-            this.repositionElements();
-            this.animationCompleted = true;
-        }
-
-        graphics.fill(this.getLeft(), this.getTop(), this.getLeft() + this.backgroundWidth, this.getTop() + this.backgroundHeight, 0x80000000);
+        graphics.fill(this.getLeft(), this.getTop(), this.getRight(), this.getBottom(), 0x80000000);
     }
 
     protected void renderForeground(GuiGraphics graphics, int mouseX, int mouseY) {
@@ -190,7 +163,7 @@ abstract class AbstractSpaceRaceScreen extends Screen {
         int x = scrollbar.x();
         int y = scrollbar.y();
         int length = scrollbar.length();
-        if (scrollbar.axis() == ScrollbarAxis.VERTICAL) {
+        if (scrollbar.vertical()) {
             graphics.fill(x, y, x + SCROLLBAR_WIDTH, y + length, 0x44171717);
             graphics.renderOutline(x, y, SCROLLBAR_WIDTH, length, 0x66454545);
         } else {
@@ -203,19 +176,13 @@ abstract class AbstractSpaceRaceScreen extends Screen {
         boolean active = this.activeScrollbar == scrollbar.type();
         boolean hovered = scrollbar.contains(mouseX, mouseY);
         int thumbColor = active ? 0xFFB9B9B9 : hovered ? 0xFFA3A3A3 : 0xFF8D8D8D;
-        if (scrollbar.axis() == ScrollbarAxis.VERTICAL) {
+        if (scrollbar.vertical()) {
             graphics.fill(x + 1, thumbPosition + 1, x + SCROLLBAR_WIDTH - 1, thumbPosition + thumbLength - 1, thumbColor);
             graphics.renderOutline(x, thumbPosition, SCROLLBAR_WIDTH, thumbLength, 0xFF5A5A5A);
         } else {
             graphics.fill(thumbPosition + 1, y + 1, thumbPosition + thumbLength - 1, y + SCROLLBAR_WIDTH - 1, thumbColor);
             graphics.renderOutline(thumbPosition, y, thumbLength, SCROLLBAR_WIDTH, 0xFF5A5A5A);
         }
-    }
-
-    private boolean isAnimationComplete() {
-        int maxWidth = (int) (this.width - (this.getXMargins() * 1.5D));
-        int maxHeight = (int) (this.height - (this.getYMargins() * 1.5D));
-        return this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight;
     }
 
     private int getYMargins() {

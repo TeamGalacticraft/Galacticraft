@@ -295,7 +295,7 @@ public interface Translations {
         String BUTTON_2 = "ui.galacticraft.space_race_manager.button_2";
         String COMING_SOON = "ui.galacticraft.space_race_manager.coming_soon";
         String EXIT = "ui.galacticraft.space_race_manager.exit";
-        String GLOBAL_STATS = "ui.galacticraft.space_race_manager.global_stats";
+        String RACE_ADVANCEMENTS = "ui.galacticraft.space_race_manager.race_advancements";
         String GLOBAL_TAB_GENERAL = "ui.galacticraft.space_race_manager.global.tab.general";
         String GLOBAL_TAB_ITEMS = "ui.galacticraft.space_race_manager.global.tab.items";
         String GLOBAL_TAB_MOBS = "ui.galacticraft.space_race_manager.global.tab.mobs";

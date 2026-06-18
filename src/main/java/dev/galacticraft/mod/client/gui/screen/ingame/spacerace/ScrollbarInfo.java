@@ -22,11 +22,12 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame.spacerace;
 
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.util.Mth;
 
 public record ScrollbarInfo(
         ScrollbarType type,
-        ScrollbarAxis axis,
+        boolean vertical,
         int x,
         int y,
         int length,
@@ -64,13 +65,13 @@ public record ScrollbarInfo(
     }
 
     public int trackStart() {
-        return this.axis == ScrollbarAxis.VERTICAL ? this.y : this.x;
+        return this.vertical ? this.y : this.x;
     }
 
     public boolean contains(double mouseX, double mouseY) {
-        if (this.axis == ScrollbarAxis.VERTICAL) {
-            return mouseX >= this.x && mouseX < this.x + SCROLLBAR_WIDTH && mouseY >= this.y && mouseY < this.y + this.length;
+        if (this.vertical) {
+            return DrawableUtil.mouseIn(mouseX, mouseY, this.x, this.y, SCROLLBAR_WIDTH, this.length);
         }
-        return mouseX >= this.x && mouseX < this.x + this.length && mouseY >= this.y && mouseY < this.y + SCROLLBAR_WIDTH;
+        return DrawableUtil.mouseIn(mouseX, mouseY, this.x, this.y, this.length, SCROLLBAR_WIDTH);
     }
 }

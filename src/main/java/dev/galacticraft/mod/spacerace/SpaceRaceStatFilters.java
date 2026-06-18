@@ -56,16 +56,7 @@ public final class SpaceRaceStatFilters {
     private static final Path GENERAL_FILE = CONFIG_DIRECTORY.resolve("general.json");
     private static final Path ITEMS_FILE = CONFIG_DIRECTORY.resolve("items.json");
     private static final Path MOBS_FILE = CONFIG_DIRECTORY.resolve("mobs.json");
-    private static final List<ResourceLocation> GENERAL_STAT_IDS = List.of(
-            GCStats.CLEAN_PARACHUTE,
-            GCStats.OPEN_PARACHEST,
-            GCStats.INTERACT_WITH_ROCKET_WORKBENCH,
-            GCStats.LAUNCH_ROCKET,
-            GCStats.CRASH_LANDING,
-            GCStats.SAFE_LANDING,
-            GCStats.EAT_CHEESE_WHEEL_SLICE,
-            GCStats.CHEESE_SLICED
-    );
+    private static final List<ResourceLocation> GENERAL_STAT_IDS = GCStats.SPACE_RACE_STATS;
 
     private SpaceRaceStatFilters() {
     }

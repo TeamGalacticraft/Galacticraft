@@ -25,7 +25,6 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 import dev.galacticraft.impl.network.c2s.RequestSpaceRaceStatsPayload;
 import dev.galacticraft.impl.network.c2s.UpdateSpaceRaceVisibilityPayload;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.PlayerClickArea;
-import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarAxis;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarInfo;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ScrollbarType;
 import dev.galacticraft.mod.client.gui.screen.ingame.spacerace.ServerStatsMode;
@@ -39,12 +38,14 @@ import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.client.gui.screens.Screen;
+import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipPositioner;
 import net.minecraft.client.multiplayer.PlayerInfo;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
 import net.minecraft.world.item.ItemStack;
+import org.joml.Vector2i;
 
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -53,6 +54,52 @@ import java.util.Map;
 import java.util.UUID;
 
 public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
+    private static final int TOOLTIP_MARGIN = 4;
+    private static final int TOOLTIP_MOUSE_OFFSET = 12;
+    private static final ClientTooltipPositioner ADVANCEMENT_TOOLTIP_POSITIONER = (screenWidth, screenHeight, mouseX, mouseY, tooltipWidth, tooltipHeight) -> {
+        int x = mouseX - tooltipWidth - TOOLTIP_MOUSE_OFFSET;
+        if (x < TOOLTIP_MARGIN) {
+            x = mouseX + TOOLTIP_MOUSE_OFFSET;
+        }
+        x = Mth.clamp(x, TOOLTIP_MARGIN, Math.max(TOOLTIP_MARGIN, screenWidth - tooltipWidth - TOOLTIP_MARGIN));
+
+        int y = mouseY - tooltipHeight - TOOLTIP_MOUSE_OFFSET;
+        if (y < TOOLTIP_MARGIN) {
+            y = mouseY + TOOLTIP_MOUSE_OFFSET;
+        }
+        y = Mth.clamp(y, TOOLTIP_MARGIN, Math.max(TOOLTIP_MARGIN, screenHeight - tooltipHeight - TOOLTIP_MARGIN));
+
+        return new Vector2i(x, y);
+    };
+
+    private static final int STATS_ENTRY_HEIGHT = 22;
+    private static final int STATS_ENTRY_SPACING = 2;
+    private static final int STATS_ENTRY_CONTENT_PADDING = 6;
+    private static final int OVERVIEW_ENTRY_HEIGHT = 20;
+    private static final int OVERVIEW_ENTRY_SPACING = 2;
+    private static final int PLAYER_HEAD_SIZE = 16;
+    private static final int PLAYER_HEAD_SPACING = 8;
+    private static final int ADVANCEMENT_ICON_SIZE = 16;
+    private static final int ADVANCEMENT_ICON_SPACING = 2;
+    private static final int ADVANCEMENT_TEXT_ICON_SPACING = 6;
+    private static final int COMPACT_TOGGLE_BUTTON_HEIGHT = 16;
+    private static final int COMPACT_TOGGLE_BUTTON_SPACING = 4;
+    private static final int SERVER_BOTTOM_CONTROL_RESERVED = COMPACT_TOGGLE_BUTTON_HEIGHT + 8;
+    private static final int SERVER_BOTTOM_CONTROL_RESERVED_SERVER_TAB = COMPACT_TOGGLE_BUTTON_HEIGHT + 5;
+    private static final int SERVER_MODE_BUTTON_HEIGHT = 16;
+    private static final int SERVER_MODE_BUTTON_SPACING = 4;
+    private static final int ADVANCEMENT_ROW_HEIGHT = 20;
+    private static final int ADVANCEMENT_ROW_SPACING = 3;
+    private static final int TREE_NODE_SIZE = 20;
+    private static final int TREE_NODE_SPACING_X = 30;
+    private static final int TREE_NODE_SPACING_Y = 26;
+    private static final int TREE_CANVAS_PADDING = 24;
+    private static final int TREE_LINE_COLOR = 0xAA5A5A5A;
+    private static final int TREE_NODE_INCOMPLETE_FILL = 0x55272727;
+    private static final int TREE_NODE_COMPLETE_FILL = 0x553E6231;
+    private static final int TREE_NODE_BORDER_INCOMPLETE = 0xAA666666;
+    private static final int TREE_NODE_BORDER_COMPLETE = 0xAA96C56B;
+
     private final Screen parent;
     private final List<PlayerClickArea> playerClickAreas = new ArrayList<>();
     private final List<TeamClickArea> teamClickAreas = new ArrayList<>();
@@ -78,7 +125,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
     private List<Component> mouseoverTooltip;
 
     public RaceAdvancementsScreen(Screen parent) {
-        super(Component.translatable(Translations.SpaceRace.SERVER_STATS));
+        super(Component.translatable(Translations.SpaceRace.RACE_ADVANCEMENTS));
         this.parent = parent;
     }
 
@@ -140,7 +187,10 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
     @Override
     protected void drawMouseoverTooltip(GuiGraphics graphics, int mouseX, int mouseY) {
         if (this.mouseoverTooltip != null) {
-            graphics.renderComponentTooltip(this.font, this.mouseoverTooltip, mouseX, mouseY);
+            List<FormattedCharSequence> tooltipLines = this.mouseoverTooltip.stream()
+                    .map(Component::getVisualOrderText)
+                    .toList();
+            graphics.renderTooltip(this.font, tooltipLines, ADVANCEMENT_TOOLTIP_POSITIONER, mouseX, mouseY);
         }
     }
 
@@ -193,7 +243,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
 
             int thumbLength = scrollbar.thumbLength();
             int trackRange = Math.max(0, scrollbar.length() - thumbLength);
-            int mouseAxis = scrollbar.axis() == ScrollbarAxis.VERTICAL ? (int) mouseY : (int) mouseX;
+            int mouseAxis = scrollbar.vertical() ? (int) mouseY : (int) mouseX;
             int trackStart = scrollbar.trackStart();
             int targetThumbPosition = Mth.clamp(mouseAxis - this.activeScrollbarThumbOffset, trackStart, trackStart + trackRange);
             this.setScrollFromThumbPosition(scrollbar, targetThumbPosition);
@@ -454,7 +504,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
 
         this.listScrollbar = new ScrollbarInfo(
                 ScrollbarType.SERVER_PLAYER_LIST,
-                ScrollbarAxis.VERTICAL,
+                true,
                 scrollbarX,
                 y,
                 rowsTrackHeight,
@@ -578,7 +628,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
 
         this.listScrollbar = new ScrollbarInfo(
                 ScrollbarType.SERVER_PLAYER_DETAIL,
-                ScrollbarAxis.VERTICAL,
+                true,
                 scrollbarX,
                 listTop,
                 rowsTrackHeight,
@@ -621,7 +671,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
 
         this.listScrollbar = new ScrollbarInfo(
                 ScrollbarType.SERVER_TEAM_LIST,
-                ScrollbarAxis.VERTICAL,
+                true,
                 scrollbarX,
                 y,
                 rowsTrackHeight,
@@ -728,7 +778,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
 
         this.listScrollbar = new ScrollbarInfo(
                 ScrollbarType.SERVER_TEAM_DETAIL,
-                ScrollbarAxis.VERTICAL,
+                true,
                 scrollbarX,
                 listTop,
                 rowsTrackHeight,
@@ -885,8 +935,8 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
         }
         graphics.disableScissor();
 
-        this.treeVerticalScrollbar = new ScrollbarInfo(ScrollbarType.SERVER_TREE_VERTICAL, ScrollbarAxis.VERTICAL, verticalScrollbarX, y, canvasHeight, contentHeight, canvasHeight, this.treeScrollY);
-        this.treeHorizontalScrollbar = new ScrollbarInfo(ScrollbarType.SERVER_TREE_HORIZONTAL, ScrollbarAxis.HORIZONTAL, x, horizontalScrollbarY, canvasWidth, contentWidth, canvasWidth, this.treeScrollX);
+        this.treeVerticalScrollbar = new ScrollbarInfo(ScrollbarType.SERVER_TREE_VERTICAL, true, verticalScrollbarX, y, canvasHeight, contentHeight, canvasHeight, this.treeScrollY);
+        this.treeHorizontalScrollbar = new ScrollbarInfo(ScrollbarType.SERVER_TREE_HORIZONTAL, false, x, horizontalScrollbarY, canvasWidth, contentWidth, canvasWidth, this.treeScrollX);
         this.renderScrollbar(graphics, this.treeVerticalScrollbar, mouseX, mouseY);
         this.renderScrollbar(graphics, this.treeHorizontalScrollbar, mouseX, mouseY);
         this.mouseoverTooltip = hoveredTooltip;
@@ -975,7 +1025,7 @@ public class RaceAdvancementsScreen extends AbstractSpaceRaceScreen {
             int thumbLength = scrollbar.thumbLength();
             int thumbStart = scrollbar.thumbPosition();
             int trackRange = Math.max(0, scrollbar.length() - thumbLength);
-            int mouseAxis = scrollbar.axis() == ScrollbarAxis.VERTICAL ? (int) mouseY : (int) mouseX;
+            int mouseAxis = scrollbar.vertical() ? (int) mouseY : (int) mouseX;
             int trackStart = scrollbar.trackStart();
 
             if (mouseAxis >= thumbStart && mouseAxis < thumbStart + thumbLength) {
