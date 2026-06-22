@@ -80,7 +80,8 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
                     )
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(OUTPUT_X_2, OUTPUT_Y_2)
-                    ),
+                    )
+                    .registerInsertHandler(CompressorInsertHandler::insert),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
                     Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate() * 2,

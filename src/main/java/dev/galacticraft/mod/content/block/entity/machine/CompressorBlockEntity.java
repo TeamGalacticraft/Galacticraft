@@ -79,10 +79,13 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
                             .filter((item, tag) -> {
                                 Integer integer = FuelRegistry.INSTANCE.get(item);
                                 return integer != null && integer > 0;
-                            }))
+                            })
+                    )
                     .add3x3Grid(TransferType.INPUT, GRID_X, GRID_Y)
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(OUTPUT_X, OUTPUT_Y))
+                            .pos(OUTPUT_X, OUTPUT_Y)
+                    )
+                    .registerInsertHandler(CompressorInsertHandler::insert)
     );
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {

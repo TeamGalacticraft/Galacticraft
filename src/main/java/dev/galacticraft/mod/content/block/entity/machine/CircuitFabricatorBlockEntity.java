@@ -62,6 +62,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -115,7 +116,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
             )
     );
 
-    public static long insert(ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
+    public static long insert(@Nullable BlockEntity blockEntity, ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
         if (variant instanceof ItemVariant itemVariant && itemVariant.toStack().is(GCItemTags.SILICONS)) {
             Item item = itemVariant.getItem();
             DataComponentPatch components = itemVariant.getComponents();
