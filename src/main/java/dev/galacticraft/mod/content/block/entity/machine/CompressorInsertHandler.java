@@ -28,6 +28,10 @@ import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
+import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import it.unimi.dsi.fastutil.ints.IntArrayList;
+import it.unimi.dsi.fastutil.ints.IntList;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
@@ -42,7 +46,9 @@ import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
 import java.util.function.Predicate;
 
 public class CompressorInsertHandler {
@@ -57,11 +63,10 @@ public class CompressorInsertHandler {
 
         // Stage 1: Find a valid recipe
         ItemStack incomingItemStack = incomingItemVariant.toStack((int) maxAmount);
-        List<ItemStack> initialItemStacks = collectItemStacks(storage, incomingItemStack);
+        Int2ObjectMap<ItemStack> initialItemStacks = collectItemStacks(storage, incomingItemStack);
 
-        CompressingRecipe recipe = findRecipe(machine, initialItemStacks);
+        CompressingRecipe recipe = findRecipe(machine, initialItemStacks.values());
         if (recipe == null) {
-            Constant.LOGGER.info("No matching CompressingRecipe found.");
             return 0;
         }
 
@@ -70,54 +75,44 @@ public class CompressorInsertHandler {
         // compressed steel using both coal and charcoal, for example
 
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
-
-        // TODO: Can't rely on Ingredient as a key as they are not guaranteed to have the same reference even if they are equal
-        Map<Ingredient, List<Integer>> slotIds = new HashMap<>();
+        List<SharedIngredient> sharedIngredients = new ArrayList<>();
 
         for (int i = 0; i < 9; i++) {
             Ingredient ingredient = i < ingredients.size() ? ingredients.get(i) : Ingredient.EMPTY;
 
-            boolean added = false;
-            for (var entry : slotIds.entrySet()) {
-                if (entry.getKey().equals(ingredient)) {
-                    List<Integer> ids = entry.getValue();
-                    ids.add(i + 1); // Skip the fuel/battery slot
-                    Collections.sort(ids);
-                    slotIds.put(entry.getKey(), ids);
-                    added = true;
-                    break;
+            handled: {
+                for (SharedIngredient shared : sharedIngredients) {
+                    if (ingredient.equals(shared.ingredient())) {
+                        shared.slots().add(i + 1); // Skip the fuel/battery slot
+                        break handled;
+                    }
                 }
-            }
 
-            if (!added) {
-                List<Integer> ids = new ArrayList<>();
-                ids.add(i + 1);
-                slotIds.put(ingredient, ids);
+                // Only reach this point if it has not been handled
+                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(i + 1)));
             }
         }
 
-        Map<Integer, ItemStack> toInsert = new HashMap<>();
+        Int2ObjectMap<ItemStack> toInsert = new Int2ObjectArrayMap<>(9);
 
-        for (var entry : slotIds.entrySet()) {
-            Ingredient ingredient = entry.getKey();
-            if (ingredient.isEmpty()) {
+        for (SharedIngredient shared : sharedIngredients) {
+            if (shared.ingredient().isEmpty()) {
                 continue;
             }
 
-            for (int i = 0; i < initialItemStacks.size(); i++) {
-                ItemStack stack = initialItemStacks.get(i);
-                if (ingredient.test(stack)) {
-                    List<Integer> ids = entry.getValue();
-                    int n = ids.size();
+            for (ItemStack stack : initialItemStacks.values()) {
+                if (shared.ingredient().test(stack)) {
+                    int n = shared.slots().size();
                     int count = stack.getCount();
 
-                    for (int j = 0; j < ids.size(); j++) {
-                        int id = ids.get(j);
-                        if (toInsert.containsKey(id)) {
-                            Constant.LOGGER.info("ItemStack already matched to a different ingredient.");
+                    for (int i = 0; i < n; i++) {
+                        int key = shared.slots().get(i);
+
+                        if (toInsert.containsKey(key)) {
                             return 0;
                         }
-                        toInsert.put(id, stack.copyWithCount((count + n - 1 - j) / n));
+
+                        toInsert.put(key, stack.copyWithCount((count + n - 1 - i) / n));
                     }
                 }
             }
@@ -127,6 +122,7 @@ public class CompressorInsertHandler {
             // Stage 3: Rearrange items into the correct slots
             for (int index = 1; index < 10; index++) {
                 ItemResourceSlot slot = storage.slot(index);
+
                 ItemStack stack = toInsert.getOrDefault(index, ItemStack.EMPTY);
                 Item item = stack.getItem();
                 DataComponentPatch components = stack.getComponentsPatch();
@@ -145,32 +141,34 @@ public class CompressorInsertHandler {
             }
 
             // Stage 4: Check that items haven't been created or destroyed and only commit everything matches up
-            List<ItemStack> pendingItemStacks = collectItemStacks(storage, ItemStack.EMPTY);
+            Int2ObjectMap<ItemStack> pendingItemStacks = collectItemStacks(storage, ItemStack.EMPTY);
 
-            long inserted = maxAmount;
-            for (ItemStack itemStack1 : pendingItemStacks) {
-                boolean notFound = true;
-                for (ItemStack itemStack2 : initialItemStacks) {
-                    if (ItemStack.isSameItemSameComponents(itemStack1, itemStack2)) {
-                        if (itemStack1.getCount() == itemStack2.getCount()) {
-                            notFound = false;
-                            break;
-                        } else if (ItemStack.isSameItemSameComponents(itemStack1, incomingItemStack)) {
-                            inserted = maxAmount + itemStack1.getCount() - itemStack2.getCount();
-                            if (inserted < 0 || inserted > maxAmount) {
-                                Constant.LOGGER.info("Aborting: inserted < 0 || inserted > maxAmount");
-                                return 0;
-                            }
-                            notFound = false;
-                            break;
-                        }
-                    }
+            if (!initialItemStacks.keySet().equals(pendingItemStacks.keySet())) {
+                return 0;
+            }
+
+            int incomingKey = ItemStack.hashItemAndComponents(incomingItemStack);
+
+            for (var entry : initialItemStacks.int2ObjectEntrySet()) {
+                int key = entry.getKey();
+                if (key == incomingKey) {
+                    continue;
                 }
 
-                if (notFound) {
-                    Constant.LOGGER.info("Aborting: notFound == true");
+                ItemStack itemStack1 = entry.getValue();
+                ItemStack itemStack2 = pendingItemStacks.get(key);
+
+                if (itemStack1.getCount() != itemStack2.getCount()) {
                     return 0;
                 }
+            }
+
+            ItemStack itemStack1 = initialItemStacks.get(incomingKey);
+            ItemStack itemStack2 = pendingItemStacks.get(incomingKey);
+
+            long inserted = maxAmount - itemStack1.getCount() + itemStack2.getCount();
+            if (inserted < 0 || inserted > maxAmount) {
+                return 0;
             }
 
             tx.commit();
@@ -178,31 +176,24 @@ public class CompressorInsertHandler {
         }
     }
 
-    private static List<ItemStack> collectItemStacks(ResourceStorage<Item, ItemResourceSlot> storage, ItemStack incomingItemStack) {
-        List<ItemStack> itemStacks = new ArrayList<>();
+    private static Int2ObjectMap<ItemStack> collectItemStacks(ResourceStorage<Item, ItemResourceSlot> storage, ItemStack incomingItemStack) {
+        Int2ObjectMap<ItemStack> itemStacks = new Int2ObjectArrayMap<>();
+
         if (!incomingItemStack.isEmpty()) {
-            itemStacks.add(incomingItemStack.copy());
+            itemStacks.put(ItemStack.hashItemAndComponents(incomingItemStack), incomingItemStack.copy());
         }
 
         for (int i = 1; i < 10; i++) {
             ItemResourceSlot slot = storage.slot(i);
             if (!slot.isEmpty()) {
-                ItemStack itemStack1 = new ItemStack(slot.getResource(), (int) slot.getAmount());
-                itemStack1.applyComponents(slot.getComponents());
+                ItemStack stack = new ItemStack(slot.getResource(), (int) slot.getAmount());
+                stack.applyComponents(slot.getComponents());
 
-                boolean handled = false;
-
-                for (int j = 0; j < itemStacks.size(); j++) {
-                    ItemStack itemStack2 = itemStacks.get(j);
-                    if (ItemStack.isSameItemSameComponents(itemStack1, itemStack2)) {
-                        itemStack2.grow(itemStack1.getCount());
-                        handled = true;
-                        break;
-                    }
-                }
-
-                if (!handled) {
-                    itemStacks.add(itemStack1);
+                int key = ItemStack.hashItemAndComponents(stack);
+                if (itemStacks.containsKey(key)) {
+                    itemStacks.get(key).grow(stack.getCount());
+                } else {
+                    itemStacks.put(key, stack);
                 }
             }
         }
@@ -210,7 +201,7 @@ public class CompressorInsertHandler {
         return itemStacks;
     }
 
-    private static @Nullable CompressingRecipe findRecipe(RecipeMachineBlockEntity<?, ?> machine, List<ItemStack> items) {
+    private static @Nullable CompressingRecipe findRecipe(RecipeMachineBlockEntity<?, ?> machine, Collection<ItemStack> items) {
         Predicate<CompressingRecipe> predicate = recipe -> {
             return items.stream().allMatch(stack -> recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)));
         };
@@ -230,5 +221,8 @@ public class CompressorInsertHandler {
         }
 
         return recipes.isEmpty() ? null : recipes.getFirst();
+    }
+
+    private record SharedIngredient(Ingredient ingredient, IntList slots) {
     }
 }
