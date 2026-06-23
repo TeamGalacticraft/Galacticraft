@@ -44,7 +44,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CircuitFabricatorMenu;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
@@ -117,7 +116,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     );
 
     public static long insert(@Nullable BlockEntity blockEntity, ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
-        if (variant instanceof ItemVariant itemVariant && itemVariant.toStack().is(GCItemTags.SILICONS)) {
+        if (variant instanceof ItemVariant itemVariant) {
             Item item = itemVariant.getItem();
             DataComponentPatch components = itemVariant.getComponents();
             return insertSilicon(storage, item, components, maxAmount, transaction);
@@ -126,8 +125,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     }
 
     public static long insertSilicon(ResourceStorage<Item, ItemResourceSlot> storage, Item item, DataComponentPatch components, long available, TransactionContext transaction) {
-        long inserted = 0;
-
         ItemResourceSlot slot1 = storage.slot(SILICON_SLOT_1);
         ItemResourceSlot slot2 = storage.slot(SILICON_SLOT_2);
 
@@ -136,15 +133,16 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         long originalCount = slot1Count + slot2Count;
 
         if (slot1Count > 0 && !slot1.contains(item, components)) {
-            return inserted;
+            return 0;
         } else if (slot2Count > 0 && !slot2.contains(item, components)) {
-            return inserted;
+            return 0;
         }
 
-        long slot1Capacity = slot1.getCapacityFor(item, components);
-        long slot2Capacity = slot2.getCapacityFor(item, components);
+        long slot1Capacity = slot1.getFilter().test(item, components) ? slot1.getCapacityFor(item, components) : 0;
+        long slot2Capacity = slot2.getFilter().test(item, components) ? slot2.getCapacityFor(item, components) : 0;
 
         long toInsert = Mth.clamp(slot1Capacity + slot2Capacity - originalCount, 0, available);
+        long inserted = 0;
 
         if (toInsert > 0) {
             long totalCount = originalCount + toInsert;

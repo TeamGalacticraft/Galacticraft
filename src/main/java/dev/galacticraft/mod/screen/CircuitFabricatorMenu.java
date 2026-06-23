@@ -25,7 +25,6 @@ package dev.galacticraft.mod.screen;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentPatch;
@@ -50,7 +49,7 @@ public class CircuitFabricatorMenu extends RecipeMachineMenu<RecipeInput, Fabric
         Slot slotFrom = this.slots.get(index);
         ItemStack stackFrom = slotFrom.getItem();
 
-        if (index >= this.internalSlots && stackFrom.is(GCItemTags.SILICONS)) {
+        if (index >= this.internalSlots) {
             Item item = stackFrom.getItem();
             DataComponentPatch components = stackFrom.getComponentsPatch();
             long available = stackFrom.getCount();
