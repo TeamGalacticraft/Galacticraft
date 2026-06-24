@@ -22,8 +22,10 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.transfer.MachineInsertHandler;
 import dev.galacticraft.machinelib.api.storage.ResourceStorage;
+import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -36,14 +38,17 @@ import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
+import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeManager;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -51,13 +56,16 @@ import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
-public class CompressorInsertHandler {
-    public static long insert(BlockEntity blockEntity, ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
-        if (!(variant instanceof ItemVariant incomingItemVariant)) {
-            return 0;
-        }
+public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> implements MachineInsertHandler<Item, ItemResourceSlot> {
+    protected AbstractCompressorBlockEntity(BlockEntityType<? extends AbstractCompressorBlockEntity> type,
+                                            BlockPos pos, BlockState state, StorageSpec spec,
+                                            int inputSlots, int inputSlotsLen, int outputSlots, int outputSlotsLen) {
+        super(type, pos, state, GCRecipes.COMPRESSING_TYPE, spec, inputSlots, inputSlotsLen, outputSlots, outputSlotsLen);
+    }
 
-        if (!(blockEntity instanceof RecipeMachineBlockEntity<?, ?> machine) || machine.getLevel() == null) {
+    @Override
+    public long insert(ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
+        if (!(variant instanceof ItemVariant incomingItemVariant)) {
             return 0;
         }
 
@@ -65,7 +73,7 @@ public class CompressorInsertHandler {
         ItemStack incomingItemStack = incomingItemVariant.toStack((int) maxAmount);
         Int2ObjectMap<ItemStack> initialItemStacks = collectItemStacks(storage, incomingItemStack);
 
-        CompressingRecipe recipe = findRecipe(machine, initialItemStacks.values());
+        CompressingRecipe recipe = findRecipe(initialItemStacks.values());
         if (recipe == null) {
             return 0;
         }
@@ -77,19 +85,19 @@ public class CompressorInsertHandler {
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         List<SharedIngredient> sharedIngredients = new ArrayList<>();
 
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < this.inputSlotsLen; i++) {
             Ingredient ingredient = i < ingredients.size() ? ingredients.get(i) : Ingredient.EMPTY;
 
             handled: {
                 for (SharedIngredient shared : sharedIngredients) {
                     if (ingredient.equals(shared.ingredient())) {
-                        shared.slots().add(i + 1); // Skip the fuel/battery slot
+                        shared.slots().add(this.inputSlotsStart + i); // Skip the fuel/battery slot
                         break handled;
                     }
                 }
 
                 // Only reach this point if it has not been handled
-                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(i + 1)));
+                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(this.inputSlotsStart + i)));
             }
         }
 
@@ -120,7 +128,7 @@ public class CompressorInsertHandler {
 
         try (Transaction tx = transaction.openNested()) {
             // Stage 3: Rearrange items into the correct slots
-            for (int index = 1; index < 10; index++) {
+            for (int index = this.inputSlotsStart; index < this.inputSlotsStart + this.inputSlotsLen; index++) {
                 ItemResourceSlot slot = storage.slot(index);
 
                 ItemStack stack = toInsert.getOrDefault(index, ItemStack.EMPTY);
@@ -176,14 +184,14 @@ public class CompressorInsertHandler {
         }
     }
 
-    private static Int2ObjectMap<ItemStack> collectItemStacks(ResourceStorage<Item, ItemResourceSlot> storage, ItemStack incomingItemStack) {
+    private Int2ObjectMap<ItemStack> collectItemStacks(ResourceStorage<Item, ItemResourceSlot> storage, ItemStack incomingItemStack) {
         Int2ObjectMap<ItemStack> itemStacks = new Int2ObjectArrayMap<>();
 
         if (!incomingItemStack.isEmpty()) {
             itemStacks.put(ItemStack.hashItemAndComponents(incomingItemStack), incomingItemStack.copy());
         }
 
-        for (int i = 1; i < 10; i++) {
+        for (int i = this.inputSlotsStart; i < this.inputSlotsStart + this.inputSlotsLen; i++) {
             ItemResourceSlot slot = storage.slot(i);
             if (!slot.isEmpty()) {
                 ItemStack stack = new ItemStack(slot.getResource(), (int) slot.getAmount());
@@ -201,17 +209,21 @@ public class CompressorInsertHandler {
         return itemStacks;
     }
 
-    private static @Nullable CompressingRecipe findRecipe(RecipeMachineBlockEntity<?, ?> machine, Collection<ItemStack> items) {
+    private @Nullable CompressingRecipe findRecipe(Collection<ItemStack> items) {
         Predicate<CompressingRecipe> predicate = recipe -> {
             return items.stream().allMatch(stack -> recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)));
         };
 
-        RecipeHolder<?> holder = machine.getActiveRecipe();
+        RecipeHolder<?> holder = this.getActiveRecipe();
         if (holder != null && holder.value() instanceof CompressingRecipe recipe && predicate.test(recipe)) {
             return recipe;
         }
 
-        RecipeManager recipeManager = machine.getLevel().getRecipeManager();
+        if (this.getLevel() == null) {
+            return null;
+        }
+
+        RecipeManager recipeManager = this.getLevel().getRecipeManager();
         List<CompressingRecipe> recipes = recipeManager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE)
                 .stream().map(RecipeHolder::value).filter(predicate).toList();
 

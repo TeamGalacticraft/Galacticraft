@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -36,7 +35,6 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.machine.CompressorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.BlockPos;
@@ -59,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.Compressor.*;
 
-public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> implements CoalPoweredMachine {
+public class CompressorBlockEntity extends AbstractCompressorBlockEntity implements CoalPoweredMachine {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -85,11 +83,10 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(OUTPUT_X, OUTPUT_Y)
                     )
-                    .registerInsertHandler(CompressorInsertHandler::insert)
     );
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT);
+        super(GCBlockEntityTypes.COMPRESSOR, pos, state, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT, 1);
     }
 
     @Override

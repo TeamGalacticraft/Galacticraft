@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
@@ -41,7 +40,6 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -59,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.ElectricCompressor.*;
 
-public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> {
+public class ElectricCompressorBlockEntity extends AbstractCompressorBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -80,8 +78,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
                     )
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(OUTPUT_X_2, OUTPUT_Y_2)
-                    )
-                    .registerInsertHandler(CompressorInsertHandler::insert),
+                    ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
                     Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate() * 2,
@@ -90,7 +87,7 @@ public class ElectricCompressorBlockEntity extends BasicRecipeMachineBlockEntity
     );
 
     public ElectricCompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
+        super(GCBlockEntityTypes.ELECTRIC_COMPRESSOR, pos, state, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOTS, OUTPUT_LENGTH);
     }
 
     @Override

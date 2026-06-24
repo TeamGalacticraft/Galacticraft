@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity.machine;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.transfer.MachineInsertHandler;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -61,7 +62,6 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -71,7 +71,7 @@ import java.util.List;
 
 import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
-public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> {
+public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> implements MachineInsertHandler<Item, ItemResourceSlot> {
     public static final int CHARGE_SLOT = 0;
     public static final int DIAMOND_SLOT = 1;
     public static final int SILICON_SLOT_1 = 2;
@@ -107,7 +107,7 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .pos(INGREDIENT_X, INGREDIENT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
                             .pos(OUTPUT_X, OUTPUT_Y)
-            ).registerInsertHandler(CircuitFabricatorBlockEntity::insert),
+            ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
                     Galacticraft.CONFIG.circuitFabricatorEnergyConsumptionRate() * 2,
@@ -115,7 +115,8 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
             )
     );
 
-    public static long insert(@Nullable BlockEntity blockEntity, ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
+    @Override
+    public long insert(ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
         if (variant instanceof ItemVariant itemVariant) {
             Item item = itemVariant.getItem();
             DataComponentPatch components = itemVariant.getComponents();
