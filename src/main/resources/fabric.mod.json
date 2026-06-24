@@ -142,21 +142,27 @@
       }
     },
     {
-      "name": "ChipWolf",
-      "contact": {
-        "homepage": "https://github.com/ChipWolf"
-      }
-    },
-    {
       "name": "ROMVoid95",
       "contact": {
         "homepage": "https://github.com/ROMVoid95"
       }
     },
     {
+      "name": "ChipWolf",
+      "contact": {
+        "homepage": "https://github.com/ChipWolf"
+      }
+    },
+    {
       "name": "BeetMacol",
       "contact": {
         "homepage": "https://github.com/BeetMacol"
+      }
+    },
+    {
+      "name": "TakeABao23",
+      "contact": {
+        "homepage": "https://github.com/TakeABao23"
       }
     },
     {
@@ -184,21 +190,15 @@
       }
     },
     {
-      "name": "Geolykt",
+      "name": "GalacticraftDev",
       "contact": {
-        "homepage": "https://github.com/Geolykt"
+        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
       "name": "Domza64",
       "contact": {
         "homepage": "https://github.com/Domza64"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -250,6 +250,12 @@
       }
     },
     {
+      "name": "Geolykt",
+      "contact": {
+        "homepage": "https://github.com/Geolykt"
+      }
+    },
+    {
       "name": "ScottRox",
       "contact": {
         "homepage": "https://github.com/ScottRox"
@@ -262,27 +268,21 @@
       }
     },
     {
-      "name": "TakeABao23",
-      "contact": {
-        "homepage": "https://github.com/TakeABao23"
-      }
-    },
-    {
       "name": "HarryPotato986",
       "contact": {
         "homepage": "https://github.com/HarryPotato986"
       }
     },
     {
-      "name": "gregorixG",
-      "contact": {
-        "homepage": "https://github.com/gregorixG"
-      }
-    },
-    {
       "name": "MaverXka",
       "contact": {
         "homepage": "https://github.com/MaverXka"
+      }
+    },
+    {
+      "name": "gregorixG",
+      "contact": {
+        "homepage": "https://github.com/gregorixG"
       }
     }
   ],
