@@ -41,20 +41,22 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.world.item.crafting.CraftingInput;
-import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.Ingredient;
+import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
+import java.util.stream.Collectors;
 
 public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> implements MachineInsertHandler<Item, ItemResourceSlot> {
     protected AbstractCompressorBlockEntity(BlockEntityType<? extends AbstractCompressorBlockEntity> type,
@@ -79,9 +81,6 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
         }
 
         // Stage 2: Create a matching between the available item stacks and the recipe's ingredients
-        // This approach doesn't always handle the case where we are trying to craft
-        // compressed steel using both coal and charcoal, for example
-
         NonNullList<Ingredient> ingredients = recipe.getIngredients();
         List<SharedIngredient> sharedIngredients = new ArrayList<>();
 
@@ -97,7 +96,14 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 }
 
                 // Only reach this point if it has not been handled
-                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(this.inputSlotsStart + i)));
+                IntList keys = new IntArrayList();
+                for (var entry : initialItemStacks.int2ObjectEntrySet()) {
+                    if (ingredient.test(entry.getValue())) {
+                        keys.add(entry.getIntKey());
+                    }
+                }
+
+                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(this.inputSlotsStart + i), keys));
             }
         }
 
@@ -108,26 +114,40 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 continue;
             }
 
-            for (ItemStack stack : initialItemStacks.values()) {
-                if (shared.ingredient().test(stack)) {
-                    int n = shared.slots().size();
-                    int count = stack.getCount();
+            int n = shared.slots().size();
+            int k = shared.stacks().size();
+            if (n < k) {
+                return 0;
+            }
 
-                    for (int i = 0; i < n; i++) {
-                        int key = shared.slots().get(i);
+            // TODO: Move more of the code inside the Solver?
+            List<ItemStack> stacks = shared.stacks().stream().map(key -> initialItemStacks.get(key)).collect(Collectors.toList());
+            stacks.sort((stack1, stack2) -> Integer.compare(stack2.getCount(), stack1.getCount()));
 
-                        if (toInsert.containsKey(key)) {
-                            return 0;
-                        }
+            int[] counts = new int[k];
+            for (int i = 0; i < k; i++) {
+                counts[i] = stacks.get(i).getCount();
+            }
 
-                        toInsert.put(key, stack.copyWithCount((count + n - 1 - i) / n));
-                    }
+            // TODO: Don't do this if we don't have to
+            Solver solver = new Solver(counts, n);
+            int[] solution = solver.getSolution();
+
+            int index = 0;
+            for (int j = 0; j < k; j++) {
+                ItemStack stack = stacks.get(j);
+                int y = solution[j];
+
+                for (int i = 0; i < y; i++) {
+                    toInsert.put(shared.slots().get(index), stack.copyWithCount((counts[j] + y - 1 - i) / y));
+                    ++index;
                 }
             }
         }
 
         try (Transaction tx = transaction.openNested()) {
             // Stage 3: Rearrange items into the correct slots
+            // TODO: Try to leave ItemStacks where they are if we don't need to move them
             for (int index = this.inputSlotsStart; index < this.inputSlotsStart + this.inputSlotsLen; index++) {
                 ItemResourceSlot slot = storage.slot(index);
 
@@ -235,6 +255,67 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
         return recipes.isEmpty() ? null : recipes.getFirst();
     }
 
-    private record SharedIngredient(Ingredient ingredient, IntList slots) {
+    private record SharedIngredient(Ingredient ingredient, IntList slots, IntList stacks) {
+    }
+
+    private class Solver {
+        private int[] counts;
+        private int k;
+        private int n;
+        private float average;
+        private float minError;
+        private int[] bestSolution;
+
+        public Solver(int[] counts, int n) {
+            this.counts = counts;
+            this.k = this.counts.length;
+            this.n = n;
+
+            this.average = 0.0F;
+            for (int i = 0; i < this.k; i++) {
+                this.average += this.counts[i];
+            }
+            this.average /= this.n;
+
+            this.minError = Float.POSITIVE_INFINITY;
+            this.bestSolution = new int[this.k];
+            Arrays.fill(this.bestSolution, 1);
+            if (this.k > 0) {
+                this.bestSolution[0] = this.n - this.k + 1;
+            }
+
+            this.solve(this.bestSolution);
+        }
+
+        public int[] getSolution() {
+            return this.bestSolution;
+        }
+
+        private void solve(int[] x) {
+            float error = this.objectiveFunction(x);
+            if (error < this.minError) {
+                this.minError = error;
+                this.bestSolution = x;
+            }
+
+            for (int i = 0; i < this.k - 1; i++) {
+                if (x[i] - 1 >= x[i + 1] + 1) {
+                    int[] y = Arrays.copyOf(x, this.k);
+                    y[i] -= 1;
+                    y[i + 1] += 1;
+                    this.solve(y);
+                } else if (x[i] <= 2) {
+                    break;
+                }
+            }
+        }
+
+        private float objectiveFunction(int[] x) {
+            float output = 0.0F;
+            for (int i = 0; i < this.k; i++) {
+                output += Math.abs(this.counts[i] - this.average * x[i]);
+            }
+            return output;
+        }
     }
 }
