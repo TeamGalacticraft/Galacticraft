@@ -24,7 +24,6 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
@@ -38,7 +37,6 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
@@ -49,7 +47,6 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
@@ -109,11 +106,6 @@ public class ElectricCompressorBlockEntity extends AbstractCompressorBlockEntity
     }
 
     @Override
-    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
-        return GCMachineStatuses.COMPRESSING;
-    }
-
-    @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
         return this.energyStorage().canExtract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
@@ -125,7 +117,7 @@ public class ElectricCompressorBlockEntity extends AbstractCompressorBlockEntity
 
     @Override
     public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
-        return (int) (recipe.value().getTime() / 1.5F);
+        return (int) (super.getProcessingTime(recipe) / 1.5F);
     }
 
     @Override
@@ -144,10 +136,5 @@ public class ElectricCompressorBlockEntity extends AbstractCompressorBlockEntity
                 player,
                 this
         );
-    }
-
-    @Override
-    protected CraftingInput craftingInv() {
-        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

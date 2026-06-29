@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
@@ -47,7 +46,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -87,11 +85,6 @@ public class CompressorBlockEntity extends AbstractCompressorBlockEntity impleme
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.COMPRESSOR, pos, state, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT, 1);
-    }
-
-    @Override
-    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
-        return GCMachineStatuses.COMPRESSING;
     }
 
     @Override
@@ -186,11 +179,6 @@ public class CompressorBlockEntity extends AbstractCompressorBlockEntity impleme
                 && !level.isBreathable(pos);
     }
 
-    @Override
-    public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
-        return recipe.value().getTime();
-    }
-
     public int getFuelTime() {
         return fuelTime;
     }
@@ -218,10 +206,5 @@ public class CompressorBlockEntity extends AbstractCompressorBlockEntity impleme
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
         return new CompressorMenu(syncId, player, this);
-    }
-
-    @Override
-    protected CraftingInput craftingInv() {
-        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }

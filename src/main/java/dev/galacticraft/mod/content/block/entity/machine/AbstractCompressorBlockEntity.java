@@ -24,10 +24,13 @@ package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.transfer.MachineInsertHandler;
+import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.ResourceStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
@@ -49,6 +52,7 @@ import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
@@ -63,6 +67,21 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                                             BlockPos pos, BlockState state, StorageSpec spec,
                                             int inputSlots, int inputSlotsLen, int outputSlots, int outputSlotsLen) {
         super(type, pos, state, GCRecipes.COMPRESSING_TYPE, spec, inputSlots, inputSlotsLen, outputSlots, outputSlotsLen);
+    }
+
+    @Override
+    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
+        return GCMachineStatuses.COMPRESSING;
+    }
+
+    @Override
+    public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
+        return recipe.value().getTime();
+    }
+
+    @Override
+    protected CraftingInput craftingInv() {
+        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 
     @Override
