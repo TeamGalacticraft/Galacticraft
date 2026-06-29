@@ -84,6 +84,8 @@ public class GCSoundManager implements SoundCallback {
 
     public static void onStatusChanged(Minecraft minecraft, LocalPlayer player, BlockPos pos, MachineStatus status, MachineStatus oldStatus) {
         MachineBlockEntity machine = (MachineBlockEntity) minecraft.level.getBlockEntity(pos);
+        if (machine == null) return;
+
         GCSoundManager manager = GCSoundManager.getInstance();
         boolean isActive = status.getType().isActive();
         float maxVolume = isActive ? 1.0F : 0.2F;
@@ -92,7 +94,7 @@ public class GCSoundManager implements SoundCallback {
         // Play new sound (if there is one)
         SoundEvent newSound = GCSoundMap.get(status, machine);
         if (newSound != null) {
-        manager.play(new MachineSound(machine, newSound, manager, maxVolume));
+            manager.play(new MachineSound(machine, newSound, manager, maxVolume));
         }
     }
 }
