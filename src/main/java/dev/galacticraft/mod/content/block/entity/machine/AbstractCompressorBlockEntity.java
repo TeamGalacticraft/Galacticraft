@@ -109,20 +109,13 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
             handled: {
                 for (SharedIngredient shared : sharedIngredients) {
                     if (ingredient.equals(shared.ingredient())) {
-                        shared.slots().add(this.inputSlotsStart + i); // Skip the fuel/battery slot
+                        shared.slots().add(this.inputSlotsStart + i);
                         break handled;
                     }
                 }
 
                 // Only reach this point if it has not been handled
-                IntList keys = new IntArrayList();
-                for (var entry : initialItemStacks.int2ObjectEntrySet()) {
-                    if (ingredient.test(entry.getValue())) {
-                        keys.add(entry.getIntKey());
-                    }
-                }
-
-                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(this.inputSlotsStart + i), keys));
+                sharedIngredients.add(new SharedIngredient(ingredient, IntArrayList.of(this.inputSlotsStart + i)));
             }
         }
 
@@ -133,24 +126,20 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 continue;
             }
 
+            List<ItemStack> stacks = initialItemStacks.values().stream()
+                    .filter(stack -> shared.ingredient().test(stack))
+                    .collect(Collectors.toList());
+
             int n = shared.slots().size();
-            int k = shared.stacks().size();
+            int k = stacks.size();
             if (n < k) {
                 return 0;
             }
 
-            // TODO: Move more of the code inside the Solver?
-            List<ItemStack> stacks = shared.stacks().stream().map(key -> initialItemStacks.get(key)).collect(Collectors.toList());
             stacks.sort((stack1, stack2) -> Integer.compare(stack2.getCount(), stack1.getCount()));
 
-            int[] counts = new int[k];
-            for (int i = 0; i < k; i++) {
-                counts[i] = stacks.get(i).getCount();
-            }
-
-            // TODO: Don't do this if we don't have to
-            Solver solver = new Solver(counts, n);
-            int[] solution = solver.getSolution();
+            int[] counts = stacks.stream().mapToInt(stack -> stack.getCount()).toArray();
+            int[] solution = Solver.solve(counts, n);
 
             int index = 0;
             for (int j = 0; j < k; j++) {
@@ -197,7 +186,7 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
             int incomingKey = ItemStack.hashItemAndComponents(incomingItemStack);
 
             for (var entry : initialItemStacks.int2ObjectEntrySet()) {
-                int key = entry.getKey();
+                int key = entry.getIntKey();
                 if (key == incomingKey) {
                     continue;
                 }
@@ -274,43 +263,47 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
         return recipes.isEmpty() ? null : recipes.getFirst();
     }
 
-    private record SharedIngredient(Ingredient ingredient, IntList slots, IntList stacks) {
+    private record SharedIngredient(Ingredient ingredient, IntList slots) {
     }
 
-    private class Solver {
+    private static class Solver {
         private int[] counts;
         private int k;
         private int n;
-        private float average;
-        private float minError;
+        private float average = 0.0F;
+        private float minError = Float.POSITIVE_INFINITY;
         private int[] bestSolution;
 
-        public Solver(int[] counts, int n) {
+        public static int[] solve(int[] counts, int n) {
+            if (counts.length == 1) {
+                return new int[] {n};
+            }
+
+            Solver solver = new Solver(counts, n);
+            return solver.bestSolution;
+        }
+
+        private Solver(int[] counts, int n) {
             this.counts = counts;
             this.k = this.counts.length;
             this.n = n;
 
-            this.average = 0.0F;
             for (int i = 0; i < this.k; i++) {
                 this.average += this.counts[i];
             }
             this.average /= this.n;
 
-            this.minError = Float.POSITIVE_INFINITY;
             this.bestSolution = new int[this.k];
             Arrays.fill(this.bestSolution, 1);
             if (this.k > 0) {
                 this.bestSolution[0] = this.n - this.k + 1;
             }
 
-            this.solve(this.bestSolution);
+            // Call a recursive function to find the solution
+            this.check(this.bestSolution);
         }
 
-        public int[] getSolution() {
-            return this.bestSolution;
-        }
-
-        private void solve(int[] x) {
+        private void check(int[] x) {
             float error = this.objectiveFunction(x);
             if (error < this.minError) {
                 this.minError = error;
@@ -322,7 +315,7 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                     int[] y = Arrays.copyOf(x, this.k);
                     y[i] -= 1;
                     y[i + 1] += 1;
-                    this.solve(y);
+                    this.check(y);
                 } else if (x[i] <= 2) {
                     break;
                 }
