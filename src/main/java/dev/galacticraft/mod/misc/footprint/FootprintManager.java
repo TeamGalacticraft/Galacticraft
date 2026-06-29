@@ -68,10 +68,14 @@ public class FootprintManager {
     public void onChange(Level level, long pos, List<Footprint> footprints) {
     }
 
-    public void addFootprint(long packedPos, Footprint footprint) {
+    public void onFootprintAdded(Level level, long packedPos, Footprint footprint) {
+    }
+
+    public void addFootprint(Level level, long packedPos, Footprint footprint) {
         List<Footprint> footprints = globalFootprints.computeIfAbsent(packedPos, key -> new ArrayList<>());
 
         footprints.add(footprint);
+        this.onFootprintAdded(level, packedPos, footprint);
     }
 
     public Long2ObjectMap<List<Footprint>> getFootprints() {

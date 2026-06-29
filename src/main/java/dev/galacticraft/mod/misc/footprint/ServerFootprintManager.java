@@ -34,11 +34,22 @@ import java.util.List;
 
 public class ServerFootprintManager extends FootprintManager {
     @Override
+    public void onFootprintAdded(Level level, long packedPos, Footprint footprint) {
+        if (footprint.type == FootprintType.HUMAN) {
+            return;
+        }
+
+        PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player ->
+                ServerPlayNetworking.send(player, new FootprintPacket(packedPos, List.of(footprint)))
+        );
+    }
+
+    @Override
     public void onChange(Level level, long packedPos, List<Footprint> footprints) {
         if (level.getGameTime() % 100 == 0) {
             PlayerLookup.tracking((ServerLevel) level, new ChunkPos(packedPos)).forEach(player -> {
                 List<Footprint> toSync = new ArrayList<>(footprints);
-                toSync.removeIf(footprint -> footprint.owner.equals(player.getUUID()));
+                toSync.removeIf(footprint -> footprint.type != FootprintType.HUMAN || footprint.owner.equals(player.getUUID()));
                 ServerPlayNetworking.send(player, new FootprintPacket(packedPos, toSync));
             });
         }
