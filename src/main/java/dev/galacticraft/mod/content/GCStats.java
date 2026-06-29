@@ -29,6 +29,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.stats.StatFormatter;
 import net.minecraft.stats.Stats;
 
+import java.util.List;
+
 public class GCStats {
     public static final ResourceLocation CLEAN_PARACHUTE = register("clean_parachute", StatFormatter.DEFAULT);
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
@@ -38,6 +40,11 @@ public class GCStats {
     public static final ResourceLocation SAFE_LANDING = register("safe_landing", StatFormatter.DEFAULT);
     public static final ResourceLocation EAT_CHEESE_WHEEL_SLICE = register("eat_cheese_wheel_slice", StatFormatter.DEFAULT);
     public static final ResourceLocation CHEESE_SLICED = register("cheese_cut", StatFormatter.DEFAULT);
+    public static final List<ResourceLocation> SPACE_RACE_STATS = List.of(
+            LAUNCH_ROCKET,
+            SAFE_LANDING,
+            CRASH_LANDING
+    );
 
     public static ResourceLocation register(String id, StatFormatter formatter) {
         ResourceLocation resourceLocation = Constant.id(id);
