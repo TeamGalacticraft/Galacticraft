@@ -115,6 +115,10 @@ public class GCEntityTypes {
             .sized(0.75F, 0.375F)
             .clientTrackingRange(8)
             .build());
+    public static final EntityType<CheeseSlimeEntity> CHEESE_SLIME = ENTITIES.register(Entity.CHEESE_SLIME, EntityType.Builder.of(CheeseSlimeEntity::new, MobCategory.MONSTER)
+            .sized(0.75F, 0.375F)
+            .clientTrackingRange(8)
+            .build());
     public static final EntityType<GreyEntity> GREY = ENTITIES.register(Entity.GREY, EntityType.Builder.of(GreyEntity::new, MobCategory.CREATURE)
             .sized(0.6F, 1.55F)
             .eyeHeight(1.25F)
@@ -196,5 +200,6 @@ public class GCEntityTypes {
         FabricDefaultAttributeRegistry.register(GREY, GreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(ARCH_GREY, ArchGreyEntity.createAttributes());
         FabricDefaultAttributeRegistry.register(SKELETON_BOSS, SkeletonBoss.createAttributes().add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D));
+        FabricDefaultAttributeRegistry.register(CHEESE_SLIME, CheeseSlimeEntity.createAttributes());
     }
 }
