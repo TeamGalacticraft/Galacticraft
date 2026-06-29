@@ -38,6 +38,7 @@ import java.util.Locale;
 import java.util.Map;
 
 public final class CapesLoader {
+    private static volatile boolean loaded = false;
     public static final class PlayerRoleData {
         public String uuid;
         public String role;
@@ -52,29 +53,54 @@ public final class CapesLoader {
         Util.backgroundExecutor().execute(() -> {
             long t0 = System.currentTimeMillis();
             Constant.LOGGER.info("Loading cape roles...");
+
             try {
                 String json = IOUtils.toString(
                         new URL(Constant.CAPES),
                         StandardCharsets.UTF_8
                 );
+
                 List<PlayerRoleData> players = new Gson().fromJson(json, TYPE);
+
                 UUID_ROLE.clear();
+
                 for (var p : players) {
-                    CapeRole role = switch (p.role.toLowerCase(Locale.ROOT)) {
+                    CapeRole role = switch (String.valueOf(p.role).toLowerCase(Locale.ROOT)) {
                         case "developer", "dev" -> CapeRole.DEVELOPER;
                         case "patron", "patreon", "supporter" -> CapeRole.PATRON;
                         default -> CapeRole.NONE;
                     };
-                    UUID_ROLE.put(p.uuid.toLowerCase(Locale.ROOT), role);
+
+                    String uuid = normalizeUuid(p.uuid);
+                    if (!uuid.isEmpty()) {
+                        UUID_ROLE.put(uuid, role);
+                    }
                 }
-                Constant.LOGGER.info("Loaded roles for {} players ({} ms).", UUID_ROLE.size(), System.currentTimeMillis() - t0);
+
+                loaded = true;
+
+                Constant.LOGGER.info(
+                        "Loaded roles for {} players ({} ms).",
+                        UUID_ROLE.size(),
+                        System.currentTimeMillis() - t0
+                );
             } catch (IOException e) {
+                loaded = false;
                 Constant.LOGGER.warn("Failed to load cape roles.", e);
             }
         });
     }
 
-    public static CapeRole roleFor(String dashedUuid) {
-        return UUID_ROLE.getOrDefault(dashedUuid.toLowerCase(Locale.ROOT), CapeRole.NONE);
+    public static CapeRole roleFor(String uuid) {
+        return UUID_ROLE.getOrDefault(normalizeUuid(uuid), CapeRole.NONE);
+    }
+
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    private static String normalizeUuid(String uuid) {
+        if (uuid == null) return "";
+        return uuid.toLowerCase(Locale.ROOT).replace("-", "");
     }
 }

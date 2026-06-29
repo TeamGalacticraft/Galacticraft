@@ -60,6 +60,7 @@ public class CapeRootScreen extends OptionsSubScreen {
 
     @Override
     protected void addOptions() {
+        CapesClientRole.ensureLoadedAsync();
         this.prefs = ClientCapePrefs.load();
         if (this.selectedCapeId == null) this.selectedCapeId = this.prefs.gcCapeId;
 
@@ -84,12 +85,14 @@ public class CapeRootScreen extends OptionsSubScreen {
 
             CapeRole role = CapesClientRole.getClientRole();
 
-            if (!isCapeAllowedForRole(this.selectedCapeId, role)) {
-                String fallback = firstAllowedCapeId(role);
-                if (fallback != null) {
-                    this.selectedCapeId = fallback;
-                    this.prefs.gcCapeId = fallback;
-                    this.prefs.save();
+            if (CapesClientRole.isLoaded()) {
+                if (!isCapeAllowedForRole(this.selectedCapeId, role)) {
+                    String fallback = firstAllowedCapeId(role);
+                    if (fallback != null) {
+                        this.selectedCapeId = fallback;
+                        this.prefs.gcCapeId = fallback;
+                        this.prefs.save();
+                    }
                 }
             }
 

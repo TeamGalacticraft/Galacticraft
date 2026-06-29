@@ -39,6 +39,8 @@ public final class CapesClientRole {
     private static final AtomicBoolean LOADED = new AtomicBoolean(false);
     private static final Type LIST_TYPE = new TypeToken<List<PlayerRole>>(){}.getType();
 
+    private static volatile boolean loaded = false;
+
     private static final class PlayerRole {
         String uuid;
         String role;
@@ -48,52 +50,71 @@ public final class CapesClientRole {
     public static void ensureLoadedAsync() {
         if (LOADED.get()) return;
         LOADED.set(true);
-        // load off-thread
+
         new Thread(() -> {
-            try (var in = new URL(Constant.CAPES).openStream();
-                 var r = new InputStreamReader(in, StandardCharsets.UTF_8)) {
+            try (
+                var in = new URL(Constant.CAPES).openStream();
+                var r = new InputStreamReader(in, StandardCharsets.UTF_8)
+            ) {
                 List<PlayerRole> list = new Gson().fromJson(r, LIST_TYPE);
+
                 UUID_ROLE.clear();
+
                 for (var pr : list) {
                     CapeRole role = switch (String.valueOf(pr.role).toLowerCase(Locale.ROOT)) {
                         case "developer", "dev" -> CapeRole.DEVELOPER;
                         case "patron", "patreon", "supporter" -> CapeRole.PATRON;
                         default -> CapeRole.NONE;
                     };
-                    UUID_ROLE.put(pr.uuid.toLowerCase(Locale.ROOT), role);
+
+                    String uuid = normalizeUuid(pr.uuid);
+                    if (!uuid.isEmpty()) {
+                        UUID_ROLE.put(uuid, role);
+                    }
                 }
+
+                loaded = true;
+
+                Constant.LOGGER.info("Loaded {} client cape role entries.", UUID_ROLE.size());
             } catch (Exception e) {
-                Constant.LOGGER.warn("Cape roles (client) failed to load; GC cape UI will not unlock.", e);
+                loaded = false;
+                Constant.LOGGER.warn("Cape roles client load failed; GC cape UI will not unlock.", e);
             }
         }, "GC-CapeRole-ClientLoad").start();
     }
 
     /** True if this client account (or local player) is Patron or Developer. */
     public static boolean isEligibleClient() {
-        var mc = Minecraft.getInstance();
-        UUID id = null;
-        if (mc.player != null && mc.player.getGameProfile() != null) {
-            id = mc.player.getGameProfile().getId();
-        }
-        if (id == null && mc.getUser() != null) {
-            // fallback to logged-in account UUID (still correct for UI gating)
-            id = mc.getUser().getProfileId();
-        }
-        if (id == null) return false;
-        CapeRole role = UUID_ROLE.getOrDefault(id.toString().toLowerCase(Locale.ROOT), CapeRole.NONE);
-        return role.ordinal() >= CapeRole.PATRON.ordinal();
+        return getClientRole().ordinal() >= CapeRole.PATRON.ordinal();
     }
 
     public static CapeRole getClientRole() {
         var mc = Minecraft.getInstance();
+
         UUID id = null;
+
         if (mc.player != null && mc.player.getGameProfile() != null) {
             id = mc.player.getGameProfile().getId();
         }
+
         if (id == null && mc.getUser() != null) {
             id = mc.getUser().getProfileId();
         }
+
         if (id == null) return CapeRole.NONE;
-        return UUID_ROLE.getOrDefault(id.toString().toLowerCase(Locale.ROOT), CapeRole.NONE);
+
+        return UUID_ROLE.getOrDefault(
+                normalizeUuid(id.toString()),
+                CapeRole.NONE
+        );
+    }
+
+    public static boolean isLoaded() {
+        return loaded;
+    }
+
+    private static String normalizeUuid(String uuid) {
+        if (uuid == null) return "";
+        return uuid.toLowerCase(Locale.ROOT).replace("-", "");
     }
 }
