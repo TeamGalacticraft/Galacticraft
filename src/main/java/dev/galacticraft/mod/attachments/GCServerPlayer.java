@@ -28,20 +28,27 @@ import dev.galacticraft.api.rocket.RocketData;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.Nullable;
 
+import java.nio.ByteBuffer;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
 public class GCServerPlayer {
+    private static final Codec<byte[]> TEAM_FLAG_CODEC = Codec.BYTE_BUFFER.xmap(GCServerPlayer::copyByteBuffer, GCServerPlayer::wrapByteArray);
+
     private RocketData rocketData;
     public NonNullList<ItemStack> stacks = NonNullList.withSize(2, ItemStack.EMPTY);
     public long fuel;
+    private @Nullable byte[] teamFlagData;
 
     public static final Codec<GCServerPlayer> CODEC = RecordCodecBuilder.create(instance -> instance.group(
             RocketData.CODEC.optionalFieldOf("rocket_data").forGetter(o -> Optional.ofNullable(o.rocketData)),
             Codec.LONG.fieldOf("fuel").forGetter(GCServerPlayer::getFuel),
-            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks)
-    ).apply(instance, (data, fuel, stacks) -> new GCServerPlayer(data.orElse(null), fuel, stacks)));
+            ItemStack.OPTIONAL_CODEC.listOf().fieldOf("rocket_stacks").forGetter(GCServerPlayer::getRocketStacks),
+            TEAM_FLAG_CODEC.optionalFieldOf("team_flag").forGetter(o -> Optional.ofNullable(o.teamFlagData).map(GCServerPlayer::copyByteArray))
+    ).apply(instance, (data, fuel, stacks, teamFlagData) -> new GCServerPlayer(data.orElse(null), fuel, stacks, teamFlagData.orElse(null))));
 
     public static GCServerPlayer get(ServerPlayer player) {
         return player.getAttachedOrCreate(GCAttachments.SERVER_PLAYER, () -> new GCServerPlayer(player));
@@ -52,9 +59,14 @@ public class GCServerPlayer {
     }
 
     public GCServerPlayer(RocketData data, long fuel, List<ItemStack> stacks) {
+        this(data, fuel, stacks, null);
+    }
+
+    public GCServerPlayer(RocketData data, long fuel, List<ItemStack> stacks, @Nullable byte[] teamFlagData) {
         this.rocketData = data;
         this.fuel = fuel;
         this.stacks = NonNullList.of(ItemStack.EMPTY, stacks.toArray(ItemStack[]::new));
+        this.teamFlagData = copyByteArray(teamFlagData);
     }
 
     public RocketData getRocketData() {
@@ -81,6 +93,14 @@ public class GCServerPlayer {
         this.fuel = fuel;
     }
 
+    public @Nullable byte[] getTeamFlagData() {
+        return copyByteArray(this.teamFlagData);
+    }
+
+    public void setTeamFlagData(@Nullable byte[] teamFlagData) {
+        this.teamFlagData = copyByteArray(teamFlagData);
+    }
+
     public void setRocketItem(ItemStack rocketItem) {
         for (int stack = 0; stack < getRocketStacks().size(); stack++)
             if (getRocketStacks().get(stack).isEmpty())
@@ -93,5 +113,20 @@ public class GCServerPlayer {
             if (getRocketStacks().get(stack).isEmpty())
                 if (stack == getRocketStacks().size() - 2)
                     getRocketStacks().set(stack, launchpad == null ? ItemStack.EMPTY : launchpad);
+    }
+
+    private static byte[] copyByteBuffer(ByteBuffer buffer) {
+        ByteBuffer copy = buffer.duplicate();
+        byte[] data = new byte[copy.remaining()];
+        copy.get(data);
+        return data;
+    }
+
+    private static @Nullable byte[] copyByteArray(@Nullable byte[] data) {
+        return data == null ? null : Arrays.copyOf(data, data.length);
+    }
+
+    private static ByteBuffer wrapByteArray(byte[] data) {
+        return ByteBuffer.wrap(Arrays.copyOf(data, data.length));
     }
 }
