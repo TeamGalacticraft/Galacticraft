@@ -131,9 +131,4 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
     public int getDisplayHeight() {
         return RECIPE_VIEWER_HEIGHT + 10;
     }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
-    }
 }

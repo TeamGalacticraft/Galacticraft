@@ -113,9 +113,4 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
     public int getDisplayWidth(DefaultCanningDisplay display) {
         return RECIPE_VIEWER_WIDTH + 10;
     }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
-    }
 }
