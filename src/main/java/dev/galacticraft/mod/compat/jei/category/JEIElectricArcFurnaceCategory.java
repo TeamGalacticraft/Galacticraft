@@ -87,7 +87,7 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
     public void setRecipe(IRecipeLayoutBuilder builder, BlastingRecipe recipe, IFocusGroup focuses) {
         builder.addInputSlot(INPUT_X - JEI_X, INPUT_Y - JEI_Y)
                 .setStandardSlotBackground()
-                .addIngredients(recipe.getIngredients().get(0));
+                .addIngredients(recipe.getIngredients().getFirst());
         builder.addOutputSlot(OUTPUT_X_1 - JEI_X, OUTPUT_Y_1 - JEI_Y)
                 .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme

@@ -75,9 +75,9 @@ public class RocketRecipeTransferHandler implements IRecipeTransferHandler<Rocke
             return this.handlerHelper.createUserErrorWithTooltip(Component.translatable(Translations.Tooltip.INCORRECT_NUMBER_OF_SLOTS));
         }
 
-        IRecipeTransferInfo info = this.handlerHelper.createBasicRecipeTransferInfo(
+        IRecipeTransferInfo<RocketWorkbenchMenu, RocketRecipe> info = this.handlerHelper.createBasicRecipeTransferInfo(
                 this.getContainerClass(),
-                this.getMenuType().get(),
+                this.getMenuType().orElse(null),
                 this.getRecipeType(),
                 0, recipeSize + 1, // Input slots (plus one for chest slot)
                 recipeSize + 2, 36 // Player inventory + hotbar slots
