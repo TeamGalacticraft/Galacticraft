@@ -70,6 +70,7 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 
+@SuppressWarnings("UnstableApiUsage")
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
     private static final CraftingRecipeFiller<?>[] CRAFTING_RECIPE_FILLERS = new CraftingRecipeFiller[]{
             new EmergencyKitRecipeFiller(),
