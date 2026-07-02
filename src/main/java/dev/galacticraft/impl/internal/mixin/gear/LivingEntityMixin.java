@@ -108,6 +108,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         super(type, world);
     }
 
+    @Unique
     private int lastHurtBySuffocationTimestamp;
 
     @Shadow

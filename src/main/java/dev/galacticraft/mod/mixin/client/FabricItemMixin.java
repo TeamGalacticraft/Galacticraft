@@ -29,6 +29,7 @@ import net.minecraft.core.component.DataComponents;
 import net.minecraft.world.food.FoodProperties;
 import net.minecraft.world.item.ItemStack;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -54,6 +55,7 @@ public interface FabricItemMixin {
         }
     }
 
+    @Unique
     private ItemStack getItemStack(DataComponentHolder holder) {
         if (holder instanceof ItemStack) {
             return (ItemStack) holder;
