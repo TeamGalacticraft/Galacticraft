@@ -157,7 +157,7 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     @Final
-    protected abstract void discard();
+    public abstract void discard();
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
