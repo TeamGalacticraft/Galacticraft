@@ -89,9 +89,4 @@ public class ElectricFurnaceCategory implements DisplayCategory<ElectricFurnaceD
     public int getDisplayHeight() {
         return REI_HEIGHT + 10;
     }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
-    }
 }

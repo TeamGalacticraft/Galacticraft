@@ -151,10 +151,4 @@ public class ElectricCompressingCategory implements DisplayCategory<ElectricComp
     public int getDisplayHeight() {
         return RECIPE_VIEWER_HEIGHT + 10;
     }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
-    }
-
 }
