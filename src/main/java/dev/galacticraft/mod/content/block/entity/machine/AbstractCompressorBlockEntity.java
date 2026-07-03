@@ -80,10 +80,11 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
     }
 
     @Override
-    protected CraftingInput craftingInv() {
+    protected @NotNull CraftingInput craftingInv() {
         return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     @Override
     public long insert(ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
         if (!(variant instanceof ItemVariant incomingItemVariant)) {
@@ -138,7 +139,7 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
 
             stacks.sort((stack1, stack2) -> Integer.compare(stack2.getCount(), stack1.getCount()));
 
-            int[] counts = stacks.stream().mapToInt(stack -> stack.getCount()).toArray();
+            int[] counts = stacks.stream().mapToInt(ItemStack::getCount).toArray();
             int[] solution = Solver.solve(counts, n);
 
             int index = 0;
@@ -147,7 +148,7 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 int y = solution[j];
 
                 for (int i = 0; i < y; i++) {
-                    toInsert.put(shared.slots().get(index), stack.copyWithCount((counts[j] + y - 1 - i) / y));
+                    toInsert.put(shared.slots().getInt(index), stack.copyWithCount((counts[j] + y - 1 - i) / y));
                     ++index;
                 }
             }
@@ -163,9 +164,8 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 Item item = stack.getItem();
                 DataComponentPatch components = stack.getComponentsPatch();
 
-                if (!slot.isEmpty() && !slot.contains(item, components)) {
-                    long amount = slot.getAmount();
-                    slot.extract(slot.getResource(), slot.getComponents(), amount, tx);
+                if (slot.getResource() != null && !slot.contains(item, components)) {
+                    slot.extract(slot.getResource(), slot.getComponents(), slot.getAmount(), tx);
                 }
 
                 long difference = stack.getCount() - slot.getAmount();
@@ -221,8 +221,9 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
 
         for (int i = this.inputSlotsStart; i < this.inputSlotsStart + this.inputSlotsLen; i++) {
             ItemResourceSlot slot = storage.slot(i);
-            if (!slot.isEmpty()) {
-                ItemStack stack = new ItemStack(slot.getResource(), (int) slot.getAmount());
+            Item item = slot.getResource();
+            if (item != null) {
+                ItemStack stack = new ItemStack(item, (int) slot.getAmount());
                 stack.applyComponents(slot.getComponents());
 
                 int key = ItemStack.hashItemAndComponents(stack);
@@ -238,9 +239,9 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
     }
 
     private @Nullable CompressingRecipe findRecipe(Collection<ItemStack> items) {
-        Predicate<CompressingRecipe> predicate = recipe -> {
-            return items.stream().allMatch(stack -> recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack)));
-        };
+        Predicate<CompressingRecipe> predicate = recipe -> items.stream().allMatch(
+                stack -> recipe.getIngredients().stream().anyMatch(ingredient -> ingredient.test(stack))
+        );
 
         RecipeHolder<?> holder = this.getActiveRecipe();
         if (holder != null && holder.value() instanceof CompressingRecipe recipe && predicate.test(recipe)) {
@@ -267,9 +268,9 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
     }
 
     private static class Solver {
-        private int[] counts;
-        private int k;
-        private int n;
+        private final int[] counts;
+        private final int k;
+        private final int n;
         private float average = 0.0F;
         private float minError = Float.POSITIVE_INFINITY;
         private int[] bestSolution;
