@@ -36,7 +36,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -94,8 +93,8 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
         // Middle slot
         widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).entries(
-                recipeDisplay.getOutputEntries().get(0).stream().map(
-                        entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
+                recipeDisplay.getOutputEntries().get(0).<ItemStack>castAsList().stream().map(
+                        entry -> entry.copy().withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
                 ).toList()
         ));
 

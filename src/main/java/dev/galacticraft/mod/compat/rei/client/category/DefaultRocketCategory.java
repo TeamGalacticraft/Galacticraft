@@ -91,8 +91,8 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
             Slot inputSlot = Widgets.createSlot(new Point(startPoint.x + data.x(), startPoint.y + data.y())).markInput();
             if (i < n && !input.get(i).isEmpty()) {
                 if (data.mirror()) {
-                    inputSlot.entries(input.get(i).stream().map(
-                            entry -> (EntryStack<ItemStack>) entry.withRenderer(MirroredEntryRenderer.INSTANCE)
+                    inputSlot.entries(input.get(i).<ItemStack>castAsList().stream().map(
+                            entry -> entry.withRenderer(MirroredEntryRenderer.INSTANCE)
                     ).toList());
                 } else {
                     inputSlot.entries(input.get(i));

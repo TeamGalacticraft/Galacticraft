@@ -37,7 +37,7 @@ import net.minecraft.world.item.ItemStack;
 
 @Environment(EnvType.CLIENT)
 public class MirroredEntryRenderer implements EntryRenderer<ItemStack> {
-    public static EntryRenderer INSTANCE = new MirroredEntryRenderer();
+    public static EntryRenderer<ItemStack> INSTANCE = new MirroredEntryRenderer();
 
     @Override
     public void render(EntryStack<ItemStack> entryStack, GuiGraphics graphics, Rectangle bounds, int mouseX, int mouseY, float delta) {
