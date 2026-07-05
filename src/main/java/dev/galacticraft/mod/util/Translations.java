@@ -296,6 +296,7 @@ public interface Translations {
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
         String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
+        String JEI_NOT_INSTALLED_ON_SERVER = "jei.tooltip.error.recipe.transfer.no.server";
 
         String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
         String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
