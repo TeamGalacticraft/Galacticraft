@@ -27,6 +27,7 @@ import dev.galacticraft.api.accessor.GearInventoryProvider;
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.item.Accessory;
+import dev.galacticraft.api.item.OxygenTank;
 import dev.galacticraft.impl.internal.fabric.GalacticraftAPI;
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
@@ -287,20 +288,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
         Container tankInv = this.galacticraft$getOxygenTanks();
         if (tankInv != null) {
             if (tankInv.getContainerSize() > 0) {
-                ItemStack itemStack = tankInv.getItem(0);
-                String tankSize = "";
-                if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
-                    tankSize = itemStack.getDescriptionId().replace("item.galacticraft.", "");
-                }
+                String tankSize = tankInv.getItem(0).getItem() instanceof OxygenTank oxygenTank ? oxygenTank.getTankSize() : "";
                 this.entityData.set(DATA_TANK_1_SIZE_ID, tankSize);
             }
 
             if (tankInv.getContainerSize() > 1) {
-                ItemStack itemStack = tankInv.getItem(1);
-                String tankSize = "";
-                if (itemStack.is(GCItemTags.OXYGEN_TANKS)) {
-                    tankSize = itemStack.getDescriptionId().replace("item.galacticraft.", "");
-                }
+                String tankSize = tankInv.getItem(1).getItem() instanceof OxygenTank oxygenTank ? oxygenTank.getTankSize() : "";
                 this.entityData.set(DATA_TANK_2_SIZE_ID, tankSize);
             }
         }
