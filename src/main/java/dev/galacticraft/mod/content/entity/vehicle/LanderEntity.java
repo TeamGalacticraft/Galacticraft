@@ -251,7 +251,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                         this.getX(),
                         this.getY(),
                         this.getZ(),
-                        (int) Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
+                        Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
                         false,
                         Level.ExplosionInteraction.MOB
                 );

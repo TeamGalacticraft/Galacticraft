@@ -39,7 +39,7 @@ import java.util.Optional;
 public interface ChangeOverTimeBlockMixin {
     @WrapMethod(method = "getNextState")
     private Optional<BlockState> gc$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
-        if ((Object) this instanceof WeatheringCopper) {
+        if (this instanceof WeatheringCopper) {
             boolean preventAgeing = true;
 
             if (level.isBreathable(pos)) {

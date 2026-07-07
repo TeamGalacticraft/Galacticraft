@@ -213,7 +213,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
                     for (int z = minZ; z < maxZ; z += 2) {
                         //the next line is called 3136 times per chunk generated apparently? saying something about slow getNoise
                         if (this.randFromPointPos(x, z) < (this.asteroidDensity.getNoise(x, z) + 0.4) / asteroidChance) {
-                            random.setSeed(x + z * 3067);
+                            random.setSeed(x + z * 3067L);
                             int y = random.nextInt(rangeY) + AsteroidChunkGenerator.MIN_ASTEROID_Y;
                             int size = random.nextInt(rangeSize) + AsteroidChunkGenerator.MIN_ASTEROID_RADIUS;
 
