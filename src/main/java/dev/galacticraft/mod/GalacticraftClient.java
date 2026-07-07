@@ -173,6 +173,7 @@ public class GalacticraftClient implements ClientModInitializer {
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
         GCEntityModelLayer.register();
+        registerFeatureRenderers();
         GalacticraftRocketPartRenderers.register();
         GCKeyBinds.register();
 
@@ -291,21 +292,6 @@ public class GalacticraftClient implements ClientModInitializer {
         InventoryTabRegistry.INSTANCE.register(GCItems.OXYGEN_MASK.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenGcInventoryPayload()), GCPlayerInventoryMenu.class);
         InventoryTabRegistry.INSTANCE.register(GCItems.ROCKET.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenRocketPayload()), player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if (entityType == EntityType.PLAYER) {
-                registrationHelper.register(new OxygenMaskRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-                registrationHelper.register(new OxygenTanksRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-                registrationHelper.register(new ParrotOxygenGearRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-            } else if (entityType == EntityType.WOLF) {
-                registrationHelper.register(new PetOxygenMaskRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));
-                registrationHelper.register(new PetOxygenTanksRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));
-            } else if (entityType == EntityType.CAT) {
-                registrationHelper.register(new PetOxygenMaskRenderLayer<Cat, EntityModel<Cat>>((RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer));
-                registrationHelper.register(new PetOxygenTanksRenderLayer<Cat, EntityModel<Cat>>((RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer));
-            } else if (entityType == EntityType.PARROT) {
-                registrationHelper.register(new ParrotOxygenGearRenderLayer<Parrot, EntityModel<Parrot>>((RenderLayerParent<Parrot, EntityModel<Parrot>>) entityRenderer));
-            }
-        });
         GCRenderTypes.init();
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
@@ -332,5 +318,28 @@ public class GalacticraftClient implements ClientModInitializer {
         GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void registerFeatureRenderers() {
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            if (entityType == EntityType.PLAYER) {
+                var playerRenderer = (RenderLayerParent<Player, EntityModel<Player>>) entityRenderer;
+                registrationHelper.register(new OxygenMaskRenderLayer<>(playerRenderer));
+                registrationHelper.register(new OxygenTanksRenderLayer<>(playerRenderer));
+                registrationHelper.register(new ParrotOxygenGearRenderLayer<>(playerRenderer));
+            } else if (entityType == EntityType.WOLF) {
+                var wolfRenderer = (RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer;
+                registrationHelper.register(new PetOxygenMaskRenderLayer<>(wolfRenderer));
+                registrationHelper.register(new PetOxygenTanksRenderLayer<>(wolfRenderer));
+            } else if (entityType == EntityType.CAT) {
+                var catRenderer = (RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer;
+                registrationHelper.register(new PetOxygenMaskRenderLayer<>(catRenderer));
+                registrationHelper.register(new PetOxygenTanksRenderLayer<>(catRenderer));
+            } else if (entityType == EntityType.PARROT) {
+                var parrotRenderer = (RenderLayerParent<Parrot, EntityModel<Parrot>>) entityRenderer;
+                registrationHelper.register(new ParrotOxygenGearRenderLayer<>(parrotRenderer));
+            }
+        });
     }
 }

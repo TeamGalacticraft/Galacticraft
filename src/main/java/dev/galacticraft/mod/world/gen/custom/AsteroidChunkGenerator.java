@@ -122,7 +122,7 @@ public class AsteroidChunkGenerator extends ChunkGenerator {
 
     private static final int NOISE_OFFSET_SIZE = 256;
 
-    private static HashSet<BlockVec3> chunksDone = new HashSet<BlockVec3>();
+    private static HashSet<BlockVec3> chunksDone = new HashSet<>();
     private int largeAsteroidsLastChunkX;
     private int largeAsteroidsLastChunkZ;
     private final MapGenAbandonedBase dungeonGenerator = new MapGenAbandonedBase();

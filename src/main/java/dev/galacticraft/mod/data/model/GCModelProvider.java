@@ -85,7 +85,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
-        Set<Block> detailedWalls = new HashSet<Block>();
+        Set<Block> detailedWalls = new HashSet<>();
 
         decorations.forEach(decorationSet -> {
                 generator.texturedModels.put(decorationSet.detailedBlock(), DETAILED_DECORATION.get(decorationSet.detailedBlock()));
