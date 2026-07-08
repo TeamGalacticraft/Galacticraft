@@ -29,13 +29,13 @@ import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.renderer.block.model.BakedQuad;
 import net.minecraft.client.renderer.block.model.ItemOverrides;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,8 +59,8 @@ public class VacuumGlassBakedModel implements BakedModel {
     private final TextureAtlasSprite frame;
 
     public VacuumGlassBakedModel(Function<Material, TextureAtlasSprite> textureGetter) {
-        this.glass = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/vacuum_glass_vanilla")));
-        this.frame = textureGetter.apply(new Material(TextureAtlas.LOCATION_BLOCKS, Constant.id("block/aluminum_decoration")));
+        this.glass = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/vacuum_glass_vanilla")));
+        this.frame = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, Constant.id("block/aluminum_decoration")));
     }
 
     @Override
