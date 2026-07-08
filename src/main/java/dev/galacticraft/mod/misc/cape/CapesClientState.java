@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.misc.cape;
 
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.resources.ResourceLocation;
 
@@ -48,8 +49,27 @@ public final class CapesClientState {
 
     public static synchronized Entry forPlayer(AbstractClientPlayer player) {
         if (player == null || player.getGameProfile() == null) return null;
+
         String id = player.getGameProfile().getId().toString().toLowerCase(Locale.ROOT);
-        return ASSIGN.get(id);
+        Entry entry = ASSIGN.get(id);
+
+        if (entry != null) {
+            return entry;
+        }
+
+        var mc = Minecraft.getInstance();
+
+        if (mc.player != null
+                && mc.player.getGameProfile() != null
+                && mc.player.getGameProfile().getId().equals(player.getGameProfile().getId())) {
+            ClientCapePrefs prefs = ClientCapePrefs.load();
+            return new Entry(
+                    prefs.mode,
+                    prefs.mode == CapeMode.GC ? prefs.gcCapeId : null
+            );
+        }
+
+        return null;
     }
 
     public static ResourceLocation gcCapeTexture(String gcCapeId) {

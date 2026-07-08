@@ -24,7 +24,6 @@ package dev.galacticraft.mod.misc.cape;
 
 import net.minecraft.server.level.ServerPlayer;
 
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Locale;
 import java.util.Map;
@@ -42,21 +41,45 @@ public final class ServerCapeManager {
 
     private static final Map<String, Assignment> ACTIVE = new HashMap<>();
 
-    public static Map<String, Assignment> snapshot() { return Collections.unmodifiableMap(ACTIVE); }
+    public static Map<String, Assignment> snapshot() {
+        return Map.copyOf(ACTIVE);
+    }
 
-    public static Assignment get(String uuid) { return ACTIVE.get(uuid.toLowerCase(Locale.ROOT)); }
+    public static Assignment get(String uuid) {
+        if (uuid == null) return null;
+        return ACTIVE.get(uuid.toLowerCase(Locale.ROOT));
+    }
 
     public static void set(ServerPlayer player, CapeMode mode, String gcCapeId) {
         String id = player.getUUID().toString().toLowerCase(Locale.ROOT);
-        ACTIVE.put(id, new Assignment(mode, gcCapeId));
+        ACTIVE.put(id, new Assignment(mode, mode == CapeMode.GC ? gcCapeId : null));
     }
 
     public static boolean validateSelection(ServerPlayer player, CapeMode mode, String gcCapeId) {
-        if (mode != CapeMode.GC) return true;
+        if (mode != CapeMode.GC) {
+            return true;
+        }
+
+        if (!CapesLoader.isLoaded()) {
+            return false;
+        }
+
         CapeRole role = CapesLoader.roleFor(player.getUUID().toString());
-        if (role == CapeRole.NONE) return false;
-        if (gcCapeId == null) return false;
+
+        if (role == CapeRole.NONE) {
+            return false;
+        }
+
+        if (gcCapeId == null || gcCapeId.isBlank()) {
+            return false;
+        }
+
         CapeRegistry.CapeDef def = CapeRegistry.get(gcCapeId);
         return def != null && role.atLeast(def.minRole);
+    }
+
+    public static void remove(ServerPlayer player) {
+        if (player == null) return;
+        ACTIVE.remove(player.getUUID().toString().toLowerCase(Locale.ROOT));
     }
 }
