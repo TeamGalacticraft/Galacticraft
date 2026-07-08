@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 @Mixin(CapeLayer.class)
 public class CapeLayerMixin {
     @ModifyArgs(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2))
-    private void galacticraft$restrictCapeWithOxygenTanks(Args args, @Local AbstractClientPlayer player) {
+    private void galacticraft$restrictCapeWithOxygenTanks(Args args, @Local(argsOnly = true) AbstractClientPlayer player) {
         Container inv = player.galacticraft$getOxygenTanks();
         boolean tank1 = inv.getItem(0).is(GCItemTags.OXYGEN_TANKS);
         boolean tank2 = inv.getItem(1).is(GCItemTags.OXYGEN_TANKS);
@@ -54,7 +54,7 @@ public class CapeLayerMixin {
     }
 
     @ModifyArg(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;sin(F)F", ordinal = 1))
-    private float galacticraft$reduceFlappingFrequency(float angle, @Local AbstractClientPlayer player) {
+    private float galacticraft$reduceFlappingFrequency(float angle, @Local(argsOnly = true) AbstractClientPlayer player) {
         Holder<CelestialBody<?, ?>> holder = player.level().galacticraft$getCelestialBody();
         if (holder != null && holder.value().gravity() < 0.8) {
             Container inv = player.galacticraft$getOxygenTanks();
@@ -66,7 +66,7 @@ public class CapeLayerMixin {
     }
 
     @ModifyArg(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V", at = @At(value = "INVOKE", target = "Lcom/mojang/math/Axis;rotationDegrees(F)Lorg/joml/Quaternionf;", ordinal = 0))
-    private float galacticraft$limitBillowing(float angle, @Local AbstractClientPlayer player) {
+    private float galacticraft$limitBillowing(float angle, @Local(argsOnly = true) AbstractClientPlayer player) {
         if (player.getVehicle() instanceof AdvancedVehicle) {
             return 0.0F;
         }
