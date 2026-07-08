@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DimensionTransition.class)
 public abstract class DimensionTransitionMixin {
-    @Inject(method = "missingRespawnBlock", at = @At(value = "HEAD"), cancellable = true)
+    @Inject(method = "missingRespawnBlock(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/portal/DimensionTransition$PostDimensionTransition;)Lnet/minecraft/world/level/portal/DimensionTransition;", at = @At(value = "HEAD"), cancellable = true)
     private static void findRespawnAndUseCryoChamber(ServerLevel overworld, Entity entity, DimensionTransition.PostDimensionTransition postDimensionTransition, CallbackInfoReturnable<DimensionTransition> cir) {
         if (entity instanceof ServerPlayer serverPlayer) {
             BlockPos blockPos = serverPlayer.getRespawnPosition();
