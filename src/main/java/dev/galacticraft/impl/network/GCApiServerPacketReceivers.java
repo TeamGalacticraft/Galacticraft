@@ -22,9 +22,7 @@
 
 package dev.galacticraft.impl.network;
 
-import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.impl.network.c2s.FlagDataPayload;
-import dev.galacticraft.impl.network.c2s.TeamNamePayload;
+import dev.galacticraft.impl.network.c2s.*;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -34,7 +32,9 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 public class GCApiServerPacketReceivers {
     public static void register() {
         registerPacket(FlagDataPayload.TYPE);
+        registerPacket(RequestSpaceRaceStatsPayload.TYPE);
         registerPacket(TeamNamePayload.TYPE);
+        registerPacket(UpdateSpaceRaceVisibilityPayload.TYPE);
     }
 
     public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
