@@ -20,30 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.moon;
 
-import dev.galacticraft.mod.Constant;
+import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Evoker;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
+import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class EvolvedEvokerEntity extends Evoker {
-    public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, Level world) {
-        super(entityType, world);
+public class GazerEntity extends Monster {
+    public GazerEntity(EntityType<? extends Monster> entityType, Level level) {
+        super(entityType, level);
     }
 
     @Override
-    public boolean galacticraft$hasMask() {
-        return true;
+    protected void registerGoals() {
+        this.goalSelector.addGoal(0, new RandomLookAroundGoal(this));
     }
 
-    @Override
-    public boolean galacticraft$hasGear() {
-        return true;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        return Constant.Item.LARGE_OXYGEN_TANK;
+    public static AttributeSupplier.Builder createAttributes() {
+        return Monster.createMonsterAttributes()
+                .add(Attributes.MOVEMENT_SPEED, 0.35F)
+                .add(Attributes.FOLLOW_RANGE, 12.0)
+                .add(Attributes.MAX_HEALTH, 24.0)
+                .add(Attributes.ATTACK_DAMAGE, 5.0)
+                .add(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE, 1.0D);
     }
 }

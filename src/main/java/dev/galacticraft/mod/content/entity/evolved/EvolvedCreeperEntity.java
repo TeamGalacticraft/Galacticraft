@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
