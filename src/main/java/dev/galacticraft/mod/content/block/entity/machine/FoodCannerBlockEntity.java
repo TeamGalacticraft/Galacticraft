@@ -136,8 +136,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         profiler.push("extract_resources");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
@@ -145,7 +145,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         this.hasCan = !this.inputSlotEmpty() || !this.storageSlotEmpty() || !this.outputSlotEmpty();
         if (this.hasCan != this.hadCan) {
             this.hadCan = this.hasCan;
-            world.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
+            level.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
         }
     }
 
