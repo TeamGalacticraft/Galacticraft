@@ -23,13 +23,11 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
-import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.tag.GCItemTags;
+import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.component.DataComponentPatch;
-import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.Slot;
@@ -51,39 +49,27 @@ public class CircuitFabricatorMenu extends RecipeMachineMenu<RecipeInput, Fabric
         Slot slotFrom = this.slots.get(index);
         ItemStack stackFrom = slotFrom.getItem();
 
-        if (index >= this.internalSlots && stackFrom.is(GCItemTags.SILICONS)) {
+        if (index >= this.internalSlots) {
             Item item = stackFrom.getItem();
-            DataComponentPatch dataComponentPatch = stackFrom.getComponentsPatch();
+            DataComponentPatch components = stackFrom.getComponentsPatch();
             long available = stackFrom.getCount();
 
-            ItemResourceSlot slot1 = this.itemStorage.slot(CircuitFabricatorBlockEntity.SILICON_SLOT_1);
-            ItemResourceSlot slot2 = this.itemStorage.slot(CircuitFabricatorBlockEntity.SILICON_SLOT_2);
+            try (Transaction transaction = Transaction.openOuter()) {
+                long inserted = CircuitFabricatorBlockEntity.insertSilicon(this.itemStorage, item, components, available, transaction);
 
-            long slot1Count = slot1.getAmount();
-            long slot2Count = slot2.getAmount();
-            long originalCount = slot1Count + slot2Count;
+                if (inserted > 0) {
+                    transaction.commit();
+                    available -= inserted;
 
-            long slot1Capacity = slot1.getCapacityFor(item, dataComponentPatch);
-            long slot2Capacity = slot2.getCapacityFor(item, dataComponentPatch);
+                    if (available == 0) {
+                        slotFrom.setByPlayer(ItemStack.EMPTY);
+                    } else {
+                        stackFrom.setCount((int) available);
+                        slotFrom.setChanged();
+                    }
 
-            long toInsert = Mth.clamp(slot1Capacity + slot2Capacity - originalCount, 0, available);
-
-            if (toInsert > 0) {
-                long totalCount = originalCount + toInsert;
-                long toInsert2 = Mth.clamp((totalCount / 2) - slot2Count, 0, toInsert);
-                long toInsert1 = toInsert - toInsert2;
-
-                available -= slot1.insert(item, dataComponentPatch, toInsert1);
-                available -= slot2.insert(item, dataComponentPatch, toInsert2);
-
-                if (available == 0) {
-                    slotFrom.setByPlayer(ItemStack.EMPTY);
-                } else {
-                    stackFrom.setCount((int) available);
-                    slotFrom.setChanged();
+                    return ItemStack.EMPTY;
                 }
-
-                return ItemStack.EMPTY;
             }
         }
 

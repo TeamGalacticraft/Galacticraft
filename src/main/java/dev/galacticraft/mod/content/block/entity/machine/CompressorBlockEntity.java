@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.content.block.entity.machine;
 
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
-import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
@@ -36,7 +34,6 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.machine.CompressorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.BlockPos;
@@ -49,7 +46,6 @@ import net.minecraft.util.RandomSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
@@ -59,7 +55,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.Compressor.*;
 
-public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<CraftingInput, CompressingRecipe> implements CoalPoweredMachine {
+public class CompressorBlockEntity extends AbstractCompressorBlockEntity implements CoalPoweredMachine {
     public static final int FUEL_SLOT = 0;
     public static final int INPUT_SLOTS = 1;
     public static final int INPUT_LENGTH = 9;
@@ -79,19 +75,16 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
                             .filter((item, tag) -> {
                                 Integer integer = FuelRegistry.INSTANCE.get(item);
                                 return integer != null && integer > 0;
-                            }))
+                            })
+                    )
                     .add3x3Grid(TransferType.INPUT, GRID_X, GRID_Y)
                     .add(ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(OUTPUT_X, OUTPUT_Y))
+                            .pos(OUTPUT_X, OUTPUT_Y)
+                    )
     );
 
     public CompressorBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.COMPRESSOR, pos, state, GCRecipes.COMPRESSING_TYPE, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT);
-    }
-
-    @Override
-    protected @NotNull MachineStatus workingStatus(RecipeHolder<CompressingRecipe> recipe) {
-        return GCMachineStatuses.COMPRESSING;
+        super(GCBlockEntityTypes.COMPRESSOR, pos, state, SPEC, INPUT_SLOTS, INPUT_LENGTH, OUTPUT_SLOT, 1);
     }
 
     @Override
@@ -186,11 +179,6 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
                 && !level.isBreathable(pos);
     }
 
-    @Override
-    public int getProcessingTime(@NotNull RecipeHolder<CompressingRecipe> recipe) {
-        return recipe.value().getTime();
-    }
-
     public int getFuelTime() {
         return fuelTime;
     }
@@ -218,10 +206,5 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
         return new CompressorMenu(syncId, player, this);
-    }
-
-    @Override
-    protected CraftingInput craftingInv() {
-        return RecipeHelper.craftingInput(3, 3, this.inputSlots.getSlots());
     }
 }
