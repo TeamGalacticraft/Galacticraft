@@ -69,11 +69,6 @@ public class EvolvedCreeperEntity extends Creeper {
     }
 
     @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return null;
-    }
-
-    @Override
     public void addAdditionalSaveData(CompoundTag tag) {
         super.addAdditionalSaveData(tag);
         tag.putBoolean(Constant.Nbt.BABY, isBaby());
