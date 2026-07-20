@@ -20,46 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.moon;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Zombie;
+import net.minecraft.world.entity.PathfinderMob;
 import net.minecraft.world.level.Level;
 
-public class EvolvedZombieEntity extends Zombie {
-    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, Level world) {
-        super(entityType, world);
-    }
-
-    @Override
-    public boolean isUnderWaterConverting() {
-        return false;
-    }
-
-    @Override
-    protected boolean convertsInWater() {
-        return false;
-    }
-
-    @Override
-    protected boolean isSunBurnTick() {
-        return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
-    }
-
-    @Override
-    public boolean galacticraft$hasMask() {
-        return true;
-    }
-
-    @Override
-    public boolean galacticraft$hasGear() {
-        return true;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        return Constant.Item.MEDIUM_OXYGEN_TANK;
+public class ArchGreyEntity extends GreyEntity {
+    public ArchGreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
+        super(entityType, level);
     }
 }

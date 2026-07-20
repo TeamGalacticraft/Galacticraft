@@ -20,15 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.Witch;
 import net.minecraft.world.level.Level;
 
-public class EvolvedPillagerEntity extends Pillager {
-    public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, Level world) {
+public class EvolvedWitchEntity extends Witch {
+    public EvolvedWitchEntity(EntityType<? extends EvolvedWitchEntity> entityType, Level world) {
         super(entityType, world);
     }
 

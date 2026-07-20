@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.nbt.CompoundTag;
@@ -28,8 +28,6 @@ import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.resources.ResourceLocation;
-import net.minecraft.sounds.SoundEvent;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.EntityDimensions;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.Pose;
@@ -66,11 +64,6 @@ public class EvolvedCreeperEntity extends Creeper {
         tag.putByte("ExplosionRadius", (byte) (this.isBaby() ? 2 : 4)); //overwrite
         tag.putShort("Fuse", (short) 37); //overwrite
         super.readAdditionalSaveData(tag);
-    }
-
-    @Override
-    protected SoundEvent getHurtSound(DamageSource source) {
-        return null;
     }
 
     @Override
