@@ -93,6 +93,42 @@
       }
     ]
   },
+  "item.bucket.empty_fuel": {
+    "subtitle": "subtitles.galacticraft.item.bucket.empty_fuel",
+    "sounds": [
+      {
+        "name": "galacticraft:item/bucket",
+        "stream": false
+      }
+    ]
+  },
+  "item.bucket.empty_oil": {
+    "subtitle": "subtitles.galacticraft.item.bucket.empty_oil",
+    "sounds": [
+      {
+        "name": "galacticraft:item/bucket",
+        "stream": false
+      }
+    ]
+  },
+  "item.bucket.fill_fuel": {
+    "subtitle": "subtitles.galacticraft.item.bucket.fill_fuel",
+    "sounds": [
+      {
+        "name": "galacticraft:item/bucket",
+        "stream": false
+      }
+    ]
+  },
+  "item.bucket.fill_oil": {
+    "subtitle": "subtitles.galacticraft.item.bucket.fill_oil",
+    "sounds": [
+      {
+        "name": "galacticraft:item/bucket",
+        "stream": false
+      }
+    ]
+  },
   "machine.airlock.close": {
     "subtitle": "subtitles.galacticraft.machine.airlock.close",
     "sounds": [
@@ -256,6 +292,60 @@
     "sounds": [
       {
         "name": "galacticraft:player/parachute",
+        "stream": false
+      }
+    ]
+  },
+  "player.splash_fuel": {
+    "subtitle": "subtitles.galacticraft.player.splash_fuel",
+    "sounds": [
+      {
+        "name": "galacticraft:player/splash_fuel",
+        "stream": false
+      }
+    ]
+  },
+  "player.splash_fuel_high_speed": {
+    "subtitle": "subtitles.galacticraft.player.splash_fuel_high_speed",
+    "sounds": [
+      {
+        "name": "galacticraft:player/splash_fuel_high_speed",
+        "stream": false
+      }
+    ]
+  },
+  "player.splash_oil": {
+    "subtitle": "subtitles.galacticraft.player.splash_oil",
+    "sounds": [
+      {
+        "name": "galacticraft:player/splash_oil",
+        "stream": false
+      }
+    ]
+  },
+  "player.splash_oil_high_speed": {
+    "subtitle": "subtitles.galacticraft.player.splash_oil_high_speed",
+    "sounds": [
+      {
+        "name": "galacticraft:player/splash_oil_high_speed",
+        "stream": false
+      }
+    ]
+  },
+  "player.swim_fuel": {
+    "subtitle": "subtitles.galacticraft.player.swim_fuel",
+    "sounds": [
+      {
+        "name": "galacticraft:player/swim_fuel",
+        "stream": false
+      }
+    ]
+  },
+  "player.swim_oil": {
+    "subtitle": "subtitles.galacticraft.player.swim_oil",
+    "sounds": [
+      {
+        "name": "galacticraft:player/swim_oil",
         "stream": false
       }
     ]
