@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "minecraft:crafting_table"
+    },
+    {
+      "item": "galacticraft:compressed_iron"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:magnetic_crafting_table"
+  }
+}

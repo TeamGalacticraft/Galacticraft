@@ -141,6 +141,7 @@ public class GalacticraftClient implements ClientModInitializer {
         MenuScreens.register(GCMenuTypes.OXYGEN_SEALER, OxygenSealerScreen::new);
         MenuScreens.register(GCMenuTypes.FUEL_LOADER, FuelLoaderScreen::new);
         MenuScreens.register(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, AirlockControllerScreen::new);
+        MenuScreens.register(GCMenuTypes.MAGNETIC_CRAFTING_TABLE, MagneticCraftingTableScreen::new);
         MenuScreens.register(GCMenuTypes.ROCKET_WORKBENCH, RocketWorkbenchScreen::new);
         MenuScreens.register(GCMenuTypes.ROCKET, RocketInventoryScreen::new);
         MenuScreens.register(GCMenuTypes.PARACHEST, ParachestScreen::new);
