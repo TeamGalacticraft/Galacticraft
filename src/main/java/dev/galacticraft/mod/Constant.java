@@ -1202,6 +1202,7 @@ public interface Constant {
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
         String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";

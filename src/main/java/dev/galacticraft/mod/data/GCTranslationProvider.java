@@ -245,6 +245,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.GLASS_FLUID_PIPE, "Glass Fluid Pipe");
         this.block(GCBlocks.FUELING_PAD, "Fueling Pad");
         this.block(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
+        this.block(GCBlocks.MAGNETIC_CRAFTING_TABLE, "Magnetic Crafting Table");
         this.block(GCBlocks.ROCKET_WORKBENCH, "Rocket Workbench");
         this.block(GCBlocks.PARACHEST, "Parachest");
 
@@ -1002,6 +1003,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.FUEL_LOADER, "Loads fuel into a rocket placed on an adjacent launch pad.");
         this.blockDesc(GCBlocks.GLOWSTONE_LANTERN, "Provides light, even in areas without oxygen.");
         this.blockDesc(GCBlocks.GLOWSTONE_TORCH, "Provides light, even in areas without oxygen.");
+        this.blockDesc(GCBlocks.MAGNETIC_CRAFTING_TABLE, "Holds items in its crafting grid when closed. Hoppers can insert ingredients.");
         this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Can be placed and eaten like a cake. Made with all-natural Moon cheese.");
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
         this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
