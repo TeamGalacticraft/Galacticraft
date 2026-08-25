@@ -73,6 +73,6 @@ public class CanningRecipeManagerPlugin implements ISimpleRecipeManagerPlugin<Ca
 
     @Override
     public List<CanningRecipe> getAllRecipes() {
-        return CannedFoodItem.getDefaultCannedFoods().stream().map(itemStack -> new CanningRecipe(itemStack)).toList();
+        return CannedFoodItem.getDefaultCannedFoods().stream().map(CanningRecipe::new).toList();
     }
 }

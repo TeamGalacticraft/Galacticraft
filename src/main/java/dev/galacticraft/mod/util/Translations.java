@@ -93,6 +93,18 @@ public interface Translations {
 
     interface BannerPattern {
         String ROCKET = "block.galacticraft.banner.rocket";
+        String ROCKET_INVERTED = "block.galacticraft.banner.rocket_inverted";
+        String ROCKET_SINISTER = "block.galacticraft.banner.rocket_sinister";
+        String ROCKET_SINISTER_INVERTED = "block.galacticraft.banner.rocket_sinister_inverted";
+
+        String CREEPER_SIDEWAYS = "block.galacticraft.banner.creeper_sideways";
+        String FLOW_SIDEWAYS = "block.galacticraft.banner.flow_sideways";
+        String FLOWER_SIDEWAYS = "block.galacticraft.banner.flower_sideways";
+        String GLOBE_SIDEWAYS = "block.galacticraft.banner.globe_sideways";
+        String GUSTER_SIDEWAYS = "block.galacticraft.banner.guster_sideways";
+        String MOJANG_SIDEWAYS = "block.galacticraft.banner.mojang_sideways";
+        String PIGLIN_SIDEWAYS = "block.galacticraft.banner.piglin_sideways";
+        String SKULL_SIDEWAYS = "block.galacticraft.banner.skull_sideways";
     }
 
     interface JukeboxSong {
@@ -116,7 +128,24 @@ public interface Translations {
     }
 
     interface Subtitles {
-        String THROW_METEOR_CHUNK = "subtitles.galacticraft.entity.throwable_meteor_chunk.throw";
+        String AIRLOCK_CLOSE = "subtitles.galacticraft.machine.airlock.close";
+        String AIRLOCK_OPEN = "subtitles.galacticraft.machine.airlock.open";
+        String AMBIENT_SCARYSCAPE = "subtitles.galacticraft.ambient.scaryscape";
+        String AMBIENT_SINGLE_DRIP = "subtitles.galacticraft.ambient.single_drip";
+        String ASTROMINER = "subtitles.galacticraft.entity.astrominer";
+        String CHEST_UNLOCK = "subtitles.galacticraft.player.chest.unlock";
+        String CIRCUIT_SCRITCH = "subtitles.galacticraft.machine.circuit.scritch";
+        String MACHINE_BUZZ = "subtitles.galacticraft.machine.buzz";
+        String MACHINE_WHIR = "subtitles.galacticraft.machine.whir";
+        String METEOR_THROW = "subtitles.galacticraft.entity.meteor_chunk.throw";
+        String OXYGEN_FAN = "subtitles.galacticraft.machine.oxygen.fan";
+        String PARACHUTE = "subtitles.galacticraft.player.parachute";
+        String ROCKET_IGNITE = "subtitles.galacticraft.entity.rocket.ignite";
+        String SKELETON_BOSS_DEATH = "subtitles.galacticraft.entity.skeleton_boss.death";
+        String SKELETON_BOSS_LAUGH = "subtitles.galacticraft.entity.skeleton_boss.laugh";
+        String SKELETON_BOSS_OOH = "subtitles.galacticraft.entity.skeleton_boss.ooh";
+        String SKELETON_BOSS_OUCH = "subtitles.galacticraft.entity.skeleton_boss.ouch";
+        String SLIMELING_DEATH = "subtitles.galacticraft.entity.slimeling.death";
     }
 
     interface RegistryDebug {
@@ -268,6 +297,7 @@ public interface Translations {
         String TIME_UNTIL_COOL = "tooltip.galacticraft.time_until_cool";
         String SECONDS_UNIT = "tooltip.galacticraft.seconds_unit";
         String INCORRECT_NUMBER_OF_SLOTS = "tooltip.galacticraft.incorrect_number_of_slots";
+        String JEI_NOT_INSTALLED_ON_SERVER = "jei.tooltip.error.recipe.transfer.no.server";
 
         String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
         String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";

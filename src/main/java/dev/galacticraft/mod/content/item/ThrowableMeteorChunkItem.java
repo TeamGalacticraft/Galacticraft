@@ -40,7 +40,7 @@ public class ThrowableMeteorChunkItem extends Item {
     @Override
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand usedHand) {
         ItemStack itemStack = player.getItemInHand(usedHand);
-        player.playSound(GCSounds.METEOR_CHUNK_THROW, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
+        player.playSound(GCSounds.METEOR_THROW, 0.5F, 0.4F / (level.getRandom().nextFloat() * 0.4F + 0.8F));
 
         if (!level.isClientSide) {
             ThrowableMeteorChunkEntity projectile = new ThrowableMeteorChunkEntity(player, level, itemStack.is(GCItems.HOT_THROWABLE_METEOR_CHUNK));

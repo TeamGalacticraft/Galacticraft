@@ -23,14 +23,13 @@
 package dev.galacticraft.mod.world.biome;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.content.GCSounds;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.resources.ResourceKey;
-import net.minecraft.world.level.biome.Biome;
-import net.minecraft.world.level.biome.BiomeGenerationSettings;
-import net.minecraft.world.level.biome.BiomeSpecialEffects;
-import net.minecraft.world.level.biome.MobSpawnSettings;
+import net.minecraft.sounds.Musics;
+import net.minecraft.world.level.biome.*;
 import net.minecraft.world.level.levelgen.carver.ConfiguredWorldCarver;
 import net.minecraft.world.level.levelgen.placement.PlacedFeature;
 import org.jetbrains.annotations.Contract;
@@ -62,7 +61,10 @@ public final class GCBiomes {
         MobSpawnSettings.Builder spawns = new MobSpawnSettings.Builder();
         BiomeGenerationSettings.Builder genSettings = new BiomeGenerationSettings.Builder(holderGetter, holderGetter2);
         BiomeSpecialEffects.Builder effects = new BiomeSpecialEffects.Builder();
-        effects.fogColor(0).waterColor(4159204).waterFogColor(329011).skyColor(0);
+        effects.fogColor(0).waterColor(4159204).waterFogColor(329011).skyColor(0)
+                .ambientMoodSound(AmbientMoodSettings.LEGACY_CAVE_SETTINGS)
+                .backgroundMusic(Musics.createGameMusic(GCSounds.MUSIC_ORBIT));
+
         return builder
                 .downfall(0)
                 .temperature(1)

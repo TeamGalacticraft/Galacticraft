@@ -58,6 +58,7 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -173,7 +174,7 @@ public class GCJEIPlugin implements IModPlugin {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
 
         List<CompressingRecipe> compressingRecipes = manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value)
-                .filter(recipe -> recipe.getIngredients().stream().allMatch(ingredient -> !ingredient.isEmpty())).toList();
+                .filter(recipe -> recipe.getIngredients().stream().noneMatch(Ingredient::isEmpty)).toList();
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, compressingRecipes);
@@ -183,7 +184,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
-        var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
+        var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);
         var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
         registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
     }

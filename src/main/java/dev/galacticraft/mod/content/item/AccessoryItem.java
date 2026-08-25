@@ -65,7 +65,7 @@ public class AccessoryItem extends Item implements Accessory {
         if (list.isEmpty()) {
             return false;
         }
-        LivingEntity entity = (LivingEntity) list.get(0);
+        LivingEntity entity = list.get(0);
         Container inv = entity.galacticraft$getGearInv();
         for (int slot = 0; slot < inv.getContainerSize(); ++slot) {
             int i = (slot == GCAccessorySlots.PET_THERMAL_SLOT && entity instanceof TamableAnimal) ? GCAccessorySlots.THERMAL_ARMOR_SLOT_START + 1 : slot;

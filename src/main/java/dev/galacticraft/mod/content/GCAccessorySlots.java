@@ -41,8 +41,8 @@ public class GCAccessorySlots {
     public static final int THERMAL_ARMOR_SLOT_START = 8;
     public static final int THERMAL_ARMOR_SLOT_END = 11;
     public static final int PET_THERMAL_SLOT = 3;
-    public static final List<TagKey<Item>> SLOT_TAGS = new ArrayList<TagKey<Item>>();
-    public static final List<ResourceLocation> SLOT_SPRITES = new ArrayList<ResourceLocation>();
+    public static final List<TagKey<Item>> SLOT_TAGS = new ArrayList<>();
+    public static final List<ResourceLocation> SLOT_SPRITES = new ArrayList<>();
 
     public static void register() {
         SLOT_TAGS.add(GCItemTags.OXYGEN_MASKS);
