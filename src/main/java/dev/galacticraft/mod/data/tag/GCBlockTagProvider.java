@@ -124,7 +124,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
-                .add(GCBlocks.LUNASLATE);
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.DENSE_ICE);
         this.tag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE)
                 .add(GCBlocks.MOON_ROCK);

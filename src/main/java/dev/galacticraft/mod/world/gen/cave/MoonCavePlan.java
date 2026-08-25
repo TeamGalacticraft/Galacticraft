@@ -44,7 +44,7 @@ public class MoonCavePlan {
         this.addElement(tunnel);
     }
 
-    private void addElement(MoonCaveElement element) {
+    public void addElement(MoonCaveElement element) {
         this.elements.add(element);
         MoonCaveBounds b = element.bounds();
         this.bounds.include(b.minX(), b.minY(), b.minZ(), b.maxX(), b.maxY(), b.maxZ());

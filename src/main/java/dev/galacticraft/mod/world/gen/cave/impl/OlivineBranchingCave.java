@@ -4,6 +4,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import dev.galacticraft.mod.world.gen.cave.*;
+import dev.galacticraft.mod.world.gen.cave.feature.SurfaceSpikeFeature;
 import dev.galacticraft.mod.world.gen.cave.shape.PathSolvedBranchingCaveShape;
 import net.minecraft.core.Holder;
 import net.minecraft.world.level.biome.Biome;
@@ -27,14 +28,23 @@ public class OlivineBranchingCave extends PlanetCave {
                 100,
                 0.22F,
                 42,
-                58,
+                68,
                 -60,
-                62,
+                72,
                 GCBlocks.MOON_BASALT.defaultBlockState(),
                 GCBlocks.OLIVINE_BLOCK.defaultBlockState(),
                 GCBlocks.BUDDING_OLIVINE.defaultBlockState(),
                 CaveTransitionConfig.weak(),
-                java.util.List.of(),
+                java.util.List.of(
+                        new SurfaceSpikeFeature(
+                                GCBlocks.OLIVINE_BLOCK.defaultBlockState(),
+                                60,
+                                6,
+                                3,
+                                9,
+                                true
+                        )
+                ),
                 20
         );
     }
@@ -46,6 +56,16 @@ public class OlivineBranchingCave extends PlanetCave {
     @Override
     public boolean matchesBiome(Holder<Biome> biome) {
         return biome.is(GCBiomes.Moon.OLIVINE_CAVES);
+    }
+
+    @Override
+    public int minBiomeSearchY() {
+        return -60;
+    }
+
+    @Override
+    public int maxBiomeSearchY() {
+        return 72;
     }
 
     @Override
