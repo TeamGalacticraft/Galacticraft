@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.model;
 
-import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import dev.galacticraft.mod.client.util.CannedFoodColorCache;
+import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import net.fabricmc.fabric.api.renderer.v1.model.ForwardingBakedModel;
 import net.fabricmc.fabric.api.renderer.v1.render.RenderContext;
 import net.minecraft.client.resources.model.BakedModel;

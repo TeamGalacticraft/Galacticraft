@@ -312,9 +312,11 @@ public class CannedFoodItem extends Item {
         }
 
         List<ItemStack> cannedFoodItems = new ArrayList<>(getContents(cannedFood));
-        int countToAdd = Math.min(stack.getCount(), MAX_FOOD);
 
-        if (countToAdd == 0) {
+        int remainingSpace = MAX_FOOD - getSize(cannedFood);
+        int countToAdd = Math.min(stack.getCount(), remainingSpace);
+
+        if (countToAdd <= 0) {
             return;
         }
 
@@ -322,7 +324,9 @@ public class CannedFoodItem extends Item {
         int existingIndex = -1;
 
         for (int i = 0; i < cannedFoodItems.size(); i++) {
-            if (ItemStack.isSameItemSameComponents(cannedFoodItems.get(i).copyWithCount(countToAdd), itemStackToAdd)) {
+            if (ItemStack.isSameItemSameComponents(
+                    cannedFoodItems.get(i),
+                    itemStackToAdd)) {
                 existingIndex = i;
                 break;
             }
@@ -332,11 +336,14 @@ public class CannedFoodItem extends Item {
             cannedFoodItems.add(itemStackToAdd);
         } else {
             ItemStack existing = cannedFoodItems.get(existingIndex).copy();
-            existing.grow(1);
+            existing.grow(countToAdd);
             cannedFoodItems.set(existingIndex, existing);
         }
 
-        cannedFood.set(DataComponents.CONTAINER, ItemContainerContents.fromItems(cannedFoodItems));
+        cannedFood.set(
+                DataComponents.CONTAINER,
+                ItemContainerContents.fromItems(cannedFoodItems)
+        );
     }
 
     public static boolean canAddToCan(Item item) {

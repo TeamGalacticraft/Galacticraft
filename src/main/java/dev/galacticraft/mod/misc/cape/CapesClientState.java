@@ -59,9 +59,7 @@ public final class CapesClientState {
 
         var mc = Minecraft.getInstance();
 
-        if (mc.player != null
-                && mc.player.getGameProfile() != null
-                && mc.player.getGameProfile().getId().equals(player.getGameProfile().getId())) {
+        if (mc.player != null && mc.player.getGameProfile().getId().equals(player.getGameProfile().getId())) {
             ClientCapePrefs prefs = ClientCapePrefs.load();
             return new Entry(
                     prefs.mode,

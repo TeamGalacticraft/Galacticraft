@@ -35,12 +35,18 @@ import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;
-import java.util.stream.Collectors;
 
 public final class CannedFoodColorCache {
     private static final int FALLBACK_COLOR = 0xFFFFFF;
+
+    private static final int MIN_ALPHA = 64;
+    private static final int MIN_BRIGHTNESS = 35;
+    private static final int MIN_SATURATION = 10;
+    private static final int WHITE_THRESHOLD = 245;
+    private static final int WHITE_MAX_SATURATION = 20;
+    private static final int COLOR_BUCKET_SIZE = 16;
+
     private static final Map<Item, Integer> FOOD_COLORS = new ConcurrentHashMap<>();
     private static final Map<CannedFoodColorKey, Integer> COLOR_CACHE = new ConcurrentHashMap<>();
 
@@ -48,9 +54,9 @@ public final class CannedFoodColorCache {
     }
 
     /**
-     * Clears cached generated food/can colours.
+     * Clears cached generated food and can colours.
      *
-     * <p>Call this after resource reloads if item texture colours may have changed.</p>
+     * <p>Call this after resource reloads if item textures may have changed.</p>
      */
     public static void clear() {
         FOOD_COLORS.clear();
@@ -96,11 +102,11 @@ public final class CannedFoodColorCache {
             return FALLBACK_COLOR;
         }
 
-        int avgRed = (int) (sumRed / totalCount);
-        int avgGreen = (int) (sumGreen / totalCount);
-        int avgBlue = (int) (sumBlue / totalCount);
+        int red = (int) (sumRed / totalCount);
+        int green = (int) (sumGreen / totalCount);
+        int blue = (int) (sumBlue / totalCount);
 
-        return avgRed << 16 | avgGreen << 8 | avgBlue;
+        return red << 16 | green << 8 | blue;
     }
 
     private static int getFoodColor(Item item) {
@@ -118,7 +124,11 @@ public final class CannedFoodColorCache {
         }
 
         ItemStack stack = item.getDefaultInstance();
-        TextureAtlasSprite sprite = itemRenderer.getModel(stack, null, null, 0).getParticleIcon();
+
+        TextureAtlasSprite sprite = itemRenderer
+                .getModel(stack, null, null, 0)
+                .getParticleIcon();
+
         if (sprite == null) {
             return FALLBACK_COLOR;
         }
@@ -127,9 +137,9 @@ public final class CannedFoodColorCache {
     }
 
     private static int calculateDominantColor(TextureAtlasSprite sprite) {
-        Map<Integer, Integer> buckets = new HashMap<>();
+        Map<Integer, ColorBucket> buckets = new HashMap<>();
 
-        var image = sprite.contents().originalImage;
+        var image = sprite.contents().ori   ginalImage;
         int width = image.getWidth();
         int height = image.getHeight();
 
@@ -142,7 +152,7 @@ public final class CannedFoodColorCache {
                 int blue = rgba >> 16 & 0xFF;
                 int alpha = rgba >> 24 & 0xFF;
 
-                if (alpha < 32) {
+                if (alpha < MIN_ALPHA) {
                     continue;
                 }
 
@@ -150,20 +160,22 @@ public final class CannedFoodColorCache {
                 int min = Math.min(red, Math.min(green, blue));
                 int saturation = max - min;
 
-                if (max < 35 || saturation < 10) {
+                if (max < MIN_BRIGHTNESS || saturation < MIN_SATURATION) {
                     continue;
                 }
 
-                if (max > 245 && saturation < 20) {
+                if (max > WHITE_THRESHOLD && saturation < WHITE_MAX_SATURATION) {
                     continue;
                 }
 
-                int bucketRed = red / 16;
-                int bucketGreen = green / 16;
-                int bucketBlue = blue / 16;
-                int bucket = bucketRed << 8 | bucketGreen << 4 | bucketBlue;
+                int bucketRed = red / COLOR_BUCKET_SIZE;
+                int bucketGreen = green / COLOR_BUCKET_SIZE;
+                int bucketBlue = blue / COLOR_BUCKET_SIZE;
 
-                buckets.merge(bucket, alpha, Integer::sum);
+                int bucketKey = bucketRed << 8 | bucketGreen << 4 | bucketBlue;
+
+                buckets.computeIfAbsent(bucketKey, key -> new ColorBucket())
+                        .add(red, green, blue, alpha);
             }
         }
 
@@ -171,19 +183,18 @@ public final class CannedFoodColorCache {
             return FALLBACK_COLOR;
         }
 
-        int bestBucket = buckets.entrySet().stream()
-                .max(Map.Entry.comparingByValue())
-                .map(Map.Entry::getKey)
-                .orElse(0xFFFFFF);
+        ColorBucket dominantBucket = buckets.values().stream()
+                .max(Comparator.comparingLong(ColorBucket::weight))
+                .orElse(null);
 
-        int red = ((bestBucket >> 8) & 0xF) * 16 + 8;
-        int green = ((bestBucket >> 4) & 0xF) * 16 + 8;
-        int blue = (bestBucket & 0xF) * 16 + 8;
+        if (dominantBucket == null) {
+            return FALLBACK_COLOR;
+        }
 
-        return red << 16 | green << 8 | blue;
+        return dominantBucket.color();
     }
 
-    private record CannedFoodColorKey(Set<Entry> entries) {
+    private record CannedFoodColorKey(List<Entry> entries) {
         private static CannedFoodColorKey of(List<ItemStack> stacks) {
             Map<Item, Integer> counts = new HashMap<>();
 
@@ -193,15 +204,46 @@ public final class CannedFoodColorCache {
                 }
             }
 
-            Set<Entry> entries = counts.entrySet().stream()
+            List<Entry> entries = counts.entrySet().stream()
                     .map(entry -> new Entry(entry.getKey(), entry.getValue()))
-                    .sorted(Comparator.comparing(entry -> BuiltInRegistries.ITEM.getKey(entry.item()).toString()))
-                    .collect(Collectors.toSet());
+                    .sorted(Comparator.comparing(
+                            entry -> BuiltInRegistries.ITEM.getKey(entry.item()).toString()))
+                    .toList();
 
             return new CannedFoodColorKey(entries);
         }
 
         private record Entry(Item item, int count) {
+        }
+    }
+
+    private static final class ColorBucket {
+        private long weightedRed;
+        private long weightedGreen;
+        private long weightedBlue;
+        private long weight;
+
+        private void add(int red, int green, int blue, int alpha) {
+            weightedRed += (long) red * alpha;
+            weightedGreen += (long) green * alpha;
+            weightedBlue += (long) blue * alpha;
+            weight += alpha;
+        }
+
+        private long weight() {
+            return weight;
+        }
+
+        private int color() {
+            if (weight <= 0) {
+                return FALLBACK_COLOR;
+            }
+
+            int red = (int) (weightedRed / weight);
+            int green = (int) (weightedGreen / weight);
+            int blue = (int) (weightedBlue / weight);
+
+            return red << 16 | green << 8 | blue;
         }
     }
 }
