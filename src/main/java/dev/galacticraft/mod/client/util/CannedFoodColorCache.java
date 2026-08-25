@@ -139,7 +139,7 @@ public final class CannedFoodColorCache {
     private static int calculateDominantColor(TextureAtlasSprite sprite) {
         Map<Integer, ColorBucket> buckets = new HashMap<>();
 
-        var image = sprite.contents().ori   ginalImage;
+        var image = sprite.contents().originalImage;
         int width = image.getWidth();
         int height = image.getHeight();
 
