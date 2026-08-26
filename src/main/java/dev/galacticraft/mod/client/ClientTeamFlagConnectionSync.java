@@ -20,35 +20,19 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.gui.screen.ingame;
+package dev.galacticraft.mod.client;
 
-import it.unimi.dsi.fastutil.booleans.BooleanConsumer;
-import net.minecraft.client.gui.GuiGraphics;
-import net.minecraft.client.gui.screens.ConfirmScreen;
-import net.minecraft.network.chat.Component;
-import net.minecraft.resources.ResourceLocation;
-import net.minecraft.util.Mth;
+import dev.galacticraft.mod.client.resources.TeamFlagTextureManager;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
 
-public class ConfirmFlagScreen extends ConfirmScreen {
-    protected final ResourceLocation imageLocation;
-
-    public ConfirmFlagScreen(BooleanConsumer booleanConsumer, ResourceLocation flagImage, Component component, Component component2) {
-        super(booleanConsumer, component, component2);
-        this.imageLocation = flagImage;
+@Environment(EnvType.CLIENT)
+public final class ClientTeamFlagConnectionSync {
+    public static void init() {
+        ClientPlayConnectionEvents.DISCONNECT.register((handler, client) -> TeamFlagTextureManager.INSTANCE.clearAll());
     }
 
-    private int titleTop() {
-        int i = this.height / 2;
-        return Mth.clamp(i - 20 - this.font.lineHeight, 10, 80);
-    }
-
-    private int flagTop() {
-        return this.titleTop() + 20;
-    }
-
-    @Override
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
-        super.render(graphics, mouseX, mouseY, delta);
-        graphics.blit(this.imageLocation, this.width / 2 - 24, this.flagTop(), 0, 0, 0, 48, 32, 48, 32);
+    private ClientTeamFlagConnectionSync() {
     }
 }

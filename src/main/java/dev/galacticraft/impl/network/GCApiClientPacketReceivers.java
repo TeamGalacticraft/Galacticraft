@@ -36,6 +36,7 @@ public class GCApiClientPacketReceivers {
         registerPacket(OxygenUpdatePayload.TYPE);
         registerPacket(RemoveSatellitePayload.TYPE);
         registerPacket(ResearchUpdatePayload.TYPE);
+        registerPacket(TeamFlagSyncPayload.TYPE);
         registerPacket(UpdateSatellitePayload.TYPE);
     }
 
