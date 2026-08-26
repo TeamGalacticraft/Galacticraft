@@ -22,8 +22,7 @@
 
 package dev.galacticraft.impl.network;
 
-import dev.galacticraft.impl.network.c2s.FlagDataPayload;
-import dev.galacticraft.impl.network.c2s.TeamNamePayload;
+import dev.galacticraft.impl.network.c2s.*;
 import dev.galacticraft.impl.network.s2c.*;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
@@ -34,9 +33,12 @@ public class GCApiPackets {
         PayloadTypeRegistry.playS2C().register(OxygenUpdatePayload.TYPE, OxygenUpdatePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(RemoveSatellitePayload.TYPE, RemoveSatellitePayload.CODEC);
         PayloadTypeRegistry.playS2C().register(ResearchUpdatePayload.TYPE, ResearchUpdatePayload.CODEC);
+        PayloadTypeRegistry.playS2C().register(SpaceRaceStatsPayload.TYPE, SpaceRaceStatsPayload.CODEC);
         PayloadTypeRegistry.playS2C().register(UpdateSatellitePayload.TYPE, UpdateSatellitePayload.CODEC);
 
         PayloadTypeRegistry.playC2S().register(FlagDataPayload.TYPE, FlagDataPayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(RequestSpaceRaceStatsPayload.TYPE, RequestSpaceRaceStatsPayload.CODEC);
         PayloadTypeRegistry.playC2S().register(TeamNamePayload.TYPE, TeamNamePayload.CODEC);
+        PayloadTypeRegistry.playC2S().register(UpdateSpaceRaceVisibilityPayload.TYPE, UpdateSpaceRaceVisibilityPayload.CODEC);
     }
 }
