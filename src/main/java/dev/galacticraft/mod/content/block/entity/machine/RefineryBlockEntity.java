@@ -107,8 +107,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
 
         this.takeFluidFromSlot(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);

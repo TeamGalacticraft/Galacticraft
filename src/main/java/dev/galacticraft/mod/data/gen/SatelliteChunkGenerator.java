@@ -189,7 +189,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
 
     @Nullable
     @Override
-    public Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel world, HolderSet<Structure> structures, BlockPos center, int radius, boolean skipReferencedStructures) {
+    public Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel level, HolderSet<Structure> structures, BlockPos center, int radius, boolean skipReferencedStructures) {
         return null;
     }
 
