@@ -29,8 +29,6 @@ import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.Mth;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.phys.Vec3;
 import org.joml.Vector3d;
 
 import java.util.UUID;
@@ -51,32 +49,44 @@ public class Footprint {
             f -> f.age,
             UUIDUtil.STREAM_CODEC,
             f -> f.owner,
-            (id, x, y, z, r, a, o) -> new Footprint(id, new Vector3d(x, y, z), r, a, o)
+            FootprintType.STREAM_CODEC,
+            f -> f.type,
+            (id, x, y, z, r, a, o, t) -> new Footprint(id, new Vector3d(x, y, z), r, a, o, t)
     );
 
     public static final short MAX_AGE = 3200;
     public final ResourceLocation dimension;
     public final float rotation;
     public final Vector3d position;
+    public final FootprintType type;
     public short age;
     public final UUID owner;
 
     public Footprint(ResourceLocation dimension, Vector3d position, float rotation, UUID ownerUUID) {
-        this(dimension, position, rotation, (short) 0, ownerUUID);
+        this(dimension, position, rotation, (short) 0, ownerUUID, FootprintType.HUMAN);
     }
 
     public Footprint(ResourceLocation dimension, Vector3d position, float rotation, short age, UUID ownerUUID) {
+        this(dimension, position, rotation, age, ownerUUID, FootprintType.HUMAN);
+    }
+
+    public Footprint(ResourceLocation dimension, Vector3d position, float rotation, UUID ownerUUID, FootprintType type) {
+        this(dimension, position, rotation, (short) 0, ownerUUID, type);
+    }
+
+    public Footprint(ResourceLocation dimension, Vector3d position, float rotation, short age, UUID ownerUUID, FootprintType type) {
         this.dimension = dimension;
         this.position = position;
         this.rotation = rotation;
         this.age = age;
         this.owner = ownerUUID;
+        this.type = type;
     }
 
-    public static Vector3d getFootprintPosition(Level level, float rotation, Vector3d startPosition, Vec3 playerCenter) {
+    public static Vector3d getFootprintPosition(FootprintType type, float rotation, Vector3d startPosition) {
         Vector3d position = new Vector3d(startPosition);
 
-        float footprintScale = 0.375F;
+        float footprintScale = type.placementScale();
         double xMin = Double.POSITIVE_INFINITY;
         double xMax = Double.NEGATIVE_INFINITY;
         double zMin = Double.POSITIVE_INFINITY;
