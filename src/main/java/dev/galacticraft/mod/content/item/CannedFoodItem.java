@@ -149,24 +149,21 @@ public class CannedFoodItem extends Item {
 
     @Override
     public @NotNull ItemStack finishUsingItem(ItemStack itemStack, Level level, LivingEntity livingEntity) {
-        if (!level.isClientSide && livingEntity instanceof Player player) {
-            int consumingItems = getNumberToBeConsumed(itemStack, player);
-            DataComponentMap components = itemStack.getComponents();
-            List<ItemStack> contents = getContents(itemStack);
-
+        if (livingEntity instanceof Player player) {
+            final int consumingItems = getNumberToBeConsumed(itemStack, player);
             int toConsume = consumingItems;
-            for (ItemStack foodItemStack : contents) {
+
+            if (toConsume == 0) {
+                return itemStack;
+            }
+
+            for (ItemStack foodItemStack : getContents(itemStack)) {
                 int itemCount = Math.min(foodItemStack.getCount(), toConsume);
                 Item foodItem = foodItemStack.getItem();
                 ItemStack foodItemCopy = foodItemStack.copy();
 
-                foodItemCopy.remove(DataComponents.FOOD);
-
                 for (int i = 0; i < itemCount; i++) {
-                    foodItem.finishUsingItem(foodItemCopy, level, livingEntity);
-                    if (livingEntity instanceof ServerPlayer serverPlayer) {
-                        serverPlayer.awardStat(Stats.ITEM_USED.get(foodItem));
-                    }
+                    foodItem.finishUsingItem(foodItemCopy, level, player);
                 }
 
                 toConsume -= itemCount;
@@ -175,30 +172,17 @@ public class CannedFoodItem extends Item {
                 }
             }
 
-            super.finishUsingItem(itemStack, level, livingEntity);
-
             if (livingEntity instanceof ServerPlayer serverPlayer) {
                 CriteriaTriggers.CONSUME_ITEM.trigger(serverPlayer, itemStack);
                 serverPlayer.awardStat(Stats.ITEM_USED.get(this));
             }
 
-            ItemStack can = this.getDefaultInstance();
-            can.applyComponents(components);
-
             for (int i = 0; i < consumingItems; i++) {
-                removeOne(can);
+                removeOne(itemStack);
             }
 
-            if (getContents(can).isEmpty()) {
-                can = EMPTY_CAN.getDefaultInstance();
-            }
-
-            if (itemStack.isEmpty()) {
-                return can;
-            }
-
-            if (!player.getAbilities().instabuild && !player.getInventory().add(can)) {
-                player.drop(can, false);
+            if (getContents(itemStack).isEmpty()) {
+                itemStack = EMPTY_CAN.getDefaultInstance();
             }
         }
 
