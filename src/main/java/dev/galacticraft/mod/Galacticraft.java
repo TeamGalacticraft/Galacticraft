@@ -51,8 +51,6 @@ import dev.galacticraft.mod.village.GCVillagerProfessions;
 import dev.galacticraft.mod.village.MoonVillagerTypes;
 import dev.galacticraft.mod.world.biome.source.GCMultiNoiseBiomeSourceParameterLists;
 import dev.galacticraft.mod.world.gen.carver.GCCarvers;
-import dev.galacticraft.mod.world.gen.dungeon.util.RoomRegistry;
-import dev.galacticraft.mod.world.gen.dungeon.util.TemplateScanner;
 import dev.galacticraft.mod.world.gen.feature.GCFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCOrePlacedFeatures;
 import dev.galacticraft.mod.world.gen.feature.GCPlacedFeatures;
@@ -67,8 +65,6 @@ import net.minecraft.server.packs.PackType;
 
 public class Galacticraft implements ModInitializer {
     public static final Config CONFIG = new ConfigImpl(FabricLoader.getInstance().getConfigDir().resolve("galacticraft.json").toFile());
-    public static RoomRegistry ROOM_REGISTRY = new RoomRegistry();
-    public static TemplateScanner SCANNER;
 
     @Override
     public void onInitialize() {

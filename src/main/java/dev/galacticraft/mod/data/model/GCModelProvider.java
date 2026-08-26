@@ -294,10 +294,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.MOON_MOSS);
         generator.createDoor(GCBlocks.METEORIC_IRON_DOOR);
 
-        generator.createTrivialCube(GCBlocks.DUNGEON_ENTRANCE_BLOCK);
-        generator.createTrivialCube(GCBlocks.DUNGEON_EXIT_BLOCK);
-
-
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
 

@@ -42,18 +42,12 @@ public class GCStructureSets {
     public static final class Moon {
         public static final ResourceKey<StructureSet> PILLAGER_BASE = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_pillager_bases"));
         public static final ResourceKey<StructureSet> RUINS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_ruins"));
-        public static final ResourceKey<StructureSet> BOSS = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("moon_boss"));
-        public static final ResourceKey<StructureSet> DUNGEON = ResourceKey.create(Registries.STRUCTURE_SET, Constant.id("dungeon"));
     }
 
     public static void bootstrapRegistries(BootstrapContext<StructureSet> context) {
         HolderGetter<Structure> structureLookup = context.lookup(Registries.STRUCTURE);
         HolderGetter<StructureSet> structureSetLookup = context.lookup(Registries.STRUCTURE_SET);
 
-        context.register(Moon.BOSS, new StructureSet(
-                structureLookup.getOrThrow(GCStructures.Moon.BOSS),
-                new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 52532672)
-        ));
         context.register(Moon.RUINS, new StructureSet(
                 structureLookup.getOrThrow(GCStructures.Moon.RUINS),
                 new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 38245864)
@@ -68,9 +62,5 @@ public class GCStructureSets {
                 8,
                 RandomSpreadType.LINEAR
         )));
-        context.register(Moon.DUNGEON, new StructureSet(
-                structureLookup.getOrThrow(GCStructures.Moon.DUNGEON),
-                new RandomSpreadStructurePlacement(32, 8, RandomSpreadType.LINEAR, 52532672)
-        ));
     }
 }
