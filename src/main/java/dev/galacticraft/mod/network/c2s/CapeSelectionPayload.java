@@ -65,10 +65,6 @@ public record CapeSelectionPayload(CapeMode mode, String gcCapeId) implements C2
         CapeMode mode = this.mode == null ? CapeMode.VANILLA : this.mode;
         String gcCapeId = this.gcCapeId;
 
-        String playerName = player.getGameProfile().getName();
-        String uuid = player.getUUID().toString();
-        CapeRole role = CapesLoader.roleFor(uuid);
-
         if (mode == CapeMode.GC && !CapesLoader.isLoaded()) {
             return;
         }
