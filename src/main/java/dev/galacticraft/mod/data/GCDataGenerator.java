@@ -63,6 +63,7 @@ public class GCDataGenerator implements DataGeneratorEntrypoint {
         pack.addProvider(GCTranslationProvider::new);
         pack.addProvider(GCBlockLootTableProvider::new);
         pack.addProvider(GCLootTableProvider::create);
+        pack.addProvider(GCChestLootTableProvider::new);
 
         // advancements
         pack.addProvider(GCAdvancementProvider::new);

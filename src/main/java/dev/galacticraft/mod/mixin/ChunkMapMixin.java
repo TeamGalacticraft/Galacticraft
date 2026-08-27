@@ -22,72 +22,46 @@
 
 package dev.galacticraft.mod.mixin;
 
-import com.mojang.datafixers.DataFixer;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.PlanetChunkGenerator;
-import dev.galacticraft.mod.world.gen.feature.custom.DeferredBlockPlacement;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.server.level.ChunkMap;
-import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.progress.ChunkProgressListener;
-import net.minecraft.util.thread.BlockableEventLoop;
 import net.minecraft.world.level.chunk.ChunkGenerator;
-import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LightChunkGetter;
-import net.minecraft.world.level.entity.ChunkStatusUpdateListener;
-import net.minecraft.world.level.levelgen.RandomState;
-import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
-import net.minecraft.world.level.storage.DimensionDataStorage;
-import net.minecraft.world.level.storage.LevelStorageSource;
-import org.spongepowered.asm.mixin.Final;
+import net.minecraft.world.level.levelgen.NoiseGeneratorSettings;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Mutable;
-import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 @Mixin(ChunkMap.class)
 public class ChunkMapMixin {
-    @Inject(method = "onChunkReadyToSend", at = @At("TAIL"))
-    private void flushDeferredBlocks(LevelChunk chunk, CallbackInfo ci) {
-        ServerLevel level = (ServerLevel) chunk.getLevel();
-        DeferredBlockPlacement.flush(level, chunk.getPos());
-    }
 
-    @Shadow
-    @Mutable
-    private RandomState randomState;
-
-    @Inject(
+    /**
+     * Vanilla only uses the generator's actual NoiseGeneratorSettings when the
+     * generator is a NoiseBasedChunkGenerator.
+     *
+     * <p>Galacticraft planet generators extend PlanetChunkGenerator instead, so
+     * vanilla would normally construct their RandomState using
+     * NoiseGeneratorSettings.dummy().</p>
+     *
+     * <p>This replaces the dummy settings before the RandomState is created,
+     * ensuring both ChunkMap.randomState and ChunkGeneratorStructureState use
+     * the planet's actual noise settings.</p>
+     */
+    @ModifyExpressionValue(
             method = "<init>",
-            at = @At("TAIL")
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;dummy()Lnet/minecraft/world/level/levelgen/NoiseGeneratorSettings;"
+            )
     )
-    private void galacticraft$replaceRandomState(
-            ServerLevel level,
-            LevelStorageSource.LevelStorageAccess user,
-            DataFixer dataFixer,
-            StructureTemplateManager structureTemplateManager,
-            Executor executor,
-            BlockableEventLoop<Runnable> mainThreadExecutor,
-            LightChunkGetter lightChunkGetter,
-            ChunkGenerator chunkGenerator,
-            ChunkProgressListener chunkProgressListener,
-            ChunkStatusUpdateListener chunkStatusUpdateListener,
-            Supplier<DimensionDataStorage> persistentStateManagerFactory,
-            int viewDistance,
-            boolean dsync,
-            CallbackInfo ci
+    private NoiseGeneratorSettings galacticraft$usePlanetNoiseSettings(
+            NoiseGeneratorSettings original,
+            @Local(argsOnly = true) ChunkGenerator chunkGenerator
     ) {
         if (chunkGenerator instanceof PlanetChunkGenerator planetGenerator) {
-            this.randomState = RandomState.create(
-                    planetGenerator.generatorSettings().value(),
-                    level.registryAccess().lookupOrThrow(Registries.NOISE),
-                    level.getSeed()
-            );
+            return planetGenerator.generatorSettings().value();
         }
+
+        return original;
     }
 }

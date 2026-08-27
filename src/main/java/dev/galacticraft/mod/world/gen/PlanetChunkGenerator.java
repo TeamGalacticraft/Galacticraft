@@ -9,10 +9,10 @@ import dev.galacticraft.mod.world.gen.cave.MoonCaveSurfacePainter;
 import dev.galacticraft.mod.world.gen.custom.MoonChunkGenerator;
 import net.minecraft.SharedConstants;
 import net.minecraft.Util;
-import net.minecraft.client.Minecraft;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
+import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.WorldGenRegion;
@@ -25,20 +25,18 @@ import net.minecraft.world.level.chunk.*;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.levelgen.*;
 import net.minecraft.world.level.levelgen.blending.Blender;
-import org.apache.commons.lang3.mutable.MutableObject;
-import org.jetbrains.annotations.Nullable;
+import net.minecraft.world.level.levelgen.structure.StructureStart;
+import net.minecraft.world.level.levelgen.structure.templatesystem.StructureTemplateManager;
 
 import java.text.DecimalFormat;
 import java.util.List;
-import java.util.OptionalInt;
 import java.util.Set;
 import java.util.concurrent.CompletableFuture;
-import java.util.function.Predicate;
 import java.util.function.Supplier;
 
 public abstract class PlanetChunkGenerator extends ChunkGenerator {
     private static final BlockState AIR;
-    private final NoiseBasedChunkGenerator vanillaCarverDelegate;
+    private final NoiseBasedChunkGenerator vanillaDelegate;
     protected final Holder<NoiseGeneratorSettings> settings;
     private final Supplier<Aquifer.FluidPicker> globalFluidPicker;
 
@@ -46,7 +44,7 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
         super(biomeSource);
         this.settings = settings;
         this.globalFluidPicker = Suppliers.memoize(() -> createFluidPicker((NoiseGeneratorSettings)settings.value()));
-        this.vanillaCarverDelegate = new NoiseBasedChunkGenerator(biomeSource, settings);
+        this.vanillaDelegate = new NoiseBasedChunkGenerator(biomeSource, settings);
     }
 
     private static Aquifer.FluidPicker createFluidPicker(NoiseGeneratorSettings settings) {
@@ -85,14 +83,36 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
         return this.settings.is(settings);
     }
 
-    public int getBaseHeight(int x, int z, Heightmap.Types heightmap, LevelHeightAccessor world, RandomState randomState) {
-        return this.iterateNoiseColumn(world, randomState, x, z, (MutableObject)null, heightmap.isOpaque()).orElse(world.getMinBuildHeight());
+    @Override
+    public int getBaseHeight(
+            int x,
+            int z,
+            Heightmap.Types heightmap,
+            LevelHeightAccessor world,
+            RandomState randomState
+    ) {
+        return this.vanillaDelegate.getBaseHeight(
+                x,
+                z,
+                heightmap,
+                world,
+                randomState
+        );
     }
 
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState randomState) {
-        MutableObject<NoiseColumn> mutableObject = new MutableObject();
-        this.iterateNoiseColumn(world, randomState, x, z, mutableObject, (Predicate)null);
-        return (NoiseColumn)mutableObject.getValue();
+    @Override
+    public NoiseColumn getBaseColumn(
+            int x,
+            int z,
+            LevelHeightAccessor world,
+            RandomState randomState
+    ) {
+        return this.vanillaDelegate.getBaseColumn(
+                x,
+                z,
+                world,
+                randomState
+        );
     }
 
     public void addDebugScreenInfo(List<String> text, RandomState randomState, BlockPos pos) {
@@ -102,64 +122,6 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
         double d = noiseRouter.ridges().compute(singlePointContext);
         String var10001 = decimalFormat.format(noiseRouter.temperature().compute(singlePointContext));
         text.add("NoiseRouter T: " + var10001 + " V: " + decimalFormat.format(noiseRouter.vegetation().compute(singlePointContext)) + " C: " + decimalFormat.format(noiseRouter.continents().compute(singlePointContext)) + " E: " + decimalFormat.format(noiseRouter.erosion().compute(singlePointContext)) + " D: " + decimalFormat.format(noiseRouter.depth().compute(singlePointContext)) + " W: " + decimalFormat.format(d) + " PV: " + decimalFormat.format((double)NoiseRouterData.peaksAndValleys((float)d)) + " AS: " + decimalFormat.format(noiseRouter.initialDensityWithoutJaggedness().compute(singlePointContext)) + " N: " + decimalFormat.format(noiseRouter.finalDensity().compute(singlePointContext)));
-    }
-
-    private OptionalInt iterateNoiseColumn(LevelHeightAccessor world, RandomState randomState, int x, int z, @Nullable MutableObject<NoiseColumn> columnSample, @Nullable Predicate<BlockState> stopPredicate) {
-        NoiseSettings noiseSettings = ((NoiseGeneratorSettings)this.settings.value()).noiseSettings().clampToHeightAccessor(world);
-        int i = noiseSettings.getCellHeight();
-        int j = noiseSettings.minY();
-        int k = Mth.floorDiv(j, i);
-        int l = Mth.floorDiv(noiseSettings.height(), i);
-        if (l <= 0) {
-            return OptionalInt.empty();
-        } else {
-            BlockState[] blockStates;
-            if (columnSample == null) {
-                blockStates = null;
-            } else {
-                blockStates = new BlockState[noiseSettings.height()];
-                columnSample.setValue(new NoiseColumn(j, blockStates));
-            }
-
-            int m = noiseSettings.getCellWidth();
-            int n = Math.floorDiv(x, m);
-            int o = Math.floorDiv(z, m);
-            int p = Math.floorMod(x, m);
-            int q = Math.floorMod(z, m);
-            int r = n * m;
-            int s = o * m;
-            double d = (double)p / (double)m;
-            double e = (double)q / (double)m;
-            NoiseChunk noiseChunk = new NoiseChunk(1, randomState, r, s, noiseSettings, DensityFunctions.BeardifierMarker.INSTANCE, (NoiseGeneratorSettings)this.settings.value(), (Aquifer.FluidPicker)this.globalFluidPicker.get(), Blender.empty());
-            noiseChunk.initializeForFirstCellX();
-            noiseChunk.advanceCellX(0);
-
-            for(int t = l - 1; t >= 0; --t) {
-                noiseChunk.selectCellYZ(t, 0);
-
-                for(int u = i - 1; u >= 0; --u) {
-                    int v = (k + t) * i + u;
-                    double f = (double)u / (double)i;
-                    noiseChunk.updateForY(v, f);
-                    noiseChunk.updateForX(x, d);
-                    noiseChunk.updateForZ(z, e);
-                    BlockState blockState = noiseChunk.getInterpolatedState();
-                    BlockState blockState2 = blockState == null ? ((NoiseGeneratorSettings)this.settings.value()).defaultBlock() : blockState;
-                    if (blockStates != null) {
-                        int w = t * i + u;
-                        blockStates[w] = blockState2;
-                    }
-
-                    if (stopPredicate != null && stopPredicate.test(blockState2)) {
-                        noiseChunk.stopInterpolation();
-                        return OptionalInt.of(v + 1);
-                    }
-                }
-            }
-
-            noiseChunk.stopInterpolation();
-            return OptionalInt.empty();
-        }
     }
 
     public void buildSurface(WorldGenRegion region, StructureManager structures, RandomState randomState, ChunkAccess chunkAccess) {
@@ -193,7 +155,7 @@ public abstract class PlanetChunkGenerator extends ChunkGenerator {
             ChunkAccess chunkAccess,
             GenerationStep.Carving carving
     ) {
-        this.vanillaCarverDelegate.applyCarvers(
+        this.vanillaDelegate.applyCarvers(
                 region,
                 seed,
                 randomState,

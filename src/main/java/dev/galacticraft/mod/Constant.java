@@ -1225,6 +1225,9 @@ public interface Constant {
 
     interface LootTable {
         String BASIC_MOON_RUINS_CHEST = "chests/moon_ruins/basic_chest";
+        String MOON_DUNGEON_BASIC_CHEST = "chests/moon_dungeon/basic_chest";
+        String MOON_DUNGEON_RARE_CHEST = "chests/moon_dungeon/rare_chest";
+        String MOON_DUNGEON_TREASURE_CHEST = "chests/moon_dungeon/treasure_chest";
     }
 
     interface Text {
