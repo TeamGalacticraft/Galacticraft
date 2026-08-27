@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.structure.dungeon;
 
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCLootTables;
 import dev.galacticraft.mod.structure.GCStructurePieceTypes;
 import net.minecraft.core.BlockPos;
@@ -31,14 +30,10 @@ import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.util.RandomSource;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.ServerLevelAccessor;
-import net.minecraft.world.level.StructureManager;
-import net.minecraft.world.level.WorldGenLevel;
 import net.minecraft.world.level.block.*;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.ChestBlockEntity;
-import net.minecraft.world.level.chunk.ChunkGenerator;
 import net.minecraft.world.level.levelgen.structure.BoundingBox;
 import net.minecraft.world.level.levelgen.structure.TemplateStructurePiece;
 import net.minecraft.world.level.levelgen.structure.pieces.StructurePieceSerializationContext;
@@ -111,27 +106,6 @@ public class LunarDungeonPiece extends TemplateStructurePiece {
     }
 
     @Override
-    public void postProcess(
-            WorldGenLevel world,
-            StructureManager structureManager,
-            ChunkGenerator chunkGenerator,
-            RandomSource random,
-            BoundingBox chunkBox,
-            ChunkPos chunkPos,
-            BlockPos pivot
-    ) {
-        super.postProcess(
-                world,
-                structureManager,
-                chunkGenerator,
-                random,
-                chunkBox,
-                chunkPos,
-                pivot
-        );
-    }
-
-    @Override
     protected void handleDataMarker(
             String metadata,
             BlockPos pos,
@@ -139,9 +113,7 @@ public class LunarDungeonPiece extends TemplateStructurePiece {
             RandomSource random,
             BoundingBox boundingBox
     ) {
-        if (metadata.startsWith(
-                DungeonConnector.PREFIX
-        )) {
+        if (metadata.startsWith(DungeonConnector.PREFIX)) {
             world.setBlock(
                     pos,
                     Blocks.AIR.defaultBlockState(),
@@ -152,29 +124,26 @@ public class LunarDungeonPiece extends TemplateStructurePiece {
         }
 
         switch (metadata) {
-            case "loot_basic" ->
-                    placeLootChest(
-                            world,
-                            pos,
-                            random,
-                            GCLootTables.MOON_DUNGEON_BASIC_CHEST
-                    );
+            case "loot_basic" -> placeLootChest(
+                    world,
+                    pos,
+                    random,
+                    GCLootTables.MOON_DUNGEON_BASIC_CHEST
+            );
 
-            case "loot_rare" ->
-                    placeLootChest(
-                            world,
-                            pos,
-                            random,
-                            GCLootTables.MOON_DUNGEON_RARE_CHEST
-                    );
+            case "loot_rare" -> placeLootChest(
+                    world,
+                    pos,
+                    random,
+                    GCLootTables.MOON_DUNGEON_RARE_CHEST
+            );
 
-            case "loot_treasure" ->
-                    placeLootChest(
-                            world,
-                            pos,
-                            random,
-                            GCLootTables.MOON_DUNGEON_TREASURE_CHEST
-                    );
+            case "treasure_chest", "loot_treasure" -> placeLootChest(
+                    world,
+                    pos,
+                    random,
+                    GCLootTables.MOON_DUNGEON_TREASURE_CHEST
+            );
 
             default -> {
             }
@@ -193,10 +162,7 @@ public class LunarDungeonPiece extends TemplateStructurePiece {
                         .defaultBlockState()
                         .setValue(
                                 ChestBlock.WATERLOGGED,
-                                world.getFluidState(pos)
-                                        .is(
-                                                FluidTags.WATER
-                                        )
+                                world.getFluidState(pos).is(FluidTags.WATER)
                         ),
                 Block.UPDATE_CLIENTS
         );

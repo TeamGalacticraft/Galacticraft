@@ -59,5 +59,23 @@ public class GCChestLootTableProvider extends SimpleFabricLootTableProvider {
                                         )
                         )
         );
+
+        output.accept(
+                GCLootTables.MOON_DUNGEON_TREASURE_CHEST,
+                LootTable.lootTable()
+                        .withPool(
+                                LootPool.lootPool()
+                                        .setRolls(UniformGenerator.between(1.0F, 1.0F))
+                                        .add(
+                                                LootItem.lootTableItem(GCItems.TIER_2_ROCKET_SCHEMATIC)
+                                                        .setWeight(1)
+                                                        .apply(
+                                                                SetItemCountFunction.setCount(
+                                                                        UniformGenerator.between(1.0F, 1.0F)
+                                                                )
+                                                        )
+                                        )
+                        )
+        );
     }
 }
