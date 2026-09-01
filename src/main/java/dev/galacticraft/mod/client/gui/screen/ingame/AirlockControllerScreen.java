@@ -629,9 +629,7 @@ public class AirlockControllerScreen
             drawCenteredString(
                     graphics,
                     this.font,
-                    Component.literal(
-                            "Owner: UNKNOWN"
-                    ),
+                    Component.translatable(Translations.Ui.AIRLOCK_STRUCTURE_MANAGED),
                     this.leftPos + 90,
                     this.topPos + 55,
                     ChatFormatting.DARK_GRAY.getColor(),
@@ -641,9 +639,7 @@ public class AirlockControllerScreen
             drawCenteredString(
                     graphics,
                     this.font,
-                    Component.literal(
-                            "Configuration Locked"
-                    ),
+                    Component.translatable(Translations.Ui.AIRLOCK_CONFIGURATION_LOCKED),
                     this.leftPos + 90,
                     this.topPos + 72,
                     ChatFormatting.RED.getColor(),
@@ -654,12 +650,8 @@ public class AirlockControllerScreen
                     graphics,
                     this.font,
                     this.menu.permanentlyUnlocked
-                            ? Component.literal(
-                            "Keycard: UNLOCKED"
-                    )
-                            : Component.literal(
-                            "Keycard Required"
-                    ),
+                            ? Component.translatable(Translations.Ui.AIRLOCK_UNLOCKED_BY_KEYCARD)
+                            : Component.translatable(Translations.Ui.AIRLOCK_REQUIRES_KEYCARD),
                     this.leftPos + 90,
                     this.topPos + 89,
                     ChatFormatting.DARK_GRAY.getColor(),
@@ -674,9 +666,7 @@ public class AirlockControllerScreen
                 mouseX,
                 mouseY,
                 PROXIMITY_FIELD_Y,
-                Component.translatable(
-                        Translations.Ui.AIRLOCK_PROXIMITY_LABEL
-                )
+                Component.translatable(Translations.Ui.AIRLOCK_PROXIMITY_LABEL)
         );
 
         drawControlRow(
@@ -684,9 +674,7 @@ public class AirlockControllerScreen
                 mouseX,
                 mouseY,
                 KEYCARD_FIELD_Y,
-                Component.literal(
-                        "Keycard Open Time"
-                )
+                Component.translatable(Translations.Ui.AIRLOCK_KEYCARD_OPEN_TIME)
         );
     }
 

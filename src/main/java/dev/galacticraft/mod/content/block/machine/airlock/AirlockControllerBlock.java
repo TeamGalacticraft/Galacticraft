@@ -29,8 +29,10 @@ import dev.galacticraft.machinelib.api.block.SimpleMachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.content.item.KeycardItem;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.Registries;
+import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
@@ -204,9 +206,7 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
                     && player instanceof ServerPlayer) {
 
                 player.displayClientMessage(
-                        net.minecraft.network.chat.Component.literal(
-                                "Owner: UNKNOWN - Configuration locked"
-                        ),
+                        Component.translatable(Translations.Chat.STRUCTURE_AIRLOCK_LOCKED),
                         true
                 );
             }

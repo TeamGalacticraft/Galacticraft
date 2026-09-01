@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
@@ -55,27 +56,15 @@ public class LunarDungeonKeycardItem extends KeycardItem {
             TooltipFlag flag
     ) {
         tooltip.add(
-                Component.literal(
-                        "Lunar Facility Security Credential"
-                ).withStyle(
-                        ChatFormatting.AQUA
-                )
+                Component.translatable(Translations.Tooltip.LUNAR_DUNGEON_KEYCARD).withStyle(ChatFormatting.AQUA)
         );
 
         tooltip.add(
-                Component.literal(
-                        "Facility: UNKNOWN"
-                ).withStyle(
-                        ChatFormatting.DARK_GRAY
-                )
+                Component.translatable(Translations.Tooltip.LUNAR_DUNGEON_KEYCARD_LOCATION).withStyle(ChatFormatting.DARK_GRAY)
         );
 
         tooltip.add(
-                Component.literal(
-                        "Single Use"
-                ).withStyle(
-                        ChatFormatting.RED
-                )
+                Component.translatable(Translations.Tooltip.LUNAR_DUNGEON_KEYCARD_SINGLE_USE).withStyle(ChatFormatting.RED)
         );
 
         super.appendHoverText(

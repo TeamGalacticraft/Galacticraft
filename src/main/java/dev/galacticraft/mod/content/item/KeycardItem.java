@@ -24,6 +24,7 @@ package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionResult;
@@ -161,11 +162,7 @@ public class KeycardItem extends Item {
     ) {
         if (!canPlayerBind()) {
             player.displayClientMessage(
-                    Component.literal(
-                            "This keycard cannot be reprogrammed."
-                    ).withStyle(
-                            ChatFormatting.RED
-                    ),
+                    Component.translatable(Translations.Chat.CANNOT_REPROGRAM_KEYCARD).withStyle(ChatFormatting.RED),
                     true
             );
 
@@ -174,11 +171,7 @@ public class KeycardItem extends Item {
 
         if (!airlock.canBindKeycard(player)) {
             player.displayClientMessage(
-                    Component.literal(
-                            "You do not have permission to bind a keycard to this airlock."
-                    ).withStyle(
-                            ChatFormatting.RED
-                    ),
+                    Component.translatable(Translations.Chat.KEYCARD_NO_PERMISSION).withStyle(ChatFormatting.RED),
                     true
             );
 
@@ -191,11 +184,7 @@ public class KeycardItem extends Item {
         );
 
         player.displayClientMessage(
-                Component.literal(
-                        "Keycard bound to airlock."
-                ).withStyle(
-                        ChatFormatting.GREEN
-                ),
+                Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_BIND).withStyle(ChatFormatting.GREEN),
                 true
         );
     }
@@ -212,11 +201,7 @@ public class KeycardItem extends Item {
                 || cardAccessId.isBlank()) {
 
             player.displayClientMessage(
-                    Component.literal(
-                            "This keycard is unbound."
-                    ).withStyle(
-                            ChatFormatting.YELLOW
-                    ),
+                    Component.translatable(Translations.Chat.KEYCARD_NOT_BOUND).withStyle(ChatFormatting.YELLOW),
                     true
             );
 
@@ -227,11 +212,7 @@ public class KeycardItem extends Item {
                 cardAccessId
         )) {
             player.displayClientMessage(
-                    Component.literal(
-                            "Access denied."
-                    ).withStyle(
-                            ChatFormatting.RED
-                    ),
+                    Component.translatable(Translations.Chat.KEYCARD_UNSUCCESSFUL_USE).withStyle(ChatFormatting.RED),
                     true
             );
 
@@ -245,11 +226,7 @@ public class KeycardItem extends Item {
 
         if (!activated) {
             player.displayClientMessage(
-                    Component.literal(
-                            "Airlock already unlocked."
-                    ).withStyle(
-                            ChatFormatting.GRAY
-                    ),
+                    Component.translatable(Translations.Chat.AIRLOCK_ALREADY_UNLOCKED).withStyle(ChatFormatting.GRAY),
                     true
             );
 
@@ -257,11 +234,7 @@ public class KeycardItem extends Item {
         }
 
         player.displayClientMessage(
-                Component.literal(
-                        "Access granted."
-                ).withStyle(
-                        ChatFormatting.GREEN
-                ),
+                Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_USE).withStyle(ChatFormatting.GREEN),
                 true
         );
 
@@ -286,19 +259,11 @@ public class KeycardItem extends Item {
                 || accessId.isBlank()) {
 
             tooltip.add(
-                    Component.literal(
-                            "Unbound"
-                    ).withStyle(
-                            ChatFormatting.GRAY
-                    )
+                    Component.translatable(Translations.Tooltip.KEYCARD_UNBOUND).withStyle(ChatFormatting.GRAY)
             );
 
             tooltip.add(
-                    Component.literal(
-                            "Sneak + Right Click an Airlock Controller to bind"
-                    ).withStyle(
-                            ChatFormatting.DARK_GRAY
-                    )
+                    Component.translatable(Translations.Tooltip.KEYCARD_SNEAK_TO_BIND).withStyle(ChatFormatting.DARK_GRAY)
             );
 
             return;
