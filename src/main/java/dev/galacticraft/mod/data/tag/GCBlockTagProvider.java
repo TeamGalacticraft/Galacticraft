@@ -432,6 +432,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
                 .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
 
+        this.tag(BlockTags.WITHER_IMMUNE)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME)
+                .add(GCBlocks.AIR_LOCK_SEAL);
+
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
