@@ -51,5 +51,6 @@ public class GCPackets {
 
         PayloadTypeRegistry.playC2S().register(AirlockSetProximityPayload.TYPE, AirlockSetProximityPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(AirlockSetProximityAccessPayload.TYPE, AirlockSetProximityAccessPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(AirlockSetKeycardOpenSecondsPayload.TYPE, AirlockSetKeycardOpenSecondsPayload.STREAM_CODEC);
     }
 }

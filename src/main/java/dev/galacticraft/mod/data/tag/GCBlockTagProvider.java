@@ -425,10 +425,12 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
 
         this.tag(GCBlockTags.AIRLOCK_BLOCKS)
-                .add(GCBlocks.AIR_LOCK_FRAME)
                 .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.AIR_LOCK_FRAME)
                 .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
-                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER);
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
 
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
@@ -622,10 +624,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
-                        GCBlocks.AIR_LOCK_FRAME,
-                        GCBlocks.REINFORCED_AIR_LOCK_FRAME,
                         GCBlocks.AIR_LOCK_CONTROLLER,
                         GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER,
+                        GCBlocks.AIR_LOCK_FRAME,
+                        GCBlocks.REINFORCED_AIR_LOCK_FRAME,
                         GCBlocks.ALUMINUM_WIRE,
                         GCBlocks.HEAVY_ALUMINUM_WIRE,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,

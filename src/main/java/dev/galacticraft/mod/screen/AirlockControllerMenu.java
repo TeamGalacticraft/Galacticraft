@@ -32,27 +32,122 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import org.jetbrains.annotations.NotNull;
 
-public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEntity> {
-    public byte proximityOpen;
-    public AirlockState state;
-    public ProximityAccess proximityAccess;
+public class AirlockControllerMenu
+        extends MachineMenu<AirlockControllerBlockEntity> {
 
-    public AirlockControllerMenu(int syncId, Player player, AirlockControllerBlockEntity be) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, player, be);
-        this.proximityOpen = be.getProximityOpen();
-        this.state = be.getAirlockState();
-        this.proximityAccess = be.getProximityAccess();
+    public byte proximityOpen = 0;
+
+    public AirlockState state =
+            AirlockState.NONE;
+
+    public ProximityAccess proximityAccess =
+            ProximityAccess.PUBLIC;
+
+    public int keycardOpenSeconds =
+            AirlockControllerBlockEntity.DEFAULT_KEYCARD_OPEN_SECONDS;
+
+    public boolean structureManaged = false;
+
+    public boolean permanentlyUnlocked = false;
+
+    public AirlockControllerMenu(
+            int syncId,
+            Player player,
+            AirlockControllerBlockEntity blockEntity
+    ) {
+        super(
+                GCMenuTypes.AIRLOCK_CONTROLLER_MENU,
+                syncId,
+                player,
+                blockEntity
+        );
+
+        this.proximityOpen =
+                blockEntity.getProximityOpen();
+
+        this.state =
+                blockEntity.getAirlockState();
+
+        this.proximityAccess =
+                blockEntity.getProximityAccess();
+
+        this.keycardOpenSeconds =
+                blockEntity.getKeycardOpenSeconds();
+
+        this.structureManaged =
+                blockEntity.isStructureManaged();
+
+        this.permanentlyUnlocked =
+                blockEntity.isPermanentlyUnlocked();
     }
 
-    public AirlockControllerMenu(int syncId, Inventory inv, BlockPos pos) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, inv, pos, 8, 89);
+    public AirlockControllerMenu(
+            int syncId,
+            Inventory inventory,
+            BlockPos pos
+    ) {
+        super(
+                GCMenuTypes.AIRLOCK_CONTROLLER_MENU,
+                syncId,
+                inventory,
+                pos,
+                8,
+                89
+        );
     }
 
     @Override
-    public void registerData(@NotNull MenuData data) {
+    public void registerData(
+            @NotNull MenuData data
+    ) {
         super.registerData(data);
-        data.registerByte(this.be::getProximityOpen, b -> this.proximityOpen = (byte) b);
-        data.registerInt(() -> this.be.getAirlockState().ordinal(), b -> this.state = AirlockState.values()[b]);
-        data.registerInt(() -> this.be.getProximityAccess().ordinal(), i -> this.proximityAccess = ProximityAccess.values()[i]);
+
+        data.registerByte(
+                this.be::getProximityOpen,
+                value ->
+                        this.proximityOpen =
+                                (byte) value
+        );
+
+        data.registerInt(
+                () ->
+                        this.be
+                                .getAirlockState()
+                                .ordinal(),
+                value ->
+                        this.state =
+                                AirlockState.values()[value]
+        );
+
+        data.registerInt(
+                () ->
+                        this.be
+                                .getProximityAccess()
+                                .ordinal(),
+                value ->
+                        this.proximityAccess =
+                                ProximityAccess.values()[value]
+        );
+
+        data.registerInt(
+                this.be::getKeycardOpenSeconds,
+                value ->
+                        this.keycardOpenSeconds =
+                                value
+        );
+
+        data.registerBoolean(
+                this.be::isStructureManaged,
+                value ->
+                        this.structureManaged =
+                                value
+        );
+
+        data.registerBoolean(
+                this.be::isPermanentlyUnlocked,
+                value ->
+                        this.permanentlyUnlocked =
+                                value
+        );
     }
 }

@@ -34,26 +34,26 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AirlockSetProximityPayload(
-        byte proximity
+public record AirlockSetKeycardOpenSecondsPayload(
+        byte seconds
 ) implements C2SPayload {
 
     public static final StreamCodec<
             ByteBuf,
-            AirlockSetProximityPayload
+            AirlockSetKeycardOpenSecondsPayload
             > STREAM_CODEC =
             ByteBufCodecs.BYTE.map(
-                    AirlockSetProximityPayload::new,
-                    AirlockSetProximityPayload::proximity
+                    AirlockSetKeycardOpenSecondsPayload::new,
+                    AirlockSetKeycardOpenSecondsPayload::seconds
             );
 
     public static final ResourceLocation ID =
             Constant.id(
-                    "airlock_set_proximity"
+                    "airlock_set_keycard_open_seconds"
             );
 
     public static final CustomPacketPayload.Type<
-            AirlockSetProximityPayload
+            AirlockSetKeycardOpenSecondsPayload
             > TYPE =
             new CustomPacketPayload.Type<>(ID);
 
@@ -75,8 +75,8 @@ public record AirlockSetProximityPayload(
             return;
         }
 
-        airlock.setProximityOpen(
-                this.proximity
+        airlock.setKeycardOpenSeconds(
+                this.seconds
         );
     }
 

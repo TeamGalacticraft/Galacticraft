@@ -35,32 +35,71 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AirlockSetProximityAccessPayload(ProximityAccess access) implements C2SPayload {
-    public static final StreamCodec<ByteBuf, AirlockSetProximityAccessPayload> STREAM_CODEC =
-            ByteBufCodecs.VAR_INT.map(
-                    i -> {
-                        ProximityAccess[] vals = ProximityAccess.values();
-                        ProximityAccess a = (i >= 0 && i < vals.length) ? vals[i] : ProximityAccess.PUBLIC;
-                        return new AirlockSetProximityAccessPayload(a);
-                    },
-                    p -> p.access.ordinal()
+public record AirlockSetProximityAccessPayload(
+        ProximityAccess access
+) implements C2SPayload {
+
+    public static final StreamCodec<
+            ByteBuf,
+            AirlockSetProximityAccessPayload
+            > STREAM_CODEC =
+            ByteBufCodecs.BYTE.map(
+                    value ->
+                            new AirlockSetProximityAccessPayload(
+                                    decode(value)
+                            ),
+                    packet ->
+                            (byte) packet.access()
+                                    .ordinal()
             );
 
-    public static final ResourceLocation ID = Constant.id("airlock_set_proximity_access");
-    public static final CustomPacketPayload.Type<AirlockSetProximityAccessPayload> TYPE = new CustomPacketPayload.Type<>(ID);
+    public static final ResourceLocation ID =
+            Constant.id(
+                    "airlock_set_proximity_access"
+            );
+
+    public static final CustomPacketPayload.Type<
+            AirlockSetProximityAccessPayload
+            > TYPE =
+            new CustomPacketPayload.Type<>(ID);
+
+    private static ProximityAccess decode(
+            byte value
+    ) {
+        int ordinal =
+                Byte.toUnsignedInt(value);
+
+        if (ordinal < 0
+                || ordinal
+                >= ProximityAccess.values().length) {
+
+            return ProximityAccess.PRIVATE;
+        }
+
+        return ProximityAccess.values()[ordinal];
+    }
 
     @Override
-    public void handle(ServerPlayNetworking.@NotNull Context context) {
-        if (context.player().containerMenu instanceof AirlockControllerMenu menu) {
-            AirlockControllerBlockEntity be = menu.be;
-            if (be != null && be.getLevel() != null && be.getLevel().isLoaded(be.getBlockPos())) {
-                if (!(be instanceof dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity mb)
-                        || mb.getSecurity().hasAccess(context.player())) {
-                    be.setProximityAccess(this.access);
-                    be.setChanged();
-                }
-            }
+    public void handle(
+            ServerPlayNetworking.@NotNull Context context
+    ) {
+        if (!(context.player().containerMenu
+                instanceof AirlockControllerMenu menu)) {
+            return;
         }
+
+        AirlockControllerBlockEntity airlock =
+                menu.be;
+
+        if (!airlock.canConfigure(
+                context.player()
+        )) {
+            return;
+        }
+
+        airlock.setProximityAccess(
+                this.access
+        );
     }
 
     @Override

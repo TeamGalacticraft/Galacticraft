@@ -312,6 +312,7 @@ public interface Constant {
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
         String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
+
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
         String FLUID_PIPE = "fluid_pipe";
@@ -355,8 +356,10 @@ public interface Constant {
         String ROCKET_WORKBENCH = "rocket_workbench";
         String AIR_LOCK_FRAME = "air_lock_frame";
         String REINFORCED_AIR_LOCK_FRAME = "reinforced_air_lock_frame";
+        String STRUCTURE_AIR_LOCK_FRAME = "structure_air_lock_frame";
         String AIR_LOCK_CONTROLLER = "air_lock_controller";
         String REINFORCED_AIR_LOCK_CONTROLLER = "reinforced_air_lock_controller";
+        String STRUCTURE_AIR_LOCK_CONTROLLER = "structure_air_lock_controller";
         String AIR_LOCK_SEAL = "air_lock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";
@@ -559,6 +562,10 @@ public interface Constant {
         String INFINITE_OXYGEN_TANK = "infinite_oxygen_tank";
 
         String EMERGENCY_KIT = "emergency_kit";
+
+        String KEYCARD = "keycard";
+
+        String LUNAR_DUNGEON_KEYCARD = "lunar_dungeon_keycard";
 
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
