@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -107,7 +107,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         super.tickDeath();
 
         if (this.deathTime == 100) {
-            level().playSound(null, getX(), getY(), getZ(), GCSounds.ENTITY_BOSSDEATH, SoundSource.HOSTILE, 10.0F, 1.5F);
+            level().playSound(null, getX(), getY(), getZ(), GCSounds.SKELETON_BOSS_DEATH, SoundSource.HOSTILE, 10.0F, 1.5F);
         }
     }
 
@@ -138,7 +138,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
     @Override
     public void playerTouch(Player player) {
         if (!this.isNoAi() && this.getPassengers().isEmpty() && this.postThrowDelay == 0 && this.throwTimer == 0 && player.equals(this.targetEntity) && this.deathTime == 0) {
-            level().playSound(player, getX(), getY(), getZ(), GCSounds.ENTITY_BOSSLAUGH, SoundSource.HOSTILE, 10.0F, 0.2F);
+            level().playSound(player, getX(), getY(), getZ(), GCSounds.SKELETON_BOSS_LAUGH, SoundSource.HOSTILE, 10.0F, 0.2F);
             if (!this.level().isClientSide) {
                 player.startRiding(this);
             }
@@ -156,7 +156,7 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
 
     @Override
     protected SoundEvent getHurtSound(DamageSource damageSourceIn) {
-        this.playSound(GCSounds.ENTITY_OOH, this.getSoundVolume(), this.getVoicePitch() + 1.0F);
+        this.playSound(GCSounds.SKELETON_BOSS_OOH, this.getSoundVolume(), this.getVoicePitch() + 1.0F);
         return null;
     }
 
@@ -282,6 +282,11 @@ public class SkeletonBoss extends AbstractBossEntity implements RangedAttackMob,
         }
 
         ItemStack itemInHand = this.getItemInHand(ProjectileUtil.getWeaponHoldingHand(this, Items.BOW));
+        if (itemInHand.isEmpty()) {
+            // Prevent "Invalid weapon firing an arrow" crash
+            itemInHand = new ItemStack(Items.BOW);
+        }
+
         ItemStack arrowItem = this.getProjectile(itemInHand);
         AbstractArrow arrow = getArrow(arrowItem, pullProgress, itemInHand);
         double d0 = target.getX() - this.getX();

@@ -1,9 +1,15 @@
 {
   "variants": {
-    "active=false": {
+    "hot=false,lit=false": {
       "model": "galacticraft:machine/coal_generator"
     },
-    "active=true": {
+    "hot=false,lit=true": {
+      "model": "galacticraft:machine/coal_generator_warming"
+    },
+    "hot=true,lit=false": {
+      "model": "galacticraft:machine/coal_generator_cooling"
+    },
+    "hot=true,lit=true": {
       "model": "galacticraft:machine/coal_generator_active"
     }
   }

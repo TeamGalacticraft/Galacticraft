@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,6 +37,7 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
+import net.minecraft.world.item.Items;
 import net.minecraft.world.level.ItemLike;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -131,6 +132,20 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.DESH_BOOTS)
                 .add(GCItems.TITANIUM_BOOTS);
 
+        this.tag(GCItemTags.ACID_RESISTANT)
+                .add(Items.DIAMOND)
+                .add(Items.DIAMOND_BLOCK)
+                .add(Items.DIAMOND_AXE)
+                .add(Items.DIAMOND_HOE)
+                .add(Items.DIAMOND_PICKAXE)
+                .add(Items.DIAMOND_SHOVEL)
+                .add(Items.DIAMOND_SWORD)
+                .add(Items.DIAMOND_HELMET)
+                .add(Items.DIAMOND_CHESTPLATE)
+                .add(Items.DIAMOND_LEGGINGS)
+                .add(Items.DIAMOND_BOOTS)
+                .add(Items.DIAMOND_HORSE_ARMOR);
+
         // Thermal armor
         this.tag(ItemTags.FREEZE_IMMUNE_WEARABLES)
                 .add(GCItems.THERMAL_PADDING_BOOTS)
@@ -162,6 +177,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
             Item pipe = GCBlocks.GLASS_FLUID_PIPES.get(color).asItem();
             this.tag(entry.getValue()).add(pipe);
         }
+
+        this.copy(GCBlockTags.FLAGS, GCItemTags.FLAGS);
+        this.addColorSet(GCItems.FLAGS);
 
         // Oxygen equipment
         this.tag(GCItemTags.OXYGEN_MASKS)
@@ -416,7 +434,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.FOODS)
                 .addTag(GCItemTags.CHEESE_FOODS)
                 .addTag(GCItemTags.CANNED_FOODS)
-                .add(GCItems.CHEESEBURGER);
+                .add(GCItems.CHEESEBURGER)
+                .add(GCItems.MOON_TANGLE_FRUIT);
 
         this.tag(GCItemTags.CANNED_FOODS)
                 .add(GCItems.CANNED_FOOD);

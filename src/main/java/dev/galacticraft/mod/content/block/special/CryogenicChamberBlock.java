@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -208,7 +208,8 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                         player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_TOO_FAR_AWAY), true);
                         break;
                     default:
-                        player.displayClientMessage(problem.getMessage(), true);
+                        if (problem.getMessage() != null)
+                            player.displayClientMessage(problem.getMessage(), true);
                 }
 
                 player.endCryoSleep();

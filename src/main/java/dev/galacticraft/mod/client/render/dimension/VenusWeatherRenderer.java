@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -111,7 +111,7 @@ public class VenusWeatherRenderer implements DimensionRenderingRegistry.WeatherR
                     }
 
                     if (y != ymax) {
-                        RandomSource random = RandomSource.create((long) (x * x * 3121 + x * 45238971 ^ z * z * 418711 + z * 13761));
+                        RandomSource random = RandomSource.create(x * x * 3121L + x * 45238971L ^ z * z * 418711L + z * 13761L);
 
                         if (drawFlag != 0) {
                             if (drawFlag >= 0 && buffer != null) {

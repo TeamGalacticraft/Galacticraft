@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class OliGrubEntityRenderer extends MobRenderer<OliGrubEntity, OliGrubEntityModel<OliGrubEntity>> {
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.OLI_GRUB);
+
     public OliGrubEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new OliGrubEntityModel<>(context.bakeLayer(GCEntityModelLayer.OLI_GRUB)), 0.3f);
     }
 
     @Override
     public ResourceLocation getTextureLocation(OliGrubEntity entity) {
-        return Constant.id(Constant.EntityTexture.OLI_GRUB);
+        return TEXTURE;
     }
 }

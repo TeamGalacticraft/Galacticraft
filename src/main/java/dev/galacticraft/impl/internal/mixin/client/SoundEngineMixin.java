@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,7 +24,6 @@ package dev.galacticraft.impl.internal.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.audio.Listener;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
@@ -59,8 +58,8 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean galacticraft_hideSubtitles(boolean original, @Local(ordinal = 2) float f3) {
-        return original || f3 < 0.01f;
+    private boolean galacticraft_hideSubtitles(boolean original) {
+        return original || this.multiplier < 0.01f;
     }
 
     @Override

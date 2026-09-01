@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -43,7 +43,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -56,6 +55,8 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
 public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
@@ -71,11 +72,11 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(44, 35),
+                            .pos(INPUT_X, INPUT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(108, 35),
+                            .pos(OUTPUT_X_1, OUTPUT_Y_1),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(134, 35)
+                            .pos(OUTPUT_X_2, OUTPUT_Y_2)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
@@ -132,7 +133,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     @Override
     protected boolean canOutputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
         ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
-        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2);
+        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2L);
     }
 
     @Override
@@ -140,7 +141,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
         return new RecipeMachineMenu<>(
                 GCMenuTypes.ELECTRIC_ARC_FURNACE,
                 syncId,
-                (ServerPlayer) player,
+                player,
                 this
         );
     }

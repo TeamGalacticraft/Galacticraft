@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,6 @@ import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
@@ -39,13 +38,15 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.GCSounds;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
-import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.screen.CircuitFabricatorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -56,6 +57,11 @@ import net.minecraft.world.item.crafting.RecipeInput;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.ArrayList;
+import java.util.List;
+
+import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> {
     public static final int CHARGE_SLOT = 0;
@@ -74,25 +80,25 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
                             .filter(ResourceFilters.CAN_EXTRACT_ENERGY)
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(31, 17)
+                            .pos(DIAMOND_X, DIAMOND_Y)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.DIAMOND_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DIAMOND)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 47)
+                            .pos(SILICON_X_1, SILICON_Y_1)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_1_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(62, 65)
+                            .pos(SILICON_X_2, SILICON_Y_2)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.SILICON_SLOT_2_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.SILICON)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(107, 72)
+                            .pos(REDSTONE_X, REDSTONE_Y)
                             .filter(ResourceFilters.itemTag(FabricationRecipe.REDSTONE_SLOT_TAG))
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.DUST)),
                     ItemResourceSlot.builder(TransferType.INPUT)
-                            .pos(134, 17),
+                            .pos(INGREDIENT_X, INGREDIENT_Y),
                     ItemResourceSlot.builder(TransferType.OUTPUT)
-                            .pos(152, 72)
+                            .pos(OUTPUT_X, OUTPUT_Y)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
@@ -105,12 +111,25 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
         super(GCBlockEntityTypes.CIRCUIT_FABRICATOR, pos, state, GCRecipes.FABRICATION_TYPE, SPEC);
     }
 
+    public void workingSounds(MachineStatus status) {
+        if (level.random.nextDouble() < 0.05 && status == GCMachineStatuses.FABRICATING) {
+            level.playSound(null, this.getBlockPos(), GCSounds.CIRCUIT_SCRITCH, SoundSource.BLOCKS, 0.8F, level.random.nextFloat() * 0.1F + 0.9F);
+        }
+    }
+
     @Override
     public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         super.tickConstant(world, pos, state, profiler);
         profiler.push("charge");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
+    }
+
+    @Override
+    public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        MachineStatus status = super.tick(level, pos, state, profiler);
+        workingSounds(status);
+        return status;
     }
 
     @Override
@@ -133,6 +152,20 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     protected void outputStacks(@NotNull RecipeHolder<FabricationRecipe> recipe) {
         ItemStack output = recipe.value().getResultItem(this.level.registryAccess());
         this.itemStorage().slot(OUTPUT_SLOT).insert(output.getItem(), output.getComponentsPatch(), output.getCount());
+    }
+
+    @Override
+    public List<ItemStack> inputItemStacks() {
+        List<ItemStack> items = new ArrayList<>();
+        for (int i = DIAMOND_SLOT; i <= INPUT_SLOT; i++) {
+            items.add(this.itemStorage().getItem(i));
+        }
+        return items;
+    }
+
+    @Override
+    public List<ItemStack> outputItemStacks() {
+        return List.of(this.itemStorage().getItem(OUTPUT_SLOT));
     }
 
     @Override
@@ -182,11 +215,6 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
 
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
-        return new RecipeMachineMenu<>(
-                GCMenuTypes.CIRCUIT_FABRICATOR,
-                syncId,
-                player,
-                this
-        );
+        return new CircuitFabricatorMenu(syncId, player, this);
     }
 }

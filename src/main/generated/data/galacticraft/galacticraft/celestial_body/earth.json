@@ -62,20 +62,32 @@
       "config": {}
     },
     "satellite_recipe": {
-      "ingredients": {
-        "1": {
-          "item": "galacticraft:advanced_wafer"
+      "ingredients": [
+        {
+          "count": 16,
+          "ingredient": {
+            "tag": "c:ingots/aluminum"
+          }
         },
-        "16": {
-          "item": "galacticraft:aluminum_ingot"
+        {
+          "count": 32,
+          "ingredient": {
+            "tag": "c:ingots/tin"
+          }
         },
-        "32": {
-          "item": "galacticraft:tin_ingot"
+        {
+          "count": 8,
+          "ingredient": {
+            "tag": "c:ingots/copper"
+          }
         },
-        "8": {
-          "item": "minecraft:copper_ingot"
+        {
+          "count": 1,
+          "ingredient": {
+            "item": "galacticraft:advanced_wafer"
+          }
         }
-      }
+      ]
     },
     "teleporter": "galacticraft:overworld",
     "world": "minecraft:overworld"

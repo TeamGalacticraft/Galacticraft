@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,4 +36,7 @@ public final class GCAttachments {
 
     public static final AttachmentType<GCClientPlayer> CLIENT_PLAYER = AttachmentRegistry.<GCClientPlayer>builder()
             .buildAndRegister(Constant.id(Attachments.CLIENT_PLAYER));
+
+    public static void init() {
+    }
 }

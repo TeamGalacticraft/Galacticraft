@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,6 +24,7 @@ package dev.galacticraft.api.component;
 
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
+import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.util.StreamCodecs;
@@ -39,8 +40,14 @@ import net.minecraft.util.ExtraCodecs;
 import java.util.function.UnaryOperator;
 
 public class GCDataComponents {
-    public static final DataComponentType<RocketData> ROCKET_DATA = register("rocket_data", b -> b
-            .persistent(RocketData.CODEC).networkSynchronized(RocketData.STREAM_CODEC));
+    public static final DataComponentType<RocketData> ROCKET_DATA = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Constant.id("rocket_data"),
+            DataComponentType.<RocketData>builder()
+                    .persistent(RocketData.CODEC)
+                    .networkSynchronized(RocketData.STREAM_CODEC)
+                    .build()
+    );
     public static final DataComponentType<Long> AMOUNT = register("amount", b -> b
             .persistent(Codec.LONG).networkSynchronized(StreamCodecs.LONG));
     public static final DataComponentType<Integer> COLOR = register("color", b -> b
@@ -63,6 +70,15 @@ public class GCDataComponents {
                     ResourceKey::location,
                     (r, l) -> ResourceKey.create(ResourceKey.createRegistryKey(r), l)
             )));
+
+    public static final DataComponentType<FluidData> FLUID_DATA = Registry.register(
+            BuiltInRegistries.DATA_COMPONENT_TYPE,
+            Constant.id("fluid_data"),
+            DataComponentType.<FluidData>builder()
+                    .persistent(FluidData.CODEC)
+                    .networkSynchronized(FluidData.STREAM_CODEC)
+                    .build()
+    );
 
     private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> op) {
         return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Constant.id(id), op.apply(DataComponentType.builder()).build());

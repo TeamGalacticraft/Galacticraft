@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -52,11 +52,13 @@ public class ParachestRenderer extends EntityRenderer<ParachestEntity> {
 
     @Override
     public void render(ParachestEntity entity, float entityYaw, float partialTick, PoseStack poseStack, MultiBufferSource buffer, int packedLight) {
+        poseStack.pushPose();
         this.parachute.setupAnim(entity, 0F, 0F, 0F, 0F, 0F);
         poseStack.translate(-0.5F, 0F, -0.5F);
         this.chest.render(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(TEXTURE)), packedLight, OverlayTexture.NO_OVERLAY);
         poseStack.translate(-0.0625F, 0F, 0.375F);
         this.parachute.renderToBuffer(poseStack, buffer.getBuffer(RenderType.entityCutoutNoCull(getTextureLocation(entity))), packedLight, OverlayTexture.NO_OVERLAY);
+        poseStack.popPose();
     }
 
     @Override

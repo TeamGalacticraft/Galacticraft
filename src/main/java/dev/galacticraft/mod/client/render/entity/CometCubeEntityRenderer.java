@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class CometCubeEntityRenderer extends MobRenderer<CometCubeEntity, CometCubeEntityModel<CometCubeEntity>> {
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.COMET_CUBE);
+
     public CometCubeEntityRenderer(EntityRendererProvider.Context context) {
         super(context, new CometCubeEntityModel<>(context.bakeLayer(GCEntityModelLayer.COMET_CUBE)), 0.4f);
     }
 
     @Override
     public ResourceLocation getTextureLocation(CometCubeEntity entity) {
-        return Constant.id(Constant.EntityTexture.COMET_CUBE);
+        return TEXTURE;
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -62,6 +62,25 @@ public interface Constant {
         return ResourceKey.create(registry, Constant.id(id));
     }
 
+    String CAPES = "https://raw.githubusercontent.com/TeamGalacticraft/Galacticraft/main/capes_roles.json";
+
+    interface Cape {
+        String EARTH = "earth";
+        String JUPITER = "jupiter";
+        String MARS = "mars";
+        String MERCURY = "mercury";
+        String MOON = "moon";
+        String NEPTUNE = "neptune";
+        String PLAIN = "plain";
+        String SPACE_STATION = "space_station";
+        String SUN = "sun";
+        String URANUS = "uranus";
+        String VENUS = "venus";
+        String DEVELOPER = "developer";
+        String REWOVEN = "rewoven";
+        String DEVELOPER_RED = "developer_red";
+    }
+
     interface Block {
         String ITEM_GROUP_BLOCKS = "blocks";
         String ITEM_GROUP_MACHINES = "machines";
@@ -69,6 +88,9 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_SURFACE_ROCK_STAIRS = "moon_surface_rock_stairs";
+        String MOON_SURFACE_ROCK_SLAB = "moon_surface_rock_slab";
+        String MOON_SURFACE_ROCK_WALL = "moon_surface_rock_wall";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
 
         String MOON_ROCK = "moon_rock";
@@ -209,17 +231,20 @@ public interface Constant {
 
         String IRON_GRATING = "iron_grating";
         String TIN_LADDER = "tin_ladder";
-        String SQUARE_LIGHT_PANEL = "square_light_panel";
-        String SPOTLIGHT_LIGHT_PANEL = "spotlight_light_panel";
-        String LINEAR_LIGHT_PANEL = "linear_light_panel";
-        String DASHED_LIGHT_PANEL = "dashed_light_panel";
-        String DIAGONAL_LIGHT_PANEL = "diagonal_light_panel";
         String VACUUM_GLASS = "vacuum_glass";
         String CLEAR_VACUUM_GLASS = "vacuum_glass_clear";
         String STRONG_VACUUM_GLASS = "vacuum_glass_strong";
         String WALKWAY = "walkway";
         String WIRE_WALKWAY = "wire_walkway";
+        String HEAVY_WIRE_WALKWAY = "heavy_wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
+
+        String OLIVINE_GLASS = "olivine_glass";
+        String OLIVINE_GLASS_PANE = "olivine_glass_pane";
+        String MOON_GLASS = "moon_glass";
+        String MOON_GLASS_PANE = "moon_glass_pane";
+
+        String FLAG = "flag";
 
         //  Environment
         String GLOWSTONE_TORCH = "glowstone_torch";
@@ -228,6 +253,9 @@ public interface Constant {
         String UNLIT_TORCH = "unlit_torch";
         String UNLIT_WALL_TORCH = "unlit_wall_torch";
         String UNLIT_LANTERN = "unlit_lantern";
+        String UNLIT_SOUL_TORCH = "unlit_soul_torch";
+        String UNLIT_SOUL_WALL_TORCH = "unlit_soul_wall_torch";
+        String UNLIT_SOUL_LANTERN = "unlit_soul_lantern";
         String CAVERNOUS_VINES = "cavernous_vines";
         String CAVERNOUS_VINES_PLANT = "cavernous_vines_plant";
         String WEB_TORCH = "web_torch";
@@ -364,6 +392,13 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
         String CANNED_FOOD = "canned_food";
+
+        String MOON_WEED = "moon_weed";
+        String MOON_SHRUBS = "moon_shrubs";
+        String MOON_MOSS = "moon_moss";
+        String MOON_TANGLE = "moon_tangle";
+        String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String BUDDING_OLIVINE = "budding_olivine";
     }
 
     interface Fluid {
@@ -502,6 +537,7 @@ public interface Constant {
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
         String INFINITE_INDICATOR = "infinite_indicator";
+        String FLUID_CANISTER = "fluid_canister";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -562,6 +598,7 @@ public interface Constant {
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
         String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
+        String MOON_TANGLE_FRUIT = "moon_tangle_fruit";
     }
 
     interface Particle {
@@ -585,15 +622,9 @@ public interface Constant {
     interface ScreenTexture {
         ResourceLocation COAL_GENERATOR_SCREEN = id("textures/gui/coal_generator_screen.png");
         ResourceLocation SOLAR_PANEL_SCREEN = id("textures/gui/solar_panel_screen.png");
-        ResourceLocation CIRCUIT_FABRICATOR_SCREEN = id("textures/gui/circuit_fabricator_screen.png");
         ResourceLocation REFINERY_SCREEN = id("textures/gui/refinery_screen.png");
-        ResourceLocation ELECTRIC_FURNACE_SCREEN = id("textures/gui/electric_furnace_screen.png");
-        ResourceLocation ELECTRIC_ARC_FURNACE_SCREEN = id("textures/gui/electric_arc_furnace_screen.png");
-        ResourceLocation COMPRESSOR_SCREEN = id("textures/gui/compressor_screen.png");
-        ResourceLocation ELECTRIC_COMPRESSOR_SCREEN = id("textures/gui/electric_compressor_screen.png");
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
-        ResourceLocation ROCKET_WORKBENCH_SCREEN = id("textures/gui/rocket_workbench.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
 
         ResourceLocation AIRLOCK_CONTROLLER_SCREEN = id("textures/gui/air_lock_controller.png");
@@ -601,18 +632,310 @@ public interface Constant {
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
-        ResourceLocation OVERLAY = id("textures/gui/overlay.png");
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
-        ResourceLocation BUBBLE_DISTRIBUTOR_SCREEN = id("textures/gui/oxygen_bubble_distributor_screen.png");
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
-        ResourceLocation FOOD_CANNER_SCREEN = id("textures/gui/food_canner_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
         ResourceLocation SOLAR_PANEL_DAY = id("textures/gui/solar_panel/day.png");
         ResourceLocation SOLAR_PANEL_NIGHT = id("textures/gui/solar_panel/night.png");
         ResourceLocation SOLAR_PANEL_BLOCKED = id("textures/gui/solar_panel/blocked.png");
+
+        int OXYGEN_TANK_WIDTH = 16;
+        int OXYGEN_TANK_HEIGHT = 48;
+    }
+
+    interface CircuitFabricator {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/circuit_fabricator_screen.png");
+
+        int DIAMOND_X = 31;
+        int DIAMOND_Y = 17;
+        int SILICON_X_1 = 62;
+        int SILICON_Y_1 = 47;
+        int SILICON_X_2 = 62;
+        int SILICON_Y_2 = 65;
+        int REDSTONE_X = 107;
+        int REDSTONE_Y = 72;
+        int INGREDIENT_X = 134;
+        int INGREDIENT_Y = 17;
+        int OUTPUT_X = 152;
+        int OUTPUT_Y = 72;
+
+        int PROGRESS_X = 48;
+        int PROGRESS_Y = 23;
+        int PROGRESS_WIDTH = 113;
+        int PROGRESS_HEIGHT = 51;
+        int PROGRESS_BACKGROUND_U = 128;
+        int PROGRESS_BACKGROUND_V = 180;
+
+        int RECIPE_VIEWER_X = 30;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 139;
+        int RECIPE_VIEWER_HEIGHT = 73;
+    }
+
+    interface Compressor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/compressor_screen.png");
+
+        int GRID_X = 17;
+        int GRID_Y = 17;
+        int OUTPUT_X = 143;
+        int OUTPUT_Y = 36;
+
+        int PROGRESS_X = 82;
+        int PROGRESS_Y = 26;
+        int PROGRESS_U = 178;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 52;
+        int PROGRESS_HEIGHT = 24;
+        int PROGRESS_BACKGROUND_U = PROGRESS_U;
+        int PROGRESS_BACKGROUND_V = PROGRESS_HEIGHT + 1;
+
+        int FIRE_X = 83;
+        int FIRE_Y = 25;
+        int FIRE_U = 242;
+        int FIRE_V = 0;
+        int FIRE_WIDTH = 14;
+        int FIRE_HEIGHT = 14;
+
+        int FUEL_X = FIRE_X;
+        int FUEL_Y = FIRE_Y + 22;
+
+        int RECIPE_VIEWER_X = 16;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 148;
+        int RECIPE_VIEWER_HEIGHT = 54;
+    }
+
+    interface ElectricCompressor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_compressor_screen.png");
+
+        int GRID_X = 30;
+        int GRID_Y = 17;
+        int OUTPUT_X_1 = 148;
+        int OUTPUT_Y_1 = 22;
+        int OUTPUT_X_2 = 148;
+        int OUTPUT_Y_2 = 48;
+
+        int PROGRESS_X = 87;
+        int PROGRESS_Y = 27;
+        int PROGRESS_U = 204;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 52;
+        int PROGRESS_HEIGHT = 25;
+        int PROGRESS_BACKGROUND_U = PROGRESS_U;
+        int PROGRESS_BACKGROUND_V = PROGRESS_HEIGHT + 1;
+
+        int RECIPE_VIEWER_X = 29;
+        int RECIPE_VIEWER_Y = 16;
+        int RECIPE_VIEWER_WIDTH = 140;
+        int RECIPE_VIEWER_HEIGHT = 54;
+    }
+
+    interface ElectricFurnace {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_furnace_screen.png");
+
+        int INPUT_X = 52;
+        int INPUT_Y = 35;
+        int OUTPUT_X = 113;
+        int OUTPUT_Y = 35;
+
+        int PROGRESS_X = 74;
+        int PROGRESS_Y = 34;
+        int PROGRESS_U = 177;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 30;
+        int PROGRESS_HEIGHT = 16;
+        int PROGRESS_BACKGROUND_U = 208;
+        int PROGRESS_BACKGROUND_V = 0;
+
+        int REI_X = 51;
+        int REI_Y = 21;
+        int REI_WIDTH = 83;
+        int REI_HEIGHT = 39;
+
+        int JEI_X = 51;
+        int JEI_Y = 26;
+        int JEI_WIDTH = 83;
+        int JEI_HEIGHT = 34;
+
+        int EMI_X = 51;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 83;
+        int EMI_HEIGHT = 38;
+    }
+
+    interface ElectricArcFurnace {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/electric_arc_furnace_screen.png");
+
+        int INPUT_X = 44;
+        int INPUT_Y = 35;
+        int OUTPUT_X_1 = 108;
+        int OUTPUT_Y_1 = 35;
+        int OUTPUT_X_2 = 134;
+        int OUTPUT_Y_2 = 35;
+
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 34;
+        int PROGRESS_U = 177;
+        int PROGRESS_V = 0;
+        int PROGRESS_WIDTH = 26;
+        int PROGRESS_HEIGHT = 16;
+        int PROGRESS_BACKGROUND_U = 204;
+        int PROGRESS_BACKGROUND_V = 0;
+
+        int REI_X = 43;
+        int REI_Y = 21;
+        int REI_WIDTH = 112;
+        int REI_HEIGHT = 39;
+
+        int JEI_X = 43;
+        int JEI_Y = 26;
+        int JEI_WIDTH = 112;
+        int JEI_HEIGHT = 34;
+
+        int EMI_X = 43;
+        int EMI_Y = 30;
+        int EMI_WIDTH = 112;
+        int EMI_HEIGHT = 38;
+    }
+
+    interface FoodCanner {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/food_canner_screen.png");
+
+        int INPUT_X = 62;
+        int INPUT_Y = 13;
+        int CURRENT_X = 62;
+        int CURRENT_Y = 40;
+        int OUTPUT_X = 62;
+        int OUTPUT_Y = 67;
+        int GRID_X = 98;
+        int GRID_Y = 13;
+
+        int PROGRESS_X = 68;
+        int PROGRESS_Y = 19;
+        int PROGRESS_WIDTH = 29;
+        int PROGRESS_HEIGHT = 57;
+        int PROGRESS_BACKGROUND_U = 180;
+        int PROGRESS_BACKGROUND_V = 80;
+
+        int TRANSFER_INPUT = 9;
+        int START_ROW_1 = TRANSFER_INPUT + 1;
+        int START_ROW_2 = START_ROW_1 + 28;
+        int SKIP_ROW_2 = START_ROW_2 + 9;
+        int START_ROW_4 = START_ROW_2 + 21;
+        int START_ROW_3 = START_ROW_4 + 27;
+        int SKIP_ROW_3 = START_ROW_3 + 8;
+        int FINAL_PROGRESS = START_ROW_3 + 21;
+        int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
+        int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
+
+        int[] ROW_ORDER = {0, 1, 3, 2};
+        int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
+
+        int RECIPE_VIEWER_X = 61;
+        int RECIPE_VIEWER_Y = 12;
+        int RECIPE_VIEWER_WIDTH = 108;
+        int RECIPE_VIEWER_HEIGHT = 72;
+    }
+
+    interface RocketWorkbench {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/rocket_workbench.png");
+
+        int CENTER_X = 53;
+
+        int SLOT_U = 200;
+        int SLOT_V = 0;
+        int SLOT_WIDTH = 18;
+        int SLOT_HEIGHT = 18;
+
+        int CHEST_X = 44;
+        int CHEST_Y = 140;
+        int CHEST_U = 178;
+        int CHEST_V = 0;
+        int CHEST_WIDTH = 20;
+        int CHEST_HEIGHT = 20;
+
+        int OUTPUT_X = 125;
+        int OUTPUT_Y = 135;
+        int OUTPUT_X_OFFSET = 9;
+        int OUTPUT_Y_OFFSET = 9;
+        int OUTPUT_U = 178;
+        int OUTPUT_V = 126;
+        int OUTPUT_WIDTH = 34;
+        int OUTPUT_HEIGHT = 34;
+        int OUTPUT_INNER_WIDTH = 24;
+        int OUTPUT_INNER_HEIGHT = 24;
+
+        int ROCKET_X = 133;
+        int ROCKET_Y = 104;
+
+        int PREVIEW_X = 100;
+        int PREVIEW_Y = 26;
+        int PREVIEW_U = 100;
+        int PREVIEW_V = 26;
+        int PREVIEW_WIDTH = 65;
+        int PREVIEW_HEIGHT = 94;
+
+        int PREVIEW_DARK_U = 178;
+        int PREVIEW_DARK_V = 26;
+
+        int RECIPE_VIEWER_X = 16;
+        int RECIPE_VIEWER_Y = 26;
+        int RECIPE_VIEWER_WIDTH = 149;
+        int RECIPE_VIEWER_HEIGHT = 134;
+    }
+
+    interface BubbleDistributor {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/oxygen_bubble_distributor_screen.png");
+
+        int BUTTON_X = 156;
+        int BUTTON_Y = 16;
+        int BUTTON_WIDTH = 13;
+        int BUTTON_HEIGHT = 13;
+
+        int BUTTON_RED_U = 178;
+        int BUTTON_RED_V = 0;
+        int BUTTON_RED_HOVER_U = 191;
+        int BUTTON_RED_HOVER_V = 0;
+
+        int BUTTON_GREEN_U = 178;
+        int BUTTON_GREEN_V = 13;
+        int BUTTON_GREEN_HOVER_U = 191;
+        int BUTTON_GREEN_HOVER_V = 13;
+
+        int BUTTON_NORMAL_U = 204;
+        int BUTTON_NORMAL_V = 13;
+        int BUTTON_NORMAL_HOVER_U = 204;
+        int BUTTON_NORMAL_HOVER_V = 0;
+
+        int TEXT_X = 60;
+        int VISIBILITY_LABEL_Y = 19;
+        int STATUS_LABEL_Y = 34;
+        int STATUS_Y = 44;
+        int CURRENT_SIZE_Y = 59;
+
+        int TEXT_FIELD_X = 132;
+        int TEXT_FIELD_Y = 69;
+        int TEXT_FIELD_WIDTH = 26;
+        int TEXT_FIELD_HEIGHT = 20;
+
+        int ARROW_X = 158;
+        int ARROW_VERTICAL_WIDTH = 11;
+        int ARROW_VERTICAL_HEIGHT = 10;
+
+        int ARROW_UP_Y = 69;
+        int ARROW_UP_U = 206;
+        int ARROW_UP_V = 0;
+        int ARROW_UP_HOVER_U = 217;
+        int ARROW_UP_HOVER_V = 0;
+
+        int ARROW_DOWN_Y = 79;
+        int ARROW_DOWN_U = 206;
+        int ARROW_DOWN_V = 10;
+        int ARROW_DOWN_HOVER_U = 217;
+        int ARROW_DOWN_HOVER_V = 10;
     }
 
     interface CelestialScreen {
@@ -761,53 +1084,6 @@ public interface Constant {
         ResourceLocation ATMOSPHERE = id("textures/environment/atmosphere.png");
     }
 
-    interface RecipeViewer {
-        ResourceLocation RECIPE_VIEWER_DISPLAY_TEXTURE = id("textures/gui/rei_display.png");
-        ResourceLocation ROCKET_WORKBENCH_DISPLAY_TEXTURE = id("textures/gui/rocket_workbench.png");
-
-        int CIRCUIT_FABRICATOR_U = 0;
-        int CIRCUIT_FABRICATOR_V = 0;
-        int CIRCUIT_FABRICATOR_WIDTH = 139;
-        int CIRCUIT_FABRICATOR_HEIGHT = 73;
-
-        int DIAMOND_X = 1;
-        int DIAMOND_Y = 1;
-        int SILICON_X_1 = 32;
-        int SILICON_Y_1 = 31;
-        int SILICON_X_2 = 32;
-        int SILICON_Y_2 = 49;
-        int REDSTONE_X = 77;
-        int REDSTONE_Y = 56;
-        int INGREDIENT_X = 104;
-        int INGREDIENT_Y = 1;
-        int WAFER_X = 122;
-        int WAFER_Y = 56;
-
-        int COMPRESSOR_U = 0;
-        int COMPRESSOR_V = 74;
-        int COMPRESSOR_WIDTH = 148;
-        int COMPRESSOR_HEIGHT = 54;
-
-        int FIRE_X = 67;
-        int FIRE_Y = 9;
-        int FUEL_X = 67;
-        int FUEL_Y = 31;
-        int COMPRESSED_X = 127;
-        int COMPRESSED_Y = 20;
-
-        int ROCKET_WORKBENCH_U = 6;
-        int ROCKET_WORKBENCH_V = 20;
-        int ROCKET_WORKBENCH_WIDTH = 162;
-        int ROCKET_WORKBENCH_HEIGHT = 145;
-        int CHEST_SLOT_U = 177;
-        int CHEST_SLOT_V = 0;
-
-        int ROCKET_PREVIEW_X = 133 - ROCKET_WORKBENCH_U;
-        int ROCKET_PREVIEW_Y = 100 - ROCKET_WORKBENCH_V;
-        int ROCKET_OUTPUT_X = 119;
-        int ROCKET_OUTPUT_Y = 115;
-    }
-
     interface SlotSprite {
         ResourceLocation ENERGY = id("slot/energy");
         ResourceLocation BUCKET = id("slot/bucket");
@@ -831,7 +1107,8 @@ public interface Constant {
         ResourceLocation ROCKET_CONE = id("slot/rocket_cone");
         ResourceLocation ROCKET_PLATING = id("slot/rocket_plating");
         ResourceLocation ROCKET_BOOSTER = id("slot/rocket_booster");
-        ResourceLocation ROCKET_FIN = id("slot/rocket_fin");
+        ResourceLocation ROCKET_FIN_LEFT = id("slot/rocket_fin_left");
+        ResourceLocation ROCKET_FIN_RIGHT = id("slot/rocket_fin_right");
         ResourceLocation ROCKET_ENGINE = id("slot/rocket_engine");
         ResourceLocation CHEST = id("slot/chest");
         ResourceLocation FOOD_CAN = id("slot/food_can");
@@ -860,6 +1137,7 @@ public interface Constant {
         String OLI_GRUB = "oli_grub";
         String COMET_CUBE = "comet_cube";
         String GAZER = "gazer";
+        String FALLING_METEOR = "falling_meteor";
         String EVOLVED_SKELETON_BOSS = "evolved_skeleton_boss";
     }
 
@@ -883,6 +1161,9 @@ public interface Constant {
     }
 
     interface EntityTexture {
+        String EVOLVED_SPIDER = "textures/entity/evolved/spider.png";
+        String EVOLVED_SPIDER_EYES = "textures/entity/evolved/spider_eyes.png";
+        String MOON_VILLAGER = "textures/entity/villager/moon_villager.png";
         String GREY = "textures/entity/grey.png";
         String ARCH_GREY = "textures/entity/arch_grey.png";
         String RUMBLER = "textures/entity/rumbler.png";
@@ -893,54 +1174,14 @@ public interface Constant {
         String SKELETON_BOSS = "textures/entity/skeletonboss.png";
     }
 
-    interface TextureCoordinate {
-        int OVERLAY_WIDTH = 16;
-        int OVERLAY_HEIGHT = 48;
-
-        int ENERGY_DARK_X = 0;
-        int ENERGY_DARK_Y = 0;
-        int ENERGY_LIGHT_X = 16;
-        int ENERGY_LIGHT_Y = 0;
-
-        int OXYGEN_DARK_X = 0;
-        int OXYGEN_DARK_Y = 50;
-        int OXYGEN_LIGHT_X = 16;
-        int OXYGEN_LIGHT_Y = 50;
-
-        int FLUID_TANK_WIDTH = 18;
-
-        int BASE_FLUID_TANK_Y = 49;
-
-        int BUTTON_WIDTH = 13;
-        int BUTTON_HEIGHT = 13;
-
-        int BUTTON_RED_X = 0;
-        int BUTTON_RED_Y = 115;
-        int BUTTON_RED_HOVER_X = 0;
-        int BUTTON_RED_HOVER_Y = 102;
-
-        int BUTTON_GREEN_X = 13;
-        int BUTTON_GREEN_Y = 115;
-        int BUTTON_GREEN_HOVER_X = 13;
-        int BUTTON_GREEN_HOVER_Y = 102;
-
-        int BUTTON_NORMAL_X = 26;
-        int BUTTON_NORMAL_Y = 115;
-        int BUTTON_NORMAL_HOVER_X = 26;
-        int BUTTON_NORMAL_HOVER_Y = 102;
-
-        int ARROW_VERTICAL_WIDTH = 11;
-        int ARROW_VERTICAL_HEIGHT = 10;
-
-        int ARROW_UP_X = 39;
-        int ARROW_UP_Y = 108;
-        int ARROW_UP_HOVER_X = 50;
-        int ARROW_UP_HOVER_Y = 108;
-
-        int ARROW_DOWN_X = 39;
-        int ARROW_DOWN_Y = 118;
-        int ARROW_DOWN_HOVER_X = 50;
-        int ARROW_DOWN_HOVER_Y = 118;
+    interface GearTexture {
+        String OXYGEN_TANKS = "textures/entity/gear/oxygen_tanks.png";
+        String OXYGEN_GEAR = "textures/entity/gear/oxygen_gear.png";
+        String PET_GEAR = "textures/entity/gear/pet_gear.png";
+        String PARROT_GEAR = "textures/entity/gear/parrot_gear.png";
+        String SPIDER_GEAR = "textures/entity/gear/spider_gear.png";
+        String WITCH_GEAR = "textures/entity/gear/witch_gear.png";
+        String ILLAGER_GEAR = "textures/entity/gear/illager_gear.png";
     }
 
     interface Menu {
@@ -1046,7 +1287,9 @@ public interface Constant {
         String HEAT = "Heat";
         String INPUTS = "Inputs";
         String OUTPUTS = "Outputs";
-        String SHAPED = "Shaped";
+        String SHAPELESS = "Shapeless";
+        String PROCESSING_TIME = "ProcessingTime";
+        String XP = "xp";
         String ITEMS = "Items";
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "CryogenicCooldown";
@@ -1085,13 +1328,20 @@ public interface Constant {
 
     interface Recipe {
         String FABRICATION = "fabrication";
+        String FLAG = "flag";
         String COMPRESSING = "compressing";
+        String ELECTRIC_COMPRESSING = "electric_compressing";
+        String ELECTRIC_SMELTING = "electric_smelting";
+        String ELECTRIC_BLASTING = "electric_blasting";
+        String CANNING = "canning";
         String ROCKET = "rocket";
 
         interface Serializer {
             String FABRICATION = "fabrication";
+            String FLAG = "flag";
             String COMPRESSING_SHAPELESS = "compressing_shapeless";
             String COMPRESSING_SHAPED = "compressing_shaped";
+            String CANNING = "canning";
             String ROCKET = "rocket";
             String EMERGENCY_KIT = "crafting_special_emergencykit";
         }
@@ -1135,14 +1385,16 @@ public interface Constant {
     interface BakedModel {
         ResourceLocation WALKWAY_CONNECTOR_MARKER = id("autogenerated/walkway_connector");
         ResourceLocation WALKWAY_CENTER_MARKER = id("autogenerated/walkway_center");
-        ResourceLocation PIPE_WALKWAY_CENTER_MARKER = id("autogenerated/glass_fluid_pipe_walkway_center");
-        ResourceLocation WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/aluminum_wire_walkway_center");
-        ResourceLocation FLUID_PIPE_WALKWAY_MARKER = id("autogenerated/fluid_pipe_walkway");
-        ResourceLocation WIRE_WALKWAY_MARKER = id("autogenerated/wire_walkway");
-        ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");
         ResourceLocation GLASS_FLUID_PIPE_MARKER = id("autogenerated/glass_fluid_pipe");
+        ResourceLocation FLUID_PIPE_WALKWAY_MARKER = id("autogenerated/fluid_pipe_walkway");
+        ResourceLocation PIPE_WALKWAY_CENTER_MARKER = id("autogenerated/glass_fluid_pipe_walkway_center");
+        ResourceLocation WIRE_MARKER = id("autogenerated/aluminum_wire");
+        ResourceLocation WIRE_WALKWAY_MARKER = id("autogenerated/wire_walkway");
+        ResourceLocation WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/aluminum_wire_walkway_center");
+        ResourceLocation HEAVY_WIRE_WALKWAY_MARKER = id("autogenerated/heavy_wire_walkway");
+        ResourceLocation HEAVY_WIRE_WALKWAY_CENTER_MARKER = id("autogenerated/heavy_aluminum_wire_walkway_center");
         ResourceLocation VACUUM_GLASS_MODEL = id("vacuum_glass");
-        ResourceLocation CANNED_FOOD = id("block/canned_food_model");
+        ResourceLocation CANNED_FOOD = id("block/canned_food");
     }
 
     interface Carver {

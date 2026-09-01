@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -42,11 +42,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extends Block implements EntityBlock {
+    protected final float radius;
     public final VoxelShape[] shapes;
 
     protected PipeShapedBlock(float radius, BlockBehaviour.Properties properties) {
         super(properties);
+        this.radius = radius;
         this.shapes = makeShapes(radius);
+    }
+
+    public float getRadius() {
+        return this.radius;
     }
 
     @Override

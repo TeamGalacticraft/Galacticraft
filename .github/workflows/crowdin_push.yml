@@ -9,10 +9,11 @@ on:
 
 jobs:
   crowdin_push:
+    if: github.repository == 'TeamGalacticraft/Galacticraft'
     runs-on: ubuntu-24.04
     steps:
       - name: Checkout Repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v6
 
       - name: Crowdin Push
         uses: crowdin/github-action@v2

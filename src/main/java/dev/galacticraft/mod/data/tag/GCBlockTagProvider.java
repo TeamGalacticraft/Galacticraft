@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -26,6 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCRegistry;
 import dev.galacticraft.mod.tag.GCBlockTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
@@ -40,6 +41,7 @@ import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
 import java.util.HashMap;
@@ -71,6 +73,19 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         map.put(DyeColor.RED, ConventionalBlockTags.RED_DYED);
         map.put(DyeColor.BLACK, ConventionalBlockTags.BLACK_DYED);
     });
+
+    protected<T extends Block> void addColorSet(GCRegistry.ColorSet<T> set, @Nullable TagKey<Block> blockTag) {
+        for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
+            this.tag(entry.getValue()).add(set.get(entry.getKey()));
+            if (blockTag != null) {
+                this.tag(blockTag).add(set.get(entry.getKey()));
+            }
+        }
+    }
+
+    protected<T extends Block> void addColorSet(GCRegistry.ColorSet<T> set) {
+        this.addColorSet(set, null);
+    }
 
     @Override
     protected void addTags(HolderLookup.Provider provider) {
@@ -110,12 +125,20 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
                 .add(GCBlocks.LUNASLATE);
+        this.tag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES)
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.MOON_ROCK);
+        this.tag(GCBlockTags.OLIVINE_CAVE_INTERNALS)
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.OLIVINE_CLUSTER)
+                .add(GCBlocks.BUDDING_OLIVINE);
         this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.DENSE_ICE)
                 .add(GCBlocks.LUNASLATE);
 
         this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
@@ -303,7 +326,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS)
                 .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.tag(GCBlockTags.OLIVINE_BLOCKS)
-                .add(GCBlocks.OLIVINE_BLOCK);
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.BUDDING_OLIVINE);
 
         this.tag(GCBlockTags.RAW_TIN_BLOCKS)
                 .add(GCBlocks.RAW_TIN_BLOCK);
@@ -398,6 +422,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
             this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
         }
 
+        this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
+
         this.tag(GCBlockTags.AIRLOCK_BLOCKS)
                 .add(GCBlocks.AIR_LOCK_FRAME)
                 .add(GCBlocks.AIR_LOCK_CONTROLLER)
@@ -414,7 +440,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(BlockTags.WALL_POST_OVERRIDE)
                 .add(GCBlocks.GLOWSTONE_TORCH)
-                .add(GCBlocks.UNLIT_TORCH);
+                .add(GCBlocks.UNLIT_TORCH)
+                .add(GCBlocks.UNLIT_SOUL_TORCH);
 
         this.tag(BlockTags.DRAGON_IMMUNE)
                 .add(GCBlocks.AIR_LOCK_SEAL);
@@ -448,6 +475,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         );
 
         var stairs = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -463,6 +491,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         };
 
         var slabs = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_BRICK_SLAB,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
@@ -478,6 +507,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         };
 
         var walls = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_WALL,
                 GCBlocks.MOON_ROCK_WALL,
                 GCBlocks.MOON_ROCK_BRICK_WALL,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
@@ -538,12 +568,16 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
                 .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
 
+        this.tag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_DOOR);
+
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCBlockTags.MACHINES)
                 .add(stairs)
                 .add(slabs)
                 .add(walls)
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
+                .add(GCBlocks.FLAGS.colorMap().values().toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,
@@ -579,9 +613,11 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.ROCKET_LAUNCH_PAD,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
+                        GCBlocks.UNLIT_SOUL_LANTERN,
                         GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
+                        GCBlocks.HEAVY_WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
@@ -590,6 +626,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.REINFORCED_AIR_LOCK_FRAME,
                         GCBlocks.AIR_LOCK_CONTROLLER,
                         GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER,
+                        GCBlocks.ALUMINUM_WIRE,
+                        GCBlocks.HEAVY_ALUMINUM_WIRE,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,
                         GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE,
 
@@ -602,6 +640,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
                         GCBlocks.OLIVINE_BLOCK,
+                        GCBlocks.BUDDING_OLIVINE,
                         GCBlocks.RAW_METEORIC_IRON_BLOCK,
                         GCBlocks.RAW_DESH_BLOCK,
                         GCBlocks.RAW_ALUMINUM_BLOCK,
@@ -687,6 +726,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
+                        GCBlocks.HEAVY_WIRE_WALKWAY,
                         GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,

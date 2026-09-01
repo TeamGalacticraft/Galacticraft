@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class RumblerEntityRenderer extends MobRenderer<RumblerEntity, RumblerEntityModel<RumblerEntity>> {
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.RUMBLER);
+
     public RumblerEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new RumblerEntityModel<>(context.bakeLayer(GCEntityModelLayer.RUMBLER)), 2f);
+        super(context, new RumblerEntityModel<>(context.bakeLayer(GCEntityModelLayer.RUMBLER)), 1.0F);
     }
 
     @Override
     public ResourceLocation getTextureLocation(RumblerEntity entity) {
-        return Constant.id(Constant.EntityTexture.RUMBLER);
+        return TEXTURE;
     }
 }

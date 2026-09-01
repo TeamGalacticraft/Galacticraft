@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -35,7 +35,7 @@ public interface EntityAccessor {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void galacticraft$setLastStep(int lastStep) {
+    default void galacticraft$swapLastStep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }

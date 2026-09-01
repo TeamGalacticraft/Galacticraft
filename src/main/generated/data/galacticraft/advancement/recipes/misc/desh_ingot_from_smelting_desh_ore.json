@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:desh_ingot_from_smelting_desh_ore"
+        "recipe": "galacticraft:desh_ingot_from_smelting_desh_ore"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:desh_ingot_from_smelting_desh_ore"
+      "galacticraft:desh_ingot_from_smelting_desh_ore"
     ]
   }
 }

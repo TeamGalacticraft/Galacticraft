@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GCSolarPanelStates {
-    public static final Map<SolarPanelSource, ResourceLocation> DEFAULT_SOLAR_PANELS = new HashMap<SolarPanelSource, ResourceLocation>();
+    public static final Map<SolarPanelSource, ResourceLocation> DEFAULT_SOLAR_PANELS = new HashMap<>();
 
     public static void register() {
         DEFAULT_SOLAR_PANELS.put(SolarPanelSource.DAY, Constant.ScreenTexture.SOLAR_PANEL_DAY);

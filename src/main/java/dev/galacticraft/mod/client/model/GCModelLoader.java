@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -34,10 +34,12 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
 import net.fabricmc.fabric.api.client.model.loading.v1.ModelLoadingPlugin;
+import net.fabricmc.fabric.api.client.model.loading.v1.ModelModifier;
 import net.fabricmc.fabric.api.resource.IdentifiableResourceReloadListener;
 import net.minecraft.Util;
 import net.minecraft.client.Minecraft;
@@ -81,15 +83,27 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
 
-    public static final ResourceLocation CANNED_FOOD_MODEL = Constant.id("block/canned_food_model");
+    public static final ResourceLocation CANNED_FOOD_ROUND = Constant.id("block/canned_food_round");
+    public static final ResourceLocation CANNED_FOOD_SQUARE = Constant.id("block/canned_food_square");
 
     private Map<ResourceLocation, GCModel> models = ImmutableMap.of();
     private AtlasSet atlases;
 
     @Override
     public void onInitializeModelLoader(Context pluginContext) {
+        pluginContext.modifyModelOnLoad().register(ModelModifier.OVERRIDE_PHASE, (model, context) -> {
+            if (context.resourceId() != null && context.resourceId().equals(Constant.BakedModel.CANNED_FOOD)) {
+                if (Galacticraft.CONFIG.squareCannedFood()) {
+                    return context.getOrLoadModel(CANNED_FOOD_SQUARE);
+                } else {
+                    return context.getOrLoadModel(CANNED_FOOD_ROUND);
+                }
+            }
+            return model;
+        });
+
         pluginContext.modifyModelAfterBake().register((model, context) -> {
-            if (context.resourceId() != null && context.resourceId().equals(CANNED_FOOD_MODEL)) {
+            if (context.resourceId() != null && context.resourceId().equals(Constant.BakedModel.CANNED_FOOD)) {
                 return new CannedFoodBakedModel(model);
             }
             return model;
@@ -106,6 +120,10 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
             if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f);
+            } else if (ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE).equals(resourceId)) {
+                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
+            } else if (Constant.BakedModel.HEAVY_WIRE_WALKWAY_MARKER.equals(resourceId)) {
+                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
             } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
             } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {
@@ -114,6 +132,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 return new WalkwayCenterModel(Constant.id("block/glass_fluid_pipe"));
             } else if (Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
                 return new WalkwayCenterModel(Constant.id("block/aluminum_wire"));
+            } else if (Constant.BakedModel.HEAVY_WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
+                return new WalkwayCenterModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {

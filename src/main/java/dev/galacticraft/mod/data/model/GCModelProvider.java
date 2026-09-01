@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,6 +23,8 @@
 package dev.galacticraft.mod.data.model;
 
 import com.google.common.collect.Maps;
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.data.model.MachineModelGenerator;
 import dev.galacticraft.machinelib.client.api.model.MachineTextureBase;
@@ -30,13 +32,18 @@ import dev.galacticraft.machinelib.client.api.model.TextureProvider;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlockRegistry;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
 import dev.galacticraft.mod.content.block.environment.CavernousVines;
+import dev.galacticraft.mod.content.block.environment.MoonTangleBlock;
+import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
+import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricModelProvider;
@@ -56,7 +63,10 @@ import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.Contract;
 
+import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 public class GCModelProvider extends FabricModelProvider {
     private static final TexturedModel.Provider DETAILED_DECORATION = TexturedModel.createDefault(GCModelProvider::detailedTexture, ModelTemplates.CUBE_BOTTOM_TOP);
@@ -71,16 +81,24 @@ public class GCModelProvider extends FabricModelProvider {
         generator.texturedModels = Maps.newHashMap(generator.texturedModels);
         generator.fullBlockModelCustomGenerators = Maps.newHashMap(generator.fullBlockModelCustomGenerators);
 
+        generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
         generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
+        Set<Block> detailedWalls = new HashSet<>();
 
-        decorations.forEach(decorationSet -> putDetailedTextured(generator, decorationSet.detailedBlock()));
-        generator.texturedModels.put(GCBlocks.LUNASLATE, TexturedModel.COLUMN_WITH_WALL.get(GCBlocks.LUNASLATE));
+        decorations.forEach(decorationSet -> {
+                generator.texturedModels.put(decorationSet.detailedBlock(), DETAILED_DECORATION.get(decorationSet.detailedBlock()));
+                detailedWalls.add(decorationSet.detailedWall());
+        });
 
         GCBlockFamilies.getAllFamilies()
                 .filter(BlockFamily::shouldGenerateModel)
-                .forEach(blockFamily -> generator.family(blockFamily.getBaseBlock()).generateFor(blockFamily));
+                .forEach(blockFamily -> {
+                        var provider = generator.family(blockFamily.getBaseBlock());
+                        provider.skipGeneratingModelsFor.addAll(detailedWalls);
+                        provider.generateFor(blockFamily);
+                });
 
         // DETAILED WALL - Special case!
         for (GCBlockRegistry.DecorationSet decorationSet : decorations) {
@@ -90,20 +108,22 @@ public class GCModelProvider extends FabricModelProvider {
         // TORCHES
         generator.createNormalTorch(GCBlocks.GLOWSTONE_TORCH, GCBlocks.GLOWSTONE_WALL_TORCH);
         generator.createNormalTorch(GCBlocks.UNLIT_TORCH, GCBlocks.UNLIT_WALL_TORCH);
+        generator.createNormalTorch(GCBlocks.UNLIT_SOUL_TORCH, GCBlocks.UNLIT_SOUL_WALL_TORCH);
 
         // LANTERNS
         generator.createLantern(GCBlocks.GLOWSTONE_LANTERN);
         generator.createLantern(GCBlocks.UNLIT_LANTERN);
+        generator.createLantern(GCBlocks.UNLIT_SOUL_LANTERN);
 
         // MOON NATURAL
         this.createMoonTurf(generator);
         generator.createTrivialCube(GCBlocks.MOON_DIRT);
         createRotatedDelegate(generator, GCBlocks.MOON_DIRT_PATH);
-        generator.createTrivialCube(GCBlocks.MOON_SURFACE_ROCK);
         generator.createTrivialCube(GCBlocks.MOON_DUNGEON_BRICK);
         generator.createTrivialCube(GCBlocks.CHISELED_MOON_ROCK_BRICK);
         generator.createAxisAlignedPillarBlock(GCBlocks.MOON_ROCK_PILLAR, TexturedModel.COLUMN);
         generator.createAxisAlignedPillarBlock(GCBlocks.OLIVINE_BLOCK, TexturedModel.COLUMN);
+        generator.createTrivialCube(GCBlocks.BUDDING_OLIVINE);
 
         // MARS NATURAL
         generator.createTrivialCube(GCBlocks.MARS_SURFACE_ROCK);
@@ -132,8 +152,21 @@ public class GCModelProvider extends FabricModelProvider {
         createWalkway(generator, GCBlocks.WALKWAY, Constant.BakedModel.WALKWAY_CONNECTOR_MARKER, Constant.BakedModel.WALKWAY_CENTER_MARKER);
         createWalkway(generator, GCBlocks.FLUID_PIPE_WALKWAY, ModelLocationUtils.getModelLocation(GCBlocks.GLASS_FLUID_PIPE), Constant.BakedModel.PIPE_WALKWAY_CENTER_MARKER);
         createWalkway(generator, GCBlocks.WIRE_WALKWAY, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE), Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER);
+        createWalkway(generator, GCBlocks.HEAVY_WIRE_WALKWAY, Constant.BakedModel.HEAVY_WIRE_WALKWAY_MARKER, Constant.BakedModel.HEAVY_WIRE_WALKWAY_CENTER_MARKER, Constant.id("block/heavy_wire_walkway"));
         this.createAutoGeneratedModel(generator, GCBlocks.ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE));
+        this.createAutoGeneratedModel(generator, GCBlocks.HEAVY_ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE));
         this.createAutoGeneratedModel(generator, GCBlocks.CANNED_FOOD, Constant.BakedModel.CANNED_FOOD);
+
+        for (Block flag : GCBlocks.FLAGS.colorMap().values()) {
+            generator.blockStateOutput.accept(
+                    MultiVariantGenerator.multiVariant(flag).with(
+                            PropertyDispatch.property(FlagBlock.SECTION)
+                                    .select(FlagBlock.Section.BOTTOM, Variant.variant().with(VariantProperties.MODEL, Constant.id("block/flagpole_bottom")))
+                                    .select(FlagBlock.Section.MIDDLE, Variant.variant().with(VariantProperties.MODEL, Constant.id("block/flagpole_middle")))
+                                    .select(FlagBlock.Section.TOP, Variant.variant().with(VariantProperties.MODEL, Constant.id("block/flagpole_top")))
+                    )
+            );
+        }
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             this.createAutoGeneratedModel(generator, pipe, ModelLocationUtils.getModelLocation(pipe));
@@ -142,6 +175,7 @@ public class GCModelProvider extends FabricModelProvider {
 
 //        //todo: generate these
         generator.skipAutoItemBlock(GCBlocks.ALUMINUM_WIRE);
+        generator.skipAutoItemBlock(GCBlocks.HEAVY_ALUMINUM_WIRE);
         generator.skipAutoItemBlock(GCBlocks.MOON_CHEESE_WHEEL);
 //        generator.delegateItemModel(GCBlocks.ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE, "_inventory"));
 //        generator.delegateItemModel(GCBlocks.GLASS_FLUID_PIPE, ModelLocationUtils.getModelLocation(GCBlocks.GLASS_FLUID_PIPE, "_inventory"));
@@ -153,17 +187,14 @@ public class GCModelProvider extends FabricModelProvider {
         this.createRocketWorkbench(generator);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
-        // LIGHT PANELS
-        generator.createNonTemplateModelBlock(GCBlocks.SQUARE_LIGHT_PANEL); //todo
-        generator.createNonTemplateModelBlock(GCBlocks.SPOTLIGHT_LIGHT_PANEL);
-        generator.createNonTemplateModelBlock(GCBlocks.LINEAR_LIGHT_PANEL);
-        generator.createNonTemplateModelBlock(GCBlocks.DASHED_LIGHT_PANEL);
-        generator.createNonTemplateModelBlock(GCBlocks.DIAGONAL_LIGHT_PANEL);
-
         // VACUUM GLASS
         this.createAutoGeneratedModel(generator, GCBlocks.VACUUM_GLASS, Constant.BakedModel.VACUUM_GLASS_MODEL);
         this.createAutoGeneratedModel(generator, GCBlocks.CLEAR_VACUUM_GLASS, Constant.BakedModel.VACUUM_GLASS_MODEL);
         this.createAutoGeneratedModel(generator, GCBlocks.STRONG_VACUUM_GLASS, Constant.BakedModel.VACUUM_GLASS_MODEL);
+
+        // MOON GLASS
+        generator.createGlassBlocks(GCBlocks.OLIVINE_GLASS, GCBlocks.OLIVINE_GLASS_PANE);
+        generator.createGlassBlocks(GCBlocks.MOON_GLASS, GCBlocks.MOON_GLASS_PANE);
 
         // ORES
         generator.createTrivialCube(GCBlocks.MARS_IRON_ORE);
@@ -252,6 +283,11 @@ public class GCModelProvider extends FabricModelProvider {
 
         // MISC WORLD GEN
         this.createCavernousVines(generator);
+        this.createMoonShrubs(generator);
+        this.createMoonWeed(generator);
+        this.createMoonTangle(generator);
+        generator.createTrivialCube(GCBlocks.MOON_MOSS);
+        generator.createDoor(GCBlocks.METEORIC_IRON_DOOR);
 
         // DUMMY
         generator.createAirLikeBlock(GCBlocks.SOLAR_PANEL_PART, GCItems.BLUE_SOLAR_WAFER);
@@ -295,7 +331,7 @@ public class GCModelProvider extends FabricModelProvider {
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.FOOD_CANNER,
+        createFoodCanner(generator, GCBlocks.FOOD_CANNER,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/food_canner_active")
@@ -303,10 +339,14 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/food_canner")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/food_canner_empty")
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.COAL_GENERATOR,
+        createCoalGenerator(generator, GCBlocks.COAL_GENERATOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/coal_generator_active")
@@ -314,10 +354,18 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/coal_generator")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_cooling")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/coal_generator_warming")
                         .build()
         );
 
-        createActiveMachine(generator, GCBlocks.COMPRESSOR,
+        createCompressor(generator, GCBlocks.COMPRESSOR,
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor_active")
@@ -325,6 +373,10 @@ public class GCModelProvider extends FabricModelProvider {
                 TextureProvider.builder(Constant.MOD_ID)
                         .sides("block/machine_side")
                         .front("block/compressor")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/machine_side")
+                        .front("block/compressor_lit")
                         .build()
         );
 
@@ -371,6 +423,33 @@ public class GCModelProvider extends FabricModelProvider {
         );
     }
 
+    private static void createCoalGenerator(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider coolingTex, TextureProvider warmingTex) {
+        ResourceLocation inactive = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), inactiveTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation cooling = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_cooling"), coolingTex);
+        ResourceLocation warming = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_warming"), warmingTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(CoalGeneratorBlock.LIT, CoalGeneratorBlock.HOT)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, warming))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, cooling))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
+    }
+
+    private static void createCompressor(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider litTex) {
+        ResourceLocation inactive = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), inactiveTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation lit = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_lit"), litTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(MachineBlock.ACTIVE, CoalGeneratorBlock.LIT)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, inactive))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, lit))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
+    }
+
     private static void createFuelLoader(BlockModelGenerators generator, Block block) {
         ResourceLocation[] ids = new ResourceLocation[10];
         for (int i = 0; i < 10; i++) {
@@ -383,6 +462,19 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
                 .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
                 )));
+    }
+
+    private static void createFoodCanner(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider canTex, TextureProvider emptyTex) {
+        ResourceLocation can = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block), canTex);
+        ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
+        ResourceLocation empty = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_empty"), emptyTex);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.properties(MachineBlock.ACTIVE, FoodCannerBlock.CAN)
+                .select(false, false, Variant.variant().with(VariantProperties.MODEL, empty))
+                .select(true, false, Variant.variant().with(VariantProperties.MODEL, empty))
+                .select(false, true, Variant.variant().with(VariantProperties.MODEL, can))
+                .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
+        ));
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
@@ -409,7 +501,10 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {
-        ResourceLocation walkwayPlatform = Constant.id("block/walkway");
+        createWalkway(generator, walkway, pipeModel, centerModel, Constant.id("block/walkway"));
+    }
+
+    private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel, ResourceLocation walkwayPlatform) {
         MultiPartGenerator blockState = MultiPartGenerator.multiPart(walkway)
                 .with(Variant.variant().with(VariantProperties.MODEL, pipeModel))
                 .with(Variant.variant().with(VariantProperties.MODEL, centerModel))
@@ -539,6 +634,7 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void detailedWall(BlockModelGenerators generator, Block base, Block wall) {
+        // TODO: unique textures for the top and bottom of walls rather than using the base block textures?
         var mapping = GCModelProvider.detailedTexture(base);
         var wallPost = GCModelTemplates.DETAILED_WALL_POST.create(wall, mapping, generator.modelOutput);
         var wallLowSide = GCModelTemplates.DETAILED_WALL_LOW_SIDE.create(wall, mapping, generator.modelOutput);
@@ -546,10 +642,6 @@ public class GCModelProvider extends FabricModelProvider {
         generator.blockStateOutput.accept(BlockModelGenerators.createWall(wall, wallPost, wallLowSide, wallTallSide));
         var wallInventory = GCModelTemplates.DETAILED_WALL_INVENTORY.create(wall, mapping, generator.modelOutput);
         generator.delegateItemModel(wall, wallInventory);
-    }
-
-    private static void putDetailedTextured(BlockModelGenerators generator, Block detailedBlock) {
-        generator.texturedModels.put(detailedBlock, DETAILED_DECORATION.get(detailedBlock));
     }
 
     private static void createRotatedDelegate(BlockModelGenerators generator, Block block) {
@@ -633,7 +725,12 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.ATMOSPHERIC_VALVE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.AMBIENT_THERMAL_CONTROLLER, ModelTemplates.FLAT_ITEM);
 
+        for (Item flag : GCItems.FLAGS.colorMap().values()) {
+            GCModelTemplates.FLAG_INVENTORY.create(ModelLocationUtils.getModelLocation(flag), new TextureMapping(), generator.output);
+        }
+
         GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.ALUMINUM_WIRE), generator.output);
+        GCModelTemplates.HEAVY_PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE.asItem()), TextureMapping.layer0(GCBlocks.HEAVY_ALUMINUM_WIRE), generator.output);
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             GCModelTemplates.PIPE_INVENTORY.create(ModelLocationUtils.getModelLocation(pipe.asItem()), TextureMapping.layer0(pipe), generator.output);
         }
@@ -641,6 +738,7 @@ public class GCModelProvider extends FabricModelProvider {
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/walkway_connector")), generator.output);
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.FLUID_PIPE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/glass_fluid_pipe")), generator.output);
         GCModelTemplates.WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/aluminum_wire")), generator.output);
+        GCModelTemplates.HEAVY_WALKWAY_INVENTORY.create(ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_WIRE_WALKWAY.asItem()), TextureMapping.defaultTexture(Constant.id("block/heavy_aluminum_wire")), generator.output);
 
         // FOOD
         generator.generateFlatItem(GCItems.MOON_CHEESE_CURD, ModelTemplates.FLAT_ITEM);
@@ -653,6 +751,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.GROUND_BEEF, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.BEEF_PATTY, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.CHEESEBURGER, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.MOON_TANGLE_FRUIT, ModelTemplates.FLAT_ITEM);
 
         // ROCKET PLATES
         generator.generateFlatItem(GCItems.TIER_1_HEAVY_DUTY_PLATE, ModelTemplates.FLAT_ITEM);
@@ -694,6 +793,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.TITANIUM_HOE, ModelTemplates.FLAT_HANDHELD_ITEM);
 
         generator.generateFlatItem(GCItems.STANDARD_WRENCH, ModelTemplates.FLAT_HANDHELD_ITEM);
+
+        this.generateFluidCanisterModels(generator);
 
         // SMITHING TEMPLATES
         generator.generateFlatItem(GCItems.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, ModelTemplates.FLAT_HANDHELD_ITEM);
@@ -793,10 +894,8 @@ public class GCModelProvider extends FabricModelProvider {
 
     @Contract("_ -> new")
     private static TextureMapping detailedTexture(Block block) {
-        var resourceLocation = TextureMapping.getBlockTexture(block, "_side");
         return new TextureMapping()
-                .put(TextureSlot.WALL, resourceLocation)
-                .put(TextureSlot.SIDE, resourceLocation)
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"))
                 .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
                 .put(TextureSlot.BOTTOM, ResourceLocation.parse(TextureMapping.getBlockTexture(block).toString().replace("detailed_", "")));
     }
@@ -887,6 +986,102 @@ public class GCModelProvider extends FabricModelProvider {
                                                         .with(VariantProperties.MODEL, horizontalModel))
                                 )
                 );
+    }
+
+    public void generateFluidCanisterModels(ItemModelGenerators generator) {
+        ResourceLocation resourceLocation = ModelLocationUtils.getModelLocation(GCItems.FLUID_CANISTER);
+        ResourceLocation resourceLocationBase = resourceLocation.withSuffix("_base");
+
+        ModelTemplates.FLAT_ITEM.create(
+                resourceLocation,
+                TextureMapping.layer0(resourceLocationBase),
+                generator.output,
+                (id, textures) -> this.generateFluidCanisterBase(id, textures)
+        );
+
+        for (int i = 1; i <= 6; i++) {
+            generator.generateLayeredItem(
+                    resourceLocation.withSuffix("_" + i),
+                    resourceLocationBase,
+                    resourceLocation.withSuffix("_overlay_" + i)
+            );
+        }
+    }
+
+    public JsonObject generateFluidCanisterBase(ResourceLocation id, Map<TextureSlot, ResourceLocation> textures) {
+        JsonObject baseTemplate = ModelTemplates.TWO_LAYERED_ITEM.createBaseTemplate(id, textures);
+        JsonArray overrides = new JsonArray();
+        String fillLevel = FluidCanisterItem.FILL_LEVEL.toString();
+
+        for (int i = 1; i <= 6; i++) {
+            JsonObject override = new JsonObject();
+            JsonObject predicate = new JsonObject();
+            float value = (float) (Math.floor(i * 100.0 / 6.0) / 100.0);
+            predicate.addProperty(fillLevel, value);
+            override.add("predicate", predicate);
+            override.addProperty("model", id.withSuffix("_" + i).toString());
+            overrides.add(override);
+        }
+
+        baseTemplate.add("overrides", overrides);
+        return baseTemplate;
+    }
+
+    private void createMoonWeed(BlockModelGenerators generator) {
+        ResourceLocation weedModel = ModelTemplates.CROSS.create(
+                GCBlocks.MOON_WEED,
+                TextureMapping.cross(TextureMapping.getBlockTexture(GCBlocks.MOON_WEED)),
+                generator.modelOutput
+        );
+
+        generator.blockStateOutput.accept(
+                BlockModelGenerators.createRotatedVariant(GCBlocks.MOON_WEED, weedModel)
+        );
+
+        generator.createSimpleFlatItemModel(GCBlocks.MOON_WEED);
+    }
+
+    private void createMoonShrubs(BlockModelGenerators generator) {
+        ResourceLocation shrubsModel = ModelLocationUtils.getModelLocation(GCBlocks.MOON_SHRUBS);
+
+        generator.blockStateOutput.accept(
+                BlockModelGenerators.createRotatedVariant(GCBlocks.MOON_SHRUBS, shrubsModel)
+        );
+
+        generator.delegateItemModel(GCBlocks.MOON_SHRUBS, shrubsModel);
+    }
+
+    private void createMoonTangle(BlockModelGenerators generator) {
+        Block vine = GCBlocks.MOON_TANGLE;
+        ResourceLocation midModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_middle", TextureMapping.cross(blockTextureWithSuffix(vine, "_middle")), generator.modelOutput);
+        ResourceLocation endModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_end", TextureMapping.cross(blockTextureWithSuffix(vine, "_end")), generator.modelOutput);
+        ResourceLocation fruitTopModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_fruit_top", TextureMapping.cross(blockTextureWithSuffix(vine, "_fruit_top")), generator.modelOutput);
+        ResourceLocation fruitBottomModel = ModelTemplates.CROSS.createWithSuffix(
+                vine, "_fruit_bottom", TextureMapping.cross(blockTextureWithSuffix(vine, "_fruit_bottom")), generator.modelOutput);
+
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(vine).with(
+                        PropertyDispatch.property(MoonTangleBlock.PART)
+                                .select(MoonTangleBlock.Part.MIDDLE, rotatedVariants(midModel))
+                                .select(MoonTangleBlock.Part.END, rotatedVariants(endModel))
+                                .select(MoonTangleBlock.Part.FRUIT_TOP, rotatedVariants(fruitTopModel))
+                                .select(MoonTangleBlock.Part.FRUIT_BOTTOM, rotatedVariants(fruitBottomModel))
+                )
+        );
+
+        generator.createSimpleFlatItemModel(vine, "_middle");
+    }
+
+    private static java.util.List<Variant> rotatedVariants(ResourceLocation model) {
+        return java.util.List.of(
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180),
+                Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+        );
     }
 
     private static TextureMapping rocketLaunchPadPart(Block block, String suffix) {

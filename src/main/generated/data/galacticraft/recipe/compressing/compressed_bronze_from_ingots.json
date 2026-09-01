@@ -1,0 +1,15 @@
+{
+  "type": "galacticraft:compressing_shapeless",
+  "ingredients": [
+    {
+      "tag": "c:ingots/bronze"
+    },
+    {
+      "tag": "c:ingots/bronze"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:compressed_bronze"
+  }
+}

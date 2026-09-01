@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,18 +25,18 @@ package dev.galacticraft.mod.util;
 import dev.galacticraft.mod.mixin.client.SpriteContentAccessor;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.texture.SpriteContents;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 public class TextureUtils {
     public static int getAverageColor(ResourceLocation textureLocation) {
-        TextureAtlasSprite textureAtlasSprite = Minecraft.getInstance().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(textureLocation);
+        TextureAtlasSprite textureAtlasSprite = Minecraft.getInstance().getTextureAtlas(InventoryMenu.BLOCK_ATLAS).apply(textureLocation);
 
         return calculateAverageColor(textureAtlasSprite);
     }
 
-    private static int calculateAverageColor(TextureAtlasSprite image) {
+    public static int calculateAverageColor(TextureAtlasSprite image) {
         long sumRed = 0;
         long sumGreen = 0;
         long sumBlue = 0;

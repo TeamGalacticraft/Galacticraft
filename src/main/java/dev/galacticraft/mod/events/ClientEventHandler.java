@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -25,6 +25,7 @@ package dev.galacticraft.mod.events;
 import dev.galacticraft.api.rocket.LaunchStage;
 import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
+import dev.galacticraft.machinelib.client.api.event.MachineStatusEvents;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
@@ -33,6 +34,7 @@ import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.GCBlockOutlineRenderer;
 import dev.galacticraft.mod.client.render.dimension.SatelliteSkyRenderer;
+import dev.galacticraft.mod.client.sounds.GCSoundManager;
 import dev.galacticraft.mod.client.sounds.RocketSound;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
@@ -53,6 +55,7 @@ public class ClientEventHandler {
         WorldRenderEvents.BLOCK_OUTLINE.register(GCBlockOutlineRenderer::renderBlockOutlines);
         WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
         ClientTickEvents.END_WORLD_TICK.register(ClientEventHandler::tickFootprints);
+        MachineStatusEvents.MACHINE_STATUS_CHANGED.register(GCSoundManager::onStatusChanged);
         HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);
         HudRenderCallback.EVENT.register(RocketOverlay::onHudRender);
         HudRenderCallback.EVENT.register(LanderOverlay::onRenderHud);
@@ -60,8 +63,12 @@ public class ClientEventHandler {
     }
 
     public static void rocketLaunchSound(Rocket rocket, LaunchStage oldStage) {
-        if (rocket instanceof RocketEntity rocketEntity && rocket.getLaunchStage() == LaunchStage.IGNITED)
-            Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
+        if (rocket instanceof RocketEntity rocketEntity) {
+            LaunchStage launchStage = rocketEntity.getLaunchStage();
+            if (launchStage == LaunchStage.IGNITED || (launchStage == LaunchStage.LAUNCHED && oldStage == LaunchStage.IDLE)) {
+                Minecraft.getInstance().getSoundManager().play(new RocketSound(rocketEntity));
+            }
+        }
     }
 
     public static void initializeSatelliteSkybox(Minecraft minecraft, ClientLevel level) {

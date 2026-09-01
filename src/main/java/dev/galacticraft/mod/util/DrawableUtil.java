@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,15 +22,21 @@
 
 package dev.galacticraft.mod.util;
 
+import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.*;
-import dev.galacticraft.mod.Constant;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.renderer.GameRenderer;
+import net.minecraft.client.renderer.texture.OverlayTexture;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.world.item.ItemDisplayContext;
+import net.minecraft.world.item.ItemStack;
 import org.joml.Matrix4f;
 
 @Environment(EnvType.CLIENT)
@@ -42,21 +48,8 @@ public class DrawableUtil {
         return Component.literal(String.valueOf(amount)); //todo
     }
 
-    public static void drawOxygenBuffer(PoseStack matrices, int x, int y, long oxygen, long capacity) {
-        if (oxygen == 0 && capacity == 0) capacity = 1;
-        drawOxygenBuffer(matrices, x, y, (double) oxygen / (double) capacity);
-    }
-
-    public static void drawOxygenBuffer(PoseStack matrices, int x, int y, double scale) {
-        RenderSystem.setShader(GameRenderer::getPositionTexShader);
-        RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
-        RenderSystem.setShaderTexture(0, Constant.ScreenTexture.OVERLAY);
-        drawProgressTexture(matrices, x, y, 0, Constant.TextureCoordinate.OXYGEN_LIGHT_X, Constant.TextureCoordinate.OXYGEN_LIGHT_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, Constant.TextureCoordinate.OVERLAY_HEIGHT, 256, 256);
-        drawProgressTexture(matrices, x, y, 0, Constant.TextureCoordinate.OXYGEN_DARK_X, Constant.TextureCoordinate.OXYGEN_DARK_Y, Constant.TextureCoordinate.OVERLAY_WIDTH, (float) (Constant.TextureCoordinate.OVERLAY_HEIGHT * (1 - scale)), 256, 256);
-    }
-
-    public static boolean isWithin(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
+    public static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
+        return mouseX >= x && mouseY >= y && mouseX < x + width && mouseY < y + height;
     }
 
     public static void drawProgressTexture(PoseStack matrices, float x, float y, float u, float v, float width, float height) {
@@ -115,5 +108,27 @@ public class DrawableUtil {
 
     public static void drawSprite_F(PoseStack matrices, float x, float y, float z, float width, float height, TextureAtlasSprite sprite) {
         drawTexturedQuad_F(matrices.last().pose(), x, x + width, y, y + height, z, sprite.getU0(), sprite.getU1(), sprite.getV0(), sprite.getV1());
+    }
+
+    public static void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z) {
+        if (itemStack.isEmpty()) {
+            return;
+        }
+        Minecraft minecraft = Minecraft.getInstance();
+        BakedModel bakedModel = minecraft.getItemRenderer().getModel(itemStack, minecraft.level, minecraft.player, z);
+        PoseStack matrices = graphics.pose();
+        matrices.pushPose();
+        matrices.translate(x + 8, y + 8, 150);
+        matrices.scale(-16.0F, -16.0F, -16.0F);
+        boolean useLighting = !bakedModel.usesBlockLight();
+        if (useLighting) {
+            Lighting.setupForFlatItems();
+        }
+        minecraft.getItemRenderer().render(itemStack, ItemDisplayContext.GUI, false, matrices, graphics.bufferSource(), 0xF000F0, OverlayTexture.NO_OVERLAY, bakedModel);
+        graphics.flush();
+        if (useLighting) {
+            Lighting.setupFor3DItems();
+        }
+        matrices.popPose();
     }
 }

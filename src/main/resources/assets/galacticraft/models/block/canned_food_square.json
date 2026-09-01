@@ -1,0 +1,56 @@
+{
+    "credit": "Made with Blockbench",
+    "texture_size": [32, 32],
+    "textures": {
+        "can": "galacticraft:block/canned_food",
+        "particle": "galacticraft:item/empty_can"
+    },
+    "elements": [
+        {
+            "from": [5, 0, 5],
+            "to": [11, 3, 11],
+            "faces": {
+                "north": {"uv": [3.0, 5.5, 6.0, 7.0], "texture": "#can"},
+                "east": {"uv": [0.0, 5.5, 3.0, 7.0], "texture": "#can"},
+                "south": {"uv": [9.0, 5.5, 12.0, 7.0], "texture": "#can"},
+                "west": {"uv": [6.0, 5.5, 9.0, 7.0], "texture": "#can"},
+                "down": {"uv": [6.0, 0.0, 9.0, 3.0], "texture": "#can"}
+            }
+        },
+        {
+            "from": [5, 3, 5],
+            "to": [11, 5, 11],
+            "faces": {
+                "north": {"uv": [3.0, 4.5, 6.0, 5.5], "texture": "#can", "tintindex": 0},
+                "east": {"uv": [0.0, 4.5, 3.0, 5.5], "texture": "#can", "tintindex": 0},
+                "south": {"uv": [9.0, 4.5, 12.0, 5.5], "texture": "#can", "tintindex": 0},
+                "west": {"uv": [6.0, 4.5, 9.0, 5.5], "texture": "#can", "tintindex": 0}
+            }
+        },
+        {
+            "from": [5, 5, 5],
+            "to": [11, 8, 11],
+            "faces": {
+                "north": {"uv": [3.0, 3.0, 6.0, 4.5], "texture": "#can"},
+                "east": {"uv": [0.0, 3.0, 3.0, 4.5], "texture": "#can"},
+                "south": {"uv": [9.0, 3.0, 12.0, 4.5], "texture": "#can"},
+                "west": {"uv": [6.0, 3.0, 9.0, 4.5], "texture": "#can"},
+                "up": {"uv": [3.0, 0.0, 6.0, 3.0], "texture": "#can"}
+            }
+        }
+    ],
+    "groups": [
+        {
+            "name": "label",
+            "origin": [8, 8, 8],
+            "color": 0,
+            "children": [1]
+        },
+        {
+            "name": "can",
+            "origin": [8, 8, 8],
+            "color": 0,
+            "children": [0, 2]
+        }
+    ]
+}

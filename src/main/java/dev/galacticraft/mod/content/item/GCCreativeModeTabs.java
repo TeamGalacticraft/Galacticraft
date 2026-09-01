@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,10 +23,12 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -61,8 +63,12 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_TURF);
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
-                output.accept(MOON_SURFACE_ROCK);
                 output.accept(MOON_DUNGEON_BRICK);
+
+                output.accept(MOON_SURFACE_ROCK);
+                output.accept(MOON_SURFACE_ROCK_STAIRS);
+                output.accept(MOON_SURFACE_ROCK_SLAB);
+                output.accept(MOON_SURFACE_ROCK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
@@ -116,6 +122,12 @@ public class GCCreativeModeTabs {
                 output.accept(CRACKED_MOON_BASALT_BRICK_STAIRS);
                 output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
+
+                // MOON PLANTS
+                output.accept(MOON_WEED);
+                output.accept(MOON_SHRUBS);
+                output.accept(MOON_MOSS);
+                output.accept(MOON_TANGLE);
 
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);
@@ -183,6 +195,7 @@ public class GCCreativeModeTabs {
                 output.accept(SILICON_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
                 output.accept(OLIVINE_BLOCK);
+                output.accept(BUDDING_OLIVINE);
                 output.accept(OLIVINE_CLUSTER);
 
                 output.accept(TIN_BLOCK);
@@ -203,20 +216,30 @@ public class GCCreativeModeTabs {
                 // TORCHES
                 output.accept(GCItems.GLOWSTONE_TORCH);
                 output.accept(GCItems.UNLIT_TORCH);
+                output.accept(GCItems.UNLIT_SOUL_TORCH);
 
                 // LANTERNS
                 output.accept(GCItems.GLOWSTONE_LANTERN);
                 output.accept(GCItems.UNLIT_LANTERN);
+                output.accept(GCItems.UNLIT_SOUL_LANTERN);
+
+                // FLAGS
+                for (Item flag : GCItems.FLAGS.colorMap().values()) {
+                    output.accept(flag);
+                }
 
                 // MISC DECOR
                 output.accept(WALKWAY);
                 output.accept(WIRE_WALKWAY);
+                output.accept(HEAVY_WIRE_WALKWAY);
                 output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
+                output.accept(METEORIC_IRON_DOOR);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);
+                output.accept(HEAVY_ALUMINUM_WIRE);
                 output.accept(SEALABLE_ALUMINUM_WIRE);
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
                 for (PipeColor color : PipeColor.byRainbowOrder()) {
@@ -236,17 +259,16 @@ public class GCCreativeModeTabs {
                     output.accept(stack);
                 }
 
-                // LIGHT PANELS
-                output.accept(SQUARE_LIGHT_PANEL);
-                output.accept(SPOTLIGHT_LIGHT_PANEL);
-                output.accept(LINEAR_LIGHT_PANEL);
-                output.accept(DASHED_LIGHT_PANEL);
-                output.accept(DIAGONAL_LIGHT_PANEL);
-
                 // VACUUM GLASS
                 output.accept(VACUUM_GLASS);
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
+
+                // MOON GLASSES
+                output.accept(OLIVINE_GLASS);
+                output.accept(OLIVINE_GLASS_PANE);
+                output.accept(MOON_GLASS);
+                output.accept(MOON_GLASS_PANE);
 
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
@@ -292,6 +314,14 @@ public class GCCreativeModeTabs {
                 BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
                 output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
+
+                // FLUID CANISTERS
+                output.accept(FLUID_CANISTER);
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.CRUDE_OIL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.FUEL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, Gases.METHANE));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_OXYGEN));
+                //output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_NITROGEN)); // Liquid nitrogen not added yet
 
                 output.accept(SMALL_OXYGEN_TANK);
                 output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));
@@ -393,6 +423,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);
                 output.accept(CHEESEBURGER);
+                output.accept(MOON_TANGLE_FRUIT);
 
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);
@@ -500,17 +531,7 @@ public class GCCreativeModeTabs {
             .title(Component.translatable(Translations.ItemGroup.CANNED_FOOD))
             .displayItems((parameters, output) -> {
                 output.accept(EMPTY_CAN);
-                // For every edible food create a creative item of that canned food type
-                for (Item item : BuiltInRegistries.ITEM) {
-                    if (CannedFoodItem.canAddToCan(item)) {
-                        // Create new canned food item with empty components
-                        ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
-                        // Add the default itemstack of the edible item into the canned foods components
-                        CannedFoodItem.add(cannedFoodItem, new ItemStack(item, CannedFoodItem.MAX_FOOD));
-                        // Add the item to the creative tab
-                        output.accept(cannedFoodItem);
-                    }
-                }
+                CannedFoodItem.getDefaultCannedFoods().forEach(cannedFoodItem -> output.accept(cannedFoodItem));
             }).build();
 
     public static void registerSpawnEggs() {

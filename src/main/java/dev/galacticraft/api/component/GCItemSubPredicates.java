@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ public class GCItemSubPredicates {
     public static final ItemSubPredicate.Type<ItemFullTankPredicate> FULL_TANK = register("full_tank", ItemFullTankPredicate.CODEC);
 
     private static <T extends ItemSubPredicate> ItemSubPredicate.Type<T> register(String string, Codec<T> codec) {
-        return Registry.register(BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE, Constant.id(string), new ItemSubPredicate.Type<T>(codec));
+        return Registry.register(BuiltInRegistries.ITEM_SUB_PREDICATE_TYPE, Constant.id(string), new ItemSubPredicate.Type<>(codec));
     }
 
     public static void init() {

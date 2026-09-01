@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -233,6 +233,7 @@ public class GCEntityLoot extends GCEntityLootSubProvider {
         add(GCEntityTypes.OLI_GRUB, noDrops());
         add(GCEntityTypes.GREY, noDrops());
         add(GCEntityTypes.ARCH_GREY, noDrops());
+        add(GCEntityTypes.FALLING_METEOR, noDrops());
 
         add(GCEntityTypes.SKELETON_BOSS,
                 LootTable.lootTable()

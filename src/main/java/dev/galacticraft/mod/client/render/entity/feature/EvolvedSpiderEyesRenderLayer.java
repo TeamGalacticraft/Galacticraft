@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import net.minecraft.client.renderer.entity.layers.EyesLayer;
 
 @Environment(EnvType.CLIENT)
 public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
-    private static final RenderType LAYER = RenderType.eyes(Constant.id("textures/entity/evolved/spider_eyes.png"));
+    private static final RenderType LAYER = RenderType.eyes(Constant.id(Constant.EntityTexture.EVOLVED_SPIDER_EYES));
 
     public EvolvedSpiderEyesRenderLayer(RenderLayerParent<T, M> featureRendererContext) {
         super(featureRendererContext);

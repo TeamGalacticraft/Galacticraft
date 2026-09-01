@@ -219,3 +219,6 @@ gradle-app.setting
 run/
 remappedSrc/
 src/main/generated/.cache/
+
+# Python 
+.github/scripts/__pycache__

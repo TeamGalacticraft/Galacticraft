@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -38,6 +38,7 @@ import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.ByIdMap;
+import net.minecraft.util.Mth;
 import net.minecraft.util.StringRepresentable;
 import net.minecraft.world.*;
 import net.minecraft.world.entity.*;
@@ -45,7 +46,6 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.phys.Vec3;
 
 import java.util.function.IntFunction;
 
@@ -89,7 +89,7 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) {
         if (up) { // Accelerate
             this.speed += this.accel / 20D;
             this.shouldClimb = true;
@@ -100,11 +100,11 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
         }
         if (left) { // Left
             setYRot(getYRot() - 0.5F * this.turnFactor);
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ + 0.5F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ + 0.5F, -30.0F, 30.0F);
         }
         if (right) { // Right
             setYRot(getYRot() + 0.5F * this.turnFactor);
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ - 0.5F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ - 0.5F, -30.0F, 30.0F);
         }
     }
 
@@ -160,10 +160,9 @@ public class Buggy extends GCVehicle implements ContainerListener, ControllableE
     public void tick() {
         super.tick();
         if (this.level().isClientSide) {
-            Vec3 delta = getDeltaMovement();
-            this.wheelRotationX += (float) Math.sqrt(delta.x * delta.x + delta.z * delta.z) * 150.0F * (this.speed < 0 ? 1 : -1);
+            this.wheelRotationX += Mth.sqrt((float) this.getDeltaMovement().horizontalDistanceSqr()) * 150.0F * (this.speed < 0 ? 1 : -1);
             this.wheelRotationX %= 360;
-            this.wheelRotationZ = Math.max(-30.0F, Math.min(30.0F, this.wheelRotationZ * 0.9F));
+            this.wheelRotationZ = Mth.clamp(this.wheelRotationZ * 0.9F, -30.0F, 30.0F);
         }
 
         if (!this.onGround()) {

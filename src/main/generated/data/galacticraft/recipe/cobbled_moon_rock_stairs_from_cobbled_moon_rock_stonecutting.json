@@ -1,0 +1,10 @@
+{
+  "type": "minecraft:stonecutting",
+  "ingredient": {
+    "item": "galacticraft:cobbled_moon_rock"
+  },
+  "result": {
+    "count": 1,
+    "id": "galacticraft:cobbled_moon_rock_stairs"
+  }
+}

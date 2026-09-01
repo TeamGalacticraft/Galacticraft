@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -27,9 +27,15 @@ import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import mezz.jei.api.recipe.RecipeType;
+import net.minecraft.world.item.crafting.BlastingRecipe;
+import net.minecraft.world.item.crafting.SmeltingRecipe;
 
 public interface GCJEIRecipeTypes {
-    RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, "fabrication", FabricationRecipe.class);
-    RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, "compressing", CompressingRecipe.class);
-    RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, "rocket", RocketRecipe.class);
+    RecipeType<FabricationRecipe> FABRICATION = RecipeType.create(Constant.MOD_ID, Constant.Recipe.FABRICATION, FabricationRecipe.class);
+    RecipeType<CompressingRecipe> COMPRESSING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.COMPRESSING, CompressingRecipe.class);
+    RecipeType<CompressingRecipe> ELECTRIC_COMPRESSING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_COMPRESSING, CompressingRecipe.class);
+    RecipeType<SmeltingRecipe> ELECTRIC_SMELTING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_SMELTING, SmeltingRecipe.class);
+    RecipeType<BlastingRecipe> ELECTRIC_BLASTING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ELECTRIC_BLASTING, BlastingRecipe.class);
+    RecipeType<CanningRecipe> CANNING = RecipeType.create(Constant.MOD_ID, Constant.Recipe.CANNING, CanningRecipe.class);
+    RecipeType<RocketRecipe> ROCKET = RecipeType.create(Constant.MOD_ID, Constant.Recipe.ROCKET, RocketRecipe.class);
 }

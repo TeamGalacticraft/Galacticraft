@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -22,13 +22,12 @@
 
 package dev.galacticraft.mod.compat.rei.common.display;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.basic.BasicDisplay;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
-import me.shedaniel.rei.api.common.entry.InputIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
@@ -40,10 +39,20 @@ import java.util.List;
 import java.util.Optional;
 
 public class DefaultFabricationDisplay extends BasicDisplay {
-    private int processingTime = 300;
+    public static final BasicDisplay.Serializer<DefaultFabricationDisplay> SERIALIZER = BasicDisplay.Serializer.of(
+            (inputs, outputs, id, tag) -> {
+                return new DefaultFabricationDisplay(inputs, outputs, id, tag.getInt(Constant.Nbt.PROCESSING_TIME));
+            },
+            (display, tag) -> {
+                tag.putInt(Constant.Nbt.PROCESSING_TIME, display.getProcessingTime());
+            }
+    );
 
-    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
+    private final int processingTime;
+
+    protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime) {
         super(inputs, outputs, location);
+        this.processingTime = processingTime;
     }
 
     public DefaultFabricationDisplay(@Nullable RecipeHolder<FabricationRecipe> recipe) {
@@ -55,13 +64,9 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         return this.processingTime;
     }
 
-    public static DefaultFabricationDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
-        return new DefaultFabricationDisplay(inputs, outputs, location);
-    }
-
     @Override
     public CategoryIdentifier<? extends DefaultFabricationDisplay> getCategoryIdentifier() {
-        return GalacticraftREIServerPlugin.CIRCUIT_FABRICATION;
+        return GalacticraftREIServerPlugin.FABRICATION;
     }
 
     private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {
@@ -70,16 +75,6 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         List<EntryIngredient> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {
             list.add(EntryIngredients.ofIngredient(recipe.value().getIngredients().get(i)));
-        }
-        return list;
-    }
-
-    public List<InputIngredient<EntryStack<?>>> getInputIngredients() {
-        List<EntryIngredient> inputEntries = getInputEntries();
-        int n = inputEntries.size();
-        List<InputIngredient<EntryStack<?>>> list = new ArrayList<>(n);
-        for (int i = 0; i < n; i++) {
-            list.add(InputIngredient.of(i, inputEntries.get(i)));
         }
         return list;
     }

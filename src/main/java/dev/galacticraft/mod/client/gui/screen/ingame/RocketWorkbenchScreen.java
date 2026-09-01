@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -24,18 +24,19 @@ package dev.galacticraft.mod.client.gui.screen.ingame;
 
 import com.mojang.blaze3d.platform.Lighting;
 import com.mojang.blaze3d.systems.RenderSystem;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
+import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
@@ -43,28 +44,22 @@ import org.jetbrains.annotations.Nullable;
 import org.joml.Matrix4f;
 import org.joml.Quaternionf;
 
-public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> implements VariableSizedContainer.Listener {
-    private static final int NORMAL_SLOT_U = 7;
-    private static final int NORMAL_SLOT_V = 224;
-    private static final int NORMAL_SLOT_SIZE = 18;
+import static dev.galacticraft.mod.Constant.RocketWorkbench.*;
 
+public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkbenchMenu> implements VariableSizedContainer.Listener {
     private static final int UI_WIDTH = 176;
     private static final int MAIN_UI_WIDTH = 176;
     private static final int UI_HEIGHT = 249;
-
-    private static final int ROCKET_PREVIEW_X = 133;
-    private static final int ROCKET_PREVIEW_Y = 100;
 
     private final RocketEntity entity;
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
+
+        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.entity.setData(menu.previewRocket());
         this.entity.setYRot(60);
-
-        menu.workbench.ingredients.addListener(this);
     }
 
     @Override
@@ -82,12 +77,26 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.imageWidth = MAIN_UI_WIDTH;
         this.imageHeight = UI_HEIGHT;
         super.init();
+
+        if (FabricLoader.getInstance().isModLoaded("emi")) {
+            this.topPos = Mth.clamp(this.height - this.imageHeight - 23, 2, this.topPos);
+        }
+    }
+
+    @Override
+    public void added() {
+        super.added();
+        this.menu.workbench.ingredients.addListener(this);
+        this.menu.workbench.ingredients.addListener(this.menu);
+        this.menu.workbench.chests.addListener(this.menu);
     }
 
     @Override
     public void removed() {
         super.removed();
         this.menu.workbench.ingredients.removeListener(this);
+        this.menu.workbench.ingredients.removeListener(this.menu);
+        this.menu.workbench.chests.removeListener(this.menu);
     }
 
     @Override
@@ -95,18 +104,18 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
         this.inventoryLabelY = this.imageHeight - 96;
 
         try (Graphics graphics = Graphics.managed(guiGraphics, this.font)) {
-            try (Graphics.Texture texture = graphics.texture(Constant.ScreenTexture.ROCKET_WORKBENCH_SCREEN, 256, 256)) {
+            try (Graphics.Texture texture = graphics.texture(SCREEN_TEXTURE, 256, 256)) {
                 texture.blit(this.leftPos, this.topPos, 0, 0, UI_WIDTH, UI_HEIGHT);
 
                 for (Slot slot : this.menu.slots) {
                     if (slot.container instanceof VariableSizedContainer) {
-                        texture.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, NORMAL_SLOT_U, NORMAL_SLOT_V, NORMAL_SLOT_SIZE, NORMAL_SLOT_SIZE);
+                        texture.blit(this.leftPos + slot.x - 1, this.topPos + slot.y - 1, SLOT_U, SLOT_V, SLOT_WIDTH, SLOT_HEIGHT);
                     }
                 }
             }
         }
 
-        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_PREVIEW_X, this.topPos + ROCKET_PREVIEW_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
+        renderEntityInInventory(guiGraphics, this.leftPos + ROCKET_X, this.topPos + ROCKET_Y, 15, SmithingScreen.ARMOR_STAND_ANGLE, null, this.entity);
     }
 
     @Override

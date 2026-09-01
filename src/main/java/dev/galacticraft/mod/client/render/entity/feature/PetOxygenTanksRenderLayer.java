@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -46,7 +46,7 @@ import net.minecraft.world.entity.animal.Cat;
 import org.jetbrains.annotations.Nullable;
 
 public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends EntityModel<T>> extends RenderLayer<T, M> {
-    private static final ResourceLocation TEXTURE = Constant.id("textures/entity/gear/oxygen_tanks.png");
+    private static final ResourceLocation TEXTURE = Constant.id(Constant.GearTexture.OXYGEN_TANKS);
     private final @Nullable ModelPart body;
     private final @Nullable ModelPart tanks;
 
@@ -71,16 +71,16 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
             return;
         }
 
-        MeshDefinition modelData = new MeshDefinition();
-        PartDefinition modelPartData = modelData.getRoot();
+        MeshDefinition meshDefinition = new MeshDefinition();
+        PartDefinition partDefinition = meshDefinition.getRoot();
         if (this.body != null) {
-            modelPartData.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
-            modelPartData.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.SMALL_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.MEDIUM_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 0).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.LARGE_OXYGEN_TANK, CubeListBuilder.create().texOffs(0, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
+            partDefinition.addOrReplaceChild(Constant.Item.INFINITE_OXYGEN_TANK, CubeListBuilder.create().texOffs(16, 16).addBox(x, y, z, 4, 8, 4, CubeDeformation.NONE), PartPose.ZERO);
         }
 
-        this.tanks = modelPartData.bake(32, 32);
+        this.tanks = partDefinition.bake(32, 32);
     }
 
     @Override
@@ -88,21 +88,20 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
         if (this.tanks == null) return;
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        TamableAnimal animal = (TamableAnimal) entity;
 
-        String tankSize = animal.galacticraft$tankSize(0);
+        String tankSize = entity.galacticraft$tankSize(0);
         ModelPart tank = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
 
         if (tank != null) {
             matrices.pushPose();
             tank.copyFrom(this.body);
 
-            if (animal.isBaby()) {
+            if (entity.isBaby()) {
                 matrices.scale(0.5F, 0.5F, 0.5F);
                 matrices.translate(0.0F, 1.5F, 0.0F);
 
-                if (animal instanceof Cat) {
-                    if (animal.isInSittingPose()) {
+                if (entity instanceof Cat) {
+                    if (entity.isInSittingPose()) {
                         tank.y += 2.12132F;
                         tank.z += 2.12132F;
                     } else {

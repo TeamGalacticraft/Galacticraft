@@ -1,0 +1,21 @@
+{
+    "format_version": "1.21.11",
+    "credit": "Made with Blockbench",
+    "parent": "block/block",
+    "textures": {
+        "0": "galacticraft:block/steel_decoration",
+        "particle": "galacticraft:block/steel_decoration"
+    },
+    "elements": [
+        {
+            "from": [7, 0, 7],
+            "to": [9, 16, 9],
+            "faces": {
+                "north": {"uv": [0, 2, 16, 4], "rotation": 90, "texture": "#0"},
+                "east": {"uv": [0, 4, 16, 6], "rotation": 270, "texture": "#0"},
+                "south": {"uv": [0, 6, 16, 8], "rotation": 90, "texture": "#0"},
+                "west": {"uv": [0, 8, 16, 10], "rotation": 270, "texture": "#0"}
+            }
+        }
+    ]
+}

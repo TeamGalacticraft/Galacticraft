@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,10 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
-import dev.galacticraft.api.component.*;
+import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.fluid.FluidData;
+import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
 import dev.galacticraft.mod.client.model.GCModelLoader;
@@ -41,6 +44,7 @@ import dev.galacticraft.mod.client.render.entity.feature.PetOxygenMaskRenderLaye
 import dev.galacticraft.mod.client.render.entity.feature.PetOxygenTanksRenderLayer;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
+import dev.galacticraft.mod.client.render.item.FlagItemRenderer;
 import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
@@ -49,8 +53,11 @@ import dev.galacticraft.mod.client.util.ColorUtil;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import dev.galacticraft.mod.content.item.FluidCanisterItem;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.events.ClientEventHandler;
+import dev.galacticraft.mod.misc.cape.CapeRegistry;
+import dev.galacticraft.mod.misc.cape.CapesClientRole;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.network.c2s.OpenGcInventoryPayload;
 import dev.galacticraft.mod.network.c2s.OpenRocketPayload;
@@ -58,6 +65,7 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.util.TextureUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -70,14 +78,19 @@ import net.fabricmc.fabric.api.client.render.fluid.v1.FluidRenderHandlerRegistry
 import net.fabricmc.fabric.api.client.render.fluid.v1.SimpleFluidRenderHandler;
 import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
+import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
+import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.entity.RenderLayerParent;
 import net.minecraft.client.renderer.entity.ThrownItemRenderer;
+import net.minecraft.client.renderer.item.ItemProperties;
+import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.FastColor;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
@@ -86,17 +99,26 @@ import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.material.Fluids;
 
+import java.util.HashMap;
+import java.util.Map;
+
+import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
+
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
 
     private boolean colorsInitialized = false;
+    private static final Map<FluidVariant, Integer> FLUID_CANISTER_COLOR_CACHE = new HashMap<>();
 
     @Override
     public void onInitializeClient() {
         long startInitTime = System.currentTimeMillis();
         Constant.LOGGER.info("Starting client initialization.");
         ClientEventHandler.init();
-        CapesLoader.load();
+        ClientCapeLoginSync.init();
+        CapesClientRole.ensureLoadedAsync();
+        CapeRegistry.bootstrap();
+        CapesLoader.loadAsync();
 
         MenuScreens.register(GCMenuTypes.BASIC_SOLAR_PANEL, BasicSolarPanelScreen::new);
         MenuScreens.register(GCMenuTypes.ADVANCED_SOLAR_PANEL, AdvancedSolarPanelScreen::new);
@@ -139,6 +161,7 @@ public class GalacticraftClient implements ClientModInitializer {
         EntityRendererRegistry.register(GCEntityTypes.OLI_GRUB, OliGrubEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.GREY, GreyEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ARCH_GREY, GreyEntityRenderer::arch);
+        EntityRendererRegistry.register(GCEntityTypes.FALLING_METEOR, FallingMeteorRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.BUBBLE, BubbleEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.ROCKET, RocketEntityRenderer::new);
         EntityRendererRegistry.register(GCEntityTypes.LANDER, LanderEntityRenderer::new);
@@ -150,27 +173,35 @@ public class GalacticraftClient implements ClientModInitializer {
         GCBlockEntityRenderer.register();
         GCClientPacketReceiver.register();
         GCEntityModelLayer.register();
+        registerFeatureRenderers();
         GalacticraftRocketPartRenderers.register();
         GCKeyBinds.register();
-        GCItemSubPredicates.init();
+
+
 
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.TIN_LADDER, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.HEAVY_WIRE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.IRON_GRATING, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_WALL_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_WALL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_SOUL_TORCH, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_SOUL_WALL_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_LANTERN, RenderType.cutout());
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.UNLIT_SOUL_LANTERN, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.CAVERNOUS_VINES_PLANT, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.OLIVINE_CLUSTER, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.MOON_CHEESE_LEAVES, RenderType.cutoutMipped());
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.OLIVINE_GLASS, GCBlocks.OLIVINE_GLASS_PANE, GCBlocks.MOON_GLASS, GCBlocks.MOON_GLASS_PANE);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE);
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());
@@ -218,26 +249,49 @@ public class GalacticraftClient implements ClientModInitializer {
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : FastColor.ARGB32.opaque(stack.getOrDefault(GCDataComponents.COLOR, 0xFFFFFF)), GCItems.CANNED_FOOD);
 
+        // Fluids can be added to the list below to give them a colour for the Fluid Canister
+        // Fluids that use a tint are handled automatically
+        ColorProviderRegistry.ITEM.register((stack, layer) -> {
+            if (layer != 1) return -1;
+
+            FluidData data = stack.get(FLUID_DATA);
+            if (data == null || data.variant().isBlank()) return -1;
+
+            return FLUID_CANISTER_COLOR_CACHE.computeIfAbsent(data.variant(), variant -> {
+                // Try the tint
+                int color = FluidVariantRendering.getColor(data.variant());
+                if (color != -1) return color;
+
+                // Manual colors
+                if (data.variant().isOf(Gases.METHANE)) return 0xFF80FFFF;
+                if (data.variant().isOf(GCFluids.LIQUID_OXYGEN)) return 0xFFD76453;
+
+                // Try to average the texture color
+                TextureAtlasSprite sprite = FluidVariantRendering.getSprite(variant);
+                if (sprite != null) {
+                    return FastColor.ARGB32.opaque(TextureUtils.calculateAverageColor(sprite));
+                }
+                return -1;
+            });
+        }, GCItems.FLUID_CANISTER);
+        InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
+
+        ItemProperties.register(GCItems.FLUID_CANISTER, FluidCanisterItem.FILL_LEVEL, (stack, world, entity, seed) -> {
+            FluidData data = stack.get(FLUID_DATA);
+            if (data == null || data.amount() <= 0) return 0.0f;
+
+            double percentage = (double) data.amount() / (double) ((FluidCanisterItem) stack.getItem()).capacity;
+            return (float) (Math.ceil(percentage * 6.0) / 6.0);
+        });
+
         BuiltinItemRendererRegistry.INSTANCE.register(GCItems.ROCKET, new RocketItemRenderer());
+        for (Item flag : GCItems.FLAGS.colorMap().values()) {
+            BuiltinItemRendererRegistry.INSTANCE.register(flag, new FlagItemRenderer());
+        }
 
         InventoryTabRegistry.INSTANCE.register(GCItems.OXYGEN_MASK.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenGcInventoryPayload()), GCPlayerInventoryMenu.class);
         InventoryTabRegistry.INSTANCE.register(GCItems.ROCKET.getDefaultInstance(), () -> ClientPlayNetworking.send(new OpenRocketPayload()), player -> player.getVehicle() instanceof RocketEntity, RocketMenu.class);
 
-        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
-            if (entityType == EntityType.PLAYER) {
-                registrationHelper.register(new OxygenMaskRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-                registrationHelper.register(new OxygenTanksRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-                registrationHelper.register(new ParrotOxygenGearRenderLayer<Player, EntityModel<Player>>((RenderLayerParent<Player, EntityModel<Player>>) entityRenderer));
-            } else if (entityType == EntityType.WOLF) {
-                registrationHelper.register(new PetOxygenMaskRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));
-                registrationHelper.register(new PetOxygenTanksRenderLayer<Wolf, EntityModel<Wolf>>((RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer));
-            } else if (entityType == EntityType.CAT) {
-                registrationHelper.register(new PetOxygenMaskRenderLayer<Cat, EntityModel<Cat>>((RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer));
-                registrationHelper.register(new PetOxygenTanksRenderLayer<Cat, EntityModel<Cat>>((RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer));
-            } else if (entityType == EntityType.PARROT) {
-                registrationHelper.register(new ParrotOxygenGearRenderLayer<Parrot, EntityModel<Parrot>>((RenderLayerParent<Parrot, EntityModel<Parrot>>) entityRenderer));
-            }
-        });
         GCRenderTypes.init();
         ModelLoadingPlugin.register(GCModelLoader.INSTANCE);
 
@@ -264,5 +318,28 @@ public class GalacticraftClient implements ClientModInitializer {
         GCModelLoader.registerModelType(UnbakedObjModel.TYPE);
 
         GCDimensionEffects.register();
+    }
+
+    @SuppressWarnings("unchecked")
+    private static void registerFeatureRenderers() {
+        LivingEntityFeatureRendererRegistrationCallback.EVENT.register((entityType, entityRenderer, registrationHelper, context) -> {
+            if (entityType == EntityType.PLAYER) {
+                var playerRenderer = (RenderLayerParent<Player, EntityModel<Player>>) entityRenderer;
+                registrationHelper.register(new OxygenMaskRenderLayer<>(playerRenderer));
+                registrationHelper.register(new OxygenTanksRenderLayer<>(playerRenderer));
+                registrationHelper.register(new ParrotOxygenGearRenderLayer<>(playerRenderer));
+            } else if (entityType == EntityType.WOLF) {
+                var wolfRenderer = (RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer;
+                registrationHelper.register(new PetOxygenMaskRenderLayer<>(wolfRenderer));
+                registrationHelper.register(new PetOxygenTanksRenderLayer<>(wolfRenderer));
+            } else if (entityType == EntityType.CAT) {
+                var catRenderer = (RenderLayerParent<Cat, EntityModel<Cat>>) entityRenderer;
+                registrationHelper.register(new PetOxygenMaskRenderLayer<>(catRenderer));
+                registrationHelper.register(new PetOxygenTanksRenderLayer<>(catRenderer));
+            } else if (entityType == EntityType.PARROT) {
+                var parrotRenderer = (RenderLayerParent<Parrot, EntityModel<Parrot>>) entityRenderer;
+                registrationHelper.register(new ParrotOxygenGearRenderLayer<>(parrotRenderer));
+            }
+        });
     }
 }

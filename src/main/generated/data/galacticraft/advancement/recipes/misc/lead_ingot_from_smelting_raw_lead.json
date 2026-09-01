@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "minecraft:lead_ingot_from_smelting_raw_lead"
+        "recipe": "galacticraft:lead_ingot_from_smelting_raw_lead"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "minecraft:lead_ingot_from_smelting_raw_lead"
+      "galacticraft:lead_ingot_from_smelting_raw_lead"
     ]
   }
 }

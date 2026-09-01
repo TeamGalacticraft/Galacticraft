@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -67,5 +67,9 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
                 .addTag(GCFluidTags.FUEL)
                 .addTag(GCFluidTags.SULFURIC_ACID)
                 .addOptionalTag(FluidTags.WATER);
+
+        // Add fluids here so they can't be inserted into the Fluid Canister
+        this.getOrCreateTagBuilder(GCFluidTags.FLUID_CANISTER_EXCLUSIONS)
+                .add(Gases.OXYGEN);
     }
 }

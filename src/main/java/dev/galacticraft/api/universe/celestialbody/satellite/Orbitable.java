@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,7 @@ import org.jetbrains.annotations.Nullable;
  */
 public interface Orbitable<C extends CelestialBodyConfig> {
     /**
-     * Returns the {@link SatelliteRecipe stellite recipe} of this celestial body, or {@code null} if satellites should not be allowed to be created
+     * Returns the {@link SatelliteRecipe satellite recipe} of this celestial body, or {@code null} if satellites should not be allowed to be created
      *
      * @param config the celestial body configuration to be queried
      * @return the {@link SatelliteRecipe satellite recipe} of this celestial body

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -112,7 +112,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private int amount = 0;
     private int progress = 0;
     public Dockable linkedRocket = null;
-    private List<Direction> check = new ArrayList<Direction>();
+    private List<Direction> check = new ArrayList<>();
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -37,7 +37,7 @@ import java.util.Set;
 
 public abstract class CelestialTeleporterType<C extends CelestialTeleporterConfig> {
     private final MapCodec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec;
-    public static final Set<RelativeMovement> NO_RELATIVE_MOVEMENT = Collections.<RelativeMovement>emptySet();
+    public static final Set<RelativeMovement> NO_RELATIVE_MOVEMENT = Collections.emptySet();
 
     public CelestialTeleporterType(Codec<C> codec) {
         this.codec = codec.fieldOf("config").xmap((config) -> new CelestialTeleporter<>(this, config), CelestialTeleporter::config);

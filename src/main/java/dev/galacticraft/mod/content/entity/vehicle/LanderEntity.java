@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -33,7 +33,6 @@ import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.network.s2c.ResetPerspectivePacket;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.ParachestMenu;
@@ -49,7 +48,6 @@ import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
 import net.fabricmc.fabric.api.transfer.v1.transaction.Transaction;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.Registries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
@@ -57,7 +55,6 @@ import net.minecraft.world.Container;
 import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -71,6 +68,8 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.List;
+
+import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.CRASH_LANDING;
 
 public class LanderEntity extends AbstractLanderEntity implements Container, ScalableFuelLevel, ControllableEntity, HasCustomInventoryScreen, IgnoreShift, ExtendedScreenHandlerFactory<ParachestMenu.OpeningData> {
     public static final float NO_PARTICLES = 0.0000001F;
@@ -247,12 +246,12 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
                 }
                 this.level().explode(
                         this,
-                        new DamageSource(this.level().registryAccess().registryOrThrow(Registries.DAMAGE_TYPE).getHolderOrThrow(GCDamageTypes.CRASH_LANDING)),
+                        this.damageSources().source(CRASH_LANDING),
                         new ExplosionDamageCalculator(),
                         this.getX(),
                         this.getY(),
                         this.getZ(),
-                        (int) Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
+                        Mth.ceil(Constant.Landing.EXPLOSION_SCALE * Math.abs(this.lastDeltaY)),
                         false,
                         Level.ExplosionInteraction.MOB
                 );
@@ -279,7 +278,7 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
             this.addDeltaMovement(new Vec3(0, (holder != null ? holder.value().gravity() : 1.0d) * -0.008D, 0));
         }
 
-        double motY = -1 * Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
+        double motY = -Math.sin(getXRot() / Constant.RADIANS_TO_DEGREES);
         double motX = Math.cos(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
         double motZ = Math.sin(getYRot() / Constant.RADIANS_TO_DEGREES) * motY;
 
@@ -444,12 +443,12 @@ public class LanderEntity extends AbstractLanderEntity implements Container, Sca
     }
 
     @Override
-    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown) {
+    public void inputTick(float leftImpulse, float forwardImpulse, boolean up, boolean down, boolean left, boolean right, boolean jumping, boolean shiftKeyDown, boolean invertControls) {
         if (!onGround()) {
             if (up)
-                setXRot(Math.min(Math.max(getXRot() - 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() - 0.5F * turnFactor, -angle, angle));
             if (down)
-                setXRot(Math.min(Math.max(getXRot() + 0.5F * turnFactor, -angle), angle));
+                setXRot(Mth.clamp(getXRot() + 0.5F * turnFactor, -angle, angle));
             if (left)
                 setYRot(getYRot() - 0.5F * turnFactor);
             if (right)

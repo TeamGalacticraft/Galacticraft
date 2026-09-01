@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.environment;
 
 import dev.galacticraft.mod.util.TooltipUtil;
-import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -39,7 +38,7 @@ public class GlowstoneLanternBlock extends LanternBlock {
 
     @Override
     public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, TooltipFlag options) {
-        TooltipUtil.appendLshiftTooltip(Translations.Tooltip.GLOWSTONE_LANTERN, tooltip);
+        TooltipUtil.appendLshiftTooltip(this.getDescriptionId() + ".description", tooltip);
         super.appendHoverText(stack, context, tooltip, options);
     }
 }

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -36,6 +36,7 @@ import dev.galacticraft.machinelib.api.transfer.TransferType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
@@ -49,6 +50,8 @@ import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -56,41 +59,24 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.galacticraft.mod.Constant.FoodCanner.*;
 import static dev.galacticraft.mod.content.item.GCItems.CANNED_FOOD;
 import static dev.galacticraft.mod.content.item.GCItems.EMPTY_CAN;
 
 public class FoodCannerBlockEntity extends MachineBlockEntity {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
-    public static final int STORAGE_SLOT = 2;
-    public static final int OUTPUT_SLOT = 3;
-
-    //x0 -> x3 && y0 -> y3 x0 and y0 top left x3 and y3 bottom right
-    public static final int[][] ROWS = {
-            { 4,  5,  6,  7},
-            { 8,  9, 10, 11},
-            {12, 13, 14, 15},
-            {16, 17, 18, 19}
-    };
-    public static final int[] ROW_ORDER = {0, 1, 3, 2};
-
-    public static final int TRANSFER_INPUT = 9;
-    public static final int START_ROW_1 = TRANSFER_INPUT + 1;
-    public static final int START_ROW_2 = START_ROW_1 + 28;
-    public static final int SKIP_ROW_2 = START_ROW_2 + 9;
-    public static final int START_ROW_4 = START_ROW_2 + 21;
-    public static final int START_ROW_3 = START_ROW_4 + 27;
-    public static final int SKIP_ROW_3 = START_ROW_3 + 8;
-    public static final int FINAL_PROGRESS = START_ROW_3 + 21;
-    public static final int TRANSFER_OUTPUT = FINAL_PROGRESS + 7;
-    public static final int MAX_PROGRESS = TRANSFER_OUTPUT + 9;
-
-    public static final int[] ROW_PROGRESS = {START_ROW_1, START_ROW_2, START_ROW_3, START_ROW_4};
+    public static final int GRID_START = 2;
+    public static final int INPUT_LENGTH = 17;
+    public static final int STORAGE_SLOT = 18;
+    public static final int OUTPUT_SLOT = 19;
 
     private int progress = 0;
     private boolean transferringCan = false;
     private boolean transferringFood = false;
     private boolean ejectCan = false;
+    private boolean hasCan = false;
+    private boolean hadCan = false;
     private boolean[] rowsConsumed = {false, false, false, false};
 
     private static final StorageSpec SPEC = StorageSpec.of(
@@ -112,23 +98,23 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         );
         storage.add(
                 ItemResourceSlot.builder(TransferType.INPUT)
-                        .pos(62, 13)
+                        .pos(INPUT_X, INPUT_Y)
                         .filter(ResourceFilters.ofResource(EMPTY_CAN))
                         .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.FOOD_CAN))
         );
+        for (ItemResourceSlot.Spec slot : createFoodSlots(GRID_X, GRID_Y, 4, 4)) {
+            storage.add(slot);
+        }
         storage.add(
                 ItemResourceSlot.builder(TransferType.INTERNAL)
-                        .pos(62, 40)
+                        .pos(CURRENT_X, CURRENT_Y)
                         .capacity(1)
                         .filter(ResourceFilters.ofResource(EMPTY_CAN))
         );
         storage.add(
                 ItemResourceSlot.builder(TransferType.OUTPUT)
-                        .pos(62, 67)
+                        .pos(OUTPUT_X, OUTPUT_Y)
         );
-        for (ItemResourceSlot.Spec slot : createFoodSlots(98, 13, 4, 4)) {
-            storage.add(slot);
-        }
         return storage;
     }
 
@@ -155,6 +141,12 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         profiler.push("extract_resources");
         this.chargeFromSlot(CHARGE_SLOT);
         profiler.pop();
+
+        this.hasCan = !this.inputSlotEmpty() || !this.storageSlotEmpty() || !this.outputSlotEmpty();
+        if (this.hasCan != this.hadCan) {
+            this.hadCan = this.hasCan;
+            world.setBlock(this.worldPosition, state.setValue(FoodCannerBlock.CAN, this.hasCan), Block.UPDATE_CLIENTS);
+        }
     }
 
     @Override
@@ -164,6 +156,7 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         }
         this.incrementProgress();
         if (this.storageSlotEmpty()) {
+            this.ejectCan = false;
             if (this.inputSlotEmpty()) {
                 this.reset(0);
                 return GCMachineStatuses.MISSING_EMPTY_CAN;
@@ -289,6 +282,13 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         return GCMachineStatuses.CANNING;
     }
 
+    @Override
+    public void updateActiveState(Level level, BlockPos pos, BlockState state, boolean active) {
+        this.hasCan = !this.inputSlotEmpty() || !this.storageSlotEmpty() || !this.outputSlotEmpty();
+        this.hadCan = this.hasCan;
+        super.updateActiveState(level, pos, state.setValue(FoodCannerBlock.CAN, this.hasCan), active);
+    }
+
     private boolean inputSlotEmpty() {
         return this.itemStorage().slot(INPUT_SLOT).isEmpty();
     }
@@ -326,7 +326,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         List<ItemStack> stacks = new ArrayList<>();
         for (int row = 0; row < 4; row++) {
             if (this.getRowConsumed(row)) {
-                for (int slot : ROWS[row]) {
+                for (int col = 0; col < 4; col++) {
+                    int slot = GRID_START + 4 * row + col;
                     if (!this.itemStorage().slot(slot).isEmpty()) {
                         ItemStack itemStack = this.itemStorage().getItem(slot);
                         itemStack.applyComponents(this.itemStorage().slot(slot).getComponents());
@@ -344,7 +345,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
         int i = 0;
         for (int row = 0; row < 4; row++) {
             if (this.getRowConsumed(row)) {
-                for (int slot : ROWS[row]) {
+                for (int col = 0; col < 4; col++) {
+                    int slot = GRID_START + 4 * row + col;
                     ItemStack stack = stacks.get(i);
                     this.itemStorage().slot(slot).extract(this.itemStorage().getItem(slot).getCount());
                     this.itemStorage().slot(slot).insert(stack.getItem(), stack.getComponentsPatch(), stack.getCount());
@@ -355,8 +357,8 @@ public class FoodCannerBlockEntity extends MachineBlockEntity {
     }
 
     private boolean isRowEmpty(int row) {
-        for (int slot : ROWS[row]) {
-            if (!this.itemStorage().slot(slot).isEmpty()) {
+        for (int col = 0; col < 4; col++) {
+            if (!this.itemStorage().slot(GRID_START + 4 * row + col).isEmpty()) {
                 return false;
             }
         }

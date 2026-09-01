@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -109,7 +109,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         long time = level.getDayTime() % this.dayLength;
         // Don't use this.isDay() because it returns false when it is thundering
         if (time > this.dayLength / 2) status = GCMachineStatuses.NOT_GENERATING;
-        if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
+        if (time > this.dayLength / 4) time = this.dayLength / 2 - time;
 
         profiler.push("transaction");
         this.currentEnergyGeneration = this.calculateEnergyProduction(time, multiplier);

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -31,12 +31,14 @@ import net.minecraft.client.renderer.entity.MobRenderer;
 import net.minecraft.resources.ResourceLocation;
 
 public class GazerEntityRenderer extends MobRenderer<GazerEntity, GazerEntityModel<GazerEntity>> {
+    public static final ResourceLocation TEXTURE = Constant.id(Constant.EntityTexture.GAZER);
+
     public GazerEntityRenderer(EntityRendererProvider.Context context) {
-        super(context, new GazerEntityModel<>(context.bakeLayer(GCEntityModelLayer.GAZER)), 0);
+        super(context, new GazerEntityModel<>(context.bakeLayer(GCEntityModelLayer.GAZER)), 0.75F);
     }
 
     @Override
     public ResourceLocation getTextureLocation(GazerEntity entity) {
-        return Constant.id(Constant.EntityTexture.GAZER);
+        return TEXTURE;
     }
 }

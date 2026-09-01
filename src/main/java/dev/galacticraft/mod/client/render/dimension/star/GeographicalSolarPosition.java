@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -21,6 +21,8 @@
  */
 
 package dev.galacticraft.mod.client.render.dimension.star;
+
+import net.minecraft.world.phys.Vec3;
 
 /**
  * Represents the three-dimensional position of a celestial body in space.
@@ -53,6 +55,10 @@ public class GeographicalSolarPosition {
         this.x = x;
         this.y = y;
         this.z = z;
+    }
+
+    public Vec3 getVec3() {
+        return new Vec3(x, y, z);
     }
 
     private static final GeographicalSolarPosition instance = new GeographicalSolarPosition(0, 0, 0);

@@ -5,6 +5,7 @@ accessible method net/minecraft/client/particle/DripParticle$DripHangParticle <i
 accessible method net/minecraft/client/particle/DripParticle$FallingParticle <init> (Lnet/minecraft/client/multiplayer/ClientLevel;DDDLnet/minecraft/world/level/material/Fluid;)V
 
 # private classes
+accessible class net/minecraft/client/gui/screens/inventory/CreativeModeInventoryScreen$SlotWrapper
 accessible class net/minecraft/data/models/BlockModelGenerators$BlockStateGeneratorSupplier
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$Condition
 accessible class net/minecraft/world/level/levelgen/SurfaceRules$LazyYCondition
@@ -28,6 +29,8 @@ accessible field net/minecraft/data/models/BlockModelGenerators texturedModels L
 mutable field net/minecraft/data/models/BlockModelGenerators    texturedModels Ljava/util/Map;
 accessible field net/minecraft/data/models/BlockModelGenerators fullBlockModelCustomGenerators Ljava/util/Map;
 mutable field net/minecraft/data/models/BlockModelGenerators    fullBlockModelCustomGenerators Ljava/util/Map;
+accessible field net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider skipGeneratingModelsFor Ljava/util/Set;
+mutable field net/minecraft/data/models/BlockModelGenerators$BlockFamilyProvider    skipGeneratingModelsFor Ljava/util/Set;
 
 # private static fields
 accessible field net/minecraft/data/loot/EntityLootSubProvider SPECIAL_LOOT_TABLE_TYPES Ljava/util/Set;
@@ -42,3 +45,4 @@ accessible field net/minecraft/client/renderer/LevelRenderer RAIN_DIAMETER I
 
 # private fields
 accessible field net/minecraft/client/renderer/LevelRenderer ticks I
+accessible field net/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity litTime I
