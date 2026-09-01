@@ -79,7 +79,7 @@ public class GCStructures {
                 new LunarDungeonStructure(
                         new Structure.StructureSettings(
                                 biomeLookup.getOrThrow(
-                                        GCBiomeTags.MOON
+                                        GCBiomeTags.MOON_DUNGEON_HAS_STRUCTURE
                                 ),
                                 Collections.emptyMap(),
                                 GenerationStep.Decoration.UNDERGROUND_STRUCTURES,

@@ -45,7 +45,8 @@ public class LunarDungeonStructure extends Structure {
                             .forGetter(structure -> structure.settings)
             ).apply(instance, LunarDungeonStructure::new));
 
-    private static final int HUB_DEPTH = 16;
+    private static final int HUB_MIN_DEPTH = 64;
+    private static final int HUB_MAX_DEPTH = 80;
 
     public LunarDungeonStructure(StructureSettings settings) {
         super(settings);
@@ -82,7 +83,9 @@ public class LunarDungeonStructure extends Structure {
                 context.randomState()
         );
 
-        int hubY = surfaceY - HUB_DEPTH;
+
+
+        int hubY = surfaceY - context.random().nextInt(HUB_MIN_DEPTH, HUB_MAX_DEPTH);
 
         if (hubY <= context.heightAccessor().getMinBuildHeight()) {
             return;

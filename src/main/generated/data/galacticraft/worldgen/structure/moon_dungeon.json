@@ -1,7 +1,7 @@
 {
   "type": "galacticraft:moon_dungeon",
   "config": {
-    "biomes": "#galacticraft:moon",
+    "biomes": "#galacticraft:has_structure/moon_dungeon",
     "spawn_overrides": {},
     "step": "underground_structures"
   }

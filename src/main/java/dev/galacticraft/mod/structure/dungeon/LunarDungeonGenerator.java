@@ -23,10 +23,10 @@ public final class LunarDungeonGenerator {
     private static final int MAX_LAYOUT_ATTEMPTS = 12;
 
     private static final int MIN_MAIN_WING_LENGTH = 2;
-    private static final int MAX_MAIN_WING_LENGTH = 3;
+    private static final int MAX_MAIN_WING_LENGTH = 4;
 
     private static final int MIN_FINAL_LENGTH = 1;
-    private static final int MAX_FINAL_LENGTH = 2;
+    private static final int MAX_FINAL_LENGTH = 3;
 
     private static final int MIN_OPTIONAL_BRANCH_LENGTH = 2;
     private static final int MAX_OPTIONAL_BRANCH_LENGTH = 5;
