@@ -55,44 +55,28 @@ import net.minecraft.world.phys.AABB;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Set;
-import java.util.UUID;
+import java.util.*;
 
 public class AirlockControllerBlockEntity extends MachineBlockEntity {
-    private static final String NBT_PROXIMITY_OPEN =
-            "ProximityOpen";
-
-    private static final String NBT_SEALED_FRAMES =
-            "SealedFrames";
-
-    private static final String NBT_PROXIMITY_ACCESS =
-            "ProximityAccess";
-
-    private static final String NBT_ACCESS_ID =
-            "AccessId";
-
-    private static final String NBT_STRUCTURE_MANAGED =
-            "StructureManaged";
-
-    private static final String NBT_KEYCARD_OPEN_SECONDS =
-            "KeycardOpenSeconds";
-
-    private static final String NBT_PERMANENT_OPEN_ON_KEYCARD =
-            "PermanentOpenOnKeycard";
-
-    private static final String NBT_PERMANENTLY_UNLOCKED =
-            "PermanentlyUnlocked";
-
     public static final int MIN_KEYCARD_OPEN_SECONDS = 1;
     public static final int MAX_KEYCARD_OPEN_SECONDS = 9;
     public static final int DEFAULT_KEYCARD_OPEN_SECONDS = 3;
-
+    private static final String NBT_PROXIMITY_OPEN =
+            "ProximityOpen";
+    private static final String NBT_SEALED_FRAMES =
+            "SealedFrames";
+    private static final String NBT_PROXIMITY_ACCESS =
+            "ProximityAccess";
+    private static final String NBT_ACCESS_ID =
+            "AccessId";
+    private static final String NBT_STRUCTURE_MANAGED =
+            "StructureManaged";
+    private static final String NBT_KEYCARD_OPEN_SECONDS =
+            "KeycardOpenSeconds";
+    private static final String NBT_PERMANENT_OPEN_ON_KEYCARD =
+            "PermanentOpenOnKeycard";
+    private static final String NBT_PERMANENTLY_UNLOCKED =
+            "PermanentlyUnlocked";
     private static final StorageSpec SPEC =
             StorageSpec.of(
                     MachineEnergyStorage.spec(
@@ -100,12 +84,11 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                             0
                     )
             );
-
+    private final Set<Long> sealedFrames =
+            new HashSet<>();
     private byte proximityOpen = 0;
-
     private ProximityAccess proximityAccess =
             ProximityAccess.PUBLIC;
-
     /*
      * A card stores this value.
      *
@@ -113,7 +96,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
      */
     private String accessId =
             UUID.randomUUID().toString();
-
     /*
      * Structure-managed controllers:
      *
@@ -124,10 +106,8 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
      * - require a matching keycard
      */
     private boolean structureManaged = false;
-
     private int keycardOpenSeconds =
             DEFAULT_KEYCARD_OPEN_SECONDS;
-
     /*
      * Temporary card activation is deliberately not persisted.
      *
@@ -135,20 +115,12 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
      * restarting the server closes it again.
      */
     private long keycardOpenUntil = 0L;
-
     private boolean permanentOpenOnKeycard = false;
-
     private boolean permanentlyUnlocked = false;
-
     private List<AirlockFrameScanner.Result> lastFrames =
             Collections.emptyList();
-
     private Map<Long, AirlockFrameScanner.Result> lastFrameMap =
             Collections.emptyMap();
-
-    private final Set<Long> sealedFrames =
-            new HashSet<>();
-
     private AirlockState state =
             AirlockState.NONE;
 
@@ -165,6 +137,132 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                 state,
                 SPEC
         );
+    }
+
+    private static Map<Long, AirlockFrameScanner.Result> indexFrames(
+            List<AirlockFrameScanner.Result> list
+    ) {
+        Map<Long, AirlockFrameScanner.Result> output =
+                new HashMap<>(list.size());
+
+        for (AirlockFrameScanner.Result result
+                : list) {
+
+            output.put(
+                    frameId(result),
+                    result
+            );
+        }
+
+        return output;
+    }
+
+    private static long frameId(
+            AirlockFrameScanner.Result frame
+    ) {
+        int hash = 1;
+
+        hash = 31 * hash
+                + frame.plane.ordinal();
+
+        hash = 31 * hash + frame.minX;
+        hash = 31 * hash + frame.minY;
+        hash = 31 * hash + frame.minZ;
+
+        hash = 31 * hash + frame.maxX;
+        hash = 31 * hash + frame.maxY;
+        hash = 31 * hash + frame.maxZ;
+
+        return hash & 0xffffffffL;
+    }
+
+    private static AABB expandedInterior(
+            AirlockFrameScanner.Result frame,
+            double radius
+    ) {
+        AABB interior =
+                switch (frame.plane) {
+                    case XY -> new AABB(
+                            frame.minX + 1,
+                            frame.minY + 1,
+                            frame.minZ,
+                            frame.maxX,
+                            frame.maxY,
+                            frame.maxZ
+                    );
+
+                    case XZ -> new AABB(
+                            frame.minX + 1,
+                            frame.minY,
+                            frame.minZ + 1,
+                            frame.maxX,
+                            frame.maxY,
+                            frame.maxZ
+                    );
+
+                    case YZ -> new AABB(
+                            frame.minX,
+                            frame.minY + 1,
+                            frame.minZ + 1,
+                            frame.maxX,
+                            frame.maxY,
+                            frame.maxZ
+                    );
+                };
+
+        return interior.inflate(
+                Math.max(
+                        radius,
+                        0
+                ) + 1.0e-4
+        );
+    }
+
+    private static boolean sameFrames(
+            List<AirlockFrameScanner.Result> first,
+            List<AirlockFrameScanner.Result> second
+    ) {
+        if (first == second) {
+            return true;
+        }
+
+        if (first == null
+                || second == null
+                || first.size() != second.size()) {
+
+            return false;
+        }
+
+        for (int i = 0;
+             i < first.size();
+             i++) {
+
+            AirlockFrameScanner.Result x =
+                    first.get(i);
+
+            AirlockFrameScanner.Result y =
+                    second.get(i);
+
+            if (x.plane != y.plane) {
+                return false;
+            }
+
+            if (x.minX != y.minX
+                    || x.minY != y.minY
+                    || x.minZ != y.minZ) {
+
+                return false;
+            }
+
+            if (x.maxX != y.maxX
+                    || x.maxY != y.maxY
+                    || x.maxZ != y.maxZ) {
+
+                return false;
+            }
+        }
+
+        return true;
     }
 
     public byte getProximityOpen() {
@@ -322,20 +420,18 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         return switch (this.proximityAccess) {
             case PUBLIC -> true;
 
-            case TEAM ->
-                    this.getSecurity()
-                            .hasAccess(player);
+            case TEAM -> this.getSecurity()
+                    .hasAccess(player);
 
-            case PRIVATE ->
-                    this.getSecurity()
-                            .isOwner(player);
+            case PRIVATE -> this.getSecurity()
+                    .isOwner(player);
         };
     }
 
     /**
      * Activates this controller using a card that has already passed its
      * access-ID check.
-     *
+     * <p>
      * No normal player permission check is performed here. The keycard itself
      * is the credential.
      *
@@ -754,16 +850,13 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         )) {
             boolean authorized =
                     switch (this.proximityAccess) {
-                        case PUBLIC ->
-                                true;
+                        case PUBLIC -> true;
 
-                        case TEAM ->
-                                this.getSecurity()
-                                        .hasAccess(player);
+                        case TEAM -> this.getSecurity()
+                                .hasAccess(player);
 
-                        case PRIVATE ->
-                                this.getSecurity()
-                                        .isOwner(player);
+                        case PRIVATE -> this.getSecurity()
+                                .isOwner(player);
                     };
 
             if (authorized) {
@@ -772,135 +865,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         return false;
-    }
-
-    private static Map<Long, AirlockFrameScanner.Result> indexFrames(
-            List<AirlockFrameScanner.Result> list
-    ) {
-        Map<Long, AirlockFrameScanner.Result> output =
-                new HashMap<>(list.size());
-
-        for (AirlockFrameScanner.Result result
-                : list) {
-
-            output.put(
-                    frameId(result),
-                    result
-            );
-        }
-
-        return output;
-    }
-
-    private static long frameId(
-            AirlockFrameScanner.Result frame
-    ) {
-        int hash = 1;
-
-        hash = 31 * hash
-                + frame.plane.ordinal();
-
-        hash = 31 * hash + frame.minX;
-        hash = 31 * hash + frame.minY;
-        hash = 31 * hash + frame.minZ;
-
-        hash = 31 * hash + frame.maxX;
-        hash = 31 * hash + frame.maxY;
-        hash = 31 * hash + frame.maxZ;
-
-        return hash & 0xffffffffL;
-    }
-
-    private static AABB expandedInterior(
-            AirlockFrameScanner.Result frame,
-            double radius
-    ) {
-        AABB interior =
-                switch (frame.plane) {
-                    case XY ->
-                            new AABB(
-                                    frame.minX + 1,
-                                    frame.minY + 1,
-                                    frame.minZ,
-                                    frame.maxX,
-                                    frame.maxY,
-                                    frame.maxZ
-                            );
-
-                    case XZ ->
-                            new AABB(
-                                    frame.minX + 1,
-                                    frame.minY,
-                                    frame.minZ + 1,
-                                    frame.maxX,
-                                    frame.maxY,
-                                    frame.maxZ
-                            );
-
-                    case YZ ->
-                            new AABB(
-                                    frame.minX,
-                                    frame.minY + 1,
-                                    frame.minZ + 1,
-                                    frame.maxX,
-                                    frame.maxY,
-                                    frame.maxZ
-                            );
-                };
-
-        return interior.inflate(
-                Math.max(
-                        radius,
-                        0
-                ) + 1.0e-4
-        );
-    }
-
-    private static boolean sameFrames(
-            List<AirlockFrameScanner.Result> first,
-            List<AirlockFrameScanner.Result> second
-    ) {
-        if (first == second) {
-            return true;
-        }
-
-        if (first == null
-                || second == null
-                || first.size() != second.size()) {
-
-            return false;
-        }
-
-        for (int i = 0;
-             i < first.size();
-             i++) {
-
-            AirlockFrameScanner.Result x =
-                    first.get(i);
-
-            AirlockFrameScanner.Result y =
-                    second.get(i);
-
-            if (x.plane != y.plane) {
-                return false;
-            }
-
-            if (x.minX != y.minX
-                    || x.minY != y.minY
-                    || x.minZ != y.minZ) {
-
-                return false;
-            }
-
-            if (x.maxX != y.maxX
-                    || x.maxY != y.maxY
-                    || x.maxZ != y.maxZ) {
-
-                return false;
-            }
-        }
-
-        return true;
     }
 
     private void seal(
@@ -1296,14 +1260,11 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             @NotNull ProfilerFiller profiler
     ) {
         return switch (this.state) {
-            case ALL ->
-                    GCMachineStatuses.AIRLOCK_ENABLED;
+            case ALL -> GCMachineStatuses.AIRLOCK_ENABLED;
 
-            case PARTIAL ->
-                    GCMachineStatuses.AIRLOCK_PARTIAL;
+            case PARTIAL -> GCMachineStatuses.AIRLOCK_PARTIAL;
 
-            case NONE ->
-                    GCMachineStatuses.AIRLOCK_DISABLED;
+            case NONE -> GCMachineStatuses.AIRLOCK_DISABLED;
         };
     }
 
