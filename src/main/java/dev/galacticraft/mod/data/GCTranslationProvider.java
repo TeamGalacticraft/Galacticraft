@@ -1043,7 +1043,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %s");
         this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
 
-        this.add(Tooltip.KEYCARD_UNBOUND,  "Unbound");
+        this.add(Tooltip.KEYCARD_UNBOUND, "Unbound");
         this.add(Tooltip.KEYCARD_SNEAK_TO_BIND, "Sneak + Right Click an Airlock Controller to bind");
 
         this.add(Tooltip.LUNAR_DUNGEON_KEYCARD, "Lunar Facility Security Credential");

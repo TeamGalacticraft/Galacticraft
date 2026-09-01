@@ -409,9 +409,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
 
-        generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        generator.createTrivialCube(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
-        this.createAirLockControllers(generator);
+        this.createAirlockBlocks(generator);
 
         this.createParachests(generator);
     }
@@ -566,27 +564,36 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
     }
 
-    private void createAirLockControllers(BlockModelGenerators generator) {
-        var basic = GCBlocks.AIR_LOCK_CONTROLLER;
-        var reinforced = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
-        ResourceLocation basicController = TextureMapping.getBlockTexture(basic);
-        ResourceLocation reinforcedController = TextureMapping.getBlockTexture(reinforced);
-        ResourceLocation basicFrame = TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME);
-        ResourceLocation reinforcedFrame = TextureMapping.getBlockTexture(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
-        MachineModelGenerator.createTrivialMachine(generator, basic, TextureProvider.builder(Constant.MOD_ID)
-                .sides(basicController)
-                .top(basicFrame)
-                .bottom(basicFrame)
-                .particle(basicController)
+    private void createAirlockBlocks(BlockModelGenerators generator) {
+        Block basicFrame = GCBlocks.AIR_LOCK_FRAME;
+        Block reinforcedFrame = GCBlocks.REINFORCED_AIR_LOCK_FRAME;
+        Block structureFrame = GCBlocks.STRUCTURE_AIR_LOCK_FRAME;
+        Block basicController = GCBlocks.AIR_LOCK_CONTROLLER;
+        Block reinforcedController = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
+        Block structureController = GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER;
+
+        // Generate frame blocks
+        generator.createTrivialCube(basicFrame);
+        generator.createTrivialCube(reinforcedFrame);
+        generator.createTrivialCube(structureFrame);
+
+        // Generate controller blocks
+        createAirlockController(generator, basicController, basicFrame);
+        createAirlockController(generator, reinforcedController, reinforcedFrame);
+        createAirlockController(generator, structureController, structureFrame);
+    }
+
+    private void createAirlockController(BlockModelGenerators generator, Block controller, Block frame) {
+        ResourceLocation controllerTexture = TextureMapping.getBlockTexture(controller);
+        ResourceLocation frameTexture = TextureMapping.getBlockTexture(frame);
+        MachineModelGenerator.createTrivialMachine(generator, controller, TextureProvider.builder(Constant.MOD_ID)
+                .sides(controllerTexture)
+                .top(frameTexture)
+                .bottom(frameTexture)
+                .particle(controllerTexture)
                 .build()
         );
-        MachineModelGenerator.createTrivialMachine(generator, reinforced, TextureProvider.builder(Constant.MOD_ID)
-                .sides(reinforcedController)
-                .top(reinforcedFrame)
-                .bottom(reinforcedFrame)
-                .particle(reinforcedController)
-                .build()
-        );
+
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
