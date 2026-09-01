@@ -34,7 +34,6 @@ import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
-import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;

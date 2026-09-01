@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.util;
 
-import net.minecraft.resources.ResourceKey;
 
 public interface Translations {
 

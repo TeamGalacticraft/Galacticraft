@@ -633,9 +633,6 @@ public interface Constant {
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
-
-        ResourceLocation AIRLOCK_CONTROLLER_SCREEN = id("textures/gui/air_lock_controller.png");
-
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
@@ -943,6 +940,19 @@ public interface Constant {
         int ARROW_DOWN_V = 10;
         int ARROW_DOWN_HOVER_U = 217;
         int ARROW_DOWN_HOVER_V = 10;
+    }
+
+    interface AirlockController {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/air_lock_controller.png");
+
+        int ARROW_VERTICAL_WIDTH = 11;
+        int ARROW_VERTICAL_HEIGHT = 10;
+        int ARROW_DOWN_HOVER_V = 10;
+        int ARROW_DOWN_U = 206;
+        int ARROW_DOWN_HOVER_U = 217;
+        int ARROW_UP_HOVER_V = 0;
+        int ARROW_UP_U = 206;
+        int ARROW_UP_HOVER_U = 217;
     }
 
     interface CelestialScreen {
