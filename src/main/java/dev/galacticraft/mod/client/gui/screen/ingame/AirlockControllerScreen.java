@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -274,18 +274,18 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         int upX = this.leftPos + 158, upY = this.topPos + 65;
         int downX = this.leftPos + 158, downY = this.topPos + 75;
 
-        boolean hoverUp = DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
-        boolean hoverDown = DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        boolean hoverUp = DrawableUtil.mouseIn(mouseX, mouseY, upX, upY, Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT);
+        boolean hoverDown = DrawableUtil.mouseIn(mouseX, mouseY, downX, downY, Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT);
 
-        g.blit(Constant.ScreenTexture.OVERLAY, upX, upY,
-                hoverUp ? Constant.TextureCoordinate.ARROW_UP_HOVER_X : Constant.TextureCoordinate.ARROW_UP_X,
-                hoverUp ? Constant.TextureCoordinate.ARROW_UP_HOVER_Y : Constant.TextureCoordinate.ARROW_UP_Y,
-                Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        g.blit(Constant.ScreenTexture.AIRLOCK_CONTROLLER_SCREEN, upX, upY,
+                hoverUp ? Constant.BubbleDistributor.ARROW_UP_HOVER_U : Constant.BubbleDistributor.ARROW_UP_U,
+                hoverUp ? Constant.BubbleDistributor.ARROW_UP_HOVER_V : Constant.BubbleDistributor.ARROW_UP_Y,
+                Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT);
 
-        g.blit(Constant.ScreenTexture.OVERLAY, downX, downY,
-                hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_X : Constant.TextureCoordinate.ARROW_DOWN_X,
-                hoverDown ? Constant.TextureCoordinate.ARROW_DOWN_HOVER_Y : Constant.TextureCoordinate.ARROW_DOWN_Y,
-                Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT);
+        g.blit(Constant.ScreenTexture.AIRLOCK_CONTROLLER_SCREEN, downX, downY,
+                hoverDown ? Constant.BubbleDistributor.ARROW_DOWN_HOVER_U : Constant.BubbleDistributor.ARROW_DOWN_U,
+                hoverDown ? Constant.BubbleDistributor.ARROW_DOWN_HOVER_V : Constant.BubbleDistributor.ARROW_DOWN_Y,
+                Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT);
 
         drawStringAlignedRight(g, this.font, Component.translatable(Translations.Ui.AIRLOCK_PROXIMITY_LABEL), this.leftPos + 130, this.topPos + 71, ChatFormatting.DARK_GRAY.getColor(), false);
     }
@@ -314,7 +314,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             int upX = this.leftPos + 158, upY = this.topPos + 65;
             int downX = this.leftPos + 158, downY = this.topPos + 75;
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, upX, upY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, upX, upY, Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.proximityOpen < 5) {
                     byte next = (byte) (this.menu.proximityOpen + 1);
                     this.menu.proximityOpen = next;
@@ -325,7 +325,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 }
             }
 
-            if (DrawableUtil.isWithin(mouseX, mouseY, downX, downY, Constant.TextureCoordinate.ARROW_VERTICAL_WIDTH, Constant.TextureCoordinate.ARROW_VERTICAL_HEIGHT)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, downX, downY, Constant.BubbleDistributor.ARROW_VERTICAL_WIDTH, Constant.BubbleDistributor.ARROW_VERTICAL_HEIGHT)) {
                 if (this.menu.proximityOpen > 0) {
                     byte next = (byte) (this.menu.proximityOpen - 1);
                     this.menu.proximityOpen = next;

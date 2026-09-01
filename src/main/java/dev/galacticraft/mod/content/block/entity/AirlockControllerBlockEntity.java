@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2019-2025 Team Galacticraft
+ * Copyright (c) 2019-2026 Team Galacticraft
  *
  * Permission is hereby granted, free of charge, to any person obtaining a copy
  * of this software and associated documentation files (the "Software"), to deal
@@ -296,7 +296,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
         if (anyAir) {
             BlockPos center = new BlockPos((f.minX + f.maxX) / 2, (f.minY + f.maxY) / 2, (f.minZ + f.maxZ) / 2);
-            server.playSound(null, center, GCSounds.PLAYER_CLOSEAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            server.playSound(null, center, GCSounds.AIRLOCK_CLOSE, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
 
         switch (f.plane) {
@@ -377,7 +377,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
         if (hadSeal) {
             BlockPos center = new BlockPos((f.minX + f.maxX) / 2, (f.minY + f.maxY) / 2, (f.minZ + f.maxZ) / 2);
-            server.playSound(null, center, GCSounds.PLAYER_OPENAIRLOCK, SoundSource.BLOCKS, 1.0F, 1.0F);
+            server.playSound(null, center, GCSounds.AIRLOCK_OPEN, SoundSource.BLOCKS, 1.0F, 1.0F);
         }
     }
 
