@@ -205,6 +205,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .addTag(GCItemTags.PARACHUTES)
                 .addTag(GCItemTags.SHIELD_CONTROLLERS);
 
+        this.tag(GCItemTags.KEYCARDS)
+                .add(GCItems.KEYCARD)
+                .add(GCItems.LUNAR_DUNGEON_KEYCARD);
+
         this.tag(GCItemTags.BATTERIES)
                 .add(GCItems.BATTERY)
                 .add(GCItems.INFINITE_BATTERY);

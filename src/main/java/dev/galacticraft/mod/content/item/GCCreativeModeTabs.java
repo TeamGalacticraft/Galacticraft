@@ -344,6 +344,9 @@ public class GCCreativeModeTabs {
 
                 output.accept(EMERGENCY_KIT);
 
+                output.accept(KEYCARD);
+                output.accept(LUNAR_DUNGEON_KEYCARD);
+
                 // MATERIALS
                 output.accept(RAW_TIN);
                 output.accept(RAW_ALUMINUM);

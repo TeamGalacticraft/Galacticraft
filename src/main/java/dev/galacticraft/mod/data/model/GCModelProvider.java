@@ -824,6 +824,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.EMERGENCY_KIT, ModelTemplates.FLAT_ITEM);
 
+        generator.generateFlatItem(GCItems.KEYCARD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LUNAR_DUNGEON_KEYCARD, ModelTemplates.FLAT_ITEM);
+
         generator.generateFlatItem(GCItems.THERMAL_PADDING_HELMET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_LEGGINGS, ModelTemplates.FLAT_ITEM);

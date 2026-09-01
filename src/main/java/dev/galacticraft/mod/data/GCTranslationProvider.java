@@ -568,6 +568,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SHIELD_CONTROLLER, "Shield Controller");
         this.item(GCItems.FREQUENCY_MODULE, "Frequency Module");
 
+        this.item(GCItems.KEYCARD, "Key Card");
+        this.item(GCItems.LUNAR_DUNGEON_KEYCARD, "Lunar Dungeon Key Card");
+
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.THERMAL_PADDING_CHESTPIECE, "Thermal Padding Chestpiece");
         this.item(GCItems.THERMAL_PADDING_LEGGINGS, "Thermal Padding Leggings");
