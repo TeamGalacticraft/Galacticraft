@@ -385,9 +385,9 @@ public class GCBlocks {
     public static final Block AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), Constant.id(Constant.Block.AIR_LOCK_CONTROLLER)));
     public static final Block REINFORCED_AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(50.0F, 1200.0F), Constant.id(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER)));
     public static final Block STRUCTURE_AIR_LOCK_CONTROLLER = BLOCKS.register(Constant.Block.STRUCTURE_AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(-1.0F, 3600000.0F).noLootTable(), Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), true));
-    public static final Block AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK)));
-    public static final Block REINFORCED_AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(50.0F, 1200.0F)));
-    public static final Block STRUCTURE_AIR_LOCK_FRAME = BLOCKS.register(Constant.Block.STRUCTURE_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME).strength(-1.0F, 3600000.0F).noLootTable().isValidSpawn(GCBlocks::never)));
+    public static final Block AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_CONTROLLER)));
+    public static final Block REINFORCED_AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(REINFORCED_AIR_LOCK_CONTROLLER)));
+    public static final Block STRUCTURE_AIR_LOCK_FRAME = BLOCKS.register(Constant.Block.STRUCTURE_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(STRUCTURE_AIR_LOCK_CONTROLLER)));
     public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME).strength(-1.0f, 3600000.0f).noLootTable().isValidSpawn(GCBlocks::never)));
 
     // TORCHES

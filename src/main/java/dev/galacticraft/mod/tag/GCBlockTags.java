@@ -106,6 +106,12 @@ public class GCBlockTags {
     public static final TagKey<Block> FLAGS = galacticraftTag("flags");
 
     public static final TagKey<Block> AIRLOCK_BLOCKS = galacticraftTag("airlock_blocks");
+    public static final TagKey<Block> BASIC_AIRLOCK_BLOCKS = galacticraftTag("airlock_blocks/basic");
+    public static final TagKey<Block> REINFORCED_AIRLOCK_BLOCKS = galacticraftTag("airlock_blocks/reinforced");
+    public static final TagKey<Block> STRUCTURE_AIRLOCK_BLOCKS = galacticraftTag("airlock_blocks/structure");
+
+    public static final TagKey<Block> AIRLOCK_CONTROLLERS = galacticraftTag("airlock_blocks/controllers");
+    public static final TagKey<Block> AIRLOCK_FRAMES = galacticraftTag("airlock_blocks/frames");
 
     public static final TagKey<Block> SLABS = galacticraftTag("slabs");
     public static final TagKey<Block> STAIRS = galacticraftTag("stairs");

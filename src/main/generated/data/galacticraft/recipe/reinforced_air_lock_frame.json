@@ -6,7 +6,7 @@
       "item": "galacticraft:oxygen_concentrator"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "tag": "c:obsidians/normal"
     },
     "S": {
       "item": "galacticraft:compressed_steel"

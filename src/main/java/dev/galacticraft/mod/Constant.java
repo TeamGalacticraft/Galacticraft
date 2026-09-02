@@ -564,7 +564,6 @@ public interface Constant {
         String EMERGENCY_KIT = "emergency_kit";
 
         String KEYCARD = "keycard";
-
         String LUNAR_DUNGEON_KEYCARD = "lunar_dungeon_keycard";
 
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";

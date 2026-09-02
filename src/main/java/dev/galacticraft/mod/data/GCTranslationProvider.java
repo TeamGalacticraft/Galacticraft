@@ -32,8 +32,8 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -941,13 +941,13 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.STRUCTURE_AIRLOCK_LOCKED, "Owner: UNKNOWN - Configuration locked");
 
-        this.add(Chat.CANNOT_REPROGRAM_KEYCARD, "This keycard cannot be reprogrammed.");
-        this.add(Chat.KEYCARD_NO_PERMISSION, "You do not have permission to bind a keycard to this airlock.");
-        this.add(Chat.KEYCARD_SUCCESSFUL_BIND, "Keycard bound to airlock.");
-        this.add(Chat.KEYCARD_NOT_BOUND, "This keycard is unbound.");
-        this.add(Chat.KEYCARD_UNSUCCESSFUL_USE,  "Access denied.");
-        this.add(Chat.AIRLOCK_ALREADY_UNLOCKED,  "Airlock already unlocked.");
-        this.add(Chat.KEYCARD_SUCCESSFUL_USE,  "Access granted.");
+        this.add(Chat.CANNOT_REPROGRAM_KEYCARD, "This key card cannot be reprogrammed.");
+        this.add(Chat.KEYCARD_NO_PERMISSION, "You do not have permission to bind a key card to this airlock.");
+        this.add(Chat.KEYCARD_SUCCESSFUL_BIND, "Key card bound to airlock.");
+        this.add(Chat.KEYCARD_NOT_BOUND, "This key card is unbound.");
+        this.add(Chat.KEYCARD_UNSUCCESSFUL_USE, "Access denied.");
+        this.add(Chat.AIRLOCK_ALREADY_UNLOCKED, "Airlock already unlocked.");
+        this.add(Chat.KEYCARD_SUCCESSFUL_USE, "Access granted.");
 
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
         this.deathBy(GCDamageTypes.METEOR_STRIKE, "%s was struck by a meteor",
@@ -1045,6 +1045,7 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Tooltip.KEYCARD_UNBOUND, "Unbound");
         this.add(Tooltip.KEYCARD_SNEAK_TO_BIND, "Sneak + Right Click an Airlock Controller to bind");
+        this.add(Tooltip.KEYCARD_BOUND_ID, "Bound Access ID: %s");
 
         this.add(Tooltip.LUNAR_DUNGEON_KEYCARD, "Lunar Facility Security Credential");
         this.add(Tooltip.LUNAR_DUNGEON_KEYCARD_LOCATION, "Facility: UNKNOWN");
@@ -1237,9 +1238,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player");
         this.add(Ui.AIRLOCK_STRUCTURE_MANAGED, "Owner: UNKNOWN");
         this.add(Ui.AIRLOCK_CONFIGURATION_LOCKED, "Configuration Locked");
-        this.add(Ui.AIRLOCK_UNLOCKED_BY_KEYCARD, "Keycard: UNLOCKED");
-        this.add(Ui.AIRLOCK_REQUIRES_KEYCARD, "Keycard Required");
-        this.add(Ui.AIRLOCK_KEYCARD_OPEN_TIME, "Keycard Open Time");
+        this.add(Ui.AIRLOCK_UNLOCKED_BY_KEYCARD, "Key Card: UNLOCKED");
+        this.add(Ui.AIRLOCK_REQUIRES_KEYCARD, "Key Card Required");
+        this.add(Ui.AIRLOCK_KEYCARD_OPEN_TIME, "Key Card Open Time");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");

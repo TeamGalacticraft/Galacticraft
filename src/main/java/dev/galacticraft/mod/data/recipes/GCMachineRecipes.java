@@ -293,7 +293,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .save(output);
 
         ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.REINFORCED_AIR_LOCK_FRAME, 4)
-                .define('O', Items.OBSIDIAN)
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('C', GCItems.OXYGEN_CONCENTRATOR)
                 .pattern("OOO")
@@ -317,7 +317,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('M', GCItems.COMPRESSED_METEORIC_IRON)
                 .define('W', GCItems.BASIC_WAFER)
-                .define('O', Items.OBSIDIAN)
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
                 .pattern("OSO")
                 .pattern("MWM")
                 .pattern("OSO")

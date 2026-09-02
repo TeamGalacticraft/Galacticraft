@@ -432,6 +432,28 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
                 .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
 
+        this.tag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.REINFORCED_AIRLOCK_BLOCKS)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.STRUCTURE_AIRLOCK_BLOCKS)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.AIRLOCK_CONTROLLERS)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER);
+
+        this.tag(GCBlockTags.AIRLOCK_FRAMES)
+                .add(GCBlocks.AIR_LOCK_FRAME)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+
         this.tag(BlockTags.WITHER_IMMUNE)
                 .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
                 .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME)

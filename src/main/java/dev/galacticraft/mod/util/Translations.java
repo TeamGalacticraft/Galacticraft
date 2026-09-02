@@ -131,7 +131,7 @@ public interface Translations {
         String KEYCARD_NO_PERMISSION = "chat.galacticraft.keycard.no_permission";
         String KEYCARD_SUCCESSFUL_BIND = "chat.galacticraft.keycard.binding_successful";
         String KEYCARD_NOT_BOUND = "chat.galacticraft.keycard.not_bound";
-        String KEYCARD_UNSUCCESSFUL_USE = "chat.galacticraft.keycard.use_unsuccessful_use";
+        String KEYCARD_UNSUCCESSFUL_USE = "chat.galacticraft.keycard.use_unsuccessfu";
         String AIRLOCK_ALREADY_UNLOCKED = "chat.galacticraft.airlock.already_unlocked";
         String KEYCARD_SUCCESSFUL_USE = "chat.galacticraft.keycard.use_successful";
     }
@@ -312,6 +312,7 @@ public interface Translations {
         String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
         String KEYCARD_UNBOUND = "tooltip.galacticraft.keycard.unbound";
         String KEYCARD_SNEAK_TO_BIND = "tooltip.galacticraft.keycard.sneak_to_bind";
+        String KEYCARD_BOUND_ID = "tooltip.galacticraft.keycard.bound_id";
         String LUNAR_DUNGEON_KEYCARD = "tooltip.galacticraft.keycard.lunar_dungeon";
         String LUNAR_DUNGEON_KEYCARD_LOCATION = "tooltip.galacticraft.keycard.lunar_dungeon_location";
         String LUNAR_DUNGEON_KEYCARD_SINGLE_USE = "tooltip.galacticraft.keycard.lunar_dungeon_single_use";
@@ -501,6 +502,10 @@ public interface Translations {
         String AIRLOCK_UNLOCKED_BY_KEYCARD = "ui.galacticraft.airlock.unlocked_by_keycard";
         String AIRLOCK_REQUIRES_KEYCARD = "ui.galacticraft.airlock.requires_keycard";
         String AIRLOCK_KEYCARD_OPEN_TIME = "ui.galacticraft.airlock.keycard_open_time";
+
+        String MACHINE_LIB_PUBLIC_ACCESS = "ui.machinelib.machine.security.access.public";
+        String MACHINE_LIB_TEAM_ACCESS = "ui.machinelib.machine.security.access.team";
+        String MACHINE_LIB_PRIVATE_ACCESS = "ui.machinelib.machine.security.access.private";
     }
 
     interface Boss {

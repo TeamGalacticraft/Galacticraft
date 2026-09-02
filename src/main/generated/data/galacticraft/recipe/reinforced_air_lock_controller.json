@@ -6,7 +6,7 @@
       "item": "galacticraft:compressed_meteoric_iron"
     },
     "O": {
-      "item": "minecraft:obsidian"
+      "tag": "c:obsidians/normal"
     },
     "S": {
       "item": "galacticraft:compressed_steel"

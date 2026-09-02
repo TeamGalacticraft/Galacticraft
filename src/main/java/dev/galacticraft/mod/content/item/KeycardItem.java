@@ -41,34 +41,22 @@ public class KeycardItem extends Item {
         super(properties);
     }
 
-    public static boolean isBound(
-            ItemStack stack
-    ) {
-        String accessId =
-                getAccessId(stack);
+    public static boolean isBound(ItemStack stack) {
+        String accessId = getAccessId(stack);
 
-        return accessId != null
-                && !accessId.isBlank();
+        return accessId != null && !accessId.isBlank();
     }
 
-    public static String getAccessId(
-            ItemStack stack
-    ) {
-        return stack.get(
-                GCDataComponents.KEYCARD_ACCESS_ID
-        );
+    public static String getAccessId(ItemStack stack) {
+        return stack.get(GCDataComponents.KEYCARD_ACCESS_ID);
     }
 
     public static void bind(
             ItemStack stack,
             String accessId
     ) {
-        if (accessId == null
-                || accessId.isBlank()) {
-
-            throw new IllegalArgumentException(
-                    "Keycard access ID cannot be blank"
-            );
+        if (accessId == null || accessId.isBlank()) {
+            throw new IllegalArgumentException("Keycard access ID cannot be blank");
         }
 
         stack.set(
@@ -81,13 +69,9 @@ public class KeycardItem extends Item {
             Item item,
             String accessId
     ) {
-        ItemStack stack =
-                new ItemStack(item);
+        ItemStack stack = new ItemStack(item);
 
-        bind(
-                stack,
-                accessId
-        );
+        bind(stack, accessId);
 
         return stack;
     }
@@ -98,39 +82,25 @@ public class KeycardItem extends Item {
             Player player
     ) {
         if (player.isShiftKeyDown()) {
-            bindToAirlock(
-                    stack,
-                    airlock,
-                    player
-            );
+            bindToAirlock(stack, airlock, player);
 
             return;
         }
 
-        useBoundKeycard(
-                stack,
-                airlock,
-                player
-        );
+        useBoundKeycard(stack, airlock, player);
     }
 
     @Override
     public InteractionResult useOn(
             UseOnContext context
     ) {
-        Player player =
-                context.getPlayer();
+        Player player = context.getPlayer();
 
         if (player == null) {
             return InteractionResult.PASS;
         }
 
-        if (!(context.getLevel()
-                .getBlockEntity(
-                        context.getClickedPos()
-                )
-                instanceof AirlockControllerBlockEntity airlock)) {
-
+        if (!(context.getLevel().getBlockEntity(context.getClickedPos()) instanceof AirlockControllerBlockEntity airlock)) {
             return InteractionResult.PASS;
         }
 
@@ -142,9 +112,7 @@ public class KeycardItem extends Item {
             );
         }
 
-        return InteractionResult.sidedSuccess(
-                context.getLevel().isClientSide
-        );
+        return InteractionResult.sidedSuccess(context.getLevel().isClientSide);
     }
 
     protected boolean canPlayerBind() {
@@ -161,32 +129,20 @@ public class KeycardItem extends Item {
             Player player
     ) {
         if (!canPlayerBind()) {
-            player.displayClientMessage(
-                    Component.translatable(Translations.Chat.CANNOT_REPROGRAM_KEYCARD).withStyle(ChatFormatting.RED),
-                    true
-            );
+            player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_REPROGRAM_KEYCARD).withStyle(ChatFormatting.RED), true);
 
             return;
         }
 
         if (!airlock.canBindKeycard(player)) {
-            player.displayClientMessage(
-                    Component.translatable(Translations.Chat.KEYCARD_NO_PERMISSION).withStyle(ChatFormatting.RED),
-                    true
-            );
+            player.displayClientMessage(Component.translatable(Translations.Chat.KEYCARD_NO_PERMISSION).withStyle(ChatFormatting.RED), true);
 
             return;
         }
 
-        bind(
-                stack,
-                airlock.getAccessId()
-        );
+        bind(stack, airlock.getAccessId());
 
-        player.displayClientMessage(
-                Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_BIND).withStyle(ChatFormatting.GREEN),
-                true
-        );
+        player.displayClientMessage(Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_BIND).withStyle(ChatFormatting.GREEN), true);
     }
 
     private void useBoundKeycard(
@@ -194,53 +150,31 @@ public class KeycardItem extends Item {
             AirlockControllerBlockEntity airlock,
             Player player
     ) {
-        String cardAccessId =
-                getAccessId(stack);
+        String cardAccessId = getAccessId(stack);
 
-        if (cardAccessId == null
-                || cardAccessId.isBlank()) {
-
-            player.displayClientMessage(
-                    Component.translatable(Translations.Chat.KEYCARD_NOT_BOUND).withStyle(ChatFormatting.YELLOW),
-                    true
-            );
+        if (cardAccessId == null || cardAccessId.isBlank()) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.KEYCARD_NOT_BOUND).withStyle(ChatFormatting.YELLOW), true);
 
             return;
         }
 
-        if (!airlock.acceptsKeycard(
-                cardAccessId
-        )) {
-            player.displayClientMessage(
-                    Component.translatable(Translations.Chat.KEYCARD_UNSUCCESSFUL_USE).withStyle(ChatFormatting.RED),
-                    true
-            );
+        if (!airlock.acceptsKeycard(cardAccessId)) {
+            player.displayClientMessage(Component.translatable(Translations.Chat.KEYCARD_UNSUCCESSFUL_USE).withStyle(ChatFormatting.RED), true);
 
             return;
         }
 
-        boolean activated =
-                airlock.activateKeycard(
-                        player
-                );
+        boolean activated = airlock.activateKeycard(player);
 
         if (!activated) {
-            player.displayClientMessage(
-                    Component.translatable(Translations.Chat.AIRLOCK_ALREADY_UNLOCKED).withStyle(ChatFormatting.GRAY),
-                    true
-            );
+            player.displayClientMessage(Component.translatable(Translations.Chat.AIRLOCK_ALREADY_UNLOCKED).withStyle(ChatFormatting.GRAY), true);
 
             return;
         }
 
-        player.displayClientMessage(
-                Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_USE).withStyle(ChatFormatting.GREEN),
-                true
-        );
+        player.displayClientMessage(Component.translatable(Translations.Chat.KEYCARD_SUCCESSFUL_USE).withStyle(ChatFormatting.GREEN), true);
 
-        if (consumeOnSuccessfulUse()
-                && !player.getAbilities().instabuild) {
-
+        if (consumeOnSuccessfulUse() && !player.getAbilities().instabuild) {
             stack.shrink(1);
         }
     }
@@ -252,38 +186,17 @@ public class KeycardItem extends Item {
             List<Component> tooltip,
             TooltipFlag flag
     ) {
-        String accessId =
-                getAccessId(stack);
+        String accessId = getAccessId(stack);
 
-        if (accessId == null
-                || accessId.isBlank()) {
-
-            tooltip.add(
-                    Component.translatable(Translations.Tooltip.KEYCARD_UNBOUND).withStyle(ChatFormatting.GRAY)
-            );
-
-            tooltip.add(
-                    Component.translatable(Translations.Tooltip.KEYCARD_SNEAK_TO_BIND).withStyle(ChatFormatting.DARK_GRAY)
-            );
+        if (accessId == null || accessId.isBlank()) {
+            tooltip.add(Component.translatable(Translations.Tooltip.KEYCARD_UNBOUND).withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable(Translations.Tooltip.KEYCARD_SNEAK_TO_BIND).withStyle(ChatFormatting.DARK_GRAY));
 
             return;
         }
 
-        String shortId =
-                accessId.length() > 8
-                        ? accessId.substring(
-                        0,
-                        8
-                )
-                        : accessId;
+        String shortId = accessId.length() > 8 ? accessId.substring(0, 8) : accessId;
 
-        tooltip.add(
-                Component.literal(
-                        "Bound Access ID: "
-                                + shortId
-                ).withStyle(
-                        ChatFormatting.GRAY
-                )
-        );
+        tooltip.add(Component.translatable(Translations.Tooltip.KEYCARD_BOUND_ID, shortId).withStyle(ChatFormatting.GRAY));
     }
 }
