@@ -35,6 +35,7 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -96,7 +97,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         );
 
         this.proximityField = new EditBox(
-                this.font,
+                Minecraft.getInstance().font,
                 0,
                 0,
                 26,
@@ -146,7 +147,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         });
 
         this.keycardTimeField = new EditBox(
-                this.font,
+                Minecraft.getInstance().font,
                 0,
                 0,
                 26,
