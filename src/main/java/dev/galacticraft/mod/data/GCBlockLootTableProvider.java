@@ -75,6 +75,8 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.UNLIT_LANTERN);
         this.dropSelf(GCBlocks.UNLIT_SOUL_LANTERN);
 
+        this.dropSelf(GCBlocks.DISPLAY_CASE);
+
         for (DecorationSet decorationSet : GCBlocks.BLOCKS.getDecorations()) {
             this.dropSelf(decorationSet.block());
             this.dropSelf(decorationSet.stairs());

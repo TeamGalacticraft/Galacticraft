@@ -265,6 +265,8 @@ public interface Constant {
         String SLIMELING_EGG = "slimeling_egg";
         String CREEPER_EGG = "creeper_egg";
 
+        String DISPLAY_CASE = "display_case";
+
         // Special
         String PARACHEST = "parachest";
         String SPACE_STATION_ARRIVAL = "space_station_arrival";

@@ -1,0 +1,39 @@
+{
+	"format_version": "1.9.0",
+    "credit": "Made with Blockbench",
+    "textures": {
+      "particle": "minecraft:block/iron_block",
+      "base_side": "minecraft:block/iron_block",
+      "base_top": "minecraft:block/red_wool",
+      "base_bottom": "minecraft:block/iron_block",
+      "case": "minecraft:block/glass"
+    },
+	"elements": [
+		{
+			"name": "Base",
+			"from": [0, 0, 0],
+			"to": [16, 2, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 2], "texture": "#base_side"},
+				"east": {"uv": [0, 0, 16, 2], "texture": "#base_side"},
+				"south": {"uv": [0, 0, 16, 2], "texture": "#base_side"},
+				"west": {"uv": [0, 0, 16, 2], "texture": "#base_side"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#base_top"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#base_bottom"}
+			}
+		},
+		{
+			"name": "Case",
+			"from": [0, 2, 0],
+			"to": [16, 7, 16],
+			"faces": {
+				"north": {"uv": [0, 0, 16, 5], "texture": "#case"},
+				"east": {"uv": [0, 0, 16, 5], "texture": "#case"},
+				"south": {"uv": [0, 0, 16, 5], "texture": "#case"},
+				"west": {"uv": [0, 0, 16, 5], "texture": "#case"},
+				"up": {"uv": [0, 0, 16, 16], "texture": "#case"},
+				"down": {"uv": [0, 0, 16, 16], "texture": "#case"}
+			}
+		}
+	]
+}

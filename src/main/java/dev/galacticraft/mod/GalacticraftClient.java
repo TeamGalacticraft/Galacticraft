@@ -197,7 +197,7 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.VACUUM_GLASS, GCBlocks.CLEAR_VACUUM_GLASS, GCBlocks.STRONG_VACUUM_GLASS);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.CRYOGENIC_CHAMBER, GCBlocks.CRYOGENIC_CHAMBER_PART, GCBlocks.PLAYER_TRANSPORT_TUBE);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.OLIVINE_GLASS, GCBlocks.OLIVINE_GLASS_PANE, GCBlocks.MOON_GLASS, GCBlocks.MOON_GLASS_PANE);
-        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE, GCBlocks.OLIANT_WEB, GCBlocks.COCOON);
+        BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE, GCBlocks.OLIANT_WEB, GCBlocks.COCOON, GCBlocks.DISPLAY_CASE);
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());

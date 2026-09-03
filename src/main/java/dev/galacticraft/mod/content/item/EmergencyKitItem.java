@@ -83,9 +83,16 @@ public class EmergencyKitItem extends Item {
 
     @Override //should sync with server
     public InteractionResultHolder<ItemStack> use(Level level, Player player, InteractionHand hand) {
+        ItemStack emergencyKit = player.getItemInHand(hand);
+        openEmergencyKit(level, emergencyKit, player);
+
+        ItemStack itemStack2 = player.isCreative() ? emergencyKit.copy() : ItemStack.EMPTY;
+        return InteractionResultHolder.sidedSuccess(itemStack2, level.isClientSide());
+    }
+
+    public void openEmergencyKit(Level level, ItemStack emergencyKit, Player player) {
         Container inv = player.galacticraft$getGearInv();
         int n = inv.getContainerSize();
-        ItemStack emergencyKit = player.getItemInHand(hand);
         DyeColor color = emergencyKit.get(DataComponents.BASE_COLOR);
         for (ItemStack itemStack : getContents(color)) {
             for (int slot = 0; slot < n; ++slot) {
@@ -103,8 +110,5 @@ public class EmergencyKitItem extends Item {
         if (!level.isClientSide()) {
             player.awardStat(Stats.ITEM_USED.get(emergencyKit.getItem()));
         }
-
-        ItemStack itemStack2 = player.isCreative() ? emergencyKit.copy() : ItemStack.EMPTY;
-        return InteractionResultHolder.sidedSuccess(itemStack2, level.isClientSide());
     }
 }

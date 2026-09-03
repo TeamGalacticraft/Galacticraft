@@ -127,6 +127,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.UNLIT_LANTERN, "Unlit Lantern");
         this.block(GCBlocks.UNLIT_SOUL_LANTERN, "Unlit Soul Lantern");
 
+        this.block(GCBlocks.DISPLAY_CASE, "Display Case");
+
         // FLUIDS
         this.block(GCBlocks.CRUDE_OIL, "Crude Oil");
         this.block(GCBlocks.FUEL, "Fuel");

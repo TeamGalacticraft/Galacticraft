@@ -102,6 +102,7 @@ public class GCBlocks {
 
     public static final Block CANNED_FOOD = BLOCKS.register(Constant.Block.CANNED_FOOD, new CannedFoodBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5F, 0.5F).sound(SoundType.METAL).noOcclusion().forceSolidOn().pushReaction(PushReaction.DESTROY)));
     public static final GCRegistry.ColorSet<Block> FLAGS = BLOCKS.registerColored(Constant.Block.FLAG, color -> new FlagBlock(color, BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_LIGHT_GRAY).strength(0.5f, 0.5f)));
+    public static final Block DISPLAY_CASE = BLOCKS.registerWithItem(Constant.Block.DISPLAY_CASE, new DisplayCaseBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).noOcclusion()));
 
     // MOON NATURAL
     public static final Block MOON_SURFACE_ROCK = BLOCKS.registerWithItem(Constant.Block.MOON_SURFACE_ROCK, new Block(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).instrument(NoteBlockInstrument.BASEDRUM).strength(1.5F, 6.0F).requiresCorrectToolForDrops()));
