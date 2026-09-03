@@ -25,7 +25,6 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.misc.cape.CapeMode;
-import dev.galacticraft.mod.misc.cape.CapeRole;
 import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.misc.cape.ServerCapeManager;
 import dev.galacticraft.mod.network.s2c.CapeAssignmentsPacket;

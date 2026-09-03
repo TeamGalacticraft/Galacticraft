@@ -51,7 +51,7 @@ public final class ServerCapeManager {
     }
 
     public static void set(ServerPlayer player, CapeMode mode, String gcCapeId) {
-        String id = player.getUUID().toString().toLowerCase(Locale.ROOT);
+        String id = player.getStringUUID().toLowerCase(Locale.ROOT);
         ACTIVE.put(id, new Assignment(mode, mode == CapeMode.GC ? gcCapeId : null));
     }
 
@@ -64,7 +64,7 @@ public final class ServerCapeManager {
             return false;
         }
 
-        CapeRole role = CapesLoader.roleFor(player.getUUID().toString());
+        CapeRole role = CapesLoader.roleFor(player.getStringUUID());
 
         if (role == CapeRole.NONE) {
             return false;
@@ -80,6 +80,6 @@ public final class ServerCapeManager {
 
     public static void remove(ServerPlayer player) {
         if (player == null) return;
-        ACTIVE.remove(player.getUUID().toString().toLowerCase(Locale.ROOT));
+        ACTIVE.remove(player.getStringUUID().toLowerCase(Locale.ROOT));
     }
 }
