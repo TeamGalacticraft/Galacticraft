@@ -46,7 +46,7 @@ public class MoonRuinsStructure extends Structure {
     private static void addPieces(StructurePiecesBuilder collector, Structure.GenerationContext context) {
         BlockPos blockPos = new BlockPos(context.chunkPos().getMinBlockX(), 90, context.chunkPos().getMinBlockZ());
         Rotation blockRotation = Rotation.getRandom(context.random());
-        MoonRuinsGenerator.addPiecesToStructure(context.structureTemplateManager(), blockPos, blockRotation, collector, context.random());
+        MoonRuinsGenerator.addPiecesToStructure(context, blockPos, blockRotation, collector, context.random());
     }
 
     @Override
