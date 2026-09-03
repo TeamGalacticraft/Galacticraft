@@ -58,8 +58,8 @@ public class ConfigImpl implements Config {
     private transient final Gson gson;
     private transient final File file;
     private boolean debugLog = false;
-    private long wireMaxTransferPerTick = 128;
-    private long heavyWireMaxTransferPerTick = 256;
+    private long wireMaxTransferPerTick = 1024;
+    private long heavyWireMaxTransferPerTick = 5120;
     private long machineEnergyStorageSize = 30_000;
     private long energyStorageModuleStorageSize = 300_000;
     private long coalGeneratorEnergyProductionRate = 120; // /t
