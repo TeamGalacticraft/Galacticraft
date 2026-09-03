@@ -24,7 +24,6 @@ package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.sugar.Local;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.world.gen.PlanetChunkGenerator;
 import net.minecraft.server.level.ChunkMap;
 import net.minecraft.world.level.chunk.ChunkGenerator;
