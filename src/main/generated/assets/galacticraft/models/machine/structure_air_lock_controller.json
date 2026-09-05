@@ -1,0 +1,12 @@
+{
+  "data": {
+    "back": "galacticraft:block/structure_air_lock_controller",
+    "bottom": "galacticraft:block/structure_air_lock_frame",
+    "front": "galacticraft:block/structure_air_lock_controller",
+    "left": "galacticraft:block/structure_air_lock_controller",
+    "particle": "galacticraft:block/structure_air_lock_controller",
+    "right": "galacticraft:block/structure_air_lock_controller",
+    "top": "galacticraft:block/structure_air_lock_frame"
+  },
+  "machinelib:type": "machine"
+}

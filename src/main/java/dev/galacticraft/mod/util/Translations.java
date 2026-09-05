@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.util;
 
+
 public interface Translations {
 
     interface Advancements {
@@ -125,6 +126,14 @@ public interface Translations {
         String CANNOT_EAT_WITH_MASK = "chat.galacticraft.cannot_eat_with_mask";
         String CANNOT_FEED_IN_NO_ATMOSPHERE = "chat.galacticraft.cannot_feed_in_no_atmosphere";
         String CANNOT_FEED_WITH_MASK = "chat.galacticraft.cannot_feed_with_mask";
+        String STRUCTURE_AIRLOCK_LOCKED = "chat.galacticraft.structure_airlock_locked";
+        String CANNOT_REPROGRAM_KEYCARD = "chat.galacticraft.keycard.cannot_reprogram";
+        String KEYCARD_NO_PERMISSION = "chat.galacticraft.keycard.no_permission";
+        String KEYCARD_SUCCESSFUL_BIND = "chat.galacticraft.keycard.binding_successful";
+        String KEYCARD_NOT_BOUND = "chat.galacticraft.keycard.not_bound";
+        String KEYCARD_UNSUCCESSFUL_USE = "chat.galacticraft.keycard.use_unsuccessfu";
+        String AIRLOCK_ALREADY_UNLOCKED = "chat.galacticraft.airlock.already_unlocked";
+        String KEYCARD_SUCCESSFUL_USE = "chat.galacticraft.keycard.use_successful";
     }
 
     interface Subtitles {
@@ -301,6 +310,12 @@ public interface Translations {
         String FLUID_CANISTER_EMPTY = "tooltip.galacticraft.fluid_canister.empty";
         String FLUID_CANISTER_FLUID_INFO = "tooltip.galacticraft.fluid_canister.fluid_info";
         String FLUID_CANISTER_LOX = "tooltip.galacticraft.fluid_canister.lox";
+        String KEYCARD_UNBOUND = "tooltip.galacticraft.keycard.unbound";
+        String KEYCARD_SNEAK_TO_BIND = "tooltip.galacticraft.keycard.sneak_to_bind";
+        String KEYCARD_BOUND_ID = "tooltip.galacticraft.keycard.bound_id";
+        String LUNAR_DUNGEON_KEYCARD = "tooltip.galacticraft.keycard.lunar_dungeon";
+        String LUNAR_DUNGEON_KEYCARD_LOCATION = "tooltip.galacticraft.keycard.lunar_dungeon_location";
+        String LUNAR_DUNGEON_KEYCARD_SINGLE_USE = "tooltip.galacticraft.keycard.lunar_dungeon_single_use";
     }
 
     interface Gas {
@@ -438,8 +453,12 @@ public interface Translations {
         String UPGRADE = "ui.galacticraft.upgrade";
         String COLOR = "ui.galacticraft.color";
 
-        String AIRLOCK_REDSTONE_SIGNAL = "ui.galacticraft.airlock.redstone_signal";
-        String AIRLOCK_OWNER = "ui.galacticraft.airlock.owner";
+        String AIRLOCK_PROXIMITY_LABEL = "ui.galacticraft.airlock_proximity_label";
+        String AIRLOCK_DEFAULT_NAME = "ui.galacticraft.airlock.default_name";
+        String AIRLOCK_ENABLED = "ui.galacticraft.airlock.enabled";
+        String AIRLOCK_PARTIAL = "ui.galacticraft.airlock.partial";
+        String AIRLOCK_DISABLED = "ui.galacticraft.airlock.disabled";
+        String AIRLOCK_OPEN_WHEN_NEAR = "ui.galacticraft.airlock.open_when_near";
         String ALPHA_WARNING_1 = "ui.galacticraft.alpha_warning.content1";
         String ALPHA_WARNING_2 = "ui.galacticraft.alpha_warning.content2";
         String ALPHA_WARNING_3 = "ui.galacticraft.alpha_warning.content3";
@@ -478,6 +497,15 @@ public interface Translations {
         String CAPES_TITLE = "ui.capes.title";
         String CAPES_STATE = "galacticraft.capes.state.";
         String CAPE = "cape.galacticraft.";
+        String AIRLOCK_STRUCTURE_MANAGED = "ui.galacticraft.airlock.structure_managed";
+        String AIRLOCK_CONFIGURATION_LOCKED = "ui.galacticraft.airlock.configuration_locked";
+        String AIRLOCK_UNLOCKED_BY_KEYCARD = "ui.galacticraft.airlock.unlocked_by_keycard";
+        String AIRLOCK_REQUIRES_KEYCARD = "ui.galacticraft.airlock.requires_keycard";
+        String AIRLOCK_KEYCARD_OPEN_TIME = "ui.galacticraft.airlock.keycard_open_time";
+
+        String MACHINE_LIB_PUBLIC_ACCESS = "ui.machinelib.machine.security.access.public";
+        String MACHINE_LIB_TEAM_ACCESS = "ui.machinelib.machine.security.access.team";
+        String MACHINE_LIB_PRIVATE_ACCESS = "ui.machinelib.machine.security.access.private";
     }
 
     interface Boss {

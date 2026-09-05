@@ -48,5 +48,9 @@ public class GCPackets {
         PayloadTypeRegistry.playC2S().register(SatelliteUpdatePayload.TYPE, SatelliteUpdatePayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(CapeSelectionPayload.TYPE, CapeSelectionPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(CreativeGcTransferItemPayload.TYPE, CreativeGcTransferItemPayload.STREAM_CODEC);
+
+        PayloadTypeRegistry.playC2S().register(AirlockSetProximityPayload.TYPE, AirlockSetProximityPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(AirlockSetProximityAccessPayload.TYPE, AirlockSetProximityAccessPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(AirlockSetKeycardOpenSecondsPayload.TYPE, AirlockSetKeycardOpenSecondsPayload.STREAM_CODEC);
     }
 }

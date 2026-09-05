@@ -56,6 +56,10 @@ public final class GCMachineStatuses {
     public static final MachineStatus ALREADY_SEALED = MachineStatus.create(Translations.MachineStatus.ALREADY_SEALED, ChatFormatting.RED, MachineStatus.Type.OTHER);
     public static final MachineStatus AREA_TOO_LARGE = MachineStatus.create(Translations.MachineStatus.AREA_TOO_LARGE, ChatFormatting.RED, MachineStatus.Type.PARTIALLY_WORKING);
     public static final MachineStatus SEALED = MachineStatus.create(Translations.MachineStatus.SEALED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    // Airlock
+    public static final MachineStatus AIRLOCK_ENABLED = MachineStatus.create(Translations.Ui.AIRLOCK_ENABLED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    public static final MachineStatus AIRLOCK_PARTIAL = MachineStatus.create(Translations.Ui.AIRLOCK_PARTIAL, ChatFormatting.YELLOW, MachineStatus.Type.WORKING);
+    public static final MachineStatus AIRLOCK_DISABLED = MachineStatus.create(Translations.Ui.AIRLOCK_DISABLED, ChatFormatting.RED, MachineStatus.Type.WORKING);
     // Oxygen - Bubble Distributor
     public static final MachineStatus DISTRIBUTING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
 

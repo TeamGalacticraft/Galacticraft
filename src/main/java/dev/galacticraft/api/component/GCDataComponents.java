@@ -48,14 +48,26 @@ public class GCDataComponents {
                     .networkSynchronized(RocketData.STREAM_CODEC)
                     .build()
     );
+
     public static final DataComponentType<Long> AMOUNT = register("amount", b -> b
-            .persistent(Codec.LONG).networkSynchronized(StreamCodecs.LONG));
+            .persistent(Codec.LONG)
+            .networkSynchronized(StreamCodecs.LONG));
+
     public static final DataComponentType<Integer> COLOR = register("color", b -> b
-            .persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.INT));
+            .persistent(ExtraCodecs.NON_NEGATIVE_INT)
+            .networkSynchronized(ByteBufCodecs.INT));
+
     public static final DataComponentType<Integer> TICKS_UNTIL_COOL = register("ticks_until_cool", b -> b
-            .persistent(ExtraCodecs.NON_NEGATIVE_INT).networkSynchronized(ByteBufCodecs.INT));
+            .persistent(ExtraCodecs.NON_NEGATIVE_INT)
+            .networkSynchronized(ByteBufCodecs.INT));
+
     public static final DataComponentType<Boolean> CREATIVE = register("creative", b -> b
-            .persistent(Codec.BOOL).networkSynchronized(ByteBufCodecs.BOOL));
+            .persistent(Codec.BOOL)
+            .networkSynchronized(ByteBufCodecs.BOOL));
+
+    public static final DataComponentType<String> KEYCARD_ACCESS_ID = register("keycard_access_id", b -> b
+            .persistent(Codec.STRING)
+            .networkSynchronized(ByteBufCodecs.STRING_UTF8));
 
     public static final DataComponentType<ResourceKey<?>> KEY = register("key", b -> b
             .persistent(RecordCodecBuilder.create(i ->
@@ -63,7 +75,8 @@ public class GCDataComponents {
                             ResourceLocation.CODEC.fieldOf("registry").forGetter(ResourceKey::registry),
                             ResourceLocation.CODEC.fieldOf("location").forGetter(ResourceKey::location)
                     ).apply(i, (r, l) -> ResourceKey.create(ResourceKey.createRegistryKey(r), l))
-            )).networkSynchronized(StreamCodec.composite(
+            ))
+            .networkSynchronized(StreamCodec.composite(
                     ResourceLocation.STREAM_CODEC,
                     ResourceKey::registry,
                     ResourceLocation.STREAM_CODEC,
@@ -80,8 +93,15 @@ public class GCDataComponents {
                     .build()
     );
 
-    private static <T> DataComponentType<T> register(String id, UnaryOperator<DataComponentType.Builder<T>> op) {
-        return Registry.register(BuiltInRegistries.DATA_COMPONENT_TYPE, Constant.id(id), op.apply(DataComponentType.builder()).build());
+    private static <T> DataComponentType<T> register(
+            String id,
+            UnaryOperator<DataComponentType.Builder<T>> op
+    ) {
+        return Registry.register(
+                BuiltInRegistries.DATA_COMPONENT_TYPE,
+                Constant.id(id),
+                op.apply(DataComponentType.builder()).build()
+        );
     }
 
     public static void init() {

@@ -145,6 +145,19 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
+        GCShapedRecipeBuilder.crafting(RecipeCategory.MISC, GCItems.KEYCARD)
+                .define('P', Items.PAPER)
+                .define('W', GCItems.ADVANCED_WAFER)
+                .define('R', ConventionalItemTags.REDSTONE_DUSTS)
+                .define('B', ConventionalItemTags.BLUE_DYES)
+                .define('D', ConventionalItemTags.RED_DYES)
+                .pattern("PBP")
+                .pattern("RWR")
+                .pattern("PDP")
+                .unlockedBy(getHasName(GCItems.ADVANCED_WAFER), has(GCItems.ADVANCED_WAFER))
+                .emiDefaultRecipe(true)
+                .save(output);
+
         SpecialRecipeBuilder.special(EmergencyKitRecipe::new).save(output, Constant.Item.EMERGENCY_KIT);
         EmiDefaultRecipeProvider.add(Constant.id("/" + Constant.Recipe.Serializer.EMERGENCY_KIT));
 

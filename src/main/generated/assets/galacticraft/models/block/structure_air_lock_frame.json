@@ -1,0 +1,6 @@
+{
+  "parent": "minecraft:block/cube_all",
+  "textures": {
+    "all": "galacticraft:block/structure_air_lock_frame"
+  }
+}

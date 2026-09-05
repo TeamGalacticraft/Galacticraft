@@ -28,6 +28,7 @@ import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
@@ -38,8 +39,7 @@ import net.minecraft.world.phys.shapes.VoxelShape;
 
 public class AirlockSealBlock extends Block {
     public static final MapCodec<AirlockSealBlock> CODEC = simpleCodec(AirlockSealBlock::new);
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
-
+    public static final DirectionProperty FACING = BlockStateProperties.FACING;
 
     @Override
     public MapCodec<? extends AirlockSealBlock> codec() {
@@ -52,31 +52,38 @@ public class AirlockSealBlock extends Block {
     }
 
 
-    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0);
-    protected static final VoxelShape SHAPE_EAST = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0);
+    // 8px-thick plate centered in the block, oriented per face normal
+    private static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0); // limits Z
+    private static final VoxelShape SHAPE_EAST_WEST = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0); // limits X
+    private static final VoxelShape SHAPE_UP_DOWN = Block.box(0.0, 4.0, 0.0, 16.0, 12.0, 16.0); // limits Y
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH) {
-            return SHAPE_NORTH;
-        } else {
-            return SHAPE_EAST;
-        }
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx) {
+        return switch (state.getValue(FACING)) {
+            case NORTH, SOUTH -> SHAPE_NORTH_SOUTH;
+            case EAST,  WEST  -> SHAPE_EAST_WEST;
+            case UP,    DOWN  -> SHAPE_UP_DOWN;   // <-- support facing up/down
+        };
     }
 
     @Override
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
-        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
+    public BlockState rotate(BlockState state, Rotation rotation) {
+        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
     }
 
     @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+    public BlockState mirror(BlockState state, Mirror mirror) {
+        return state.rotate(mirror.getRotation(state.getValue(FACING)));
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        return this.defaultBlockState().setValue(FACING, blockPlaceContext.getHorizontalDirection().getOpposite());
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) {
+        b.add(FACING);
     }
 
+    @Override
+    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
+        Direction look = ctx.getNearestLookingDirection().getOpposite();
+        return this.defaultBlockState().setValue(FACING, look);
+    }
 }

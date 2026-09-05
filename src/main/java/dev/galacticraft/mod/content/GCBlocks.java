@@ -30,6 +30,7 @@ import dev.galacticraft.mod.content.block.boss.BossSpawner;
 import dev.galacticraft.mod.content.block.decoration.*;
 import dev.galacticraft.mod.content.block.environment.*;
 import dev.galacticraft.mod.content.block.machine.*;
+import dev.galacticraft.mod.content.block.machine.airlock.AirlockControllerBlock;
 import dev.galacticraft.mod.content.block.special.*;
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.AluminumWireBlock;
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.SealableAluminumWireBlock;
@@ -381,8 +382,12 @@ public class GCBlocks {
     public static final Block OXYGEN_STORAGE_MODULE = BLOCKS.registerWithItem(Constant.Block.OXYGEN_STORAGE_MODULE, new ResourceStorageBlock(BlockBehaviour.Properties.of().mapColor(MapColor.COLOR_GRAY).strength(3.0F, 5.0F).sound(SoundType.METAL).requiresCorrectToolForDrops(), Constant.id(Constant.Block.OXYGEN_STORAGE_MODULE)));
     public static final Block FOOD_CANNER = BLOCKS.registerWithItem(Constant.Block.FOOD_CANNER, new FoodCannerBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(3.0F, 5.0F).sound(SoundType.METAL).mapColor(MapColor.COLOR_GRAY).requiresCorrectToolForDrops()));
 
-    public static final AirlockBlock AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new AirlockBlock(false, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
-    public static final AirlockBlock AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockBlock(true, BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).mapColor(MapColor.COLOR_GRAY)));
+    public static final Block AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK), Constant.id(Constant.Block.AIR_LOCK_CONTROLLER)));
+    public static final Block REINFORCED_AIR_LOCK_CONTROLLER = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(50.0F, 1200.0F), Constant.id(Constant.Block.REINFORCED_AIR_LOCK_CONTROLLER)));
+    public static final Block STRUCTURE_AIR_LOCK_CONTROLLER = BLOCKS.register(Constant.Block.STRUCTURE_AIR_LOCK_CONTROLLER, new AirlockControllerBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.IRON_BLOCK).strength(-1.0F, 3600000.0F).noLootTable(), Constant.id(Constant.Block.AIR_LOCK_CONTROLLER), true));
+    public static final Block AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_CONTROLLER)));
+    public static final Block REINFORCED_AIR_LOCK_FRAME = BLOCKS.registerWithItem(Constant.Block.REINFORCED_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(REINFORCED_AIR_LOCK_CONTROLLER)));
+    public static final Block STRUCTURE_AIR_LOCK_FRAME = BLOCKS.register(Constant.Block.STRUCTURE_AIR_LOCK_FRAME, new Block(BlockBehaviour.Properties.ofFullCopy(STRUCTURE_AIR_LOCK_CONTROLLER)));
     public static final Block AIR_LOCK_SEAL = BLOCKS.register(Constant.Block.AIR_LOCK_SEAL, new AirlockSealBlock(BlockBehaviour.Properties.ofFullCopy(AIR_LOCK_FRAME).strength(-1.0f, 3600000.0f).noLootTable().isValidSpawn(GCBlocks::never)));
 
     // TORCHES

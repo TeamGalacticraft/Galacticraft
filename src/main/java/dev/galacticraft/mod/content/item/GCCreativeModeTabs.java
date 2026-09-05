@@ -299,6 +299,8 @@ public class GCCreativeModeTabs {
                 output.accept(FOOD_CANNER);
                 output.accept(AIR_LOCK_FRAME);
                 output.accept(AIR_LOCK_CONTROLLER);
+                output.accept(REINFORCED_AIR_LOCK_FRAME);
+                output.accept(REINFORCED_AIR_LOCK_CONTROLLER);
             }).build();
 
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup
@@ -341,6 +343,9 @@ public class GCCreativeModeTabs {
                 }
 
                 output.accept(EMERGENCY_KIT);
+
+                output.accept(KEYCARD);
+                output.accept(LUNAR_DUNGEON_KEYCARD);
 
                 // MATERIALS
                 output.accept(RAW_TIN);

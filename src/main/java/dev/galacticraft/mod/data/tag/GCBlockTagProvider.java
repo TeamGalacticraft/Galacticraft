@@ -424,6 +424,41 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
 
+        this.tag(GCBlockTags.AIRLOCK_BLOCKS)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.AIR_LOCK_FRAME)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.REINFORCED_AIRLOCK_BLOCKS)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.STRUCTURE_AIRLOCK_BLOCKS)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+
+        this.tag(GCBlockTags.AIRLOCK_CONTROLLERS)
+                .add(GCBlocks.AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER);
+
+        this.tag(GCBlockTags.AIRLOCK_FRAMES)
+                .add(GCBlocks.AIR_LOCK_FRAME)
+                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+
+        this.tag(BlockTags.WITHER_IMMUNE)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME)
+                .add(GCBlocks.AIR_LOCK_SEAL);
+
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
@@ -616,8 +651,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
-                        GCBlocks.AIR_LOCK_FRAME,
                         GCBlocks.AIR_LOCK_CONTROLLER,
+                        GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER,
+                        GCBlocks.AIR_LOCK_FRAME,
+                        GCBlocks.REINFORCED_AIR_LOCK_FRAME,
                         GCBlocks.ALUMINUM_WIRE,
                         GCBlocks.HEAVY_ALUMINUM_WIRE,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,

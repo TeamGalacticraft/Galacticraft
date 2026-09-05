@@ -409,8 +409,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);
         generator.createNonTemplateModelBlock(GCBlocks.SULFURIC_ACID);
 
-        generator.createTrivialCube(GCBlocks.AIR_LOCK_FRAME);
-        this.createAirLockController(generator);
+        this.createAirlockBlocks(generator);
 
         this.createParachests(generator);
     }
@@ -565,10 +564,36 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialBlock(GCBlocks.VAPOR_SPOUT, textureMapping, ModelTemplates.CUBE_TOP);
     }
 
-    private void createAirLockController(BlockModelGenerators generator) {
-        var block = GCBlocks.AIR_LOCK_CONTROLLER;
-        var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
-        generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    private void createAirlockBlocks(BlockModelGenerators generator) {
+        Block basicFrame = GCBlocks.AIR_LOCK_FRAME;
+        Block reinforcedFrame = GCBlocks.REINFORCED_AIR_LOCK_FRAME;
+        Block structureFrame = GCBlocks.STRUCTURE_AIR_LOCK_FRAME;
+        Block basicController = GCBlocks.AIR_LOCK_CONTROLLER;
+        Block reinforcedController = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
+        Block structureController = GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER;
+
+        // Generate frame blocks
+        generator.createTrivialCube(basicFrame);
+        generator.createTrivialCube(reinforcedFrame);
+        generator.createTrivialCube(structureFrame);
+
+        // Generate controller blocks
+        createAirlockController(generator, basicController, basicFrame);
+        createAirlockController(generator, reinforcedController, reinforcedFrame);
+        createAirlockController(generator, structureController, structureFrame);
+    }
+
+    private void createAirlockController(BlockModelGenerators generator, Block controller, Block frame) {
+        ResourceLocation controllerTexture = TextureMapping.getBlockTexture(controller);
+        ResourceLocation frameTexture = TextureMapping.getBlockTexture(frame);
+        MachineModelGenerator.createTrivialMachine(generator, controller, TextureProvider.builder(Constant.MOD_ID)
+                .sides(controllerTexture)
+                .top(frameTexture)
+                .bottom(frameTexture)
+                .particle(controllerTexture)
+                .build()
+        );
+
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
@@ -805,6 +830,9 @@ public class GCModelProvider extends FabricModelProvider {
         generator.generateFlatItem(GCItems.SHIELD_CONTROLLER, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.FREQUENCY_MODULE, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.EMERGENCY_KIT, ModelTemplates.FLAT_ITEM);
+
+        generator.generateFlatItem(GCItems.KEYCARD, ModelTemplates.FLAT_ITEM);
+        generator.generateFlatItem(GCItems.LUNAR_DUNGEON_KEYCARD, ModelTemplates.FLAT_ITEM);
 
         generator.generateFlatItem(GCItems.THERMAL_PADDING_HELMET, ModelTemplates.FLAT_ITEM);
         generator.generateFlatItem(GCItems.THERMAL_PADDING_CHESTPIECE, ModelTemplates.FLAT_ITEM);

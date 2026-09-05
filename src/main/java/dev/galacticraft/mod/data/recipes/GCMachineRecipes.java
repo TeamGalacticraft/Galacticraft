@@ -292,6 +292,16 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.REINFORCED_AIR_LOCK_FRAME, 4)
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('C', GCItems.OXYGEN_CONCENTRATOR)
+                .pattern("OOO")
+                .pattern("SCS")
+                .pattern("OOO")
+                .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
+                .save(output);
+
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIR_LOCK_CONTROLLER)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('M', GCItems.COMPRESSED_METEORIC_IRON)
@@ -301,6 +311,17 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .pattern("SSS")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .emiDefaultRecipe(true)
+                .save(output);
+
+        ShapedRecipeBuilder.shaped(RecipeCategory.DECORATIONS, GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('M', GCItems.COMPRESSED_METEORIC_IRON)
+                .define('W', GCItems.BASIC_WAFER)
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
+                .pattern("OSO")
+                .pattern("MWM")
+                .pattern("OSO")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .save(output);
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.CRYOGENIC_CHAMBER)

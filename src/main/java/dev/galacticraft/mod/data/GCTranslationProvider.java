@@ -32,8 +32,8 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -384,7 +384,11 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.FUEL_LOADER, "Fuel Loader");
 
         this.block(GCBlocks.AIR_LOCK_CONTROLLER, "Airlock Controller");
+        this.block(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER, "Reinforced Airlock Controller");
+        this.block(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER, "Dungeon Airlock Controller");
         this.block(GCBlocks.AIR_LOCK_FRAME, "Airlock Frame");
+        this.block(GCBlocks.REINFORCED_AIR_LOCK_FRAME, "Reinforced Airlock Frame");
+        this.block(GCBlocks.STRUCTURE_AIR_LOCK_FRAME, "Dungeon Airlock Frame");
         this.block(GCBlocks.AIR_LOCK_SEAL, "Airlock Seal");
     }
 
@@ -565,6 +569,9 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.item(GCItems.SHIELD_CONTROLLER, "Shield Controller");
         this.item(GCItems.FREQUENCY_MODULE, "Frequency Module");
+
+        this.item(GCItems.KEYCARD, "Key Card");
+        this.item(GCItems.LUNAR_DUNGEON_KEYCARD, "Lunar Dungeon Key Card");
 
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.THERMAL_PADDING_CHESTPIECE, "Thermal Padding Chestpiece");
@@ -933,6 +940,16 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(GcHouston.IN_OVERWORLD, "I don't need to be rescued!");
         this.add(GcHouston.SUCCESS, "You have been rescued. Better luck next time...");
 
+        this.add(Chat.STRUCTURE_AIRLOCK_LOCKED, "Owner: UNKNOWN - Configuration locked");
+
+        this.add(Chat.CANNOT_REPROGRAM_KEYCARD, "This key card cannot be reprogrammed.");
+        this.add(Chat.KEYCARD_NO_PERMISSION, "You do not have permission to bind a key card to this airlock.");
+        this.add(Chat.KEYCARD_SUCCESSFUL_BIND, "Key card bound to airlock.");
+        this.add(Chat.KEYCARD_NOT_BOUND, "This key card is unbound.");
+        this.add(Chat.KEYCARD_UNSUCCESSFUL_USE, "Access denied.");
+        this.add(Chat.AIRLOCK_ALREADY_UNLOCKED, "Airlock already unlocked.");
+        this.add(Chat.KEYCARD_SUCCESSFUL_USE, "Access granted.");
+
         this.deathBy(GCDamageTypes.CRASH_LANDING, "%s came in too hot");
         this.deathBy(GCDamageTypes.METEOR_STRIKE, "%s was struck by a meteor",
                 "%s was struck by a meteor hurled by %s");
@@ -1026,6 +1043,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Tooltip.FLUID_CANISTER_EMPTY, "Empty");
         this.add(Tooltip.FLUID_CANISTER_FLUID_INFO, "%s: %s");
         this.add(Tooltip.FLUID_CANISTER_LOX, "LOX");
+
+        this.add(Tooltip.KEYCARD_UNBOUND, "Unbound");
+        this.add(Tooltip.KEYCARD_SNEAK_TO_BIND, "Sneak + Right Click an Airlock Controller to bind");
+        this.add(Tooltip.KEYCARD_BOUND_ID, "Bound Access ID: %s");
+
+        this.add(Tooltip.LUNAR_DUNGEON_KEYCARD, "Lunar Facility Security Credential");
+        this.add(Tooltip.LUNAR_DUNGEON_KEYCARD_LOCATION, "Facility: UNKNOWN");
+        this.add(Tooltip.LUNAR_DUNGEON_KEYCARD_SINGLE_USE, "Single Use");
     }
 
     protected void generateConfigTranslations() {
@@ -1206,8 +1231,17 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.UPGRADE, "Upgrade");
         this.add(Ui.COLOR, "Color");
 
-        this.add(Ui.AIRLOCK_REDSTONE_SIGNAL, "Opens on Redstone Signal");
-        this.add(Ui.AIRLOCK_OWNER, "%s's Airlock Controller");
+        this.add(Ui.AIRLOCK_PROXIMITY_LABEL, "Airlock Proximity:");
+        this.add(Ui.AIRLOCK_DEFAULT_NAME, "Airlock Controller");
+        this.add(Ui.AIRLOCK_ENABLED, "Airlock Enabled");
+        this.add(Ui.AIRLOCK_PARTIAL, "Airlock Partially Enabled");
+        this.add(Ui.AIRLOCK_DISABLED, "Airlock Disabled");
+        this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player");
+        this.add(Ui.AIRLOCK_STRUCTURE_MANAGED, "Owner: UNKNOWN");
+        this.add(Ui.AIRLOCK_CONFIGURATION_LOCKED, "Configuration Locked");
+        this.add(Ui.AIRLOCK_UNLOCKED_BY_KEYCARD, "Key Card: UNLOCKED");
+        this.add(Ui.AIRLOCK_REQUIRES_KEYCARD, "Key Card Required");
+        this.add(Ui.AIRLOCK_KEYCARD_OPEN_TIME, "Key Card Open Time");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");

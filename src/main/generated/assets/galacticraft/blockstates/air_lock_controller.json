@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "galacticraft:block/air_lock_controller"
+      "model": "galacticraft:machine/air_lock_controller"
     }
   }
 }
