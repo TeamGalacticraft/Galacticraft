@@ -25,7 +25,7 @@ package dev.galacticraft.mod.client.render.entity.feature;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.content.entity.evolved.EvolvedSpiderEntity;
 import net.minecraft.client.model.HierarchicalModel;
 import net.minecraft.client.model.SpiderModel;
 import net.minecraft.client.model.geom.ModelPart;
