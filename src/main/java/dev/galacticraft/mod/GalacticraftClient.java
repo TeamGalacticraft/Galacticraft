@@ -23,7 +23,6 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
-import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.client.ClientCapeLoginSync;
@@ -37,11 +36,7 @@ import dev.galacticraft.mod.client.particle.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
-import dev.galacticraft.mod.client.render.entity.feature.OxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.ParrotOxygenGearRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.PetOxygenMaskRenderLayer;
-import dev.galacticraft.mod.client.render.entity.feature.PetOxygenTanksRenderLayer;
+import dev.galacticraft.mod.client.render.entity.feature.*;
 import dev.galacticraft.mod.client.render.entity.model.GCEntityModelLayer;
 import dev.galacticraft.mod.client.render.entity.rocket.RocketEntityRenderer;
 import dev.galacticraft.mod.client.render.item.FlagItemRenderer;
@@ -49,7 +44,9 @@ import dev.galacticraft.mod.client.render.item.RocketItemRenderer;
 import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers;
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
+import dev.galacticraft.mod.client.util.CannedFoodColorCache;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.client.util.TextureUtils;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
@@ -65,7 +62,6 @@ import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.screen.GCPlayerInventoryMenu;
 import dev.galacticraft.mod.screen.RocketMenu;
-import dev.galacticraft.mod.util.TextureUtils;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -90,13 +86,13 @@ import net.minecraft.client.renderer.item.ItemProperties;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.server.packs.PackType;
 import net.minecraft.util.FastColor;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.animal.Cat;
 import net.minecraft.world.entity.animal.Parrot;
 import net.minecraft.world.entity.animal.Wolf;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.HashMap;
@@ -247,7 +243,10 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ColorProviderRegistry.BLOCK.register((state, world, pos, tintIndex) -> FallenMeteorBlock.colorMultiplier(state, world, pos), GCBlocks.FALLEN_METEOR);
         ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : ColorUtil.getRainbowOpaque(), GCItems.INFINITE_BATTERY, GCItems.INFINITE_OXYGEN_TANK);
-        ColorProviderRegistry.ITEM.register((stack, layer) -> layer != 1 ? -1 : FastColor.ARGB32.opaque(stack.getOrDefault(GCDataComponents.COLOR, 0xFFFFFF)), GCItems.CANNED_FOOD);
+        ColorProviderRegistry.ITEM.register((stack, layer) -> {
+            if (layer != 1) return -1;
+            return FastColor.ARGB32.opaque(CannedFoodColorCache.getCanColor(stack));
+        }, GCItems.CANNED_FOOD);
 
         // Fluids can be added to the list below to give them a colour for the Fluid Canister
         // Fluids that use a tint are handled automatically
@@ -274,7 +273,11 @@ public class GalacticraftClient implements ClientModInitializer {
                 return -1;
             });
         }, GCItems.FLUID_CANISTER);
-        InvalidateRenderStateCallback.EVENT.register(FLUID_CANISTER_COLOR_CACHE::clear);
+
+        InvalidateRenderStateCallback.EVENT.register(() -> {
+            FLUID_CANISTER_COLOR_CACHE.clear();
+            CannedFoodColorCache.clear();
+        });
 
         ItemProperties.register(GCItems.FLUID_CANISTER, FluidCanisterItem.FILL_LEVEL, (stack, world, entity, seed) -> {
             FluidData data = stack.get(FLUID_DATA);

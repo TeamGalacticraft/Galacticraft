@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.util;
+package dev.galacticraft.mod.client.util;
 
 import dev.galacticraft.mod.mixin.client.SpriteContentAccessor;
 import net.minecraft.client.Minecraft;

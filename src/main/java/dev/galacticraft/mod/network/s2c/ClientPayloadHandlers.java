@@ -20,31 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client;
+package dev.galacticraft.mod.network.s2c;
 
 import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
-import dev.galacticraft.mod.util.Translations;
-import net.fabricmc.fabric.api.client.keybinding.v1.KeyBindingHelper;
-import net.minecraft.client.KeyMapping;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
 import net.minecraft.client.Minecraft;
-import org.lwjgl.glfw.GLFW;
 
-public class GCKeyBinds {
-    public static final KeyMapping OPEN_CELESTIAL_SCREEN = new KeyMapping(Translations.Keybindings.OPEN_CELESTIAL_SCREEN, GLFW.GLFW_KEY_M, KeyMapping.CATEGORY_MISC);
-    public static final KeyMapping OPEN_ROCKET_INVENTORY = new KeyMapping(Translations.Keybindings.ROCKET_INVENTORY, GLFW.GLFW_KEY_F, KeyMapping.CATEGORY_INVENTORY);
-
-    public static void register() {
-        KeyBindingHelper.registerKeyBinding(OPEN_CELESTIAL_SCREEN);
-        KeyBindingHelper.registerKeyBinding(OPEN_ROCKET_INVENTORY);
+@Environment(EnvType.CLIENT)
+public final class ClientPayloadHandlers {
+    public static void openCelestialScreen(OpenCelestialScreenPayload payload) {
+        Minecraft.getInstance().setScreen(new CelestialSelectionScreen(
+                false,
+                payload.data(),
+                payload.canCreateStations(),
+                payload.celestialBody().value(),
+                payload.disabledDestinations()
+        ));
     }
 
-    public static void handleKeybinds(Minecraft client) {
-        if (client.level != null && client.player != null) {
-            if (client.screen == null) {
-                while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
-                    client.setScreen(new CelestialSelectionScreen(true, null, false, null, null));
-                }
-            }
-        }
+    private ClientPayloadHandlers() {
     }
 }

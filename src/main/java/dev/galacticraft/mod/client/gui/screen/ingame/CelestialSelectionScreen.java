@@ -47,6 +47,7 @@ import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.StringUtil;
@@ -55,8 +56,15 @@ import net.minecraft.world.item.crafting.Ingredient;
 import org.jetbrains.annotations.Nullable;
 import org.lwjgl.glfw.GLFW;
 
-import java.util.*;
-import java.util.stream.Collectors;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.HashSet;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Map;
+import java.util.Objects;
+import java.util.Set;
 
 import static dev.galacticraft.mod.Constant.CelestialScreen.*;
 
@@ -68,9 +76,12 @@ public class CelestialSelectionScreen extends CelestialScreen {
     protected int BOT = 0;
 
     public final boolean mapMode;
-    private final @Nullable RocketData data;
-    protected final CelestialBody<?, ?> fromBody;
     public final boolean canCreateStations;
+
+    private final @Nullable RocketData data;
+    private final Set<ResourceLocation> disabledDestinations;
+
+    protected final CelestialBody<?, ?> fromBody;
 
     protected int createSpaceStationButtonY;
     protected int zoomTooltipPos = 0;
@@ -79,18 +90,26 @@ public class CelestialSelectionScreen extends CelestialScreen {
     protected boolean renamingSpaceStation;
     protected String renamingString = "";
 
-    public CelestialSelectionScreen(boolean mapMode, @Nullable RocketData data, boolean canCreateStations, CelestialBody<?, ?> fromBody) {
+    public CelestialSelectionScreen(
+            boolean mapMode,
+            @Nullable RocketData data,
+            boolean canCreateStations,
+            CelestialBody<?, ?> fromBody,
+            Collection<ResourceLocation> disabledDestinations
+    ) {
         super(Component.empty());
         this.mapMode = mapMode;
         this.data = data;
         this.canCreateStations = canCreateStations;
         this.fromBody = fromBody;
+        this.disabledDestinations = new HashSet<>(
+                disabledDestinations == null ? Collections.emptySet() : disabledDestinations
+        );
     }
 
     @Override
     public void init() {
         super.init();
-        assert this.minecraft != null;
 
         this.LHS = this.borderSize + this.borderEdgeSize;
         this.RHS = this.width - this.LHS;
@@ -98,139 +117,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     @Override
-    public void onClose() {
-        super.onClose();
-    }
-
-    protected Component grandparentName() {
-        CelestialBody<?, ?> body = this.selectedBody;
-        if (body == null || body == this.celestialBodies.get(SOL)) {
-            return Component.translatable(Translations.Galaxy.MILKY_WAY); //fixme
-        }
-        if (body.parent().isPresent()) {
-            if (body.parentValue(this.celestialBodies).parent().isPresent()) {
-                return body.parentValue(this.celestialBodies).parentValue(this.celestialBodies).name();
-            } else {
-                return body.galaxyValue(this.galaxies, this.celestialBodies).name();
-            }
-        } else {
-            return body.galaxyValue(this.galaxies, this.celestialBodies).name();
-        }
-    }
-
-    protected Component parentName() {
-        if (this.selectedBody == null) return Component.translatable(Translations.CelestialBody.SOL); //fixme
-        if (this.selectedBody == this.celestialBodies.get(SOL))
-            return Component.translatable(Translations.CelestialBody.SOL);
-        if (this.selectedBody.parent().isPresent())
-            return this.selectedBody.parentValue(this.celestialBodies).name();
-        return this.selectedBody.galaxyValue(this.galaxies, this.celestialBodies).name();
-    }
-
-    protected List<CelestialBody<?, ?>> getChildren(CelestialBody<?, ?> celestialBody) {
-        if (celestialBody != null) {
-            List<CelestialBody<?, ?>> list = this.celestialBodies.stream()
-                    .filter(body -> !body.isSatellite() && body.parent().isPresent() && body.parentValue(this.celestialBodies) == celestialBody)
-                    .collect(Collectors.toList());
-
-            List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = this.getVisibleSatellitesForCelestialBody(celestialBody);
-            if (satellites.size() > 0) {
-                list.add(satellites.get(0));
-            }
-
-            list.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
-            return list;
-        }
-        return Collections.emptyList();
-    }
-
-    @Override
-    public boolean keyPressed(int key, int scanCode, int modifiers) {
-        if (this.renamingSpaceStation) {
-            if (key == GLFW.GLFW_KEY_BACKSPACE) {
-                if (this.renamingString != null && !this.renamingString.isEmpty()) {
-                    String toBeParsed = this.renamingString.substring(0, this.renamingString.length() - 1);
-
-                    if (this.isValid(toBeParsed)) {
-                        this.renamingString = toBeParsed;
-//                        this.timeBackspacePressed = System.currentTimeMillis();
-                    } else {
-                        this.renamingString = "";
-                    }
-                }
-
-                return true;
-            } else if (Screen.isPaste(key)) {
-                assert this.minecraft != null;
-                String pastestring = this.minecraft.keyboardHandler.getClipboard();
-
-                if (pastestring.isEmpty()) {
-                    return false;
-                }
-
-                if (this.isValid(this.renamingString + pastestring)) {
-                    this.renamingString = this.renamingString + pastestring;
-                    this.renamingString = this.renamingString.substring(0, Math.min(this.renamingString.length(), MAX_SPACE_STATION_NAME_LENGTH));
-                }
-
-                return true;
-            }
-        } else if (key == GLFW.GLFW_KEY_ENTER) {
-            // Keyboard shortcut - teleport to dimension by pressing 'Enter'
-            this.teleportToSelectedBody();
-            return true;
-        }
-
-        return super.keyPressed(key, scanCode, modifiers);
-    }
-
-    @Override
-    public boolean charTyped(char character, int modifiers) {
-        if (this.renamingSpaceStation && StringUtil.isAllowedChatCharacter(character)) {
-            this.renamingString = this.renamingString + character;
-            this.renamingString = this.renamingString.substring(0, Math.min(this.renamingString.length(), MAX_SPACE_STATION_NAME_LENGTH));
-            return true;
-        }
-
-        return super.charTyped(character, modifiers);
-    }
-
-    public boolean isValid(String string) {
-        return !string.isEmpty() && StringUtil.isAllowedChatCharacter(string.charAt(string.length() - 1));
-    }
-
-    protected boolean canCreateSpaceStation(CelestialBody<?, ?> atBody) {
-        if (!atBody.isOrbitable()) {
-            return false;
-        }
-        SatelliteRecipe recipe = ((Orbitable) atBody.type()).satelliteRecipe(atBody.config());
-        if (recipe == null) {
-            return false;
-        }
-        if (this.mapMode/* || ConfigManagerCore.disableSpaceStationCreation.get()*/ || !this.canCreateStations) //todo SSconfig
-        {
-            return false;
-        }
-
-        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, atBody)) {
-            // If parent body is unreachable, the satellite is also unreachable
-            return false;
-        }
-
-        boolean foundSatellite = false;
-        assert this.minecraft != null;
-        assert this.minecraft.level != null;
-        for (CelestialBody<SatelliteConfig, SatelliteType> type : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
-            if (type.parentValue(this.celestialBodies) == atBody) {
-                assert this.minecraft.player != null;
-                if (type.type().ownershipData(type.config()).owner().equals(this.minecraft.player.getUUID())) {
-                    foundSatellite = true;
-                    break;
-                }
-            }
-        }
-
-        return !foundSatellite;
+    public boolean shouldCloseOnEsc() {
+        return this.mapMode;
     }
 
     @Override
@@ -239,485 +127,600 @@ public class CelestialSelectionScreen extends CelestialScreen {
         this.selectedStationOwner = "";
     }
 
-    protected void teleportToSelectedBody() {
-        assert !this.mapMode;
-        if (this.selectedBody != null && this.selectedBody.type() instanceof Landable landable) {
-            landable.world(this.selectedBody.config());
-            if (this.data == null || this.data.canTravel(this.manager, this.fromBody, this.selectedBody)) {
-                try {
-                    assert this.minecraft != null;
-                    Component fromName = this.selectedBody.name();
-                    if (this.selectedBody.isSatellite()) {
-                        SatelliteConfig config = (SatelliteConfig) this.selectedBody.config();
-                        ClientPlayNetworking.send(new PlanetTeleportPayload(config.getId()));
-
-                        String name = config.getCustomName();
-                        if (name.length() == 0) {
-                            fromName = Component.translatable(Translations.Ui.SPACE_STATION_NAME, config.getOwnershipData().username());
-                        } else {
-                            fromName = Component.literal(name);
-                        }
-                    } else {
-                        ClientPlayNetworking.send(new PlanetTeleportPayload(this.celestialBodies.getKey(this.selectedBody)));
-                    }
-                    this.minecraft.setScreen(new SpaceTravelScreen(fromName, ((Landable) this.selectedBody.type()).world(this.selectedBody.config())));
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
+    @Override
+    public boolean keyPressed(int key, int scanCode, int modifiers) {
+        if (this.renamingSpaceStation) {
+            return this.keyPressedWhileRenaming(key);
         }
-    }
 
-    @Override
-    public boolean mouseDragged(double x, double y, int activeButton, double dragX, double dragY) {
-        return super.mouseDragged(x, y, activeButton, dragX, dragY);
-    }
-
-    @Override
-    public boolean mouseReleased(double x, double y, int button) {
-        return super.mouseReleased(x, y, button);
-    }
-
-    @Override
-    public boolean mouseClicked(double x, double y, int button) {
-        boolean clickHandled = false;
-
-        if (this.selectedBody != null && x > LHS && x < LHS + 88 && y > LHS && y < LHS + 13) {
-            this.unselectCelestialBody();
+        if (key == GLFW.GLFW_KEY_ENTER) {
+            this.teleportToSelectedBody();
             return true;
         }
 
-        if (!this.mapMode) {
-            if (x >= RHS - CREATE_SS_PANEL_WIDTH - 2 && x < RHS - 2 && y > createSpaceStationButtonY && y < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
-                if (this.selectedBody != null && this.selectedBody.type() instanceof Orbitable orbitable/* && this.selectedBody.getWorld() != null*/) {
-                    SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
-                    if (recipe != null && this.canCreateSpaceStation(this.selectedBody)) {
-                        assert this.minecraft != null;
-                        assert this.minecraft.player != null;
-                        if (this.minecraft.player.hasInfiniteMaterials() || recipe.test(this.minecraft.player.getInventory())) {
-                            SatelliteCreationPayload payload = new SatelliteCreationPayload(this.selectedBody.getKey(this.celestialBodies));
-                            ClientPlayNetworking.send(payload);
-                            //Zoom in on planet to show the new SpaceStation if not already zoomed
-                            if (!this.isZoomed()) {
-                                this.selectionState = EnumSelection.ZOOMED;
-                                this.preSelectZoom = this.zoom;
-                                this.preSelectPosition = this.position;
-                                this.ticksSinceSelectionF = 0;
-                                this.doneZooming = false;
-                            }
-                            return true;
-                        }
-
-                        clickHandled = true;
-                    }
-                }
-            }
-        }
-
-        boolean a = x > RHS - 88 && x < RHS && y > LHS && y < LHS + 13;
-        if (this.mapMode) {
-            if (a) {
-                assert this.minecraft != null;
-                this.minecraft.setScreen(null);
-                clickHandled = true;
-            }
-        }
-
-        if (this.selectedBody != null && !this.mapMode) {
-            if (a) {
-                assert this.minecraft != null;
-                if ((!this.isSatellite(this.selectedBody) || ((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player))) {
-                    this.teleportToSelectedBody();
-                }
-                clickHandled = true;
-            }
-        }
-
-        if (this.isSatellite(this.selectedBody)) {
-            if (this.renamingSpaceStation) {
-                if (x >= width / 2f - 90 && x <= width / 2f + 90 && y >= this.height / 2f - 38 && y <= this.height / 2f + 38) {
-                    // Apply
-                    if (x >= width / 2f - 90 + 17 && x <= width / 2f - 90 + 17 + 72 && y >= this.height / 2f - 38 + 59 && y <= this.height / 2f - 38 + 59 + 12) {
-                        assert this.minecraft != null;
-                        assert this.minecraft.player != null;
-                        String strName = this.minecraft.player.getName().getString();
-                        CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                        selectedSatellite.type().setCustomName(this.renamingString, selectedSatellite.config());
-                        ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config()));
-                        this.renamingSpaceStation = false;
-                    }
-                    // Cancel
-                    if (x >= width / 2f && x <= width / 2f + 72 && y >= this.height / 2f - 38 + 59 && y <= this.height / 2f - 38 + 59 + 12) {
-                        this.renamingSpaceStation = false;
-                    }
-                    clickHandled = true;
-                }
-            } else {
-                if (x >= width / 2f - 47 && x <= width / 2f - 47 + 94 && y >= LHS && y <= LHS + 11) {
-                    if (!this.selectedStationOwner.isEmpty()) {
-                        assert this.minecraft != null;
-                        if (this.selectedStationOwner.equalsIgnoreCase(this.minecraft.player.getName().getString())) {
-                            this.renamingSpaceStation = true;
-                            this.renamingString = null;
-                            clickHandled = true;
-                        }
-                    }
-                }
-
-                CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellites = this.getVisibleSatellitesForCelestialBody(selectedSatellite.parentValue(this.celestialBodies));
-                int stationListSize = visibleSatellites.size();
-                int max = Math.min((this.height / 2) / 14, stationListSize);
-
-                int xPos;
-                int yPos;
-
-                // Up button
-                xPos = RHS - 85;
-                yPos = LHS + 45;
-
-                if (x >= xPos && x <= xPos + 61 && y >= yPos && y <= yPos + 4) {
-                    if (this.spaceStationListOffset > 0) {
-                        this.spaceStationListOffset--;
-                    }
-                    clickHandled = true;
-                }
-
-                // Down button
-                xPos = RHS - 85;
-                yPos = LHS + 49 + max * 14;
-
-                if (x >= xPos && x <= xPos + 61 && y >= yPos && y <= yPos + 4) {
-                    if (max + this.spaceStationListOffset < stationListSize) {
-                        this.spaceStationListOffset++;
-                    }
-                    clickHandled = true;
-                }
-
-                int i = 0;
-                int j = 0;
-                for (CelestialBody<SatelliteConfig, SatelliteType> satellite : visibleSatellites) {
-                    if (i >= max) break;
-
-                    if (j >= this.spaceStationListOffset) {
-                        int xOffset = 0;
-
-                        if (satellite.type().ownershipData(satellite.config()).username().equalsIgnoreCase(this.selectedStationOwner)) {
-                            xOffset -= 5;
-                        }
-
-                        xPos = RHS - 95 + xOffset;
-                        yPos = LHS + 50 + i * 14;
-
-                        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
-                            this.selectedStationOwner = satellite.type().ownershipData(satellite.config()).username();
-                            clickHandled = true;
-                        }
-                        i++;
-                    }
-                    j++;
-                }
-            }
-        }
-
-        int xPos = LHS + 2;
-        int yPos = LHS + 10;
-
-        boolean planetZoomedMoon = this.isZoomed() && this.isPlanet(this.selectedParent);
-
-        // Top yellow button e.g. Sol
-        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12 && this.selectedParent != null) {
-            if (this.selectedBody == null) {
-                this.preSelectZoom = this.zoom;
-                this.preSelectPosition = this.position;
-            }
-
-            EnumSelection selectionCountOld = this.selectionState;
-
-            if (this.isSelected()) {
-                this.unselectCelestialBody();
-            }
-
-            if (selectionCountOld == EnumSelection.ZOOMED) {
-                this.selectionState = EnumSelection.SELECTED;
-            }
-
-            this.selectedBody = this.selectedParent;
-            this.ticksSinceSelectionF = 0;
-            this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
-            if (this.isZoomed() && !planetZoomedMoon) {
-                this.ticksSinceMenuOpenF = 0;
-            }
-            clickHandled = true;
-        }
-
-        yPos += 22;
-
-        // First blue button - normally the Selected Body (but it's the parent planet if this is a moon)
-        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
-            if (planetZoomedMoon) {
-                if (this.selectedBody == null) {
-                    this.preSelectZoom = this.zoom;
-                    this.preSelectPosition = this.position;
-                }
-
-                EnumSelection selectionCountOld = this.selectionState;
-                if (this.isSelected()) {
-                    this.unselectCelestialBody();
-                }
-                if (selectionCountOld == EnumSelection.ZOOMED) {
-                    this.selectionState = EnumSelection.SELECTED;
-                }
-
-                this.selectedBody = this.selectedParent;
-                this.ticksSinceSelectionF = 0;
-                this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
-            }
-            clickHandled = true;
-        }
-
-        if (!clickHandled) {
-            List<CelestialBody<?, ?>> children = this.getChildren(this.isZoomed() && !(this.isPlanet(this.selectedParent)) ? this.selectedBody : this.selectedParent);
-
-            yPos = LHS + 50;
-            for (CelestialBody<?, ?> child : children) {
-                clickHandled = this.testClicked(child, child.equals(this.selectedBody) ? 5 : 0, yPos, x, y, false);
-                yPos += 14;
-
-                if (!clickHandled && !this.isZoomed() && child.equals(this.selectedBody)) {
-                    List<CelestialBody<?, ?>> grandchildren = this.getChildren(child);
-                    int gOffset = 0;
-                    for (CelestialBody<?, ?> grandchild : grandchildren) {
-                        if (gOffset + 14 > this.animateGrandchildren) {
-                            break;
-                        }
-                        clickHandled = this.testClicked(grandchild, 10, yPos, x, y, true);
-                        yPos += 14;
-                        gOffset += 14;
-                        if (clickHandled) {
-                            break;
-                        }
-                    }
-                    yPos += this.animateGrandchildren - gOffset;
-                }
-
-                if (clickHandled) {
-                    break;
-                }
-            }
-        }
-
-        return clickHandled || super.mouseClicked(x, y, button);
+        return super.keyPressed(key, scanCode, modifiers);
     }
 
-    protected boolean testClicked(CelestialBody<?, ?> body, int xOffset, int yPos, double x, double y, boolean grandchild) {
-        int xPos = this.borderSize + this.borderEdgeSize + 2 + xOffset;
-        if (x >= xPos && x <= xPos + 93 && y >= yPos && y <= yPos + 12) {
-            if (this.selectedBody != body || !this.isZoomed()) {
-                if (this.selectedBody == null) {
-                    this.preSelectZoom = this.zoom;
-                    this.preSelectPosition = this.position;
-                }
-
-                EnumSelection selectionCountOld = this.selectionState;
-
-                if (selectionCountOld == EnumSelection.ZOOMED) {
-                    this.selectionState = EnumSelection.SELECTED;
-                }
-
-                this.doneZooming = false;
-                this.planetZoom = 0.0F;
-
-                if (body != this.selectedBody) {
-                    // Selecting a different body
-                    this.lastSelectedBody = this.selectedBody;
-                    this.selectionState = EnumSelection.SELECTED;
-                } else {
-                    // Selecting the same body e.g. double-clicking
-                    this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
-                }
-
-                this.selectedBody = body;
-                this.ticksSinceSelectionF = 0;
-                if (grandchild) {
-                    this.selectionState = EnumSelection.ZOOMED;
-                }
-                if (this.isZoomed()) {
-                    this.ticksSinceMenuOpenF = 0;
-                }
-                this.animateGrandchildren = 0;
-                return true;
+    private boolean keyPressedWhileRenaming(int key) {
+        if (key == GLFW.GLFW_KEY_BACKSPACE) {
+            if (this.renamingString != null && !this.renamingString.isEmpty()) {
+                this.renamingString = this.renamingString.substring(0, this.renamingString.length() - 1);
             }
+            return true;
         }
+
+        if (Screen.isPaste(key)) {
+            String pasted = Objects.requireNonNull(this.minecraft).keyboardHandler.getClipboard();
+            if (pasted.isEmpty()) {
+                return false;
+            }
+
+            String value = this.renamingString == null ? pasted : this.renamingString + pasted;
+            if (isValidRenameText(value)) {
+                this.renamingString = value.substring(0, Math.min(value.length(), MAX_SPACE_STATION_NAME_LENGTH));
+            }
+
+            return true;
+        }
+
         return false;
     }
 
     @Override
-    public boolean mouseScrolled(double mouseX, double mouseY, double scrollX, double scrollY) {
-        return super.mouseScrolled(mouseX, mouseY, scrollX, scrollY);
+    public boolean charTyped(char character, int modifiers) {
+        if (this.renamingSpaceStation && StringUtil.isAllowedChatCharacter(character)) {
+            String value = this.renamingString == null ? String.valueOf(character) : this.renamingString + character;
+            this.renamingString = value.substring(0, Math.min(value.length(), MAX_SPACE_STATION_NAME_LENGTH));
+            return true;
+        }
+
+        return super.charTyped(character, modifiers);
     }
 
+    private static boolean isValidRenameText(String string) {
+        if (string == null || string.isEmpty()) {
+            return false;
+        }
+
+        for (int i = 0; i < string.length(); i++) {
+            if (!StringUtil.isAllowedChatCharacter(string.charAt(i))) {
+                return false;
+            }
+        }
+
+        return true;
+    }
+
+    protected Component grandparentName() {
+        CelestialBody<?, ?> body = this.selectedBody;
+
+        if (body == null || body == this.celestialBodies.get(SOL)) {
+            return Component.translatable(Translations.Galaxy.MILKY_WAY);
+        }
+
+        if (body.parent().isEmpty()) {
+            return body.galaxyValue(this.galaxies, this.celestialBodies).name();
+        }
+
+        CelestialBody<?, ?> parent = body.parentValue(this.celestialBodies);
+        if (parent.parent().isPresent()) {
+            return parent.parentValue(this.celestialBodies).name();
+        }
+
+        return body.galaxyValue(this.galaxies, this.celestialBodies).name();
+    }
+
+    protected Component parentName() {
+        if (this.selectedBody == null || this.selectedBody == this.celestialBodies.get(SOL)) {
+            return Component.translatable(Translations.CelestialBody.SOL);
+        }
+
+        if (this.selectedBody.parent().isPresent()) {
+            return this.selectedBody.parentValue(this.celestialBodies).name();
+        }
+
+        return this.selectedBody.galaxyValue(this.galaxies, this.celestialBodies).name();
+    }
+
+    protected List<CelestialBody<?, ?>> getChildren(CelestialBody<?, ?> celestialBody) {
+        if (celestialBody == null) {
+            return Collections.emptyList();
+        }
+
+        List<CelestialBody<?, ?>> children = new ArrayList<>();
+
+        for (CelestialBody<?, ?> body : this.celestialBodies) {
+            if (!body.isSatellite() && body.parent().isPresent() && body.parentValue(this.celestialBodies) == celestialBody) {
+                children.add(body);
+            }
+        }
+
+        List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = this.getVisibleSatellitesForCelestialBody(celestialBody);
+        if (!satellites.isEmpty()) {
+            children.add(satellites.get(0));
+        }
+
+        children.sort((a, b) -> Float.compare(a.position().lineScale(), b.position().lineScale()));
+        return children;
+    }
+
+    protected boolean canCreateSpaceStation(CelestialBody<?, ?> body) {
+        if (body == null || this.mapMode || !this.canCreateStations || !body.isOrbitable()) {
+            return false;
+        }
+
+        if (this.isDisabledDestination(body)) {
+            return false;
+        }
+
+        if (!(body.type() instanceof Orbitable orbitable)) {
+            return false;
+        }
+
+        SatelliteRecipe recipe = orbitable.satelliteRecipe(body.config());
+        if (recipe == null) {
+            return false;
+        }
+
+        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, body)) {
+            return false;
+        }
+
+        return !this.playerAlreadyOwnsStationAt(body);
+    }
+
+    private boolean playerAlreadyOwnsStationAt(CelestialBody<?, ?> body) {
+        if (this.minecraft == null || this.minecraft.player == null || this.minecraft.getConnection() == null) {
+            return true;
+        }
+
+        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : this.satellites().values()) {
+            if (satellite.parentValue(this.celestialBodies) == body
+                    && satellite.type().ownershipData(satellite.config()).owner().equals(this.minecraft.player.getUUID())) {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    protected void teleportToSelectedBody() {
+        if (this.mapMode || this.selectedBody == null || this.isDisabledDestination(this.selectedBody)) {
+            return;
+        }
+
+        if (!(this.selectedBody.type() instanceof Landable landable)) {
+            return;
+        }
+
+        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, this.selectedBody)) {
+            return;
+        }
+
+        if (this.isSatellite(this.selectedBody) && !this.canAccessSelectedSatellite()) {
+            return;
+        }
+
+        ResourceLocation destination = this.selectedBody.isSatellite()
+                ? ((SatelliteConfig) this.selectedBody.config()).getId()
+                : this.celestialBodies.getKey(this.selectedBody);
+
+        if (destination == null) {
+            return;
+        }
+
+        ClientPlayNetworking.send(new PlanetTeleportPayload(destination));
+
+        Component name = this.travelDisplayName(this.selectedBody);
+        this.minecraft.setScreen(new SpaceTravelScreen(name, landable.world(this.selectedBody.config())));
+    }
+
+    private Component travelDisplayName(CelestialBody<?, ?> body) {
+        if (!body.isSatellite()) {
+            return body.name();
+        }
+
+        SatelliteConfig config = (SatelliteConfig) body.config();
+        String customName = config.getCustomName();
+
+        if (customName.isEmpty()) {
+            return Component.translatable(Translations.Ui.SPACE_STATION_NAME, config.getOwnershipData().username());
+        }
+
+        return Component.literal(customName);
+    }
+
+    private boolean canAccessSelectedSatellite() {
+        return !this.isSatellite(this.selectedBody)
+                || ((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player);
+    }
+
+    private boolean isDisabledDestination(CelestialBody<?, ?> body) {
+        if (body == null) {
+            return false;
+        }
+
+        ResourceLocation id = body.isSatellite()
+                ? ((SatelliteConfig) body.config()).getId()
+                : body.getKey(this.celestialBodies).location();
+
+        return id != null && this.disabledDestinations.contains(id);
+    }
+
+    private boolean canLaunchTo(CelestialBody<?, ?> body) {
+        if (body == null || this.isDisabledDestination(body)) {
+            return false;
+        }
+
+        if (!(body.type() instanceof Landable)) {
+            return false;
+        }
+
+        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, body)) {
+            return false;
+        }
+
+        return !this.isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(this.minecraft.player);
+    }
+
+    private boolean canReachWithRocket(CelestialBody<?, ?> body) {
+        return body != null && (this.data == null || this.fromBody == null || this.data.canTravel(this.manager, this.fromBody, body));
+    }
+
+    @Override
+    public boolean mouseClicked(double x, double y, int button) {
+        if (this.selectedBody != null && DrawableUtil.mouseIn(x, y, LHS, LHS, 88, 13)) {
+            this.unselectCelestialBody();
+            return true;
+        }
+
+        boolean handled = false;
+
+        handled |= this.handleCreateSpaceStationClick(x, y);
+        handled |= this.handleTopRightClick(x, y);
+        handled |= this.handleSatellitePanelClick(x, y);
+        handled |= this.handleLeftNavigationClick(x, y);
+
+        return handled || super.mouseClicked(x, y, button);
+    }
+
+    private boolean handleCreateSpaceStationClick(double x, double y) {
+        if (this.mapMode || this.selectedBody == null) {
+            return false;
+        }
+
+        if (!DrawableUtil.mouseIn(x, y, RHS - CREATE_SS_PANEL_WIDTH - 2, createSpaceStationButtonY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT)) {
+            return false;
+        }
+
+        if (!(this.selectedBody.type() instanceof Orbitable orbitable)) {
+            return false;
+        }
+
+        SatelliteRecipe recipe = orbitable.satelliteRecipe(this.selectedBody.config());
+        if (recipe == null || !this.canCreateSpaceStation(this.selectedBody)) {
+            return false;
+        }
+
+        if (!this.minecraft.player.hasInfiniteMaterials() && !recipe.test(this.minecraft.player.getInventory())) {
+            return true;
+        }
+
+        ClientPlayNetworking.send(new SatelliteCreationPayload(this.selectedBody.getKey(this.celestialBodies)));
+        this.zoomAfterStationCreation();
+        return true;
+    }
+
+    private void zoomAfterStationCreation() {
+        if (this.isZoomed()) {
+            return;
+        }
+
+        this.selectionState = EnumSelection.ZOOMED;
+        this.preSelectZoom = this.zoom;
+        this.preSelectPosition = this.position;
+        this.ticksSinceSelectionF = 0;
+        this.doneZooming = false;
+    }
+
+    private boolean handleTopRightClick(double x, double y) {
+        boolean clicked = DrawableUtil.mouseIn(x, y, RHS - 88, LHS, 88, 13);
+
+        if (!clicked) {
+            return false;
+        }
+
+        if (this.mapMode) {
+            this.minecraft.setScreen(null);
+            return true;
+        }
+
+        if (this.selectedBody != null) {
+            this.teleportToSelectedBody();
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleSatellitePanelClick(double x, double y) {
+        if (!this.isSatellite(this.selectedBody)) {
+            return false;
+        }
+
+        if (this.renamingSpaceStation) {
+            return this.handleRenameDialogClick(x, y);
+        }
+
+        boolean handled = false;
+        handled |= this.handleRenameButtonClick(x, y);
+        handled |= this.handleSatelliteListButtonsClick(x, y);
+        handled |= this.handleSatelliteOwnerSelectionClick(x, y);
+        return handled;
+    }
+
+    private boolean handleRenameDialogClick(double x, double y) {
+        if (!DrawableUtil.mouseIn(x, y, this.width / 2f - 90, this.height / 2f - 38, 180, 76)) {
+            return false;
+        }
+
+        if (DrawableUtil.mouseIn(x, y, this.width / 2f - 90 + 17, this.height / 2f - 38 + 59, 72, 12)) {
+            CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = selectedSatellite();
+            selectedSatellite.type().setCustomName(this.renamingString == null ? "" : this.renamingString, selectedSatellite.config());
+            ClientPlayNetworking.send(new SatelliteUpdatePayload(selectedSatellite.config()));
+            this.renamingSpaceStation = false;
+            return true;
+        }
+
+        if (DrawableUtil.mouseIn(x, y, this.width / 2f, this.height / 2f - 38 + 59, 72, 12)) {
+            this.renamingSpaceStation = false;
+            return true;
+        }
+
+        return true;
+    }
+
+    private boolean handleRenameButtonClick(double x, double y) {
+        if (!DrawableUtil.mouseIn(x, y, this.width / 2f - 47, LHS, 94, 11)) {
+            return false;
+        }
+
+        if (this.selectedStationOwner.isEmpty() || this.minecraft.player == null) {
+            return false;
+        }
+
+        if (this.selectedStationOwner.equalsIgnoreCase(this.minecraft.player.getName().getString())) {
+            this.renamingSpaceStation = true;
+            this.renamingString = null;
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleSatelliteListButtonsClick(double x, double y) {
+        List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = visibleSatellitesForSelectedSatelliteParent();
+        int max = Math.min((this.height / 2) / 14, satellites.size());
+
+        if (DrawableUtil.mouseIn(x, y, RHS - 85, LHS + 45, 61, 4)) {
+            if (this.spaceStationListOffset > 0) {
+                this.spaceStationListOffset--;
+            }
+            return true;
+        }
+
+        if (DrawableUtil.mouseIn(x, y, RHS - 85, LHS + 49 + max * 14, 61, 4)) {
+            if (max + this.spaceStationListOffset < satellites.size()) {
+                this.spaceStationListOffset++;
+            }
+            return true;
+        }
+
+        return false;
+    }
+
+    private boolean handleSatelliteOwnerSelectionClick(double x, double y) {
+        List<CelestialBody<SatelliteConfig, SatelliteType>> satellites = visibleSatellitesForSelectedSatelliteParent();
+        int max = Math.min((this.height / 2) / 14, satellites.size());
+
+        int rendered = 0;
+        int index = 0;
+
+        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : satellites) {
+            if (rendered >= max) {
+                break;
+            }
+
+            if (index++ < this.spaceStationListOffset) {
+                continue;
+            }
+
+            String username = satellite.type().ownershipData(satellite.config()).username();
+            int xOffset = username.equalsIgnoreCase(this.selectedStationOwner) ? -5 : 0;
+
+            if (DrawableUtil.mouseIn(x, y, RHS - 95 + xOffset, LHS + 50 + rendered * 14, 93, 12)) {
+                this.selectedStationOwner = username;
+                return true;
+            }
+
+            rendered++;
+        }
+
+        return false;
+    }
+
+    private boolean handleLeftNavigationClick(double x, double y) {
+        int xPos = LHS + 2;
+        int yPos = LHS + 10;
+        boolean planetZoomedMoon = this.isZoomed() && this.isPlanet(this.selectedParent);
+
+        if (this.selectedParent != null && DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
+            this.selectTopParent(planetZoomedMoon);
+            return true;
+        }
+
+        yPos += 22;
+
+        if (DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
+            if (planetZoomedMoon) {
+                this.selectBody(this.selectedParent, false);
+            }
+            return true;
+        }
+
+        List<CelestialBody<?, ?>> children = this.getChildren(this.isZoomed() && !this.isPlanet(this.selectedParent) ? this.selectedBody : this.selectedParent);
+
+        yPos = LHS + 50;
+        for (CelestialBody<?, ?> child : children) {
+            if (this.testClicked(child, child.equals(this.selectedBody) ? 5 : 0, yPos, x, y, false)) {
+                return true;
+            }
+
+            yPos += 14;
+
+            if (!this.isZoomed() && child.equals(this.selectedBody)) {
+                List<CelestialBody<?, ?>> grandchildren = this.getChildren(child);
+                int gOffset = 0;
+
+                for (CelestialBody<?, ?> grandchild : grandchildren) {
+                    if (gOffset + 14 > this.animateGrandchildren) {
+                        break;
+                    }
+
+                    if (this.testClicked(grandchild, 10, yPos, x, y, true)) {
+                        return true;
+                    }
+
+                    yPos += 14;
+                    gOffset += 14;
+                }
+
+                yPos += this.animateGrandchildren - gOffset;
+            }
+        }
+
+        return false;
+    }
+
+    private void selectTopParent(boolean planetZoomedMoon) {
+        if (this.selectedBody == null) {
+            this.preSelectZoom = this.zoom;
+            this.preSelectPosition = this.position;
+        }
+
+        EnumSelection oldSelection = this.selectionState;
+
+        if (this.isSelected()) {
+            this.unselectCelestialBody();
+        }
+
+        if (oldSelection == EnumSelection.ZOOMED) {
+            this.selectionState = EnumSelection.SELECTED;
+        }
+
+        this.selectedBody = this.selectedParent;
+        this.ticksSinceSelectionF = 0;
+        this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
+
+        if (this.isZoomed() && !planetZoomedMoon) {
+            this.ticksSinceMenuOpenF = 0;
+        }
+    }
+
+    private void selectBody(CelestialBody<?, ?> body, boolean grandchild) {
+        if (body == null) {
+            return;
+        }
+
+        if (this.selectedBody == null) {
+            this.preSelectZoom = this.zoom;
+            this.preSelectPosition = this.position;
+        }
+
+        EnumSelection oldSelection = this.selectionState;
+        if (this.isSelected()) {
+            this.unselectCelestialBody();
+        }
+
+        if (oldSelection == EnumSelection.ZOOMED) {
+            this.selectionState = EnumSelection.SELECTED;
+        }
+
+        this.selectedBody = body;
+        this.ticksSinceSelectionF = 0;
+        this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
+
+        if (grandchild) {
+            this.selectionState = EnumSelection.ZOOMED;
+        }
+
+        if (this.isZoomed()) {
+            this.ticksSinceMenuOpenF = 0;
+        }
+    }
+
+    protected boolean testClicked(CelestialBody<?, ?> body, int xOffset, int yPos, double x, double y, boolean grandchild) {
+        int xPos = this.borderSize + this.borderEdgeSize + 2 + xOffset;
+
+        if (!DrawableUtil.mouseIn(x, y, xPos, yPos, 93, 12)) {
+            return false;
+        }
+
+        if (this.selectedBody == body && this.isZoomed()) {
+            return false;
+        }
+
+        if (this.selectedBody == null) {
+            this.preSelectZoom = this.zoom;
+            this.preSelectPosition = this.position;
+        }
+
+        EnumSelection oldSelection = this.selectionState;
+        if (oldSelection == EnumSelection.ZOOMED) {
+            this.selectionState = EnumSelection.SELECTED;
+        }
+
+        this.doneZooming = false;
+        this.planetZoom = 0.0F;
+
+        if (body != this.selectedBody) {
+            this.lastSelectedBody = this.selectedBody;
+            this.selectionState = EnumSelection.SELECTED;
+        } else {
+            this.selectionState = EnumSelection.values()[this.selectionState.ordinal() + 1];
+        }
+
+        this.selectedBody = body;
+        this.ticksSinceSelectionF = 0;
+
+        if (grandchild) {
+            this.selectionState = EnumSelection.ZOOMED;
+        }
+
+        if (this.isZoomed()) {
+            this.ticksSinceMenuOpenF = 0;
+        }
+
+        this.animateGrandchildren = 0;
+        return true;
+    }
 
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.render(graphics, mouseX, mouseY, delta);
-
         this.drawButtons(graphics, mouseX, mouseY);
-    }
-
-    @Override
-    public boolean shouldCloseOnEsc() {
-        return this.mapMode;
     }
 
     public void drawButtons(GuiGraphics gui, int mouseX, int mouseY) {
         boolean handledSliderPos = false;
-        Component text;
 
         try (Graphics graphics = Graphics.managed(gui, this.font)) {
-            try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                // Catalog:
-                texture.blit(LHS, LHS, 74, 11, CATALOG_U, CATALOG_V, CATALOG_WIDTH, CATALOG_HEIGHT, BLUE);
-                texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.CATALOG), LHS + 40, LHS + 1, WHITE);
-
-                // Catalog wedge:
-                texture.blit(LHS + 4, LHS, 83, 12, CATALOG_BACKING_U, CATALOG_BACKING_V, CATALOG_BACKING_WIDTH, CATALOG_BACKING_HEIGHT, BLUE);
-
-                int scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
-                boolean planetZoomedNotMoon = this.isZoomed() && !(this.isGrandchildBody(this.selectedParent));
-
-                // Parent frame:
-                texture.blit(LHS - 95 + scale, LHS + 12, 95, 41, PARENT_LABEL_U, PARENT_LABEL_V, PARENT_LABEL_WIDTH, PARENT_LABEL_HEIGHT, BLUE);
-                texture.drawText(planetZoomedNotMoon ? this.selectedBody.name() : this.parentName(), LHS + 9 - 95 + scale, LHS + 34, WHITE, false);
-
-                // Grandparent frame:
-                texture.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, GRANDPARENT_LABEL_U, GRANDPARENT_LABEL_V, GRANDPARENT_LABEL_WIDTH, GRANDPARENT_LABEL_HEIGHT, YELLOW);
-                if (this.isZoomed() && this.selectedBody == this.celestialBodies.get(SOL)) {
-                    text = this.grandparentName();
-                } else {
-                    text = planetZoomedNotMoon ? this.parentName() : this.grandparentName();
-                }
-                texture.drawText(text, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
-
-                List<CelestialBody<?, ?>> children = this.getChildren(/*planetZoomedNotMoon*/this.isZoomed() ? this.selectedBody : this.celestialBodies.get(SOL));
-                this.drawChildButtons(texture, children, 0, 0, true);
-
-                if (this.mapMode) {
-                    texture.blit(RHS - 74, LHS, 74, 11, TOP_RIGHT_ACTION_BUTTON_U + TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_V, -TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_HEIGHT, RED);
-                    texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.EXIT), RHS - 40, LHS + 1, WHITE, false);
-                }
-            }
-
+            this.drawCatalog(graphics);
 
             if (this.selectedBody != null) {
-                // Right-hand bar (basic selectionState info)
-
-                if (this.isSatellite(this.selectedBody)) {
-                    this.drawSpaceStationDetails(graphics);
-                } else {
-                    try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                        texture.blit(RHS - SIDE_PANEL_WIDTH, LHS, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, SIDE_PANEL_U, SIDE_PANEL_V, BLUE);
-                    }
-                }
-
-                this.drawSpaceStationCreationPrompt(gui, graphics, mouseX, mouseY);
-
-                try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-                    // Top bar title:
-                    int color = BLUE;
-                    if (this.isSatellite(this.selectedBody)) {
-                        if (this.selectedStationOwner.isEmpty() || !this.selectedStationOwner.equalsIgnoreCase(this.minecraft.player.getName().getString())) {
-                            color = RED;
-                        } else {
-                            color = GREEN;
-                        }
-                    }
-                    texture.blit(this.width / 2 - 47, LHS, 94, 11, TOPBAR_U, TOPBAR_V, TOPBAR_WIDTH, TOPBAR_HEIGHT, color);
-
-                    if (this.selectedBody.type() instanceof Tiered tiered && tiered.accessWeight(this.selectedBody.config()) >= 0 && !this.isSatellite(this.selectedBody)) {
-                        boolean canReach;
-                        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, this.selectedBody)) {
-                            canReach = false;
-                            color = RED;
-                        } else {
-                            canReach = true;
-                            color = GREEN;
-                        }
-                        texture.blit(this.width / 2 - 30, LHS + 11, 30, 11, TOPBAR_U, TOPBAR_V, 30, TOPBAR_HEIGHT, color);
-                        texture.blit(this.width / 2, LHS + 11, 30, 11, TOPBAR_U + TOPBAR_WIDTH - 30, TOPBAR_V, 30, TOPBAR_HEIGHT, color);
-                        text = Component.translatable(Translations.CelestialSelection.TIER, tiered.accessWeight(this.selectedBody.config()) == -1 ? "?" : tiered.accessWeight(this.selectedBody.config()));
-                        texture.drawCenteredText(text, this.width / 2, LHS + 13, canReach ? GREY4 : RED3, false);
-                    }
-
-                    text = this.selectedBody.name();
-                    if (this.isSatellite(this.selectedBody)) {
-                        text = Component.translatable(Translations.CelestialSelection.RENAME);
-                    }
-
-                    texture.drawCenteredText(text, this.width / 2, LHS + 2, WHITE, false);
-
-                    if (!this.mapMode) {
-                        if (this.data != null && !this.data.canTravel(this.manager, this.fromBody, this.selectedBody) || !(this.selectedBody.type() instanceof Landable) || this.isSatellite(this.selectedBody) && !((Satellite) this.selectedBody.type()).ownershipData(this.selectedBody.config()).canAccess(this.minecraft.player)) {
-                            color = RED;
-                        } else {
-                            color = GREEN;
-                        }
-
-                        texture.blit(RHS - 74, LHS, 74, 11, TOP_RIGHT_ACTION_BUTTON_U + TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_V, -TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_HEIGHT, color);
-                        text = Component.translatable(Translations.CelestialSelection.LAUNCH);
-                        texture.drawCenteredText(text, RHS - 40, LHS + 2, WHITE, false);
-                    }
-
-                    if (this.selectionState == EnumSelection.SELECTED && !this.isSatellite(this.selectedBody)) {
-                        handledSliderPos = true;
-
-                        int sliderPos = this.zoomTooltipPos;
-                        if (this.zoomTooltipPos != 38) {
-                            sliderPos = Math.min((int) this.ticksSinceSelectionF * 2, 38);
-                            this.zoomTooltipPos = sliderPos;
-                        }
-
-                        texture.blit(RHS - 182, this.height - this.borderSize - this.borderEdgeSize - sliderPos, 83, 38, ZOOM_INFO_TAB_U + ZOOM_INFO_TAB_WIDTH, ZOOM_INFO_TAB_V, -ZOOM_INFO_TAB_WIDTH, ZOOM_INFO_TAB_HEIGHT, BLUE);
-
-                        boolean flag0 = !this.getVisibleSatellitesForCelestialBody(this.selectedBody).isEmpty();
-                        boolean flag1 = this.isPlanet(this.selectedBody) && !this.getChildren(this.selectedBody).isEmpty();
-                        if (flag0 && flag1) {
-                            texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES), RHS - 182 + 41, this.height - this.borderSize - this.borderEdgeSize + 2 - sliderPos, 79, GREY5);
-                        } else if (!flag0 && flag1) {
-                            texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_MOONS), RHS - 182 + 41, this.height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5);
-                        } else if (flag0) {
-                            texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_SATELLITES), RHS - 182 + 41, this.height - this.borderSize - this.borderEdgeSize + 6 - sliderPos, 79, GREY5);
-                        } else {
-                            texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CLICK_AGAIN), RHS - 182 + 41, this.height - this.borderSize - this.borderEdgeSize + 11 - sliderPos, 79, GREY5);
-                        }
-                    }
-                }
-
-                if (this.isSatellite(this.selectedBody) && renamingSpaceStation) {
-                    try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512, 512)) {
-                        texture.blit(this.width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, BLUE);
-                        texture.blit(this.width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, BLUE);
-                        texture.blit(this.width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, BLUE);
-                        texture.blit(this.width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159 + 72, 80, -72, 12, BLUE);
-                        texture.blit(this.width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, BLUE);
-                        texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.ASSIGN_NAME), this.width / 2, this.height / 2 - 35, WHITE);
-                        texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.APPLY), this.width / 2 - 36, this.height / 2 + 23, WHITE);
-                        texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.CANCEL), this.width / 2 + 36, this.height / 2 + 23, WHITE);
-
-                        if (this.renamingString == null) {
-                            CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-                            String playerName = this.minecraft.player.getName().getString();
-                            this.renamingString = selectedSatellite.type().getCustomName(selectedSatellite.config());
-                        }
-
-                        text = Component.literal(this.renamingString);
-                        Component underscore = text.copy().append("_");
-                        if ((int) (this.ticksSinceMenuOpenF / 10) % 2 == 0) {
-                            text = underscore;
-                        }
-                        texture.drawText(text, this.width / 2 - this.font.width(underscore) / 2, this.height / 2 - 17, WHITE, false);
-                    }
-                }
+                this.drawSelectedBodyPanel(gui, graphics, mouseX, mouseY);
+                handledSliderPos = this.drawSelectedBodyTopBar(graphics);
+                this.drawRenameDialog(graphics);
             }
 
             if (!handledSliderPos) {
@@ -726,9 +729,180 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
     }
 
+    private void drawCatalog(Graphics graphics) {
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
+            texture.blit(LHS, LHS, 74, 11, CATALOG_U, CATALOG_V, CATALOG_WIDTH, CATALOG_HEIGHT, BLUE);
+            texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.CATALOG), LHS + 40, LHS + 1, WHITE);
+
+            texture.blit(LHS + 4, LHS, 83, 12, CATALOG_BACKING_U, CATALOG_BACKING_V, CATALOG_BACKING_WIDTH, CATALOG_BACKING_HEIGHT, BLUE);
+
+            int scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
+            boolean planetZoomedNotMoon = this.isZoomed() && !this.isGrandchildBody(this.selectedParent);
+
+            texture.blit(LHS - 95 + scale, LHS + 12, 95, 41, PARENT_LABEL_U, PARENT_LABEL_V, PARENT_LABEL_WIDTH, PARENT_LABEL_HEIGHT, BLUE);
+            texture.drawText(planetZoomedNotMoon ? this.selectedBody.name() : this.parentName(), LHS + 9 - 95 + scale, LHS + 34, WHITE, false);
+
+            texture.blit(LHS + 2 - 95 + scale, LHS + 14, 93, 17, GRANDPARENT_LABEL_U, GRANDPARENT_LABEL_V, GRANDPARENT_LABEL_WIDTH, GRANDPARENT_LABEL_HEIGHT, YELLOW);
+
+            Component text = this.isZoomed() && this.selectedBody == this.celestialBodies.get(SOL)
+                    ? this.grandparentName()
+                    : planetZoomedNotMoon ? this.parentName() : this.grandparentName();
+
+            texture.drawText(text, LHS + 7 - 95 + scale, LHS + 16, GREY3, false);
+
+            List<CelestialBody<?, ?>> children = this.getChildren(this.isZoomed() ? this.selectedBody : this.celestialBodies.get(SOL));
+            this.drawChildButtons(texture, children, 0, 0, true);
+
+            if (this.mapMode) {
+                texture.blit(RHS - 74, LHS, 74, 11, TOP_RIGHT_ACTION_BUTTON_U + TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_V, -TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_HEIGHT, RED);
+                texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.EXIT), RHS - 40, LHS + 1, WHITE, false);
+            }
+        }
+    }
+
+    private void drawSelectedBodyPanel(GuiGraphics gui, Graphics graphics, int mouseX, int mouseY) {
+        if (this.isSatellite(this.selectedBody)) {
+            this.drawSpaceStationDetails(graphics);
+        } else {
+            try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
+                texture.blit(RHS - SIDE_PANEL_WIDTH, LHS, SIDE_PANEL_WIDTH, SIDE_PANEL_HEIGHT, SIDE_PANEL_U, SIDE_PANEL_V, BLUE);
+            }
+        }
+
+        this.drawSpaceStationCreationPrompt(gui, graphics, mouseX, mouseY);
+    }
+
+    private boolean drawSelectedBodyTopBar(Graphics graphics) {
+        boolean handledSliderPos = false;
+
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
+            int color = this.selectedTopBarColor();
+
+            texture.blit(this.width / 2 - 47, LHS, 94, 11, TOPBAR_U, TOPBAR_V, TOPBAR_WIDTH, TOPBAR_HEIGHT, color);
+
+            if (this.selectedBody.type() instanceof Tiered tiered && tiered.accessWeight(this.selectedBody.config()) >= 0 && !this.isSatellite(this.selectedBody)) {
+                boolean disabled = this.isDisabledDestination(this.selectedBody);
+                boolean canReach = !disabled && this.canReachWithRocket(this.selectedBody);
+                int tierColor = canReach ? GREEN : RED;
+
+                texture.blit(this.width / 2 - 30, LHS + 11, 30, 11, TOPBAR_U, TOPBAR_V, 30, TOPBAR_HEIGHT, tierColor);
+                texture.blit(this.width / 2, LHS + 11, 30, 11, TOPBAR_U + TOPBAR_WIDTH - 30, TOPBAR_V, 30, TOPBAR_HEIGHT, tierColor);
+
+                Component tierText = disabled
+                        ? Component.literal("Disabled")
+                        : Component.translatable(Translations.CelestialSelection.TIER, tiered.accessWeight(this.selectedBody.config()) == -1 ? "?" : tiered.accessWeight(this.selectedBody.config()));
+
+                texture.drawCenteredText(tierText, this.width / 2, LHS + 13, canReach ? GREY4 : RED3, false);
+            }
+
+            Component title = this.isSatellite(this.selectedBody)
+                    ? Component.translatable(Translations.CelestialSelection.RENAME)
+                    : this.selectedBody.name();
+
+            texture.drawCenteredText(title, this.width / 2, LHS + 2, WHITE, false);
+
+            if (!this.mapMode) {
+                boolean canLaunch = this.canLaunchTo(this.selectedBody);
+                int launchColor = canLaunch ? GREEN : RED;
+
+                texture.blit(RHS - 74, LHS, 74, 11, TOP_RIGHT_ACTION_BUTTON_U + TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_V, -TOP_RIGHT_ACTION_BUTTON_WIDTH, TOP_RIGHT_ACTION_BUTTON_HEIGHT, launchColor);
+
+                Component launchText = this.isDisabledDestination(this.selectedBody)
+                        ? Component.literal("Disabled")
+                        : Component.translatable(Translations.CelestialSelection.LAUNCH);
+
+                texture.drawCenteredText(launchText, RHS - 40, LHS + 2, WHITE, false);
+            }
+
+            if (this.selectionState == EnumSelection.SELECTED && !this.isSatellite(this.selectedBody)) {
+                handledSliderPos = true;
+                this.drawZoomTooltip(texture);
+            }
+        }
+
+        return handledSliderPos;
+    }
+
+    private int selectedTopBarColor() {
+        if (!this.isSatellite(this.selectedBody)) {
+            return BLUE;
+        }
+
+        if (this.minecraft == null || this.minecraft.player == null) {
+            return RED;
+        }
+
+        return !this.selectedStationOwner.isEmpty()
+                && this.selectedStationOwner.equalsIgnoreCase(this.minecraft.player.getName().getString())
+                ? GREEN
+                : RED;
+    }
+
+    private void drawZoomTooltip(Graphics.TextureColor texture) {
+        int sliderPos = this.zoomTooltipPos;
+        if (this.zoomTooltipPos != 38) {
+            sliderPos = Math.min((int) this.ticksSinceSelectionF * 2, 38);
+            this.zoomTooltipPos = sliderPos;
+        }
+
+        texture.blit(RHS - 182, this.height - this.borderSize - this.borderEdgeSize - sliderPos, 83, 38, ZOOM_INFO_TAB_U + ZOOM_INFO_TAB_WIDTH, ZOOM_INFO_TAB_V, -ZOOM_INFO_TAB_WIDTH, ZOOM_INFO_TAB_HEIGHT, BLUE);
+
+        boolean hasSatellites = !this.getVisibleSatellitesForCelestialBody(this.selectedBody).isEmpty();
+        boolean hasChildren = this.isPlanet(this.selectedBody) && !this.getChildren(this.selectedBody).isEmpty();
+
+        Component text;
+        int yOffset;
+
+        if (hasSatellites && hasChildren) {
+            text = Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_MOONS_AND_SATELLITES);
+            yOffset = 2;
+        } else if (hasChildren) {
+            text = Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_MOONS);
+            yOffset = 6;
+        } else if (hasSatellites) {
+            text = Component.translatable(Translations.CelestialSelection.CLICK_AGAIN_SATELLITES);
+            yOffset = 6;
+        } else {
+            text = Component.translatable(Translations.CelestialSelection.CLICK_AGAIN);
+            yOffset = 11;
+        }
+
+        texture.drawSplitText(text, RHS - 182 + 41, this.height - this.borderSize - this.borderEdgeSize + yOffset - sliderPos, 79, GREY5);
+    }
+
+    private void drawRenameDialog(Graphics graphics) {
+        if (!this.isSatellite(this.selectedBody) || !this.renamingSpaceStation) {
+            return;
+        }
+
+        try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION_1, 512, 512)) {
+            texture.blit(this.width / 2 - 90, this.height / 2 - 38, 179, 67, 159, 0, 179, 67, BLUE);
+            texture.blit(this.width / 2 - 90 + 4, this.height / 2 - 38 + 2, 171, 10, 159, 92, 171, 10, BLUE);
+            texture.blit(this.width / 2 - 90 + 8, this.height / 2 - 38 + 18, 161, 13, 159, 67, 161, 13, BLUE);
+            texture.blit(this.width / 2 - 90 + 17, this.height / 2 - 38 + 59, 72, 12, 159 + 72, 80, -72, 12, BLUE);
+            texture.blit(this.width / 2, this.height / 2 - 38 + 59, 72, 12, 159, 80, 72, 12, BLUE);
+
+            texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.ASSIGN_NAME), this.width / 2, this.height / 2 - 35, WHITE);
+            texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.APPLY), this.width / 2 - 36, this.height / 2 + 23, WHITE);
+            texture.drawCenteredText(Component.translatable(Translations.CelestialSelection.CANCEL), this.width / 2 + 36, this.height / 2 + 23, WHITE);
+
+            if (this.renamingString == null) {
+                this.renamingString = selectedSatellite().type().getCustomName(selectedSatellite().config());
+            }
+
+            Component text = Component.literal(this.renamingString);
+            Component cursorText = text.copy().append("_");
+
+            if ((int) (this.ticksSinceMenuOpenF / 10) % 2 == 0) {
+                text = cursorText;
+            }
+
+            texture.drawText(text, this.width / 2 - this.font.width(cursorText) / 2, this.height / 2 - 17, WHITE, false);
+        }
+    }
+
     private void drawSpaceStationDetails(Graphics graphics) {
-        CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite = (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
-        List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellites = this.getVisibleSatellitesForCelestialBody(selectedSatellite.parentValue(this.celestialBodies));
+        List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellites = visibleSatellitesForSelectedSatelliteParent();
         int stationListSize = visibleSatellites.size();
         int max = Math.min((this.height / 2) / 14, stationListSize);
 
@@ -746,49 +920,50 @@ public class CelestialSelectionScreen extends CelestialScreen {
         }
 
         try (Graphics.TextureColor texture = graphics.textureColor(CELESTIAL_SELECTION)) {
-            int i = 0;
-            int j = 0;
+            int rendered = 0;
+            int index = 0;
+
             for (CelestialBody<SatelliteConfig, SatelliteType> body : visibleSatellites) {
-                if (i >= max) break;
-
-                if (j >= this.spaceStationListOffset) {
-                    SatelliteConfig config = body.config();
-                    String username = config.getOwnershipData().username();
-                    int xOffset = username.equalsIgnoreCase(this.selectedStationOwner) ? -5 : 0;
-
-                    texture.blit(RHS - 95 + xOffset, LHS + 50 + i * 14, 93, 12, SIDE_BUTTON_U + SIDE_BUTTON_WIDTH, SIDE_BUTTON_V, -SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, BLUE);
-
-                    Component text;
-                    String name = config.getCustomName();
-                    if (name.length() == 0) {
-                        text = Component.translatable(Translations.Ui.SPACE_STATION_NAME, username);
-                    } else {
-                        text = Component.literal(name);
-                    }
-
-                    String str = text.getString();
-                    int n = str.length();
-                    while (this.font.width(str) >= 80) {
-                        str = text.getString(--n);
-                    }
-                    if (!str.equals(text.getString())) {
-                        str += "...";
-                    }
-                    texture.drawText(Component.literal(str), RHS - 88 + xOffset, LHS + 52 + i * 14, WHITE, false);
-                    i++;
+                if (rendered >= max) {
+                    break;
                 }
-                j++;
+
+                if (index++ < this.spaceStationListOffset) {
+                    continue;
+                }
+
+                SatelliteConfig config = body.config();
+                String username = config.getOwnershipData().username();
+                int xOffset = username.equalsIgnoreCase(this.selectedStationOwner) ? -5 : 0;
+
+                texture.blit(RHS - 95 + xOffset, LHS + 50 + rendered * 14, 93, 12, SIDE_BUTTON_U + SIDE_BUTTON_WIDTH, SIDE_BUTTON_V, -SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, BLUE);
+
+                Component name = config.getCustomName().isEmpty()
+                        ? Component.translatable(Translations.Ui.SPACE_STATION_NAME, username)
+                        : Component.literal(config.getCustomName());
+
+                texture.drawText(Component.literal(trimToWidth(name.getString(), 80)), RHS - 88 + xOffset, LHS + 52 + rendered * 14, WHITE, false);
+                rendered++;
             }
         }
     }
 
-    private void drawSpaceStationCreationPrompt(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY) {
+    private String trimToWidth(String value, int maxWidth) {
+        String out = value;
+
+        while (!out.isEmpty() && this.font.width(out) >= maxWidth) {
+            out = out.substring(0, out.length() - 1);
+        }
+
+        return out.equals(value) ? out : out + "...";
+    }
+
+    private void drawSpaceStationCreationPrompt(GuiGraphics gui, Graphics graphics, int mouseX, int mouseY) {
         if (!this.canCreateSpaceStation(this.selectedBody) || this.isSatellite(this.selectedBody)) {
             return;
         }
 
         SatelliteRecipe recipe = ((Orbitable) this.selectedBody.type()).satelliteRecipe(this.selectedBody.config());
-
         List<Boolean> hasIngredients = recipe == null ? List.of() : recipe.ingredients().stream()
                 .map(pair -> this.getAmountInInventory(pair.getFirst()) >= pair.getSecond())
                 .toList();
@@ -797,7 +972,6 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
         final int rows = (int) Math.ceil(Math.max(hasIngredients.size(), 1) / 4.0);
         final int rowHeight = 25;
-
         final int x = RHS - CREATE_SS_PANEL_WIDTH - 2;
         final int centerX = x + (int) Math.ceil(CREATE_SS_PANEL_WIDTH / 2.0);
         final int y = LHS + 134;
@@ -806,10 +980,10 @@ public class CelestialSelectionScreen extends CelestialScreen {
             int canCreateLength = Math.max(0, texture.getSplitStringLines(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), 91) - 2);
 
             texture.blit(RHS - 79, y - CREATE_SS_PANEL_CAP_HEIGHT - 1, CREATE_SS_PANEL_CAP_WIDTH, CREATE_SS_PANEL_CAP_HEIGHT, CREATE_SS_PANEL_CAP_U, CREATE_SS_PANEL_CAP_V, CREATE_SS_PANEL_CAP_WIDTH, CREATE_SS_PANEL_CAP_HEIGHT, BLUE);
-
             texture.blit(x, y, CREATE_SS_PANEL_WIDTH, 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V, CREATE_SS_PANEL_WIDTH, 4, BLUE);
 
             int backgroundY = y + 4;
+
             for (int i = 0; i < canCreateLength; i++) {
                 texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, this.font.lineHeight, BLUE);
                 backgroundY += this.font.lineHeight;
@@ -823,98 +997,136 @@ public class CelestialSelectionScreen extends CelestialScreen {
             texture.blit(x, backgroundY, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, CREATE_SS_PANEL_U, CREATE_SS_PANEL_V + 4, CREATE_SS_PANEL_WIDTH, CREATE_SS_PANEL_HEIGHT - 4, BLUE);
             backgroundY += CREATE_SS_PANEL_HEIGHT - 4;
 
-            if (recipe != null) {
-                int color = validInputMaterials ? GREEN1 : RED;
+            if (recipe == null) {
+                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CANNOT_CREATE_SPACE_STATION), centerX, y + 4, 91, WHITE);
+                return;
+            }
 
-                createSpaceStationButtonY = backgroundY + 1;
-                if (!this.mapMode && mousePosX >= x && mousePosX < RHS - 2 && mousePosY >= createSpaceStationButtonY && mousePosY < createSpaceStationButtonY + CREATE_SS_PANEL_BUTTON_HEIGHT) {
-                    texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
-                }
+            int buttonColor = validInputMaterials ? GREEN1 : RED;
+            createSpaceStationButtonY = backgroundY + 1;
 
-                texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, color);
+            texture.blit(x, createSpaceStationButtonY, CREATE_SS_PANEL_BUTTON_WIDTH, CREATE_SS_PANEL_BUTTON_HEIGHT, CREATE_SS_PANEL_BUTTON_U, CREATE_SS_PANEL_BUTTON_V, buttonColor);
 
-                color = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
-                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), centerX, y + 3, CREATE_SS_PANEL_WIDTH - 2, FastColor.ARGB32.color(255, color, 255, color));
+            int pulse = (int) ((Math.sin(this.ticksSinceMenuOpenF / 5.0) * 0.5 + 0.5) * 255);
+            texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CAN_CREATE_SPACE_STATION), centerX, y + 3, CREATE_SS_PANEL_WIDTH - 2, FastColor.ARGB32.color(255, pulse, 255, pulse));
 
-                if (!mapMode) {
-                    texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), centerX, createSpaceStationButtonY + 2, CREATE_SS_PANEL_WIDTH - 2, WHITE);
-                }
+            if (!this.mapMode) {
+                texture.drawSplitText(Component.translatable(Translations.CelestialSelection.CREATE_SPACE_STATION), centerX, createSpaceStationButtonY + 2, CREATE_SS_PANEL_WIDTH - 2, WHITE);
             }
         }
 
         if (recipe != null) {
-            String str;
-            int i = 0;
-            for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
-                Ingredient ingredient = pair.getFirst();
-                ItemStack stack = ingredient.getItems()[(int) (this.minecraft.level.getGameTime() % (20 * ingredient.getItems().length) / 20)];
-
-                final int xPos = x + 7 + 21 * (i % 4);
-                final int yPos = createSpaceStationButtonY - 3 + rowHeight * (i / 4 - rows);
-
-                Lighting.setupFor3DItems();
-                graphics.cleanupState();
-                gui.renderItem(stack, xPos, yPos);
-                gui.renderItemDecorations(this.font, stack, xPos, yPos, null);
-                Lighting.setupForFlatItems();
-                RenderSystem.enableBlend();
-
-                if (DrawableUtil.mouseIn(mousePosX, mousePosY, xPos, yPos, 16, 16)) {
-                    this.renderCelestialScreenTooltip(gui, graphics, mousePosX, mousePosY, stack.getHoverName());
-                }
-
-                str = pair.getSecond().toString();
-                int color = validInputMaterials || hasIngredients.get(i) ? GREEN : RED;
-                gui.drawString(this.font, str, xPos + 9 - this.font.width(str) / 2, yPos + 17, color, false);
-
-                i++;
-            }
-        } else {
-            try (Graphics.Text text = graphics.text()) {
-                text.drawSplitText(Component.translatable(Translations.CelestialSelection.CANNOT_CREATE_SPACE_STATION), centerX, y + 4, 91, WHITE);
-            }
+            this.drawSpaceStationRecipeItems(gui, graphics, mouseX, mouseY, recipe, hasIngredients, validInputMaterials, x, createSpaceStationButtonY, rowHeight, rows);
         }
     }
 
-    private List<CelestialBody<SatelliteConfig, SatelliteType>> getVisibleSatellitesForCelestialBody(CelestialBody<?, ?> selectedBody) {
-        if (selectedBody == null || selectedBody.type() instanceof Satellite) return Collections.emptyList();
+    private void drawSpaceStationRecipeItems(
+            GuiGraphics gui,
+            Graphics graphics,
+            int mouseX,
+            int mouseY,
+            SatelliteRecipe recipe,
+            List<Boolean> hasIngredients,
+            boolean validInputMaterials,
+            int x,
+            int buttonY,
+            int rowHeight,
+            int rows
+    ) {
+        int i = 0;
+
+        for (Pair<Ingredient, Integer> pair : recipe.ingredients()) {
+            Ingredient ingredient = pair.getFirst();
+            ItemStack[] stacks = ingredient.getItems();
+
+            if (stacks.length == 0) {
+                i++;
+                continue;
+            }
+
+            ItemStack stack = stacks[(int) (this.minecraft.level.getGameTime() % (20L * stacks.length) / 20L)];
+
+            int xPos = x + 7 + 21 * (i % 4);
+            int yPos = buttonY - 3 + rowHeight * (i / 4 - rows);
+
+            Lighting.setupFor3DItems();
+            graphics.cleanupState();
+            gui.renderItem(stack, xPos, yPos);
+            gui.renderItemDecorations(this.font, stack, xPos, yPos, null);
+            Lighting.setupForFlatItems();
+            RenderSystem.enableBlend();
+
+            if (DrawableUtil.mouseIn(mouseX, mouseY, xPos, yPos, 16, 16)) {
+                this.renderCelestialScreenTooltip(gui, graphics, mouseX, mouseY, stack.getHoverName());
+            }
+
+            String amount = pair.getSecond().toString();
+            int color = validInputMaterials || hasIngredients.get(i) ? GREEN : RED;
+            gui.drawString(this.font, amount, xPos + 9 - this.font.width(amount) / 2, yPos + 17, color, false);
+
+            i++;
+        }
+    }
+
+    private List<CelestialBody<SatelliteConfig, SatelliteType>> getVisibleSatellitesForCelestialBody(CelestialBody<?, ?> body) {
+        if (body == null || body.type() instanceof Satellite || this.minecraft == null || this.minecraft.player == null || this.minecraft.getConnection() == null) {
+            return Collections.emptyList();
+        }
+
         List<CelestialBody<SatelliteConfig, SatelliteType>> list = new LinkedList<>();
-        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : ((SatelliteAccessor) this.minecraft.getConnection()).galacticraft$getSatellites().values()) {
-            if (satellite.parentValue(this.celestialBodies) == selectedBody && satellite.type().ownershipData(satellite.config()).canAccess(this.minecraft.player)) {
+
+        for (CelestialBody<SatelliteConfig, SatelliteType> satellite : this.satellites().values()) {
+            if (satellite.parentValue(this.celestialBodies) == body
+                    && satellite.type().ownershipData(satellite.config()).canAccess(this.minecraft.player)) {
                 list.add(satellite);
             }
         }
+
         return list;
     }
 
-    /**
-     * Draws child bodies (when appropriate) on the left-hand interface
-     */
+    private Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites() {
+        return ((SatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).galacticraft$getSatellites();
+    }
+
+    private List<CelestialBody<SatelliteConfig, SatelliteType>> visibleSatellitesForSelectedSatelliteParent() {
+        CelestialBody<SatelliteConfig, SatelliteType> selected = this.selectedSatellite();
+        return this.getVisibleSatellitesForCelestialBody(selected.parentValue(this.celestialBodies));
+    }
+
+    @SuppressWarnings("unchecked")
+    private CelestialBody<SatelliteConfig, SatelliteType> selectedSatellite() {
+        return (CelestialBody<SatelliteConfig, SatelliteType>) this.selectedBody;
+    }
+
     protected int drawChildButtons(Graphics.TextureColor texture, List<CelestialBody<?, ?>> children, int xOffsetBase, int yOffsetPrior, boolean recursive) {
         xOffsetBase += this.borderSize + this.borderEdgeSize;
         final int yOffsetBase = this.borderSize + this.borderEdgeSize + 50 + yOffsetPrior;
         int yOffset = 0;
+
         for (int i = 0; i < children.size(); i++) {
             CelestialBody<?, ?> child = children.get(i);
             int xOffset = xOffsetBase + (child.equals(this.selectedBody) ? 5 : 0);
-            final int scale = Mth.clamp((int) (this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0, 95);
-
+            int scale = Mth.clamp((int) (this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0, 95);
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
-            int color;
-            if (child.type() instanceof Landable<?> && (this.data == null || this.fromBody == null || this.data.canTravel(this.manager, this.fromBody, child))) {
-                color = FastColor.ARGB32.color((int) (scale / 95.0F) * 255, 0, (int) ((0.6F + brightness) * 255), 0);
-            } else {
-                color = FastColor.ARGB32.color((int) (scale / 95.0F) * 255, (int) ((0.6F + brightness) * 255), 0, 0);
-            }
-            texture.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, SIDE_BUTTON_GRADIENT_U, SIDE_BUTTON_GRADIENT_V, SIDE_BUTTON_GRADIENT_WIDTH, SIDE_BUTTON_GRADIENTn_HEIGHT, color);
-            texture.blit(2 + xOffset, yOffsetBase + yOffset, 93, 12, SIDE_BUTTON_U, SIDE_BUTTON_V, SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, FastColor.ARGB32.color((int) ((scale / 95.0F) * 255), (int) ((3 * brightness) * 255), (int) ((0.6F + 2 * brightness) * 255), 255));
+
+            int gradientColor = this.childGradientColor(child, scale, brightness);
+            int buttonColor = FastColor.ARGB32.color(
+                    (int) ((scale / 95.0F) * 255),
+                    (int) ((3 * brightness) * 255),
+                    (int) ((0.6F + 2 * brightness) * 255),
+                    255
+            );
+
+            texture.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, SIDE_BUTTON_GRADIENT_U, SIDE_BUTTON_GRADIENT_V, SIDE_BUTTON_GRADIENT_WIDTH, SIDE_BUTTON_GRADIENTn_HEIGHT, gradientColor);
+            texture.blit(2 + xOffset, yOffsetBase + yOffset, 93, 12, SIDE_BUTTON_U, SIDE_BUTTON_V, SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, buttonColor);
 
             if (scale > 0) {
-                color = 0xe0e0e0;
-                texture.drawText(child.isSatellite() ? Component.translatable(Translations.CelestialBody.SATELLITES) : child.name(), 7 + xOffset, yOffsetBase + yOffset + 2, color, false);
+                texture.drawText(child.isSatellite() ? Component.translatable(Translations.CelestialBody.SATELLITES) : child.name(), 7 + xOffset, yOffsetBase + yOffset + 2, 0xe0e0e0, false);
             }
 
             yOffset += 14;
+
             if (recursive && child.equals(this.selectedBody)) {
                 List<CelestialBody<?, ?>> grandchildren = this.getChildren(child);
                 if (!grandchildren.isEmpty()) {
@@ -928,22 +1140,38 @@ public class CelestialSelectionScreen extends CelestialScreen {
                             }
                             this.drawChildButtons(texture, partial, 10, yOffset, false);
                         }
+
                         yOffset += this.animateGrandchildren;
                         this.animateGrandchildren += 2;
                     }
                 }
             }
         }
+
         return yOffset;
     }
 
-    protected void renderCelestialScreenTooltip(GuiGraphics gui, Graphics graphics, int mousePosX, int mousePosY, Component text) {
+    private int childGradientColor(CelestialBody<?, ?> child, int scale, float brightness) {
+        int alpha = (int) ((scale / 95.0F) * 255);
+
+        if (this.isDisabledDestination(child)) {
+            return FastColor.ARGB32.color(alpha, (int) ((0.65F + brightness) * 255), (int) ((0.35F + brightness) * 255), 0);
+        }
+
+        if (child.type() instanceof Landable && this.canReachWithRocket(child)) {
+            return FastColor.ARGB32.color(alpha, 0, (int) ((0.6F + brightness) * 255), 0);
+        }
+
+        return FastColor.ARGB32.color(alpha, (int) ((0.6F + brightness) * 255), 0, 0);
+    }
+
+    protected void renderCelestialScreenTooltip(GuiGraphics gui, Graphics graphics, int mouseX, int mouseY, Component text) {
         int textWidth = this.font.width(text);
         int tooltipWidth = textWidth + 7;
         int tooltipHeight = 16;
 
-        int x1 = Mth.clamp(mousePosX - textWidth / 2 - 4, 0, this.width - tooltipWidth);
-        int y1 = Mth.clamp(mousePosY - tooltipHeight, 0, this.height - tooltipHeight);
+        int x1 = Mth.clamp(mouseX - textWidth / 2 - 4, 0, this.width - tooltipWidth);
+        int y1 = Mth.clamp(mouseY - tooltipHeight, 0, this.height - tooltipHeight);
         int x2 = x1 + tooltipWidth;
         int y2 = y1 + tooltipHeight;
 
@@ -975,14 +1203,15 @@ public class CelestialSelectionScreen extends CelestialScreen {
     }
 
     protected int getAmountInInventory(Ingredient ingredient) {
-        int i = 0;
+        int amount = 0;
 
-        for (int j = 0; j < Objects.requireNonNull(Objects.requireNonNull(this.minecraft).player).getInventory().getContainerSize(); ++j) {
-            ItemStack stack = this.minecraft.player.getInventory().getItem(j);
+        for (int slot = 0; slot < Objects.requireNonNull(this.minecraft).player.getInventory().getContainerSize(); slot++) {
+            ItemStack stack = this.minecraft.player.getInventory().getItem(slot);
             if (ingredient.test(stack)) {
-                i += stack.getCount();
+                amount += stack.getCount();
             }
         }
-        return i;
+
+        return amount;
     }
 }
