@@ -36,18 +36,23 @@ import dev.galacticraft.dynamicdimensions.api.event.DynamicDimensionLoadCallback
 import dev.galacticraft.impl.internal.command.GCApiCommands;
 import dev.galacticraft.impl.network.GCApiPackets;
 import dev.galacticraft.impl.network.GCApiServerPacketReceivers;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.impl.universe.BuiltinObjects;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.data.gen.SatelliteChunkGenerator;
 import net.fabricmc.api.ModInitializer;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistries;
 import net.fabricmc.fabric.api.event.registry.DynamicRegistrySetupCallback;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.storage.LevelResource;
 import org.jetbrains.annotations.ApiStatus;
 
@@ -85,6 +90,16 @@ public class GalacticraftAPI implements ModInitializer {
         DynamicDimensionLoadCallback.register((minecraftServer, dynamicDimensionLoader) -> {
             ((SatelliteAccessor) minecraftServer).galacticraft$loadSatellites(dynamicDimensionLoader);
         });
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(((player, origin, destination) -> {
+            Container inv = player.galacticraft$getGearInv();
+            ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
+            for(int i = 0; i < inv.getContainerSize(); i++) {
+                stacks[i] = inv.getItem(i);
+            }
+            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
+            ServerPlayNetworking.send(player, payload);
+        }));
 
         // todo: update celestial body level cache
         DynamicRegistrySetupCallback.EVENT.register(view -> {
