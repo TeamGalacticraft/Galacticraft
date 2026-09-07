@@ -109,7 +109,7 @@ public abstract class AbstractSolarPanelBlockEntity extends MachineBlockEntity i
         long time = level.getDayTime() % this.dayLength;
         // Don't use this.isDay() because it returns false when it is thundering
         if (time > this.dayLength / 2) status = GCMachineStatuses.NOT_GENERATING;
-        if (time > this.dayLength / 4) time = (long) (this.dayLength / 2) - time;
+        if (time > this.dayLength / 4) time = this.dayLength / 2 - time;
 
         profiler.push("transaction");
         this.currentEnergyGeneration = this.calculateEnergyProduction(time, multiplier);

@@ -37,7 +37,7 @@ import java.util.Set;
 
 public abstract class CelestialTeleporterType<C extends CelestialTeleporterConfig> {
     private final MapCodec<CelestialTeleporter<C, CelestialTeleporterType<C>>> codec;
-    public static final Set<RelativeMovement> NO_RELATIVE_MOVEMENT = Collections.<RelativeMovement>emptySet();
+    public static final Set<RelativeMovement> NO_RELATIVE_MOVEMENT = Collections.emptySet();
 
     public CelestialTeleporterType(Codec<C> codec) {
         this.codec = codec.fieldOf("config").xmap((config) -> new CelestialTeleporter<>(this, config), CelestialTeleporter::config);

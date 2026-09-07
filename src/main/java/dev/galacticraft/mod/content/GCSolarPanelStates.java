@@ -30,7 +30,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GCSolarPanelStates {
-    public static final Map<SolarPanelSource, ResourceLocation> DEFAULT_SOLAR_PANELS = new HashMap<SolarPanelSource, ResourceLocation>();
+    public static final Map<SolarPanelSource, ResourceLocation> DEFAULT_SOLAR_PANELS = new HashMap<>();
 
     public static void register() {
         DEFAULT_SOLAR_PANELS.put(SolarPanelSource.DAY, Constant.ScreenTexture.SOLAR_PANEL_DAY);

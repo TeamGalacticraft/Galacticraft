@@ -1019,6 +1019,7 @@
   "tag.fluid.c.oil": "Oil",
   "tag.fluid.c.oxygen": "Liquid Oxygen",
   "tag.fluid.c.sulfuric_acid": "Sulfuric Acid",
+  "tag.fluid.galacticraft.fluid_canister_exclusions": "Excluded from Fluid Canisters",
   "tag.fluid.galacticraft.fuel": "Galacticraft Fuel",
   "tag.fluid.galacticraft.non_breathable": "Non-Breathable Fluids",
   "tag.fluid.galacticraft.oil": "Galacticraft Oil",

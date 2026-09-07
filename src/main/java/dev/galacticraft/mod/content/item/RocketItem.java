@@ -105,7 +105,7 @@ public class RocketItem extends Item {
 
         Style style = TooltipUtil.DEFAULT_STYLE;
         RocketData data = stack.has(GCDataComponents.ROCKET_DATA) ? stack.get(GCDataComponents.ROCKET_DATA) : RocketPrefabs.MISSING;
-        List<Component> list = new ArrayList<Component>();
+        List<Component> list = new ArrayList<>();
         list.add(Component.translatable(Translations.Ui.COLOR).append(": ").withStyle(style).append(Component.literal("#" + Integer.toHexString(data.color())).withColor(data.color())));
         if (data.cone().isPresent())
             list.add(RocketPartTypes.CONE.name.copy().append(": ").append(RocketPart.getName(data.cone().get().key())).withStyle(style));
