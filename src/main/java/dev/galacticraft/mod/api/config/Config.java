@@ -23,8 +23,6 @@
 package dev.galacticraft.mod.api.config;
 
 public interface Config {
-    boolean isAlphaWarningHidden();
-
     boolean isDebugLogEnabled();
 
     long wireTransferLimit();
@@ -67,8 +65,6 @@ public interface Config {
 
     long foodCannerEnergyConsumptionRate();
 
-    boolean squareCannedFood();
-
     long fluidCanisterCapacity();
 
     long smallOxygenTankCapacity();
@@ -94,8 +90,6 @@ public interface Config {
     double bossHealthMultiplier();
 
     boolean enableGcHouston();
-
-    boolean enableCreativeGearInv();
 
     void load();
 

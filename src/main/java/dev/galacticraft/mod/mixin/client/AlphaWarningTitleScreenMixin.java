@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.GalacticraftClient;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -66,7 +66,7 @@ public abstract class AlphaWarningTitleScreenMixin extends Screen {
 
     @Inject(method = "init()V", at = @At("TAIL"))
     protected void init(CallbackInfo ci) {
-        if (Galacticraft.CONFIG.isAlphaWarningHidden()) {
+        if (GalacticraftClient.CONFIG.isAlphaWarningHidden()) {
             warningHidden = true;
         }
     }

@@ -24,7 +24,6 @@ package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -71,10 +70,6 @@ public record CreativeGcTransferItemPayload(int containerType, int slotIndex, in
     @Override
     public void handle(@NotNull ServerPlayNetworking.Context context) {
         context.server().execute(() -> {
-            if (!Galacticraft.CONFIG.enableCreativeGearInv()) {
-                Constant.LOGGER.info("{} failed to execute packet. Galacticraft creative gear inventory is disabled.", this.getClass().getTypeName());
-                return;
-            }
             var player = context.player();
             if (!player.isCreative()) {
                 return;

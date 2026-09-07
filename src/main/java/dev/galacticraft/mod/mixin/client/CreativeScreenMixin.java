@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.GalacticraftClient;
 import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
 import dev.galacticraft.mod.client.gui.widget.RadioButton;
 import dev.galacticraft.mod.content.GCAccessorySlots;
@@ -82,7 +82,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Unique
     private boolean isCreativeGearInvAllowed() {
-        return Galacticraft.CONFIG.enableCreativeGearInv();
+        return GalacticraftClient.CONFIG.enableCreativeGearInv();
     }
 
     private CreativeScreenMixin(AbstractContainerMenu abstractContainerMenu, Inventory inventory, Component component) {

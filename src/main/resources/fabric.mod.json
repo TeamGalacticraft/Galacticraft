@@ -300,7 +300,7 @@
       "dev.galacticraft.mod.data.GCDataGenerator"
     ],
     "modmenu": [
-      "dev.galacticraft.mod.compat.ModMenuApiImpl"
+      "dev.galacticraft.mod.compat.modmenu.ModMenuApiImpl"
     ],
     "rei_client": [
       "dev.galacticraft.mod.compat.rei.client.GalacticraftREIClientPlugin"

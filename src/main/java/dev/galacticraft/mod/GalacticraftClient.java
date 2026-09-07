@@ -26,6 +26,7 @@ import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.api.fluid.FluidData;
 import dev.galacticraft.api.gas.Gases;
+import dev.galacticraft.mod.api.config.ClientConfig;
 import dev.galacticraft.mod.client.ClientCapeLoginSync;
 import dev.galacticraft.mod.client.GCKeyBinds;
 import dev.galacticraft.mod.client.gui.screen.ingame.*;
@@ -50,6 +51,7 @@ import dev.galacticraft.mod.client.render.rocket.GalacticraftRocketPartRenderers
 import dev.galacticraft.mod.client.resources.GCResourceReloadListener;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.client.util.ColorUtil;
+import dev.galacticraft.mod.config.ClientConfigImpl;
 import dev.galacticraft.mod.content.*;
 import dev.galacticraft.mod.content.block.environment.FallenMeteorBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
@@ -80,6 +82,7 @@ import net.fabricmc.fabric.api.client.rendering.v1.*;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.fabricmc.fabric.api.transfer.v1.client.fluid.FluidVariantRendering;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.client.model.EntityModel;
 import net.minecraft.client.particle.SplashParticle;
@@ -106,8 +109,8 @@ import static dev.galacticraft.api.component.GCDataComponents.FLUID_DATA;
 
 @Environment(EnvType.CLIENT)
 public class GalacticraftClient implements ClientModInitializer {
+    public static final ClientConfig CONFIG = new ClientConfigImpl(FabricLoader.getInstance().getConfigDir().resolve("galacticraft_client.json").toFile());
 
-    private boolean colorsInitialized = false;
     private static final Map<FluidVariant, Integer> FLUID_CANISTER_COLOR_CACHE = new HashMap<>();
 
     @Override

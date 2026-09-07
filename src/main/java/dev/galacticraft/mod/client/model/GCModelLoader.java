@@ -34,7 +34,7 @@ import com.mojang.serialization.Codec;
 import com.mojang.serialization.DataResult;
 import com.mojang.serialization.JsonOps;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.GalacticraftClient;
 import dev.galacticraft.mod.client.event.RocketAtlasCallback;
 import dev.galacticraft.mod.client.resources.RocketTextureManager;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -93,7 +93,7 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     public void onInitializeModelLoader(Context pluginContext) {
         pluginContext.modifyModelOnLoad().register(ModelModifier.OVERRIDE_PHASE, (model, context) -> {
             if (context.resourceId() != null && context.resourceId().equals(Constant.BakedModel.CANNED_FOOD)) {
-                if (Galacticraft.CONFIG.squareCannedFood()) {
+                if (GalacticraftClient.CONFIG.squareCannedFood()) {
                     return context.getOrLoadModel(CANNED_FOOD_SQUARE);
                 } else {
                     return context.getOrLoadModel(CANNED_FOOD_ROUND);

@@ -20,19 +20,16 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.compat;
+package dev.galacticraft.mod.api.config;
 
-import com.terraformersmc.modmenu.api.ConfigScreenFactory;
-import com.terraformersmc.modmenu.api.ModMenuApi;
-import dev.galacticraft.mod.config.ConfigImpl;
-import net.fabricmc.loader.api.FabricLoader;
+public interface ClientConfig {
+    boolean isAlphaWarningHidden();
 
-public class ModMenuApiImpl implements ModMenuApi {
-    @Override
-    public ConfigScreenFactory<?> getModConfigScreenFactory() {
-        if (FabricLoader.getInstance().isModLoaded("cloth-config")) {
-            return ConfigImpl.ConfigScreen.INSTANCE;
-        }
-        return null;
-    }
+    boolean squareCannedFood();
+
+    boolean enableCreativeGearInv();
+
+    void load();
+
+    void save();
 }
