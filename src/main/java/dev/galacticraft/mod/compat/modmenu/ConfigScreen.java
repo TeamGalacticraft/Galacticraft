@@ -105,20 +105,22 @@ public class ConfigScreen implements ConfigScreenFactory<Screen> {
         ClientConfigImpl clientConfig = (ClientConfigImpl) GalacticraftClient.CONFIG;
         ConfigImpl config = (ConfigImpl) Galacticraft.CONFIG;
 
+        boolean notInMultiplayer = minecraft.isSingleplayer() || minecraft.level == null;
+
         ConfigBuilder b = ConfigBuilder.create()
                 .setParentScreen(parent)
                 .setTitle(Component.translatable(Translations.Config.TITLE))
                 .setSavingRunnable(() -> {
                     clientConfig.save();
 
-                    if (minecraft.isSingleplayer()) {
+                    if (notInMultiplayer) {
                         config.save();
                     }
                 });
 
         this.addClientConfig(clientConfig, b);
 
-        if (minecraft.isSingleplayer()) {
+        if (notInMultiplayer) {
             this.addConfig(config, b);
         }
 
@@ -153,7 +155,7 @@ public class ConfigScreen implements ConfigScreenFactory<Screen> {
                 clientConfig.squareCannedFood())
                 .setTooltip(tooltipSingular.apply(Translations.Config.SQUARE_CANNED_FOOD))
                 .setSaveConsumer(clientConfig::setSquareCannedFood)
-                .setDefaultValue(false)
+                .setDefaultValue(true)
                 .build()
         );
     }
