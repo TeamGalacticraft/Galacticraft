@@ -246,7 +246,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     public void onLand(Level level, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity blockEntity) {
         super.onLand(level, pos, fallingBlockState, currentStateInPos, blockEntity);
 
-        for (var livingEntity : level.getEntitiesOfClass(LivingEntity.class, blockEntity.getBoundingBox().inflate(1.0D)))
+        for (var livingEntity : level.getEntitiesOfClass(LivingEntity.class, blockEntity.getBoundingBox()))
         {
             var damage = Math.max(2.0F, Math.min(blockEntity.fallDistance * 2.0F, 40.0F));
             livingEntity.hurt(level.damageSources().fallingBlock(blockEntity), damage);
