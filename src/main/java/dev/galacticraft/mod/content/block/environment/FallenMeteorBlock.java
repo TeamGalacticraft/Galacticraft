@@ -34,8 +34,12 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -55,6 +59,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +69,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     private static final VoxelShape SHAPE = box(3, 0, 3, 13, 10, 13);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 5);
+    private final int[] coolingRates = { 1, 500, 460, 370, 240, 200 };
 
     public FallenMeteorBlock(BlockBehaviour.Properties settings) {
         super(settings);
@@ -83,14 +89,58 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     @Override
     public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
+        boolean waterlogged = state.getValue(WATERLOGGED);
 
         if (i > 0) {
-            if (random.nextInt(500) == 0) {
+            int coolingRate = coolingRates[i];
+
+            if (waterlogged)
+            {
+                coolingRate /= 2;
+            }
+
+            if (random.nextInt(coolingRate) == 0) {
                 world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
+                world.playSound(null,
+                        pos,
+                        SoundEvents.FIRE_EXTINGUISH,
+                        SoundSource.BLOCKS,
+                        0.7F,
+                        0.8F);
             } else {
                 super.tick(state, world, pos, random);
             }
         }
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+
+        int heat = state.getValue(HEAT);
+        if ( !(state.getValue(WATERLOGGED) && heat > 0) ) {
+            return;
+        }
+
+        double hspread = 0;
+        if (heat > 3) {
+            double spread = (heat - 3) * 0.03D;
+
+            hspread = (random.nextDouble() - 0.5D) * spread;
+        }
+
+        for (var i = 0; i < heat; ++i) {
+            level.addParticle(
+                    ParticleTypes.CLOUD,
+                    pos.getX() + random.nextDouble(),
+                    pos.getY() + 0.2D + random.nextDouble(),
+                    pos.getZ() + random.nextDouble(),
+                    hspread,
+                    heat * 0.01D,
+                    hspread
+            );
+        }
+
+
     }
 
     @Override
@@ -129,7 +179,17 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
             return;
         }
 
+        if (entity instanceof Player player)
+        {
+            if (player.isCreative()) return;
+        }
+
         if (entity instanceof LivingEntity livingEntity) {
+
+            if (entity.fireImmune() || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                return;
+            }
+
             world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
             for (var i = 0; i < 8; ++i) {
@@ -137,17 +197,59 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
             }
 
             if (!livingEntity.isOnFire()) {
-                livingEntity.setRemainingFireTicks(2);
+                livingEntity.igniteForSeconds(1);
             }
 
-            var knockX = pos.getX() + 0.5F - livingEntity.getX();
+            var knockX = livingEntity.getX() - (pos.getX());
+            var knockY = livingEntity.getY() + livingEntity.getBbHeight() / 2.0D - (pos.getY());
             double knockZ;
 
-            for (knockZ = livingEntity.getZ() - pos.getZ(); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
+            for (knockZ = livingEntity.getZ() - (pos.getZ()); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
                 knockX = (Math.random() - Math.random()) * 0.01D;
             }
 
-            livingEntity.knockback(1, knockX, knockZ);
+            meteorKnockback(livingEntity,0.3F, knockX, knockY, knockZ);
+        }
+    }
+
+    protected void meteorKnockback(LivingEntity entity, double strength, double x, double y, double z) {
+        strength *= 1.0D - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
+
+        if (strength <= 0.0D) {
+            return;
+        }
+
+        Vec3 direction = new Vec3(x, y, z);
+
+        if (direction.horizontalDistanceSqr() < 1.0E-5D) {
+            direction = new Vec3(
+                    (Math.random() - Math.random()) * 0.01D,
+                    y,
+                    (Math.random() - Math.random()) * 0.01D
+            );
+        }
+
+        direction = direction.normalize().scale(strength);
+
+        Vec3 velocity = entity.getDeltaMovement();
+
+        entity.hasImpulse = true;
+
+        entity.setDeltaMovement(
+                velocity.x / 2.0D + direction.x,
+                velocity.y / 2.0D + direction.y,
+                velocity.z / 2.0D + direction.z
+        );
+    }
+
+    @Override
+    public void onLand(Level level, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity blockEntity) {
+        super.onLand(level, pos, fallingBlockState, currentStateInPos, blockEntity);
+
+        for (var livingEntity : level.getEntitiesOfClass(LivingEntity.class, blockEntity.getBoundingBox().inflate(1.0D)))
+        {
+            var damage = Math.max(2.0F, Math.min(blockEntity.fallDistance * 2.0F, 40.0F));
+            livingEntity.hurt(level.damageSources().fallingBlock(blockEntity), damage);
         }
     }
 
