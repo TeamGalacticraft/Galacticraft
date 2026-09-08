@@ -36,6 +36,7 @@ import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -59,6 +60,7 @@ public class GCEventHandlers {
     public static void init() {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(GCEventHandlers::onPlayerChangeWorld);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
     }
@@ -67,19 +69,21 @@ public class GCEventHandlers {
         if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
             player.galacticraft$closeCelestialScreen();
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
-
-            // Send gear inventory to player
-            Container inv = player.galacticraft$getGearInv();
-            ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
-            for (int i = 0; i < inv.getContainerSize(); i++) {
-                stacks[i] = inv.getItem(i);
-            }
-
-            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
-            ServerPlayNetworking.send(player, payload);
         } else {
             player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
+    }
+
+    public static void onPlayerChangeWorld(ServerPlayer player, ServerLevel origin, ServerLevel destination) {
+        // Send gear inventory to player
+        Container inv = player.galacticraft$getGearInv();
+        ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            stacks[i] = inv.getItem(i);
+        }
+
+        GearInvPayload packet = new GearInvPayload(player.getId(), stacks);
+        ServerPlayNetworking.send(player, packet);
     }
 
     public static void onWorldTick(ServerLevel level) {
