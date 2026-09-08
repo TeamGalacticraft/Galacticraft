@@ -27,6 +27,7 @@ import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCCelestialBodies;
@@ -46,6 +47,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -65,6 +67,16 @@ public class GCEventHandlers {
         if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
             player.galacticraft$closeCelestialScreen();
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
+            
+            // Send gear inventory to player
+            Container inv = player.galacticraft$getGearInv();
+            ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
+            for (int i = 0; i < inv.getContainerSize(); i++) {
+                stacks[i] = inv.getItem(i);
+            }
+
+            GearInvPayload payload = new GearInvPayload(player.getId(), stacks);
+            ServerPlayNetworking.send(player, payload);
         } else {
             player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
