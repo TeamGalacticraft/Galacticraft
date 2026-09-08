@@ -67,7 +67,7 @@ public class GCEventHandlers {
         if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
             player.galacticraft$closeCelestialScreen();
             ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
-            
+
             // Send gear inventory to player
             Container inv = player.galacticraft$getGearInv();
             ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
