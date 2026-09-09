@@ -78,8 +78,8 @@ public class EnergyStorageModuleBlockEntity extends ResourceStorageBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SELF_SLOT);
         this.drainPowerToSlot(CHARGE_ITEM_SLOT);
     }
