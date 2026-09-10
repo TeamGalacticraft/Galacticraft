@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.environment;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.mod.Constant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.particles.ParticleTypes;
@@ -69,7 +70,9 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     private static final VoxelShape SHAPE = box(3, 0, 3, 13, 10, 13);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 5);
-    private final int[] coolingRates = { 1, 500, 460, 370, 240, 200 };
+    private static final float FALL_DAMAGE_PER_DISTANCE = 2.0F;
+    private static final int FALL_DAMAGE_MAX = 40;
+    private final int[] coolingRates = { 0, 10, 8, 6, 4, 2 };
 
     public FallenMeteorBlock(BlockBehaviour.Properties settings) {
         super(settings);
@@ -82,51 +85,39 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        this.tick(state, world, pos, random);
+    protected boolean isRandomlyTicking(BlockState state) {
+        return state.getValue(HEAT) > 0;
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
-        boolean waterlogged = state.getValue(WATERLOGGED);
 
-        if (i > 0) {
-            int coolingRate = coolingRates[i];
+        int coolingRate = coolingRates[i];
 
-            if (waterlogged)
-            {
-                coolingRate /= 2;
-            }
-
-            if (random.nextInt(coolingRate) == 0) {
-                world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
-                world.playSound(null,
-                        pos,
-                        SoundEvents.FIRE_EXTINGUISH,
-                        SoundSource.BLOCKS,
-                        0.7F,
-                        0.8F);
-            } else {
-                super.tick(state, world, pos, random);
-            }
+        if (state.getValue(WATERLOGGED)) {
+            coolingRate /= 2;
         }
+
+        if (random.nextInt(coolingRate) == 0) {
+            world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    @Override
+    protected void falling(FallingBlockEntity entity) {
+        entity.setHurtsEntities(FALL_DAMAGE_PER_DISTANCE, FALL_DAMAGE_MAX);
     }
 
     @Override
     public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
 
         int heat = state.getValue(HEAT);
-        if ( !(state.getValue(WATERLOGGED) && heat > 0) ) {
+        if (!(state.getValue(WATERLOGGED) && heat > 0)) {
             return;
         }
 
-        double hspread = 0;
-        if (heat > 3) {
-            double spread = (heat - 3) * 0.03D;
-
-            hspread = (random.nextDouble() - 0.5D) * spread;
-        }
+        double spread = heat > 3 ? (heat - 3) * 0.03D : 0;
 
         for (var i = 0; i < heat; ++i) {
             level.addParticle(
@@ -134,12 +125,22 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
                     pos.getX() + random.nextDouble(),
                     pos.getY() + 0.2D + random.nextDouble(),
                     pos.getZ() + random.nextDouble(),
-                    hspread,
+                    (random.nextDouble() - 0.5D) * spread,
                     heat * 0.01D,
-                    hspread
+                    (random.nextDouble() - 0.5D) * spread
             );
         }
 
+        if (level.getGameTime() % 20 == 0) {
+            level.playLocalSound(
+                    pos,
+                    SoundEvents.FIRE_EXTINGUISH,
+                    SoundSource.BLOCKS,
+                    0.7F,
+                    0.8F,
+                    true
+            );
+        }
 
     }
 
@@ -179,8 +180,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
             return;
         }
 
-        if (entity instanceof Player player)
-        {
+        if (entity instanceof Player player) {
             if (player.isCreative()) return;
         }
 
@@ -196,9 +196,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
                 world.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
             }
 
-            if (!livingEntity.isOnFire()) {
-                livingEntity.igniteForSeconds(1);
-            }
+            livingEntity.igniteForSeconds(1);
 
             var knockX = livingEntity.getX() - (pos.getX());
             var knockY = livingEntity.getY() + livingEntity.getBbHeight() / 2.0D - (pos.getY());
@@ -208,7 +206,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
                 knockX = (Math.random() - Math.random()) * 0.01D;
             }
 
-            meteorKnockback(livingEntity,0.3F, knockX, knockY, knockZ);
+            meteorKnockback(livingEntity, 0.3F, knockX, knockY, knockZ);
         }
     }
 
@@ -236,21 +234,8 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
         entity.hasImpulse = true;
 
         entity.setDeltaMovement(
-                velocity.x / 2.0D + direction.x,
-                velocity.y / 2.0D + direction.y,
-                velocity.z / 2.0D + direction.z
+                velocity.scale(0.5D).add(direction)
         );
-    }
-
-    @Override
-    public void onLand(Level level, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity blockEntity) {
-        super.onLand(level, pos, fallingBlockState, currentStateInPos, blockEntity);
-
-        for (var livingEntity : level.getEntitiesOfClass(LivingEntity.class, blockEntity.getBoundingBox()))
-        {
-            var damage = Math.max(2.0F, Math.min(blockEntity.fallDistance * 2.0F, 40.0F));
-            livingEntity.hurt(level.damageSources().fallingBlock(blockEntity), damage);
-        }
     }
 
     @Override
