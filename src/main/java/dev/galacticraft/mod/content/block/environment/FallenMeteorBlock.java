@@ -71,7 +71,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 5);
     private static final float FALL_DAMAGE_PER_DISTANCE = 2.0F;
     private static final int FALL_DAMAGE_MAX = 40;
-    private final int[] coolingRates = { 0, 10, 8, 6, 4, 2 };
+    private final int[] COOLING_RATES = { 0, 10, 8, 6, 4, 2 };
 
     public FallenMeteorBlock(BlockBehaviour.Properties settings) {
         super(settings);
@@ -92,7 +92,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
 
-        int coolingRate = coolingRates[i];
+        int coolingRate = COOLING_RATES[i];
 
         if (state.getValue(WATERLOGGED)) {
             coolingRate /= 2;
@@ -106,6 +106,18 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     @Override
     protected void falling(FallingBlockEntity entity) {
         entity.setHurtsEntities(FALL_DAMAGE_PER_DISTANCE, FALL_DAMAGE_MAX);
+    }
+
+    @Override
+    public void onLand(Level level, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
+        super.onLand(level, pos, fallingBlockState, currentStateInPos, fallingBlockEntity);
+
+        level.playSound(fallingBlockEntity,
+                pos,
+                SoundEvents.METAL_FALL,
+                SoundSource.BLOCKS,
+                0.6F,
+                1.0F);
     }
 
     @Override
@@ -130,12 +142,12 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
             );
         }
 
-        if (level.getGameTime() % 20 == 0) {
+        if (random.nextInt(40) == 0) {
             level.playLocalSound(
                     pos,
                     SoundEvents.FIRE_EXTINGUISH,
                     SoundSource.BLOCKS,
-                    0.7F,
+                    heat * 0.12F,
                     0.8F,
                     true
             );
