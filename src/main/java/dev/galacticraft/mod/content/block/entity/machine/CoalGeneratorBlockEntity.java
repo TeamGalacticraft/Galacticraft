@@ -221,7 +221,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
 
                 if (time > 0 && slot.consumeOne() != null) {
                     this.fuelLength = time;
-                    this.fuelTime = 1;
                     return null;
                 }
             }
