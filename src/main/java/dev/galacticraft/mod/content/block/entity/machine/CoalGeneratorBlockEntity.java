@@ -156,6 +156,11 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
         this.energyStorage().insert((long) (Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * this.heat));
         this.energySource.trySpreadEnergy(level, pos, state);
         profiler.popPush("fuel_reset");
+
+        if (this.energyStorage().isFull()) {
+            return MachineStatuses.CAPACITOR_FULL;
+        }
+
         if (this.fuelLength == 0) {
             MachineStatus status = this.consumeFuel(level, pos, state);
             if (status != null) {
@@ -169,9 +174,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
 
         this.curr = this.heat == 1.0;
 
-        if (this.energyStorage().isFull()) {
-            return MachineStatuses.CAPACITOR_FULL;
-        } else if (this.heat < 1.0) {
+        if (this.heat < 1.0) {
             return GCMachineStatuses.WARMING_UP;
         } else {
             return GCMachineStatuses.GENERATING;
