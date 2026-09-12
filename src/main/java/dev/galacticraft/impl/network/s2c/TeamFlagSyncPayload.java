@@ -20,26 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.network.c2s;
+package dev.galacticraft.impl.network.s2c;
 
-import dev.galacticraft.impl.network.s2c.TeamFlagSyncPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.client.resources.TeamFlagTextureManager;
 import io.netty.buffer.ByteBuf;
-import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.codec.ByteBufCodecs;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record FlagDataPayload(byte[] data) implements C2SPayload {
-    public static final ResourceLocation ID = Constant.id("flag_data");
-    public static final Type<FlagDataPayload> TYPE = new Type<>(ID);
-    public static final StreamCodec<ByteBuf, FlagDataPayload> CODEC = ByteBufCodecs.BYTE_ARRAY.map(FlagDataPayload::new, FlagDataPayload::data);
+public record TeamFlagSyncPayload(byte[] data) implements S2CPayload {
+    public static final ResourceLocation ID = Constant.id("team_flag_sync");
+    public static final Type<TeamFlagSyncPayload> TYPE = new Type<>(ID);
+    public static final StreamCodec<ByteBuf, TeamFlagSyncPayload> CODEC = ByteBufCodecs.BYTE_ARRAY.map(TeamFlagSyncPayload::new, TeamFlagSyncPayload::data);
 
-    public FlagDataPayload {
-        if (data.length != 48 * 32 * 3) throw new IllegalArgumentException();
+    public TeamFlagSyncPayload {
+        if (data.length != 0 && data.length != TeamFlagTextureManager.FLAG_WIDTH * TeamFlagTextureManager.FLAG_HEIGHT * 3) {
+            throw new IllegalArgumentException("Invalid team flag payload");
+        }
     }
 
     @Override
@@ -48,11 +49,7 @@ public record FlagDataPayload(byte[] data) implements C2SPayload {
     }
 
     @Override
-    public void handle(ServerPlayNetworking.@NotNull Context context) {
-        context.player().server.execute(() -> {
-            GCServerPlayer playerData = GCServerPlayer.get(context.player());
-            playerData.setTeamFlagData(this.data);
-            ServerPlayNetworking.send(context.player(), new TeamFlagSyncPayload(this.data));
-        });
+    public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
+        return () -> TeamFlagTextureManager.INSTANCE.setCurrentFlag(this.data.length == 0 ? null : this.data);
     }
 }
