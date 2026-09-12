@@ -91,6 +91,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(GCBlockTags.SEALABLE)
                 .add(GCBlocks.AIR_LOCK_SEAL)
+                .add(GCBlocks.MAGNETIC_CRAFTING_TABLE)
                 .add(GCBlocks.ROCKET_WORKBENCH)
                 .add(GCBlocks.CRYOGENIC_CHAMBER)
                 .add(GCBlocks.CRYOGENIC_CHAMBER_PART);
@@ -392,6 +393,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(ConventionalBlockTags.CLUSTERS)
                 .add(GCBlocks.OLIVINE_CLUSTER);
 
+        this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
+                .add(GCBlocks.MAGNETIC_CRAFTING_TABLE);
+
         this.tag(GCBlockTags.MACHINES).add(
                 GCBlocks.CIRCUIT_FABRICATOR,
                 GCBlocks.COMPRESSOR,
@@ -605,6 +609,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.TIN_LADDER,
                         GCBlocks.FUELING_PAD,
                         GCBlocks.ROCKET_LAUNCH_PAD,
+                        GCBlocks.MAGNETIC_CRAFTING_TABLE,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
                         GCBlocks.UNLIT_SOUL_LANTERN,
