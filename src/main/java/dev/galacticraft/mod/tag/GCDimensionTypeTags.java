@@ -31,6 +31,7 @@ public class GCDimensionTypeTags {
     public static final TagKey<DimensionType> FOOTPRINTS_DIMENSIONS = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("footprints"));
     public static final TagKey<DimensionType> SPACE = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("space"));
     public static final TagKey<DimensionType> VACUUM = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("vacuum"));
+    public static final TagKey<DimensionType> NO_WEATHER = TagKey.create(Registries.DIMENSION_TYPE, Constant.id("no_weather"));
 
     public static void register() {
     }
