@@ -154,6 +154,7 @@ public class CompressorBlockEntity extends AbstractCompressorBlockEntity impleme
             RandomSource randomSource = level.getRandom();
             level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
 
+            profiler.pop();
             return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
         profiler.pop();
