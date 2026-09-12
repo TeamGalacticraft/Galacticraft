@@ -788,6 +788,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCFluidTags.LIQUID_OXYGEN, "Liquid Oxygen");
         this.tag(GCFluidTags.OXYGEN, "Oxygen");
         this.tag(GCFluidTags.NON_BREATHABLE, "Non-Breathable Fluids");
+        this.tag(GCFluidTags.FLUID_CANISTER_EXCLUSIONS, "Excluded from Fluid Canisters");
     }
 
     protected void generateGasTranslations() {
