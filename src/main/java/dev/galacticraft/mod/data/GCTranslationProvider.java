@@ -24,6 +24,7 @@ package dev.galacticraft.mod.data;
 
 import dev.galacticraft.api.data.TranslationProvider;
 import dev.galacticraft.api.rocket.part.RocketPart;
+import dev.galacticraft.mod.Constant.Cape;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry.DecorationSet;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -33,6 +34,32 @@ import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.tag.GCItemTags;
+import dev.galacticraft.mod.util.Translations.Advancements;
+import dev.galacticraft.mod.util.Translations.BannerPattern;
+import dev.galacticraft.mod.util.Translations.Boss;
+import dev.galacticraft.mod.util.Translations.CelestialBody;
+import dev.galacticraft.mod.util.Translations.CelestialSelection;
+import dev.galacticraft.mod.util.Translations.Chat;
+import dev.galacticraft.mod.util.Translations.Config;
+import dev.galacticraft.mod.util.Translations.DimensionTp;
+import dev.galacticraft.mod.util.Translations.Galaxy;
+import dev.galacticraft.mod.util.Translations.Gas;
+import dev.galacticraft.mod.util.Translations.GcHouston;
+import dev.galacticraft.mod.util.Translations.ItemGroup;
+import dev.galacticraft.mod.util.Translations.Items;
+import dev.galacticraft.mod.util.Translations.JukeboxSong;
+import dev.galacticraft.mod.util.Translations.Keybindings;
+import dev.galacticraft.mod.util.Translations.MachineStatus;
+import dev.galacticraft.mod.util.Translations.Misc;
+import dev.galacticraft.mod.util.Translations.RecipeCategory;
+import dev.galacticraft.mod.util.Translations.RegistryDebug;
+import dev.galacticraft.mod.util.Translations.SetOxygen;
+import dev.galacticraft.mod.util.Translations.SolarPanel;
+import dev.galacticraft.mod.util.Translations.SpaceRace;
+import dev.galacticraft.mod.util.Translations.Subtitles;
+import dev.galacticraft.mod.util.Translations.Tooltip;
+import dev.galacticraft.mod.util.Translations.Ui;
+import dev.galacticraft.mod.util.Translations.Waila;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
@@ -376,6 +403,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace");
         this.block(GCBlocks.REFINERY, "Refinery");
         this.block(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector");
+        this.block(GCBlocks.OXYGEN_DETECTOR, "Oxygen Detector");
         this.block(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer");
         this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
         this.block(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor");
@@ -1007,6 +1035,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
         this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Collects oxygen from nearby crops and trees.");
+        this.blockDesc(GCBlocks.OXYGEN_DETECTOR, "Will emit a redstone signal when surrounded by oxygen.");
         this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Fills oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_SEALER, "Fills an airtight room with oxygen to make it breathable.");
         this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Stores a large amount of oxygen.");
@@ -1137,6 +1166,8 @@ public class GCTranslationProvider extends TranslationProvider {
     }
 
     protected void generateMachineStatusTranslations() {
+        this.add(MachineStatus.ENABLED, "Enabled");
+        this.add(MachineStatus.DISABLED, "Disabled");
         this.add(MachineStatus.GENERATING, "Generating");
         this.add(MachineStatus.NO_FUEL, "No Fuel");
         this.add(MachineStatus.WARMING_UP, "Warming Up");
@@ -1224,6 +1255,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
+        this.add(Ui.DETECTOR_MODE, "Current Mode: %s");
+        this.add(Ui.DETECTOR_AND, "AND");
+        this.add(Ui.DETECTOR_OR, "OR");
+        this.add(Ui.DETECTOR_FACE, "Face: %s");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
