@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.screen;
 
+import static dev.galacticraft.mod.content.GCBlocks.OXYGEN_DETECTOR;
+
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;
@@ -51,6 +53,7 @@ public class GCMenuTypes {
     public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = SynchronizedMenuType.create(MachineMenu::new, 84);
 
     public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = SynchronizedMenuType.create(OxygenCollectorMenu::new);
+    public static final MenuType<OxygenDetectorMenu> OXYGEN_DETECTOR = SynchronizedMenuType.create(OxygenDetectorMenu::new);
 
     public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
     public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
@@ -88,6 +91,7 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.REFINERY_MENU), REFINERY);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DETECTOR_MENU), OXYGEN_DETECTOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);

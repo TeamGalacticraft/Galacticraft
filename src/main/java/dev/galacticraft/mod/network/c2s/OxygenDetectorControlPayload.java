@@ -20,34 +20,45 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.network;
+package dev.galacticraft.mod.network.c2s;
+
+import org.jetbrains.annotations.NotNull;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
-import dev.galacticraft.mod.network.c2s.*;
+import dev.galacticraft.machinelib.impl.Constant;
+import dev.galacticraft.mod.screen.OxygenDetectorMenu;
+import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerPlayer;
 
-/**
- * Handles server-bound (C2S) packets.
- */
-public class GCServerPacketReceivers {
-    public static void register() {
-        registerPacket(BubbleMaxPayload.TYPE);
-        registerPacket(BubbleVisibilityPayload.TYPE);
-        registerPacket(ControlEntityPayload.TYPE);
-        registerPacket(EjectCanPayload.TYPE);
-        registerPacket(OpenGcInventoryPayload.TYPE);
-        registerPacket(OpenPetInventoryPayload.TYPE);
-        registerPacket(OpenRocketPayload.TYPE);
-        registerPacket(OxygenDetectorControlPayload.TYPE);
-        registerPacket(PlanetTeleportPayload.TYPE);
-        registerPacket(SatelliteCreationPayload.TYPE);
-        registerPacket(SatelliteUpdatePayload.TYPE);
-        registerPacket(CapeSelectionPayload.TYPE);
-        registerPacket(CreativeGcTransferItemPayload.TYPE);
+public record OxygenDetectorControlPayload(boolean mode) implements C2SPayload {
+    public static final StreamCodec<ByteBuf, OxygenDetectorControlPayload> STREAM_CODEC = StreamCodec.of(
+        (buf, payload) -> {
+            buf.writeBoolean(payload.mode());
+        },
+        buf -> {
+            Boolean mode = buf.readBoolean();
+
+            return new OxygenDetectorControlPayload(mode);
+        }
+    );
+    public static final ResourceLocation ID = Constant.id("oxygen_detector_control");
+    public static final Type<OxygenDetectorControlPayload> TYPE = new Type<>(ID);
+
+    @Override
+    public void handle(@NotNull ServerPlayNetworking.Context context) {
+        ServerPlayer player = context.player();
+
+        if (player.containerMenu instanceof OxygenDetectorMenu menu) {
+            if (menu.be.canAccess(player)) menu.be.setMode(mode);
+        }
     }
 
-    public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ServerPlayNetworking.registerGlobalReceiver(type, C2SPayload::handle);
+    @Override
+    public Type<? extends CustomPacketPayload> type() {
+        return TYPE;
     }
 }

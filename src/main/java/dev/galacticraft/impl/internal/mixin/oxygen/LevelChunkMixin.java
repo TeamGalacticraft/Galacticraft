@@ -24,17 +24,22 @@ package dev.galacticraft.impl.internal.mixin.oxygen;
 
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+
+import dev.galacticraft.api.block.OxygenChangeListener;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenAccessor;
 import dev.galacticraft.impl.internal.accessor.ChunkOxygenSyncer;
 import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.Registry;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelHeightAccessor;
 import net.minecraft.world.level.biome.Biome;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
@@ -78,6 +83,22 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
                 this.dirtySections |= (short) (0b1 << this.getSectionIndex(y));
             }
             accessor.galacticraft$setInverted(x, y & 15, z, inverted);
+        }
+
+        Boolean newValue = inverted ^ this.level.getDefaultBreathable();
+        BlockPos pos = getPos().getBlockAt(x, y, z);
+
+        for (Direction direction : Direction.values()) {
+            Block block =  getBlockState(pos.relative(direction)).getBlock();
+
+            if (block instanceof OxygenChangeListener listener) {
+                listener.onOxygenChange(this.level, pos, direction.getOpposite(), newValue);
+            }
+
+            BlockEntity be = getBlockEntity(pos);
+            if (be instanceof OxygenChangeListener listener) {
+                listener.onOxygenChange(this.level, pos, direction.getOpposite(), newValue);
+            }
         }
     }
 
