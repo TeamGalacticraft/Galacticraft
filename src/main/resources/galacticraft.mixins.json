@@ -48,7 +48,6 @@
     "client.ClientPacketListenerMixin",
     "client.CreativeScreenMixin",
     "client.ElytraLayerMixin",
-    "client.FabricItemMixin",
     "client.FogRendererMixin",
     "client.GameRendererMixin",
     "client.HumanoidModelMixin",
