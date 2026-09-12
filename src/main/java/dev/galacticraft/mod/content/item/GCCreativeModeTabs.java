@@ -291,6 +291,7 @@ public class GCCreativeModeTabs {
                 output.accept(REFINERY);
                 output.accept(FUEL_LOADER);
                 output.accept(OXYGEN_COLLECTOR);
+                output.accept(OXYGEN_DETECTOR);
                 output.accept(OXYGEN_SEALER);
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
