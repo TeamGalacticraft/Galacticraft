@@ -20,35 +20,34 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin.client;
+package dev.galacticraft.mod.client.gui.screen.ingame.spacerace;
 
-import dev.galacticraft.mod.client.gui.widget.SpaceRaceButtonWidget;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.gui.screens.PauseScreen;
-import net.minecraft.client.gui.screens.Screen;
+import dev.galacticraft.mod.util.Translations;
 import net.minecraft.network.chat.Component;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.Items;
 
-@Mixin(PauseScreen.class)
-@Environment(EnvType.CLIENT)
-public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Component text) {
-        super(text);
+public enum GlobalItemsColumn {
+    MINED(Translations.SpaceRace.ITEM_COLUMN_MINED, new ItemStack(Items.DIAMOND_PICKAXE)),
+    CRAFTED(Translations.SpaceRace.ITEM_COLUMN_CRAFTED, new ItemStack(Items.CRAFTING_TABLE)),
+    USED(Translations.SpaceRace.ITEM_COLUMN_USED, new ItemStack(Items.IRON_SWORD)),
+    BROKEN(Translations.SpaceRace.ITEM_COLUMN_BROKEN, new ItemStack(Items.CHIPPED_ANVIL)),
+    PICKED_UP(Translations.SpaceRace.ITEM_COLUMN_PICKED_UP, new ItemStack(Items.CHEST)),
+    DROPPED(Translations.SpaceRace.ITEM_COLUMN_DROPPED, new ItemStack(Items.DROPPER));
+
+    private final Component tooltip;
+    private final ItemStack icon;
+
+    GlobalItemsColumn(String tooltipKey, ItemStack icon) {
+        this.tooltip = Component.translatable(tooltipKey);
+        this.icon = icon;
     }
 
-    @Inject(method = "init", at = @At("RETURN"))
-    private void init(CallbackInfo info) {
-        int screenWidth = this.width;
-        int screenHeight = this.height;
-        int buttonWidth = 100;
-        int buttonHeight = 35;
-        int x = screenWidth - buttonWidth;
-        int y = screenHeight - buttonHeight;
+    public Component tooltip() {
+        return this.tooltip;
+    }
 
-        this.addRenderableWidget(new SpaceRaceButtonWidget(this.minecraft, x, y, buttonWidth, buttonHeight, screenWidth, screenHeight));
+    public ItemStack icon() {
+        return this.icon;
     }
 }

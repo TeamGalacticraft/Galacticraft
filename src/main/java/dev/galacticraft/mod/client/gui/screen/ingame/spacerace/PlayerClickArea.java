@@ -20,27 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.impl.network;
+package dev.galacticraft.mod.client.gui.screen.ingame.spacerace;
 
-import dev.galacticraft.impl.network.s2c.*;
-import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
-import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
+import java.util.UUID;
 
-/**
- * Handles client-bound (S2C) packets.
- */
-public class GCApiClientPacketReceivers {
-    public static void register() {
-        registerPacket(AddSatellitePayload.TYPE);
-        registerPacket(GearInvPayload.TYPE);
-        registerPacket(OxygenUpdatePayload.TYPE);
-        registerPacket(RemoveSatellitePayload.TYPE);
-        registerPacket(ResearchUpdatePayload.TYPE);
-        registerPacket(SpaceRaceStatsPayload.TYPE);
-        registerPacket(UpdateSatellitePayload.TYPE);
-    }
-
-    public static <P extends S2CPayload> void registerPacket(CustomPacketPayload.Type<P> type) {
-        ClientPlayNetworking.registerGlobalReceiver(type, (payload, context) -> context.client().execute(payload.handle(context)));
+public record PlayerClickArea(int x1, int y1, int x2, int y2, UUID playerId) {
+    public boolean contains(double mouseX, double mouseY) {
+        return mouseX >= this.x1 && mouseX < this.x2 && mouseY >= this.y1 && mouseY < this.y2;
     }
 }
