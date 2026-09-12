@@ -24,8 +24,8 @@ package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.content.GCEntityTypes;
-import dev.galacticraft.mod.content.entity.EvolvedSkeletonEntity;
-import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.content.entity.evolved.EvolvedSkeletonEntity;
+import dev.galacticraft.mod.content.entity.evolved.EvolvedSpiderEntity;
 import net.minecraft.world.DifficultyInstance;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MobSpawnType;

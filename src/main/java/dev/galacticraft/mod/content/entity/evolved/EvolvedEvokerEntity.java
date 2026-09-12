@@ -20,14 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.PathfinderMob;
+import net.minecraft.world.entity.monster.Evoker;
 import net.minecraft.world.level.Level;
 
-public class ArchGreyEntity extends GreyEntity {
-    public ArchGreyEntity(EntityType<? extends PathfinderMob> entityType, Level level) {
-        super(entityType, level);
+public class EvolvedEvokerEntity extends Evoker {
+    public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, Level world) {
+        super(entityType, world);
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return true;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return Constant.Item.LARGE_OXYGEN_TANK;
     }
 }
