@@ -172,7 +172,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
                 return status;
             }
         } else if (++this.fuelTime >= this.fuelLength) {
-             this.consumeFuel(level, pos, state);
+            this.consumeFuel(level, pos, state);
         }
 
         profiler.pop();
