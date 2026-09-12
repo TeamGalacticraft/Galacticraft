@@ -172,7 +172,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
                 return status;
             }
         } else if (++this.fuelTime >= this.fuelLength) {
-            this.consumeFuel(level, pos, state);
+             this.consumeFuel(level, pos, state);
         }
 
         profiler.pop();
@@ -213,18 +213,24 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
 
         if (!this.shouldExtinguish(level, pos, state)) {
             ItemResourceSlot slot = this.itemStorage().slot(INPUT_SLOT);
+
             if (slot.getModifications() != this.fuelSlotModCount) {
                 this.fuelSlotModCount = slot.getModifications();
+
                 int time = FUEL_MAP.getInt(slot.getResource());
-                if (time > 0) {
-                    if (slot.consumeOne() != null) {
-                        this.fuelLength = time;
-                        return null;
-                    }
+
+                if (time > 0 && slot.consumeOne() != null) {
+                    this.fuelLength = time;
+                    this.fuelTime = 1;
+                    return null;
                 }
             }
-            return this.heat > 0 ? GCMachineStatuses.COOLING_DOWN : GCMachineStatuses.NO_FUEL;
+
+            return this.heat > 0
+                    ? GCMachineStatuses.COOLING_DOWN
+                    : GCMachineStatuses.NO_FUEL;
         }
+
         return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
     }
 
