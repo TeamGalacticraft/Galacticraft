@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  
+
   "id": "galacticraft-test",
   "version": "0.1.0",
   "name": "Galacticraft Test Mod",
@@ -38,6 +38,7 @@
       "dev.galacticraft.mod.gametest.machine.EnergyStorageModuleTestSuite",
       "dev.galacticraft.mod.gametest.machine.FuelLoaderTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
+      "dev.galacticraft.mod.gametest.oxygen.ExtinguishableTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
       "dev.galacticraft.mod.gametest.WireTestSuite"
     ]
