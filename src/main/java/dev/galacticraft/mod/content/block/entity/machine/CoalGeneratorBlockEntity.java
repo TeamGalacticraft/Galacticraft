@@ -153,25 +153,33 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transaction");
-        this.energyStorage().insert((long) (Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * this.heat));
+        this.energyStorage().insert(
+                (long) (Galacticraft.CONFIG.coalGeneratorEnergyProductionRate() * this.heat)
+        );
         this.energySource.trySpreadEnergy(level, pos, state);
-        profiler.popPush("fuel_reset");
+        profiler.pop();
+
+        if (this.energyStorage().isFull()) {
+            return MachineStatuses.CAPACITOR_FULL;
+        }
+
+        profiler.push("fuel_reset");
+
         if (this.fuelLength == 0) {
             MachineStatus status = this.consumeFuel(level, pos, state);
             if (status != null) {
+                profiler.pop();
                 return status;
             }
-        }
-        if (++this.fuelTime >= this.fuelLength) {
+        } else if (++this.fuelTime >= this.fuelLength) {
             this.consumeFuel(level, pos, state);
         }
+
         profiler.pop();
 
         this.curr = this.heat == 1.0;
 
-        if (this.energyStorage().isFull()) {
-            return MachineStatuses.CAPACITOR_FULL;
-        } else if (this.heat < 1.0) {
+        if (this.heat < 1.0) {
             return GCMachineStatuses.WARMING_UP;
         } else {
             return GCMachineStatuses.GENERATING;
@@ -205,18 +213,23 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
 
         if (!this.shouldExtinguish(level, pos, state)) {
             ItemResourceSlot slot = this.itemStorage().slot(INPUT_SLOT);
+
             if (slot.getModifications() != this.fuelSlotModCount) {
                 this.fuelSlotModCount = slot.getModifications();
+
                 int time = FUEL_MAP.getInt(slot.getResource());
-                if (time > 0) {
-                    if (slot.consumeOne() != null) {
-                        this.fuelLength = time;
-                        return null;
-                    }
+
+                if (time > 0 && slot.consumeOne() != null) {
+                    this.fuelLength = time;
+                    return null;
                 }
             }
-            return this.heat > 0 ? GCMachineStatuses.COOLING_DOWN : GCMachineStatuses.NO_FUEL;
+
+            return this.heat > 0
+                    ? GCMachineStatuses.COOLING_DOWN
+                    : GCMachineStatuses.NO_FUEL;
         }
+
         return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
     }
 
