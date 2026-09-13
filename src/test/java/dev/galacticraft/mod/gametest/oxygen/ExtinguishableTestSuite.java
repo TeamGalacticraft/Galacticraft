@@ -27,8 +27,11 @@ import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.gametest.GalacticraftGameTest;
 import net.minecraft.core.BlockPos;
+import net.minecraft.gametest.framework.AfterBatch;
+import net.minecraft.gametest.framework.BeforeBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
@@ -36,10 +39,18 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 
 public class ExtinguishableTestSuite implements GalacticraftGameTest {
-    @GameTest(template = SINGLE_BLOCK)
-    public void extinguishTorchTest(GameTestHelper context) {
-        context.getLevel().setDefaultBreathable(false);
+    @BeforeBatch(batch = "nonBreathable")
+    public void beforeBatch(ServerLevel level) {
+        level.setDefaultBreathable(false);
+    }
 
+    @AfterBatch(batch = "nonBreathable")
+    public void afterBatch(ServerLevel level) {
+        level.setDefaultBreathable(true);
+    }
+
+    @GameTest(batch = "nonBreathable", template = SINGLE_BLOCK)
+    public void extinguishTorchTest(GameTestHelper context) {
         final var torchPos = new BlockPos(0, 0, 0);
 
         context.setBlock(torchPos, Blocks.TORCH.defaultBlockState());
@@ -49,8 +60,6 @@ public class ExtinguishableTestSuite implements GalacticraftGameTest {
 
     @GameTest(template = EMPTY_ROOM)
     public void reigniteTorchTest(GameTestHelper context) {
-        context.getLevel().setDefaultBreathable(true);
-
         final var torchPos = new BlockPos(2, 2, 2);
 
         context.setBlock(torchPos, GCBlocks.UNLIT_TORCH.defaultBlockState());
@@ -62,10 +71,8 @@ public class ExtinguishableTestSuite implements GalacticraftGameTest {
         context.succeedWhenBlockPresent(Blocks.TORCH, torchPos);
     }
 
-    @GameTest(template = EMPTY_ROOM)
+    @GameTest(batch = "nonBreathable", template = EMPTY_ROOM)
     public void notExtinguishedInSealedRoomTest(GameTestHelper context) {
-        context.getLevel().setDefaultBreathable(false);
-
         final var sealerPos = new BlockPos(1, 2, 1);
         final var torchPos = new BlockPos(3, 2, 3);
 
