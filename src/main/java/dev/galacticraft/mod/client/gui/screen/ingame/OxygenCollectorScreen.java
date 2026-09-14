@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
+import dev.galacticraft.machinelib.client.api.util.DisplayUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenCollectorBlockEntity;
 import dev.galacticraft.mod.screen.OxygenCollectorMenu;
@@ -33,6 +33,8 @@ import net.fabricmc.api.Environment;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.chat.MutableComponent;
+import net.minecraft.network.chat.TextColor;
 import net.minecraft.world.entity.player.Inventory;
 
 @Environment(EnvType.CLIENT)
@@ -50,8 +52,14 @@ public class OxygenCollectorScreen extends MachineScreen<OxygenCollectorBlockEnt
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         super.renderMachineBackground(graphics, mouseX, mouseY, delta);
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.COLLECTING, this.menu.collectionAmount).getString(), this.leftPos + 55, this.topPos + 56, ChatFormatting.DARK_GRAY.getColor(), false);
-        MachineStatus status = this.menu.state.getStatus();
-        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, status != null ? status.getText() : Component.empty()), this.leftPos + 32, this.topPos + 66, ChatFormatting.DARK_GRAY.getColor(), false);
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.MACHINE_STATUS, Component.empty()), this.leftPos + 60, this.topPos + 19, ChatFormatting.DARK_GRAY.getColor(), false);
+
+        MutableComponent statusText = this.menu.state.getStatusText(this.menu.redstoneMode).copy();
+        if (statusText.getStyle().getColor() == TextColor.fromLegacyFormat(ChatFormatting.GREEN)) {
+            statusText.withStyle(ChatFormatting.DARK_GREEN);
+        }
+        graphics.drawString(this.font, statusText, this.leftPos + 60, this.topPos + 29, -1, false);
+
+        graphics.drawString(this.font, Component.translatable(Translations.Ui.COLLECTING, DisplayUtil.formatFluid(this.menu.collectionAmount, false)), this.leftPos + 60, this.topPos + 44, ChatFormatting.DARK_GRAY.getColor(), false);
     }
 }
