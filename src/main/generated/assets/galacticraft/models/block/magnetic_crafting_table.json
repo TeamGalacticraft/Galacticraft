@@ -1,0 +1,8 @@
+{
+  "parent": "minecraft:block/cube_bottom_top",
+  "textures": {
+    "bottom": "galacticraft:block/magnetic_crafting_table_base",
+    "side": "galacticraft:block/magnetic_crafting_table_side",
+    "top": "galacticraft:block/magnetic_crafting_table_top"
+  }
+}

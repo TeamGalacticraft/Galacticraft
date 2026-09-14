@@ -445,6 +445,8 @@
   "block.galacticraft.magenta_candle_moon_cheese_wheel": "Moon Cheese Wheel with Magenta Candle",
   "block.galacticraft.magenta_flag": "Magenta Flag",
   "block.galacticraft.magenta_glass_fluid_pipe": "Magenta Stained Glass Fluid Pipe",
+  "block.galacticraft.magnetic_crafting_table": "Magnetic Crafting Table",
+  "block.galacticraft.magnetic_crafting_table.description": "Holds items in its crafting grid when closed. Hoppers can insert ingredients.",
   "block.galacticraft.mars_cobblestone": "Mars Cobblestone",
   "block.galacticraft.mars_cobblestone_slab": "Mars Cobblestone Slab",
   "block.galacticraft.mars_cobblestone_stairs": "Mars Cobblestone Stairs",
