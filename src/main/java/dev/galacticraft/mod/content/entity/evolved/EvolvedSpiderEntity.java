@@ -20,14 +20,30 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
+import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.entity.monster.Spider;
 import net.minecraft.world.level.Level;
 
-public class MoonVillagerEntity extends Villager {
-    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, Level level) {
-        super(entityType, level);
+public class EvolvedSpiderEntity extends Spider {
+    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
+        super(entityType, world);
+    }
+
+    @Override
+    public boolean galacticraft$hasMask() {
+        return true;
+    }
+
+    @Override
+    public boolean galacticraft$hasGear() {
+        return true;
+    }
+
+    @Override
+    public String galacticraft$tankSize(int i) {
+        return Constant.Item.MEDIUM_OXYGEN_TANK;
     }
 }
