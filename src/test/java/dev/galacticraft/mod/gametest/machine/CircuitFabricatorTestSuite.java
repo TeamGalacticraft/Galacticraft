@@ -23,16 +23,26 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.transfer.ResourceFlow;
+import dev.galacticraft.machinelib.api.transfer.ResourceType;
+import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
+import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestGenerator;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.RecipeInput;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -55,5 +65,26 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
         List<TestFunction> tests = super.registerTests();
         tests.add(this.createChargeFromEnergyItemTest(CircuitFabricatorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
+    }
+
+    @MachineTest(workTime = 333)
+    public Runnable hopperInsertionTest(CircuitFabricatorBlockEntity machine, GameTestHelper context) {
+        machine.itemStorage().slot(CircuitFabricatorBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
+        machine.getIOConfig().get(BlockFace.TOP).setOption(ResourceType.ITEM, ResourceFlow.INPUT);
+
+        BlockPos hopperPos = new BlockPos(1, 3, 1);
+
+        context.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState());
+        HopperBlockEntity hopper = context.getBlockEntity(hopperPos);
+
+        hopper.setItem(0, new ItemStack(Items.DIAMOND, 1));
+        hopper.setItem(1, new ItemStack(GCItems.SILICON, 2));
+        hopper.setItem(2, new ItemStack(Items.REDSTONE, 1));
+        hopper.setItem(3, new ItemStack(Items.REDSTONE_TORCH, 1));
+
+        return () -> Assertions.assertTrue(
+                machine.itemStorage().slot(CircuitFabricatorBlockEntity.OUTPUT_SLOT).contains(GCItems.BASIC_WAFER),
+                "Expected hopper to insert ingredients into the correct slots of the circuit fabricator to craft recipe"
+        );
     }
 }
