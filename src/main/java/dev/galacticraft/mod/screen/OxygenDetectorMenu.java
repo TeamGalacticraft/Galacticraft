@@ -22,10 +22,7 @@
 
 package dev.galacticraft.mod.screen;
 
-import dev.galacticraft.machinelib.api.machine.configuration.IOFace;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.transfer.ResourceFlow;
-import dev.galacticraft.machinelib.api.transfer.ResourceType;
 import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenDetectorBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -41,16 +38,10 @@ public class OxygenDetectorMenu extends MachineMenu<OxygenDetectorBlockEntity> {
         super(GCMenuTypes.OXYGEN_DETECTOR, syncId, inv, pos, 8, 84);
     }
 
-    /*
-        NOTE: This is obviously temporary. This was the only way I could use configuration panel.
-        Can be fixed AFTER changes in: https://github.com/TeamGalacticraft/MachineLib/pull/27
-    */
     @Override
     public void cycleFaceConfig(BlockFace face, boolean reverse, boolean reset) {
-        IOFace option = this.configuration.get(face);
-        ResourceType type = option.getType();
-        option.setOption(type == ResourceType.NONE ? ResourceType.ANY : ResourceType.NONE, ResourceFlow.INPUT);
+        super.cycleFaceConfig(face, reverse, reset);
 
-        this.be.setChanged();
+        this.be.sendUpdate(); // Redstone signal does not update when faces change in overworld. That's why I'm adding this.
     }
 }

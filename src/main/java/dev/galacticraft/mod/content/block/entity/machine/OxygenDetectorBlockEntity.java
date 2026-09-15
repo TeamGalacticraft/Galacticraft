@@ -67,7 +67,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
         return settings.hasAccess(player);
     }
 
-    private void sendUpdate() {
+    public void sendUpdate() {
         setChanged(); // only for marking dirty, nothing to send.
 
         if (level != null && !level.isClientSide) {
@@ -77,6 +77,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
                 getBlockState(),
                 3
             );
+            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
         }
     }
 
@@ -93,35 +94,35 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
         return AND;
     }
 
-    public boolean isFaceActive(Direction direction) {
-        IOFace option = getIOConfig().get(BlockFace.from(this.getBlockState(), direction));
-        return option.getType() != ResourceType.NONE;
+    @Override
+    public boolean faceHasOverride(BlockFace face) {
+        return true;
     }
 
-    public boolean isAnyFaceActive() {
-        for (Direction direction : Direction.values()) {
-            if (isFaceActive(direction)) return true;
-        }
-        return false;
+    public boolean isFaceActive(Direction direction) {
+        IOFace option = getIOConfig().get(BlockFace.from(this.getBlockState(), direction));
+        return option.getType() != ResourceType.OVERRIDE; // Override disables detecting oxygen. (and switches to base texture)
     }
 
     public boolean isOxygenPresent(Direction direction) {
         BlockPos pos = this.worldPosition.relative(direction);
+        boolean isFree = !this.level.getBlockState(pos).isSolidRender(this.level, pos);
+        if(oxygenWorld) return isFree;
 
-        return this.level.isBreathable(pos) && !this.level.getBlockState(pos).isSolidRender(this.level, pos);
+        return this.level.isBreathable(pos) && isFree;
     }
 
     public boolean isOxygenPresent() {
-        if (oxygenWorld) return true;
-
+        boolean isAnyActive = false;
         for (Direction direction : Direction.values()) {
             if (!isFaceActive(direction)) continue;
+            isAnyActive = true; // For preventing unnecessary call
 
             if (!AND && isOxygenPresent(direction)) return true;
             if (AND && !isOxygenPresent(direction)) return false;
         }
 
-        return isAnd() && isAnyFaceActive(); // After loop ends, AND mode needs to return true unlike OR mode.
+        return isAnd() && isAnyActive; // After loop ends, AND mode needs to return true unlike OR mode.
     }
 
     @Override

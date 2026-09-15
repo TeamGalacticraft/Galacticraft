@@ -50,11 +50,19 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
     protected void init() {
         super.init();
 
-        switchButton = new Button(this.leftPos + 76, this.topPos + 24, 24, 33, Component.empty(), btn -> {invertMode();}, s -> s.get()) {
+        switchButton = new Button(this.leftPos + 121, this.topPos + 24, 24, 33, Component.empty(), btn -> {invertMode();}, s -> s.get()) {
             @Override
             protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {};
         };
         addRenderableWidget(switchButton);
+    }
+
+    private int getModeColor() {
+        return menu.be.isAnd() ? 0xFF0000 : 0x00FF00;
+    }
+
+    private int getStatColor() {
+        return menu.be.isOxygenPresent() ? 0x9CC2FF : 0x4A6898;
     }
 
     @Override
@@ -66,10 +74,14 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
             switchButton.getWidth(), switchButton.getHeight()
         );
 
-        if (mouseIn(mouseX, mouseY, switchButton.getX(), switchButton.getY(), switchButton.getWidth(), switchButton.getHeight())) {
-            String mode_str = Component.translatable(menu.be.isAnd() ? Translations.Ui.DETECTOR_AND : Translations.Ui.DETECTOR_OR).getString();
-            Component mode = Component.translatable(Translations.Ui.DETECTOR_MODE, mode_str);
+        String mode_str = Component.translatable(menu.be.isAnd() ? Translations.Ui.DETECTOR_AND : Translations.Ui.DETECTOR_OR).getString();
+        Component mode = Component.translatable(Translations.Ui.DETECTOR_MODE, mode_str).withColor(getModeColor());
+        graphics.drawString(font, mode, this.leftPos + 12, this.topPos + 24, mode.getStyle().getColor().getValue());
 
+        Component stat = Component.translatable(menu.be.isOxygenPresent() ? Translations.Ui.OXYGEN_DETECTED : Translations.Ui.NO_OXYGEN_DETECTED);
+        graphics.drawString(font, stat, this.leftPos + 12, this.topPos + 40, getStatColor());
+
+        if (mouseIn(mouseX, mouseY, switchButton.getX(), switchButton.getY(), switchButton.getWidth(), switchButton.getHeight())) {
             graphics.renderTooltip(font, mode, mouseX, mouseY);
         }
     }

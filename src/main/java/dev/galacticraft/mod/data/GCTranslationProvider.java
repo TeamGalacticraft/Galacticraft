@@ -1258,7 +1258,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.DETECTOR_MODE, "Current Mode: %s");
         this.add(Ui.DETECTOR_AND, "AND");
         this.add(Ui.DETECTOR_OR, "OR");
-        this.add(Ui.DETECTOR_FACE, "Face: %s");
+        this.add(Ui.OXYGEN_DETECTED, "Oxygen Detected");
+        this.add(Ui.NO_OXYGEN_DETECTED, "No Oxygen Detected");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");

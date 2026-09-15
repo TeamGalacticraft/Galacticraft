@@ -462,12 +462,13 @@ public interface Translations {
         String DETECTOR_MODE = "ui.galacticraft.machine.detector_mode";
         String DETECTOR_AND = "ui.galacticraft.machine.detector_and";
         String DETECTOR_OR = "ui.galacticraft.machine.detector_or";
-        String DETECTOR_FACE = "ui.galacticraft.machine.detector_face";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_1_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_1_level";
         String OXYGEN_TANK_2_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_2_level";
         String OXYGEN_WARNING = "ui.galacticraft.oxygen.warning";
         String OXYGEN_SETUP_INVALID = "ui.galacticraft.oxygen.invalid_setup";
+        String OXYGEN_DETECTED = "ui.galacticraft.status.oxygen_detected";
+        String NO_OXYGEN_DETECTED = "ui.galacticraft.status.no_oxygen_detected";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
         String ROCKET_FULL = "ui.galacticraft.rocket.full";
         String ROCKET_NO_FUEL = "ui.galacticraft.rocket.no_fuel";
