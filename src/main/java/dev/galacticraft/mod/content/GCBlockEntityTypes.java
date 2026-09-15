@@ -61,6 +61,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<OxygenCollectorBlockEntity> OXYGEN_COLLECTOR = register(Constant.Block.OXYGEN_COLLECTOR, OxygenCollectorBlockEntity::new, GCBlocks.OXYGEN_COLLECTOR);
     public static final BlockEntityType<OxygenCompressorBlockEntity> OXYGEN_COMPRESSOR = register(Constant.Block.OXYGEN_COMPRESSOR, OxygenCompressorBlockEntity::new, GCBlocks.OXYGEN_COMPRESSOR);
     public static final BlockEntityType<OxygenDecompressorBlockEntity> OXYGEN_DECOMPRESSOR = register(Constant.Block.OXYGEN_DECOMPRESSOR, OxygenDecompressorBlockEntity::new, GCBlocks.OXYGEN_DECOMPRESSOR);
+    public static final BlockEntityType<OxygenDetectorBlockEntity> OXYGEN_DETECTOR = register(Constant.Block.OXYGEN_DETECTOR, OxygenDetectorBlockEntity::new, GCBlocks.OXYGEN_DETECTOR);
     public static final BlockEntityType<OxygenSealerBlockEntity> OXYGEN_SEALER = register(Constant.Block.OXYGEN_SEALER, OxygenSealerBlockEntity::new, GCBlocks.OXYGEN_SEALER);
     public static final BlockEntityType<OxygenBubbleDistributorBlockEntity> OXYGEN_BUBBLE_DISTRIBUTOR = register(Constant.Block.OXYGEN_BUBBLE_DISTRIBUTOR, OxygenBubbleDistributorBlockEntity::new, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
 
