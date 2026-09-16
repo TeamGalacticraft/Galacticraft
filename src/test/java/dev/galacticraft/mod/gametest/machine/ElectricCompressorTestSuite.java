@@ -23,16 +23,26 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.transfer.ResourceFlow;
+import dev.galacticraft.machinelib.api.transfer.ResourceType;
+import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricCompressorBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
+import net.minecraft.core.BlockPos;
 import net.minecraft.gametest.framework.GameTestGenerator;
+import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.gametest.framework.TestFunction;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.CraftingInput;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.entity.HopperBlockEntity;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -52,5 +62,45 @@ public final class ElectricCompressorTestSuite extends RecipeGameTest<CraftingIn
         List<TestFunction> tests = super.registerTests();
         tests.add(this.createChargeFromEnergyItemTest(ElectricCompressorBlockEntity.CHARGE_SLOT, GCItems.INFINITE_BATTERY));
         return tests;
+    }
+
+    @MachineTest(workTime = 175)
+    public Runnable heavyPlatingHopperInsertionTest(ElectricCompressorBlockEntity machine, GameTestHelper context) {
+        machine.itemStorage().slot(ElectricCompressorBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
+        machine.getIOConfig().get(BlockFace.TOP).setOption(ResourceType.ITEM, ResourceFlow.INPUT);
+
+        final BlockPos hopperPos = MACHINE_POS.above();
+
+        context.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState());
+        HopperBlockEntity hopper = context.getBlockEntity(hopperPos);
+
+        hopper.setItem(0, new ItemStack(GCItems.COMPRESSED_STEEL, 2));
+        hopper.setItem(1, new ItemStack(GCItems.COMPRESSED_ALUMINUM, 2));
+        hopper.setItem(2, new ItemStack(GCItems.COMPRESSED_BRONZE, 2));
+
+        return () -> Assertions.assertTrue(
+                machine.itemStorage().slot(ElectricCompressorBlockEntity.OUTPUT_SLOTS).contains(GCItems.TIER_1_HEAVY_DUTY_PLATE),
+                "Expected hopper to insert ingredients into the correct slots of the electric compressor to craft recipe"
+        );
+    }
+
+    @MachineTest(workTime = 150)
+    public Runnable compressedSteelHopperInsertionTest(ElectricCompressorBlockEntity machine, GameTestHelper context) {
+        machine.itemStorage().slot(ElectricCompressorBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
+        machine.getIOConfig().get(BlockFace.TOP).setOption(ResourceType.ITEM, ResourceFlow.INPUT);
+
+        final BlockPos hopperPos = MACHINE_POS.above();
+
+        context.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState());
+        HopperBlockEntity hopper = context.getBlockEntity(hopperPos);
+
+        hopper.setItem(0, new ItemStack(Items.COAL, 2));
+        hopper.setItem(1, new ItemStack(GCItems.COMPRESSED_IRON, 2));
+        hopper.setItem(2, new ItemStack(Items.CHARCOAL, 2));
+
+        return () -> Assertions.assertTrue(
+                machine.itemStorage().slot(ElectricCompressorBlockEntity.OUTPUT_SLOTS).contains(GCItems.COMPRESSED_STEEL),
+                "Expected hopper to insert ingredients into the correct slots of the electric compressor to craft recipe"
+        );
     }
 }
