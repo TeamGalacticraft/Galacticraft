@@ -72,7 +72,7 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
         machine.itemStorage().slot(CircuitFabricatorBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
         machine.getIOConfig().get(BlockFace.TOP).setOption(ResourceType.ITEM, ResourceFlow.INPUT);
 
-        BlockPos hopperPos = new BlockPos(1, 3, 1);
+        final BlockPos hopperPos = MACHINE_POS.above();
 
         context.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState());
         HopperBlockEntity hopper = context.getBlockEntity(hopperPos);
