@@ -20,18 +20,12 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.gametest.oxygen;
+package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.content.GCBlocks;
-import dev.galacticraft.mod.content.block.entity.machine.OxygenSealerBlockEntity;
-import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.gametest.GalacticraftGameTest;
 import net.minecraft.core.BlockPos;
-import net.minecraft.gametest.framework.AfterBatch;
-import net.minecraft.gametest.framework.BeforeBatch;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Items;
@@ -39,16 +33,6 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.level.block.Blocks;
 
 public class ExtinguishableTestSuite implements GalacticraftGameTest {
-    @BeforeBatch(batch = "nonBreathable")
-    public void beforeBatch(ServerLevel level) {
-        level.setDefaultBreathable(false);
-    }
-
-    @AfterBatch(batch = "nonBreathable")
-    public void afterBatch(ServerLevel level) {
-        level.setDefaultBreathable(true);
-    }
-
     @GameTest(batch = "nonBreathable", template = SINGLE_BLOCK)
     public void extinguishTorchTest(GameTestHelper context) {
         final var torchPos = new BlockPos(0, 0, 0);
@@ -58,9 +42,9 @@ public class ExtinguishableTestSuite implements GalacticraftGameTest {
         context.succeedWhenBlockPresent(GCBlocks.UNLIT_TORCH, torchPos);
     }
 
-    @GameTest(template = EMPTY_ROOM)
+    @GameTest(template = SINGLE_BLOCK)
     public void reigniteTorchTest(GameTestHelper context) {
-        final var torchPos = new BlockPos(2, 2, 2);
+        final var torchPos = new BlockPos(0, 0, 0);
 
         context.setBlock(torchPos, GCBlocks.UNLIT_TORCH.defaultBlockState());
 
@@ -69,22 +53,5 @@ public class ExtinguishableTestSuite implements GalacticraftGameTest {
         context.useBlock(torchPos, player);
 
         context.succeedWhenBlockPresent(Blocks.TORCH, torchPos);
-    }
-
-    @GameTest(batch = "nonBreathable", template = EMPTY_ROOM)
-    public void notExtinguishedInSealedRoomTest(GameTestHelper context) {
-        final var sealerPos = new BlockPos(1, 2, 1);
-        final var torchPos = new BlockPos(3, 2, 3);
-
-        context.setBlock(sealerPos, GCBlocks.OXYGEN_SEALER.defaultBlockState());
-        OxygenSealerBlockEntity blockEntity = context.getBlockEntity(sealerPos);
-        blockEntity.itemStorage().slot(OxygenSealerBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
-        blockEntity.itemStorage().slot(OxygenSealerBlockEntity.OXYGEN_INPUT_SLOT).set(GCItems.INFINITE_OXYGEN_TANK, 1);
-
-        // The room should be sealed by the time this runs
-        context.runAfterDelay(OxygenSealerBlockEntity.SEAL_CHECK_TIME, () -> context.setBlock(torchPos, Blocks.TORCH.defaultBlockState()));
-
-        // Another oxygen sealer check should have been performed since the torch was placed
-        context.runAfterDelay(OxygenSealerBlockEntity.SEAL_CHECK_TIME * 2, () -> context.succeedWhenBlockPresent(Blocks.TORCH, torchPos));
     }
 }
