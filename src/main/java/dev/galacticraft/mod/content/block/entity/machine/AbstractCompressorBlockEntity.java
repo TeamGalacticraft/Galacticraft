@@ -29,7 +29,6 @@ import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.storage.ResourceStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
@@ -257,8 +256,21 @@ public abstract class AbstractCompressorBlockEntity extends BasicRecipeMachineBl
                 .stream().map(RecipeHolder::value).filter(predicate).toList();
 
         if (recipes.size() > 1) {
-            Constant.LOGGER.info("Multiple compressing recipes found for the current set of items, arbitrarily choosing the first one.");
-            // TODO: Prioritise recipes with fewer missing ingredients, I'm not sure how else to make a more informed decision between these recipes
+            CompressingRecipe bestRecipe = null;
+            long minMissingIngredientCount = Long.MAX_VALUE;
+
+            for (CompressingRecipe recipe : recipes) {
+                long missingIngredientCount = recipe.getIngredients().stream().filter(
+                        ingredient -> items.stream().noneMatch(ingredient)
+                ).count();
+
+                if (missingIngredientCount < minMissingIngredientCount) {
+                    minMissingIngredientCount = missingIngredientCount;
+                    bestRecipe = recipe;
+                }
+            }
+
+            return bestRecipe;
         }
 
         return recipes.isEmpty() ? null : recipes.getFirst();
