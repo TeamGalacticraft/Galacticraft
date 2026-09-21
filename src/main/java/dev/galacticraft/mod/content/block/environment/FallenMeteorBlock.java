@@ -34,8 +34,12 @@ import net.minecraft.tags.FluidTags;
 import net.minecraft.util.FastColor;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
+import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.item.FallingBlockEntity;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
@@ -55,6 +59,7 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.level.block.state.properties.IntegerProperty;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.level.material.Fluids;
+import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -64,6 +69,9 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     private static final VoxelShape SHAPE = box(3, 0, 3, 13, 10, 13);
     public static final BooleanProperty WATERLOGGED = BlockStateProperties.WATERLOGGED;
     public static final IntegerProperty HEAT = IntegerProperty.create("heat", 0, 5);
+    private static final float FALL_DAMAGE_PER_DISTANCE = 2.0F;
+    private static final int FALL_DAMAGE_MAX = 40;
+    private final int[] COOLING_RATES = { 0, 10, 8, 6, 4, 2 };
 
     public FallenMeteorBlock(BlockBehaviour.Properties settings) {
         super(settings);
@@ -76,21 +84,75 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
-        this.tick(state, world, pos, random);
+    protected boolean isRandomlyTicking(BlockState state) {
+        return state.getValue(HEAT) > 0;
     }
 
     @Override
-    public void tick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
 
-        if (i > 0) {
-            if (random.nextInt(500) == 0) {
-                world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
-            } else {
-                super.tick(state, world, pos, random);
-            }
+        int coolingRate = COOLING_RATES[i];
+
+        if (state.getValue(WATERLOGGED)) {
+            coolingRate /= 2;
         }
+
+        if (random.nextInt(coolingRate) == 0) {
+            world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
+        }
+    }
+
+    @Override
+    protected void falling(FallingBlockEntity entity) {
+        entity.setHurtsEntities(FALL_DAMAGE_PER_DISTANCE, FALL_DAMAGE_MAX);
+    }
+
+    @Override
+    public void onLand(Level level, BlockPos pos, BlockState fallingBlockState, BlockState currentStateInPos, FallingBlockEntity fallingBlockEntity) {
+        super.onLand(level, pos, fallingBlockState, currentStateInPos, fallingBlockEntity);
+
+        level.playSound(fallingBlockEntity,
+                pos,
+                SoundEvents.METAL_FALL,
+                SoundSource.BLOCKS,
+                0.6F,
+                1.0F);
+    }
+
+    @Override
+    public void animateTick(BlockState state, Level level, BlockPos pos, RandomSource random) {
+
+        int heat = state.getValue(HEAT);
+        if (!(state.getValue(WATERLOGGED) && heat > 0)) {
+            return;
+        }
+
+        double spread = heat > 3 ? (heat - 3) * 0.03D : 0;
+
+        for (var i = 0; i < heat; ++i) {
+            level.addParticle(
+                    ParticleTypes.CLOUD,
+                    pos.getX() + random.nextDouble(),
+                    pos.getY() + 0.2D + random.nextDouble(),
+                    pos.getZ() + random.nextDouble(),
+                    (random.nextDouble() - 0.5D) * spread,
+                    heat * 0.01D,
+                    (random.nextDouble() - 0.5D) * spread
+            );
+        }
+
+        if (random.nextInt(40) == 0) {
+            level.playLocalSound(
+                    pos,
+                    SoundEvents.FIRE_EXTINGUISH,
+                    SoundSource.BLOCKS,
+                    heat * 0.12F,
+                    0.8F,
+                    true
+            );
+        }
+
     }
 
     @Override
@@ -129,26 +191,62 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
             return;
         }
 
+        if (entity instanceof Player player) {
+            if (player.isCreative()) return;
+        }
+
         if (entity instanceof LivingEntity livingEntity) {
+
+            if (entity.fireImmune() || livingEntity.hasEffect(MobEffects.FIRE_RESISTANCE)) {
+                return;
+            }
+
             world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
 
             for (var i = 0; i < 8; ++i) {
                 world.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
             }
 
-            if (!livingEntity.isOnFire()) {
-                livingEntity.setRemainingFireTicks(2);
-            }
+            livingEntity.igniteForSeconds(1);
 
-            var knockX = pos.getX() + 0.5F - livingEntity.getX();
+            var knockX = livingEntity.getX() - (pos.getX());
+            var knockY = livingEntity.getY() + livingEntity.getBbHeight() / 2.0D - (pos.getY());
             double knockZ;
 
-            for (knockZ = livingEntity.getZ() - pos.getZ(); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
+            for (knockZ = livingEntity.getZ() - (pos.getZ()); knockX * knockX + knockZ * knockZ < 1.0E-4D; knockZ = (Math.random() - Math.random()) * 0.01D) {
                 knockX = (Math.random() - Math.random()) * 0.01D;
             }
 
-            livingEntity.knockback(1, knockX, knockZ);
+            meteorKnockback(livingEntity, 0.3F, knockX, knockY, knockZ);
         }
+    }
+
+    protected void meteorKnockback(LivingEntity entity, double strength, double x, double y, double z) {
+        strength *= 1.0D - entity.getAttributeValue(Attributes.KNOCKBACK_RESISTANCE);
+
+        if (strength <= 0.0D) {
+            return;
+        }
+
+        Vec3 direction = new Vec3(x, y, z);
+
+        if (direction.horizontalDistanceSqr() < 1.0E-5D) {
+            direction = new Vec3(
+                    (Math.random() - Math.random()) * 0.01D,
+                    y,
+                    (Math.random() - Math.random()) * 0.01D
+            );
+        }
+
+        direction = direction.normalize().scale(strength);
+
+        Vec3 velocity = entity.getDeltaMovement();
+
+        entity.hasImpulse = true;
+
+        entity.setDeltaMovement(
+                velocity.scale(0.5D).add(direction)
+        );
     }
 
     @Override

@@ -27,16 +27,21 @@ import dev.galacticraft.api.registry.AcidTransformItemRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
+import dev.galacticraft.mod.misc.cape.ServerCapeManager;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
+import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
+import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
+import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -46,6 +51,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.Container;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
@@ -57,8 +63,19 @@ public class GCEventHandlers {
     public static void init() {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
+
+        ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(GCEventHandlers::onPlayerChangeWorld);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
+
+        ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            CapeSelectionPayload.sendCapeSnapshot(handler.player);
+        });
+
+        ServerPlayConnectionEvents.DISCONNECT.register((handler, server) -> {
+            ServerCapeManager.remove(handler.player);
+            CapeSelectionPayload.broadcastCapeSnapshot(server);
+        });
     }
 
     public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
@@ -68,6 +85,18 @@ public class GCEventHandlers {
         } else {
             player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
         }
+    }
+
+    public static void onPlayerChangeWorld(ServerPlayer player, ServerLevel origin, ServerLevel destination) {
+        // Send gear inventory to player
+        Container inv = player.galacticraft$getGearInv();
+        ItemStack[] stacks = new ItemStack[inv.getContainerSize()];
+        for (int i = 0; i < inv.getContainerSize(); i++) {
+            stacks[i] = inv.getItem(i);
+        }
+
+        GearInvPayload packet = new GearInvPayload(player.getId(), stacks);
+        ServerPlayNetworking.send(player, packet);
     }
 
     public static void onWorldTick(ServerLevel level) {

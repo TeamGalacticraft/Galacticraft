@@ -142,6 +142,12 @@
       }
     },
     {
+      "name": "ChipWolf",
+      "contact": {
+        "homepage": "https://github.com/ChipWolf"
+      }
+    },
+    {
       "name": "ROMVoid95",
       "contact": {
         "homepage": "https://github.com/ROMVoid95"
@@ -154,15 +160,21 @@
       }
     },
     {
-      "name": "ChipWolf",
+      "name": "MaverXka",
       "contact": {
-        "homepage": "https://github.com/ChipWolf"
+        "homepage": "https://github.com/MaverXka"
       }
     },
     {
       "name": "TakeABao23",
       "contact": {
         "homepage": "https://github.com/TakeABao23"
+      }
+    },
+    {
+      "name": "davo899",
+      "contact": {
+        "homepage": "https://github.com/davo899"
       }
     },
     {
@@ -181,12 +193,6 @@
       "name": "LeMayday",
       "contact": {
         "homepage": "https://github.com/LeMayday"
-      }
-    },
-    {
-      "name": "davo899",
-      "contact": {
-        "homepage": "https://github.com/davo899"
       }
     },
     {
@@ -268,21 +274,21 @@
       }
     },
     {
-      "name": "HarryPotato986",
-      "contact": {
-        "homepage": "https://github.com/HarryPotato986"
-      }
-    },
-    {
-      "name": "MaverXka",
-      "contact": {
-        "homepage": "https://github.com/MaverXka"
-      }
-    },
-    {
       "name": "gregorixG",
       "contact": {
         "homepage": "https://github.com/gregorixG"
+      }
+    },
+    {
+      "name": "emsar69",
+      "contact": {
+        "homepage": "https://github.com/emsar69"
+      }
+    },
+    {
+      "name": "HarryPotato986",
+      "contact": {
+        "homepage": "https://github.com/HarryPotato986"
       }
     }
   ],

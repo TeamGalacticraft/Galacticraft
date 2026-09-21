@@ -24,9 +24,13 @@ package dev.galacticraft.mod.compat.rei.common;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.rei.common.display.*;
+import dev.galacticraft.mod.content.item.CannedFoodItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.display.DisplaySerializerRegistry;
+import me.shedaniel.rei.api.common.entry.comparison.ItemComparatorRegistry;
 import me.shedaniel.rei.api.common.plugins.REIServerPlugin;
+import net.minecraft.world.item.ItemStack;
 
 public class GalacticraftREIServerPlugin implements REIServerPlugin {
     public static final CategoryIdentifier<DefaultFabricationDisplay> FABRICATION = CategoryIdentifier.of(Constant.MOD_ID, "plugins/" + Constant.Recipe.FABRICATION);
@@ -47,5 +51,16 @@ public class GalacticraftREIServerPlugin implements REIServerPlugin {
         registry.register(ELECTRIC_BLASTING, ElectricArcFurnaceDisplay.SERIALIZER);
         registry.register(CANNING, DefaultCanningDisplay.SERIALIZER);
         registry.register(ROCKET, DefaultRocketDisplay.SERIALIZER);
+    }
+
+    @Override
+    public void registerItemComparators(ItemComparatorRegistry registry) {
+        registry.register((context, cannedFood) -> {
+            long hash = 0;
+            for (ItemStack stack : CannedFoodItem.getContents(cannedFood)) {
+                hash = hash * 31 + ItemStack.hashItemAndComponents(stack);
+            }
+            return hash;
+        }, GCItems.CANNED_FOOD);
     }
 }
