@@ -172,6 +172,12 @@
       }
     },
     {
+      "name": "davo899",
+      "contact": {
+        "homepage": "https://github.com/davo899"
+      }
+    },
+    {
       "name": "sebasphereda",
       "contact": {
         "homepage": "https://github.com/sebasphereda"
@@ -184,15 +190,51 @@
       }
     },
     {
-      "name": "davo899",
-      "contact": {
-        "homepage": "https://github.com/davo899"
-      }
-    },
-    {
       "name": "LeMayday",
       "contact": {
         "homepage": "https://github.com/LeMayday"
+      }
+    },
+    {
+      "name": "GalacticraftDev",
+      "contact": {
+        "homepage": "https://github.com/GalacticraftDev"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
+      }
+    },
+    {
+      "name": "IMS212",
+      "contact": {
+        "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
+      "name": "christopherweinhardt",
+      "contact": {
+        "homepage": "https://github.com/christopherweinhardt"
+      }
+    },
+    {
+      "name": "JunePrimavera",
+      "contact": {
+        "homepage": "https://github.com/JunePrimavera"
+      }
+    },
+    {
+      "name": "benreid24",
+      "contact": {
+        "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "marquito73",
+      "contact": {
+        "homepage": "https://github.com/marquito73"
       }
     },
     {
@@ -214,9 +256,9 @@
       }
     },
     {
-      "name": "marquito73",
+      "name": "Geolykt",
       "contact": {
-        "homepage": "https://github.com/marquito73"
+        "homepage": "https://github.com/Geolykt"
       }
     },
     {
@@ -232,45 +274,9 @@
       }
     },
     {
-      "name": "benreid24",
-      "contact": {
-        "homepage": "https://github.com/benreid24"
-      }
-    },
-    {
-      "name": "JunePrimavera",
-      "contact": {
-        "homepage": "https://github.com/JunePrimavera"
-      }
-    },
-    {
-      "name": "christopherweinhardt",
-      "contact": {
-        "homepage": "https://github.com/christopherweinhardt"
-      }
-    },
-    {
       "name": "gregorixG",
       "contact": {
         "homepage": "https://github.com/gregorixG"
-      }
-    },
-    {
-      "name": "HarryPotato986",
-      "contact": {
-        "homepage": "https://github.com/HarryPotato986"
-      }
-    },
-    {
-      "name": "IMS212",
-      "contact": {
-        "homepage": "https://github.com/IMS212"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -280,15 +286,9 @@
       }
     },
     {
-      "name": "Domza64",
+      "name": "HarryPotato986",
       "contact": {
-        "homepage": "https://github.com/Domza64"
-      }
-    },
-    {
-      "name": "Geolykt",
-      "contact": {
-        "homepage": "https://github.com/Geolykt"
+        "homepage": "https://github.com/HarryPotato986"
       }
     }
   ],
