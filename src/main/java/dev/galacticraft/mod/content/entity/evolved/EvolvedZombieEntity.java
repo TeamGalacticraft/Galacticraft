@@ -20,16 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 
-public class EvolvedSpiderEntity extends Spider {
-    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
+public class EvolvedZombieEntity extends Zombie {
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public boolean isUnderWaterConverting() {
+        return false;
+    }
+
+    @Override
+    protected boolean convertsInWater() {
+        return false;
+    }
+
+    @Override
+    protected boolean isSunBurnTick() {
+        return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }
 
     @Override

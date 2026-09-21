@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderEyesRenderLayer;
 import dev.galacticraft.mod.client.render.entity.feature.EvolvedSpiderMaskRenderLayer;
 import dev.galacticraft.mod.client.render.entity.feature.OxygenTanksRenderLayer;
-import dev.galacticraft.mod.content.entity.EvolvedSpiderEntity;
+import dev.galacticraft.mod.content.entity.evolved.EvolvedSpiderEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.SpiderModel;

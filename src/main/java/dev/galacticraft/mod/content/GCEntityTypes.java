@@ -27,6 +27,8 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Constant.Entity;
 import dev.galacticraft.mod.content.entity.*;
 import dev.galacticraft.mod.content.entity.boss.SkeletonBoss;
+import dev.galacticraft.mod.content.entity.evolved.*;
+import dev.galacticraft.mod.content.entity.moon.*;
 import dev.galacticraft.mod.content.entity.vehicle.Buggy;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
