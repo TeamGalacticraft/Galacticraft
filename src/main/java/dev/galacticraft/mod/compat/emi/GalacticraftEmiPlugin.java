@@ -27,12 +27,14 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
+import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
+import dev.galacticraft.mod.compat.emi.handler.MagneticCraftingRecipeHandler;
 import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.*;
@@ -73,6 +75,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
     public static final EmiStack FOOD_CANNER = EmiStack.of(GCBlocks.FOOD_CANNER);
+    public static final EmiStack MAGNETIC_CRAFTING_TABLE = EmiStack.of(GCBlocks.MAGNETIC_CRAFTING_TABLE);
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Simplified Icons
@@ -109,6 +112,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(CANNING, FOOD_CANNER);
+        registry.addWorkstation(VanillaEmiRecipeCategories.CRAFTING, MAGNETIC_CRAFTING_TABLE);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
 
         registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
@@ -168,6 +172,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                         FoodCannerBlockEntity.OUTPUT_SLOT + 1
                 )
         );
+        registry.addRecipeHandler(GCMenuTypes.MAGNETIC_CRAFTING_TABLE, new MagneticCraftingRecipeHandler());
         registry.addRecipeHandler(GCMenuTypes.ROCKET_WORKBENCH, new RocketRecipeHandler(ROCKET));
 
         RecipeManager manager = registry.getRecipeManager();

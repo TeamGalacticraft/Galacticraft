@@ -84,6 +84,7 @@ public class GCBlockEntityTypes {
     public static final BlockEntityType<FlagBlockEntity> FLAG = register(Constant.Block.FLAG, FlagBlockEntity::new, GCBlocks.FLAGS.colorMap().values().toArray(new Block[0]));
 
     public static final BlockEntityType<AirlockControllerBlockEntity> AIRLOCK_CONTROLLER = register(Constant.Block.AIR_LOCK_CONTROLLER, AirlockControllerBlockEntity::new, GCBlocks.AIR_LOCK_CONTROLLER);
+    public static final BlockEntityType<MagneticCraftingTableBlockEntity> MAGNETIC_CRAFTING_TABLE = register(Constant.Block.MAGNETIC_CRAFTING_TABLE, MagneticCraftingTableBlockEntity::new, GCBlocks.MAGNETIC_CRAFTING_TABLE);
     public static final BlockEntityType<RocketWorkbenchBlockEntity> ROCKET_WORKBENCH = register(Constant.Block.ROCKET_WORKBENCH, RocketWorkbenchBlockEntity::new, GCBlocks.ROCKET_WORKBENCH);
 
     private static<T extends BlockEntity> BlockEntityType<T> register(String id, BlockEntityType.BlockEntitySupplier<T> supplier, Block... compatibleBlocks) {

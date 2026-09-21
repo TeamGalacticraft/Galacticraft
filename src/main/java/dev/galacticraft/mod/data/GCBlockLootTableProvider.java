@@ -347,6 +347,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.FOOD_CANNER);
 
         this.dropSelf(GCBlocks.PLAYER_TRANSPORT_TUBE);
+        this.dropSelf(GCBlocks.MAGNETIC_CRAFTING_TABLE);
         this.dropSelf(GCBlocks.ROCKET_WORKBENCH);
 
         this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());

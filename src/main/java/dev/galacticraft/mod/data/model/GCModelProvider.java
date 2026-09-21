@@ -40,6 +40,7 @@ import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.content.block.machine.FoodCannerBlock;
 import dev.galacticraft.mod.content.block.machine.FuelLoaderBlock;
 import dev.galacticraft.mod.content.block.machine.ResourceStorageBlock;
+import dev.galacticraft.mod.content.block.special.MagneticCraftingTableBlock;
 import dev.galacticraft.mod.content.block.special.ParachestBlock;
 import dev.galacticraft.mod.content.block.special.RocketWorkbench;
 import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
@@ -184,6 +185,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
+        this.createMagneticCraftingTable(generator);
         this.createRocketWorkbench(generator);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
@@ -569,6 +571,39 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createMagneticCraftingTable(BlockModelGenerators generator) {
+        var block = GCBlocks.MAGNETIC_CRAFTING_TABLE;
+        var textureMapping = new TextureMapping()
+                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_base"))
+                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
+                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
+        ResourceLocation model = ModelTemplates.CUBE_BOTTOM_TOP.create(block, textureMapping, generator.modelOutput);
+
+        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MagneticCraftingTableBlock.FACING)
+                .select(Direction.DOWN, Variant.variant()
+                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)
+                        .with(VariantProperties.MODEL, model))
+                .select(Direction.UP, Variant.variant()
+                        .with(VariantProperties.MODEL, model))
+                .select(Direction.NORTH, Variant.variant()
+                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                        .with(VariantProperties.MODEL, model))
+                .select(Direction.SOUTH, Variant.variant()
+                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
+                        .with(VariantProperties.MODEL, model))
+                .select(Direction.WEST, Variant.variant()
+                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
+                        .with(VariantProperties.MODEL, model))
+                .select(Direction.EAST, Variant.variant()
+                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
+                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
+                        .with(VariantProperties.MODEL, model))
+        ));
+        generator.delegateItemModel(block, model);
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
