@@ -24,7 +24,6 @@ package dev.galacticraft.impl.internal.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.llamalad7.mixinextras.sugar.Local;
 import com.mojang.blaze3d.audio.Listener;
 import dev.galacticraft.impl.accessor.SoundSystemAccessor;
 import net.fabricmc.api.EnvType;
@@ -59,8 +58,8 @@ public abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean galacticraft_hideSubtitles(boolean original, @Local(ordinal = 2) float f3) {
-        return original || f3 < 0.01f;
+    private boolean galacticraft_hideSubtitles(boolean original) {
+        return original || this.multiplier < 0.01f;
     }
 
     @Override

@@ -88,6 +88,9 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_SURFACE_ROCK_STAIRS = "moon_surface_rock_stairs";
+        String MOON_SURFACE_ROCK_SLAB = "moon_surface_rock_slab";
+        String MOON_SURFACE_ROCK_WALL = "moon_surface_rock_wall";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
 
         String MOON_ROCK = "moon_rock";
@@ -236,6 +239,11 @@ public interface Constant {
         String HEAVY_WIRE_WALKWAY = "heavy_wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
+        String OLIVINE_GLASS = "olivine_glass";
+        String OLIVINE_GLASS_PANE = "olivine_glass_pane";
+        String MOON_GLASS = "moon_glass";
+        String MOON_GLASS_PANE = "moon_glass_pane";
+
         String FLAG = "flag";
 
         //  Environment
@@ -382,6 +390,13 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
         String CANNED_FOOD = "canned_food";
+
+        String MOON_WEED = "moon_weed";
+        String MOON_SHRUBS = "moon_shrubs";
+        String MOON_MOSS = "moon_moss";
+        String MOON_TANGLE = "moon_tangle";
+        String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String BUDDING_OLIVINE = "budding_olivine";
     }
 
     interface Fluid {
@@ -520,6 +535,7 @@ public interface Constant {
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
         String INFINITE_INDICATOR = "infinite_indicator";
+        String FLUID_CANISTER = "fluid_canister";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -580,6 +596,7 @@ public interface Constant {
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
         String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
+        String MOON_TANGLE_FRUIT = "moon_tangle_fruit";
     }
 
     interface Particle {

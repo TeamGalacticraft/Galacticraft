@@ -115,6 +115,9 @@ public class GCBlockTags {
 
     public static final TagKey<Block> ASTEROID_ROCKS = galacticraftTag("asteroid_rocks");
 
+    public static final TagKey<Block> OLIVINE_CAVE_REPLACEABLES = galacticraftTag("olivine_cave_replaceables");
+    public static final TagKey<Block> OLIVINE_CAVE_INTERNALS = galacticraftTag("olivine_cave_internals");
+
     public static final TagKey<Block> DECORATION_BLOCKS = galacticraftTag("decoration_blocks");
     public static final TagKey<Block> ALUMINUM_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/aluminum");
     public static final TagKey<Block> BRONZE_DECORATION_BLOCKS = galacticraftTag("decoration_blocks/bronze");

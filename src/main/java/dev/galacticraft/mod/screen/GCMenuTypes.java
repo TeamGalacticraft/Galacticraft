@@ -28,7 +28,6 @@ import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,7 +41,7 @@ public class GCMenuTypes {
     public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
     public static final MenuType<SolarPanelMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
 
-    public static final MenuType<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = SynchronizedMenuType.create(RecipeMachineMenu::new, 94);
+    public static final MenuType<CircuitFabricatorMenu> CIRCUIT_FABRICATOR = SynchronizedMenuType.create(CircuitFabricatorMenu::new);
     public static final MenuType<CompressorMenu> COMPRESSOR = SynchronizedMenuType.create(CompressorMenu::new);
 
     public static final MenuType<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);

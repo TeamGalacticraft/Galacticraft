@@ -94,7 +94,7 @@ public class WireWalkwayBlock extends WireBlock implements AbstractWalkwayBlock,
 
     @Override
     protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+        return blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override

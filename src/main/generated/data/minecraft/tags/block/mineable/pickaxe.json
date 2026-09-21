@@ -1,6 +1,7 @@
 {
   "values": [
     "#galacticraft:machines",
+    "galacticraft:moon_surface_rock_stairs",
     "galacticraft:moon_rock_stairs",
     "galacticraft:moon_rock_brick_stairs",
     "galacticraft:cracked_moon_rock_brick_stairs",
@@ -13,6 +14,7 @@
     "galacticraft:cracked_moon_basalt_brick_stairs",
     "galacticraft:mars_stone_stairs",
     "galacticraft:mars_cobblestone_stairs",
+    "galacticraft:moon_surface_rock_slab",
     "galacticraft:moon_rock_slab",
     "galacticraft:moon_rock_brick_slab",
     "galacticraft:cracked_moon_rock_brick_slab",
@@ -25,6 +27,7 @@
     "galacticraft:cracked_moon_basalt_brick_slab",
     "galacticraft:mars_stone_slab",
     "galacticraft:mars_cobblestone_slab",
+    "galacticraft:moon_surface_rock_wall",
     "galacticraft:moon_rock_wall",
     "galacticraft:moon_rock_brick_wall",
     "galacticraft:cracked_moon_rock_brick_wall",
@@ -128,6 +131,7 @@
     "galacticraft:lead_block",
     "galacticraft:lunar_sapphire_block",
     "galacticraft:olivine_block",
+    "galacticraft:budding_olivine",
     "galacticraft:raw_meteoric_iron_block",
     "galacticraft:raw_desh_block",
     "galacticraft:raw_aluminum_block",

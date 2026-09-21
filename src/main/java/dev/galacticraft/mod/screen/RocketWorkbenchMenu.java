@@ -42,6 +42,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.Container;
 import net.minecraft.world.ContainerListener;
 import net.minecraft.world.entity.player.Inventory;
@@ -89,13 +90,20 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
 
         this.workbench = workbench;
 
-        this.workbench.ingredients.addListener(this);
-        this.workbench.chests.addListener(this);
+        // Add client-side listeners via RocketWorkbenchScreen
+        if (this.workbench.getLevel() instanceof ServerLevel) {
+            this.workbench.ingredients.addListener(this);
+            this.workbench.chests.addListener(this);
+        }
 
         this.recipe = (RecipeHolder<RocketRecipe>) playerInventory.player.level().getRecipeManager().byKey(Constant.id("rocket/rocket")).get();
         this.recipeSize = this.recipe.value().getIngredients().size();
         this.addSlots();
         this.workbench.resizeInventory(this.recipeSize);
+    }
+
+    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, OpeningData data) {
+        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(data.pos), playerInventory);
     }
 
     protected void addSlots() {
@@ -157,12 +165,11 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
     public void removed(Player player) {
         super.removed(player);
 
-        this.workbench.ingredients.removeListener(this);
-        this.workbench.chests.removeListener(this);
-    }
-
-    public RocketWorkbenchMenu(int syncId, Inventory playerInventory, OpeningData data) {
-        this(syncId, (RocketWorkbenchBlockEntity) playerInventory.player.level().getBlockEntity(data.pos), playerInventory);
+        // Remove client-side listeners via RocketWorkbenchScreen
+        if (this.workbench.getLevel() instanceof ServerLevel) {
+            this.workbench.ingredients.removeListener(this);
+            this.workbench.chests.removeListener(this);
+        }
     }
 
     protected boolean isIngredient(ItemStack stack) {

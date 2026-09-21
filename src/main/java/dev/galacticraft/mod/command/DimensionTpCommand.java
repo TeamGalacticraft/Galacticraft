@@ -26,11 +26,12 @@ import com.mojang.brigadier.Command;
 import com.mojang.brigadier.CommandDispatcher;
 import com.mojang.brigadier.context.CommandContext;
 import com.mojang.brigadier.exceptions.CommandSyntaxException;
-import com.mojang.brigadier.tree.CommandNode;
 import com.mojang.brigadier.tree.LiteralCommandNode;
 import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.util.Translations;
@@ -56,7 +57,7 @@ import java.util.Collections;
 
 public class DimensionTpCommand {
     public static void register(CommandDispatcher<CommandSourceStack> dispatcher) {
-        LiteralCommandNode literalCommandNode = dispatcher.register(Commands.literal(Constant.Command.DIMENSION_TP)
+        LiteralCommandNode<CommandSourceStack> literalCommandNode = dispatcher.register(Commands.literal(Constant.Command.DIMENSION_TP)
                 .requires(stack -> stack.hasPermission(2))
                 .executes(DimensionTpCommand::openCelestialScreen)
                 .then(Commands.argument("dimension", DimensionArgument.dimension())
@@ -74,7 +75,7 @@ public class DimensionTpCommand {
         dispatcher.register(Commands.literal(Constant.Command.DIMTP)
                 .requires(stack -> stack.hasPermission(2))
                 .executes(DimensionTpCommand::openCelestialScreen)
-                .redirect((CommandNode) literalCommandNode)
+                .redirect(literalCommandNode)
         );
     }
 
@@ -116,7 +117,12 @@ public class DimensionTpCommand {
 
         player.galacticraft$openCelestialScreen(null);
         Holder<CelestialBody<?, ?>> body = player.level().galacticraft$getCelestialBody();
-        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(null, body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH))); //todo
+        ServerPlayNetworking.send(player, new OpenCelestialScreenPayload(
+                null,
+                body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH),
+                Galacticraft.CONFIG.enableSpaceStationCreation(),
+                GCConfigUtil.disabledCelestialScreenDestinations()
+        ));
         return Command.SINGLE_SUCCESS;
     }
 

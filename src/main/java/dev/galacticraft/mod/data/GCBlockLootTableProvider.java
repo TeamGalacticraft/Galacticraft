@@ -89,8 +89,12 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.MOON_TURF);
         this.dropSelf(GCBlocks.MOON_DIRT);
         this.dropOther(GCBlocks.MOON_DIRT_PATH, GCBlocks.MOON_DIRT);
-        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK);
         this.dropSelf(GCBlocks.MOON_DUNGEON_BRICK);
+
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_SLAB);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_STAIRS);
+        this.dropSelf(GCBlocks.MOON_SURFACE_ROCK_WALL);
 
         this.add(GCBlocks.MOON_ROCK, this.createSingleItemTableWithSilkTouch(GCBlocks.MOON_ROCK, GCBlocks.COBBLED_MOON_ROCK));
         this.dropSelf(GCBlocks.MOON_ROCK_SLAB);
@@ -145,6 +149,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.CRACKED_MOON_BASALT_BRICK_STAIRS);
         this.dropSelf(GCBlocks.CRACKED_MOON_BASALT_BRICK_WALL);
 
+        // MOON PLANTS
+
+        this.dropSelf(GCBlocks.MOON_WEED);
+        this.dropSelf(GCBlocks.MOON_SHRUBS);
+        this.dropSelf(GCBlocks.MOON_MOSS);
+        this.dropSelf(GCBlocks.MOON_TANGLE);
+
         this.dropSelf(GCBlocks.MARS_SURFACE_ROCK);
         this.dropSelf(GCBlocks.MARS_SUB_SURFACE_ROCK);
 
@@ -176,6 +187,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.HEAVY_WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.IRON_GRATING);
+        this.dropSelf(GCBlocks.METEORIC_IRON_DOOR);
 
         this.add(GCBlocks.CANNED_FOOD, LootTable.lootTable());
 
@@ -213,6 +225,13 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.VACUUM_GLASS);
         this.dropSelf(GCBlocks.CLEAR_VACUUM_GLASS);
         this.dropSelf(GCBlocks.STRONG_VACUUM_GLASS);
+
+        // MOON GLASSES
+
+        this.dropSelf(GCBlocks.OLIVINE_GLASS);
+        this.dropSelf(GCBlocks.OLIVINE_GLASS_PANE);
+        this.dropSelf(GCBlocks.MOON_GLASS);
+        this.dropSelf(GCBlocks.MOON_GLASS_PANE);
 
         // --ORES-- (alphabetical)
         //ALUMINUM
@@ -267,6 +286,7 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.LEAD_BLOCK);
         this.dropSelf(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.dropSelf(GCBlocks.OLIVINE_BLOCK);
+        this.dropSelf(GCBlocks.BUDDING_OLIVINE);
         this.dropSelf(GCBlocks.RAW_METEORIC_IRON_BLOCK);
         this.dropSelf(GCBlocks.RAW_DESH_BLOCK);
         this.dropSelf(GCBlocks.RAW_ALUMINUM_BLOCK);

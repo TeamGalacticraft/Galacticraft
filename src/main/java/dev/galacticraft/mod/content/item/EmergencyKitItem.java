@@ -46,7 +46,7 @@ import java.util.List;
 public class EmergencyKitItem extends Item {
 
     public static List<ItemStack> getContents(DyeColor color) {
-        List<ItemStack> emergencyItems = new ArrayList<ItemStack>();
+        List<ItemStack> emergencyItems = new ArrayList<>();
 
         ItemStack cannedFoodItem = GCItems.CANNED_FOOD.getDefaultInstance();
         CannedFoodItem.add(cannedFoodItem, new ItemStack(Items.APPLE, CannedFoodItem.MAX_FOOD));

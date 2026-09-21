@@ -88,21 +88,20 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
         if (this.tanks == null) return;
 
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        TamableAnimal animal = (TamableAnimal) entity;
 
-        String tankSize = animal.galacticraft$tankSize(0);
+        String tankSize = entity.galacticraft$tankSize(0);
         ModelPart tank = this.tanks.hasChild(tankSize) ? this.tanks.getChild(tankSize) : null;
 
         if (tank != null) {
             matrices.pushPose();
             tank.copyFrom(this.body);
 
-            if (animal.isBaby()) {
+            if (entity.isBaby()) {
                 matrices.scale(0.5F, 0.5F, 0.5F);
                 matrices.translate(0.0F, 1.5F, 0.0F);
 
-                if (animal instanceof Cat) {
-                    if (animal.isInSittingPose()) {
+                if (entity instanceof Cat) {
+                    if (entity.isInSittingPose()) {
                         tank.y += 2.12132F;
                         tank.z += 2.12132F;
                     } else {

@@ -23,10 +23,12 @@
 package dev.galacticraft.mod.content.item;
 
 import dev.galacticraft.api.component.GCDataComponents;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.rocket.RocketPrefabs;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlockRegistry;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.itemgroup.v1.FabricItemGroup;
 import net.fabricmc.fabric.api.itemgroup.v1.ItemGroupEvents;
@@ -61,8 +63,12 @@ public class GCCreativeModeTabs {
                 output.accept(MOON_TURF);
                 output.accept(MOON_DIRT);
                 output.accept(MOON_DIRT_PATH);
-                output.accept(MOON_SURFACE_ROCK);
                 output.accept(MOON_DUNGEON_BRICK);
+
+                output.accept(MOON_SURFACE_ROCK);
+                output.accept(MOON_SURFACE_ROCK_STAIRS);
+                output.accept(MOON_SURFACE_ROCK_SLAB);
+                output.accept(MOON_SURFACE_ROCK_WALL);
 
                 output.accept(MOON_ROCK);
                 output.accept(MOON_ROCK_STAIRS);
@@ -116,6 +122,12 @@ public class GCCreativeModeTabs {
                 output.accept(CRACKED_MOON_BASALT_BRICK_STAIRS);
                 output.accept(CRACKED_MOON_BASALT_BRICK_SLAB);
                 output.accept(CRACKED_MOON_BASALT_BRICK_WALL);
+
+                // MOON PLANTS
+                output.accept(MOON_WEED);
+                output.accept(MOON_SHRUBS);
+                output.accept(MOON_MOSS);
+                output.accept(MOON_TANGLE);
 
                 // MARS NATURAL
                 output.accept(MARS_SURFACE_ROCK);
@@ -183,6 +195,7 @@ public class GCCreativeModeTabs {
                 output.accept(SILICON_BLOCK);
                 output.accept(LUNAR_SAPPHIRE_BLOCK);
                 output.accept(OLIVINE_BLOCK);
+                output.accept(BUDDING_OLIVINE);
                 output.accept(OLIVINE_CLUSTER);
 
                 output.accept(TIN_BLOCK);
@@ -222,6 +235,7 @@ public class GCCreativeModeTabs {
                 output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
+                output.accept(METEORIC_IRON_DOOR);
 
                 // SPECIAL
                 output.accept(ALUMINUM_WIRE);
@@ -249,6 +263,12 @@ public class GCCreativeModeTabs {
                 output.accept(VACUUM_GLASS);
                 output.accept(CLEAR_VACUUM_GLASS);
                 output.accept(STRONG_VACUUM_GLASS);
+
+                // MOON GLASSES
+                output.accept(OLIVINE_GLASS);
+                output.accept(OLIVINE_GLASS_PANE);
+                output.accept(MOON_GLASS);
+                output.accept(MOON_GLASS_PANE);
 
                 // MISC WORLD GEN
                 output.accept(CAVERNOUS_VINES);
@@ -292,6 +312,14 @@ public class GCCreativeModeTabs {
                 BATTERY.setStoredEnergy(chargedBattery, BATTERY.getEnergyCapacity(chargedBattery));
                 output.accept(chargedBattery);
                 output.accept(INFINITE_BATTERY);
+
+                // FLUID CANISTERS
+                output.accept(FLUID_CANISTER);
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.CRUDE_OIL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.FUEL));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, Gases.METHANE));
+                output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_OXYGEN));
+                //output.accept(FluidCanisterItem.getFilledCanister(FLUID_CANISTER, GCFluids.LIQUID_NITROGEN)); // Liquid nitrogen not added yet
 
                 output.accept(SMALL_OXYGEN_TANK);
                 output.accept(OxygenTankItem.getFullTank(SMALL_OXYGEN_TANK));
@@ -393,6 +421,7 @@ public class GCCreativeModeTabs {
                 output.accept(BEEF_PATTY);
                 output.accept(BURGER_BUN);
                 output.accept(CHEESEBURGER);
+                output.accept(MOON_TANGLE_FRUIT);
 
                 output.accept(THROWABLE_METEOR_CHUNK);
                 output.accept(HOT_THROWABLE_METEOR_CHUNK);

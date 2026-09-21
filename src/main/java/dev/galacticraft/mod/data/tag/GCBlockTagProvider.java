@@ -125,12 +125,20 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
                 .add(GCBlocks.LUNASLATE);
+        this.tag(GCBlockTags.OLIVINE_CAVE_REPLACEABLES)
+                .add(GCBlocks.LUNASLATE)
+                .add(GCBlocks.MOON_ROCK);
+        this.tag(GCBlockTags.OLIVINE_CAVE_INTERNALS)
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.OLIVINE_CLUSTER)
+                .add(GCBlocks.BUDDING_OLIVINE);
         this.tag(GCBlockTags.MOON_CRATER_CARVER_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK)
                 .add(GCBlocks.MOON_SURFACE_ROCK)
                 .add(GCBlocks.MOON_BASALT)
                 .add(GCBlocks.MOON_DIRT)
                 .add(GCBlocks.MOON_TURF)
+                .add(GCBlocks.DENSE_ICE)
                 .add(GCBlocks.LUNASLATE);
 
         this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
@@ -318,7 +326,8 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.LUNAR_SAPPHIRE_BLOCKS)
                 .add(GCBlocks.LUNAR_SAPPHIRE_BLOCK);
         this.tag(GCBlockTags.OLIVINE_BLOCKS)
-                .add(GCBlocks.OLIVINE_BLOCK);
+                .add(GCBlocks.OLIVINE_BLOCK)
+                .add(GCBlocks.BUDDING_OLIVINE);
 
         this.tag(GCBlockTags.RAW_TIN_BLOCKS)
                 .add(GCBlocks.RAW_TIN_BLOCK);
@@ -460,6 +469,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         );
 
         var stairs = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_STAIRS,
                 GCBlocks.MOON_ROCK_BRICK_STAIRS,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_STAIRS,
@@ -475,6 +485,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         };
 
         var slabs = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_SLAB,
                 GCBlocks.MOON_ROCK_BRICK_SLAB,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_SLAB,
@@ -490,6 +501,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         };
 
         var walls = new Block[] {
+                GCBlocks.MOON_SURFACE_ROCK_WALL,
                 GCBlocks.MOON_ROCK_WALL,
                 GCBlocks.MOON_ROCK_BRICK_WALL,
                 GCBlocks.CRACKED_MOON_ROCK_BRICK_WALL,
@@ -549,6 +561,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .addTag(GCBlockTags.TIN_DECORATION_BLOCKS)
                 .addTag(GCBlockTags.TITANIUM_DECORATION_BLOCKS)
                 .addTag(GCBlockTags.DARK_DECORATION_BLOCKS);
+
+        this.tag(GCBlockTags.METEORIC_IRON_DECORATION_BLOCKS)
+                .add(GCBlocks.METEORIC_IRON_DOOR);
 
         this.tag(BlockTags.MINEABLE_WITH_PICKAXE)
                 .forceAddTag(GCBlockTags.MACHINES)
@@ -617,6 +632,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.LEAD_BLOCK,
                         GCBlocks.LUNAR_SAPPHIRE_BLOCK,
                         GCBlocks.OLIVINE_BLOCK,
+                        GCBlocks.BUDDING_OLIVINE,
                         GCBlocks.RAW_METEORIC_IRON_BLOCK,
                         GCBlocks.RAW_DESH_BLOCK,
                         GCBlocks.RAW_ALUMINUM_BLOCK,

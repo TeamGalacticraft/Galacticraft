@@ -121,7 +121,7 @@ public class SolarPanelScreen<Machine extends MachineBlockEntity & SolarPanel, M
         }
 
         if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + LIGHT_SOURCE_X, this.topPos + LIGHT_SOURCE_Y, LIGHT_SOURCE_WIDTH, LIGHT_SOURCE_HEIGHT)) {
-            List<Component> tooltip = new ArrayList<Component>();
+            List<Component> tooltip = new ArrayList<>();
             LightSource source = this.lightSources.get(this.menu.getSource());
             tooltip.add(Component.translatable(Translations.SolarPanel.LIGHT_SOURCE).setStyle(Constant.Text.AQUA_STYLE).append(source.name()));
             tooltip.add(Component.translatable(Translations.SolarPanel.STRENGTH, source.strength()).setStyle(Constant.Text.GREEN_STYLE));

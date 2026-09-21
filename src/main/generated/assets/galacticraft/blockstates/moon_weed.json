@@ -1,0 +1,21 @@
+{
+  "variants": {
+    "": [
+      {
+        "model": "galacticraft:block/moon_weed"
+      },
+      {
+        "model": "galacticraft:block/moon_weed",
+        "y": 90
+      },
+      {
+        "model": "galacticraft:block/moon_weed",
+        "y": 180
+      },
+      {
+        "model": "galacticraft:block/moon_weed",
+        "y": 270
+      }
+    ]
+  }
+}
