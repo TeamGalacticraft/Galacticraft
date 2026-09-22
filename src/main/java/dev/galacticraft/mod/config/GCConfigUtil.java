@@ -20,30 +20,27 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.config;
 
 import dev.galacticraft.mod.Constant;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Spider;
-import net.minecraft.world.level.Level;
+import dev.galacticraft.mod.Galacticraft;
+import net.minecraft.resources.ResourceLocation;
 
-public class EvolvedSpiderEntity extends Spider {
-    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
-        super(entityType, world);
-    }
+import java.util.ArrayList;
+import java.util.List;
 
-    @Override
-    public boolean galacticraft$hasMask() {
-        return true;
-    }
+public class GCConfigUtil {
+    public static List<ResourceLocation> disabledCelestialScreenDestinations() {
+        List<ResourceLocation> out = new ArrayList<>();
 
-    @Override
-    public boolean galacticraft$hasGear() {
-        return true;
-    }
+        for (String id : Galacticraft.CONFIG.disabledCelestialScreenDimensions()) {
+            try {
+                out.add(ResourceLocation.parse(id));
+            } catch (Exception e) {
+                Constant.LOGGER.warn("Ignoring invalid disabled celestial screen dimension id '{}'.", id);
+            }
+        }
 
-    @Override
-    public String galacticraft$tankSize(int i) {
-        return Constant.Item.MEDIUM_OXYGEN_TANK;
+        return out;
     }
 }

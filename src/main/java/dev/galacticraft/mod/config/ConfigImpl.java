@@ -51,6 +51,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -94,6 +96,9 @@ public class ConfigImpl implements Config {
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
     private boolean enableCreativeGearInv = true;
+    private boolean enableSpaceStationCreation = true;
+
+    private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -442,6 +447,26 @@ public class ConfigImpl implements Config {
 
     public void setCreativeGearInv(boolean enableCreativeGearInv) {
         this.enableCreativeGearInv = enableCreativeGearInv;
+    }
+
+    @Override
+    public boolean enableSpaceStationCreation() {
+        return this.enableSpaceStationCreation;
+    }
+
+    public void setEnableSpaceStationCreation(boolean enableSpaceStationCreation) {
+        this.enableSpaceStationCreation = enableSpaceStationCreation;
+    }
+
+    @Override
+    public List<String> disabledCelestialScreenDimensions() {
+        return this.disabledCelestialScreenDimensions;
+    }
+
+    public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
+        this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
+                ? new ArrayList<>()
+                : disabledCelestialScreenDimensions;
     }
 
     public void load() {
@@ -818,6 +843,16 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(FluidConstants.BUCKET)
                     .setMin(0)
                     .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            misc.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
+                    config.enableSpaceStationCreation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
+                    .setSaveConsumer(config::setEnableSpaceStationCreation)
+                    .setDefaultValue(true)
                     .build()
             );
 

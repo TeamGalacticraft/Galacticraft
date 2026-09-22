@@ -14,7 +14,8 @@ pluginManagement {
                 includeGroup("fabric-loom")
             }
         }
-        maven("https://repo.terradevelopment.net/repository/maven-releases/") {
+        maven("http://5.161.199.182/repository/maven-releases/") {
+            isAllowInsecureProtocol = true
             // https://maven.galacticraft.net/repository/maven-releases
             content {
                 includeGroup("dev.galacticraft")

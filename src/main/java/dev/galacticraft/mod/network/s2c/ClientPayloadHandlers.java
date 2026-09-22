@@ -20,30 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.network.s2c;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Pillager;
-import net.minecraft.world.level.Level;
+import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
+import net.fabricmc.api.EnvType;
+import net.fabricmc.api.Environment;
+import net.minecraft.client.Minecraft;
 
-public class EvolvedPillagerEntity extends Pillager {
-    public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, Level world) {
-        super(entityType, world);
+@Environment(EnvType.CLIENT)
+public final class ClientPayloadHandlers {
+    public static void openCelestialScreen(OpenCelestialScreenPayload payload) {
+        Minecraft.getInstance().setScreen(new CelestialSelectionScreen(
+                false,
+                payload.data(),
+                payload.canCreateStations(),
+                payload.celestialBody().value(),
+                payload.disabledDestinations()
+        ));
     }
 
-    @Override
-    public boolean galacticraft$hasMask() {
-        return true;
-    }
-
-    @Override
-    public boolean galacticraft$hasGear() {
-        return true;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        return Constant.Item.LARGE_OXYGEN_TANK;
+    private ClientPayloadHandlers() {
     }
 }

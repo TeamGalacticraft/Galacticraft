@@ -161,7 +161,7 @@ loom {
 
 repositories {
     mavenLocal()
-    maven("http://5.161.199.182/repository/maven-releases/" ) {
+    maven("http://5.161.199.182/repository/maven-releases/") {
         isAllowInsecureProtocol = true
         // https://maven.galacticraft.net/repository/maven-releases
         content {
