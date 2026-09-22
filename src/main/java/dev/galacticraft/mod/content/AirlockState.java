@@ -22,8 +22,21 @@
 
 package dev.galacticraft.mod.content;
 
+import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
+
 public enum AirlockState {
-    NONE,      // no frames sealed (all open)
-    PARTIAL,   // at least one sealed, but not all
-    ALL;       // all frames sealed
+    NONE(GCMachineStatuses.AIRLOCK_DISABLED),         // no frames sealed (all open)
+    PARTIAL(GCMachineStatuses.AIRLOCK_PARTIAL),   // at least one sealed, but not all
+    ALL(GCMachineStatuses.AIRLOCK_ENABLED);           // all frames sealed
+
+    private final MachineStatus status;
+
+    AirlockState(MachineStatus status) {
+        this.status = status;
+    }
+
+    public MachineStatus getStatus() {
+        return this.status;
+    }
 }

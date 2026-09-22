@@ -570,8 +570,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.item(GCItems.SHIELD_CONTROLLER, "Shield Controller");
         this.item(GCItems.FREQUENCY_MODULE, "Frequency Module");
 
-        this.item(GCItems.KEYCARD, "Key Card");
-        this.item(GCItems.LUNAR_DUNGEON_KEYCARD, "Lunar Dungeon Key Card");
+        this.item(GCItems.KEYCARD, "Keycard");
+        this.item(GCItems.LUNAR_DUNGEON_KEYCARD, "Lunar Dungeon Keycard");
 
         this.item(GCItems.THERMAL_PADDING_HELMET, "Thermal Padding Helm");
         this.item(GCItems.THERMAL_PADDING_CHESTPIECE, "Thermal Padding Chestpiece");
@@ -664,6 +664,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
 
         this.tag(GCItemTags.FLAGS, "Flags");
+
+        this.tag(GCItemTags.KEYCARDS, "Keycards");
 
         this.tag(GCItemTags.BATTERIES, "Batteries");
 
@@ -942,10 +944,10 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Chat.STRUCTURE_AIRLOCK_LOCKED, "Owner: UNKNOWN - Configuration locked");
 
-        this.add(Chat.CANNOT_REPROGRAM_KEYCARD, "This key card cannot be reprogrammed.");
-        this.add(Chat.KEYCARD_NO_PERMISSION, "You do not have permission to bind a key card to this airlock.");
-        this.add(Chat.KEYCARD_SUCCESSFUL_BIND, "Key card bound to airlock.");
-        this.add(Chat.KEYCARD_NOT_BOUND, "This key card is unbound.");
+        this.add(Chat.CANNOT_REPROGRAM_KEYCARD, "This keycard cannot be reprogrammed.");
+        this.add(Chat.KEYCARD_NO_PERMISSION, "You do not have permission to bind a keycard to this airlock.");
+        this.add(Chat.KEYCARD_SUCCESSFUL_BIND, "Keycard bound to airlock.");
+        this.add(Chat.KEYCARD_NOT_BOUND, "This keycard is unbound.");
         this.add(Chat.KEYCARD_UNSUCCESSFUL_USE, "Access denied.");
         this.add(Chat.AIRLOCK_ALREADY_UNLOCKED, "Airlock already unlocked.");
         this.add(Chat.KEYCARD_SUCCESSFUL_USE, "Access granted.");
@@ -1241,9 +1243,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player");
         this.add(Ui.AIRLOCK_STRUCTURE_MANAGED, "Owner: UNKNOWN");
         this.add(Ui.AIRLOCK_CONFIGURATION_LOCKED, "Configuration Locked");
-        this.add(Ui.AIRLOCK_UNLOCKED_BY_KEYCARD, "Key Card: UNLOCKED");
-        this.add(Ui.AIRLOCK_REQUIRES_KEYCARD, "Key Card Required");
-        this.add(Ui.AIRLOCK_KEYCARD_OPEN_TIME, "Key Card Open Time");
+        this.add(Ui.AIRLOCK_UNLOCKED_BY_KEYCARD, "Keycard: UNLOCKED");
+        this.add(Ui.AIRLOCK_REQUIRES_KEYCARD, "Keycard Required");
+        this.add(Ui.AIRLOCK_KEYCARD_OPEN_TIME, "Keycard Open Time:");
         this.add(Ui.ALPHA_WARNING_1, "Galacticraft is currently in ALPHA.");
         this.add(Ui.ALPHA_WARNING_2, "Please report all issues you find.");
         this.add(Ui.ALPHA_WARNING_3, "Press [ESC] or click to continue.");

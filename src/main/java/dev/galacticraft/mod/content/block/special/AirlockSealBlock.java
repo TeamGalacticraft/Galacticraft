@@ -23,67 +23,53 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.Mirror;
-import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.BlockPos;
 
 public class AirlockSealBlock extends Block {
     public static final MapCodec<AirlockSealBlock> CODEC = simpleCodec(AirlockSealBlock::new);
-    public static final DirectionProperty FACING = BlockStateProperties.FACING;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
+
+    private static final VoxelShape SHAPE_X = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0);
+    private static final VoxelShape SHAPE_Y = Block.box(0.0, 4.0, 0.0, 16.0, 12.0, 16.0);
+    private static final VoxelShape SHAPE_Z = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0);
+
+    public AirlockSealBlock(Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Z));
+    }
 
     @Override
     public MapCodec<? extends AirlockSealBlock> codec() {
         return CODEC;
     }
 
-    public AirlockSealBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
-    }
-
-
-    // 8px-thick plate centered in the block, oriented per face normal
-    private static final VoxelShape SHAPE_NORTH_SOUTH = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0); // limits Z
-    private static final VoxelShape SHAPE_EAST_WEST = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0); // limits X
-    private static final VoxelShape SHAPE_UP_DOWN = Block.box(0.0, 4.0, 0.0, 16.0, 12.0, 16.0); // limits Y
-
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext ctx) {
-        return switch (state.getValue(FACING)) {
-            case NORTH, SOUTH -> SHAPE_NORTH_SOUTH;
-            case EAST,  WEST  -> SHAPE_EAST_WEST;
-            case UP,    DOWN  -> SHAPE_UP_DOWN;   // <-- support facing up/down
+    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+        return switch (state.getValue(AXIS)) {
+            case X -> SHAPE_X;
+            case Y -> SHAPE_Y;
+            case Z -> SHAPE_Z;
         };
     }
 
     @Override
-    public BlockState rotate(BlockState state, Rotation rotation) {
-        return state.setValue(FACING, rotation.rotate(state.getValue(FACING)));
+    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
+        builder.add(AXIS);
     }
 
     @Override
-    public BlockState mirror(BlockState state, Mirror mirror) {
-        return state.rotate(mirror.getRotation(state.getValue(FACING)));
-    }
-
-    @Override
-    protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> b) {
-        b.add(FACING);
-    }
-
-    @Override
-    public BlockState getStateForPlacement(BlockPlaceContext ctx) {
-        Direction look = ctx.getNearestLookingDirection().getOpposite();
-        return this.defaultBlockState().setValue(FACING, look);
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(AXIS, context.getClickedFace().getAxis());
     }
 }

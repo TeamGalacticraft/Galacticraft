@@ -24,22 +24,25 @@ package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.configuration.AccessLevel;
 import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.AirlockState;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCSounds;
-import dev.galacticraft.mod.content.ProximityAccess;
 import dev.galacticraft.mod.content.block.machine.airlock.AirlockFrameScanner;
 import dev.galacticraft.mod.content.block.special.AirlockSealBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.util.Mth;
@@ -61,18 +64,21 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     public static final int MIN_KEYCARD_OPEN_SECONDS = 1;
     public static final int MAX_KEYCARD_OPEN_SECONDS = 9;
     public static final int DEFAULT_KEYCARD_OPEN_SECONDS = 3;
+    public static final ResourceLocation PROXIMITY_ACCESS = Constant.id("airlock_proximity");
+
     private static final String NBT_PROXIMITY_OPEN = "ProximityOpen";
-    private static final String NBT_SEALED_FRAMES = "SealedFrames";
     private static final String NBT_PROXIMITY_ACCESS = "ProximityAccess";
+    private static final String NBT_SEALED_FRAMES = "SealedFrames";
     private static final String NBT_ACCESS_ID = "AccessId";
     private static final String NBT_STRUCTURE_MANAGED = "StructureManaged";
     private static final String NBT_KEYCARD_OPEN_SECONDS = "KeycardOpenSeconds";
     private static final String NBT_PERMANENT_OPEN_ON_KEYCARD = "PermanentOpenOnKeycard";
     private static final String NBT_PERMANENTLY_UNLOCKED = "PermanentlyUnlocked";
+
     private static final StorageSpec SPEC = StorageSpec.empty();
+
     private final Set<Long> sealedFrames = new HashSet<>();
     private byte proximityOpen = 0;
-    private ProximityAccess proximityAccess = ProximityAccess.PUBLIC;
 
     /*
      * A card stores this value.
@@ -102,28 +108,19 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     private long keycardOpenUntil = 0L;
     private boolean permanentOpenOnKeycard = false;
     private boolean permanentlyUnlocked = false;
+
     private List<AirlockFrameScanner.Result> lastFrames = Collections.emptyList();
     private Map<Long, AirlockFrameScanner.Result> lastFrameMap = Collections.emptyMap();
     private AirlockState state = AirlockState.NONE;
 
     private int ticks = 0;
 
-    public AirlockControllerBlockEntity(
-            BlockEntityType<?> type,
-            BlockPos pos,
-            BlockState state
-    ) {
-        super(
-                (BlockEntityType<? extends MachineBlockEntity>) type,
-                pos,
-                state,
-                SPEC
-        );
-    }
+    public AirlockControllerBlockEntity(BlockEntityType<? extends MachineBlockEntity> type, BlockPos pos, BlockState state) {
+        super(type, pos, state, SPEC);
 
-    private static Map<Long, AirlockFrameScanner.Result> indexFrames(
-            List<AirlockFrameScanner.Result> list
-    ) {
+        this.getSecurity().registerAccessLevel(PROXIMITY_ACCESS, AccessLevel.PUBLIC);
+    }
+    private static Map<Long, AirlockFrameScanner.Result> indexFrames(List<AirlockFrameScanner.Result> list) {
         Map<Long, AirlockFrameScanner.Result> output = new HashMap<>(list.size());
 
         for (AirlockFrameScanner.Result result : list) {
@@ -133,64 +130,56 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         return output;
     }
 
-    private static long frameId(
-            AirlockFrameScanner.Result frame
-    ) {
+    private static long frameId(AirlockFrameScanner.Result frame) {
         int hash = 1;
 
-        hash = 31 * hash + frame.plane.ordinal();
+        hash = 31 * hash + frame.plane().ordinal();
 
-        hash = 31 * hash + frame.minX;
-        hash = 31 * hash + frame.minY;
-        hash = 31 * hash + frame.minZ;
+        hash = 31 * hash + frame.minX();
+        hash = 31 * hash + frame.minY();
+        hash = 31 * hash + frame.minZ();
 
-        hash = 31 * hash + frame.maxX;
-        hash = 31 * hash + frame.maxY;
-        hash = 31 * hash + frame.maxZ;
+        hash = 31 * hash + frame.maxX();
+        hash = 31 * hash + frame.maxY();
+        hash = 31 * hash + frame.maxZ();
 
         return hash & 0xffffffffL;
     }
 
-    private static AABB expandedInterior(
-            AirlockFrameScanner.Result frame,
-            double radius
-    ) {
-        AABB interior = switch (frame.plane) {
+    private static AABB expandedInterior(AirlockFrameScanner.Result frame, double radius) {
+        AABB interior = switch (frame.plane()) {
             case XY -> new AABB(
-                    frame.minX + 1,
-                    frame.minY + 1,
-                    frame.minZ,
-                    frame.maxX,
-                    frame.maxY,
-                    frame.maxZ
+                    frame.minX() + 1,
+                    frame.minY() + 1,
+                    frame.minZ(),
+                    frame.maxX(),
+                    frame.maxY(),
+                    frame.maxZ()
             );
 
             case XZ -> new AABB(
-                    frame.minX + 1,
-                    frame.minY,
-                    frame.minZ + 1,
-                    frame.maxX,
-                    frame.maxY,
-                    frame.maxZ
+                    frame.minX() + 1,
+                    frame.minY(),
+                    frame.minZ() + 1,
+                    frame.maxX(),
+                    frame.maxY(),
+                    frame.maxZ()
             );
 
             case YZ -> new AABB(
-                    frame.minX,
-                    frame.minY + 1,
-                    frame.minZ + 1,
-                    frame.maxX,
-                    frame.maxY,
-                    frame.maxZ
+                    frame.minX(),
+                    frame.minY() + 1,
+                    frame.minZ()+ 1,
+                    frame.maxX(),
+                    frame.maxY(),
+                    frame.maxZ()
             );
         };
 
         return interior.inflate(Math.max(radius, 0) + 1.0e-4);
     }
 
-    private static boolean sameFrames(
-            List<AirlockFrameScanner.Result> first,
-            List<AirlockFrameScanner.Result> second
-    ) {
+    private static boolean sameFrames(List<AirlockFrameScanner.Result> first, List<AirlockFrameScanner.Result> second) {
         if (first == second) {
             return true;
         }
@@ -200,20 +189,18 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         for (int i = 0; i < first.size(); i++) {
-
             AirlockFrameScanner.Result x = first.get(i);
-
             AirlockFrameScanner.Result y = second.get(i);
 
-            if (x.plane != y.plane) {
+            if (x.plane() != y.plane()) {
                 return false;
             }
 
-            if (x.minX != y.minX || x.minY != y.minY || x.minZ != y.minZ) {
+            if (x.minX() != y.minX() || x.minY() != y.minY() || x.minZ() != y.minZ()) {
                 return false;
             }
 
-            if (x.maxX != y.maxX || x.maxY != y.maxY || x.maxZ != y.maxZ) {
+            if (x.maxX() != y.maxX() || x.maxY() != y.maxY() || x.maxZ() != y.maxZ()) {
                 return false;
             }
         }
@@ -231,38 +218,26 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         this.proximityOpen = (byte) Mth.clamp(proximityOpen, 0, 5);
-
         setChanged();
     }
 
-    public ProximityAccess getProximityAccess() {
-        return this.proximityAccess;
+    public AccessLevel getProximityAccess() {
+        return this.getSecurity().getAccessLevel(PROXIMITY_ACCESS);
     }
 
-    public void setProximityAccess(
-            ProximityAccess access
-    ) {
+    public void setProximityAccess(@NotNull AccessLevel access) {
         if (this.structureManaged) {
             return;
         }
 
-        if (access == null) {
-            access = ProximityAccess.PUBLIC;
-        }
-
-        if (this.proximityAccess != access) {
-            this.proximityAccess = access;
-            setChanged();
-        }
+        this.getSecurity().setAccessLevel(PROXIMITY_ACCESS, access);
     }
 
     public String getAccessId() {
         return this.accessId;
     }
 
-    public boolean acceptsKeycard(
-            @Nullable String cardAccessId
-    ) {
+    public boolean acceptsKeycard(@Nullable String cardAccessId) {
         return cardAccessId != null && Objects.equals(this.accessId, cardAccessId);
     }
 
@@ -274,9 +249,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         return this.keycardOpenSeconds;
     }
 
-    public void setKeycardOpenSeconds(
-            int seconds
-    ) {
+    public void setKeycardOpenSeconds(int seconds) {
         if (this.structureManaged) {
             return;
         }
@@ -299,38 +272,22 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
     public void initializeStructureManagedDefaults() {
         this.structureManaged = true;
-
         this.proximityOpen = 0;
-        this.proximityAccess = ProximityAccess.PRIVATE;
-
+        this.getSecurity().setAccessLevel(PROXIMITY_ACCESS, AccessLevel.PRIVATE);
         this.permanentOpenOnKeycard = true;
     }
 
-    public void configureAsStructureManaged(
-            String accessId
-    ) {
-        configureAsStructureManaged(
-                accessId,
-                true
-        );
+    public void configureAsStructureManaged(String accessId) {
+        configureAsStructureManaged(accessId, true);
     }
 
-    public void configureAsStructureManaged(
-            String accessId,
-            boolean permanentOpenOnKeycard
-    ) {
+    public void configureAsStructureManaged(String accessId, boolean permanentOpenOnKeycard) {
         this.structureManaged = true;
-
         this.proximityOpen = 0;
-        this.proximityAccess =
-                ProximityAccess.PRIVATE;
+        this.getSecurity().setAccessLevel(PROXIMITY_ACCESS, AccessLevel.PRIVATE);
+        this.permanentOpenOnKeycard = permanentOpenOnKeycard;
 
-        this.permanentOpenOnKeycard =
-                permanentOpenOnKeycard;
-
-        if (accessId != null
-                && !accessId.isBlank()) {
-
+        if (accessId != null && !accessId.isBlank()) {
             this.accessId = accessId;
         }
 
@@ -341,29 +298,12 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
     }
 
-    public boolean canConfigure(
-            Player player
-    ) {
-        return !this.structureManaged
-                && this.getSecurity().hasAccess(player);
+    public boolean canConfigure(Player player) {
+        return !this.structureManaged && this.getSecurity().hasAccess(player);
     }
 
-    public boolean canBindKeycard(
-            Player player
-    ) {
-        if (this.structureManaged) {
-            return false;
-        }
-
-        return switch (this.proximityAccess) {
-            case PUBLIC -> true;
-
-            case TEAM -> this.getSecurity()
-                    .hasAccess(player);
-
-            case PRIVATE -> this.getSecurity()
-                    .isOwner(player);
-        };
+    public boolean canBindKeycard(Player player) {
+        return !this.structureManaged && this.getSecurity().hasAccess(player);
     }
 
     /**
@@ -375,9 +315,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
      *
      * @return true when this card caused a new activation
      */
-    public boolean activateKeycard(
-            Player player
-    ) {
+    public boolean activateKeycard(Player player) {
         if (!(this.level instanceof ServerLevel server)) {
             return false;
         }
@@ -390,97 +328,58 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             this.permanentlyUnlocked = true;
         } else {
             long duration = this.keycardOpenSeconds * 20L;
-
             this.keycardOpenUntil = Math.max(this.keycardOpenUntil, server.getGameTime() + duration);
         }
 
         setChanged();
-
         updateAirlockState(server);
 
         return true;
     }
 
-    private boolean keycardRequestsOpen(
-            ServerLevel server
-    ) {
+    private boolean keycardRequestsOpen(ServerLevel server) {
         return this.permanentlyUnlocked || server.getGameTime() < this.keycardOpenUntil;
     }
 
     @Override
-    protected void saveAdditional(
-            CompoundTag tag,
-            HolderLookup.Provider lookup
-    ) {
-        super.saveAdditional(
-                tag,
-                lookup
-        );
+    protected void saveAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.saveAdditional(tag, lookup);
 
-        tag.putByte(
-                NBT_PROXIMITY_OPEN,
-                this.proximityOpen
-        );
+        tag.putByte(NBT_PROXIMITY_OPEN, this.proximityOpen);
+        tag.putString(NBT_ACCESS_ID, this.accessId);
+        tag.putBoolean(NBT_STRUCTURE_MANAGED, this.structureManaged);
+        tag.putInt(NBT_KEYCARD_OPEN_SECONDS, this.keycardOpenSeconds);
+        tag.putBoolean(NBT_PERMANENT_OPEN_ON_KEYCARD, this.permanentOpenOnKeycard);
+        tag.putBoolean(NBT_PERMANENTLY_UNLOCKED, this.permanentlyUnlocked);
 
-        tag.putInt(
-                NBT_PROXIMITY_ACCESS,
-                this.proximityAccess.ordinal()
-        );
-
-        tag.putString(
-                NBT_ACCESS_ID,
-                this.accessId
-        );
-
-        tag.putBoolean(
-                NBT_STRUCTURE_MANAGED,
-                this.structureManaged
-        );
-
-        tag.putInt(
-                NBT_KEYCARD_OPEN_SECONDS,
-                this.keycardOpenSeconds
-        );
-
-        tag.putBoolean(
-                NBT_PERMANENT_OPEN_ON_KEYCARD,
-                this.permanentOpenOnKeycard
-        );
-
-        tag.putBoolean(
-                NBT_PERMANENTLY_UNLOCKED,
-                this.permanentlyUnlocked
-        );
-
-        long[] sealed = this.sealedFrames
-                .stream()
+        long[] sealed = this.sealedFrames.stream()
                 .mapToLong(Long::longValue)
                 .toArray();
 
-        tag.putLongArray(
-                NBT_SEALED_FRAMES,
-                sealed
-        );
+        tag.putLongArray(NBT_SEALED_FRAMES, sealed);
     }
 
     @Override
-    public void loadAdditional(
-            CompoundTag tag,
-            HolderLookup.Provider lookup
-    ) {
-        super.loadAdditional(
-                tag,
-                lookup
-        );
+    public void loadAdditional(CompoundTag tag, HolderLookup.Provider lookup) {
+        super.loadAdditional(tag, lookup);
 
         if (tag.contains(NBT_PROXIMITY_OPEN)) {
             this.proximityOpen = tag.getByte(NBT_PROXIMITY_OPEN);
         }
 
+        /*
+         * Legacy migration from the old ProximityAccess enum.
+         */
         if (tag.contains(NBT_PROXIMITY_ACCESS)) {
             int ordinal = tag.getInt(NBT_PROXIMITY_ACCESS);
 
-            this.proximityAccess = ordinal >= 0 && ordinal < ProximityAccess.values().length ? ProximityAccess.values()[ordinal] : ProximityAccess.PUBLIC;
+            AccessLevel migrated = switch (ordinal) {
+                case 1 -> AccessLevel.TEAM;
+                case 2 -> AccessLevel.PRIVATE;
+                default -> AccessLevel.PUBLIC;
+            };
+
+            this.getSecurity().setAccessLevel(PROXIMITY_ACCESS, migrated);
         }
 
         if (tag.contains(NBT_ACCESS_ID)) {
@@ -496,7 +395,11 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         if (tag.contains(NBT_KEYCARD_OPEN_SECONDS)) {
-            this.keycardOpenSeconds = Mth.clamp(tag.getInt(NBT_KEYCARD_OPEN_SECONDS), MIN_KEYCARD_OPEN_SECONDS, MAX_KEYCARD_OPEN_SECONDS);
+            this.keycardOpenSeconds = Mth.clamp(
+                    tag.getInt(NBT_KEYCARD_OPEN_SECONDS),
+                    MIN_KEYCARD_OPEN_SECONDS,
+                    MAX_KEYCARD_OPEN_SECONDS
+            );
         }
 
         if (tag.contains(NBT_PERMANENT_OPEN_ON_KEYCARD)) {
@@ -522,18 +425,16 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
         if (this.structureManaged) {
             this.proximityOpen = 0;
-            this.proximityAccess = ProximityAccess.PRIVATE;
+            this.getSecurity().setAccessLevel(PROXIMITY_ACCESS, AccessLevel.PRIVATE);
         }
 
         onLoad();
     }
 
     public void onLoad() {
-        if (!(this.level instanceof ServerLevel server)) {
-            return;
+        if (this.level instanceof ServerLevel server) {
+            updateAirlockState(server);
         }
-
-        updateAirlockState(server);
     }
 
     private void serverTick() {
@@ -548,21 +449,14 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         updateAirlockState(server);
     }
 
-    private void updateAirlockState(
-            ServerLevel server
-    ) {
+    private void updateAirlockState(ServerLevel server) {
         List<AirlockFrameScanner.Result> frames = AirlockFrameScanner.scanAll(server, this.worldPosition);
-
         Map<Long, AirlockFrameScanner.Result> frameMap = indexFrames(frames);
 
         boolean framesChanged = !sameFrames(frames, this.lastFrames);
-
         boolean keycardOpen = keycardRequestsOpen(server);
-
         boolean powered = server.getBestNeighborSignal(this.worldPosition) > 0;
-
         RedstoneMode mode = this.getRedstoneMode();
-
         boolean redstoneAllows = mode.isActive(powered);
 
         Set<Long> nextSealed = new HashSet<>();
@@ -587,9 +481,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
         boolean anyChange = false;
 
-        for (long id : new HashSet<>(
-                this.sealedFrames
-        )) {
+        for (long id : new HashSet<>(this.sealedFrames)) {
             if (nextSealed.contains(id)) {
                 continue;
             }
@@ -598,9 +490,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
             if (frame != null) {
                 unseal(frame);
-
                 this.sealedFrames.remove(id);
-
                 anyChange = true;
             }
         }
@@ -614,9 +504,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
             if (frame != null) {
                 seal(frame);
-
                 this.sealedFrames.add(id);
-
                 anyChange = true;
             }
         }
@@ -634,13 +522,10 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         boolean stateChanged = newState != this.state;
 
         this.state = newState;
-
         this.lastFrames = frames;
-
         this.lastFrameMap = frameMap;
 
         if (anyChange || framesChanged || stateChanged) {
-
             BlockState blockState = server.getBlockState(this.worldPosition);
 
             server.sendBlockUpdated(
@@ -654,10 +539,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
     }
 
-    private boolean hasAuthorizedPlayerNear(
-            ServerLevel server,
-            AirlockFrameScanner.Result frame
-    ) {
+    private boolean hasAuthorizedPlayerNear(ServerLevel server, AirlockFrameScanner.Result frame) {
         double radius = this.proximityOpen;
 
         if (radius <= 0) {
@@ -667,17 +549,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         AABB expanded = expandedInterior(frame, radius);
 
         for (Player player : server.getEntitiesOfClass(Player.class, expanded)) {
-            boolean authorized = switch (this.proximityAccess) {
-                case PUBLIC -> true;
-
-                case TEAM -> this.getSecurity()
-                        .hasAccess(player);
-
-                case PRIVATE -> this.getSecurity()
-                        .isOwner(player);
-            };
-
-            if (authorized) {
+            if (this.getSecurity().hasAccess(PROXIMITY_ACCESS, player)) {
                 return true;
             }
         }
@@ -691,50 +563,21 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         boolean anyAir = false;
+        BlockState seal = GCBlocks.AIR_LOCK_SEAL.defaultBlockState()
+                .setValue(AirlockSealBlock.AXIS, frame.plane().normal());
 
-        switch (frame.plane) {
-            case XY -> {
-                int z = frame.minZ;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) {
-                            anyAir = true;
-                        }
-                    }
-                }
-            }
-
-            case XZ -> {
-                int y = frame.minY;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) {
-                            anyAir = true;
-                        }
-                    }
-                }
-            }
-
-            case YZ -> {
-                int x = frame.minX;
-
-                for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        if (server.getBlockState(new BlockPos(x, y, z)).isAir()) {
-                            anyAir = true;
-                        }
-                    }
-                }
+        for (BlockPos pos : withinFrame(frame)) {
+            if (server.getBlockState(pos).isAir()) {
+                anyAir = true;
+                server.setBlock(pos, seal, Block.UPDATE_ALL);
             }
         }
 
         if (anyAir) {
             BlockPos center = new BlockPos(
-                    (frame.minX + frame.maxX) / 2,
-                    (frame.minY + frame.maxY) / 2,
-                    (frame.minZ + frame.maxZ) / 2
+                    (frame.minX()+ frame.maxX()) / 2,
+                    (frame.minY()+ frame.maxY()) / 2,
+                    (frame.minZ()+ frame.maxZ()) / 2
             );
 
             server.playSound(
@@ -746,113 +589,27 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                     1.0F
             );
         }
-
-        switch (frame.plane) {
-            case XY -> {
-                int z = frame.minZ;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-
-                        if (server.getBlockState(pos).isAir()) {
-                            server.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(AirlockSealBlock.FACING, frame.sealFacing), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            }
-
-            case XZ -> {
-                int y = frame.minY;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-
-                        if (server.getBlockState(pos).isAir()) {
-                            server.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(AirlockSealBlock.FACING, frame.sealFacing), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            }
-
-            case YZ -> {
-                int x = frame.minX;
-
-                for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-
-                        if (server.getBlockState(pos).isAir()) {
-                            server.setBlock(pos, GCBlocks.AIR_LOCK_SEAL.defaultBlockState().setValue(AirlockSealBlock.FACING, frame.sealFacing), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            }
-        }
     }
 
-    private void unseal(
-            AirlockFrameScanner.Result frame
-    ) {
+    private void unseal(AirlockFrameScanner.Result frame) {
         if (!(this.level instanceof ServerLevel server)) {
             return;
         }
 
         boolean hadSeal = false;
 
-        switch (frame.plane) {
-            case XY -> {
-                int z = frame.minZ;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-                        if (server.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                            hadSeal = true;
-
-                            server.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            }
-
-            case XZ -> {
-                int y = frame.minY;
-
-                for (int x = frame.minX + 1; x <= frame.maxX - 1; x++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-                        if (server.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                            hadSeal = true;
-
-                            server.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
-                    }
-                }
-            }
-
-            case YZ -> {
-                int x = frame.minX;
-
-                for (int y = frame.minY + 1; y <= frame.maxY - 1; y++) {
-                    for (int z = frame.minZ + 1; z <= frame.maxZ - 1; z++) {
-                        BlockPos pos = new BlockPos(x, y, z);
-                        if (server.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
-                            hadSeal = true;
-
-                            server.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
-                        }
-                    }
-                }
+        for (BlockPos pos : withinFrame(frame)) {
+            if (server.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+                hadSeal = true;
+                server.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }
         }
 
         if (hadSeal) {
             BlockPos center = new BlockPos(
-                    (frame.minX + frame.maxX) / 2,
-                    (frame.minY + frame.maxY) / 2,
-                    (frame.minZ + frame.maxZ) / 2
+                    (frame.minX()+ frame.maxX()) / 2,
+                    (frame.minY()+ frame.maxY()) / 2,
+                    (frame.minZ()+ frame.maxZ()) / 2
             );
 
             server.playSound(
@@ -864,6 +621,18 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                     1.0F
             );
         }
+    }
+
+    private static Iterable<BlockPos> withinFrame(AirlockFrameScanner.Result frame) {
+        int startX = Math.min(frame.minX()+ 1, frame.maxX());
+        int startY = Math.min(frame.minY()+ 1, frame.maxY());
+        int startZ = Math.min(frame.minZ()+ 1, frame.maxZ());
+
+        int endX = Math.max(frame.minX(), frame.maxX()- 1);
+        int endY = Math.max(frame.minY(), frame.maxY()- 1);
+        int endZ = Math.max(frame.minZ(), frame.maxZ()- 1);
+
+        return BlockPos.betweenClosed(startX, startY, startZ, endX, endY, endZ);
     }
 
     public AirlockState getAirlockState() {
@@ -887,13 +656,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             @NotNull ProfilerFiller profiler
     ) {
         serverTick();
-
-        super.tickConstant(
-                level,
-                pos,
-                state,
-                profiler
-        );
+        super.tickConstant(level, pos, state, profiler);
     }
 
     @Override
@@ -903,13 +666,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             @NotNull BlockState state,
             @NotNull ProfilerFiller profiler
     ) {
-        return switch (this.state) {
-            case ALL -> GCMachineStatuses.AIRLOCK_ENABLED;
-
-            case PARTIAL -> GCMachineStatuses.AIRLOCK_PARTIAL;
-
-            case NONE -> GCMachineStatuses.AIRLOCK_DISABLED;
-        };
+        return this.state.getStatus();
     }
 
     @Override
@@ -918,11 +675,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             Inventory inventory,
             Player player
     ) {
-        return new AirlockControllerMenu(
-                syncId,
-                player,
-                this
-        );
+        return new AirlockControllerMenu(syncId, player, this);
     }
 
     @Override
@@ -930,7 +683,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         try {
             if (this.level instanceof ServerLevel server) {
                 boolean shouldUnseal = false;
-
                 boolean chunkLoaded = server.isLoaded(this.worldPosition);
 
                 if (chunkLoaded) {

@@ -44,27 +44,30 @@ public final class AirlockFrameScanner {
             .thenComparingInt(r -> r.maxX).thenComparingInt(r -> r.maxY).thenComparingInt(r -> r.maxZ);
 
     public enum Plane {
-        XY(Axis.Z), // z is constant
-        XZ(Axis.Y), // y is constant
-        YZ(Axis.X); // x is constant
-        final Axis normal;
-        Plane(Axis normal) { this.normal = normal; }
+        XY(Axis.Z),
+        XZ(Axis.Y),
+        YZ(Axis.X);
+
+        private final Axis normal;
+
+        Plane(Axis normal) {
+            this.normal = normal;
+        }
+
+        public Axis normal() {
+            return this.normal;
+        }
     }
 
-    public static final class Result {
-        public final Plane plane;
-        public final int minX, minY, minZ, maxX, maxY, maxZ;
-        public final Direction sealFacing; // FACING for AIR_LOCK_SEAL
-
-        Result(Plane plane,
-               int minX, int minY, int minZ,
-               int maxX, int maxY, int maxZ,
-               Direction sealFacing) {
-            this.plane = plane;
-            this.minX = minX; this.minY = minY; this.minZ = minZ;
-            this.maxX = maxX; this.maxY = maxY; this.maxZ = maxZ;
-            this.sealFacing = sealFacing;
-        }
+    public record Result(
+            Plane plane,
+            int minX,
+            int minY,
+            int minZ,
+            int maxX,
+            int maxY,
+            int maxZ
+    ) {
     }
 
     private static boolean isFrame(Level level, BlockPos pos) {
@@ -84,14 +87,6 @@ public final class AirlockFrameScanner {
         }
         out.sort(ORDER); // stable order across ticks
         return out;
-    }
-
-    /** Back-compat helper if you still call scan(): returns first found or invalid. */
-    public static Result scan(Level level, BlockPos controller) {
-        List<Result> all = scanAll(level, controller);
-        return all.isEmpty()
-                ? new Result(Plane.XY, 0,0,0, 0,0,0, Direction.NORTH)
-                : all.get(0);
     }
 
     // ---------- Plane scanning ----------
@@ -142,16 +137,10 @@ public final class AirlockFrameScanner {
     // ---------- Plane scanning ----------
     private enum EdgeKind { VMIN, VMAX, UMIN, UMAX }
 
-    private static void addIfNotNullDistinct(List<Result> list, Result r) {
-        if (r == null) return;
-        for (Result e : list) {
-            if (r.plane == e.plane &&
-                    r.minX == e.minX && r.minY == e.minY && r.minZ == e.minZ &&
-                    r.maxX == e.maxX && r.maxY == e.maxY && r.maxZ == e.maxZ) {
-                return;
-            }
+    private static void addIfNotNullDistinct(List<Result> list, Result result) {
+        if (result != null && list.size() < 2 && !list.contains(result)) {
+            list.add(result);
         }
-        if (list.size() < 2) list.add(r);
     }
 
     private static Result findBestRectWithFixedEdge(
@@ -296,14 +285,7 @@ public final class AirlockFrameScanner {
             default -> throw new IllegalStateException();
         }
 
-        // Seal facing = plane normal direction
-        Direction facing = switch (plane) {
-            case XY -> Direction.NORTH; // ⟂ Z
-            case XZ -> Direction.UP;    // ⟂ Y
-            case YZ -> Direction.EAST;  // ⟂ X
-        };
-
-        return new Result(plane, minX, minY, minZ, maxX, maxY, maxZ, facing);
+        return new Result(plane, minX, minY, minZ, maxX, maxY, maxZ);
     }
 
     // ---------- Geometry helpers ----------
@@ -349,16 +331,21 @@ public final class AirlockFrameScanner {
 
     private static BlockPos unproj(int u, int v, int wConst, Axes axes) {
         // inverse mapping from (u,v) back to (x,y,z)
-        int x=0,y=0,z=0;
-        for (Axis a : new Axis[]{axes.u, axes.v, axes.wConst}) {
-            int val = (a == axes.u) ? u : (a == axes.v) ? v : wConst;
-            switch (a) {
-                case X -> x = val;
-                case Y -> y = val;
-                case Z -> z = val;
+        int x = 0;
+        int y = 0;
+        int z = 0;
+
+        for (Axis axis : new Axis[]{axes.u, axes.v, axes.wConst}) {
+            int value = axis == axes.u ? u : axis == axes.v ? v : wConst;
+
+            switch (axis) {
+                case X -> x = value;
+                case Y -> y = value;
+                case Z -> z = value;
             }
         }
-        return new BlockPos(x,y,z);
+
+        return new BlockPos(x, y, z);
     }
 
     private static boolean perimeterIsFrames(Set<BlockPos> frames, Axes axes, int wConst,

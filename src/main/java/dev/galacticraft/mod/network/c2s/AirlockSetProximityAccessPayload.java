@@ -23,8 +23,8 @@
 package dev.galacticraft.mod.network.c2s;
 
 import dev.galacticraft.impl.network.c2s.C2SPayload;
+import dev.galacticraft.machinelib.api.machine.configuration.AccessLevel;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.ProximityAccess;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.screen.AirlockControllerMenu;
 import io.netty.buffer.ByteBuf;
@@ -35,71 +35,42 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
-public record AirlockSetProximityAccessPayload(
-        ProximityAccess access
-) implements C2SPayload {
+public record AirlockSetProximityAccessPayload(AccessLevel access) implements C2SPayload {
 
-    public static final StreamCodec<
-            ByteBuf,
-            AirlockSetProximityAccessPayload
-            > STREAM_CODEC =
+    public static final StreamCodec<ByteBuf, AirlockSetProximityAccessPayload> STREAM_CODEC =
             ByteBufCodecs.BYTE.map(
-                    value ->
-                            new AirlockSetProximityAccessPayload(
-                                    decode(value)
-                            ),
-                    packet ->
-                            (byte) packet.access()
-                                    .ordinal()
+                    value -> new AirlockSetProximityAccessPayload(decode(value)),
+                    packet -> (byte) packet.access().ordinal()
             );
 
-    public static final ResourceLocation ID =
-            Constant.id(
-                    "airlock_set_proximity_access"
-            );
+    public static final ResourceLocation ID = Constant.id("airlock_set_proximity_access");
 
-    public static final CustomPacketPayload.Type<
-            AirlockSetProximityAccessPayload
-            > TYPE =
+    public static final CustomPacketPayload.Type<AirlockSetProximityAccessPayload> TYPE =
             new CustomPacketPayload.Type<>(ID);
 
-    private static ProximityAccess decode(
-            byte value
-    ) {
-        int ordinal =
-                Byte.toUnsignedInt(value);
+    private static AccessLevel decode(byte value) {
+        int ordinal = Byte.toUnsignedInt(value);
 
-        if (ordinal < 0
-                || ordinal
-                >= ProximityAccess.values().length) {
-
-            return ProximityAccess.PRIVATE;
+        if (ordinal >= AccessLevel.VALUES.length) {
+            return AccessLevel.PRIVATE;
         }
 
-        return ProximityAccess.values()[ordinal];
+        return AccessLevel.VALUES[ordinal];
     }
 
     @Override
-    public void handle(
-            ServerPlayNetworking.@NotNull Context context
-    ) {
-        if (!(context.player().containerMenu
-                instanceof AirlockControllerMenu menu)) {
+    public void handle(ServerPlayNetworking.@NotNull Context context) {
+        if (!(context.player().containerMenu instanceof AirlockControllerMenu menu)) {
             return;
         }
 
-        AirlockControllerBlockEntity airlock =
-                menu.be;
+        AirlockControllerBlockEntity airlock = menu.be;
 
-        if (!airlock.canConfigure(
-                context.player()
-        )) {
+        if (!airlock.canConfigure(context.player())) {
             return;
         }
 
-        airlock.setProximityAccess(
-                this.access
-        );
+        airlock.setProximityAccess(this.access);
     }
 
     @Override

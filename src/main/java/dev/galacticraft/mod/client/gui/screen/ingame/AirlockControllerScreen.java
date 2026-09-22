@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.configuration.AccessLevel;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.AirlockState;
-import dev.galacticraft.mod.content.ProximityAccess;
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.network.c2s.AirlockSetKeycardOpenSecondsPayload;
 import dev.galacticraft.mod.network.c2s.AirlockSetProximityAccessPayload;
@@ -35,7 +35,6 @@ import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.Font;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractButton;
@@ -55,56 +54,73 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
     private static final int STATUS_LABEL_X = 90;
     private static final int STATUS_LABEL_Y = 15;
     private static final int ACCESS_BTN_Y = 25;
-    private static final ResourceLocation MACHINELIB_PANELS = ResourceLocation.fromNamespaceAndPath("machinelib", "textures/gui/machine_panels.png");
+
+    private static final ResourceLocation MACHINELIB_PANELS =
+            ResourceLocation.fromNamespaceAndPath("machinelib", "textures/gui/machine_panels.png");
+
     private static final int TEX_W = 256;
     private static final int TEX_H = 256;
+
     private static final int BTN_U = 0;
     private static final int BTN_V_NORMAL = 196;
     private static final int BTN_V_HOVER = 216;
     private static final int BTN_V_SELECTED = 236;
     private static final int BTN_W = 20;
     private static final int BTN_H = 20;
-    private static final int PUB_U = 208;
-    private static final int PUB_V = 49;
-    private static final int PUB_W = 15;
-    private static final int PUB_H = 15;
-    private static final int TEAM_U = 210;
-    private static final int TEAM_V = 71;
-    private static final int TEAM_W = 12;
-    private static final int TEAM_H = 14;
-    private static final int PRIV_U = 231;
-    private static final int PRIV_V = 49;
-    private static final int PRIV_W = 10;
-    private static final int PRIV_H = 14;
+
+    private static final int ICON_W = 20;
+    private static final int ICON_H = 20;
+
+    private static final int PUB_U = 205;
+    private static final int PUB_V = 47;
+
+    private static final int TEAM_U = 205;
+    private static final int TEAM_V = 68;
+
+    private static final int PRIV_U = 226;
+    private static final int PRIV_V = 47;
+
     private static final int ACCESS_BTN_SIZE = 20;
     private static final int ACCESS_BTN_GAP = 6;
-    private final EditBox proximityField;
-    private final EditBox keycardTimeField;
+
+    private static final int FIELD_X = 132;
+    private static final int ARROW_X = 158;
+    private static final int ARROW_DOWN_OFFSET_Y = 10;
+    private static final int LABEL_RIGHT_X = 130;
+
+    private static final int STRUCTURE_TEXT_X = 90;
+    private static final int STRUCTURE_MANAGED_Y = 55;
+    private static final int STRUCTURE_LOCKED_Y = 72;
+    private static final int STRUCTURE_KEYCARD_Y = 89;
+
+    private static final int IMAGE_HEIGHT = 176;
+    private static final int TITLE_LABEL_X = 90;
+
+    private static final int PROXIMITY_MIN = 0;
+    private static final int PROXIMITY_MAX = 5;
+
+    private static final int FIELD_WIDTH = 26;
+    private static final int FIELD_HEIGHT = 20;
+
+    private EditBox proximityField;
+    private EditBox keycardTimeField;
+
     private IconButton publicBtn;
     private IconButton teamBtn;
     private IconButton privateBtn;
-    private ProximityAccess cachedAccess = null;
 
-    public AirlockControllerScreen(
-            AirlockControllerMenu menu,
-            Inventory inventory,
-            Component title
-    ) {
-        super(
-                menu,
-                title,
-                Constant.AirlockController.SCREEN_TEXTURE
-        );
+    public AirlockControllerScreen(AirlockControllerMenu menu, Inventory inventory, Component title) {
+        super(menu, title, Constant.AirlockController.SCREEN_TEXTURE);
+    }
 
-        this.proximityField = new EditBox(
-                Minecraft.getInstance().font,
-                0,
-                0,
-                26,
-                20,
-                Component.empty()
-        );
+    @Override
+    protected void init() {
+        super.init();
 
+        this.imageHeight = IMAGE_HEIGHT;
+        this.titleLabelX = TITLE_LABEL_X;
+
+        this.proximityField = new EditBox(this.font, 0, 0, FIELD_WIDTH, FIELD_HEIGHT, Component.empty());
         this.proximityField.setValue(String.valueOf(this.menu.proximityOpen));
 
         this.proximityField.setFilter(value -> {
@@ -114,8 +130,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
 
             try {
                 int parsed = Integer.parseInt(value);
-
-                return parsed >= 0 && parsed <= 5;
+                return parsed >= PROXIMITY_MIN && parsed <= PROXIMITY_MAX;
             } catch (NumberFormatException ignored) {
                 return false;
             }
@@ -127,34 +142,17 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             }
 
             try {
-                byte parsed = Byte.parseByte(value);
-
-                parsed = (byte) Math.max(
-                        0,
-                        Math.min(
-                                5,
-                                parsed
-                        )
-                );
+                byte parsed = (byte) Mth.clamp(Integer.parseInt(value), PROXIMITY_MIN, PROXIMITY_MAX);
 
                 if (parsed != this.menu.proximityOpen) {
                     this.menu.proximityOpen = parsed;
-
                     ClientPlayNetworking.send(new AirlockSetProximityPayload(parsed));
                 }
             } catch (NumberFormatException ignored) {
             }
         });
 
-        this.keycardTimeField = new EditBox(
-                Minecraft.getInstance().font,
-                0,
-                0,
-                26,
-                20,
-                Component.empty()
-        );
-
+        this.keycardTimeField = new EditBox(this.font, 0, 0, FIELD_WIDTH, FIELD_HEIGHT, Component.empty());
         this.keycardTimeField.setValue(String.valueOf(this.menu.keycardOpenSeconds));
 
         this.keycardTimeField.setFilter(value -> {
@@ -165,7 +163,8 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             try {
                 int parsed = Integer.parseInt(value);
 
-                return parsed >= AirlockControllerBlockEntity.MIN_KEYCARD_OPEN_SECONDS && parsed <= AirlockControllerBlockEntity.MAX_KEYCARD_OPEN_SECONDS;
+                return parsed >= AirlockControllerBlockEntity.MIN_KEYCARD_OPEN_SECONDS
+                        && parsed <= AirlockControllerBlockEntity.MAX_KEYCARD_OPEN_SECONDS;
             } catch (NumberFormatException ignored) {
                 return false;
             }
@@ -184,140 +183,68 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 );
 
                 if (parsed != this.menu.keycardOpenSeconds) {
-
                     this.menu.keycardOpenSeconds = parsed;
-
                     ClientPlayNetworking.send(new AirlockSetKeycardOpenSecondsPayload((byte) parsed));
                 }
             } catch (NumberFormatException ignored) {
             }
         });
-    }
 
-    private ProximityAccess currentAccess() {
-        return this.menu.proximityAccess != null ? this.menu.proximityAccess : ProximityAccess.PUBLIC;
+        this.publicBtn = new IconButton(
+                0,
+                0,
+                ACCESS_BTN_SIZE,
+                MACHINELIB_PANELS,
+                PUB_U,
+                PUB_V,
+                ICON_W,
+                ICON_H,
+                button -> setProximityAccess(AccessLevel.PUBLIC),
+                Component.translatable(Translations.Ui.MACHINE_LIB_PUBLIC_ACCESS)
+        );
+
+        this.teamBtn = new IconButton(
+                0,
+                0,
+                ACCESS_BTN_SIZE,
+                MACHINELIB_PANELS,
+                TEAM_U,
+                TEAM_V,
+                ICON_W,
+                ICON_H,
+                button -> setProximityAccess(AccessLevel.TEAM),
+                Component.translatable(Translations.Ui.MACHINE_LIB_TEAM_ACCESS)
+        );
+
+        this.privateBtn = new IconButton(
+                0,
+                0,
+                ACCESS_BTN_SIZE,
+                MACHINELIB_PANELS,
+                PRIV_U,
+                PRIV_V,
+                ICON_W,
+                ICON_H,
+                button -> setProximityAccess(AccessLevel.PRIVATE),
+                Component.translatable(Translations.Ui.MACHINE_LIB_PRIVATE_ACCESS)
+        );
+
+        positionFields();
+        layoutAccessButtons();
+
+        this.addRenderableWidget(this.proximityField);
+        this.addRenderableWidget(this.keycardTimeField);
+        this.addRenderableWidget(this.publicBtn);
+        this.addRenderableWidget(this.teamBtn);
+        this.addRenderableWidget(this.privateBtn);
+
+        updateControlValues();
+        updateManagedWidgets();
     }
 
     @Override
     protected void containerTick() {
         super.containerTick();
-
-        ProximityAccess access = currentAccess();
-
-        if (access != this.cachedAccess) {
-            if (this.publicBtn != null && this.teamBtn != null && this.privateBtn != null) {
-
-                this.publicBtn.setSelected(access == ProximityAccess.PUBLIC);
-
-                this.teamBtn.setSelected(access == ProximityAccess.TEAM);
-
-                this.privateBtn.setSelected(access == ProximityAccess.PRIVATE);
-            }
-
-            this.cachedAccess = access;
-        }
-
-        if (!this.proximityField.isFocused()) {
-            String expected = String.valueOf(this.menu.proximityOpen);
-
-            if (!this.proximityField.getValue().equals(expected)) {
-                this.proximityField.setValue(expected);
-            }
-        }
-
-        if (!this.keycardTimeField.isFocused()) {
-            String expected = String.valueOf(this.menu.keycardOpenSeconds);
-
-            if (!this.keycardTimeField.getValue().equals(expected)) {
-                this.keycardTimeField.setValue(expected);
-            }
-        }
-
-        updateManagedWidgets();
-    }
-
-    @Override
-    protected void init() {
-        super.init();
-
-        this.imageHeight = 171;
-        this.titleLabelX = 90;
-
-        positionFields();
-
-        this.addRenderableWidget(this.proximityField);
-
-        this.addRenderableWidget(this.keycardTimeField);
-
-        ProximityAccess initial = currentAccess();
-
-        this.publicBtn = new IconButton(
-            0,
-            0,
-            ACCESS_BTN_SIZE,
-            MACHINELIB_PANELS,
-            PUB_U,
-            PUB_V,
-            PUB_W,
-            PUB_H,
-            button -> {
-                this.menu.proximityAccess = ProximityAccess.PUBLIC;
-
-                ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.PUBLIC));
-            },
-            Component.translatable(Translations.Ui.MACHINE_LIB_PUBLIC_ACCESS)
-        );
-
-        this.teamBtn = new IconButton(
-            0,
-            0,
-            ACCESS_BTN_SIZE,
-            MACHINELIB_PANELS,
-            TEAM_U,
-            TEAM_V,
-            TEAM_W,
-            TEAM_H,
-            button -> {
-                this.menu.proximityAccess = ProximityAccess.TEAM;
-
-                ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.TEAM));
-            },
-            Component.translatable(Translations.Ui.MACHINE_LIB_TEAM_ACCESS)
-        );
-
-        this.privateBtn = new IconButton(
-            0,
-            0,
-            ACCESS_BTN_SIZE,
-            MACHINELIB_PANELS,
-            PRIV_U,
-            PRIV_V,
-            PRIV_W,
-            PRIV_H,
-            button -> {
-                this.menu.proximityAccess = ProximityAccess.PRIVATE;
-
-                ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(ProximityAccess.PRIVATE));
-            },
-            Component.translatable(Translations.Ui.MACHINE_LIB_PRIVATE_ACCESS)
-        );
-
-        this.addRenderableWidget(this.publicBtn);
-
-        this.addRenderableWidget(this.teamBtn);
-
-        this.addRenderableWidget(this.privateBtn);
-
-        this.publicBtn.setSelected(initial == ProximityAccess.PUBLIC);
-
-        this.teamBtn.setSelected(initial == ProximityAccess.TEAM);
-
-        this.privateBtn.setSelected(initial == ProximityAccess.PRIVATE);
-
-        this.cachedAccess = initial;
-
-        layoutAccessButtons();
-
         updateManagedWidgets();
     }
 
@@ -326,17 +253,14 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         super.repositionElements();
 
         positionFields();
-
         layoutAccessButtons();
     }
 
     private void positionFields() {
-        this.proximityField.setX(this.leftPos + 132);
-
+        this.proximityField.setX(this.leftPos + FIELD_X);
         this.proximityField.setY(this.topPos + PROXIMITY_FIELD_Y);
 
-        this.keycardTimeField.setX(this.leftPos + 132);
-
+        this.keycardTimeField.setX(this.leftPos + FIELD_X);
         this.keycardTimeField.setY(this.topPos + KEYCARD_FIELD_Y);
     }
 
@@ -346,64 +270,65 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         }
 
         int centerX = this.leftPos + this.imageWidth / 2;
-
         int total = ACCESS_BTN_SIZE * 3 + ACCESS_BTN_GAP * 2;
-
         int startX = centerX - total / 2;
 
-        this.publicBtn.setPosition(
-                startX,
-                this.topPos + ACCESS_BTN_Y
-        );
+        this.publicBtn.setPosition(startX, this.topPos + ACCESS_BTN_Y);
+        this.teamBtn.setPosition(startX + ACCESS_BTN_SIZE + ACCESS_BTN_GAP, this.topPos + ACCESS_BTN_Y);
+        this.privateBtn.setPosition(startX + (ACCESS_BTN_SIZE + ACCESS_BTN_GAP) * 2, this.topPos + ACCESS_BTN_Y);
+    }
 
-        this.teamBtn.setPosition(
-                startX + ACCESS_BTN_SIZE + ACCESS_BTN_GAP,
-                this.topPos + ACCESS_BTN_Y
-        );
+    private void updateControlValues() {
+        AccessLevel access = this.menu.proximityAccess;
 
-        this.privateBtn.setPosition(
-                startX + (ACCESS_BTN_SIZE + ACCESS_BTN_GAP) * 2,
-                this.topPos + ACCESS_BTN_Y
-        );
+        this.publicBtn.setSelected(access == AccessLevel.PUBLIC);
+        this.teamBtn.setSelected(access == AccessLevel.TEAM);
+        this.privateBtn.setSelected(access == AccessLevel.PRIVATE);
+
+        syncField(this.proximityField, this.menu.proximityOpen);
+        syncField(this.keycardTimeField, this.menu.keycardOpenSeconds);
+    }
+
+    private static void syncField(EditBox field, int value) {
+        if (!field.isFocused()) {
+            String expected = String.valueOf(value);
+
+            if (!field.getValue().equals(expected)) {
+                field.setValue(expected);
+            }
+        }
     }
 
     private void updateManagedWidgets() {
         boolean configurable = !this.menu.structureManaged;
 
         this.proximityField.visible = configurable;
-
         this.keycardTimeField.visible = configurable;
 
         this.proximityField.setEditable(configurable);
-
         this.keycardTimeField.setEditable(configurable);
 
-        if (this.publicBtn != null) {
-            this.publicBtn.visible = configurable;
+        this.publicBtn.visible = configurable;
+        this.publicBtn.active = configurable;
 
-            this.publicBtn.active = configurable;
-        }
+        this.teamBtn.visible = configurable;
+        this.teamBtn.active = configurable;
 
-        if (this.teamBtn != null) {
-            this.teamBtn.visible = configurable;
+        this.privateBtn.visible = configurable;
+        this.privateBtn.active = configurable;
+    }
 
-            this.teamBtn.active = configurable;
-        }
-
-        if (this.privateBtn != null) {
-            this.privateBtn.visible = configurable;
-
-            this.privateBtn.active = configurable;
-        }
+    private void setProximityAccess(AccessLevel access) {
+        this.menu.proximityAccess = access;
+        ClientPlayNetworking.send(new AirlockSetProximityAccessPayload(access));
+        this.playButtonSound();
     }
 
     @Override
-    protected void renderMachineBackground(
-            GuiGraphics graphics,
-            int mouseX,
-            int mouseY,
-            float delta
-    ) {
+    protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+        updateControlValues();
+        updateManagedWidgets();
+
         AirlockState enabled = this.menu.state;
 
         Component label;
@@ -411,213 +336,175 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
 
         if (enabled == AirlockState.ALL) {
             label = Component.translatable(Translations.Ui.AIRLOCK_ENABLED);
-
             color = ChatFormatting.DARK_GREEN.getColor();
         } else if (enabled == AirlockState.PARTIAL) {
             label = Component.translatable(Translations.Ui.AIRLOCK_PARTIAL);
-
             color = ChatFormatting.DARK_PURPLE.getColor();
         } else {
             label = Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
-
             color = ChatFormatting.RED.getColor();
         }
 
         drawCenteredString(
-            graphics,
-            this.font,
-            label,
-            this.leftPos + STATUS_LABEL_X,
-            this.topPos + STATUS_LABEL_Y,
-            color,
-            false
+                graphics,
+                this.font,
+                label,
+                this.leftPos + STATUS_LABEL_X,
+                this.topPos + STATUS_LABEL_Y,
+                color,
+                false
         );
 
         if (this.menu.structureManaged) {
             drawCenteredString(
-                graphics,
-                this.font,
-                Component.translatable(Translations.Ui.AIRLOCK_STRUCTURE_MANAGED),
-                this.leftPos + 90,
-                this.topPos + 55,
-                ChatFormatting.DARK_GRAY.getColor(),
-                false
+                    graphics,
+                    this.font,
+                    Component.translatable(Translations.Ui.AIRLOCK_STRUCTURE_MANAGED),
+                    this.leftPos + STRUCTURE_TEXT_X,
+                    this.topPos + STRUCTURE_MANAGED_Y,
+                    ChatFormatting.DARK_GRAY.getColor(),
+                    false
             );
 
             drawCenteredString(
-                graphics,
-                this.font,
-                Component.translatable(Translations.Ui.AIRLOCK_CONFIGURATION_LOCKED),
-                this.leftPos + 90,
-                this.topPos + 72,
-                ChatFormatting.RED.getColor(),
-                false
+                    graphics,
+                    this.font,
+                    Component.translatable(Translations.Ui.AIRLOCK_CONFIGURATION_LOCKED),
+                    this.leftPos + STRUCTURE_TEXT_X,
+                    this.topPos + STRUCTURE_LOCKED_Y,
+                    ChatFormatting.RED.getColor(),
+                    false
             );
 
             drawCenteredString(
-                graphics,
-                this.font,
-                this.menu.permanentlyUnlocked
-                    ? Component.translatable(Translations.Ui.AIRLOCK_UNLOCKED_BY_KEYCARD)
-                    : Component.translatable(Translations.Ui.AIRLOCK_REQUIRES_KEYCARD),
-                this.leftPos + 90,
-                this.topPos + 89,
-                ChatFormatting.DARK_GRAY.getColor(),
-                false
+                    graphics,
+                    this.font,
+                    this.menu.permanentlyUnlocked
+                            ? Component.translatable(Translations.Ui.AIRLOCK_UNLOCKED_BY_KEYCARD)
+                            : Component.translatable(Translations.Ui.AIRLOCK_REQUIRES_KEYCARD),
+                    this.leftPos + STRUCTURE_TEXT_X,
+                    this.topPos + STRUCTURE_KEYCARD_Y,
+                    ChatFormatting.DARK_GRAY.getColor(),
+                    false
             );
 
             return;
         }
 
         drawControlRow(
-            graphics,
-            mouseX,
-            mouseY,
-            PROXIMITY_FIELD_Y,
-            Component.translatable(Translations.Ui.AIRLOCK_PROXIMITY_LABEL)
+                graphics,
+                mouseX,
+                mouseY,
+                PROXIMITY_FIELD_Y,
+                Component.translatable(Translations.Ui.AIRLOCK_PROXIMITY_LABEL)
         );
 
         drawControlRow(
-            graphics,
-            mouseX,
-            mouseY,
-            KEYCARD_FIELD_Y,
-            Component.translatable(Translations.Ui.AIRLOCK_KEYCARD_OPEN_TIME)
+                graphics,
+                mouseX,
+                mouseY,
+                KEYCARD_FIELD_Y,
+                Component.translatable(Translations.Ui.AIRLOCK_KEYCARD_OPEN_TIME)
         );
     }
 
-    private void drawControlRow(
-            GuiGraphics graphics,
-            int mouseX,
-            int mouseY,
-            int fieldY,
-            Component label
-    ) {
-        int upX = this.leftPos + 158;
-
+    private void drawControlRow(GuiGraphics graphics, int mouseX, int mouseY, int fieldY, Component label) {
+        int arrowX = this.leftPos + ARROW_X;
         int upY = this.topPos + fieldY;
-
-        int downX = this.leftPos + 158;
-
-        int downY = this.topPos + fieldY + 10;
+        int downY = upY + ARROW_DOWN_OFFSET_Y;
 
         boolean hoverUp = DrawableUtil.mouseIn(
-            mouseX,
-            mouseY,
-            upX,
-            upY,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                mouseX,
+                mouseY,
+                arrowX,
+                upY,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         );
 
         boolean hoverDown = DrawableUtil.mouseIn(
-            mouseX,
-            mouseY,
-            downX,
-            downY,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                mouseX,
+                mouseY,
+                arrowX,
+                downY,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         );
 
         graphics.blit(
-            Constant.AirlockController.SCREEN_TEXTURE,
-            upX,
-            upY,
-            hoverUp
-                ? Constant.AirlockController.ARROW_UP_HOVER_U
-                : Constant.AirlockController.ARROW_UP_U,
-            Constant.AirlockController.ARROW_UP_HOVER_V,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                Constant.AirlockController.SCREEN_TEXTURE,
+                arrowX,
+                upY,
+                hoverUp
+                        ? Constant.AirlockController.ARROW_UP_HOVER_U
+                        : Constant.AirlockController.ARROW_UP_U,
+                Constant.AirlockController.ARROW_UP_HOVER_V,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         );
 
         graphics.blit(
-            Constant.AirlockController.SCREEN_TEXTURE,
-            downX,
-            downY,
-            hoverDown
-                ? Constant.AirlockController.ARROW_DOWN_HOVER_U
-                : Constant.AirlockController.ARROW_DOWN_U,
-            Constant.AirlockController.ARROW_DOWN_HOVER_V,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                Constant.AirlockController.SCREEN_TEXTURE,
+                arrowX,
+                downY,
+                hoverDown
+                        ? Constant.AirlockController.ARROW_DOWN_HOVER_U
+                        : Constant.AirlockController.ARROW_DOWN_U,
+                Constant.AirlockController.ARROW_DOWN_HOVER_V,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         );
 
         drawStringAlignedRight(
-            graphics,
-            this.font,
-            label,
-            this.leftPos + 130,
-            this.topPos + fieldY + 6,
-            ChatFormatting.DARK_GRAY.getColor(),
-            false
+                graphics,
+                this.font,
+                label,
+                this.leftPos + LABEL_RIGHT_X,
+                this.topPos + fieldY + 6,
+                ChatFormatting.DARK_GRAY.getColor(),
+                false
         );
     }
 
     @Override
-    public boolean mouseClicked(
-            double mouseX,
-            double mouseY,
-            int button
-    ) {
+    public boolean mouseClicked(double mouseX, double mouseY, int button) {
         if (this.menu.structureManaged) {
-            return super.mouseClicked(
-                    mouseX,
-                    mouseY,
-                    button
-            );
+            return super.mouseClicked(mouseX, mouseY, button);
         }
 
         if (button == 0) {
-            if (handleProximityArrow(
-                    mouseX,
-                    mouseY
-            )) {
+            if (handleProximityArrow(mouseX, mouseY)) {
                 return true;
             }
 
-            if (handleKeycardArrow(
-                    mouseX,
-                    mouseY
-            )) {
+            if (handleKeycardArrow(mouseX, mouseY)) {
                 return true;
             }
         }
 
-        return super.mouseClicked(
-                mouseX,
-                mouseY,
-                button
-        );
+        return super.mouseClicked(mouseX, mouseY, button);
     }
 
-    private boolean handleProximityArrow(
-            double mouseX,
-            double mouseY
-    ) {
-        int upX = this.leftPos + 158;
-
+    private boolean handleProximityArrow(double mouseX, double mouseY) {
+        int arrowX = this.leftPos + ARROW_X;
         int upY = this.topPos + PROXIMITY_FIELD_Y;
-
-        int downY = upY + 10;
+        int downY = upY + ARROW_DOWN_OFFSET_Y;
 
         if (DrawableUtil.mouseIn(
-            mouseX,
-            mouseY,
-            upX,
-            upY,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                mouseX,
+                mouseY,
+                arrowX,
+                upY,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         )) {
-            if (this.menu.proximityOpen < 5) {
+            if (this.menu.proximityOpen < PROXIMITY_MAX) {
                 byte next = (byte) (this.menu.proximityOpen + 1);
 
                 this.menu.proximityOpen = next;
-
                 this.proximityField.setValue(String.valueOf(next));
 
                 ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
-
                 this.playButtonSound();
             }
 
@@ -625,22 +512,20 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         }
 
         if (DrawableUtil.mouseIn(
-            mouseX,
-            mouseY,
-            upX,
-            downY,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                mouseX,
+                mouseY,
+                arrowX,
+                downY,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         )) {
-            if (this.menu.proximityOpen > 0) {
+            if (this.menu.proximityOpen > PROXIMITY_MIN) {
                 byte next = (byte) (this.menu.proximityOpen - 1);
 
                 this.menu.proximityOpen = next;
-
                 this.proximityField.setValue(String.valueOf(next));
 
                 ClientPlayNetworking.send(new AirlockSetProximityPayload(next));
-
                 this.playButtonSound();
             }
 
@@ -650,47 +535,36 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         return false;
     }
 
-    private boolean handleKeycardArrow(
-            double mouseX,
-            double mouseY
-    ) {
-        int upX = this.leftPos + 158;
-
+    private boolean handleKeycardArrow(double mouseX, double mouseY) {
+        int arrowX = this.leftPos + ARROW_X;
         int upY = this.topPos + KEYCARD_FIELD_Y;
-
-        int downY = upY + 10;
+        int downY = upY + ARROW_DOWN_OFFSET_Y;
 
         if (DrawableUtil.mouseIn(
                 mouseX,
                 mouseY,
-                upX,
+                arrowX,
                 upY,
                 Constant.AirlockController.ARROW_VERTICAL_WIDTH,
                 Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         )) {
             if (this.menu.keycardOpenSeconds < AirlockControllerBlockEntity.MAX_KEYCARD_OPEN_SECONDS) {
-
-                int next = this.menu.keycardOpenSeconds + 1;
-
-                setKeycardOpenSeconds(next);
+                setKeycardOpenSeconds(this.menu.keycardOpenSeconds + 1);
             }
 
             return true;
         }
 
         if (DrawableUtil.mouseIn(
-            mouseX,
-            mouseY,
-            upX,
-            downY,
-            Constant.AirlockController.ARROW_VERTICAL_WIDTH,
-            Constant.AirlockController.ARROW_VERTICAL_HEIGHT
+                mouseX,
+                mouseY,
+                arrowX,
+                downY,
+                Constant.AirlockController.ARROW_VERTICAL_WIDTH,
+                Constant.AirlockController.ARROW_VERTICAL_HEIGHT
         )) {
             if (this.menu.keycardOpenSeconds > AirlockControllerBlockEntity.MIN_KEYCARD_OPEN_SECONDS) {
-
-                int next = this.menu.keycardOpenSeconds - 1;
-
-                setKeycardOpenSeconds(next);
+                setKeycardOpenSeconds(this.menu.keycardOpenSeconds - 1);
             }
 
             return true;
@@ -699,22 +573,16 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         return false;
     }
 
-    private void setKeycardOpenSeconds(
-            int seconds
-    ) {
+    private void setKeycardOpenSeconds(int seconds) {
         this.menu.keycardOpenSeconds = seconds;
-
         this.keycardTimeField.setValue(String.valueOf(seconds));
 
         ClientPlayNetworking.send(new AirlockSetKeycardOpenSecondsPayload((byte) seconds));
-
         this.playButtonSound();
     }
 
     @Override
-    protected void drawTitle(
-            @NotNull GuiGraphics graphics
-    ) {
+    protected void drawTitle(@NotNull GuiGraphics graphics) {
         drawCenteredString(
                 graphics,
                 this.font,
@@ -735,14 +603,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             int color,
             boolean shadow
     ) {
-        graphics.drawString(
-            font,
-            text,
-            centerX - font.width(text) / 2,
-            y,
-            color,
-            shadow
-        );
+        graphics.drawString(font, text, centerX - font.width(text) / 2, y, color, shadow);
     }
 
     public void drawStringAlignedRight(
@@ -754,14 +615,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             int color,
             boolean shadow
     ) {
-        graphics.drawString(
-            font,
-            text,
-            x - font.width(text),
-            y,
-            color,
-            shadow
-        );
+        graphics.drawString(font, text, x - font.width(text), y, color, shadow);
     }
 
     private static class IconButton extends AbstractButton {
@@ -771,7 +625,9 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         private final int iconW;
         private final int iconH;
         private final PressHandler handler;
+
         private boolean selected;
+
         IconButton(
                 int x,
                 int y,
@@ -784,21 +640,13 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
                 PressHandler handler,
                 Component tooltipText
         ) {
-            super(
-                x,
-                y,
-                size,
-                size,
-                Component.empty()
-            );
+            super(x, y, size, size, Component.empty());
 
             this.texture = texture;
-
             this.iconU = iconU;
             this.iconV = iconV;
             this.iconW = iconW;
             this.iconH = iconH;
-
             this.handler = handler;
 
             if (!tooltipText.getString().isEmpty()) {
@@ -806,9 +654,7 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
             }
         }
 
-        void setSelected(
-                boolean selected
-        ) {
+        void setSelected(boolean selected) {
             this.selected = selected;
         }
 
@@ -818,54 +664,45 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
         }
 
         @Override
-        protected void renderWidget(
-                GuiGraphics graphics,
-                int mouseX,
-                int mouseY,
-                float delta
-        ) {
-            int v = this.selected ? BTN_V_SELECTED : (this.isHovered() ? BTN_V_HOVER : BTN_V_NORMAL);
+        protected void renderWidget(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+            int v = this.selected
+                    ? BTN_V_SELECTED
+                    : this.isHovered()
+                    ? BTN_V_HOVER
+                    : BTN_V_NORMAL;
 
             graphics.blit(
-                this.texture,
-                getX(),
-                getY(),
-                BTN_U,
-                v,
-                BTN_W,
-                BTN_H,
-                TEX_W,
-                TEX_H
+                    this.texture,
+                    getX(),
+                    getY(),
+                    BTN_U,
+                    v,
+                    BTN_W,
+                    BTN_H,
+                    TEX_W,
+                    TEX_H
             );
 
-            int iconX = getX() + (this.width - this.iconW) / 2 + 1;
-
-            int iconY = getY() + (this.height - this.iconH) / 2;
-
             graphics.blit(
-                this.texture,
-                iconX,
-                iconY,
-                this.iconU,
-                this.iconV,
-                this.iconW,
-                this.iconH,
-                TEX_W,
-                TEX_H
+                    this.texture,
+                    getX(),
+                    getY(),
+                    this.iconU,
+                    this.iconV,
+                    this.iconW,
+                    this.iconH,
+                    TEX_W,
+                    TEX_H
             );
         }
 
         @Override
-        protected void updateWidgetNarration(
-                NarrationElementOutput output
-        ) {
+        protected void updateWidgetNarration(NarrationElementOutput output) {
         }
 
         @FunctionalInterface
         interface PressHandler {
-            void onPress(
-                IconButton button
-            );
+            void onPress(IconButton button);
         }
     }
 }

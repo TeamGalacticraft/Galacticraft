@@ -41,7 +41,9 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.ItemInteractionResult;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -49,6 +51,8 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public class AirlockControllerBlock extends SimpleMachineBlock {
     private static final MapCodec<AirlockControllerBlock> CODEC =
@@ -65,16 +69,10 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
     private final ResourceKey<BlockEntityType<?>> blockEntityTypeKey;
     private final boolean structureManagedByDefault;
 
-    public AirlockControllerBlock(
-            Properties properties,
-            ResourceLocation blockEntityType
-    ) {
+    public AirlockControllerBlock(Properties properties, ResourceLocation blockEntityType) {
         this(
                 properties,
-                ResourceKey.create(
-                        Registries.BLOCK_ENTITY_TYPE,
-                        blockEntityType
-                ),
+                ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, blockEntityType),
                 false
         );
     }
@@ -86,10 +84,7 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
     ) {
         this(
                 properties,
-                ResourceKey.create(
-                        Registries.BLOCK_ENTITY_TYPE,
-                        blockEntityType
-                ),
+                ResourceKey.create(Registries.BLOCK_ENTITY_TYPE, blockEntityType),
                 structureManagedByDefault
         );
     }
@@ -99,16 +94,10 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
             ResourceKey<BlockEntityType<?>> blockEntityTypeKey,
             boolean structureManagedByDefault
     ) {
-        super(
-                properties,
-                blockEntityTypeKey
-        );
+        super(properties, blockEntityTypeKey);
 
-        this.blockEntityTypeKey =
-                blockEntityTypeKey;
-
-        this.structureManagedByDefault =
-                structureManagedByDefault;
+        this.blockEntityTypeKey = blockEntityTypeKey;
+        this.structureManagedByDefault = structureManagedByDefault;
     }
 
     @Override
@@ -117,20 +106,10 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
     }
 
     @Override
-    public @Nullable MachineBlockEntity newBlockEntity(
-            BlockPos pos,
-            BlockState state
-    ) {
-        MachineBlockEntity blockEntity =
-                super.newBlockEntity(
-                        pos,
-                        state
-                );
+    public @Nullable MachineBlockEntity newBlockEntity(BlockPos pos, BlockState state) {
+        MachineBlockEntity blockEntity = super.newBlockEntity(pos, state);
 
-        if (this.structureManagedByDefault
-                && blockEntity
-                instanceof AirlockControllerBlockEntity airlock) {
-
+        if (this.structureManagedByDefault && blockEntity instanceof AirlockControllerBlockEntity airlock) {
             airlock.initializeStructureManagedDefaults();
         }
 
@@ -145,17 +124,9 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
             @Nullable LivingEntity placer,
             ItemStack stack
     ) {
-        if (this.structureManagedByDefault) {
-            return;
+        if (!this.structureManagedByDefault) {
+            super.setPlacedBy(level, pos, state, placer, stack);
         }
-
-        super.setPlacedBy(
-                level,
-                pos,
-                state,
-                placer,
-                stack
-        );
     }
 
     @Override
@@ -173,19 +144,16 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
         }
 
         if (!level.isClientSide
-                && level.getBlockEntity(pos)
-                instanceof AirlockControllerBlockEntity airlock) {
-
-            keycard.interactWithAirlock(
-                    stack,
-                    airlock,
-                    player
-            );
+                && level.getBlockEntity(pos) instanceof AirlockControllerBlockEntity airlock) {
+            keycard.interactWithAirlock(stack, airlock, player);
         }
 
-        return ItemInteractionResult.sidedSuccess(
-                level.isClientSide
-        );
+        return ItemInteractionResult.sidedSuccess(level.isClientSide);
+    }
+
+    @Override
+    public void appendHoverText(ItemStack stack, Item.TooltipContext context, List<Component> tooltip, @NotNull TooltipFlag flag) {
+        // No hover text for airlocks
     }
 
     @Override
@@ -196,33 +164,19 @@ public class AirlockControllerBlock extends SimpleMachineBlock {
             Player player,
             BlockHitResult hit
     ) {
-        if (level.getBlockEntity(pos)
-                instanceof AirlockControllerBlockEntity airlock
-                && (
-                this.structureManagedByDefault
-                        || airlock.isStructureManaged()
-        )) {
-            if (!level.isClientSide
-                    && player instanceof ServerPlayer) {
-
+        if (level.getBlockEntity(pos) instanceof AirlockControllerBlockEntity airlock
+                && (this.structureManagedByDefault || airlock.isStructureManaged())) {
+            if (player instanceof ServerPlayer) {
                 player.displayClientMessage(
                         Component.translatable(Translations.Chat.STRUCTURE_AIRLOCK_LOCKED),
                         true
                 );
             }
 
-            return InteractionResult.sidedSuccess(
-                    level.isClientSide
-            );
+            return InteractionResult.sidedSuccess(level.isClientSide);
         }
 
-        return super.useWithoutItem(
-                state,
-                level,
-                pos,
-                player,
-                hit
-        );
+        return super.useWithoutItem(state, level, pos, player, hit);
     }
 
     public boolean isStructureManagedByDefault() {

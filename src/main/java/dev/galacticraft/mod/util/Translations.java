@@ -455,7 +455,7 @@ public interface Translations {
         String UPGRADE = "ui.galacticraft.upgrade";
         String COLOR = "ui.galacticraft.color";
 
-        String AIRLOCK_PROXIMITY_LABEL = "ui.galacticraft.airlock_proximity_label";
+        String AIRLOCK_PROXIMITY_LABEL = "ui.galacticraft.airlock.proximity_label";
         String AIRLOCK_DEFAULT_NAME = "ui.galacticraft.airlock.default_name";
         String AIRLOCK_ENABLED = "ui.galacticraft.airlock.enabled";
         String AIRLOCK_PARTIAL = "ui.galacticraft.airlock.partial";

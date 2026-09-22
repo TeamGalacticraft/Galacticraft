@@ -425,12 +425,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
 
         this.tag(GCBlockTags.AIRLOCK_BLOCKS)
-                .add(GCBlocks.AIR_LOCK_CONTROLLER)
-                .add(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER)
-                .add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER)
-                .add(GCBlocks.AIR_LOCK_FRAME)
-                .add(GCBlocks.REINFORCED_AIR_LOCK_FRAME)
-                .add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME);
+                .addTag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
+                .addTag(GCBlockTags.REINFORCED_AIRLOCK_BLOCKS)
+                .addTag(GCBlockTags.STRUCTURE_AIRLOCK_BLOCKS);
 
         this.tag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
                 .add(GCBlocks.AIR_LOCK_CONTROLLER)
