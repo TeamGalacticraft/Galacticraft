@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.content.item;
 
+import dev.galacticraft.mod.content.block.decoration.FlagBlock;
+import dev.galacticraft.mod.content.block.entity.decoration.FlagBlockEntity;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberPart;
 import dev.galacticraft.mod.util.TooltipUtil;
@@ -140,6 +142,12 @@ public class StandardWrenchItem extends Item {
                     world.setBlock(pos, newState, Block.UPDATE_ALL);
                     handled = true;
                 }
+            } else if (FlagBlock.getBaseBlockEntity(world, pos) instanceof FlagBlockEntity flag) {
+                int rotation = player.isShiftKeyDown() ? -1 : 1;
+                float yaw = flag.getYaw();
+                yaw = (Math.round(yaw / 22.5) + rotation) * 22.5f;
+                flag.setYaw(yaw % 360);
+                handled = true;
             }
 
             if (handled) {

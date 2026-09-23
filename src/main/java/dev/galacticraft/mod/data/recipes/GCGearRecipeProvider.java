@@ -323,6 +323,20 @@ public class GCGearRecipeProvider extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
                 .emiDefaultRecipe(true)
                 .save(output);
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.TOOLS, GCItems.FLUID_CANISTER)
+                .define('T', GCItems.COMPRESSED_TIN)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('G', ConventionalItemTags.GLASS_BLOCKS_COLORLESS)
+                .define('C', GCItemTags.TIN_CANISTERS)
+                .pattern("TST")
+                .pattern("TGT")
+                .pattern("TCT")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_TIN), has(GCItems.COMPRESSED_TIN))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_STEEL), has(GCItems.COMPRESSED_STEEL))
+                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItemTags.TIN_CANISTERS))
+                .emiDefaultRecipe(true)
+                .save(output);
     }
 
     private static void titaniumSmithing(RecipeOutput output, RecipeCategory category, Item input, Item result) {

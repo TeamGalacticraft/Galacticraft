@@ -29,6 +29,7 @@ import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.screen.RocketMenu;
+import dev.galacticraft.mod.util.DrawableUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
@@ -42,11 +43,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
-
-    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
-    }
-
     public RocketInventoryScreen(RocketMenu abstractContainerMenu, Inventory inventory, Component component) {
         super(abstractContainerMenu, inventory, component);
     }
@@ -93,7 +89,7 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
             primary = !primary;
         }
 
-        if (mouseIn(mouseX, mouseY, X, Y, width, height)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, X - 1, Y - 1, width + 2, height + 2)) {
             RenderSystem.disableDepthTest();
             graphics.fill(X, Y, X + width, Y + height, 0x80ffffff);
             RenderSystem.enableDepthTest();

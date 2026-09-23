@@ -42,11 +42,17 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extends Block implements EntityBlock {
+    protected final float radius;
     public final VoxelShape[] shapes;
 
     protected PipeShapedBlock(float radius, BlockBehaviour.Properties properties) {
         super(properties);
+        this.radius = radius;
         this.shapes = makeShapes(radius);
+    }
+
+    public float getRadius() {
+        return this.radius;
     }
 
     @Override

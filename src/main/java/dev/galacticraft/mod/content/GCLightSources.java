@@ -34,8 +34,8 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class GCLightSources {
-    public static final Map<SolarPanelSource, LightSource> DEFAULT_LIGHT_SOURCES = new HashMap<SolarPanelSource, LightSource>();
-    public static final Map<SolarPanelSource, LightSource> MOON_LIGHT_SOURCES = new HashMap<SolarPanelSource, LightSource>();
+    public static final Map<SolarPanelSource, LightSource> DEFAULT_LIGHT_SOURCES = new HashMap<>();
+    public static final Map<SolarPanelSource, LightSource> MOON_LIGHT_SOURCES = new HashMap<>();
 
     public static void register() {
         DEFAULT_LIGHT_SOURCES.put(SolarPanelSource.DAY,

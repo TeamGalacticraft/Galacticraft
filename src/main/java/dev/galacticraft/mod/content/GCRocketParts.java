@@ -32,7 +32,9 @@ import dev.galacticraft.impl.rocket.travelpredicate.config.AccessWeightTravelPre
 import dev.galacticraft.impl.rocket.travelpredicate.type.AccessWeightTravelPredicateType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.content.rocket.part.config.ExplosiveUpgradeConfig;
 import dev.galacticraft.mod.content.rocket.part.config.StorageUpgradeConfig;
+import dev.galacticraft.mod.content.rocket.part.type.ExplosiveUpgradeType;
 import dev.galacticraft.mod.content.rocket.part.type.StorageUpgradeType;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.minecraft.data.worldgen.BootstrapContext;
@@ -54,6 +56,8 @@ public class GCRocketParts {
 
     public static final ResourceKey<RocketBooster<?, ?>> TIER_2_BOOSTER = booster("tier_2");
     public static final ResourceKey<RocketUpgrade<?, ?>> STORAGE_UPGRADE = upgrade("storage");
+
+    public static final ResourceKey<RocketUpgrade<?, ?>> EXPLOSIVE_UPGRADE = upgrade("explosive");
 
     public static void bootstrapCone(BootstrapContext<RocketCone<?, ?>> context) {
         context.register(TIER_1_CONE,
@@ -174,11 +178,28 @@ public class GCRocketParts {
     }
 
     public static void bootstrapUpgrade(BootstrapContext<RocketUpgrade<?, ?>> context) {
-        context.register(STORAGE_UPGRADE, RocketUpgrade.create(new StorageUpgradeConfig(1,
-                RocketPartRecipeBuilder.create()
-                        .define('C', Ingredient.of(Items.CHEST))
-                        .center("C")
-                        .build()), StorageUpgradeType.INSTANCE));
+        context.register(STORAGE_UPGRADE, RocketUpgrade.create(
+                new StorageUpgradeConfig(
+                        1,
+                        RocketPartRecipeBuilder.create()
+                                .define('C', Ingredient.of(Items.CHEST))
+                                .center("C")
+                                .build()
+                ),
+                StorageUpgradeType.INSTANCE
+        ));
+
+        context.register(EXPLOSIVE_UPGRADE, RocketUpgrade.create(
+                new ExplosiveUpgradeConfig(
+                        1.0f,
+                        80,
+                        RocketPartRecipeBuilder.create()
+                                .define('T', Ingredient.of(Items.TNT))
+                                .center("T")
+                                .build()
+                ),
+                ExplosiveUpgradeType.INSTANCE
+        ));
     }
 
     @Contract(pure = true)

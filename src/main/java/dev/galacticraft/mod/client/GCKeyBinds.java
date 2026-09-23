@@ -42,7 +42,7 @@ public class GCKeyBinds {
         if (client.level != null && client.player != null) {
             if (client.screen == null) {
                 while (OPEN_CELESTIAL_SCREEN.consumeClick()) {
-                    client.setScreen(new CelestialSelectionScreen(true, null, false, null));
+                    client.setScreen(new CelestialSelectionScreen(true, null, false, null, null));
                 }
             }
         }

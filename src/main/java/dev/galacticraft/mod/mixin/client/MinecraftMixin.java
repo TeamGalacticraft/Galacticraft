@@ -22,9 +22,13 @@
 
 package dev.galacticraft.mod.mixin.client;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.GalacticraftClient;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.main.GameConfig;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,5 +39,11 @@ public class MinecraftMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/social/PlayerSocialManager;<init>(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;)V"))
     private void initGcResources(GameConfig gameConfig, CallbackInfo ci) {
         GalacticraftClient.init();
+    }
+
+    @ModifyExpressionValue(method = "getSituationalMusic", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;dimension()Lnet/minecraft/resources/ResourceKey;", ordinal = 1))
+    private ResourceKey<Level> galacticraft$preventCreativeMusic(ResourceKey<Level> original) {
+        // Return Level.NETHER to prevent the creative music from playing
+        return original.location().getNamespace().equals(Constant.MOD_ID) ? Level.NETHER : original;
     }
 }

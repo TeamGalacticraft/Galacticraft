@@ -22,23 +22,21 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.client.gui.CircuitFabricatorProgressAnimation;
 import dev.galacticraft.mod.content.block.entity.machine.CircuitFabricatorBlockEntity;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
+import dev.galacticraft.mod.screen.CircuitFabricatorMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.crafting.RecipeInput;
 
 import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
 @Environment(EnvType.CLIENT)
-public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> {
-    public CircuitFabricatorScreen(RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity> handler, Inventory inv, Component title) {
+public class CircuitFabricatorScreen extends MachineScreen<CircuitFabricatorBlockEntity, CircuitFabricatorMenu> {
+    public CircuitFabricatorScreen(CircuitFabricatorMenu handler, Inventory inv, Component title) {
         super(handler, title, SCREEN_TEXTURE);
         this.imageHeight = 176;
         this.imageWidth = 176;

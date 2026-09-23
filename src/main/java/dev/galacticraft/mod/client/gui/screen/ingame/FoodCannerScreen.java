@@ -27,6 +27,7 @@ import dev.galacticraft.mod.client.gui.FoodCannerProgressAnimation;
 import dev.galacticraft.mod.content.block.entity.machine.FoodCannerBlockEntity;
 import dev.galacticraft.mod.network.c2s.EjectCanPayload;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
@@ -57,7 +58,7 @@ public class FoodCannerScreen extends MachineScreen<FoodCannerBlockEntity, FoodC
 
     @Override
     public boolean mouseClicked(double mouseX, double mouseY, int button) {
-        if (mouseIn(mouseX, mouseY, this.leftPos + CURRENT_X, this.topPos + CURRENT_Y, 18, 18)) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, this.leftPos + CURRENT_X - 1, this.topPos + CURRENT_Y - 1, 18, 18)) {
             ClientPlayNetworking.send(new EjectCanPayload());
             this.playButtonSound();
             return true;

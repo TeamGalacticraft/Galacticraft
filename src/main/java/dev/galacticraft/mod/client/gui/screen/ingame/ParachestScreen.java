@@ -30,6 +30,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.entity.ScalableFuelLevel;
 import dev.galacticraft.mod.screen.ParachestMenu;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.minecraft.client.gui.GuiGraphics;
@@ -43,10 +44,6 @@ import java.util.List;
 
 public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
     private static ResourceLocation[] parachestTexture = new ResourceLocation[4];
-
-    private static boolean mouseIn(double mouseX, double mouseY, int x, int y, int width, int height) {
-        return mouseX >= x && mouseY >= y && mouseX <= x + width && mouseY <= y + height;
-    }
 
     static {
         for (int i = 0; i < 4; i++) {
@@ -92,7 +89,7 @@ public class ParachestScreen extends AbstractContainerScreen<ParachestMenu> {
                 primary = !primary;
             }
 
-            if (mouseIn(mouseX, mouseY, X, Y, width, height)) {
+            if (DrawableUtil.mouseIn(mouseX, mouseY, X - 1, Y - 1, width + 2, height + 2)) {
                 RenderSystem.disableDepthTest();
                 graphics.fill(X, Y, X + width, Y + height, 0x80ffffff);
                 RenderSystem.enableDepthTest();

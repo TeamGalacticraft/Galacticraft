@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:walkway"
+    },
+    {
+      "item": "galacticraft:heavy_aluminum_wire"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:heavy_wire_walkway"
+  }
+}

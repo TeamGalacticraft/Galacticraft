@@ -118,7 +118,7 @@ public class SatelliteType extends CelestialBodyType<SatelliteConfig> implements
                 true, // hasSkyLight
                 false, // hasCeiling
                 false, // ultraWarm
-                false, // natural
+                true, // natural
                 1.0, // coordinateScale
                 false, // bedWorks
                 false, // respawnAnchorWorks

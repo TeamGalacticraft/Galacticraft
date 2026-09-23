@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content;
 
+import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.api.gas.GasComposition;
 import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.api.registry.AddonRegistries;
@@ -47,26 +48,32 @@ import dev.galacticraft.impl.universe.position.type.OrbitalCelestialPositionType
 import dev.galacticraft.impl.universe.position.type.StaticCelestialPositionType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.item.GCItems;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
-import it.unimi.dsi.fastutil.ints.Int2ObjectArrayMap;
-import it.unimi.dsi.fastutil.ints.Int2ObjectMap;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.core.Holder;
 import net.minecraft.core.HolderGetter;
 import net.minecraft.data.worldgen.BootstrapContext;
 import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.util.Mth;
-import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Contract;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.List;
 import java.util.Optional;
 
 public class GCCelestialBodies {
-    private static final Int2ObjectMap<Ingredient> EARTH_SATELLITE_RECIPE = new Int2ObjectArrayMap<>(new int[]{16, 32, 8, 1}, new Ingredient[]{Ingredient.of(GCItems.ALUMINUM_INGOT), Ingredient.of(GCItems.TIN_INGOT), Ingredient.of(Items.COPPER_INGOT), Ingredient.of(GCItems.ADVANCED_WAFER)});
+    private static final List<Pair<Ingredient, Integer>> EARTH_SATELLITE_RECIPE = List.of(
+            new Pair(Ingredient.of(GCItemTags.ALUMINUM_INGOTS), 16),
+            new Pair(Ingredient.of(GCItemTags.TIN_INGOTS), 32),
+            new Pair(Ingredient.of(ConventionalItemTags.COPPER_INGOTS), 8),
+            new Pair(Ingredient.of(GCItems.ADVANCED_WAFER), 1)
+    );
+
     public static final ResourceKey<CelestialBody<?, ?>> SOL = BuiltinObjects.SOL_KEY;
     public static final ResourceKey<CelestialBody<?, ?>> EARTH = BuiltinObjects.EARTH_KEY;
     public static final ResourceKey<CelestialBody<?, ?>> MOON = key("moon");

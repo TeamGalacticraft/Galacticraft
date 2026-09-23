@@ -112,7 +112,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private int amount = 0;
     private int progress = 0;
     public Dockable linkedRocket = null;
-    private List<Direction> check = new ArrayList<Direction>();
+    private List<Direction> check = new ArrayList<>();
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);

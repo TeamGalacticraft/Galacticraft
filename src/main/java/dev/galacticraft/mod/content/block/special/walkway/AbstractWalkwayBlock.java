@@ -43,28 +43,40 @@ import java.util.Map;
 
 public interface AbstractWalkwayBlock {
     // Maps connection state (from PipeShapedBlock.generateAABBIndex()) and walkway facing direction to the right VoxelShape
-    Map<Pair<Integer, Direction>, VoxelShape> SHAPES = Util.make(new HashMap<>(), map -> {
-        float pipeRadius = 0.125f;
-        VoxelShape[] pipeShapes = PipeShapedBlock.makeShapes(pipeRadius);
-
-        for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
-            for (Direction platformDirection : Direction.values()) {
-                map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
-                        pipeShapes[pipeAabb],
-                        ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
-                ));
-            }
-        }
-    });
+    Map<Float, Map<Pair<Integer, Direction>, VoxelShape>> SHAPES = new HashMap<>();
 
     static @NotNull VoxelShape getShape(Connected connected, BlockState blockState) {
-        return SHAPES.get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
+        return getShape(connected, blockState, 0.125f);
+    }
+
+    static @NotNull VoxelShape getShape(Connected connected, BlockState blockState, float pipeRadius) {
+        return getShapes(pipeRadius).get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
     }
 
     // Returns a shape with all connections active
     // Should be used when no block entity is available, like when the game is checking if the player is obstructing placement
     static @NotNull VoxelShape getShape(BlockState blockState) {
-        return SHAPES.get(Pair.of(63, blockState.getValue(BlockStateProperties.FACING)));
+        return getShape(blockState, 0.125f);
+    }
+
+    static @NotNull VoxelShape getShape(BlockState blockState, float pipeRadius) {
+        return getShapes(pipeRadius).get(Pair.of(63, blockState.getValue(BlockStateProperties.FACING)));
+    }
+
+    static Map<Pair<Integer, Direction>, VoxelShape> getShapes(float pipeRadius) {
+        return SHAPES.computeIfAbsent(pipeRadius, radius -> Util.make(new HashMap<>(), map -> {
+            VoxelShape[] pipeShapes = PipeShapedBlock.makeShapes(radius);
+
+            for (int pipeAabb = 0; pipeAabb < Math.pow(2, 6); pipeAabb++) {
+                for (Direction platformDirection : Direction.values()) {
+                    int withCenterWire = pipeAabb | (1 << platformDirection.ordinal());
+                    map.put(Pair.of(pipeAabb, platformDirection), Shapes.or(
+                            pipeShapes[withCenterWire],
+                            ConnectingBlockUtil.WALKWAY_SHAPES.get(platformDirection)
+                    ));
+                }
+            }
+        }));
     }
 
     static @NotNull BlockState applyStateForPlacement(BlockState state, BlockPlaceContext context) {

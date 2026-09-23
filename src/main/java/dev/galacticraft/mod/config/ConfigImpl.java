@@ -51,6 +51,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -79,6 +81,7 @@ public class ConfigImpl implements Config {
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private boolean squareCannedFood = false;
+    private long fluidCanisterCapacity = FluidConstants.BUCKET;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -93,6 +96,9 @@ public class ConfigImpl implements Config {
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
     private boolean enableCreativeGearInv = true;
+    private boolean enableSpaceStationCreation = true;
+
+    private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -318,6 +324,15 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public long fluidCanisterCapacity() {
+        return this.fluidCanisterCapacity;
+    }
+
+    public void setFluidCanisterCapacity(long capacity) {
+        this.fluidCanisterCapacity = capacity;
+    }
+
+    @Override
     public long smallOxygenTankCapacity() {
         return this.smallOxygenTankCapacity;
     }
@@ -432,6 +447,26 @@ public class ConfigImpl implements Config {
 
     public void setCreativeGearInv(boolean enableCreativeGearInv) {
         this.enableCreativeGearInv = enableCreativeGearInv;
+    }
+
+    @Override
+    public boolean enableSpaceStationCreation() {
+        return this.enableSpaceStationCreation;
+    }
+
+    public void setEnableSpaceStationCreation(boolean enableSpaceStationCreation) {
+        this.enableSpaceStationCreation = enableSpaceStationCreation;
+    }
+
+    @Override
+    public List<String> disabledCelestialScreenDimensions() {
+        return this.disabledCelestialScreenDimensions;
+    }
+
+    public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
+        this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
+                ? new ArrayList<>()
+                : disabledCelestialScreenDimensions;
     }
 
     public void load() {
@@ -795,7 +830,31 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
+            ConfigCategory misc = b.getOrCreateCategory(Component.translatable(Translations.Config.MISC));
+
+            misc.addEntry(creative.build());
+
+            misc.addEntry(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
+                    config.fluidCanisterCapacity())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
+                    .setSaveConsumer(config::setFluidCanisterCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
+
+            misc.addEntry(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
+                    config.enableSpaceStationCreation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
+                    .setSaveConsumer(config::setEnableSpaceStationCreation)
+                    .setDefaultValue(true)
+                    .build()
+            );
 
             // --- LIFE SUPPORT CONFIG ---
 

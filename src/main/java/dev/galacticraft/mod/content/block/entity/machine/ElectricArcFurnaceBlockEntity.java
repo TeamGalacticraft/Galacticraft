@@ -43,7 +43,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -134,7 +133,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     @Override
     protected boolean canOutputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
         ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
-        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2);
+        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2L);
     }
 
     @Override
@@ -142,7 +141,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
         return new RecipeMachineMenu<>(
                 GCMenuTypes.ELECTRIC_ARC_FURNACE,
                 syncId,
-                (ServerPlayer) player,
+                player,
                 this
         );
     }

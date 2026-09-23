@@ -66,7 +66,10 @@ to keep them small and ensure a quick review process.
 ### Code style
 Mainly:
 * Indent using four spaces
-* Braces `{}` go on the same line
+* A keyword followed by a parenthesis should be separated by a space, e.g. `if (condition)` not `if(condition)`
+* Put a space after each comma in an argument list, e.g. `a, b, c` not `a,b,c`
+* Put spaces around operators, e.g. `y = m * x + c` not `y=m*x+c`
+* Opening braces `{}` go on the same line, not a new line
 
 Overall, follow the style of the file you're in.
 Feel free to use `var` for variables with obvious types.

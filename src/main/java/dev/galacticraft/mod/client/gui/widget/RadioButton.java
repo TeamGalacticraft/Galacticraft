@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.gui.widget;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.AbstractWidget;
@@ -74,13 +75,9 @@ public class RadioButton extends AbstractWidget {
     }
 
     public int getButtonHovered(int mouseX, int mouseY) {
-        if (mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
-                mouseY >= getY() && mouseY < getY() + BTN_HEIGHT) {
+        if (DrawableUtil.mouseIn(mouseX, mouseY, getX(), getY(), BTN_WIDTH, BTN_HEIGHT)) {
             return 0;
-        }
-
-        if (mouseX >= getX() && mouseX < getX() + BTN_WIDTH &&
-                mouseY >= getY() + BTN_HEIGHT && mouseY < getY() + BTN_HEIGHT * 2) {
+        } else if (DrawableUtil.mouseIn(mouseX, mouseY, getX(), getY() + BTN_HEIGHT, BTN_WIDTH, BTN_HEIGHT)) {
             return 1;
         }
         return -1;

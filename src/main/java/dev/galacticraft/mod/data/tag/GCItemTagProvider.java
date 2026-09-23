@@ -178,6 +178,9 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
             this.tag(entry.getValue()).add(pipe);
         }
 
+        this.copy(GCBlockTags.FLAGS, GCItemTags.FLAGS);
+        this.addColorSet(GCItems.FLAGS);
+
         // Oxygen equipment
         this.tag(GCItemTags.OXYGEN_MASKS)
                 .add(GCItems.OXYGEN_MASK);
@@ -431,7 +434,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.tag(ConventionalItemTags.FOODS)
                 .addTag(GCItemTags.CHEESE_FOODS)
                 .addTag(GCItemTags.CANNED_FOODS)
-                .add(GCItems.CHEESEBURGER);
+                .add(GCItems.CHEESEBURGER)
+                .add(GCItems.MOON_TANGLE_FRUIT);
 
         this.tag(GCItemTags.CANNED_FOODS)
                 .add(GCItems.CANNED_FOOD);
