@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  
+
   "id": "galacticraft-test",
   "version": "0.1.0",
   "name": "Galacticraft Test Mod",
@@ -26,6 +26,7 @@
   "environment": "*",
   "entrypoints": {
     "fabric-gametest": [
+      "dev.galacticraft.mod.gametest.BatchFunctions",
       "dev.galacticraft.mod.gametest.GratingTestSuite",
       "dev.galacticraft.mod.gametest.machine.AdvancedSolarPanelTestSuite",
       "dev.galacticraft.mod.gametest.machine.BasicSolarPanelTestSuite",
@@ -37,7 +38,9 @@
       "dev.galacticraft.mod.gametest.machine.ElectricFurnaceTestSuite",
       "dev.galacticraft.mod.gametest.machine.EnergyStorageModuleTestSuite",
       "dev.galacticraft.mod.gametest.machine.FuelLoaderTestSuite",
+      "dev.galacticraft.mod.gametest.machine.OxygenSealerTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
+      "dev.galacticraft.mod.gametest.ExtinguishableTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
       "dev.galacticraft.mod.gametest.WireTestSuite"
     ]
