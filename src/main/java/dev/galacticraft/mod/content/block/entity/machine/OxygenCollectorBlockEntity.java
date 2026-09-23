@@ -60,7 +60,6 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
 
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
-    public static final int MAX_OXYGEN_PER_TICK = 50;
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -98,7 +97,8 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     private int collectOxygen(@NotNull ServerLevel level, @NotNull BlockPos pos) {
-        int millibuckets = 50;
+        // Start at the maximum value, which is attained in dimensions with a breathable atmosphere
+        long amountCollected = Galacticraft.CONFIG.oxygenCollectorProductionLimit();
 
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;
@@ -119,11 +119,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 leafBlocks += OxygenBlockDataManager.getOxygen(level, pos1, state);
             }
 
-            millibuckets = Math.min(millibuckets, (int) Math.floor(leafBlocks / 16.0F));
+            amountCollected = Math.min(amountCollected, ((long) Math.floor(leafBlocks / 16.0F)) * FluidUtil.MILLIBUCKET);
         }
 
-        // Convert to droplets
-        return millibuckets * 81;
+        return (int) amountCollected;
     }
 
     @Override

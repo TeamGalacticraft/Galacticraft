@@ -27,6 +27,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -72,6 +73,7 @@ public class ConfigImpl implements Config {
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private float electricArcFurnaceBonusChance = 0.25F;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenCollectorProductionLimit = 50 * FluidUtil.MILLIBUCKET;
     private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
@@ -235,6 +237,15 @@ public class ConfigImpl implements Config {
 
     public void setOxygenCollectorEnergyConsumptionRate(long amount) {
         this.oxygenCollectorEnergyConsumptionRate = amount;
+    }
+
+    @Override
+    public long oxygenCollectorProductionLimit() {
+        return oxygenCollectorProductionLimit;
+    }
+
+    public void setOxygenCollectorProductionLimit(long amount) {
+        this.oxygenCollectorProductionLimit = amount;
     }
 
     @Override
@@ -700,6 +711,16 @@ public class ConfigImpl implements Config {
                     .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE))
                     .setSaveConsumer(config::setOxygenCollectorEnergyConsumptionRate)
                     .setDefaultValue(10)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    labelSub.apply(Translations.Config.OXYGEN_COLLECTOR_PRODUCTION_LIMIT),
+                    config.oxygenCollectorProductionLimit())
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COLLECTOR_PRODUCTION_LIMIT))
+                    .setSaveConsumer(config::setOxygenCollectorProductionLimit)
+                    .setDefaultValue(50 * FluidUtil.MILLIBUCKET)
                     .build()
             );
 
