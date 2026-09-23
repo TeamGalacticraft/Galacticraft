@@ -24,24 +24,67 @@ package dev.galacticraft.mod.content.block.machine.airlock;
 
 import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
 import dev.galacticraft.mod.tag.GCBlockTags;
+import it.unimi.dsi.fastutil.longs.Long2ByteOpenHashMap;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.Direction.Axis;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.state.BlockState;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Comparator;
+import java.util.List;
 
 /**
- * Finds the smallest possible rectangular frame(s) on each axis-aligned plane that include the controller
- * on the perimeter (not a corner). Supports up to two rectangles per plane (controller edge used by two frames),
- * and returns all planes (XY, XZ, YZ).
+ * Finds rectangular airlock frames on each axis-aligned plane containing
+ * the supplied controller.
+ *
+ * <p>The four corners of a frame are completely optional. Only the
+ * non-corner portions of all four sides are required to consist of
+ * {@link GCBlockTags#AIRLOCK_BLOCKS}.
+ *
+ * <p>Consequently all of the following are valid:
+ *
+ * <pre>
+ * F F F F F       F F F       F F F
+ * F       F       F     F     F     F
+ * F       F       F     F     F     F
+ * F F F F F       F F F         F F
+ *
+ * 4 corners       3 corners     1 corner
+ * </pre>
+ *
+ * <p>The controller may be anywhere on the perimeter, including a corner.
+ *
+ * <p>Up to two smallest distinct rectangles are returned per plane.
  */
 public final class AirlockFrameScanner {
 
+    /**
+     * Safety guard against pathological/infinite-looking rows of airlock
+     * blocks.
+     *
+     * This is deliberately very large and is comparable to the guard used
+     * by the previous flood-fill implementation.
+     */
+    private static final int MAX_SCAN_DISTANCE = 32768;
+
+    private static final Plane[] PLANES = Plane.values();
+
     public static final Comparator<Result> ORDER = Comparator
-            .comparing((Result r) -> r.plane.ordinal())
-            .thenComparingInt(r -> r.minX).thenComparingInt(r -> r.minY).thenComparingInt(r -> r.minZ)
-            .thenComparingInt(r -> r.maxX).thenComparingInt(r -> r.maxY).thenComparingInt(r -> r.maxZ);
+            .comparing((Result result) -> result.plane().ordinal())
+            .thenComparingInt(Result::minX)
+            .thenComparingInt(Result::minY)
+            .thenComparingInt(Result::minZ)
+            .thenComparingInt(Result::maxX)
+            .thenComparingInt(Result::maxY)
+            .thenComparingInt(Result::maxZ);
+
+    private static final Comparator<Result> AREA_ORDER =
+            Comparator.comparingLong(AirlockFrameScanner::area)
+                    .thenComparing(ORDER);
+
+    private AirlockFrameScanner() {
+    }
 
     public enum Plane {
         XY(Axis.Z),
@@ -59,6 +102,35 @@ public final class AirlockFrameScanner {
         }
     }
 
+    /**
+     * Logical corner identifiers.
+     *
+     * U/V refer to the two axes within the selected plane.
+     *
+     * XY: U=X, V=Y
+     * XZ: U=X, V=Z
+     * YZ: U=Y, V=Z
+     */
+    public enum CornerKind {
+        MIN_U_MIN_V,
+        MAX_U_MIN_V,
+        MIN_U_MAX_V,
+        MAX_U_MAX_V
+    }
+
+    /**
+     * Information about a corner that is actually occupied by an airlock
+     * frame block.
+     *
+     * Missing corners simply do not appear in {@link Result#corners()}.
+     */
+    public record Corner(
+            CornerKind kind,
+            BlockPos pos,
+            BlockState state
+    ) {
+    }
+
     public record Result(
             Plane plane,
             int minX,
@@ -66,309 +138,893 @@ public final class AirlockFrameScanner {
             int minZ,
             int maxX,
             int maxY,
-            int maxZ
+            int maxZ,
+            List<Corner> corners
     ) {
+        public Result {
+            corners = List.copyOf(corners);
+        }
+
+        /**
+         * Compatibility constructor for code that only needs the rectangle.
+         */
+        public Result(
+                Plane plane,
+                int minX,
+                int minY,
+                int minZ,
+                int maxX,
+                int maxY,
+                int maxZ
+        ) {
+            this(
+                    plane,
+                    minX,
+                    minY,
+                    minZ,
+                    maxX,
+                    maxY,
+                    maxZ,
+                    List.of()
+            );
+        }
+
+        public int cornerCount() {
+            return this.corners.size();
+        }
+
+        public boolean hasCorner(CornerKind kind) {
+            for (Corner corner : this.corners) {
+                if (corner.kind() == kind) {
+                    return true;
+                }
+            }
+
+            return false;
+        }
     }
 
-    private static boolean isFrame(Level level, BlockPos pos) {
-        return level.getBlockState(pos).is(GCBlockTags.AIRLOCK_BLOCKS);
+    private enum EdgeKind {
+        VMIN,
+        VMAX,
+        UMIN,
+        UMAX
     }
 
-    private static boolean isController(Level level, BlockPos pos) {
-        return level.getBlockEntity(pos) instanceof AirlockControllerBlockEntity;
-    }
-
-    /** Scan all planes; return up to two smallest rectangles per plane. */
+    /**
+     * Scan all three axis-aligned planes containing the controller.
+     */
     public static List<Result> scanAll(Level level, BlockPos controller) {
-        if (!isFrame(level, controller)) return List.of();
-        List<Result> out = new ArrayList<>(6);
-        for (Plane plane : Plane.values()) {
-            out.addAll(scanPlane(level, controller, plane));
-        }
-        out.sort(ORDER); // stable order across ticks
-        return out;
-    }
-
-    // ---------- Plane scanning ----------
-
-    private record Axes(Axis u, Axis v, Axis wConst) {}
-
-    private static List<Result> scanPlane(Level level, BlockPos controller, Plane plane) {
-        final int fixed = controller.get(plane.normal);
-        final Axes axes = axesFor(plane); // u,v are the in-plane axes
-
-        // 1) Gather all frame blocks connected to controller within this plane
-        Set<BlockPos> frames = floodInPlane(level, controller, plane, fixed);
-        if (frames.isEmpty()) return List.of();
-
-        // Require exactly one controller in this connected set
-        int controllers = 0;
-        for (BlockPos p : frames) if (isController(level, p)) controllers++;
-        if (controllers != 1) return List.of();
-
-        // 2) in-plane coords of controller
-        int u0 = proj(controller, axes.u);
-        int v0 = proj(controller, axes.v);
-
-        // Search bounds (tight box around connected set)
-        int minU = Integer.MAX_VALUE, maxU = Integer.MIN_VALUE, minV = Integer.MAX_VALUE, maxV = Integer.MIN_VALUE;
-        for (BlockPos p : frames) {
-            int u = proj(p, axes.u), v = proj(p, axes.v);
-            if (u < minU) minU = u; if (u > maxU) maxU = u;
-            if (v < minV) minV = v; if (v > maxV) maxV = v;
+        if (!isFrame(level, controller)) {
+            return List.of();
         }
 
-        // 3) Find up to two rectangles with controller on an edge
-        Result bestVMin = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.VMIN, minU, maxU, minV, maxV);
-        Result bestVMax = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.VMAX, minU, maxU, minV, maxV);
-        Result bestUMin = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.UMIN, minU, maxU, minV, maxV);
-        Result bestUMax = findBestRectWithFixedEdge(level, frames, plane, axes, fixed, u0, v0, EdgeKind.UMAX, minU, maxU, minV, maxV);
+        List<Result> result = new ArrayList<>(6);
 
-        List<Result> planeOut = new ArrayList<>(2);
-        addIfNotNullDistinct(planeOut, bestVMin);
-        addIfNotNullDistinct(planeOut, bestVMax);
-        if (planeOut.size() < 2) addIfNotNullDistinct(planeOut, bestUMin);
-        if (planeOut.size() < 2) addIfNotNullDistinct(planeOut, bestUMax);
-
-        planeOut.sort(ORDER); // stable per plane
-        return planeOut;
-    }
-
-    // ---------- Plane scanning ----------
-    private enum EdgeKind { VMIN, VMAX, UMIN, UMAX }
-
-    private static void addIfNotNullDistinct(List<Result> list, Result result) {
-        if (result != null && list.size() < 2 && !list.contains(result)) {
-            list.add(result);
+        for (Plane plane : PLANES) {
+            result.addAll(scanPlane(level, controller, plane));
         }
+
+        result.sort(ORDER);
+        return result;
     }
 
-    private static Result findBestRectWithFixedEdge(
-            Level level, Set<BlockPos> frames, Plane plane, Axes axes, int fixed,
-            int u0, int v0, EdgeKind kind,
-            int minU, int maxU, int minV, int maxV
+    // ---------------------------------------------------------------------
+    // Plane scanning
+    // ---------------------------------------------------------------------
+
+    private static List<Result> scanPlane(
+            Level level,
+            BlockPos controller,
+            Plane plane
     ) {
-        // Fix one edge to pass through the controller (so controller sits on that edge).
-        final boolean edgeIsAlongU; // true if the fixed edge is a U-span (constant v), false if a V-span (constant u)
-        switch (kind) {
-            case VMIN, VMAX -> edgeIsAlongU = true;   // edge is v == v0, spans in U
-            case UMIN, UMAX -> edgeIsAlongU = false;  // edge is u == u0, spans in V
-            default -> throw new IllegalStateException();
+        FrameView view = new FrameView(level, plane, controller.get(plane.normal()));
+
+        int u0 = projectU(controller, plane);
+        int v0 = projectV(controller, plane);
+
+        /*
+         * Each search assumes that the controller lies on one of the four
+         * possible sides.
+         *
+         * The controller may also be a corner. In that case the same
+         * rectangle can be discovered from two adjacent EdgeKinds; the
+         * duplicate is removed below.
+         */
+        Result vMin = findBestRectWithFixedEdge(
+                view,
+                controller,
+                EdgeKind.VMIN,
+                u0,
+                v0
+        );
+
+        Result vMax = findBestRectWithFixedEdge(
+                view,
+                controller,
+                EdgeKind.VMAX,
+                u0,
+                v0
+        );
+
+        Result uMin = findBestRectWithFixedEdge(
+                view,
+                controller,
+                EdgeKind.UMIN,
+                u0,
+                v0
+        );
+
+        Result uMax = findBestRectWithFixedEdge(
+                view,
+                controller,
+                EdgeKind.UMAX,
+                u0,
+                v0
+        );
+
+        List<Result> candidates = new ArrayList<>(4);
+
+        addDistinct(candidates, vMin);
+        addDistinct(candidates, vMax);
+        addDistinct(candidates, uMin);
+        addDistinct(candidates, uMax);
+
+        if (candidates.isEmpty()) {
+            return List.of();
         }
+
+        /*
+         * The class promises the two smallest rectangles on this plane.
+         *
+         * Sorting by area first makes that statement actually true rather
+         * than depending on EdgeKind search order.
+         */
+        candidates.sort(AREA_ORDER);
+
+        if (candidates.size() > 2) {
+            candidates.subList(2, candidates.size()).clear();
+        }
+
+        candidates.sort(ORDER);
+        return candidates;
+    }
+
+    private static void addDistinct(List<Result> list, Result result) {
+        if (result == null) {
+            return;
+        }
+
+        for (Result existing : list) {
+            if (sameBounds(existing, result)) {
+                return;
+            }
+        }
+
+        list.add(result);
+    }
+
+    private static boolean sameBounds(Result a, Result b) {
+        return a.plane() == b.plane()
+                && a.minX() == b.minX()
+                && a.minY() == b.minY()
+                && a.minZ() == b.minZ()
+                && a.maxX() == b.maxX()
+                && a.maxY() == b.maxY()
+                && a.maxZ() == b.maxZ();
+    }
+
+    /**
+     * Searches for the smallest rectangle for which {@code controller}
+     * belongs to the specified side.
+     *
+     * <p>The search operates in logical coordinates:
+     *
+     * <ul>
+     *     <li>{@code along}: coordinate running along the controller side</li>
+     *     <li>{@code perpendicular}: coordinate running toward the opposite side</li>
+     * </ul>
+     *
+     * <p>This means all four EdgeKinds can use exactly the same algorithm.
+     */
+    private static Result findBestRectWithFixedEdge(
+            FrameView view,
+            BlockPos controller,
+            EdgeKind edge,
+            int u0,
+            int v0
+    ) {
+        boolean alongU = edge == EdgeKind.VMIN || edge == EdgeKind.VMAX;
+
+        int along0 = alongU ? u0 : v0;
+        int perpendicular0 = alongU ? v0 : u0;
+
+        /*
+         * Direction from the controller side toward the rectangle interior.
+         */
+        int perpendicularDirection = switch (edge) {
+            case VMIN, UMIN -> 1;
+            case VMAX, UMAX -> -1;
+        };
+
+        /*
+         * Find the contiguous frame run passing through the controller.
+         *
+         * This run tells us every possible location for the two corners of
+         * the controller-side edge:
+         *
+         * - Any occupied position in the run can itself be a corner.
+         * - Exactly one position beyond the run can be a missing corner.
+         *
+         * Nothing farther away can be part of this rectangle because that
+         * would introduce a missing non-corner edge block.
+         */
+        int runMin = along0;
+        int runMax = along0;
+
+        for (int distance = 1; distance <= MAX_SCAN_DISTANCE; distance++) {
+            int along = along0 - distance;
+
+            if (!isFrameLogical(
+                    view,
+                    alongU,
+                    along,
+                    perpendicular0
+            )) {
+                break;
+            }
+
+            runMin = along;
+        }
+
+        for (int distance = 1; distance <= MAX_SCAN_DISTANCE; distance++) {
+            int along = along0 + distance;
+
+            if (!isFrameLogical(
+                    view,
+                    alongU,
+                    along,
+                    perpendicular0
+            )) {
+                break;
+            }
+
+            runMax = along;
+        }
+
+        /*
+         * One position outside the contiguous run is allowed because that
+         * position may simply be an omitted corner.
+         */
+        int candidateMin = runMin - 1;
+        int candidateMax = runMax + 1;
 
         long bestArea = Long.MAX_VALUE;
-        int bestMinU = 0, bestMaxU = 0, bestMinV = 0, bestMaxV = 0;
+        LogicalRect best = null;
 
-        if (edgeIsAlongU) {
-            // Controller sits on v == v0 edge; search vOpp on the other side.
-            if (kind == EdgeKind.VMIN) {
-                // expand toward +V (vOpp > v0)
-                for (int vOpp = v0 + 1; vOpp <= maxV; vOpp++) {
-                    // sweep U around the controller, ensuring the fixed edge is continuous
-                    for (int uMin = u0; uMin >= minU; uMin--) {
-                        if (!isFrame(level, unproj(uMin, v0, fixed, axes))) break;
-                        for (int uMax = u0; uMax <= maxU; uMax++) {
-                            if (!isFrame(level, unproj(uMax, v0, fixed, axes))) break;
-                            if ((uMax - uMin + 1) < 3 || (vOpp - v0 + 1) < 3) continue;
+        /*
+         * Controller may be:
+         *
+         * - somewhere inside the edge,
+         * - the minimum corner,
+         * - the maximum corner.
+         *
+         * Therefore minAlong may equal along0 and maxAlong may equal along0.
+         */
+        for (int minAlong = candidateMin; minAlong <= along0; minAlong++) {
 
-                            int vMinRect = v0;
-                            int vMaxRect = vOpp;
+            /*
+             * If a result already exists, the minimum possible height is 3.
+             * A width this large can no longer improve the result.
+             */
+            int smallestWidth = Math.max(3, along0 - minAlong + 1);
 
-                            if (perimeterIsFrames(frames, axes, fixed, uMin, vMinRect, uMax, vMaxRect)
-                                    && interiorHasNoFrames(frames, axes, fixed, uMin, vMinRect, uMax, vMaxRect)) {
-                                long area = (long)(uMax - uMin + 1) * (long)(vMaxRect - vMinRect + 1);
-                                if (area < bestArea) {
-                                    bestArea = area;
-                                    bestMinU = uMin; bestMaxU = uMax;
-                                    bestMinV = vMinRect; bestMaxV = vMaxRect;
-                                }
-                            }
-                        }
-                    }
-                }
-            } else { // VMAX: expand toward -V (vOpp < v0)  --- FIXED LOOPS ---
-                for (int vOpp = v0 - 1; vOpp >= minV; vOpp--) {
-                    for (int uMin = u0; uMin >= minU; uMin--) {
-                        if (!isFrame(level, unproj(uMin, v0, fixed, axes))) break;
-                        for (int uMax = u0; uMax <= maxU; uMax++) {
-                            if (!isFrame(level, unproj(uMax, v0, fixed, axes))) break;
-                            if ((uMax - uMin + 1) < 3 || (v0 - vOpp + 1) < 3) continue;
-
-                            int vMinRect = vOpp;
-                            int vMaxRect = v0;
-
-                            if (perimeterIsFrames(frames, axes, fixed, uMin, vMinRect, uMax, vMaxRect)
-                                    && interiorHasNoFrames(frames, axes, fixed, uMin, vMinRect, uMax, vMaxRect)) {
-                                long area = (long)(uMax - uMin + 1) * (long)(vMaxRect - vMinRect + 1);
-                                if (area < bestArea) {
-                                    bestArea = area;
-                                    bestMinU = uMin; bestMaxU = uMax;
-                                    bestMinV = vMinRect; bestMaxV = vMaxRect;
-                                }
-                            }
-                        }
-                    }
-                }
+            if (bestArea != Long.MAX_VALUE
+                    && (long) smallestWidth * 3L > bestArea) {
+                continue;
             }
-        } else {
-            // Controller sits on u == u0 edge; search uOpp on the other side.
-            if (kind == EdgeKind.UMIN) {
-                // expand toward +U (uOpp > u0)
-                for (int uOpp = u0 + 1; uOpp <= maxU; uOpp++) {
-                    for (int vMin2 = v0; vMin2 >= minV; vMin2--) {
-                        if (!isFrame(level, unproj(u0, vMin2, fixed, axes))) break;
-                        for (int vMax2 = v0; vMax2 <= maxV; vMax2++) {
-                            if (!isFrame(level, unproj(u0, vMax2, fixed, axes))) break;
-                            if ((uOpp - u0 + 1) < 3 || (vMax2 - vMin2 + 1) < 3) continue;
 
-                            int uMinRect = u0;
-                            int uMaxRect = uOpp;
+            int firstMax = Math.max(along0, minAlong + 2);
 
-                            if (perimeterIsFrames(frames, axes, fixed, uMinRect, vMin2, uMaxRect, vMax2)
-                                    && interiorHasNoFrames(frames, axes, fixed, uMinRect, vMin2, uMaxRect, vMax2)) {
-                                long area = (long)(uMaxRect - uMinRect + 1) * (long)(vMax2 - vMin2 + 1);
-                                if (area < bestArea) {
-                                    bestArea = area;
-                                    bestMinU = uMinRect; bestMaxU = uMaxRect;
-                                    bestMinV = vMin2;    bestMaxV = vMax2;
-                                }
-                            }
-                        }
-                    }
+            for (int maxAlong = firstMax;
+                 maxAlong <= candidateMax;
+                 maxAlong++) {
+
+                int width = maxAlong - minAlong + 1;
+
+                if (bestArea != Long.MAX_VALUE
+                        && (long) width * 3L > bestArea) {
+                    break;
                 }
-            } else { // UMAX: expand toward -U (uOpp < u0)  --- FIXED LOOPS ---
-                for (int uOpp = u0 - 1; uOpp >= minU; uOpp--) {
-                    for (int vMin2 = v0; vMin2 >= minV; vMin2--) {
-                        if (!isFrame(level, unproj(u0, vMin2, fixed, axes))) break;
-                        for (int vMax2 = v0; vMax2 <= maxV; vMax2++) {
-                            if (!isFrame(level, unproj(u0, vMax2, fixed, axes))) break;
-                            if ((u0 - uOpp + 1) < 3 || (vMax2 - vMin2 + 1) < 3) continue;
 
-                            int uMinRect = uOpp;
-                            int uMaxRect = u0;
+                /*
+                 * Everything between the two corners of the controller side
+                 * must be frame.
+                 *
+                 * The corner cells themselves are intentionally ignored.
+                 */
+                if (!edgeInteriorIsFrame(
+                        view,
+                        alongU,
+                        minAlong,
+                        maxAlong,
+                        perpendicular0
+                )) {
+                    continue;
+                }
 
-                            if (perimeterIsFrames(frames, axes, fixed, uMinRect, vMin2, uMaxRect, vMax2)
-                                    && interiorHasNoFrames(frames, axes, fixed, uMinRect, vMin2, uMaxRect, vMax2)) {
-                                long area = (long)(uMaxRect - uMinRect + 1) * (long)(vMax2 - vMin2 + 1);
-                                if (area < bestArea) {
-                                    bestArea = area;
-                                    bestMinU = uMinRect; bestMaxU = uMaxRect;
-                                    bestMinV = vMin2;    bestMaxV = vMax2;
-                                }
-                            }
-                        }
-                    }
+                LogicalRect candidate = findNearestOppositeEdge(
+                        view,
+                        controller,
+                        alongU,
+                        minAlong,
+                        maxAlong,
+                        perpendicular0,
+                        perpendicularDirection
+                );
+
+                if (candidate == null) {
+                    continue;
+                }
+
+                long candidateArea = candidate.area();
+
+                if (candidateArea < bestArea) {
+                    bestArea = candidateArea;
+                    best = candidate;
                 }
             }
         }
 
-        if (bestArea == Long.MAX_VALUE) return null;
-
-        // Map u/v bounds back to xyz bounds
-        int minX, minY, minZ, maxX, maxY, maxZ;
-        switch (plane) {
-            case XY -> {
-                minX = bestMinU; maxX = bestMaxU;
-                minY = bestMinV; maxY = bestMaxV;
-                minZ = maxZ = fixed;
-            }
-            case XZ -> {
-                minX = bestMinU; maxX = bestMaxU;
-                minZ = bestMinV; maxZ = bestMaxV;
-                minY = maxY = fixed;
-            }
-            case YZ -> {
-                minY = bestMinU; maxY = bestMaxU;
-                minZ = bestMinV; maxZ = bestMaxV;
-                minX = maxX = fixed;
-            }
-            default -> throw new IllegalStateException();
+        if (best == null) {
+            return null;
         }
 
-        return new Result(plane, minX, minY, minZ, maxX, maxY, maxZ);
+        return createResult(view, best);
     }
 
-    // ---------- Geometry helpers ----------
+    /**
+     * Starting from a known controller-side edge, follows both side edges
+     * outward until it finds the nearest valid opposite edge.
+     *
+     * <p>Side and opposite-edge corners are never required.
+     */
+    private static LogicalRect findNearestOppositeEdge(
+            FrameView view,
+            BlockPos controller,
+            boolean alongU,
+            int minAlong,
+            int maxAlong,
+            int fixedPerpendicular,
+            int direction
+    ) {
+        /*
+         * A frame must be at least 3 blocks in this dimension:
+         *
+         * fixed edge
+         * one interior side block
+         * opposite edge
+         */
+        for (int distance = 2;
+             distance <= MAX_SCAN_DISTANCE;
+             distance++) {
 
-    private static Axes axesFor(Plane plane) {
-        return switch (plane) {
-            case XY -> new Axes(Axis.X, Axis.Y, Axis.Z);
-            case XZ -> new Axes(Axis.X, Axis.Z, Axis.Y);
-            case YZ -> new Axes(Axis.Y, Axis.Z, Axis.X);
-        };
+            int previousPerpendicular =
+                    fixedPerpendicular + direction * (distance - 1);
+
+            /*
+             * These are non-corner cells of the two side edges.
+             *
+             * Once either one is absent, no larger rectangle using these
+             * same two sides can ever be valid.
+             */
+            if (!isFrameLogical(
+                    view,
+                    alongU,
+                    minAlong,
+                    previousPerpendicular
+            )) {
+                return null;
+            }
+
+            if (!isFrameLogical(
+                    view,
+                    alongU,
+                    maxAlong,
+                    previousPerpendicular
+            )) {
+                return null;
+            }
+
+            int oppositePerpendicular =
+                    fixedPerpendicular + direction * distance;
+
+            /*
+             * Only the INTERIOR of the opposite edge is required.
+             *
+             * opposite corners:
+             *
+             *   (minAlong, oppositePerpendicular)
+             *   (maxAlong, oppositePerpendicular)
+             *
+             * may contain anything.
+             */
+            if (!edgeInteriorIsFrame(
+                    view,
+                    alongU,
+                    minAlong,
+                    maxAlong,
+                    oppositePerpendicular
+            )) {
+                continue;
+            }
+
+            int minPerpendicular = Math.min(
+                    fixedPerpendicular,
+                    oppositePerpendicular
+            );
+
+            int maxPerpendicular = Math.max(
+                    fixedPerpendicular,
+                    oppositePerpendicular
+            );
+
+            LogicalRect rect;
+
+            if (alongU) {
+                rect = new LogicalRect(
+                        minAlong,
+                        minPerpendicular,
+                        maxAlong,
+                        maxPerpendicular
+                );
+            } else {
+                rect = new LogicalRect(
+                        minPerpendicular,
+                        minAlong,
+                        maxPerpendicular,
+                        maxAlong
+                );
+            }
+
+            /*
+             * If this otherwise-complete edge has frame blocks inside the
+             * rectangle, every larger rectangle in this direction would
+             * contain those same blocks as interior frame blocks.
+             *
+             * We can therefore terminate this side search immediately.
+             */
+            if (!interiorHasNoFrames(view, rect)) {
+                return null;
+            }
+
+            if (!containsControllerOnPerimeter(
+                    rect,
+                    projectU(controller, view.plane),
+                    projectV(controller, view.plane)
+            )) {
+                continue;
+            }
+
+            /*
+             * Preserve the old restriction that exactly one controller may
+             * belong to a detected frame.
+             */
+            if (!hasExactlyOneController(view, rect)) {
+                return null;
+            }
+
+            return rect;
+        }
+
+        return null;
     }
 
-    private static Set<BlockPos> floodInPlane(Level level, BlockPos start, Plane plane, int fixed) {
-        Set<BlockPos> visited = new HashSet<>();
-        ArrayDeque<BlockPos> q = new ArrayDeque<>();
-        q.add(start);
-        visited.add(start);
-        for (int guard = 0; guard < 32768 && !q.isEmpty(); guard++) {
-            BlockPos p = q.removeFirst();
-            for (Direction d : inPlaneDirections(plane)) {
-                BlockPos n = p.relative(d);
-                if (n.get(plane.normal) != fixed) continue;
-                if (!visited.contains(n) && isFrame(level, n)) {
-                    visited.add(n);
-                    q.add(n);
-                }
+    // ---------------------------------------------------------------------
+    // Rectangle validation
+    // ---------------------------------------------------------------------
+
+    /**
+     * Tests the required, non-corner portion of an edge.
+     */
+    private static boolean edgeInteriorIsFrame(
+            FrameView view,
+            boolean alongU,
+            int minAlong,
+            int maxAlong,
+            int perpendicular
+    ) {
+        for (int along = minAlong + 1;
+             along < maxAlong;
+             along++) {
+
+            if (!isFrameLogical(
+                    view,
+                    alongU,
+                    along,
+                    perpendicular
+            )) {
+                return false;
             }
         }
-        return visited;
-    }
 
-    private static Direction[] inPlaneDirections(Plane plane) {
-        return switch (plane) {
-            case XY -> new Direction[]{Direction.EAST, Direction.WEST, Direction.UP, Direction.DOWN};
-            case XZ -> new Direction[]{Direction.EAST, Direction.WEST, Direction.NORTH, Direction.SOUTH};
-            case YZ -> new Direction[]{Direction.NORTH, Direction.SOUTH, Direction.UP, Direction.DOWN};
-        };
-    }
-
-    private static int proj(BlockPos p, Axis axis) {
-        return p.get(axis);
-    }
-
-    private static BlockPos unproj(int u, int v, int wConst, Axes axes) {
-        // inverse mapping from (u,v) back to (x,y,z)
-        int x = 0;
-        int y = 0;
-        int z = 0;
-
-        for (Axis axis : new Axis[]{axes.u, axes.v, axes.wConst}) {
-            int value = axis == axes.u ? u : axis == axes.v ? v : wConst;
-
-            switch (axis) {
-                case X -> x = value;
-                case Y -> y = value;
-                case Z -> z = value;
-            }
-        }
-
-        return new BlockPos(x, y, z);
-    }
-
-    private static boolean perimeterIsFrames(Set<BlockPos> frames, Axes axes, int wConst,
-                                             int uMin, int vMin, int uMax, int vMax) {
-        // edges: u in [uMin..uMax] at v=vMin and v=vMax; v in [vMin..vMax] at u=uMin and u=uMax
-        for (int u = uMin; u <= uMax; u++) {
-            if (!frames.contains(unproj(u, vMin, wConst, axes))) return false;
-            if (!frames.contains(unproj(u, vMax, wConst, axes))) return false;
-        }
-        for (int v = vMin; v <= vMax; v++) {
-            if (!frames.contains(unproj(uMin, v, wConst, axes))) return false;
-            if (!frames.contains(unproj(uMax, v, wConst, axes))) return false;
-        }
         return true;
     }
 
-    private static boolean interiorHasNoFrames(Set<BlockPos> frames, Axes axes, int wConst,
-                                               int uMin, int vMin, int uMax, int vMax) {
-        for (int u = uMin + 1; u <= uMax - 1; u++) {
-            for (int v = vMin + 1; v <= vMax - 1; v++) {
-                if (frames.contains(unproj(u, v, wConst, axes))) return false;
+    /**
+     * The interior of an airlock may not contain other airlock-frame blocks.
+     */
+    private static boolean interiorHasNoFrames(
+            FrameView view,
+            LogicalRect rect
+    ) {
+        for (int u = rect.minU + 1; u < rect.maxU; u++) {
+            for (int v = rect.minV + 1; v < rect.maxV; v++) {
+                if (view.isFrame(u, v)) {
+                    return false;
+                }
             }
         }
+
         return true;
+    }
+
+    /**
+     * Ensures exactly one airlock controller exists on the complete
+     * perimeter.
+     *
+     * Corners are visited exactly once.
+     */
+    private static boolean hasExactlyOneController(
+            FrameView view,
+            LogicalRect rect
+    ) {
+        int controllers = 0;
+
+        /*
+         * minV / maxV edges, including corners.
+         */
+        for (int u = rect.minU; u <= rect.maxU; u++) {
+            if (view.isController(u, rect.minV)) {
+                if (++controllers > 1) {
+                    return false;
+                }
+            }
+
+            if (view.isController(u, rect.maxV)) {
+                if (++controllers > 1) {
+                    return false;
+                }
+            }
+        }
+
+        /*
+         * minU / maxU edges, excluding corners because those were already
+         * checked above.
+         */
+        for (int v = rect.minV + 1; v < rect.maxV; v++) {
+            if (view.isController(rect.minU, v)) {
+                if (++controllers > 1) {
+                    return false;
+                }
+            }
+
+            if (view.isController(rect.maxU, v)) {
+                if (++controllers > 1) {
+                    return false;
+                }
+            }
+        }
+
+        return controllers == 1;
+    }
+
+    private static boolean containsControllerOnPerimeter(
+            LogicalRect rect,
+            int u,
+            int v
+    ) {
+        if (u < rect.minU
+                || u > rect.maxU
+                || v < rect.minV
+                || v > rect.maxV) {
+            return false;
+        }
+
+        return u == rect.minU
+                || u == rect.maxU
+                || v == rect.minV
+                || v == rect.maxV;
+    }
+
+    // ---------------------------------------------------------------------
+    // Result construction / corner discovery
+    // ---------------------------------------------------------------------
+
+    private static Result createResult(
+            FrameView view,
+            LogicalRect rect
+    ) {
+        List<Corner> corners = new ArrayList<>(4);
+
+        addCornerIfPresent(
+                view,
+                corners,
+                CornerKind.MIN_U_MIN_V,
+                rect.minU,
+                rect.minV
+        );
+
+        addCornerIfPresent(
+                view,
+                corners,
+                CornerKind.MAX_U_MIN_V,
+                rect.maxU,
+                rect.minV
+        );
+
+        addCornerIfPresent(
+                view,
+                corners,
+                CornerKind.MIN_U_MAX_V,
+                rect.minU,
+                rect.maxV
+        );
+
+        addCornerIfPresent(
+                view,
+                corners,
+                CornerKind.MAX_U_MAX_V,
+                rect.maxU,
+                rect.maxV
+        );
+
+        return switch (view.plane) {
+            case XY -> new Result(
+                    view.plane,
+                    rect.minU,
+                    rect.minV,
+                    view.fixed,
+                    rect.maxU,
+                    rect.maxV,
+                    view.fixed,
+                    corners
+            );
+
+            case XZ -> new Result(
+                    view.plane,
+                    rect.minU,
+                    view.fixed,
+                    rect.minV,
+                    rect.maxU,
+                    view.fixed,
+                    rect.maxV,
+                    corners
+            );
+
+            case YZ -> new Result(
+                    view.plane,
+                    view.fixed,
+                    rect.minU,
+                    rect.minV,
+                    view.fixed,
+                    rect.maxU,
+                    rect.maxV,
+                    corners
+            );
+        };
+    }
+
+    private static void addCornerIfPresent(
+            FrameView view,
+            List<Corner> corners,
+            CornerKind kind,
+            int u,
+            int v
+    ) {
+        if (!view.isFrame(u, v)) {
+            return;
+        }
+
+        BlockPos pos = view.immutablePos(u, v);
+
+        corners.add(new Corner(
+                kind,
+                pos,
+                view.level.getBlockState(pos)
+        ));
+    }
+
+    // ---------------------------------------------------------------------
+    // Logical coordinates
+    // ---------------------------------------------------------------------
+
+    private record LogicalRect(
+            int minU,
+            int minV,
+            int maxU,
+            int maxV
+    ) {
+        long area() {
+            return (long) (this.maxU - this.minU + 1)
+                    * (long) (this.maxV - this.minV + 1);
+        }
+    }
+
+    /**
+     * Converts logical (along, perpendicular) coordinates back to U/V.
+     */
+    private static boolean isFrameLogical(
+            FrameView view,
+            boolean alongU,
+            int along,
+            int perpendicular
+    ) {
+        return alongU
+                ? view.isFrame(along, perpendicular)
+                : view.isFrame(perpendicular, along);
+    }
+
+    private static int projectU(BlockPos pos, Plane plane) {
+        return switch (plane) {
+            case XY, XZ -> pos.getX();
+            case YZ -> pos.getY();
+        };
+    }
+
+    private static int projectV(BlockPos pos, Plane plane) {
+        return switch (plane) {
+            case XY -> pos.getY();
+            case XZ, YZ -> pos.getZ();
+        };
+    }
+
+    private static long area(Result result) {
+        return switch (result.plane()) {
+            case XY -> (long) (result.maxX() - result.minX() + 1)
+                    * (long) (result.maxY() - result.minY() + 1);
+
+            case XZ -> (long) (result.maxX() - result.minX() + 1)
+                    * (long) (result.maxZ() - result.minZ() + 1);
+
+            case YZ -> (long) (result.maxY() - result.minY() + 1)
+                    * (long) (result.maxZ() - result.minZ() + 1);
+        };
+    }
+
+    // ---------------------------------------------------------------------
+    // Cached world view
+    // ---------------------------------------------------------------------
+
+    /**
+     * Provides cached frame/controller queries within one plane.
+     *
+     * <p>Primitive long keys avoid allocating BlockPos objects for every
+     * repeated geometry check.
+     */
+    private static final class FrameView {
+
+        private static final byte UNKNOWN = -1;
+        private static final byte FALSE = 0;
+        private static final byte TRUE = 1;
+
+        private final Level level;
+        private final Plane plane;
+        private final int fixed;
+
+        private final BlockPos.MutableBlockPos cursor =
+                new BlockPos.MutableBlockPos();
+
+        private final Long2ByteOpenHashMap frameCache =
+                new Long2ByteOpenHashMap();
+
+        private final Long2ByteOpenHashMap controllerCache =
+                new Long2ByteOpenHashMap();
+
+        private FrameView(
+                Level level,
+                Plane plane,
+                int fixed
+        ) {
+            this.level = level;
+            this.plane = plane;
+            this.fixed = fixed;
+
+            this.frameCache.defaultReturnValue(UNKNOWN);
+            this.controllerCache.defaultReturnValue(UNKNOWN);
+        }
+
+        private boolean isFrame(int u, int v) {
+            long key = key(u, v);
+
+            byte cached = this.frameCache.get(key);
+
+            if (cached != UNKNOWN) {
+                return cached == TRUE;
+            }
+
+            setCursor(u, v);
+
+            boolean frame = this.level
+                    .getBlockState(this.cursor)
+                    .is(GCBlockTags.AIRLOCK_BLOCKS);
+
+            this.frameCache.put(
+                    key,
+                    frame ? TRUE : FALSE
+            );
+
+            return frame;
+        }
+
+        private boolean isController(int u, int v) {
+            long key = key(u, v);
+
+            byte cached = this.controllerCache.get(key);
+
+            if (cached != UNKNOWN) {
+                return cached == TRUE;
+            }
+
+            setCursor(u, v);
+
+            boolean controller =
+                    this.level.getBlockEntity(this.cursor)
+                            instanceof AirlockControllerBlockEntity;
+
+            this.controllerCache.put(
+                    key,
+                    controller ? TRUE : FALSE
+            );
+
+            return controller;
+        }
+
+        private BlockPos immutablePos(int u, int v) {
+            return switch (this.plane) {
+                case XY -> new BlockPos(u, v, this.fixed);
+                case XZ -> new BlockPos(u, this.fixed, v);
+                case YZ -> new BlockPos(this.fixed, u, v);
+            };
+        }
+
+        private void setCursor(int u, int v) {
+            switch (this.plane) {
+                case XY -> this.cursor.set(
+                        u,
+                        v,
+                        this.fixed
+                );
+
+                case XZ -> this.cursor.set(
+                        u,
+                        this.fixed,
+                        v
+                );
+
+                case YZ -> this.cursor.set(
+                        this.fixed,
+                        u,
+                        v
+                );
+            }
+        }
+
+        private static long key(int u, int v) {
+            return ((long) u << 32)
+                    ^ (v & 0xFFFFFFFFL);
+        }
+    }
+
+    // ---------------------------------------------------------------------
+    // Basic block tests
+    // ---------------------------------------------------------------------
+
+    private static boolean isFrame(
+            Level level,
+            BlockPos pos
+    ) {
+        return level.getBlockState(pos)
+                .is(GCBlockTags.AIRLOCK_BLOCKS);
     }
 }
