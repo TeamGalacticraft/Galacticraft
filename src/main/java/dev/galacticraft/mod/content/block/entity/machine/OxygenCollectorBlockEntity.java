@@ -60,6 +60,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     public static final int OXYGEN_TANK = 0;
 
     public static final long MAX_OXYGEN = FluidUtil.bucketsToDroplets(50);
+    public static final int MAX_OXYGEN_PER_TICK = 50;
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -135,13 +136,14 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
         this.fluidSource.trySpreadFluids(level, pos, state);
+        profiler.pop();
 
         if (this.fluidStorage().slot(OXYGEN_TANK).isFull()) {
             this.collectionAmount = 0;
             return GCMachineStatuses.OXYGEN_TANK_FULL;
         }
 
-        profiler.popPush("transaction");
+        profiler.push("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
                 profiler.push("collect");
