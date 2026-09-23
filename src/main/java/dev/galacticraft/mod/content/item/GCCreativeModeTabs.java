@@ -297,10 +297,10 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_COMPRESSOR);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FOOD_CANNER);
-                output.accept(AIR_LOCK_CONTROLLER);
-                output.accept(AIR_LOCK_FRAME);
-                output.accept(REINFORCED_AIR_LOCK_CONTROLLER);
-                output.accept(REINFORCED_AIR_LOCK_FRAME);
+                output.accept(AIRLOCK_CONTROLLER);
+                output.accept(AIRLOCK_FRAME);
+                output.accept(REINFORCED_AIRLOCK_CONTROLLER);
+                output.accept(REINFORCED_AIRLOCK_FRAME);
             }).build();
 
     public static final CreativeModeTab ITEMS_GROUP = FabricItemGroup

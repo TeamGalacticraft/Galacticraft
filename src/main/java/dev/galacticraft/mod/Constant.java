@@ -354,13 +354,13 @@ public interface Constant {
         String HYDRAULIC_PLATFORM = "hydraulic_platform";
         String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
         String ROCKET_WORKBENCH = "rocket_workbench";
-        String AIR_LOCK_FRAME = "air_lock_frame";
-        String REINFORCED_AIR_LOCK_FRAME = "reinforced_air_lock_frame";
-        String STRUCTURE_AIR_LOCK_FRAME = "structure_air_lock_frame";
-        String AIR_LOCK_CONTROLLER = "air_lock_controller";
-        String REINFORCED_AIR_LOCK_CONTROLLER = "reinforced_air_lock_controller";
-        String STRUCTURE_AIR_LOCK_CONTROLLER = "structure_air_lock_controller";
-        String AIR_LOCK_SEAL = "air_lock_seal";
+        String AIRLOCK_FRAME = "airlock_frame";
+        String REINFORCED_AIRLOCK_FRAME = "reinforced_airlock_frame";
+        String STRUCTURE_AIRLOCK_FRAME = "structure_airlock_frame";
+        String AIRLOCK_CONTROLLER = "airlock_controller";
+        String REINFORCED_AIRLOCK_CONTROLLER = "reinforced_airlock_controller";
+        String STRUCTURE_AIRLOCK_CONTROLLER = "structure_airlock_controller";
+        String AIRLOCK_SEAL = "airlock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";
         String TELEMETRY_UNIT = "telemetry_unit";
@@ -942,7 +942,7 @@ public interface Constant {
     }
 
     interface AirlockController {
-        ResourceLocation SCREEN_TEXTURE = id("textures/gui/air_lock_controller.png");
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/airlock_controller.png");
 
         int ARROW_VERTICAL_WIDTH = 11;
         int ARROW_VERTICAL_HEIGHT = 10;
@@ -1221,7 +1221,7 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
-        String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String AIRLOCK_CONTROLLER_MENU = "airlock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";

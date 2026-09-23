@@ -331,27 +331,13 @@ public class AirlockControllerScreen extends MachineScreen<AirlockControllerBloc
 
         AirlockState enabled = this.menu.state;
 
-        Component label;
-        int color;
-
-        if (enabled == AirlockState.ALL) {
-            label = Component.translatable(Translations.Ui.AIRLOCK_ENABLED);
-            color = ChatFormatting.DARK_GREEN.getColor();
-        } else if (enabled == AirlockState.PARTIAL) {
-            label = Component.translatable(Translations.Ui.AIRLOCK_PARTIAL);
-            color = ChatFormatting.DARK_PURPLE.getColor();
-        } else {
-            label = Component.translatable(Translations.Ui.AIRLOCK_DISABLED);
-            color = ChatFormatting.RED.getColor();
-        }
-
         drawCenteredString(
                 graphics,
                 this.font,
-                label,
+                enabled.getStatus().getText(),
                 this.leftPos + STATUS_LABEL_X,
                 this.topPos + STATUS_LABEL_Y,
-                color,
+                -1,
                 false
         );
 

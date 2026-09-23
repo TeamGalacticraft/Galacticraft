@@ -118,6 +118,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
         this.getSecurity().registerAccessLevel(PROXIMITY_ACCESS, AccessLevel.PUBLIC);
     }
+
     private static Map<Long, AirlockFrameScanner.Result> indexFrames(List<AirlockFrameScanner.Result> list) {
         Map<Long, AirlockFrameScanner.Result> output = new HashMap<>(list.size());
 
@@ -561,7 +562,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         }
 
         boolean anyAir = false;
-        BlockState seal = GCBlocks.AIR_LOCK_SEAL.defaultBlockState()
+        BlockState seal = GCBlocks.AIRLOCK_SEAL.defaultBlockState()
                 .setValue(AirlockSealBlock.AXIS, frame.plane().normal());
 
         for (BlockPos pos : withinFrame(frame)) {
@@ -597,7 +598,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         boolean hadSeal = false;
 
         for (BlockPos pos : withinFrame(frame)) {
-            if (server.getBlockState(pos).is(GCBlocks.AIR_LOCK_SEAL)) {
+            if (server.getBlockState(pos).is(GCBlocks.AIRLOCK_SEAL)) {
                 hadSeal = true;
                 server.setBlock(pos, Blocks.AIR.defaultBlockState(), Block.UPDATE_ALL);
             }

@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:reinforced_air_lock_frame"
+        "recipe": "galacticraft:airlock_frame"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:reinforced_air_lock_frame"
+      "galacticraft:airlock_frame"
     ]
   }
 }

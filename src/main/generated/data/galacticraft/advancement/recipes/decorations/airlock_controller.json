@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:air_lock_controller"
+        "recipe": "galacticraft:airlock_controller"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -26,7 +26,7 @@
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:air_lock_controller"
+      "galacticraft:airlock_controller"
     ]
   }
 }

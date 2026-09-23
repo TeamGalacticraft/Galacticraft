@@ -1,7 +1,0 @@
-{
-  "variants": {
-    "axis=x": { "model": "galacticraft:block/air_lock_seal", "uvlock": true },
-    "axis=y": { "model": "galacticraft:block/air_lock_seal_ud", "uvlock": true },
-    "axis=z": { "model": "galacticraft:block/air_lock_seal", "y": 90, "uvlock": true }
-  }
-}

@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_compressed_meteoric_iron": {
+    "has_oxygen_concentrator": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:compressed_meteoric_iron"
+            "items": "galacticraft:oxygen_concentrator"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:reinforced_air_lock_controller"
+        "recipe": "galacticraft:reinforced_airlock_frame"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_compressed_meteoric_iron"
+      "has_oxygen_concentrator"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:reinforced_air_lock_controller"
+      "galacticraft:reinforced_airlock_frame"
     ]
   }
 }

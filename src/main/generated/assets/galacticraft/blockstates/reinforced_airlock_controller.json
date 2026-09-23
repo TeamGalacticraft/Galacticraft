@@ -1,0 +1,7 @@
+{
+  "variants": {
+    "": {
+      "model": "galacticraft:machine/reinforced_airlock_controller"
+    }
+  }
+}

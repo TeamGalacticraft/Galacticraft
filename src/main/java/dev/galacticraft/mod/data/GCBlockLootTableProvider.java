@@ -327,16 +327,16 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
 
         //AIRLOCKS
         //basic
-        this.dropSelf(GCBlocks.AIR_LOCK_CONTROLLER);
-        this.dropSelf(GCBlocks.AIR_LOCK_FRAME);
+        this.dropSelf(GCBlocks.AIRLOCK_CONTROLLER);
+        this.dropSelf(GCBlocks.AIRLOCK_FRAME);
         //reinforced
-        this.dropSelf(GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER);
-        this.dropSelf(GCBlocks.REINFORCED_AIR_LOCK_FRAME);
+        this.dropSelf(GCBlocks.REINFORCED_AIRLOCK_CONTROLLER);
+        this.dropSelf(GCBlocks.REINFORCED_AIRLOCK_FRAME);
         //structure
-        this.add(GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER, noDrop());
-        this.add(GCBlocks.STRUCTURE_AIR_LOCK_FRAME, noDrop());
+        this.add(GCBlocks.STRUCTURE_AIRLOCK_CONTROLLER, noDrop());
+        this.add(GCBlocks.STRUCTURE_AIRLOCK_FRAME, noDrop());
         //seal
-        this.add(GCBlocks.AIR_LOCK_SEAL, noDrop());
+        this.add(GCBlocks.AIRLOCK_SEAL, noDrop());
 
         this.dropSelf(GCBlocks.CRYOGENIC_CHAMBER);
         this.dropSelf(GCBlocks.CIRCUIT_FABRICATOR);

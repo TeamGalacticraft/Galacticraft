@@ -565,12 +565,12 @@ public class GCModelProvider extends FabricModelProvider {
     }
 
     private void createAirlockBlocks(BlockModelGenerators generator) {
-        Block basicFrame = GCBlocks.AIR_LOCK_FRAME;
-        Block reinforcedFrame = GCBlocks.REINFORCED_AIR_LOCK_FRAME;
-        Block structureFrame = GCBlocks.STRUCTURE_AIR_LOCK_FRAME;
-        Block basicController = GCBlocks.AIR_LOCK_CONTROLLER;
-        Block reinforcedController = GCBlocks.REINFORCED_AIR_LOCK_CONTROLLER;
-        Block structureController = GCBlocks.STRUCTURE_AIR_LOCK_CONTROLLER;
+        Block basicFrame = GCBlocks.AIRLOCK_FRAME;
+        Block reinforcedFrame = GCBlocks.REINFORCED_AIRLOCK_FRAME;
+        Block structureFrame = GCBlocks.STRUCTURE_AIRLOCK_FRAME;
+        Block basicController = GCBlocks.AIRLOCK_CONTROLLER;
+        Block reinforcedController = GCBlocks.REINFORCED_AIRLOCK_CONTROLLER;
+        Block structureController = GCBlocks.STRUCTURE_AIRLOCK_CONTROLLER;
 
         // Generate frame blocks
         generator.createTrivialCube(basicFrame);

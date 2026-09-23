@@ -11,7 +11,7 @@
       "entries": [
         {
           "type": "minecraft:item",
-          "name": "galacticraft:reinforced_air_lock_frame"
+          "name": "galacticraft:reinforced_airlock_controller"
         }
       ],
       "rolls": 1.0
