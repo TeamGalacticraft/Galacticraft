@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.moon;
 
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import net.minecraft.world.entity.EntityType;

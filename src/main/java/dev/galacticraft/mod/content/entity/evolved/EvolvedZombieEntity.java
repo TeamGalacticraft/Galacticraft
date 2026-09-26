@@ -20,16 +20,32 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Pillager;
+import net.minecraft.world.entity.monster.Zombie;
 import net.minecraft.world.level.Level;
 
-public class EvolvedPillagerEntity extends Pillager {
-    public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, Level world) {
+public class EvolvedZombieEntity extends Zombie {
+    public EvolvedZombieEntity(EntityType<? extends EvolvedZombieEntity> entityType, Level world) {
         super(entityType, world);
+    }
+
+    @Override
+    public boolean isUnderWaterConverting() {
+        return false;
+    }
+
+    @Override
+    protected boolean convertsInWater() {
+        return false;
+    }
+
+    @Override
+    protected boolean isSunBurnTick() {
+        return super.isSunBurnTick() && this.level().getBiome(this.blockPosition()).is(GCBiomes.Moon.BASALTIC_MARE);
     }
 
     @Override
@@ -44,6 +60,6 @@ public class EvolvedPillagerEntity extends Pillager {
 
     @Override
     public String galacticraft$tankSize(int i) {
-        return Constant.Item.LARGE_OXYGEN_TANK;
+        return Constant.Item.MEDIUM_OXYGEN_TANK;
     }
 }

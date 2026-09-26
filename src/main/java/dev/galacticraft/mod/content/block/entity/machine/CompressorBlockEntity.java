@@ -148,16 +148,18 @@ public class CompressorBlockEntity extends AbstractCompressorBlockEntity impleme
     @Override
     public @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("extinguish");
-        if (this.fuelTime > 0 && this.shouldExtinguish(level, pos, state)) {
-            this.fuelLength = 0;
-            this.fuelTime = 0;
-            RandomSource randomSource = level.getRandom();
-            level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
+        try {
+            if (this.fuelTime > 0 && this.shouldExtinguish(level, pos, state)) {
+                this.fuelLength = 0;
+                this.fuelTime = 0;
+                RandomSource randomSource = level.getRandom();
+                level.playSound(null, pos, SoundEvents.FIRE_EXTINGUISH, SoundSource.BLOCKS, 0.25F, 2.6F + (randomSource.nextFloat() - randomSource.nextFloat()) * 0.8F);
 
+                return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
+            }
+        } finally {
             profiler.pop();
-            return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
         }
-        profiler.pop();
 
         RecipeHolder<CompressingRecipe> recipe = this.getActiveRecipe();
         if (recipe != null && this.getState().isActive()) {

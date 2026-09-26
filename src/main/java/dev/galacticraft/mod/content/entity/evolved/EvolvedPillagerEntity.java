@@ -20,15 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.EnderMan;
+import net.minecraft.world.entity.monster.Pillager;
 import net.minecraft.world.level.Level;
 
-public class EvolvedEndermanEntity extends EnderMan {
-    public EvolvedEndermanEntity(EntityType<? extends EvolvedEndermanEntity> entityType, Level world) {
+public class EvolvedPillagerEntity extends Pillager {
+    public EvolvedPillagerEntity(EntityType<? extends EvolvedPillagerEntity> entityType, Level world) {
         super(entityType, world);
     }
 
@@ -44,6 +44,6 @@ public class EvolvedEndermanEntity extends EnderMan {
 
     @Override
     public String galacticraft$tankSize(int i) {
-        return Constant.Item.MEDIUM_OXYGEN_TANK;
+        return Constant.Item.LARGE_OXYGEN_TANK;
     }
 }

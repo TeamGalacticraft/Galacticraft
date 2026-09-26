@@ -20,30 +20,24 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.gametest;
 
-import dev.galacticraft.mod.Constant;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Evoker;
-import net.minecraft.world.level.Level;
+import net.minecraft.gametest.framework.AfterBatch;
+import net.minecraft.gametest.framework.BeforeBatch;
+import net.minecraft.server.level.ServerLevel;
 
-public class EvolvedEvokerEntity extends Evoker {
-    public EvolvedEvokerEntity(EntityType<? extends EvolvedEvokerEntity> entityType, Level world) {
-        super(entityType, world);
+/**
+ * This class should be listed at the beginning of the "fabric-gametest" entrypoints,
+ * so that the batch set-up and tear-down functions are registered before they are accessed.
+ */
+public final class BatchFunctions implements GalacticraftGameTest {
+    @BeforeBatch(batch = "nonBreathable")
+    public static void beforeNonBreathableBatch(ServerLevel level) {
+        level.setDefaultBreathable(false);
     }
 
-    @Override
-    public boolean galacticraft$hasMask() {
-        return true;
-    }
-
-    @Override
-    public boolean galacticraft$hasGear() {
-        return true;
-    }
-
-    @Override
-    public String galacticraft$tankSize(int i) {
-        return Constant.Item.LARGE_OXYGEN_TANK;
+    @AfterBatch(batch = "nonBreathable")
+    public static void afterNonBreathableBatch(ServerLevel level) {
+        level.setDefaultBreathable(true);
     }
 }

@@ -20,15 +20,15 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.evolved;
 
 import dev.galacticraft.mod.Constant;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.monster.Spider;
+import net.minecraft.world.entity.monster.EnderMan;
 import net.minecraft.world.level.Level;
 
-public class EvolvedSpiderEntity extends Spider {
-    public EvolvedSpiderEntity(EntityType<? extends Spider> entityType, Level world) {
+public class EvolvedEndermanEntity extends EnderMan {
+    public EvolvedEndermanEntity(EntityType<? extends EvolvedEndermanEntity> entityType, Level world) {
         super(entityType, world);
     }
 

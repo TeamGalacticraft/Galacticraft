@@ -20,27 +20,14 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.render.entity.feature;
+package dev.galacticraft.mod.content.entity.moon;
 
-import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.evolved.EvolvedSpiderEntity;
-import net.fabricmc.api.EnvType;
-import net.fabricmc.api.Environment;
-import net.minecraft.client.model.SpiderModel;
-import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.entity.RenderLayerParent;
-import net.minecraft.client.renderer.entity.layers.EyesLayer;
+import net.minecraft.world.entity.EntityType;
+import net.minecraft.world.entity.npc.Villager;
+import net.minecraft.world.level.Level;
 
-@Environment(EnvType.CLIENT)
-public class EvolvedSpiderEyesRenderLayer<T extends EvolvedSpiderEntity, M extends SpiderModel<T>> extends EyesLayer<T, M> {
-    private static final RenderType LAYER = RenderType.eyes(Constant.id(Constant.EntityTexture.EVOLVED_SPIDER_EYES));
-
-    public EvolvedSpiderEyesRenderLayer(RenderLayerParent<T, M> featureRendererContext) {
-        super(featureRendererContext);
-    }
-
-    @Override
-    public RenderType renderType() {
-        return LAYER;
+public class MoonVillagerEntity extends Villager {
+    public MoonVillagerEntity(EntityType<? extends MoonVillagerEntity> entityType, Level level) {
+        super(entityType, level);
     }
 }

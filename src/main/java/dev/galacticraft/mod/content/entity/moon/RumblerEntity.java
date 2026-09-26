@@ -20,20 +20,18 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.content.entity;
+package dev.galacticraft.mod.content.entity.moon;
 
 import dev.galacticraft.api.entity.attribute.GcApiEntityAttributes;
 import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.FlyingMob;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.goal.RandomLookAroundGoal;
-import net.minecraft.world.entity.monster.Enemy;
 import net.minecraft.world.entity.monster.Monster;
 import net.minecraft.world.level.Level;
 
-public class CometCubeEntity extends FlyingMob implements Enemy {
-    public CometCubeEntity(EntityType<? extends FlyingMob> entityType, Level level) {
+public class RumblerEntity extends Monster {
+    public RumblerEntity(EntityType<? extends Monster> entityType, Level level) {
         super(entityType, level);
     }
 
