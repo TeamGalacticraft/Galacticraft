@@ -25,6 +25,7 @@ package dev.galacticraft.mod.gametest.machine;
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
+import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.ResourceFlow;
 import dev.galacticraft.machinelib.api.transfer.ResourceType;
 import dev.galacticraft.machinelib.api.util.BlockFace;
@@ -68,14 +69,16 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
     }
 
     @MachineTest(workTime = 333)
-    public Runnable hopperInsertionTest(CircuitFabricatorBlockEntity machine, GameTestHelper context) {
-        machine.itemStorage().slot(CircuitFabricatorBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
+    public Runnable hopperInsertion(CircuitFabricatorBlockEntity machine, GameTestHelper helper) {
+        ItemResourceSlot output = machine.itemStorage().slot(CircuitFabricatorBlockEntity.OUTPUT_SLOT);
+
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         machine.getIOConfig().get(BlockFace.TOP).setOption(ResourceType.ITEM, ResourceFlow.INPUT);
 
         final BlockPos hopperPos = MACHINE_POS.above();
 
-        context.setBlock(hopperPos, Blocks.HOPPER.defaultBlockState());
-        HopperBlockEntity hopper = context.getBlockEntity(hopperPos);
+        helper.setBlock(hopperPos, Blocks.HOPPER);
+        HopperBlockEntity hopper = helper.getBlockEntity(hopperPos);
 
         hopper.setItem(0, new ItemStack(Items.DIAMOND, 1));
         hopper.setItem(1, new ItemStack(GCItems.SILICON, 2));
@@ -83,7 +86,7 @@ public final class CircuitFabricatorTestSuite extends RecipeGameTest<RecipeInput
         hopper.setItem(3, new ItemStack(Items.REDSTONE_TORCH, 1));
 
         return () -> Assertions.assertTrue(
-                machine.itemStorage().slot(CircuitFabricatorBlockEntity.OUTPUT_SLOT).contains(GCItems.BASIC_WAFER),
+                output.contains(GCItems.BASIC_WAFER),
                 "Expected hopper to insert ingredients into the correct slots of the circuit fabricator to craft recipe"
         );
     }
