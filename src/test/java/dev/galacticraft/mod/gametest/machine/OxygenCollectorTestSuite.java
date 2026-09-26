@@ -58,24 +58,27 @@ public final class OxygenCollectorTestSuite extends MachineGameTest<OxygenCollec
 
     @MachineTest(batch = "breathable")
     public Runnable collectOxygenFromAtmosphere(OxygenCollectorBlockEntity machine) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         FluidResourceSlot oxygen = machine.fluidStorage().slot(OxygenCollectorBlockEntity.OXYGEN_TANK);
+
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
 
         return () -> Assertions.assertFalse(oxygen.isEmpty(), "Expected oxygen collector to produce oxygen in a breathable atmosphere!");
     }
 
     @MachineTest(batch = "nonBreathable")
     public Runnable dontCollectOxygenFromAtmosphere(OxygenCollectorBlockEntity machine) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         FluidResourceSlot oxygen = machine.fluidStorage().slot(OxygenCollectorBlockEntity.OXYGEN_TANK);
+
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
 
         return () -> Assertions.assertTrue(oxygen.isEmpty(), "Expected oxygen collector to not produce any oxygen in a non-breathable atmosphere!");
     }
 
     @MachineTest(batch = "nonBreathable")
     public Runnable collectOxygenFromLeaves(OxygenCollectorBlockEntity machine, GameTestHelper helper) {
-        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
         FluidResourceSlot oxygen = machine.fluidStorage().slot(OxygenCollectorBlockEntity.OXYGEN_TANK);
+
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
 
         BlockState leaves = Blocks.OAK_LEAVES.defaultBlockState().setValue(LeavesBlock.PERSISTENT, false);
         for (BlockPos pos : BlockPos.betweenClosed(0, 1, 0, 2, 3, 2)) {
