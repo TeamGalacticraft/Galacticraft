@@ -38,6 +38,7 @@
       "dev.galacticraft.mod.gametest.machine.ElectricFurnaceTestSuite",
       "dev.galacticraft.mod.gametest.machine.EnergyStorageModuleTestSuite",
       "dev.galacticraft.mod.gametest.machine.FuelLoaderTestSuite",
+      "dev.galacticraft.mod.gametest.machine.OxygenCollectorTestSuite",
       "dev.galacticraft.mod.gametest.machine.OxygenSealerTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
       "dev.galacticraft.mod.gametest.ExtinguishableTestSuite",
