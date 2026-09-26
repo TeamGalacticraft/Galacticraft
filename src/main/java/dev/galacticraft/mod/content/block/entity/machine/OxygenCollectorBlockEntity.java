@@ -97,6 +97,9 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     }
 
     private int collectOxygen(@NotNull ServerLevel level, @NotNull BlockPos pos) {
+        // Start at the maximum value, which is attained in dimensions with a breathable atmosphere
+        long amountCollected = Galacticraft.CONFIG.oxygenCollectorProductionLimit();
+
         if (!this.oxygenWorld) {
             int minX = pos.getX() - 5;
             int minY = pos.getY() - 5;
@@ -105,7 +108,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
             int maxY = pos.getY() + 5;
             int maxZ = pos.getZ() + 5;
 
-            float leafBlocks = 0;
+            float leafBlocks = 0.0F;
 
             for (BlockPos pos1 : BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ)) {
                 BlockState state = level.getBlockState(pos1);
@@ -116,12 +119,10 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 leafBlocks += OxygenBlockDataManager.getOxygen(level, pos1, state);
             }
 
-            if (leafBlocks < 2) return 0;
-
-            double oxyCount = 20 * (leafBlocks / 14.0F);
-            return (int) Math.ceil(oxyCount) / 20; //every tick
+            amountCollected = Math.min(amountCollected, ((long) Math.floor(leafBlocks / 16.0F)) * FluidUtil.MILLIBUCKET);
         }
-        return 183 / 20;
+
+        return (int) amountCollected;
     }
 
     @Override
@@ -137,6 +138,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
         profiler.pop();
 
         if (this.fluidStorage().slot(OXYGEN_TANK).isFull()) {
+            this.collectionAmount = 0;
             return GCMachineStatuses.OXYGEN_TANK_FULL;
         }
 
@@ -148,7 +150,7 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
                 profiler.pop();
                 if (this.collectionAmount > 0) {
                     this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
-                    this.fluidStorage().slot(OXYGEN_TANK).insert(Gases.OXYGEN, FluidUtil.bucketsToDroplets(this.collectionAmount));
+                    this.collectionAmount = (int) this.fluidStorage().slot(OXYGEN_TANK).insert(Gases.OXYGEN, this.collectionAmount);
                     return GCMachineStatuses.COLLECTING;
                 } else {
                     return GCMachineStatuses.NOT_ENOUGH_OXYGEN;

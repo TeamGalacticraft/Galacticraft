@@ -53,6 +53,8 @@ public interface Config {
 
     long oxygenCollectorEnergyConsumptionRate();
 
+    long oxygenCollectorProductionLimit();
+
     long oxygenCompressorEnergyConsumptionRate();
 
     long oxygenDecompressorEnergyConsumptionRate();

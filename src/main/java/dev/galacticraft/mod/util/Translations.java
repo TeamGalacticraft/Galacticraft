@@ -214,6 +214,7 @@ public interface Translations {
         String ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_arc_furnace_energy_consumption_rate";
         String ELECTRIC_ARC_FURNACE_BONUS_CHANCE = "config.galacticraft.energy.machines.electric_arc_furnace_bonus_chance";
         String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
+        String OXYGEN_COLLECTOR_PRODUCTION_LIMIT = "config.galacticraft.energy.machines.oxygen_collector_production_limit";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
         String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_energy_consumption_rate";

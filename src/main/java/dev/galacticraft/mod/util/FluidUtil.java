@@ -38,6 +38,8 @@ public class FluidUtil {
     public static final String SUFFIX_MILLIBUCKETS = "mB";
     public static final String SUFFIX_BUCKETS = "B";
 
+    public static final long MILLIBUCKET = FluidConstants.BUCKET / 1000;
+
     public static long bucketsToDroplets(int buckets) {
         return buckets * FluidConstants.BUCKET;
     }
