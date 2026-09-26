@@ -175,6 +175,7 @@ public class GCCreativeModeTabs {
                 output.accept(DESH_ORE);
 
                 output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_SILICON_ORE);
                 output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(ILMENITE_ORE);
 
