@@ -30,6 +30,7 @@ import dev.galacticraft.mod.tag.GCBlockTags;
 import dev.galacticraft.mod.tag.GCItemTags;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.fabricmc.fabric.api.datagen.v1.provider.FabricTagProvider;
+import net.fabricmc.fabric.api.tag.convention.v2.ConventionalBlockTags;
 import net.fabricmc.fabric.api.tag.convention.v2.ConventionalItemTags;
 import net.minecraft.Util;
 import net.minecraft.core.HolderLookup;
@@ -210,6 +211,27 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.INFINITE_BATTERY);
 
         // ORE TAGS
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_MOON_ROCK, GCItemTags.ORE_BEARING_GROUND_MOON_ROCK);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_MOON_BASALT, GCItemTags.ORE_BEARING_GROUND_MOON_BASALT);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_LUNASLATE, GCItemTags.ORE_BEARING_GROUND_LUNASLATE);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_MARS_STONE, GCItemTags.ORE_BEARING_GROUND_MARS_STONE);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_ASTEROID_ROCK, GCItemTags.ORE_BEARING_GROUND_ASTEROID_ROCK);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK, GCItemTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK);
+        this.copy(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK, GCItemTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK);
+
+        this.copy(ConventionalBlockTags.ORES_IN_GROUND_STONE, ConventionalItemTags.ORES_IN_GROUND_STONE);
+        this.copy(ConventionalBlockTags.ORES_IN_GROUND_DEEPSLATE, ConventionalItemTags.ORES_IN_GROUND_DEEPSLATE);
+        this.copy(GCBlockTags.ORES_IN_GROUND_MOON_ROCK, GCItemTags.ORES_IN_GROUND_MOON_ROCK);
+        this.copy(GCBlockTags.ORES_IN_GROUND_MOON_BASALT, GCItemTags.ORES_IN_GROUND_MOON_BASALT);
+        this.copy(GCBlockTags.ORES_IN_GROUND_LUNASLATE, GCItemTags.ORES_IN_GROUND_LUNASLATE);
+        this.copy(GCBlockTags.ORES_IN_GROUND_MARS_STONE, GCItemTags.ORES_IN_GROUND_MARS_STONE);
+        this.copy(GCBlockTags.ORES_IN_GROUND_ASTEROID_ROCK, GCItemTags.ORES_IN_GROUND_ASTEROID_ROCK);
+        this.copy(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK, GCItemTags.ORES_IN_GROUND_SOFT_VENUS_ROCK);
+        this.copy(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK, GCItemTags.ORES_IN_GROUND_HARD_VENUS_ROCK);
+
+        this.copy(ConventionalBlockTags.ORE_RATES_DENSE, ConventionalItemTags.ORE_RATES_DENSE);
+        this.copy(ConventionalBlockTags.ORE_RATES_SINGULAR, ConventionalItemTags.ORE_RATES_SINGULAR);
+
         this.tag(ItemTags.IRON_ORES)
                 .add(GCBlocks.MARS_IRON_ORE.asItem())
                 .add(GCBlocks.ASTEROID_IRON_ORE.asItem());

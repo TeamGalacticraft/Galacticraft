@@ -58,6 +58,22 @@ public class GCItemTags {
     public static final TagKey<Item> OLIVINE_SHARDS = commonTag("gems/olivine");
     public static final TagKey<Item> LUNAR_SAPPHIRES = commonTag("gems/lunar_sapphire");
 
+    public static final TagKey<Item> ORE_BEARING_GROUND_MOON_ROCK = commonTag("ore_bearing_ground/moon_rock");
+    public static final TagKey<Item> ORE_BEARING_GROUND_MOON_BASALT = commonTag("ore_bearing_ground/moon_basalt");
+    public static final TagKey<Item> ORE_BEARING_GROUND_LUNASLATE = commonTag("ore_bearing_ground/lunaslate");
+    public static final TagKey<Item> ORE_BEARING_GROUND_MARS_STONE = commonTag("ore_bearing_ground/mars_stone");
+    public static final TagKey<Item> ORE_BEARING_GROUND_ASTEROID_ROCK = commonTag("ore_bearing_ground/asteroid_rock");
+    public static final TagKey<Item> ORE_BEARING_GROUND_SOFT_VENUS_ROCK = commonTag("ore_bearing_ground/soft_venus_rock");
+    public static final TagKey<Item> ORE_BEARING_GROUND_HARD_VENUS_ROCK = commonTag("ore_bearing_ground/hard_venus_rock");
+
+    public static final TagKey<Item> ORES_IN_GROUND_MOON_ROCK = commonTag("ores_in_ground/moon_rock");
+    public static final TagKey<Item> ORES_IN_GROUND_MOON_BASALT = commonTag("ores_in_ground/moon_basalt");
+    public static final TagKey<Item> ORES_IN_GROUND_LUNASLATE = commonTag("ores_in_ground/lunaslate");
+    public static final TagKey<Item> ORES_IN_GROUND_MARS_STONE = commonTag("ores_in_ground/mars_stone");
+    public static final TagKey<Item> ORES_IN_GROUND_ASTEROID_ROCK = commonTag("ores_in_ground/asteroid_rock");
+    public static final TagKey<Item> ORES_IN_GROUND_SOFT_VENUS_ROCK = commonTag("ores_in_ground/soft_venus_rock");
+    public static final TagKey<Item> ORES_IN_GROUND_HARD_VENUS_ROCK = commonTag("ores_in_ground/hard_venus_rock");
+
     public static final TagKey<Item> ALUMINUM_ORES = commonTag("ores/aluminum");
     public static final TagKey<Item> CHEESE_ORES = commonTag("ores/cheese");
     public static final TagKey<Item> DESH_ORES = commonTag("ores/desh");

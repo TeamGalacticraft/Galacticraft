@@ -664,6 +664,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.OLIVINE_SHARDS, "Olivine Shards");
         this.tag(GCItemTags.LUNAR_SAPPHIRES, "Lunar Sapphires");
 
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MOON_ROCK, "Moon Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MOON_BASALT, "Moon Basalt Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_LUNASLATE, "Lunaslate Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MARS_STONE, "Mars Stone Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_ASTEROID_ROCK, "Asteroid Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK, "Soft Venus Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK, "Hard Venus Rock Ore Bearing Ground");
+
+        this.tag(GCItemTags.ORES_IN_GROUND_MOON_ROCK, "Moon Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_MOON_BASALT, "Moon Basalt Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_LUNASLATE, "Lunaslate Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_MARS_STONE, "Mars Stone Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_ASTEROID_ROCK, "Asteroid Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_SOFT_VENUS_ROCK, "Soft Venus Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_HARD_VENUS_ROCK, "Hard Venus Rock Ores In Ground");
+
         this.tag(GCItemTags.ALUMINUM_ORES, "Aluminum Ores");
         this.tag(GCItemTags.CHEESE_ORES, "Cheese Ores");
         this.tag(GCItemTags.DESH_ORES, "Desh Ores");
