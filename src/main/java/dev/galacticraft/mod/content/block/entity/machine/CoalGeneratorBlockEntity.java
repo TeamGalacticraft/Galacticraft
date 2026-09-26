@@ -164,18 +164,18 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
         }
 
         profiler.push("fuel_reset");
-
-        if (this.fuelLength == 0) {
-            MachineStatus status = this.consumeFuel(level, pos, state);
-            if (status != null) {
-                profiler.pop();
-                return status;
+        try {
+            if (this.fuelLength == 0) {
+                MachineStatus status = this.consumeFuel(level, pos, state);
+                if (status != null) {
+                    return status;
+                }
+            } else if (++this.fuelTime >= this.fuelLength) {
+                this.consumeFuel(level, pos, state);
             }
-        } else if (++this.fuelTime >= this.fuelLength) {
-            this.consumeFuel(level, pos, state);
+        } finally {
+            profiler.pop();
         }
-
-        profiler.pop();
 
         this.curr = this.heat == 1.0;
 

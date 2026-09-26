@@ -134,9 +134,13 @@ public class OxygenCollectorBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
         this.fluidSource.trySpreadFluids(level, pos, state);
+        profiler.pop();
 
-        if (this.fluidStorage().slot(OXYGEN_TANK).isFull()) return GCMachineStatuses.OXYGEN_TANK_FULL;
-        profiler.popPush("transaction");
+        if (this.fluidStorage().slot(OXYGEN_TANK).isFull()) {
+            return GCMachineStatuses.OXYGEN_TANK_FULL;
+        }
+
+        profiler.push("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) {
                 profiler.push("collect");
