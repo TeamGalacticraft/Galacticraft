@@ -113,23 +113,24 @@ public class OxygenCompressorBlockEntity extends MachineBlockEntity {
         if (!tank.supportsInsertion() || space == 0) return GCMachineStatuses.OXYGEN_TANK_FULL;
 
         profiler.push("transaction");
-        if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
-            long available = oxygenStorage.extract(Gases.OXYGEN, space);
-            if (available > 0) {
-                this.energyStorage().extract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate());
-                try (Transaction transaction = Transaction.openOuter()) {
-                    tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
-                    transaction.commit();
-                    profiler.pop();
-                    return GCMachineStatuses.COMPRESSING_OXYGEN;
+        try {
+            if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate())) {
+                long available = oxygenStorage.extract(Gases.OXYGEN, space);
+                if (available > 0) {
+                    this.energyStorage().extract(Galacticraft.CONFIG.oxygenCompressorEnergyConsumptionRate());
+                    try (Transaction transaction = Transaction.openOuter()) {
+                        tank.insert(FluidVariant.of(Gases.OXYGEN), available, transaction);
+                        transaction.commit();
+                        return GCMachineStatuses.COMPRESSING_OXYGEN;
+                    }
+                } else {
+                    return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
                 }
             } else {
-                profiler.pop();
-                return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
+                return MachineStatuses.NOT_ENOUGH_ENERGY;
             }
-        } else {
+        } finally {
             profiler.pop();
-            return MachineStatuses.NOT_ENOUGH_ENERGY;
         }
     }
 

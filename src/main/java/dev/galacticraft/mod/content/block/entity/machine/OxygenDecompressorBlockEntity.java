@@ -113,8 +113,8 @@ public class OxygenDecompressorBlockEntity extends MachineBlockEntity {
         if (StorageUtil.simulateExtract(tank, FluidVariant.of(Gases.OXYGEN), Long.MAX_VALUE, null) == 0) {
             return GCMachineStatuses.EMPTY_OXYGEN_TANK;
         }
-        profiler.push("transaction");
 
+        profiler.push("transaction");
         try {
             if (this.energyStorage().extractExact(Galacticraft.CONFIG.oxygenDecompressorEnergyConsumptionRate())) {
                 StorageHelper.move(FluidVariant.of(Gases.OXYGEN), tank, this.fluidStorage().slot(OXYGEN_TANK), Long.MAX_VALUE, null);
