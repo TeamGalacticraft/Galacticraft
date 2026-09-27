@@ -189,6 +189,10 @@ repositories {
     maven("https://maven.terraformersmc.com/releases/") {
         content {
             includeGroup("com.terraformersmc")
+        }
+    }
+    maven("https://repo.sleeping.town") {
+        content {
             includeGroup("dev.emi")
         }
     }
