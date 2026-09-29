@@ -1113,6 +1113,15 @@ public class GCTranslationProvider extends TranslationProvider {
                         "Use IDs such as galacticraft:moon or galacticraft:venus. " +
                         "A server/world restart is required after changing this setting."
         );
+        this.add(Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS, "Disabled Celestial Screen Dimensions");
+        this.add(Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC,
+                "Dimensions listed here will not be accessible via the celestial screen. " +
+                        "Use IDs such as galacticraft:moon or galacticraft:venus. " +
+                        "A server/world restart is required after changing this setting."
+        );
+
+        this.add(Config.SERVER, "Server");
+        this.add(Config.SERVER_SIDE_DIMENSION, "Server Side Dimension Config");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");

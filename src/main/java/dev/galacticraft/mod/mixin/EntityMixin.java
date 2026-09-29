@@ -294,6 +294,7 @@ public abstract class EntityMixin implements EntityAccessor {
                     target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"
             )
     )
+    @SuppressWarnings({"rawtypes", "unchecked"})
     private void galacticraft$onBelowWorld(
             Entity entity,
             Operation<Void> original
@@ -303,7 +304,12 @@ public abstract class EntityMixin implements EntityAccessor {
             return;
         }
 
-        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
+        if (!(entity.level() instanceof ServerLevel currentLevel)) {
+            original.call(entity);
+            return;
+        }
+
+        Holder<CelestialBody<?, ?>> holder = currentLevel.galacticraft$getCelestialBody();
 
         CelestialBody<?, ?> fromBody = holder != null ? holder.value() : null;
 
@@ -312,16 +318,11 @@ public abstract class EntityMixin implements EntityAccessor {
             return;
         }
 
-        Registry<CelestialBody<?, ?>> celestialBodies = entity.level().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+        Registry<CelestialBody<?, ?>> celestialBodies = currentLevel.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
 
         CelestialBody<?, ?> body = fromBody.parentValue(celestialBodies);
 
         if (!(body.type() instanceof Landable landable)) {
-            original.call(entity);
-            return;
-        }
-
-        if (!(entity.level() instanceof ServerLevel currentLevel)) {
             original.call(entity);
             return;
         }

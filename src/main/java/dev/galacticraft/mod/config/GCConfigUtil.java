@@ -27,6 +27,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.core.Registry;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
@@ -125,7 +126,7 @@ public final class GCConfigUtil {
             return true;
         }
 
-        ResourceKey<Level> key = ResourceKey.create(net.minecraft.core.registries.Registries.DIMENSION, dimension);
+        ResourceKey<Level> key = ResourceKey.create(Registries.DIMENSION, dimension);
 
         return isDimensionUnavailable(server, key);
     }

@@ -10,7 +10,7 @@
         },
         "target": {
           "predicate_type": "minecraft:tag_match",
-          "tag": "galacticraft:moon_stone_ore_replaceables"
+          "tag": "galacticraft:moon_rock_ore_replaceables"
         }
       }
     ]

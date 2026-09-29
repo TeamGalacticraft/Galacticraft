@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import net.minecraft.core.Registry;
@@ -31,7 +33,6 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.world.level.dimension.LevelStem;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -47,7 +48,7 @@ public abstract class MinecraftServerDimensionMixin {
      * ServerLevel constructor. Consequently, their region files are never opened,
      * chunks are never loaded, and world generation never runs.</p>
      */
-    @Redirect(
+    @WrapOperation(
             method = "createLevels",
             at = @At(
                     value = "INVOKE",
@@ -56,21 +57,22 @@ public abstract class MinecraftServerDimensionMixin {
     )
     private Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>>
     galacticraft$filterDisabledDimensions(
-            Registry<LevelStem> registry
+            Registry<LevelStem> registry,
+            Operation<Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>>> original
     ) {
         MinecraftServer server = (MinecraftServer) (Object) this;
 
-        Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>> original = registry.entrySet();
+        Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>> entries = original.call(registry);
 
         Set<ResourceLocation> disabled = GCConfigUtil.disabledDimensions(server);
 
         if (disabled.isEmpty()) {
-            return original;
+            return entries;
         }
 
-        Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>> filtered = new LinkedHashSet<>(original.size());
+        Set<Map.Entry<ResourceKey<LevelStem>, LevelStem>> filtered = new LinkedHashSet<>(entries.size());
 
-        for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : original) {
+        for (Map.Entry<ResourceKey<LevelStem>, LevelStem> entry : entries) {
             ResourceKey<LevelStem> stemKey = entry.getKey();
 
             /*
@@ -81,11 +83,11 @@ public abstract class MinecraftServerDimensionMixin {
                 continue;
             }
 
-            if (GCConfigUtil.isDimensionDisabled(
-                    server,
-                    stemKey.location()
-            )) {
-                Constant.LOGGER.info("Dimension {} is disabled; its ServerLevel will not be created.", stemKey.location());
+            if (disabled.contains(stemKey.location())) {
+                Constant.LOGGER.info(
+                        "Dimension {} is disabled; its ServerLevel will not be created.",
+                        stemKey.location()
+                );
                 continue;
             }
 
