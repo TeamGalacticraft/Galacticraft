@@ -87,13 +87,14 @@ public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecip
     public void setRecipe(IRecipeLayoutBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
         builder.addInputSlot(INPUT_X - JEI_X, INPUT_Y - JEI_Y)
                 .setStandardSlotBackground()
-                .addIngredients(recipe.getIngredients().get(0));
+                .addIngredients(recipe.getIngredients().getFirst());
         builder.addOutputSlot(OUTPUT_X - JEI_X, OUTPUT_Y - JEI_Y)
                 .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
     }
 
     @Override
+    @SuppressWarnings("removal")
     public void createRecipeExtras(IRecipeExtrasBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
         int cookingTime = recipe.getCookingTime();
         if (cookingTime > 0) {

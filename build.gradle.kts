@@ -57,7 +57,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
-    id("fabric-loom") version("1.10-SNAPSHOT")
+    id("fabric-loom") version("1.13.6")
     id("com.diffplug.spotless") version("7.0.4")
     id("org.ajoberstar.grgit") version("5.3.2")
     id("dev.galacticraft.mojarn") version("0.6.1+19")
@@ -107,8 +107,13 @@ base.archivesName.set(modName)
 
 loom {
     accessWidenerPath.set(project.file("src/main/resources/galacticraft.accesswidener"))
-    mixin.add(sourceSets.main.get(), "galacticraft.refmap.json")
-    mixin.add(sourceSets.test.get(), "galacticraft-test.refmap.json")
+
+    @Suppress("UnstableApiUsage")
+    mixin {
+        useLegacyMixinAp = true
+        add(sourceSets.main.get(), "galacticraft.refmap.json")
+        add(sourceSets.test.get(), "galacticraft-test.refmap.json")
+    }
 
     runs {
         getByName("client") {

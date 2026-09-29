@@ -112,6 +112,7 @@ public class JEICompressingCategory implements IRecipeCategory<CompressingRecipe
     }
 
     @Override
+    @SuppressWarnings("removal") // Not enough of a difference to warrant swapping yet
     public void createRecipeExtras(IRecipeExtrasBuilder builder, CompressingRecipe recipe, IFocusGroup focuses) {
         int time = recipe.getTime();
         if (time > 0) {
