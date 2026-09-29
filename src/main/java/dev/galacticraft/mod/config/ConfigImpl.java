@@ -102,6 +102,8 @@ public class ConfigImpl implements Config {
 
     private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
 
+    private List<String> disabledDimensions = new ArrayList<>();
+
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -477,7 +479,18 @@ public class ConfigImpl implements Config {
     public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
         this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
                 ? new ArrayList<>()
-                : disabledCelestialScreenDimensions;
+                : new ArrayList<>(disabledCelestialScreenDimensions);
+    }
+
+    @Override
+    public List<String> disabledDimensions() {
+        return this.disabledDimensions;
+    }
+
+    public void setDisabledDimensions(List<String> disabledDimensions) {
+        this.disabledDimensions = disabledDimensions == null
+                ? new ArrayList<>()
+                : new ArrayList<>(disabledDimensions);
     }
 
     public void load() {
@@ -874,6 +887,17 @@ public class ConfigImpl implements Config {
                     .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
                     .setSaveConsumer(config::setEnableSpaceStationCreation)
                     .setDefaultValue(true)
+                    .build()
+            );
+
+            misc.addEntry(ConfigEntryBuilder.create()
+                    .startStrList(
+                            Component.translatable(Translations.Config.DISABLED_DIMENSIONS),
+                            new ArrayList<>(config.disabledDimensions())
+                    )
+                    .setTooltip(Component.translatable(Translations.Config.DISABLED_DIMENSIONS_DESC))
+                    .setDefaultValue(List.of())
+                    .setSaveConsumer(config::setDisabledDimensions)
                     .build()
             );
 

@@ -30,6 +30,8 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.FallingMeteorEntity;
@@ -39,6 +41,7 @@ import dev.galacticraft.mod.network.c2s.CapeSelectionPayload;
 import dev.galacticraft.mod.network.s2c.FootprintRemovedPacket;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.entity.event.v1.ServerEntityWorldChangeEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.networking.v1.PlayerLookup;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayConnectionEvents;
@@ -46,7 +49,10 @@ import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
 import net.minecraft.core.Holder;
+import net.minecraft.core.registries.Registries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
@@ -58,6 +64,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.Vec3;
 
 public class GCEventHandlers {
     public static void init() {
@@ -69,6 +76,7 @@ public class GCEventHandlers {
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
+            recoverPlayerFromUnavailableDimension(server, handler.player);
             CapeSelectionPayload.sendCapeSnapshot(handler.player);
         });
 
@@ -76,15 +84,69 @@ public class GCEventHandlers {
             ServerCapeManager.remove(handler.player);
             CapeSelectionPayload.broadcastCapeSnapshot(server);
         });
+
+        ServerLifecycleEvents.SERVER_STOPPED.register(GCConfigUtil::clearServer);
     }
 
-    public static void onPlayerChangePlanets(MinecraftServer server, ServerPlayer player, CelestialBody<?, ?> body, CelestialBody<?, ?> fromBody) {
-        if (body.type() instanceof Landable landable && player.galacticraft$isCelestialScreenActive() && (player.galacticraft$getCelestialScreenState() == null || player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body))) {
-            player.galacticraft$closeCelestialScreen();
-            ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(server.getLevel(landable.world(body.config())), player, body, fromBody);
-        } else {
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    public static void onPlayerChangePlanets(
+            MinecraftServer server,
+            ServerPlayer player,
+            CelestialBody<?, ?> body,
+            CelestialBody<?, ?> fromBody
+    ) {
+        if (!(body.type() instanceof Landable landable)) {
             player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
+            return;
         }
+
+        if (!player.galacticraft$isCelestialScreenActive()) {
+            player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
+            return;
+        }
+
+        if (player.galacticraft$getCelestialScreenState() != null && !player.galacticraft$getCelestialScreenState().canTravel(server.registryAccess(), fromBody, body)) {
+            player.connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
+            return;
+        }
+
+        ResourceKey<Level> destinationKey = landable.world(body.config());
+
+        if (GCConfigUtil.isDimensionDisabled(server, destinationKey)) {
+            Constant.LOGGER.warn(
+                    "Blocked {} from travelling to disabled dimension {}.",
+                    player.getScoreboardName(),
+                    destinationKey.location()
+            );
+
+            player.galacticraft$closeCelestialScreen();
+            return;
+        }
+
+        ServerLevel destination = server.getLevel(destinationKey);
+
+        if (destination == null) {
+            Constant.LOGGER.warn(
+                    "Blocked {} from travelling to unavailable dimension {}.",
+                    player.getScoreboardName(),
+                    destinationKey.location()
+            );
+
+            player.galacticraft$closeCelestialScreen();
+            return;
+        }
+
+        player.galacticraft$closeCelestialScreen();
+
+        ((CelestialTeleporter) landable
+                .teleporter(body.config())
+                .value())
+                .onEnterAtmosphere(
+                        destination,
+                        player,
+                        body,
+                        fromBody
+                );
     }
 
     public static void onPlayerChangeWorld(ServerPlayer player, ServerLevel origin, ServerLevel destination) {
@@ -139,6 +201,81 @@ public class GCEventHandlers {
                 throwMeteor(server, level, player, 6);
             }
         });
+    }
+
+    private static void recoverPlayerFromUnavailableDimension(
+            MinecraftServer server,
+            ServerPlayer player
+    ) {
+        ServerPlayerAccessor accessor = (ServerPlayerAccessor) player;
+
+        ResourceLocation savedDimension =
+                accessor.galacticraft$getSavedLoginDimension();
+
+        /*
+         * Clear it immediately. We only need this information during login.
+         */
+        accessor.galacticraft$clearSavedLoginDimension();
+
+        if (savedDimension == null) {
+            return;
+        }
+
+        ResourceKey<Level> savedKey = ResourceKey.create(
+                Registries.DIMENSION,
+                savedDimension
+        );
+
+        /*
+         * This deliberately checks both:
+         *
+         * 1. Explicitly disabled dimensions.
+         * 2. Dimensions which simply no longer exist.
+         *
+         * The second case also protects players after removing another mod or
+         * datapack which previously supplied their current world.
+         */
+        boolean unavailable = GCConfigUtil.isDimensionDisabled(server, savedKey) || server.getLevel(savedKey) == null;
+
+        if (!unavailable) {
+            return;
+        }
+
+        ServerLevel overworld = server.overworld();
+
+        BlockPos spawn = overworld.getSharedSpawnPos();
+
+        Constant.LOGGER.warn(
+                "Player {} was saved in unavailable dimension {}. " +
+                        "Relocating them to the overworld spawn.",
+                player.getScoreboardName(),
+                savedDimension
+        );
+
+        /*
+         * Prevent stale state from a rocket/vehicle or celestial selection
+         * surviving the recovery.
+         */
+        player.galacticraft$closeCelestialScreen();
+
+        if (player.isPassenger()) {
+            player.stopRiding();
+        }
+
+        player.setDeltaMovement(Vec3.ZERO);
+        player.resetFallDistance();
+
+        player.teleportTo(
+                overworld,
+                spawn.getX() + 0.5D,
+                spawn.getY() + 0.1D,
+                spawn.getZ() + 0.5D,
+                player.getYRot(),
+                player.getXRot()
+        );
+
+        player.setDeltaMovement(Vec3.ZERO);
+        player.resetFallDistance();
     }
 
     private static void throwMeteor(MinecraftServer server, ServerLevel level, Player targetPlayer, int meteorSize) {

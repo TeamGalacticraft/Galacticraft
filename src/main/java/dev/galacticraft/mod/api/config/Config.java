@@ -105,6 +105,8 @@ public interface Config {
 
     List<String> disabledCelestialScreenDimensions();
 
+    List<String> disabledDimensions();
+
     void load();
 
     void save();

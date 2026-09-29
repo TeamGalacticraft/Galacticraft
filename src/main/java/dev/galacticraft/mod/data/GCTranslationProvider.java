@@ -1107,6 +1107,13 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
         this.add(Config.ENABLE_SPACE_STATION_CREATION, "Enable Space Station Creation");
 
+        this.add(Config.DISABLED_DIMENSIONS, "Disabled Dimensions");
+        this.add(Config.DISABLED_DIMENSIONS_DESC,
+                "Dimensions listed here will not be loaded or generated when the world starts. " +
+                        "Use IDs such as galacticraft:moon or galacticraft:venus. " +
+                        "A server/world restart is required after changing this setting."
+        );
+
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
     }

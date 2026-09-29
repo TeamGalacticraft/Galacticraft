@@ -33,6 +33,8 @@ import dev.galacticraft.dynamicdimensions.impl.registry.RegistryUtil;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.config.GCConfigUtil;
+import net.minecraft.core.Registry;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.*;
 import net.minecraft.resources.RegistryOps;
@@ -116,32 +118,94 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
-    public void galacticraft$loadSatellites(DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader) {
+    public void galacticraft$loadSatellites(
+            DynamicDimensionLoadCallback.DynamicDimensionLoader dynamicDimensionLoader
+    ) {
         Path worldFile = this.storageSource.getLevelPath(LevelResource.ROOT);
-        if (Files.exists(worldFile.resolve("satellites.dat"))) {
-            try {
-                ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap()).getList("satellites", Tag.TAG_COMPOUND);
-                RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
-                Constant.LOGGER.info("Loading {} satellites", nbt.size());
-                for (Tag compound : nbt) {
-                    assert compound instanceof CompoundTag : "Not a compound?!";
-                    ResourceLocation id = ResourceLocation.parse(((CompoundTag) compound).getString("id"));
-                    DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(ops, compound);
-                    if (decode.error().isPresent()) {
-                        Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());
-                        continue;
-                    }
-                    CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, decode.getOrThrow().getFirst());
-                    this.galacticraft$addSatellite(satellite, false);
 
-                    LevelStem levelStem = satellite.config().getOptions();
-                    dynamicDimensionLoader.loadDynamicDimension(id, levelStem.generator(), levelStem.type().value());
-                }
-            } catch (Throwable exception) {
-                throw new RuntimeException("Failed to read satellite data!", exception);
-            }
-        } else {
+        if (!Files.exists(worldFile.resolve("satellites.dat"))) {
             Constant.LOGGER.info("File not found: satellites.dat");
+            return;
+        }
+
+        MinecraftServer server = (MinecraftServer) (Object) this;
+
+        try {
+            ListTag nbt = NbtIo.readCompressed(worldFile.resolve("satellites.dat"), NbtAccounter.unlimitedHeap())
+                    .getList("satellites", Tag.TAG_COMPOUND);
+
+            RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
+
+            Registry<CelestialBody<?, ?>> celestialBodies = this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+
+            Constant.LOGGER.info("Loading {} satellites", nbt.size());
+
+            for (Tag tag : nbt) {
+                if (!(tag instanceof CompoundTag compound)) {
+                    Constant.LOGGER.warn("Skipping invalid non-compound satellite data entry.");
+                    continue;
+                }
+
+                ResourceLocation id;
+
+                try {
+                    id = ResourceLocation.parse(compound.getString("id"));
+                } catch (Exception e) {
+                    Constant.LOGGER.error("Skipping satellite with invalid id '{}'.", compound.getString("id"));
+                    continue;
+                }
+
+                /*
+                 * Exact station dimension blacklist.
+                 */
+                if (GCConfigUtil.isDimensionDisabled(server, id)) {
+                    Constant.LOGGER.info("Skipping disabled satellite dimension {}.", id);
+                    continue;
+                }
+
+                DataResult<Pair<SatelliteConfig, Tag>> decode = SatelliteConfig.CODEC.decode(ops, compound);
+
+                if (decode.error().isPresent()) {
+                    Constant.LOGGER.error("Skipping satellite '{}' - {}", id, decode.error().get().message());
+                    continue;
+                }
+
+                SatelliteConfig config = decode.getOrThrow().getFirst();
+
+                CelestialBody<SatelliteConfig, SatelliteType> satellite = new CelestialBody<>(SatelliteType.INSTANCE, config);
+
+                /*
+                 * A station orbiting a disabled planet should not become an orphan
+                 * dimension whose return destination does not exist.
+                 */
+                if (GCConfigUtil.isParentBodyUnavailable(
+                        server,
+                        celestialBodies,
+                        satellite
+                )) {
+                    Constant.LOGGER.info(
+                            "Skipping satellite {} because its parent celestial " +
+                                    "body is unavailable.",
+                            id
+                    );
+                    continue;
+                }
+
+                this.galacticraft$addSatellite(satellite, false);
+
+                LevelStem levelStem = satellite.config().getOptions();
+
+                dynamicDimensionLoader.loadDynamicDimension(
+                        id,
+                        levelStem.generator(),
+                        levelStem.type().value()
+                );
+            }
+        } catch (Throwable exception) {
+            throw new RuntimeException(
+                    "Failed to read satellite data!",
+                    exception
+            );
         }
     }
 }
