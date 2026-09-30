@@ -1,0 +1,12 @@
+{
+  "data": {
+    "back": "galacticraft:block/oxygen_detector",
+    "bottom": "galacticraft:block/oxygen_detector",
+    "front": "galacticraft:block/oxygen_detector",
+    "left": "galacticraft:block/oxygen_detector",
+    "particle": "galacticraft:block/oxygen_detector",
+    "right": "galacticraft:block/oxygen_detector",
+    "top": "galacticraft:block/oxygen_detector"
+  },
+  "machinelib:type": "machine"
+}

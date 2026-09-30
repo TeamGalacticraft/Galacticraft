@@ -403,6 +403,7 @@ public class GCModelProvider extends FabricModelProvider {
         );
 
         createFullCubeActiveMachine(generator, GCBlocks.OXYGEN_COLLECTOR);
+        createFullCubeActiveMachine(generator, GCBlocks.OXYGEN_DETECTOR);
         createFullCubeActiveMachine(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
 
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);

@@ -43,6 +43,7 @@ public class GCPackets {
         PayloadTypeRegistry.playC2S().register(OpenGcInventoryPayload.TYPE, OpenGcInventoryPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(OpenPetInventoryPayload.TYPE, OpenPetInventoryPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(OpenRocketPayload.TYPE, OpenRocketPayload.STREAM_CODEC);
+        PayloadTypeRegistry.playC2S().register(OxygenDetectorControlPayload.TYPE, OxygenDetectorControlPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(PlanetTeleportPayload.TYPE, PlanetTeleportPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(SatelliteCreationPayload.TYPE, SatelliteCreationPayload.STREAM_CODEC);
         PayloadTypeRegistry.playC2S().register(SatelliteUpdatePayload.TYPE, SatelliteUpdatePayload.STREAM_CODEC);
