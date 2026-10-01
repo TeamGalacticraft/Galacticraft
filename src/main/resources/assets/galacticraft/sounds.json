@@ -299,17 +299,15 @@
   "player.splash_fuel": {
     "subtitle": "subtitles.galacticraft.player.splash_fuel",
     "sounds": [
-      {
-        "name": "galacticraft:player/splash_fuel",
-        "stream": false
-      }
+      "galacticraft:fluid/fuel/fuel_splash1",
+      "galacticraft:fluid/fuel/fuel_splash2"
     ]
   },
   "player.splash_fuel_high_speed": {
     "subtitle": "subtitles.galacticraft.player.splash_fuel_high_speed",
     "sounds": [
       {
-        "name": "galacticraft:player/splash_fuel_high_speed",
+        "name": "galacticraft:fluid/fuel/fuel_heavy_splash",
         "stream": false
       }
     ]
@@ -317,17 +315,15 @@
   "player.splash_oil": {
     "subtitle": "subtitles.galacticraft.player.splash_oil",
     "sounds": [
-      {
-        "name": "galacticraft:player/splash_oil",
-        "stream": false
-      }
+      "galacticraft:fluid/oil/oil_splash1",
+      "galacticraft:fluid/oil/oil_splash2"
     ]
   },
   "player.splash_oil_high_speed": {
     "subtitle": "subtitles.galacticraft.player.splash_oil_high_speed",
     "sounds": [
       {
-        "name": "galacticraft:player/splash_oil_high_speed",
+        "name": "galacticraft:fluid/oil/oil_heavy_splash",
         "stream": false
       }
     ]
@@ -335,19 +331,47 @@
   "player.swim_fuel": {
     "subtitle": "subtitles.galacticraft.player.swim_fuel",
     "sounds": [
-      {
-        "name": "galacticraft:player/swim_fuel",
-        "stream": false
-      }
+      "galacticraft:fluid/fuel/fuel_swim1",
+      "galacticraft:fluid/fuel/fuel_swim2",
+      "galacticraft:fluid/fuel/fuel_swim3",
+      "galacticraft:fluid/fuel/fuel_swim4",
+      "galacticraft:fluid/fuel/fuel_swim5",
+      "galacticraft:fluid/fuel/fuel_swim6",
+      "galacticraft:fluid/fuel/fuel_swim7",
+      "galacticraft:fluid/fuel/fuel_swim8",
+      "galacticraft:fluid/fuel/fuel_swim9",
+      "galacticraft:fluid/fuel/fuel_swim10",
+      "galacticraft:fluid/fuel/fuel_swim11",
+      "galacticraft:fluid/fuel/fuel_swim12",
+      "galacticraft:fluid/fuel/fuel_swim13",
+      "galacticraft:fluid/fuel/fuel_swim14",
+      "galacticraft:fluid/fuel/fuel_swim15",
+      "galacticraft:fluid/fuel/fuel_swim16",
+      "galacticraft:fluid/fuel/fuel_swim17",
+      "galacticraft:fluid/fuel/fuel_swim18"
     ]
   },
   "player.swim_oil": {
     "subtitle": "subtitles.galacticraft.player.swim_oil",
     "sounds": [
-      {
-        "name": "galacticraft:player/swim_oil",
-        "stream": false
-      }
+      "galacticraft:fluid/oil/oil_swim1",
+      "galacticraft:fluid/oil/oil_swim2",
+      "galacticraft:fluid/oil/oil_swim3",
+      "galacticraft:fluid/oil/oil_swim4",
+      "galacticraft:fluid/oil/oil_swim5",
+      "galacticraft:fluid/oil/oil_swim6",
+      "galacticraft:fluid/oil/oil_swim7",
+      "galacticraft:fluid/oil/oil_swim8",
+      "galacticraft:fluid/oil/oil_swim9",
+      "galacticraft:fluid/oil/oil_swim10",
+      "galacticraft:fluid/oil/oil_swim11",
+      "galacticraft:fluid/oil/oil_swim12",
+      "galacticraft:fluid/oil/oil_swim13",
+      "galacticraft:fluid/oil/oil_swim14",
+      "galacticraft:fluid/oil/oil_swim15",
+      "galacticraft:fluid/oil/oil_swim16",
+      "galacticraft:fluid/oil/oil_swim17",
+      "galacticraft:fluid/oil/oil_swim18"
     ]
   }
 }
