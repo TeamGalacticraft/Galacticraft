@@ -22,23 +22,58 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.machinelib.api.machine.configuration.AccessLevel;
+import dev.galacticraft.machinelib.api.menu.MachineMenu;
+import dev.galacticraft.machinelib.api.menu.MenuData;
+import dev.galacticraft.mod.content.AirlockState;
+import dev.galacticraft.mod.content.block.entity.AirlockControllerBlockEntity;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
-import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
 
-public class AirlockControllerMenu extends AbstractContainerMenu {
-    public AirlockControllerMenu(int syncId, Inventory inventory) {
-        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId);
+public class AirlockControllerMenu extends MachineMenu<AirlockControllerBlockEntity> {
+
+    public byte proximityOpen;
+    public AirlockState state = AirlockState.NONE;
+    public AccessLevel proximityAccess = AccessLevel.PUBLIC;
+    public int keycardOpenSeconds = AirlockControllerBlockEntity.DEFAULT_KEYCARD_OPEN_SECONDS;
+    public boolean structureManaged;
+    public boolean permanentlyUnlocked;
+
+    public AirlockControllerMenu(int syncId, Player player, AirlockControllerBlockEntity blockEntity) {
+        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, player, blockEntity);
+
+        this.proximityOpen = blockEntity.getProximityOpen();
+        this.state = blockEntity.getAirlockState();
+        this.proximityAccess = blockEntity.getProximityAccess();
+        this.keycardOpenSeconds = blockEntity.getKeycardOpenSeconds();
+        this.structureManaged = blockEntity.isStructureManaged();
+        this.permanentlyUnlocked = blockEntity.isPermanentlyUnlocked();
+    }
+
+    public AirlockControllerMenu(int syncId, Inventory inventory, BlockPos pos) {
+        super(GCMenuTypes.AIRLOCK_CONTROLLER_MENU, syncId, inventory, pos, 8, 89);
     }
 
     @Override
-    public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
-    }
+    public void registerData(@NotNull MenuData data) {
+        super.registerData(data);
 
-    @Override
-    public boolean stillValid(Player player) {
-        return true;
+        data.registerByte(this.be::getProximityOpen, value -> this.proximityOpen = (byte) value);
+
+        data.registerInt(
+                () -> this.be.getAirlockState().ordinal(),
+                value -> this.state = AirlockState.values()[value]
+        );
+
+        data.registerInt(
+                () -> this.be.getProximityAccess().ordinal(),
+                value -> this.proximityAccess = AccessLevel.getByOrdinal((byte) value)
+        );
+
+        data.registerInt(this.be::getKeycardOpenSeconds, value -> this.keycardOpenSeconds = value);
+        data.registerBoolean(this.be::isStructureManaged, value -> this.structureManaged = value);
+        data.registerBoolean(this.be::isPermanentlyUnlocked, value -> this.permanentlyUnlocked = value);
     }
 }

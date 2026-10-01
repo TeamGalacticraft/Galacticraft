@@ -44,6 +44,9 @@ public class GCServerPacketReceivers {
         registerPacket(SatelliteUpdatePayload.TYPE);
         registerPacket(CapeSelectionPayload.TYPE);
         registerPacket(CreativeGcTransferItemPayload.TYPE);
+        registerPacket(AirlockSetProximityPayload.TYPE);
+        registerPacket(AirlockSetProximityAccessPayload.TYPE);
+        registerPacket(AirlockSetKeycardOpenSecondsPayload.TYPE);
     }
 
     public static <P extends C2SPayload> void registerPacket(CustomPacketPayload.Type<P> type) {

@@ -281,7 +281,18 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIR_LOCK_FRAME, 4)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIRLOCK_CONTROLLER)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('M', GCItems.COMPRESSED_METEORIC_IRON)
+                .define('W', GCItems.BASIC_WAFER)
+                .pattern("SSS")
+                .pattern("MWM")
+                .pattern("SSS")
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
+                .emiDefaultRecipe(true)
+                .save(output);
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIRLOCK_FRAME, 4)
                 .define('A', GCItems.COMPRESSED_ALUMINUM)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('C', GCItems.OXYGEN_CONCENTRATOR)
@@ -292,14 +303,26 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.AIR_LOCK_CONTROLLER)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.REINFORCED_AIRLOCK_CONTROLLER)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('M', GCItems.COMPRESSED_METEORIC_IRON)
                 .define('W', GCItems.BASIC_WAFER)
-                .pattern("SSS")
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
+                .pattern("OSO")
                 .pattern("MWM")
-                .pattern("SSS")
+                .pattern("OSO")
                 .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
+                .emiDefaultRecipe(true)
+                .save(output);
+
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.REINFORCED_AIRLOCK_FRAME, 4)
+                .define('O', ConventionalItemTags.NORMAL_OBSIDIANS)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('C', GCItems.OXYGEN_CONCENTRATOR)
+                .pattern("OOO")
+                .pattern("SCS")
+                .pattern("OOO")
+                .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
                 .emiDefaultRecipe(true)
                 .save(output);
 

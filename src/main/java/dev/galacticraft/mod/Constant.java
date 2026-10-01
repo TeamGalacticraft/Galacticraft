@@ -312,6 +312,7 @@ public interface Constant {
         String OXYGEN_COMPRESSOR = "oxygen_compressor";
         String FOOD_CANNER = "food_canner";
         String OXYGEN_DECOMPRESSOR = "oxygen_decompressor";
+
         String OXYGEN_DETECTOR = "oxygen_detector";
         String OXYGEN_SEALER = "oxygen_sealer";
         String FLUID_PIPE = "fluid_pipe";
@@ -353,9 +354,13 @@ public interface Constant {
         String HYDRAULIC_PLATFORM = "hydraulic_platform";
         String MAGNETIC_CRAFTING_TABLE = "magnetic_crafting_table";
         String ROCKET_WORKBENCH = "rocket_workbench";
-        String AIR_LOCK_FRAME = "air_lock_frame";
-        String AIR_LOCK_CONTROLLER = "air_lock_controller";
-        String AIR_LOCK_SEAL = "air_lock_seal";
+        String AIRLOCK_FRAME = "airlock_frame";
+        String REINFORCED_AIRLOCK_FRAME = "reinforced_airlock_frame";
+        String STRUCTURE_AIRLOCK_FRAME = "structure_airlock_frame";
+        String AIRLOCK_CONTROLLER = "airlock_controller";
+        String REINFORCED_AIRLOCK_CONTROLLER = "reinforced_airlock_controller";
+        String STRUCTURE_AIRLOCK_CONTROLLER = "structure_airlock_controller";
+        String AIRLOCK_SEAL = "airlock_seal";
         String CHROMATIC_APPLICATOR = "chromatic_applicator";
         String DISPLAY_SCREEN = "display_screen";
         String TELEMETRY_UNIT = "telemetry_unit";
@@ -558,6 +563,9 @@ public interface Constant {
 
         String EMERGENCY_KIT = "emergency_kit";
 
+        String KEYCARD = "keycard";
+        String LUNAR_DUNGEON_KEYCARD = "lunar_dungeon_keycard";
+
         String THERMAL_PADDING_HELMET = "thermal_padding_helmet";
         String THERMAL_PADDING_CHESTPIECE = "thermal_padding_chestpiece";
         String THERMAL_PADDING_LEGGINGS = "thermal_padding_leggings";
@@ -624,7 +632,6 @@ public interface Constant {
         ResourceLocation ENERGY_STORAGE_MODULE_SCREEN = id("textures/gui/energy_storage_module_screen.png");
         ResourceLocation OXYGEN_COLLECTOR_SCREEN = id("textures/gui/oxygen_collector_screen.png");
         ResourceLocation ROCKET_SELECTION = id("textures/gui/rocket_part_selection.png");
-
         ResourceLocation PLAYER_INVENTORY_SCREEN = id("textures/gui/player_inventory_screen.png");
         ResourceLocation PET_INVENTORY_SCREEN = id("textures/gui/pet_inventory_screen.png");
         ResourceLocation ROCKET_INVENTORY = id("textures/gui/rocket.png");
@@ -934,6 +941,19 @@ public interface Constant {
         int ARROW_DOWN_HOVER_V = 10;
     }
 
+    interface AirlockController {
+        ResourceLocation SCREEN_TEXTURE = id("textures/gui/airlock_controller.png");
+
+        int ARROW_VERTICAL_WIDTH = 11;
+        int ARROW_VERTICAL_HEIGHT = 10;
+        int ARROW_DOWN_HOVER_V = 10;
+        int ARROW_DOWN_U = 206;
+        int ARROW_DOWN_HOVER_U = 217;
+        int ARROW_UP_HOVER_V = 0;
+        int ARROW_UP_U = 206;
+        int ARROW_UP_HOVER_U = 217;
+    }
+
     interface CelestialScreen {
         ResourceLocation CELESTIAL_SELECTION = id("textures/gui/celestial_selection.png");
         ResourceLocation CELESTIAL_SELECTION_1 = id("textures/gui/celestial_selection_1.png");
@@ -1201,7 +1221,7 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE_MENU = "oxygen_storage_module_menu";
         String OXYGEN_SEALER_MENU = "oxygen_sealer_menu";
         String FUEL_LOADER_MENU = "fuel_loader_menu";
-        String AIR_LOCK_CONTROLLER_MENU = "air_lock_menu";
+        String AIRLOCK_CONTROLLER_MENU = "airlock_menu";
         String ROCKET_WORKBENCH_MENU = "rocket_workbench_menu";
         String ROCKET = "rocket";
         String PARACHEST = "parachest";
