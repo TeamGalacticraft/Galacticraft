@@ -68,6 +68,10 @@ public class GCSounds {
     // Player
     public static final SoundEvent CHEST_UNLOCK = register("player.chest.unlock");
     public static final SoundEvent PARACHUTE = register("player.parachute");
+    public static final SoundEvent EMPTY_FUEL = register("player.empty_fuel_bucket");
+    public static final SoundEvent EMPTY_OIL = register("player.empty_oil_bucket");
+    public static final SoundEvent FILL_FUEL = register("player.fill_fuel_bucket");
+    public static final SoundEvent FILL_OIL = register("player.fill_oil_bucket");
     public static final SoundEvent SPLASH_FUEL = register("player.splash_fuel");
     public static final SoundEvent SPLASH_FUEL_HIGH_SPEED = register("player.splash_fuel_high_speed");
     public static final SoundEvent SPLASH_OIL = register("player.splash_oil");

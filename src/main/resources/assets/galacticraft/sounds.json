@@ -287,6 +287,38 @@
       }
     ]
   },
+  "player.empty_fuel_bucket": {
+    "subtitle": "subtitles.galacticraft.player.empty_fuel_bucket",
+    "sounds": [
+      "galacticraft:fluid/fuel/empty_fuel_bucket1",
+      "galacticraft:fluid/fuel/empty_fuel_bucket2",
+      "galacticraft:fluid/fuel/empty_fuel_bucket3"
+    ]
+  },
+  "player.empty_oil_bucket": {
+    "subtitle": "subtitles.galacticraft.player.empty_oil_bucket",
+    "sounds": [
+      "galacticraft:fluid/oil/empty_oil_bucket1",
+      "galacticraft:fluid/oil/empty_oil_bucket2",
+      "galacticraft:fluid/oil/empty_oil_bucket3"
+    ]
+  },
+  "player.fill_fuel_bucket": {
+    "subtitle": "subtitles.galacticraft.player.fill_fuel_bucket",
+    "sounds": [
+      "galacticraft:fluid/fuel/fill_fuel_bucket1",
+      "galacticraft:fluid/fuel/fill_fuel_bucket2",
+      "galacticraft:fluid/fuel/fill_fuel_bucket3"
+    ]
+  },
+  "player.fill_oil_bucket": {
+    "subtitle": "subtitles.galacticraft.player.fill_oil_bucket",
+    "sounds": [
+      "galacticraft:fluid/oil/fill_oil_bucket1",
+      "galacticraft:fluid/oil/fill_oil_bucket2",
+      "galacticraft:fluid/oil/fill_oil_bucket3"
+    ]
+  },
   "player.parachute": {
     "subtitle": "subtitles.galacticraft.player.parachute",
     "sounds": [
