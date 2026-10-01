@@ -98,6 +98,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -709,12 +710,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         gcPlayer.setRocketItem(rocket);
 
                         serverPlayer.galacticraft$openCelestialScreen(d);
-                        ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
-                                this.getRocketData(),
-                                this.level().galacticraft$getCelestialBody(),
-                                Galacticraft.CONFIG.enableSpaceStationCreation(),
-                                GCConfigUtil.disabledCelestialScreenDestinations()
-                        ));
+                        try (Level level = this.level()) {
+                            ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
+                                    this.getRocketData(),
+                                    level.galacticraft$getCelestialBody(),
+                                    Galacticraft.CONFIG.enableSpaceStationCreation(),
+                                    GCConfigUtil.disabledCelestialScreenDestinations(serverPlayer.getServer())
+                            ));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         remove(RemovalReason.UNLOADED_WITH_PLAYER);
                         break;

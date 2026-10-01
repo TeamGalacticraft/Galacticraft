@@ -240,6 +240,13 @@ public interface Translations {
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
         String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
+
+        String DISABLED_DIMENSIONS = "config.galacticraft.disabled_dimensions";
+        String DISABLED_DIMENSIONS_DESC = "config.galacticraft.disabled_dimensions.desc";
+        String DISABLED_CELESTIAL_SCREEN_DIMENSIONS = "config.galacticraft.disabled_celestial_screen_dimensions";
+        String DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC = "config.galacticraft.disabled_celestial_screen_dimensions.desc";
+        String SERVER = "config.galacticraft.server";
+        String SERVER_SIDE_DIMENSION = "config.galacticraft.server_side_dimension";
     }
 
     interface Galaxy {

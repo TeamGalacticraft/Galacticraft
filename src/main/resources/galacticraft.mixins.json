@@ -27,6 +27,7 @@
     "LivingEntityMixin",
     "MapBannerMixin",
     "MapItemMixin",
+    "MinecraftServerDimensionMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
     "PlayerMixin",

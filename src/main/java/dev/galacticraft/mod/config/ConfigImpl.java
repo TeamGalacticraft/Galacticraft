@@ -102,6 +102,8 @@ public class ConfigImpl implements Config {
 
     private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
 
+    private List<String> disabledDimensions = new ArrayList<>();
+
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
                 .setPrettyPrinting()
@@ -477,7 +479,18 @@ public class ConfigImpl implements Config {
     public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
         this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
                 ? new ArrayList<>()
-                : disabledCelestialScreenDimensions;
+                : new ArrayList<>(disabledCelestialScreenDimensions);
+    }
+
+    @Override
+    public List<String> disabledDimensions() {
+        return this.disabledDimensions;
+    }
+
+    public void setDisabledDimensions(List<String> disabledDimensions) {
+        this.disabledDimensions = disabledDimensions == null
+                ? new ArrayList<>()
+                : new ArrayList<>(disabledDimensions);
     }
 
     public void load() {
@@ -834,6 +847,49 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
+            // --- SERVER CONFIG ---
+
+            ConfigCategory server = b.getOrCreateCategory(Component.translatable(Translations.Config.SERVER));
+
+            // --- SERVER SIDE DIMENSION CONFIG ---
+            SubCategoryBuilder serverSideDimension = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SERVER_SIDE_DIMENSION));
+
+            serverSideDimension.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
+                    config.enableSpaceStationCreation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
+                    .setSaveConsumer(config::setEnableSpaceStationCreation)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            serverSideDimension.add(ConfigEntryBuilder.create()
+                    .startStrList(
+                            Component.translatable(Translations.Config.DISABLED_DIMENSIONS),
+                            new ArrayList<>(config.disabledDimensions())
+                    )
+                    .setTooltip(Component.translatable(Translations.Config.DISABLED_DIMENSIONS_DESC))
+                    .setDefaultValue(List.of())
+                    .setSaveConsumer(config::setDisabledDimensions)
+                    .requireRestart()
+                    .build()
+            );
+
+            serverSideDimension.add(ConfigEntryBuilder.create()
+                    .startStrList(
+                            Component.translatable(Translations.Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS),
+                            new ArrayList<>(config.disabledCelestialScreenDimensions())
+                    )
+                    .setTooltip(Component.translatable(Translations.Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC))
+                    .setDefaultValue(List.of())
+                    .setSaveConsumer(config::setDisabledCelestialScreenDimensions)
+                    .requireRestart()
+                    .build()
+            );
+
+            server.addEntry(serverSideDimension.build());
+
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
@@ -864,16 +920,6 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(FluidConstants.BUCKET)
                     .setMin(0)
                     .setMax(Long.MAX_VALUE)
-                    .build()
-            );
-
-            misc.addEntry(new BooleanToggleBuilder(
-                    Component.translatable(Translations.Config.RESET),
-                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
-                    config.enableSpaceStationCreation())
-                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
-                    .setSaveConsumer(config::setEnableSpaceStationCreation)
-                    .setDefaultValue(true)
                     .build()
             );
 
