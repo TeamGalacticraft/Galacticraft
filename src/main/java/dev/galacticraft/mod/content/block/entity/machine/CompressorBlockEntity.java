@@ -52,6 +52,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
@@ -147,7 +148,7 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
             this.lit = lit;
             BlockState blockState = level.getBlockState(this.worldPosition)
                     .setValue(CompressorBlock.LIT, this.lit);
-            level.setBlock(this.worldPosition, blockState, 2);
+            level.setBlock(this.worldPosition, blockState, Block.UPDATE_CLIENTS);
         }
 
     }
