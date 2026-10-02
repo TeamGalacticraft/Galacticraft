@@ -52,6 +52,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.crafting.CraftingInput;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
@@ -135,8 +136,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;
@@ -145,9 +146,9 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
         boolean lit = this.fuelLength > 0;
         if (this.lit != lit) {
             this.lit = lit;
-            BlockState blockState = this.level.getBlockState(this.worldPosition)
+            BlockState blockState = level.getBlockState(this.worldPosition)
                     .setValue(CompressorBlock.LIT, this.lit);
-            this.level.setBlock(this.worldPosition, blockState, 2);
+            level.setBlock(this.worldPosition, blockState, Block.UPDATE_CLIENTS);
         }
 
     }
