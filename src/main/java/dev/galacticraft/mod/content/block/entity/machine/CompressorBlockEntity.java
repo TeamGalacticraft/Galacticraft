@@ -135,8 +135,8 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         if (--this.fuelTime <= 0) {
             this.fuelLength = 0;
             this.fuelTime = 0;
@@ -145,9 +145,9 @@ public class CompressorBlockEntity extends BasicRecipeMachineBlockEntity<Craftin
         boolean lit = this.fuelLength > 0;
         if (this.lit != lit) {
             this.lit = lit;
-            BlockState blockState = this.level.getBlockState(this.worldPosition)
+            BlockState blockState = level.getBlockState(this.worldPosition)
                     .setValue(CompressorBlock.LIT, this.lit);
-            this.level.setBlock(this.worldPosition, blockState, 2);
+            level.setBlock(this.worldPosition, blockState, 2);
         }
 
     }

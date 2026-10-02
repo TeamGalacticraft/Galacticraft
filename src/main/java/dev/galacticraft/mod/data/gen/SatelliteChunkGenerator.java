@@ -140,7 +140,7 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getSpawnHeight(LevelHeightAccessor world) {
+    public int getSpawnHeight(LevelHeightAccessor level) {
         return 255;
     }
 
@@ -178,18 +178,18 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getFirstFreeHeight(int x, int z, Types heightmap, LevelHeightAccessor world, RandomState noiseConfig) {
+    public int getFirstFreeHeight(int x, int z, Types heightmap, LevelHeightAccessor level, RandomState noiseConfig) {
         return 0;
     }
 
     @Override
-    public int getFirstOccupiedHeight(int x, int z, Types heightmap, LevelHeightAccessor world, RandomState noiseConfig) {
+    public int getFirstOccupiedHeight(int x, int z, Types heightmap, LevelHeightAccessor level, RandomState noiseConfig) {
         return 0;
     }
 
     @Nullable
     @Override
-    public Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel world, HolderSet<Structure> structures, BlockPos center, int radius, boolean skipReferencedStructures) {
+    public Pair<BlockPos, Holder<Structure>> findNearestMapStructure(ServerLevel level, HolderSet<Structure> structures, BlockPos center, int radius, boolean skipReferencedStructures) {
         return null;
     }
 
@@ -212,12 +212,12 @@ public class SatelliteChunkGenerator extends ChunkGenerator {
     }
 
     @Override
-    public int getBaseHeight(int x, int z, Types heightmap, LevelHeightAccessor world, RandomState noiseConfig) {
+    public int getBaseHeight(int x, int z, Types heightmap, LevelHeightAccessor level, RandomState noiseConfig) {
         return 0;
     }
 
     @Override
-    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor world, RandomState noiseConfig) {
+    public NoiseColumn getBaseColumn(int x, int z, LevelHeightAccessor level, RandomState noiseConfig) {
         return EMPTY_VIEW;
     }
 }
