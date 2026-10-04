@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.screen;
 
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenDetectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.player.Inventory;
@@ -36,12 +35,5 @@ public class OxygenDetectorMenu extends MachineMenu<OxygenDetectorBlockEntity> {
 
     public OxygenDetectorMenu(int syncId, Inventory inv, BlockPos pos) {
         super(GCMenuTypes.OXYGEN_DETECTOR, syncId, inv, pos, 8, 84);
-    }
-
-    @Override
-    public void cycleFaceConfig(BlockFace face, boolean reverse, boolean reset) {
-        super.cycleFaceConfig(face, reverse, reset);
-
-        this.be.sendUpdate(); // Redstone signal does not update when faces change in overworld. That's why I'm adding this.
     }
 }

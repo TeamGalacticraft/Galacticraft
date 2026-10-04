@@ -34,15 +34,15 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 
-public record OxygenDetectorControlPayload(boolean mode) implements C2SPayload {
+public record OxygenDetectorControlPayload(boolean andMode) implements C2SPayload {
     public static final StreamCodec<ByteBuf, OxygenDetectorControlPayload> STREAM_CODEC = StreamCodec.of(
         (buf, payload) -> {
-            buf.writeBoolean(payload.mode());
+            buf.writeBoolean(payload.andMode());
         },
         buf -> {
-            Boolean mode = buf.readBoolean();
+            Boolean andMode = buf.readBoolean();
 
-            return new OxygenDetectorControlPayload(mode);
+            return new OxygenDetectorControlPayload(andMode);
         }
     );
     public static final ResourceLocation ID = Constant.id("oxygen_detector_control");
@@ -53,7 +53,7 @@ public record OxygenDetectorControlPayload(boolean mode) implements C2SPayload {
         ServerPlayer player = context.player();
 
         if (player.containerMenu instanceof OxygenDetectorMenu menu) {
-            if (menu.be.canAccess(player)) menu.be.setMode(mode);
+            if (menu.be.canAccess(player)) menu.be.setMode(andMode);
         }
     }
 

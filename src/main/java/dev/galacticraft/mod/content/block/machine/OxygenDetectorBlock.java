@@ -27,19 +27,16 @@ import org.jetbrains.annotations.Nullable;
 
 import com.mojang.serialization.MapCodec;
 
-import dev.galacticraft.api.block.OxygenChangeListener;
 import dev.galacticraft.machinelib.api.block.MachineBlock;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenDetectorBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.BaseEntityBlock;
-import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
-public class OxygenDetectorBlock extends MachineBlock implements OxygenChangeListener {
+public class OxygenDetectorBlock extends MachineBlock {
     private final MapCodec<OxygenDetectorBlock> CODEC = simpleCodec(OxygenDetectorBlock::new);
 
     public OxygenDetectorBlock(Properties settings) {
@@ -53,22 +50,7 @@ public class OxygenDetectorBlock extends MachineBlock implements OxygenChangeLis
 
     @Override
     protected int getSignal(BlockState state, BlockGetter world, BlockPos pos, Direction axisDirection) {
-        if (world.getBlockEntity(pos) instanceof OxygenDetectorBlockEntity entity) {
-            return entity.isOxygenPresent() ? 15 : 0;
-        }
-        return 0;
-    }
-
-    @Override
-    public void neighborChanged(BlockState state, Level level, BlockPos pos, Block block, BlockPos fromPos,
-            boolean notify) {
-        super.neighborChanged(state, level, pos, block, fromPos, notify);
-        level.updateNeighborsAt(pos, this);
-    }
-
-    @Override
-    public void onOxygenChange(Level level, BlockPos pos, Direction direction, boolean newValue) {
-        level.updateNeighborsAt(pos, this);
+        return isActive(state) ? 15 : 0;
     }
 
     @Override

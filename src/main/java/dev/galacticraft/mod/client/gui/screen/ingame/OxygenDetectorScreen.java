@@ -29,6 +29,7 @@ import dev.galacticraft.mod.network.c2s.OxygenDetectorControlPayload;
 import dev.galacticraft.mod.screen.OxygenDetectorMenu;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.components.Button;
 import net.minecraft.network.chat.Component;
@@ -42,7 +43,7 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
     }
 
     private void invertMode() {
-        boolean mode = !menu.be.getMode();
+        boolean mode = !menu.be.isAnd();
         ClientPlayNetworking.send(new OxygenDetectorControlPayload(mode));
     }
 
@@ -57,12 +58,12 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
         addRenderableWidget(switchButton);
     }
 
-    private int getModeColor() {
-        return menu.be.isAnd() ? 0xFF0000 : 0x00FF00;
+    private ChatFormatting getModeColor() {
+        return menu.be.isAnd() ? ChatFormatting.RED : ChatFormatting.GREEN;
     }
 
-    private int getStatColor() {
-        return menu.be.isOxygenPresent() ? 0x9CC2FF : 0x4A6898;
+    private ChatFormatting getStatColor() {
+        return menu.be.isActive() ? ChatFormatting.AQUA : ChatFormatting.BLUE;
     }
 
     @Override
@@ -74,12 +75,12 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
             switchButton.getWidth(), switchButton.getHeight()
         );
 
-        String mode_str = Component.translatable(menu.be.isAnd() ? Translations.Ui.DETECTOR_AND : Translations.Ui.DETECTOR_OR).getString();
-        Component mode = Component.translatable(Translations.Ui.DETECTOR_MODE, mode_str).withColor(getModeColor());
-        graphics.drawString(font, mode, this.leftPos + 12, this.topPos + 24, mode.getStyle().getColor().getValue());
+        Component mode = Component.translatable(menu.be.isAnd() ? Translations.Ui.DETECTOR_AND : Translations.Ui.DETECTOR_OR);
+        mode = Component.translatable(Translations.Ui.DETECTOR_MODE, mode).withStyle(getModeColor());
+        graphics.drawString(font, mode, this.leftPos + 12, this.topPos + 24, -1, false);
 
-        Component stat = Component.translatable(menu.be.isOxygenPresent() ? Translations.Ui.OXYGEN_DETECTED : Translations.Ui.NO_OXYGEN_DETECTED);
-        graphics.drawString(font, stat, this.leftPos + 12, this.topPos + 40, getStatColor());
+        Component stat = Component.translatable(menu.be.isActive() ? Translations.Ui.OXYGEN_DETECTED : Translations.Ui.NO_OXYGEN_DETECTED).withStyle(getStatColor());
+        graphics.drawString(font, stat, this.leftPos + 12, this.topPos + 40, -1, false);
 
         if (mouseIn(mouseX, mouseY, switchButton.getX(), switchButton.getY(), switchButton.getWidth(), switchButton.getHeight())) {
             graphics.renderTooltip(font, mode, mouseX, mouseY);

@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.screen;
 
-import static dev.galacticraft.mod.content.GCBlocks.OXYGEN_DETECTOR;
-
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;

@@ -368,8 +368,6 @@ public interface Translations {
     }
 
     interface MachineStatus {
-        String ENABLED = "ui.galacticraft.status.enabled";
-        String DISABLED = "ui.galacticraft.status.disabled";
         String GENERATING = "ui.galacticraft.status.generating";
         String NO_FUEL = "ui.galacticraft.status.no_fuel";
         String WARMING_UP = "ui.galacticraft.status.warming_up";

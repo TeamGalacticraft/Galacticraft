@@ -291,11 +291,11 @@ public class GCCreativeModeTabs {
                 output.accept(REFINERY);
                 output.accept(FUEL_LOADER);
                 output.accept(OXYGEN_COLLECTOR);
-                output.accept(OXYGEN_DETECTOR);
                 output.accept(OXYGEN_SEALER);
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
+                output.accept(OXYGEN_DETECTOR);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FOOD_CANNER);
                 output.accept(AIR_LOCK_FRAME);

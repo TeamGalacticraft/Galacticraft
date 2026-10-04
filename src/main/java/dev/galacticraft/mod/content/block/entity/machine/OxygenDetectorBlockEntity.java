@@ -27,6 +27,7 @@ import org.jetbrains.annotations.Nullable;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
+import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.configuration.IOFace;
 import dev.galacticraft.machinelib.api.machine.configuration.SecuritySettings;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -44,14 +45,20 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.Level;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 
 public class OxygenDetectorBlockEntity extends MachineBlockEntity {
-    private boolean AND = false;
+    private boolean andMode = false;
     private boolean oxygenWorld = false;
 
     public OxygenDetectorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.OXYGEN_DETECTOR, pos, state, StorageSpec.empty());
+    }
+
+    @Override
+    public boolean isDisabled() {
+        return false;
     }
 
     @Override
@@ -67,31 +74,19 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
         return settings.hasAccess(player);
     }
 
-    public void sendUpdate() {
-        setChanged(); // only for marking dirty, nothing to send.
+    public void setMode(boolean isAnd) {
+        if (andMode != isAnd) {
+            andMode = isAnd;
+            this.setChanged();
 
-        if (level != null && !level.isClientSide) {
-            level.sendBlockUpdated(
-                worldPosition,
-                getBlockState(),
-                getBlockState(),
-                3
-            );
-            level.updateNeighborsAt(worldPosition, getBlockState().getBlock());
+            if (level != null && !level.isClientSide) {
+                level.sendBlockUpdated(worldPosition, getBlockState(), getBlockState(), Block.UPDATE_ALL);
+            }
         }
     }
 
-    public void setMode(boolean isAnd) {
-        AND = isAnd;
-        sendUpdate();
-    }
-
-    public boolean getMode() {
-        return AND;
-    }
-
     public boolean isAnd() {
-        return AND;
+        return andMode;
     }
 
     @Override
@@ -99,27 +94,26 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
         return true;
     }
 
-    public boolean isFaceActive(Direction direction) {
+    private boolean isFaceActive(Direction direction) {
         IOFace option = getIOConfig().get(BlockFace.from(this.getBlockState(), direction));
         return option.getType() != ResourceType.OVERRIDE; // Override disables detecting oxygen. (and switches to base texture)
     }
 
-    public boolean isOxygenPresent(Direction direction) {
+    private boolean isOxygenPresent(Direction direction) {
         BlockPos pos = this.worldPosition.relative(direction);
         boolean isFree = !this.level.getBlockState(pos).isSolidRender(this.level, pos);
-        if(oxygenWorld) return isFree;
 
-        return this.level.isBreathable(pos) && isFree;
+        return isFree && (oxygenWorld || this.level.isBreathable(pos));
     }
 
-    public boolean isOxygenPresent() {
+    private boolean isOxygenPresent() {
         boolean isAnyActive = false;
         for (Direction direction : Direction.values()) {
             if (!isFaceActive(direction)) continue;
             isAnyActive = true; // For preventing unnecessary call
 
-            if (!AND && isOxygenPresent(direction)) return true;
-            if (AND && !isOxygenPresent(direction)) return false;
+            if (!andMode && isOxygenPresent(direction)) return true;
+            if (andMode && !isOxygenPresent(direction)) return false;
         }
 
         return isAnd() && isAnyActive; // After loop ends, AND mode needs to return true unlike OR mode.
@@ -129,20 +123,20 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
     protected void saveAdditional(CompoundTag tag, Provider lookup) {
         super.saveAdditional(tag, lookup);
 
-        tag.putBoolean("and", AND);
+        tag.putBoolean("and", andMode);
     }
 
     @Override
     public void loadAdditional(CompoundTag tag, Provider lookup) {
         super.loadAdditional(tag, lookup);
 
-        AND = tag.getBoolean("and");
+        andMode = tag.getBoolean("and");
     }
 
     @Override
     public @NotNull CompoundTag getUpdateTag(Provider registryLookup) {
         CompoundTag tag = super.getUpdateTag(registryLookup);
-        tag.putBoolean("and", AND);
+        tag.putBoolean("and", andMode);
 
         return tag;
     }
@@ -150,7 +144,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state,
             @NotNull ProfilerFiller profiler) {
-        return null;
+        return isOxygenPresent() ? MachineStatuses.ACTIVE : MachineStatuses.IDLE;
     }
 
     @Override
