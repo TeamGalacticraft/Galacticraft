@@ -90,7 +90,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     @Override
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(GCBlockTags.SEALABLE)
-                .add(GCBlocks.AIR_LOCK_SEAL)
+                .add(GCBlocks.AIRLOCK_SEAL)
                 .add(GCBlocks.ROCKET_WORKBENCH)
                 .add(GCBlocks.CRYOGENIC_CHAMBER)
                 .add(GCBlocks.CRYOGENIC_CHAMBER_PART);
@@ -418,6 +418,38 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
 
+        this.tag(GCBlockTags.AIRLOCK_BLOCKS)
+                .addTag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
+                .addTag(GCBlockTags.REINFORCED_AIRLOCK_BLOCKS)
+                .addTag(GCBlockTags.STRUCTURE_AIRLOCK_BLOCKS);
+
+        this.tag(GCBlockTags.BASIC_AIRLOCK_BLOCKS)
+                .add(GCBlocks.AIRLOCK_CONTROLLER)
+                .add(GCBlocks.AIRLOCK_FRAME);
+
+        this.tag(GCBlockTags.REINFORCED_AIRLOCK_BLOCKS)
+                .add(GCBlocks.REINFORCED_AIRLOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIRLOCK_FRAME);
+
+        this.tag(GCBlockTags.STRUCTURE_AIRLOCK_BLOCKS)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_FRAME);
+
+        this.tag(GCBlockTags.AIRLOCK_CONTROLLERS)
+                .add(GCBlocks.AIRLOCK_CONTROLLER)
+                .add(GCBlocks.REINFORCED_AIRLOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_CONTROLLER);
+
+        this.tag(GCBlockTags.AIRLOCK_FRAMES)
+                .add(GCBlocks.AIRLOCK_FRAME)
+                .add(GCBlocks.REINFORCED_AIRLOCK_FRAME)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_FRAME);
+
+        this.tag(BlockTags.WITHER_IMMUNE)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_CONTROLLER)
+                .add(GCBlocks.STRUCTURE_AIRLOCK_FRAME)
+                .add(GCBlocks.AIRLOCK_SEAL);
+
         this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
                 .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
@@ -432,10 +464,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.UNLIT_SOUL_TORCH);
 
         this.tag(BlockTags.DRAGON_IMMUNE)
-                .add(GCBlocks.AIR_LOCK_SEAL);
+                .add(GCBlocks.AIRLOCK_SEAL);
 
         this.tag(BlockTags.WITHER_IMMUNE)
-                .add(GCBlocks.AIR_LOCK_SEAL);
+                .add(GCBlocks.AIRLOCK_SEAL);
 
         this.tag(BlockTags.ENDERMAN_HOLDABLE)
                 .add(GCBlocks.MOON_TURF)
@@ -610,8 +642,10 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
-                        GCBlocks.AIR_LOCK_FRAME,
-                        GCBlocks.AIR_LOCK_CONTROLLER,
+                        GCBlocks.AIRLOCK_CONTROLLER,
+                        GCBlocks.REINFORCED_AIRLOCK_CONTROLLER,
+                        GCBlocks.AIRLOCK_FRAME,
+                        GCBlocks.REINFORCED_AIRLOCK_FRAME,
                         GCBlocks.ALUMINUM_WIRE,
                         GCBlocks.HEAVY_ALUMINUM_WIRE,
                         GCBlocks.SEALABLE_ALUMINUM_WIRE,

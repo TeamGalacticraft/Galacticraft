@@ -1,0 +1,30 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "B": {
+      "tag": "c:dyes/blue"
+    },
+    "D": {
+      "tag": "c:dyes/red"
+    },
+    "P": {
+      "item": "minecraft:paper"
+    },
+    "R": {
+      "tag": "c:dusts/redstone"
+    },
+    "W": {
+      "item": "galacticraft:advanced_wafer"
+    }
+  },
+  "pattern": [
+    "PBP",
+    "RWR",
+    "PDP"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:keycard"
+  }
+}

@@ -228,6 +228,9 @@ public class GCItems {
 
     public static final Item EMERGENCY_KIT = ITEMS.register(Constant.Item.EMERGENCY_KIT, new EmergencyKitItem(new Item.Properties().stacksTo(1)));
 
+    public static final Item KEYCARD = ITEMS.register(Constant.Item.KEYCARD, new KeycardItem(new Item.Properties().stacksTo(1)));
+    public static final Item LUNAR_DUNGEON_KEYCARD = ITEMS.register(Constant.Item.LUNAR_DUNGEON_KEYCARD, new LunarDungeonKeycardItem(new Item.Properties().stacksTo(1)));
+
     // SMITHING TEMPLATES
     public static final Item TITANTIUM_UPGRADE_SMITHING_TEMPLATE = ITEMS.register(Constant.Item.TITANTIUM_UPGRADE_SMITHING_TEMPLATE, new SmithingTemplateItem(
             Component.translatable(Translations.Misc.UPGRADE_TITANIUM_APPLIES_TO).withStyle(Constant.Text.BLUE_STYLE),

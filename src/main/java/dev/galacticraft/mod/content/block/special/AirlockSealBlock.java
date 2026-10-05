@@ -23,60 +23,60 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
-import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.block.Block;
+import net.minecraft.world.level.block.RotatedPillarBlock;
 import net.minecraft.world.level.block.Rotation;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
-import net.minecraft.world.level.block.state.properties.DirectionProperty;
+import net.minecraft.world.level.block.state.properties.EnumProperty;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
+import net.minecraft.core.BlockPos;
+import org.jetbrains.annotations.NotNull;
 
 public class AirlockSealBlock extends Block {
     public static final MapCodec<AirlockSealBlock> CODEC = simpleCodec(AirlockSealBlock::new);
-    public static final DirectionProperty FACING = BlockStateProperties.HORIZONTAL_FACING;
+    public static final EnumProperty<Direction.Axis> AXIS = BlockStateProperties.AXIS;
 
+    private static final VoxelShape SHAPE_X = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0);
+    private static final VoxelShape SHAPE_Y = Block.box(0.0, 4.0, 0.0, 16.0, 12.0, 16.0);
+    private static final VoxelShape SHAPE_Z = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0);
+
+    public AirlockSealBlock(Properties properties) {
+        super(properties);
+        this.registerDefaultState(this.defaultBlockState().setValue(AXIS, Direction.Axis.Z));
+    }
 
     @Override
     public MapCodec<? extends AirlockSealBlock> codec() {
         return CODEC;
     }
 
-    public AirlockSealBlock(Properties properties) {
-        super(properties);
-        this.registerDefaultState(this.defaultBlockState().setValue(FACING, Direction.NORTH));
-    }
-
-
-    protected static final VoxelShape SHAPE_NORTH = Block.box(0.0, 0.0, 4.0, 16.0, 16.0, 12.0);
-    protected static final VoxelShape SHAPE_EAST = Block.box(4.0, 0.0, 0.0, 12.0, 16.0, 16.0);
-
     @Override
     public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        if (state.getValue(FACING) == Direction.NORTH || state.getValue(FACING) == Direction.SOUTH) {
-            return SHAPE_NORTH;
-        } else {
-            return SHAPE_EAST;
-        }
+        return switch (state.getValue(AXIS)) {
+            case X -> SHAPE_X;
+            case Y -> SHAPE_Y;
+            case Z -> SHAPE_Z;
+        };
     }
 
     @Override
-    public BlockState rotate(BlockState blockState, Rotation rotation) {
-        return blockState.setValue(FACING, rotation.rotate(blockState.getValue(FACING)));
+    protected @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+        return RotatedPillarBlock.rotatePillar(state, rotation);
     }
 
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
-        builder.add(FACING);
+        builder.add(AXIS);
     }
 
     @Override
-    public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        return this.defaultBlockState().setValue(FACING, blockPlaceContext.getHorizontalDirection().getOpposite());
+    public BlockState getStateForPlacement(BlockPlaceContext context) {
+        return this.defaultBlockState().setValue(AXIS, context.getClickedFace().getAxis());
     }
-
 }

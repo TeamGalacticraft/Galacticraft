@@ -52,6 +52,8 @@ public class GCItemTags {
 
     public static final TagKey<Item> FLAGS = galacticraftTag("flags");
 
+    public static final TagKey<Item> KEYCARDS = commonTag("keycards");
+
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 
     public static final TagKey<Item> SILICONS = commonTag("silicon");

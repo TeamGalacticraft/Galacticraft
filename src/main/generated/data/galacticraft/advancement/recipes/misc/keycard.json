@@ -1,11 +1,11 @@
 {
   "parent": "minecraft:recipes/root",
   "criteria": {
-    "has_oxygen_concentrator": {
+    "has_advanced_wafer": {
       "conditions": {
         "items": [
           {
-            "items": "galacticraft:oxygen_concentrator"
+            "items": "galacticraft:advanced_wafer"
           }
         ]
       },
@@ -13,7 +13,7 @@
     },
     "has_the_recipe": {
       "conditions": {
-        "recipe": "galacticraft:air_lock_frame"
+        "recipe": "galacticraft:keycard"
       },
       "trigger": "minecraft:recipe_unlocked"
     }
@@ -21,12 +21,12 @@
   "requirements": [
     [
       "has_the_recipe",
-      "has_oxygen_concentrator"
+      "has_advanced_wafer"
     ]
   ],
   "rewards": {
     "recipes": [
-      "galacticraft:air_lock_frame"
+      "galacticraft:keycard"
     ]
   }
 }
