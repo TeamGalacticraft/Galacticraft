@@ -1,0 +1,10 @@
+{
+  "variants": {
+    "active=false": {
+      "model": "galacticraft:machine/oxygen_detector"
+    },
+    "active=true": {
+      "model": "galacticraft:machine/oxygen_detector_active"
+    }
+  }
+}

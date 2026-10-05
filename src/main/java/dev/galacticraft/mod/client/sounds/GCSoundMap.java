@@ -50,7 +50,9 @@ public class GCSoundMap {
             Map.entry(GCMachineStatuses.BLOCKED, Optional.empty()),
             Map.entry(GCMachineStatuses.NOT_GENERATING, Optional.empty()),
             Map.entry(GCMachineStatuses.COLLECTING, Optional.of(GCSounds.OXYGEN_FAN)),
-            Map.entry(GCMachineStatuses.DISTRIBUTING, Optional.of(GCSounds.OXYGEN_FAN)));
+            Map.entry(GCMachineStatuses.DISTRIBUTING, Optional.of(GCSounds.OXYGEN_FAN)),
+            Map.entry(GCMachineStatuses.OXYGEN_DETECTED, Optional.empty()),
+            Map.entry(GCMachineStatuses.NO_OXYGEN_DETECTED, Optional.empty()));
 
     public static @Nullable SoundEvent get(MachineStatus status, MachineBlockEntity machine) {
         if (machine instanceof CoalPoweredMachine) {

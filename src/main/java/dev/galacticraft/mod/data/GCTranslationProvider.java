@@ -376,6 +376,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace");
         this.block(GCBlocks.REFINERY, "Refinery");
         this.block(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector");
+        this.block(GCBlocks.OXYGEN_DETECTOR, "Oxygen Detector");
         this.block(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer");
         this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
         this.block(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor");
@@ -1023,6 +1024,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
         this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Collects oxygen from nearby crops and trees.");
+        this.blockDesc(GCBlocks.OXYGEN_DETECTOR, "Will emit a redstone signal when surrounded by oxygen.");
         this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Fills oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_SEALER, "Fills an airtight room with oxygen to make it breathable.");
         this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Stores a large amount of oxygen.");
@@ -1184,6 +1186,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING_OXYGEN, "Compressing");
         this.add(MachineStatus.DECOMPRESSING, "Decompressing");
+        this.add(MachineStatus.OXYGEN_DETECTED, "Oxygen Detected");
+        this.add(MachineStatus.NO_OXYGEN_DETECTED, "No Oxygen Detected");
         this.add(MachineStatus.MISSING_OXYGEN_TANK, "Missing Oxygen Tank");
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.EMPTY_OXYGEN_TANK, "Empty Oxygen Tank");
@@ -1257,6 +1261,9 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
+        this.add(Ui.DETECTOR_MODE, "Current Mode: %s");
+        this.add(Ui.DETECTOR_AND, "AND");
+        this.add(Ui.DETECTOR_OR, "OR");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
