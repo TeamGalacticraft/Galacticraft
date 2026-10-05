@@ -106,7 +106,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("WW")
                 .pattern("TT")
                 .pattern("CC")
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItemTags.TIN_CANISTERS))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_METEORIC_IRON), has(GCItems.COMPRESSED_METEORIC_IRON))
                 .emiDefaultRecipe(true)
                 .save(output);
 
@@ -117,7 +117,7 @@ public class GCMiscRecipeProvider extends FabricRecipeProvider {
                 .pattern("WWW")
                 .pattern("TTT")
                 .pattern("CCC")
-                .unlockedBy(getHasName(GCItems.TIN_CANISTER), has(GCItemTags.TIN_CANISTERS))
+                .unlockedBy(getHasName(GCItems.COMPRESSED_DESH), has(GCItems.COMPRESSED_DESH))
                 .emiDefaultRecipe(true)
                 .save(output);
 
