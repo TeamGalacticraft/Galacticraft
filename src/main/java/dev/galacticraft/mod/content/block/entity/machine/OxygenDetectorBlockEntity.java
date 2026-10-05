@@ -27,7 +27,6 @@ import org.jetbrains.annotations.Nullable;
 
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
-import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.machine.configuration.IOFace;
 import dev.galacticraft.machinelib.api.machine.configuration.SecuritySettings;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
@@ -35,6 +34,7 @@ import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.transfer.ResourceType;
 import dev.galacticraft.machinelib.api.util.BlockFace;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.OxygenDetectorMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -144,7 +144,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
     @Override
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state,
             @NotNull ProfilerFiller profiler) {
-        return isOxygenPresent() ? MachineStatuses.ACTIVE : MachineStatuses.IDLE;
+        return isOxygenPresent() ? GCMachineStatuses.OXYGEN_DETECTED : GCMachineStatuses.NO_OXYGEN_DETECTED;
     }
 
     @Override

@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
+import dev.galacticraft.machinelib.api.machine.configuration.RedstoneMode;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.OxygenDetectorBlockEntity;
@@ -62,10 +63,6 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
         return menu.be.isAnd() ? ChatFormatting.RED : ChatFormatting.GREEN;
     }
 
-    private ChatFormatting getStatColor() {
-        return menu.be.isActive() ? ChatFormatting.AQUA : ChatFormatting.BLUE;
-    }
-
     @Override
     protected void renderMachineBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
         int target_y = menu.be.isAnd() ? 0 : 34;
@@ -79,7 +76,7 @@ public class OxygenDetectorScreen extends MachineScreen<OxygenDetectorBlockEntit
         mode = Component.translatable(Translations.Ui.DETECTOR_MODE, mode).withStyle(getModeColor());
         graphics.drawString(font, mode, this.leftPos + 12, this.topPos + 24, -1, false);
 
-        Component stat = Component.translatable(menu.be.isActive() ? Translations.Ui.OXYGEN_DETECTED : Translations.Ui.NO_OXYGEN_DETECTED).withStyle(getStatColor());
+        Component stat = menu.be.getState().getStatusText(RedstoneMode.IGNORE);
         graphics.drawString(font, stat, this.leftPos + 12, this.topPos + 40, -1, false);
 
         if (mouseIn(mouseX, mouseY, switchButton.getX(), switchButton.getY(), switchButton.getWidth(), switchButton.getHeight())) {

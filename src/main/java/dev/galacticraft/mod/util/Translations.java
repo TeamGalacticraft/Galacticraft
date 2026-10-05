@@ -382,6 +382,8 @@ public interface Translations {
         String COLLECTING = "ui.galacticraft.status.collecting";
         String COMPRESSING_OXYGEN = "ui.galacticraft.status.compressing_oxygen";
         String DECOMPRESSING = "ui.galacticraft.status.decompressing";
+        String OXYGEN_DETECTED = "ui.galacticraft.status.oxygen_detected";
+        String NO_OXYGEN_DETECTED = "ui.galacticraft.status.no_oxygen_detected";
         String MISSING_OXYGEN_TANK = "ui.galacticraft.status.missing_oxygen_tank";
         String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
         String EMPTY_OXYGEN_TANK = "ui.galacticraft.status.empty_oxygen_tank";
@@ -465,8 +467,6 @@ public interface Translations {
         String OXYGEN_TANK_2_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_2_level";
         String OXYGEN_WARNING = "ui.galacticraft.oxygen.warning";
         String OXYGEN_SETUP_INVALID = "ui.galacticraft.oxygen.invalid_setup";
-        String OXYGEN_DETECTED = "ui.galacticraft.status.oxygen_detected";
-        String NO_OXYGEN_DETECTED = "ui.galacticraft.status.no_oxygen_detected";
         String ROCKET_FUEL = "ui.galacticraft.rocket.fuel";
         String ROCKET_FULL = "ui.galacticraft.rocket.full";
         String ROCKET_NO_FUEL = "ui.galacticraft.rocket.no_fuel";

@@ -58,6 +58,9 @@ public final class GCMachineStatuses {
     public static final MachineStatus SEALED = MachineStatus.create(Translations.MachineStatus.SEALED, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
     // Oxygen - Bubble Distributor
     public static final MachineStatus DISTRIBUTING = MachineStatus.create(Translations.MachineStatus.DISTRIBUTING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);
+    // Oxygen - Detector
+    public static final MachineStatus OXYGEN_DETECTED = MachineStatus.create(Translations.MachineStatus.OXYGEN_DETECTED, ChatFormatting.AQUA, MachineStatus.Type.WORKING);
+    public static final MachineStatus NO_OXYGEN_DETECTED = MachineStatus.create(Translations.MachineStatus.NO_OXYGEN_DETECTED, ChatFormatting.BLUE, MachineStatus.Type.MISSING_RESOURCE);
 
     // Refinery
     public static final MachineStatus REFINING = MachineStatus.create(Translations.MachineStatus.REFINING, ChatFormatting.GREEN, MachineStatus.Type.WORKING);

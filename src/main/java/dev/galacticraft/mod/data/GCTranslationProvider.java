@@ -1153,6 +1153,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING_OXYGEN, "Compressing");
         this.add(MachineStatus.DECOMPRESSING, "Decompressing");
+        this.add(MachineStatus.OXYGEN_DETECTED, "Oxygen Detected");
+        this.add(MachineStatus.NO_OXYGEN_DETECTED, "No Oxygen Detected");
         this.add(MachineStatus.MISSING_OXYGEN_TANK, "Missing Oxygen Tank");
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.EMPTY_OXYGEN_TANK, "Empty Oxygen Tank");
@@ -1229,8 +1231,6 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.DETECTOR_MODE, "Current Mode: %s");
         this.add(Ui.DETECTOR_AND, "AND");
         this.add(Ui.DETECTOR_OR, "OR");
-        this.add(Ui.OXYGEN_DETECTED, "Oxygen Detected");
-        this.add(Ui.NO_OXYGEN_DETECTED, "No Oxygen Detected");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");
