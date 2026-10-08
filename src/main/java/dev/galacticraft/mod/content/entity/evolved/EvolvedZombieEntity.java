@@ -60,6 +60,6 @@ public class EvolvedZombieEntity extends Zombie {
 
     @Override
     public String galacticraft$tankSize(int i) {
-        return Constant.Item.MEDIUM_OXYGEN_TANK;
+        return Constant.Item.SMALL_OXYGEN_TANK;
     }
 }
