@@ -167,6 +167,14 @@ public abstract class EntityMixin implements EntityAccessor {
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
+
+        oilEffects(invulnerable);
+        sulfuricAcidEffects(invulnerable);
+    }
+
+    // If a flaming entity enters oil, this entity should explode
+    @Unique
+    private void oilEffects(boolean invulnerable) {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
@@ -175,14 +183,12 @@ public abstract class EntityMixin implements EntityAccessor {
                 }
             }
         }
-        sulfuricAcidEffects(invulnerable);
-
     }
 
+    // The entity enters an acid fluid, this entity needs to take damage
     @Unique
     private void sulfuricAcidEffects(boolean invulnerable) {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enters an acid fluid, this entity needs to take damage
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
                 boolean damage = this.timeInAcid >= 30;
                 boolean playSound = true;
