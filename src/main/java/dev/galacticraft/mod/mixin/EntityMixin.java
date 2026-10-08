@@ -62,6 +62,7 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -126,6 +127,9 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract boolean hurt(DamageSource source, float amount);
 
     @Shadow
+    protected abstract SoundEvent getSwimSound();
+
+    @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
 
     @Shadow
@@ -162,6 +166,19 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     @Final
     protected abstract void discard();
+
+    @Inject(method = "playSwimSound", at = @At("HEAD"), cancellable = true)
+    private void playCustomSwimSound(float volume, CallbackInfo ci) {
+        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
+        FluidState fluidState = this.level().getFluidState(mutableBlockPos);
+        if (fluidState.is(GCFluidTags.FUEL)) {
+            this.playSound(this.getSwimSound(), volume, 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+            ci.cancel();
+        } else if (fluidState.is(GCFluidTags.OIL)) {
+            this.playSound(this.getSwimSound(), volume, 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
+            ci.cancel();
+        }
+    }
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
