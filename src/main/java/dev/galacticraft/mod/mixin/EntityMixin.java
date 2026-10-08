@@ -175,7 +175,12 @@ public abstract class EntityMixin implements EntityAccessor {
                 }
             }
         }
+        sulfuricAcidEffects(invulnerable);
 
+    }
+
+    @Unique
+    private void sulfuricAcidEffects(boolean invulnerable) {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
             // The entity enters an acid fluid, this entity needs to take damage
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
@@ -202,20 +207,15 @@ public abstract class EntityMixin implements EntityAccessor {
                     this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
                 if (playSound && this.timeInAcid % 5 == 0) {
-                    this.sulfuricAcidEffects();
+                    this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+                    for (int i = 0; i < 4; i++) {
+                        level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
+                    }
                 }
             }
             ++this.timeInAcid;
         } else {
             this.timeInAcid = 0;
-        }
-    }
-
-    @Unique
-    private void sulfuricAcidEffects() {
-        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-        for (int i = 0; i < 4; i++) {
-            level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
         }
     }
 
