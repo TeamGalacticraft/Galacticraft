@@ -31,7 +31,6 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -56,8 +55,9 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         this.processingTime = processingTime;
     }
 
-    public DefaultFabricationDisplay(@Nullable RecipeHolder<FabricationRecipe> recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
+    @SuppressWarnings("UnstableApiUsage")
+    public DefaultFabricationDisplay(RecipeHolder<FabricationRecipe> recipe) {
+        super(getInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
         this.processingTime = recipe.value().getProcessingTime();
     }
 
@@ -70,8 +70,7 @@ public class DefaultFabricationDisplay extends BasicDisplay {
         return GalacticraftREIServerPlugin.FABRICATION;
     }
 
-    private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<FabricationRecipe> recipe) {
-        if (recipe == null) return Collections.emptyList();
+    private static List<EntryIngredient> getInputs(RecipeHolder<FabricationRecipe> recipe) {
         int n = recipe.value().getIngredients().size();
         List<EntryIngredient> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {

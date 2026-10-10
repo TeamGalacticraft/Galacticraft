@@ -31,7 +31,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.BlastingRecipe;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,8 +48,8 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
             }
     );
 
-    private int processingTime;
-    private float xp;
+    private final int processingTime;
+    private final float xp;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected ElectricArcFurnaceDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime, float xp) {
@@ -59,8 +58,9 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
         this.xp = xp;
     }
 
-    public ElectricArcFurnaceDisplay(@Nullable RecipeHolder<BlastingRecipe> recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(
+    @SuppressWarnings("UnstableApiUsage")
+    public ElectricArcFurnaceDisplay(RecipeHolder<BlastingRecipe> recipe) {
+        super(getInputs(recipe), Collections.singletonList(
                 EntryIngredients.ofItemStacks(List.of(recipe.value().getResultItem(registryAccess()),
                         recipe.value().getResultItem(registryAccess()).copyWithCount(recipe.value().getResultItem(registryAccess()).getCount() * 2)
                 ))
@@ -82,8 +82,7 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
         return GalacticraftREIServerPlugin.ELECTRIC_BLASTING;
     }
 
-    private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<BlastingRecipe> recipe) {
-        if (recipe == null) return Collections.emptyList();
+    private static List<EntryIngredient> getInputs(RecipeHolder<BlastingRecipe> recipe) {
         int n = recipe.value().getIngredients().size();
         List<EntryIngredient> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {

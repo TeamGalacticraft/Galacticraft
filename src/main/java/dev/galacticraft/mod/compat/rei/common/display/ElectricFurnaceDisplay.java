@@ -31,7 +31,6 @@ import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -49,8 +48,8 @@ public class ElectricFurnaceDisplay extends BasicDisplay {
             }
     );
 
-    private int processingTime;
-    private float xp;
+    private final int processingTime;
+    private final float xp;
 
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected ElectricFurnaceDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime, float xp) {
@@ -59,8 +58,9 @@ public class ElectricFurnaceDisplay extends BasicDisplay {
         this.xp = xp;
     }
 
-    public ElectricFurnaceDisplay(@Nullable RecipeHolder<SmeltingRecipe> recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
+    @SuppressWarnings("UnstableApiUsage")
+    public ElectricFurnaceDisplay(RecipeHolder<SmeltingRecipe> recipe) {
+        super(getInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
         this.processingTime = (int) (recipe.value().getCookingTime() / 1.5F);
         this.xp = recipe.value().getExperience();
     }
@@ -78,8 +78,7 @@ public class ElectricFurnaceDisplay extends BasicDisplay {
         return GalacticraftREIServerPlugin.ELECTRIC_SMELTING;
     }
 
-    private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<SmeltingRecipe> recipe) {
-        if (recipe == null) return Collections.emptyList();
+    private static List<EntryIngredient> getInputs(RecipeHolder<SmeltingRecipe> recipe) {
         int n = recipe.value().getIngredients().size();
         List<EntryIngredient> list = new ArrayList<>(n);
         for (int i = 0; i < n; i++) {

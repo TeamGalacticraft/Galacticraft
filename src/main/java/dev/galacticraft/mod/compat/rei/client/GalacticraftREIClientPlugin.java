@@ -70,7 +70,6 @@ import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
 
-@SuppressWarnings("UnstableApiUsage")
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
     private static final CraftingRecipeFiller<?>[] CRAFTING_RECIPE_FILLERS = new CraftingRecipeFiller[]{
             new EmergencyKitRecipeFiller(),
@@ -134,6 +133,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
                 stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
@@ -189,6 +189,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)

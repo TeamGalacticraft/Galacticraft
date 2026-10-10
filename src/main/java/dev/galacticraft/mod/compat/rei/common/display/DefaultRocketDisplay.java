@@ -30,7 +30,6 @@ import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryIngredients;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.crafting.RecipeHolder;
-import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -58,15 +57,11 @@ public class DefaultRocketDisplay extends BasicDisplay {
         this.hasBoosters = hasBoosters;
     }
 
-    public DefaultRocketDisplay(@Nullable RecipeHolder<RocketRecipe> recipe) {
-        super(getInputs(recipe), recipe == null ? Collections.emptyList() : Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
-        if (recipe != null) {
-            this.bodyHeight = recipe.value().bodyHeight();
-            this.hasBoosters = !recipe.value().boosters().isEmpty();
-        } else {
-            this.bodyHeight = 0;
-            this.hasBoosters = false;
-        }
+    @SuppressWarnings("UnstableApiUsage")
+    public DefaultRocketDisplay(RecipeHolder<RocketRecipe> recipe) {
+        super(getInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
+        this.bodyHeight = recipe.value().bodyHeight();
+        this.hasBoosters = !recipe.value().boosters().isEmpty();
     }
 
     @Override
@@ -74,8 +69,7 @@ public class DefaultRocketDisplay extends BasicDisplay {
         return GalacticraftREIServerPlugin.ROCKET;
     }
 
-    private static List<EntryIngredient> getInputs(@Nullable RecipeHolder<RocketRecipe> recipe) {
-        if (recipe == null) return Collections.emptyList();
+    private static List<EntryIngredient> getInputs(RecipeHolder<RocketRecipe> recipe) {
         RocketRecipe rocketRecipe = recipe.value();
         List<EntryIngredient> list = new ArrayList<>();
         list.add(EntryIngredients.ofIngredient(rocketRecipe.cone()));
