@@ -53,6 +53,8 @@ public interface Config {
 
     long oxygenCollectorEnergyConsumptionRate();
 
+    long oxygenCollectorProductionLimit();
+
     long oxygenCompressorEnergyConsumptionRate();
 
     long oxygenDecompressorEnergyConsumptionRate();
@@ -102,6 +104,8 @@ public interface Config {
     boolean enableSpaceStationCreation();
 
     List<String> disabledCelestialScreenDimensions();
+
+    List<String> disabledDimensions();
 
     void load();
 

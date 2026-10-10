@@ -30,6 +30,7 @@ import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.advancements.GCTriggers;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
@@ -40,6 +41,8 @@ import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Locale;
 
 public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) implements C2SPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, SatelliteCreationPayload> STREAM_CODEC =
@@ -71,6 +74,21 @@ public record SatelliteCreationPayload(ResourceKey<CelestialBody<?, ?>> body) im
                         "Blocked invalid satellite creation request from {} for non-orbitable body {}.",
                         context.player().getScoreboardName(),
                         body.location()
+                );
+                return;
+            }
+
+            ResourceLocation satelliteId = ResourceLocation.parse(this.body.location() + "_" + context.player().getScoreboardName().toLowerCase(Locale.ROOT));
+
+            if (GCConfigUtil.isDimensionDisabled(
+                    context.server(),
+                    satelliteId
+            )) {
+                Constant.LOGGER.warn(
+                        "Blocked space station creation for {} because dimension {} " +
+                                "is disabled.",
+                        context.player().getScoreboardName(),
+                        satelliteId
                 );
                 return;
             }

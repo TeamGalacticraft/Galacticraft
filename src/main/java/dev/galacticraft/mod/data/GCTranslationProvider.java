@@ -376,6 +376,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.ELECTRIC_ARC_FURNACE, "Electric Arc Furnace");
         this.block(GCBlocks.REFINERY, "Refinery");
         this.block(GCBlocks.OXYGEN_COLLECTOR, "Oxygen Collector");
+        this.block(GCBlocks.OXYGEN_DETECTOR, "Oxygen Detector");
         this.block(GCBlocks.OXYGEN_SEALER, "Oxygen Sealer");
         this.block(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Bubble Distributor");
         this.block(GCBlocks.OXYGEN_DECOMPRESSOR, "Oxygen Decompressor");
@@ -663,6 +664,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.SILICONS, "Silicon");
         this.tag(GCItemTags.OLIVINE_SHARDS, "Olivine Shards");
         this.tag(GCItemTags.LUNAR_SAPPHIRES, "Lunar Sapphires");
+
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MOON_ROCK, "Moon Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MOON_BASALT, "Moon Basalt Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_LUNASLATE, "Lunaslate Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_MARS_STONE, "Mars Stone Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_ASTEROID_ROCK, "Asteroid Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK, "Soft Venus Rock Ore Bearing Ground");
+        this.tag(GCItemTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK, "Hard Venus Rock Ore Bearing Ground");
+
+        this.tag(GCItemTags.ORES_IN_GROUND_MOON_ROCK, "Moon Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_MOON_BASALT, "Moon Basalt Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_LUNASLATE, "Lunaslate Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_MARS_STONE, "Mars Stone Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_ASTEROID_ROCK, "Asteroid Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_SOFT_VENUS_ROCK, "Soft Venus Rock Ores In Ground");
+        this.tag(GCItemTags.ORES_IN_GROUND_HARD_VENUS_ROCK, "Hard Venus Rock Ores In Ground");
 
         this.tag(GCItemTags.ALUMINUM_ORES, "Aluminum Ores");
         this.tag(GCItemTags.CHEESE_ORES, "Cheese Ores");
@@ -1007,6 +1024,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
         this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_COLLECTOR, "Collects oxygen from nearby crops and trees.");
+        this.blockDesc(GCBlocks.OXYGEN_DETECTOR, "Will emit a redstone signal when surrounded by oxygen.");
         this.blockDesc(GCBlocks.OXYGEN_COMPRESSOR, "Fills oxygen tanks.");
         this.blockDesc(GCBlocks.OXYGEN_SEALER, "Fills an airtight room with oxygen to make it breathable.");
         this.blockDesc(GCBlocks.OXYGEN_STORAGE_MODULE, "Stores a large amount of oxygen.");
@@ -1064,6 +1082,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE, "Electric Arc Furnace Energy Consumption Rate/t");
         this.add(Config.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "Electric Arc Furnace Bonus Chance");
         this.add(Config.OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE, "Oxygen Collector Energy Consumption Rate/t");
+        this.add(Config.OXYGEN_COLLECTOR_PRODUCTION_LIMIT, "Oxygen Collector Production Limit/t");
         this.add(Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Compressor Energy Consumption Rate/t");
         this.add(Config.OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE, "Oxygen Decompressor Energy Consumption Rate/t");
         this.add(Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE, "Oxygen Sealer Energy Consumption Rate/t");
@@ -1089,6 +1108,22 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.BOSS_HEALTH_MODIFIER, "Boss Health Modifier");
         this.add(Config.BOSS_HEALTH_MODIFIER_DESC, "Multiplies All GC5 Bosses Health By This Value");
         this.add(Config.ENABLE_SPACE_STATION_CREATION, "Enable Space Station Creation");
+
+        this.add(Config.DISABLED_DIMENSIONS, "Disabled Dimensions");
+        this.add(Config.DISABLED_DIMENSIONS_DESC,
+                "Dimensions listed here will not be loaded or generated when the world starts. " +
+                        "Use IDs such as galacticraft:moon or galacticraft:venus. " +
+                        "A server/world restart is required after changing this setting."
+        );
+        this.add(Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS, "Disabled Celestial Screen Dimensions");
+        this.add(Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC,
+                "Dimensions listed here will not be accessible via the celestial screen. " +
+                        "Use IDs such as galacticraft:moon or galacticraft:venus. " +
+                        "A server/world restart is required after changing this setting."
+        );
+
+        this.add(Config.SERVER, "Server");
+        this.add(Config.SERVER_SIDE_DIMENSION, "Server Side Dimension Config");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1151,6 +1186,8 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(MachineStatus.COLLECTING, "Collecting");
         this.add(MachineStatus.COMPRESSING_OXYGEN, "Compressing");
         this.add(MachineStatus.DECOMPRESSING, "Decompressing");
+        this.add(MachineStatus.OXYGEN_DETECTED, "Oxygen Detected");
+        this.add(MachineStatus.NO_OXYGEN_DETECTED, "No Oxygen Detected");
         this.add(MachineStatus.MISSING_OXYGEN_TANK, "Missing Oxygen Tank");
         this.add(MachineStatus.OXYGEN_TANK_FULL, "Oxygen Tank Full");
         this.add(MachineStatus.EMPTY_OXYGEN_TANK, "Empty Oxygen Tank");
@@ -1219,11 +1256,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Ui.BUBBLE_TARGET_SIZE, "Target Size: ");
         this.add(Ui.BUBBLE_VISIBLE, "Bubble Visible");
 
-        this.add(Ui.COLLECTING, "Collecting: %s/s");
+        this.add(Ui.COLLECTING, "Collecting: %s/t");
         this.add(Ui.CURRENT_OXYGEN, "Oxygen: %s");
         this.add(Ui.GJT, "%s gJ/t");
         this.add(Ui.MILLIBUCKETS, "mB");
         this.add(Ui.MAX_OXYGEN, "Maximum Oxygen: %s");
+        this.add(Ui.DETECTOR_MODE, "Current Mode: %s");
+        this.add(Ui.DETECTOR_AND, "AND");
+        this.add(Ui.DETECTOR_OR, "OR");
         this.add(Ui.MACHINE_STATUS, "Status: %s");
         this.add(Ui.OXYGEN_TANK_1_LEVEL, "Oxygen Tank 1: %s");
         this.add(Ui.OXYGEN_TANK_2_LEVEL, "Oxygen Tank 2: %s");

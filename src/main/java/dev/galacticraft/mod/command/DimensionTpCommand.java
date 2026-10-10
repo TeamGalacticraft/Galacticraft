@@ -121,7 +121,7 @@ public class DimensionTpCommand {
                 null,
                 body != null ? body : player.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).getHolderOrThrow(GCCelestialBodies.EARTH),
                 Galacticraft.CONFIG.enableSpaceStationCreation(),
-                GCConfigUtil.disabledCelestialScreenDestinations()
+                GCConfigUtil.disabledCelestialScreenDestinations(context.getSource().getServer())
         ));
         return Command.SINGLE_SUCCESS;
     }

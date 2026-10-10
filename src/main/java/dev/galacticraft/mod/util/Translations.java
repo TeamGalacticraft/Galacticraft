@@ -214,6 +214,7 @@ public interface Translations {
         String ELECTRIC_ARC_FURNACE_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.electric_arc_furnace_energy_consumption_rate";
         String ELECTRIC_ARC_FURNACE_BONUS_CHANCE = "config.galacticraft.energy.machines.electric_arc_furnace_bonus_chance";
         String OXYGEN_COLLECTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_collector_energy_consumption_rate";
+        String OXYGEN_COLLECTOR_PRODUCTION_LIMIT = "config.galacticraft.energy.machines.oxygen_collector_production_limit";
         String OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_compressor_energy_consumption_rate";
         String OXYGEN_DECOMPRESSOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_decompressor_energy_consumption_rate";
         String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_energy_consumption_rate";
@@ -239,6 +240,13 @@ public interface Translations {
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
         String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
+
+        String DISABLED_DIMENSIONS = "config.galacticraft.disabled_dimensions";
+        String DISABLED_DIMENSIONS_DESC = "config.galacticraft.disabled_dimensions.desc";
+        String DISABLED_CELESTIAL_SCREEN_DIMENSIONS = "config.galacticraft.disabled_celestial_screen_dimensions";
+        String DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC = "config.galacticraft.disabled_celestial_screen_dimensions.desc";
+        String SERVER = "config.galacticraft.server";
+        String SERVER_SIDE_DIMENSION = "config.galacticraft.server_side_dimension";
     }
 
     interface Galaxy {
@@ -382,6 +390,8 @@ public interface Translations {
         String COLLECTING = "ui.galacticraft.status.collecting";
         String COMPRESSING_OXYGEN = "ui.galacticraft.status.compressing_oxygen";
         String DECOMPRESSING = "ui.galacticraft.status.decompressing";
+        String OXYGEN_DETECTED = "ui.galacticraft.status.oxygen_detected";
+        String NO_OXYGEN_DETECTED = "ui.galacticraft.status.no_oxygen_detected";
         String MISSING_OXYGEN_TANK = "ui.galacticraft.status.missing_oxygen_tank";
         String OXYGEN_TANK_FULL = "ui.galacticraft.status.oxygen_tank_full";
         String EMPTY_OXYGEN_TANK = "ui.galacticraft.status.empty_oxygen_tank";
@@ -457,6 +467,9 @@ public interface Translations {
         String GJT = "ui.galacticraft.machine.gj_per_t";
         String MILLIBUCKETS = "ui.galacticraft.machine.millibuckets";
         String MAX_OXYGEN = "ui.galacticraft.machine.max_oxygen";
+        String DETECTOR_MODE = "ui.galacticraft.machine.detector_mode";
+        String DETECTOR_AND = "ui.galacticraft.machine.detector_and";
+        String DETECTOR_OR = "ui.galacticraft.machine.detector_or";
         String MACHINE_STATUS = "ui.galacticraft.machine.status";
         String OXYGEN_TANK_1_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_1_level";
         String OXYGEN_TANK_2_LEVEL = "ui.galacticraft.player_inv_screen.oxygen_tank_2_level";

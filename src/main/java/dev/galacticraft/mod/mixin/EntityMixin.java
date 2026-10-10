@@ -28,7 +28,9 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
@@ -38,6 +40,8 @@ import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.resources.ResourceKey;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
@@ -283,25 +287,68 @@ public abstract class EntityMixin implements EntityAccessor {
         this.lastStep = -this.lastStep;
     }
 
-    @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
-    private void galacticraft$onBelowWorld(Entity entity, Operation<Void> original) {
+    @WrapOperation(
+            method = "checkBelowWorld",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"
+            )
+    )
+    @SuppressWarnings({"rawtypes", "unchecked"})
+    private void galacticraft$onBelowWorld(
+            Entity entity,
+            Operation<Void> original
+    ) {
         if (!entity.getType().is(GCEntityTypeTags.CAN_REENTER_ATMOSPHERE)) {
             original.call(entity);
             return;
         }
 
-        Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
-        CelestialBody fromBody = holder != null ? holder.value() : null;
-        if (fromBody != null && fromBody.isSatellite() && fromBody.parent().isPresent()) {
-            Registry<CelestialBody<?, ?>> celestialBodies = entity.level().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
-            CelestialBody body = fromBody.parentValue(celestialBodies);
-            if (body.type() instanceof Landable landable) {
-                if (entity.level() instanceof ServerLevel level) {
-                    ((CelestialTeleporter) landable.teleporter(body.config()).value()).onEnterAtmosphere(level.getServer().getLevel(landable.world(body.config())), entity, body, fromBody);
-                }
-                return;
-            }
+        if (!(entity.level() instanceof ServerLevel currentLevel)) {
+            original.call(entity);
+            return;
         }
-        original.call(entity);
+
+        Holder<CelestialBody<?, ?>> holder = currentLevel.galacticraft$getCelestialBody();
+
+        CelestialBody<?, ?> fromBody = holder != null ? holder.value() : null;
+
+        if (fromBody == null || !fromBody.isSatellite() || fromBody.parent().isEmpty()) {
+            original.call(entity);
+            return;
+        }
+
+        Registry<CelestialBody<?, ?>> celestialBodies = currentLevel.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+
+        CelestialBody<?, ?> body = fromBody.parentValue(celestialBodies);
+
+        if (!(body.type() instanceof Landable landable)) {
+            original.call(entity);
+            return;
+        }
+
+        ResourceKey<Level> destinationKey = landable.world(body.config());
+
+        MinecraftServer server = currentLevel.getServer();
+
+        ServerLevel destination = GCConfigUtil.getEnabledLevel(server, destinationKey);
+
+        if (destination == null) {
+            Constant.LOGGER.warn(
+                    "Unable to re-enter atmosphere from {} because destination " +
+                            "dimension {} is disabled or unavailable.",
+                    currentLevel.dimension().location(),
+                    destinationKey.location()
+            );
+
+            /*
+             * Fall back to vanilla below-world handling rather than feeding null
+             * into a CelestialTeleporter.
+             */
+            original.call(entity);
+            return;
+        }
+
+        ((CelestialTeleporter<?, ?>) landable.teleporter(body.config()).value()).onEnterAtmosphere(destination, entity, body, fromBody);
     }
 }
