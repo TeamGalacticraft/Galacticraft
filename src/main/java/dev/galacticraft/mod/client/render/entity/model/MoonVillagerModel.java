@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.client.render.entity.model;
 
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.content.entity.MoonVillagerEntity;
+import dev.galacticraft.mod.content.entity.moon.MoonVillagerEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.model.VillagerModel;
