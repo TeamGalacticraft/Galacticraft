@@ -23,6 +23,7 @@
 package dev.galacticraft.impl.internal.client.tabs;
 
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
+import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.world.entity.player.Player;
@@ -43,7 +44,7 @@ public class InventoryTabRegistryImpl implements InventoryTabRegistry {
         INSTANCE.register(Items.CRAFTING_TABLE.getDefaultInstance(), () -> {
             assert Minecraft.getInstance().player != null;
             Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
-        }, player -> true, InventoryMenu.class);
+        }, player -> !(player.getVehicle() instanceof RocketEntity && player.isCreative()), InventoryMenu.class);
     }
 
     @Override
