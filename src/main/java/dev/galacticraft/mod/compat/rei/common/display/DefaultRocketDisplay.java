@@ -51,6 +51,7 @@ public class DefaultRocketDisplay extends BasicDisplay {
     public final int bodyHeight;
     public final boolean hasBoosters;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected DefaultRocketDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int bodyHeight, boolean hasBoosters) {
         super(inputs, outputs, location);
         this.bodyHeight = bodyHeight;

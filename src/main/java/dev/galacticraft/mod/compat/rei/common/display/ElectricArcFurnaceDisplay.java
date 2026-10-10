@@ -52,6 +52,7 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
     private int processingTime;
     private float xp;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected ElectricArcFurnaceDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime, float xp) {
         super(inputs, outputs, location);
         this.processingTime = processingTime;

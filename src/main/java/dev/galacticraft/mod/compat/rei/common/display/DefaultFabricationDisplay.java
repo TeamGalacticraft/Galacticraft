@@ -50,6 +50,7 @@ public class DefaultFabricationDisplay extends BasicDisplay {
 
     private final int processingTime;
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     protected DefaultFabricationDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location, int processingTime) {
         super(inputs, outputs, location);
         this.processingTime = processingTime;
