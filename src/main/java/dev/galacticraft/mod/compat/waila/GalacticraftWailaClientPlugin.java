@@ -33,8 +33,10 @@ import mcp.mobius.waila.api.IClientRegistrar;
 import mcp.mobius.waila.api.IWailaClientPlugin;
 import net.minecraft.world.entity.LivingEntity;
 
+@SuppressWarnings("unused")
 public class GalacticraftWailaClientPlugin implements IWailaClientPlugin {
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void register(IClientRegistrar registrar) {
         registrar.redirect(FlagNameProvider.INSTANCE, FlagBlock.class);
         registrar.body(FuelLevelProvider.INSTANCE, RocketEntity.class, 1050);
