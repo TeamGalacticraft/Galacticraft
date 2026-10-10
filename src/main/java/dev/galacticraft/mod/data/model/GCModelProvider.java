@@ -85,7 +85,7 @@ public class GCModelProvider extends FabricModelProvider {
         generator.fullBlockModelCustomGenerators.put(GCBlocks.LUNASLATE, BlockModelGenerators::createMirroredColumnGenerator);
 
         List<GCBlockRegistry.DecorationSet> decorations = GCBlocks.BLOCKS.getDecorations();
-        Set<Block> detailedWalls = new HashSet<Block>();
+        Set<Block> detailedWalls = new HashSet<>();
 
         decorations.forEach(decorationSet -> {
                 generator.texturedModels.put(decorationSet.detailedBlock(), DETAILED_DECORATION.get(decorationSet.detailedBlock()));
@@ -404,6 +404,19 @@ public class GCModelProvider extends FabricModelProvider {
 
         createFullCubeActiveMachine(generator, GCBlocks.OXYGEN_COLLECTOR);
         createFullCubeActiveMachine(generator, GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR);
+
+        createActiveMachine(generator, GCBlocks.OXYGEN_DETECTOR,
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/oxygen_detector_side_active")
+                        .top("block/oxygen_detector_top_active")
+                        .bottom("block/oxygen_detector_top_active")
+                        .build(),
+                TextureProvider.builder(Constant.MOD_ID)
+                        .sides("block/oxygen_detector_side")
+                        .top("block/oxygen_detector_top")
+                        .bottom("block/oxygen_detector_top")
+                        .build()
+        );
 
         generator.createNonTemplateModelBlock(GCBlocks.CRUDE_OIL);
         generator.createNonTemplateModelBlock(GCBlocks.FUEL);

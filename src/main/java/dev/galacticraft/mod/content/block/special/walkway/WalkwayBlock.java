@@ -65,7 +65,7 @@ public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements
 
     @Override
     protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+        return blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override

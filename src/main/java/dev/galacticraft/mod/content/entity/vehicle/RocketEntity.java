@@ -33,8 +33,10 @@ import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -96,6 +98,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
@@ -707,7 +710,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         gcPlayer.setRocketItem(rocket);
 
                         serverPlayer.galacticraft$openCelestialScreen(d);
-                        ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(this.getRocketData(), this.level().galacticraft$getCelestialBody()));
+                        try (Level level = this.level()) {
+                            ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
+                                    this.getRocketData(),
+                                    level.galacticraft$getCelestialBody(),
+                                    Galacticraft.CONFIG.enableSpaceStationCreation(),
+                                    GCConfigUtil.disabledCelestialScreenDestinations(serverPlayer.getServer())
+                            ));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         remove(RemovalReason.UNLOADED_WITH_PLAYER);
                         break;

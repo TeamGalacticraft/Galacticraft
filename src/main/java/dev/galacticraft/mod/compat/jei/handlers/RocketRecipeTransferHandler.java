@@ -66,7 +66,7 @@ public class RocketRecipeTransferHandler implements IRecipeTransferHandler<Rocke
     @Override
     public IRecipeTransferError transferRecipe(RocketWorkbenchMenu menu, RocketRecipe recipe, IRecipeSlotsView recipeSlotsView, Player player, boolean maxTransfer, boolean doTransfer) {
         if (!this.handlerHelper.recipeTransferHasServerSupport()) {
-            return this.handlerHelper.createUserErrorWithTooltip(Component.translatable("jei.tooltip.error.recipe.transfer.no.server"));
+            return this.handlerHelper.createUserErrorWithTooltip(Component.translatable(Translations.Tooltip.JEI_NOT_INSTALLED_ON_SERVER));
         }
 
         int ingredientsSize = recipe.getIngredients().size();

@@ -96,6 +96,7 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
     }
 
     @Override
+    @SuppressWarnings("removal") // Not enough of a difference to warrant swapping yet
     public void createRecipeExtras(IRecipeExtrasBuilder builder, BlastingRecipe recipe, IFocusGroup focuses) {
         int cookingTime = recipe.getCookingTime();
         if (cookingTime > 0) {

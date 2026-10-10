@@ -46,9 +46,8 @@ public abstract class PlayerMixin extends LivingEntity implements CryogenicAcces
 
     @Inject(method = "stopSleepInBed", at = @At(value = "HEAD"))
     private void gc$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci) {
-        if (!((Player) (Object) this).level().isClientSide() && !this.isCreative() && this.isInCryoSleep()) {
-            ((Player) (Object) this).heal(5.0F);
-
+        if (!this.level().isClientSide() && !this.isCreative() && this.isInCryoSleep()) {
+            this.heal(5.0F);
             this.setCryogenicChamberCooldown(6000);
         }
     }

@@ -107,8 +107,8 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
 
         this.takeFluidFromSlot(OIL_INPUT_SLOT, OIL_TANK, GCFluids.CRUDE_OIL);
@@ -119,12 +119,14 @@ public class RefineryBlockEntity extends MachineBlockEntity {
     protected @NotNull MachineStatus tick(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         profiler.push("transfer");
         this.fluidSource.trySpreadFluids(level, pos, state);
+        profiler.pop();
 
         FluidResourceSlot oilTank = this.fluidStorage().slot(OIL_TANK);
         if (oilTank.isEmpty()) return GCMachineStatuses.MISSING_OIL;
         FluidResourceSlot fuelTank = this.fluidStorage().slot(FUEL_TANK);
         if (fuelTank.isFull()) return GCMachineStatuses.FUEL_TANK_FULL;
-        profiler.popPush("transaction");
+
+        profiler.push("transaction");
         try {
             if (this.energyStorage().canExtract(Galacticraft.CONFIG.refineryEnergyConsumptionRate())) {
                 long space = fuelTank.tryInsert(GCFluids.FUEL, FluidConstants.BUCKET / 20 / 5);

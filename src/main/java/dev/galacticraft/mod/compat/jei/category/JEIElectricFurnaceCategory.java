@@ -94,6 +94,7 @@ public class JEIElectricFurnaceCategory implements IRecipeCategory<SmeltingRecip
     }
 
     @Override
+    @SuppressWarnings("removal")
     public void createRecipeExtras(IRecipeExtrasBuilder builder, SmeltingRecipe recipe, IFocusGroup focuses) {
         int cookingTime = recipe.getCookingTime();
         if (cookingTime > 0) {

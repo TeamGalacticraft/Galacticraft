@@ -50,6 +50,7 @@ public class GCApiLookupProviders {
             GCBlockEntityTypes.REFINERY,
             GCBlockEntityTypes.FUEL_LOADER,
             GCBlockEntityTypes.OXYGEN_COLLECTOR,
+            GCBlockEntityTypes.OXYGEN_DETECTOR,
             GCBlockEntityTypes.OXYGEN_COMPRESSOR,
             GCBlockEntityTypes.OXYGEN_DECOMPRESSOR,
             GCBlockEntityTypes.OXYGEN_SEALER,
