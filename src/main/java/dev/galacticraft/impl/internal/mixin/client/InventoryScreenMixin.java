@@ -22,14 +22,12 @@
 
 package dev.galacticraft.impl.internal.mixin.client;
 
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(InventoryScreen.class)
 public class InventoryScreenMixin {
