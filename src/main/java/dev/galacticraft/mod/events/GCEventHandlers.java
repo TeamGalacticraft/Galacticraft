@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.events;
 
-import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.registry.AcidTransformItemRegistry;
+import dev.galacticraft.api.registry.ExtinguishableBlockRegistry;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
