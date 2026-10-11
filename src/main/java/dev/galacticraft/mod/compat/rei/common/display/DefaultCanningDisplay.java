@@ -44,10 +44,12 @@ public class DefaultCanningDisplay extends BasicDisplay {
         super(getInputs(output), Collections.singletonList(EntryIngredients.of(output)), Optional.empty());
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public DefaultCanningDisplay(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         super(inputs, outputs, location);
     }
 
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     public static DefaultCanningDisplay createRaw(List<EntryIngredient> inputs, List<EntryIngredient> outputs, Optional<ResourceLocation> location) {
         return new DefaultCanningDisplay(inputs, outputs, location);
     }

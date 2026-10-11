@@ -36,7 +36,7 @@ public class CanningProgressEmiWidget extends Widget {
     private final Bounds bounds;
     private long previousTime;
     private float progress;
-    private boolean[] showRow;
+    private final boolean[] showRow;
 
     public CanningProgressEmiWidget(int x, int y, int numIngredients) {
         this.bounds = new Bounds(x, y, PROGRESS_WIDTH, PROGRESS_HEIGHT);

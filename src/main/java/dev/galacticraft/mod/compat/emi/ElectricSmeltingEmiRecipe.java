@@ -62,17 +62,16 @@ public class ElectricSmeltingEmiRecipe extends BasicEmiRecipe {
         // Add the background texture
         widgets.addTexture(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V);
 
-        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText()));
-        });
+        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false)
+                .tooltip((mx, my) -> List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText())));
 
         widgets.addText(Component.translatable(EMI_XP, this.experience), PROGRESS_BAR_X + PROGRESS_WIDTH / 2, 28, -1, true).horizontalAlign(Alignment.CENTER);
 
-        widgets.addSlot(this.inputs.get(0), INPUT_X - EMI_X - 1, INPUT_Y - EMI_Y - 1);
+        widgets.addSlot(this.inputs.getFirst(), INPUT_X - EMI_X - 1, INPUT_Y - EMI_Y - 1);
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), OUTPUT_X - EMI_X - 5, OUTPUT_Y - EMI_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_X - EMI_X - 5, OUTPUT_Y - EMI_Y - 5).large(true).recipeContext(this);
     }
 }
