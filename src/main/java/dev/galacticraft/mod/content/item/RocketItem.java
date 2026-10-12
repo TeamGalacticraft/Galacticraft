@@ -37,15 +37,20 @@ import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.util.TooltipUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.Style;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.item.context.UseOnContext;
 import net.minecraft.world.level.Level;
 
@@ -82,6 +87,17 @@ public class RocketItem extends Item {
                 if (creative) {
                     rocket.setFuel(Long.MAX_VALUE);
                 }
+
+                CustomData customData = held.getComponents().getOrDefault(DataComponents.CUSTOM_DATA, CustomData.EMPTY);
+                if (customData.contains("Storage")) {
+                    CompoundTag storageTag = customData.copyTag().getCompound("Storage");
+
+                    SimpleContainer storage = rocket.getStorage();
+                    if (storage != null) {
+                        ContainerHelper.loadAllItems(storageTag, storage.getItems(), rocket.registryAccess());
+                    }
+                }
+
                 level.addFreshEntity(rocket);
 
                 if (!player.isCreative()) {

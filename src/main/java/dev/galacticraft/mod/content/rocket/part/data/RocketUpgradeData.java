@@ -24,7 +24,7 @@ package dev.galacticraft.mod.content.rocket.part.data;
 
 import com.mojang.serialization.Codec;
 
-public sealed interface RocketUpgradeData permits ExplosiveRocketData {
+public sealed interface RocketUpgradeData permits StorageRocketData, ExplosiveRocketData {
 
     Codec<RocketUpgradeData> DIRECT_CODEC =
             Codec.STRING.dispatch(

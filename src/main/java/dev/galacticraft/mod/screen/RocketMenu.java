@@ -22,7 +22,10 @@
 
 package dev.galacticraft.mod.screen;
 
+import dev.galacticraft.api.rocket.RocketData;
+import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
@@ -54,11 +57,53 @@ public class RocketMenu extends AbstractContainerMenu {
         for (int slotY = 0; slotY < 9; ++slotY) {
             this.addSlot(new Slot(playerInventory, slotY, 8 + slotY * 18, 108));
         }
+
+        if (!hasInventory()) return;
+
+        SimpleContainer storage = rocket.getStorage();
+        int size = storage.getContainerSize();
+        for (int i = 0; i < size; i++) {
+            int col = i / (size / 2);
+            int row = i % (size / 2);
+            this.addSlot(new Slot(storage, i, 116 + row * 18, 9 + col * 18));
+        }
+    }
+
+    public boolean hasInventory() {
+        RocketData data = rocket.getRocketData();
+        return data.hasUpgrade(GCRocketParts.STORAGE_UPGRADE);
     }
 
     @Override
     public ItemStack quickMoveStack(Player player, int i) {
-        return ItemStack.EMPTY;
+        if (!hasInventory()) return ItemStack.EMPTY;
+
+        ItemStack movedStack = ItemStack.EMPTY;
+        Slot slot = this.slots.get(i);
+
+        if (slot != null && slot.hasItem()) {
+            ItemStack rawStack = slot.getItem();
+            movedStack = rawStack.copy();
+
+            int size = rocket.getStorage().getContainerSize();
+            if (i >= 36) {
+                if (!this.moveItemStackTo(rawStack, 0, 36, false)) {
+                    return ItemStack.EMPTY;
+                }
+            } else {
+                if (!this.moveItemStackTo(rawStack, 36, 36 + size, false)) {
+                    return ItemStack.EMPTY;
+                }
+            }
+
+            if (rawStack.isEmpty()) {
+                slot.set(ItemStack.EMPTY);
+            } else {
+                slot.setChanged();
+            }
+        }
+
+        return movedStack;
     }
 
     @Override

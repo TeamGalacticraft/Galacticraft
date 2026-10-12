@@ -46,6 +46,7 @@ import dev.galacticraft.mod.content.block.special.launchpad.AbstractLaunchPad;
 import dev.galacticraft.mod.content.entity.data.GCEntityDataSerializers;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
+import dev.galacticraft.mod.content.rocket.part.data.StorageRocketData;
 import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.particle.EntityParticleOption;
@@ -64,6 +65,7 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.nbt.CompoundTag;
@@ -73,19 +75,23 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.resources.RegistryOps;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
+import net.minecraft.world.ContainerHelper;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResult;
+import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.component.CustomData;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -121,6 +127,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     private int crashArmTimer = 0;
     private boolean crashed = false;
+
+    private SimpleContainer storage;
+    private final int slotMultiplier = 6; // slot per chest.
 
     private final boolean debugMode = false && FabricLoader.getInstance().isDevelopmentEnvironment();
 
@@ -249,6 +258,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         return this.entityData.get(FUEL);
     }
 
+    public int getChestCount() {
+        Optional<StorageRocketData> data = this.getRocketData().getUpgradeData(StorageRocketData.class);
+        if (!data.isPresent()) return 0;
+
+        return data.get().chestCount();
+    }
+
+    public @Nullable SimpleContainer getStorage() {
+        if (storage == null) {
+            int slots = getChestCount() * slotMultiplier;
+            if (slots > 0) storage = new SimpleContainer(slots);
+        }
+
+        return storage;
+    }
+
     @Override
     public void setPad(FuelDock pad) {
         this.linkedPad = pad;
@@ -284,6 +309,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     public ItemStack getDropItem() {
         ItemStack rocket = new ItemStack(GCItems.ROCKET);
         rocket.applyComponents(this.getRocketData().asPatch());
+
+        if (this.storage != null && !this.storage.isEmpty()) {
+            CompoundTag storageTag = new CompoundTag();
+            ContainerHelper.saveAllItems(storageTag, this.storage.getItems(), this.registryAccess());
+
+            CustomData.update(DataComponents.CUSTOM_DATA, rocket, t -> {
+                t.put("Storage", storageTag);
+            });
+        }
+
         return rocket;
     }
 
@@ -704,12 +739,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         gcPlayer.setRocketStacks(NonNullList.withSize(2, ItemStack.EMPTY)); // TODO un-hardcode this
                         gcPlayer.setFuel(this.tank.getAmount());
 
-                        var rocket = new ItemStack(GCItems.ROCKET);
-                        RocketData d = this.getRocketData();
-                        rocket.applyComponents(d.asPatch());
+                        ItemStack rocket = this.getDropItem();
                         gcPlayer.setRocketItem(rocket);
 
-                        serverPlayer.galacticraft$openCelestialScreen(d);
+                        serverPlayer.galacticraft$openCelestialScreen(this.getRocketData());
                         try (Level level = this.level()) {
                             ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
                                     this.getRocketData(),
@@ -839,7 +872,9 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
     @Override
     protected void readAdditionalSaveData(CompoundTag tag) {
-        this.setData(RocketData.CODEC.decode(NbtOps.INSTANCE, tag.getCompound("data")).mapOrElse(Pair::getFirst, e -> RocketPrefabs.TIER_1));
+        RegistryOps<Tag> ops = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+
+        this.setData(RocketData.CODEC.decode(ops, tag.getCompound("data")).mapOrElse(Pair::getFirst, e -> RocketPrefabs.TIER_1));
 
         if (tag.contains("Stage")) this.setLaunchStage(LaunchStage.valueOf(tag.getString("Stage")));
         if (tag.contains("Thrust")) this.setThrust(tag.getFloat("Thrust"));
@@ -850,13 +885,22 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         if (tag.contains("CrashArmTimer")) this.crashArmTimer = tag.getInt("CrashArmTimer");
         if (tag.contains("Crashed")) this.crashed = tag.getBoolean("Crashed");
 
+        if (tag.contains("Storage")) {
+            int slots = getChestCount() * slotMultiplier;
+            storage = new SimpleContainer(slots);
+
+            ContainerHelper.loadAllItems(tag.getCompound("Storage"), storage.getItems(), this.registryAccess());
+        }
+
         BlockEntity be = this.level().getBlockEntity(BlockPos.of(tag.getLong("Linked")));
         if (be instanceof FuelDock pad) this.linkedPad = pad;
     }
 
     @Override
     protected void addAdditionalSaveData(CompoundTag tag) {
-        DataResult<Tag> result = RocketData.CODEC.encodeStart(NbtOps.INSTANCE, getRocketData());
+        RegistryOps<Tag> ops = this.registryAccess().createSerializationContext(NbtOps.INSTANCE);
+
+        DataResult<Tag> result = RocketData.CODEC.encodeStart(ops, getRocketData());
         tag.put("data", result.getPartialOrThrow());
 
         tag.putString("Stage", getLaunchStage().name());
@@ -867,6 +911,13 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         tag.putInt("CrashArmTimer", this.crashArmTimer);
         tag.putBoolean("Crashed", this.crashed);
+
+        if (storage != null) {
+            CompoundTag storageTag = new CompoundTag();
+
+            ContainerHelper.saveAllItems(storageTag, storage.getItems(), this.registryAccess());
+            tag.put("Storage", storageTag);
+        }
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
     }

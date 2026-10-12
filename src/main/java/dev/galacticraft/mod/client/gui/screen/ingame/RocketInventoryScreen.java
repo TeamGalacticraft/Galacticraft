@@ -74,6 +74,11 @@ public class RocketInventoryScreen extends AbstractContainerScreen<RocketMenu> {
     protected void renderBg(GuiGraphics graphics, float v, int mouseX, int mouseY) {
         graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos, this.topPos, 0, 0, this.imageWidth, this.imageHeight);
 
+        if (this.menu.hasInventory()) {
+            // TODO: slot size is fixed for now. todo: edit blit logic when It's dynamic.
+            graphics.blit(Constant.ScreenTexture.ROCKET_INVENTORY, this.leftPos + 115, this.topPos + 8, 176, 38, 54, 36);
+        }
+
         final int X = this.leftPos + 71;
         final int Y = this.topPos + 7;
         final int width = 34;
