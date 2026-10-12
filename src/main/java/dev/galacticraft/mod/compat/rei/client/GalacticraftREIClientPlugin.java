@@ -45,9 +45,9 @@ import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
-import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import me.shedaniel.math.Rectangle;
@@ -133,6 +133,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
                 stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
@@ -188,6 +189,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)

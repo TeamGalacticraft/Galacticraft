@@ -51,10 +51,12 @@ import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
@@ -68,6 +70,7 @@ import net.minecraft.core.NonNullList;
 import net.minecraft.core.component.DataComponents;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -88,7 +91,9 @@ import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.component.CustomData;
@@ -111,7 +116,7 @@ import java.util.Optional;
 import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.CRASH_LANDING;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
+public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory<Integer> {
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> THRUST = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
@@ -920,6 +925,31 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         }
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
+    }
+
+    @Override
+    public Integer getScreenOpeningData(ServerPlayer player) {
+        return player.getVehicle().getId();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+        return new RocketMenu(syncId, inventory, player, (RocketEntity) player.getVehicle());
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.empty();
+    }
+
+    @Override
+    public boolean shouldCloseCurrentScreen() {
+        return false;
+    }
+
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+        player.openMenu(this);
     }
 
     public int getTimeBeforeLaunch() {

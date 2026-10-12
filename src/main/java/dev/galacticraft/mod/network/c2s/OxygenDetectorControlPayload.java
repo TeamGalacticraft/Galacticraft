@@ -22,8 +22,6 @@
 
 package dev.galacticraft.mod.network.c2s;
 
-import org.jetbrains.annotations.NotNull;
-
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.machinelib.impl.Constant;
 import dev.galacticraft.mod.screen.OxygenDetectorMenu;
@@ -33,6 +31,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import org.jetbrains.annotations.NotNull;
 
 public record OxygenDetectorControlPayload(boolean andMode) implements C2SPayload {
     public static final StreamCodec<ByteBuf, OxygenDetectorControlPayload> STREAM_CODEC = StreamCodec.of(

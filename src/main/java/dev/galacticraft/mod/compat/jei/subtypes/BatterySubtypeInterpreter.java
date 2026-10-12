@@ -34,7 +34,7 @@ public class BatterySubtypeInterpreter implements ISubtypeInterpreter<ItemStack>
     @Override
     public String getSubtypeData(ItemStack itemStack, UidContext context) {
         if (context == UidContext.Recipe) return "";
-        return String.valueOf(BATTERY.getStoredEnergy(itemStack)) + "/" + String.valueOf(BATTERY.getEnergyCapacity(itemStack));
+        return BATTERY.getStoredEnergy(itemStack) + "/" + BATTERY.getEnergyCapacity(itemStack);
     }
 
     @Override
