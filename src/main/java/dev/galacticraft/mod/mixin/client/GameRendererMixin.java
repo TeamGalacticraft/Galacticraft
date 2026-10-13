@@ -43,7 +43,7 @@ public abstract class GameRendererMixin implements GameRendererAccessor {
 
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Shadow
     private int confusionAnimationTick;
@@ -62,13 +62,13 @@ public abstract class GameRendererMixin implements GameRendererAccessor {
     private Camera mainCamera;
 
     @Shadow
-    public abstract double getFov(Camera camera, float f, boolean bl);
+    protected abstract double getFov(Camera camera, float f, boolean bl);
 
     @Shadow
-    public abstract void bobHurt(PoseStack poseStack, float f);
+    protected abstract void bobHurt(PoseStack poseStack, float f);
 
     @Shadow
-    public abstract void bobView(PoseStack poseStack, float f);
+    protected abstract void bobView(PoseStack poseStack, float f);
 
     @Shadow
     public abstract void resetProjectionMatrix(Matrix4f matrix4f);

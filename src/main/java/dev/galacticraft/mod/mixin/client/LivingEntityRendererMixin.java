@@ -54,7 +54,7 @@ public abstract class LivingEntityRendererMixin {
 
     @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
     private boolean gc$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
-        return instance.isInCryoSleep() ? false : original.call(instance, pose);
+        return !instance.isInCryoSleep() && original.call(instance, pose);
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)

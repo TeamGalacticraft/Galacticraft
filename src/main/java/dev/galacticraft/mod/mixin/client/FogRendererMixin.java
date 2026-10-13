@@ -62,7 +62,7 @@ public class FogRendererMixin {
     }
 
     @ModifyExpressionValue(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;getLookVector()Lorg/joml/Vector3f;"))
-    private static Vector3f gc$getSunriseColor(Vector3f original, @Local ClientLevel clientLevel) {
+    private static Vector3f gc$getSunriseColor(Vector3f original, @Local(argsOnly = true) ClientLevel clientLevel) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && clientLevel.dimension() == Level.OVERWORLD) {
             return original.zero();
