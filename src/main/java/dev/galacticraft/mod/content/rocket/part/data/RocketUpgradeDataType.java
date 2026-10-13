@@ -30,6 +30,7 @@ public final class RocketUpgradeDataType {
 
     public static MapCodec<? extends RocketUpgradeData> mapCodecByName(String name) {
         return switch (name) {
+            case StorageRocketData.TYPE_NAME -> StorageRocketData.MAP_CODEC;
             case ExplosiveRocketData.TYPE_NAME -> ExplosiveRocketData.MAP_CODEC;
             default -> throw new IllegalArgumentException("Unknown rocket upgrade data type: " + name);
         };
