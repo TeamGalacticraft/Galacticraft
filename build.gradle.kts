@@ -53,6 +53,7 @@ val wthitVersion             = project.property("wthit.version").toString()
 val architecturyVersion      = project.property("architectury.version").toString()
 val appleskinVersion         = project.property("appleskin.version").toString()
 val objVersion               = project.property("obj.version").toString()
+val omnishapeVersion         = project.property("omnishape.version").toString()
 
 plugins {
     java
@@ -217,6 +218,18 @@ repositories {
             includeGroup("squeek.appleskin")
         }
     }
+    exclusiveContent {
+        forRepository {
+            maven {
+                name = "Modrinth"
+                url = uri("https://api.modrinth.com/maven")
+            }
+        }
+
+        filter {
+            includeGroup("maven.modrinth")
+        }
+    }
 }
 
 configurations {
@@ -257,6 +270,9 @@ dependencies {
     "compat"("mcp.mobius.waila:wthit:fabric-$wthitVersion")
     "compat"("dev.architectury:architectury-fabric:$architecturyVersion") // required for REI fluid support
     "compat"("squeek.appleskin:appleskin-fabric:$appleskinVersion")
+
+    modCompileOnly("maven.modrinth:omnishape:$omnishapeVersion")
+    modLocalRuntime("maven.modrinth:omnishape:$omnishapeVersion")
 
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-api-fabric:$reiVersion")
     modCompileOnly("me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:$reiVersion")
