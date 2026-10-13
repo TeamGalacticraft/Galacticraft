@@ -44,6 +44,6 @@ public class EvolvedPillagerEntity extends Pillager {
 
     @Override
     public String galacticraft$tankSize(int i) {
-        return Constant.Item.LARGE_OXYGEN_TANK;
+        return Constant.Item.MEDIUM_OXYGEN_TANK;
     }
 }
