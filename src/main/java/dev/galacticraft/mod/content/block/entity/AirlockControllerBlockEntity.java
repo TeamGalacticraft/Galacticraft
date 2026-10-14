@@ -651,10 +651,6 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
         return this.state;
     }
 
-    public List<AirlockFrameScanner.Result> getLastFrames() {
-        return this.lastFrames;
-    }
-
     @Override
     public @NotNull Component getDisplayName() {
         return Component.translatable(Translations.Ui.AIRLOCK_DEFAULT_NAME);
