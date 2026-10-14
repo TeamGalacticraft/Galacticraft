@@ -42,7 +42,7 @@ import java.util.List;
  * non-corner portions of all four sides are required to consist of
  * {@link GCBlockTags#AIRLOCK_BLOCKS}.
  *
- * <p>Consequently all of the following are valid:
+ * <p>Consequently all the following are valid:
  *
  * <pre>
  * F F F F F       F F F       F F F
@@ -201,27 +201,6 @@ public final class AirlockFrameScanner {
                     maxZ,
                     List.of()
             );
-        }
-
-        /**
-         * Calculates the area of the rectangle in its containing plane.
-         *
-         * <p>The area includes the perimeter blocks and is measured
-         * in square blocks.
-         *
-         * @return the area of the rectangle in square blocks
-         */
-        public long area() {
-            return switch (this.plane) {
-                case XY -> (long) (this.maxX - this.minX + 1)
-                        * (long) (this.maxY - this.minY + 1);
-
-                case XZ -> (long) (this.maxX - this.minX + 1)
-                        * (long) (this.maxZ - this.minZ + 1);
-
-                case YZ -> (long) (this.maxY - this.minY + 1)
-                        * (long) (this.maxZ - this.minZ + 1);
-            };
         }
 
         /**
@@ -387,8 +366,8 @@ public final class AirlockFrameScanner {
          * the controller.
          *
          * Every possible controller-side edge must be
-         * contained within this run, with the exception
-         * of its two optional corner positions.
+         * contained within this run, except
+         * its two optional corner positions.
          */
         int runMin = along0;
         int runMax = along0;
@@ -728,7 +707,6 @@ public final class AirlockFrameScanner {
     /**
      * Ensures exactly one airlock controller exists on the complete
      * perimeter.
-     *
      * Corners are visited exactly once.
      */
     private static boolean hasExactlyOneController(
@@ -901,10 +879,6 @@ public final class AirlockFrameScanner {
             int maxU,
             int maxV
     ) {
-        long area() {
-            return (long) (this.maxU - this.minU + 1)
-                    * (long) (this.maxV - this.minV + 1);
-        }
     }
 
     /**
