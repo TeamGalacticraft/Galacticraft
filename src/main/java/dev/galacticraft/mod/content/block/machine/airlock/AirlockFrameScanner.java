@@ -63,11 +63,11 @@ import java.util.List;
 public final class AirlockFrameScanner {
 
     /**
-     * Safety guard against pathological/infinite-looking rows of airlock
-     * blocks.
+     * Safety guard against pathological or effectively unbounded rows
+     * of airlock blocks.
      *
-     * This is deliberately very large and is comparable to the guard used
-     * by the previous flood-fill implementation.
+     * <p>This limit is deliberately large and is comparable to the
+     * guard used by the previous flood-fill implementation.
      */
     private static final int MAX_SCAN_DISTANCE = 32768;
 
@@ -102,13 +102,15 @@ public final class AirlockFrameScanner {
     }
 
     /**
-     * Logical corner identifiers.
+     * Logical identifiers for the four corners of a rectangle.
      *
-     * U/V refer to the two axes within the selected plane.
+     * <p>U and V represent the two axes within the selected plane:
      *
-     * XY: U=X, V=Y
-     * XZ: U=X, V=Z
-     * YZ: U=Y, V=Z
+     * <ul>
+     *     <li>XY: U = X, V = Y</li>
+     *     <li>XZ: U = X, V = Z</li>
+     *     <li>YZ: U = Y, V = Z</li>
+     * </ul>
      */
     public enum CornerKind {
         MIN_U_MIN_V,
@@ -121,7 +123,11 @@ public final class AirlockFrameScanner {
      * Information about a corner that is actually occupied by an airlock
      * frame block.
      *
-     * Missing corners simply do not appear in {@link Result#corners()}.
+     * <p>Missing corners simply do not appear in {@link Result#corners()}.
+     *
+     * @param kind the logical position of the corner within the rectangle
+     * @param pos the world position of the corner block
+     * @param state the block state of the corner block
      */
     public record Corner(
             CornerKind kind,
@@ -130,6 +136,24 @@ public final class AirlockFrameScanner {
     ) {
     }
 
+    /**
+     * Represents a valid rectangular airlock frame discovered by the scanner.
+     *
+     * <p>The rectangle is described by its minimum and maximum world
+     * coordinates, inclusive of the perimeter blocks.
+     *
+     * <p>Only corners occupied by airlock frame blocks are included
+     * in {@code corners}. Missing corners are permitted.
+     *
+     * @param plane the axis-aligned plane containing the rectangle
+     * @param minX the minimum X coordinate of the rectangle
+     * @param minY the minimum Y coordinate of the rectangle
+     * @param minZ the minimum Z coordinate of the rectangle
+     * @param maxX the maximum X coordinate of the rectangle
+     * @param maxY the maximum Y coordinate of the rectangle
+     * @param maxZ the maximum Z coordinate of the rectangle
+     * @param corners the occupied corners of the rectangle
+     */
     public record Result(
             Plane plane,
             int minX,
@@ -145,7 +169,18 @@ public final class AirlockFrameScanner {
         }
 
         /**
-         * Compatibility constructor for code that only needs the rectangle.
+         * Constructs a rectangle result without corner information.
+         *
+         * <p>This constructor is retained for compatibility with code
+         * that only requires the rectangle's bounds.
+         *
+         * @param plane the axis-aligned plane containing the rectangle
+         * @param minX the minimum X coordinate
+         * @param minY the minimum Y coordinate
+         * @param minZ the minimum Z coordinate
+         * @param maxX the maximum X coordinate
+         * @param maxY the maximum Y coordinate
+         * @param maxZ the maximum Z coordinate
          */
         public Result(
                 Plane plane,
@@ -168,6 +203,14 @@ public final class AirlockFrameScanner {
             );
         }
 
+        /**
+         * Calculates the area of the rectangle in its containing plane.
+         *
+         * <p>The area includes the perimeter blocks and is measured
+         * in square blocks.
+         *
+         * @return the area of the rectangle in square blocks
+         */
         public long area() {
             return switch (this.plane) {
                 case XY -> (long) (this.maxX - this.minX + 1)
@@ -181,6 +224,15 @@ public final class AirlockFrameScanner {
             };
         }
 
+        /**
+         * Compares this rectangle's plane and bounds with another result.
+         *
+         * <p>Corner metadata is intentionally ignored.
+         *
+         * @param other the rectangle to compare against
+         * @return {@code true} if both rectangles have identical
+         *         planes and bounds
+         */
         public boolean sameBounds(Result other) {
             return this.plane == other.plane
                     && this.minX == other.minX
@@ -200,10 +252,19 @@ public final class AirlockFrameScanner {
     }
 
     /**
-     * Scan all three axis-aligned planes containing the controller.
+     * Scans all three axis-aligned planes containing the controller.
      *
-     * <p>Every geometrically distinct valid rectangle is returned.
-     * There is no fixed limit on the number of airlocks per plane.
+     * <p>Every geometrically distinct valid rectangle containing
+     * the controller is returned.
+     *
+     * <p>There is no fixed limit on the number of rectangles
+     * discovered per plane.
+     *
+     * @param level the world containing the airlock frames
+     * @param controller the position of the airlock controller
+     * @return a deterministically ordered list of all valid
+     *         rectangles containing the controller, or an empty
+     *         list if none are found
      */
     public static List<Result> scanAll(Level level, BlockPos controller) {
         if (!isFrame(level, controller)) {
