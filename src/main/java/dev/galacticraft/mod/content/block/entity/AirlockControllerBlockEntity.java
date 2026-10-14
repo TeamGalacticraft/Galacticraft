@@ -316,7 +316,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
      *
      * @return true when this card caused a new activation
      */
-    public boolean activateKeycard(Player player) {
+    public boolean activateKeycard() {
         if (!(this.level instanceof ServerLevel server)) {
             return false;
         }

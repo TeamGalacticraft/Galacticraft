@@ -33,6 +33,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.context.UseOnContext;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 
@@ -91,7 +92,7 @@ public class KeycardItem extends Item {
     }
 
     @Override
-    public InteractionResult useOn(
+    public @NotNull InteractionResult useOn(
             UseOnContext context
     ) {
         Player player = context.getPlayer();
@@ -164,7 +165,7 @@ public class KeycardItem extends Item {
             return;
         }
 
-        boolean activated = airlock.activateKeycard(player);
+        boolean activated = airlock.activateKeycard();
 
         if (!activated) {
             player.displayClientMessage(Component.translatable(Translations.Chat.AIRLOCK_ALREADY_UNLOCKED).withStyle(ChatFormatting.GRAY), true);
