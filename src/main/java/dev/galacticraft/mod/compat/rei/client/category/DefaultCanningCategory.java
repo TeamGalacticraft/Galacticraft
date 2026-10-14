@@ -80,7 +80,7 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
         widgets.add(progressWidget);
 
         // Top slot
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.getFirst()));
 
         // Grid slots
         for (int i = 0; i < 16; i++) {
@@ -93,13 +93,13 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
         // Middle slot
         widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).entries(
-                recipeDisplay.getOutputEntries().get(0).<ItemStack>castAsList().stream().map(
+                recipeDisplay.getOutputEntries().getFirst().<ItemStack>castAsList().stream().map(
                         entry -> entry.copy().withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
                 ).toList()
         ));
 
         // Bottom slot
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
 
         return widgets;
     }

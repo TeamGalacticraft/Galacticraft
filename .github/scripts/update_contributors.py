@@ -77,34 +77,34 @@ def build_payload(raw):
         author = c.get("author") or {}
         login = (author.get("login") or "")
         atype = (author.get("type") or "")
-        if "bot" in atype.lower() or "bot" in login.lower():
-            continue
-        filtered.append({
-            **author,
-            "contributions": c.get("total", 0) or 0
-        })
+        if "bot" not in atype.lower() and "bot" not in login.lower():
+            filtered.append({
+                **author,
+                "contributions": c.get("total") or 0
+            })
 
-    filtered.sort(key=lambda c: c.get("contributions", 0), reverse=True)
+    filtered.sort(key=lambda c: c.get("contributions"))
 
-    return [
+    out = [
         {
-            "name": c.get("login", "") or "",
-            "contact": {"homepage": c.get("html_url", "") or ""},
+            "name": c.get("login"),
+            "contact": {"homepage": c.get("html_url") or ""},
         }
-        for c in filtered
+        for c in reversed(filtered)
     ]
+
+    contributions = dict([
+        (c.get("login"), c.get("contributions"))
+        for c in filtered
+    ])
+
+    return (out, contributions)
 
 def read_existing(root):
     arr = root.get("contributors")
     if not isinstance(arr, list):
         return []
-    out = []
-    for el in arr:
-        if isinstance(el, dict):
-            name = el.get("name", "") or ""
-            homepage = ((el.get("contact") or {}).get("homepage", "") or "")
-            out.append({"name": name, "contact": {"homepage": homepage}})
-    return out
+    return [el.get("name") or "" for el in arr if isinstance(el, dict)]
 
 def write_etag(new_etag: str | None):
     if not new_etag:
@@ -134,14 +134,29 @@ def main():
         print(f"Failed to reach GitHub: {e}. Keeping existing contributors.")
         return
 
-    new_contrib = build_payload(raw)
+    new_contrib, contributions = build_payload(raw)
 
     # Persist the new ETag (if any)
     write_etag(new_etag)
 
-    if existing == new_contrib:
-        print("Contributors already up-to-date. No changes written.")
-        return
+    # Definitely update the contributors when new_contrib and existing
+    # are not the same up to reordering, possibly update the contributors
+    # when new_contrib and existing are the same up to reordering
+    if set(contributions.keys()) == set(existing):
+        prev_count = float("inf")
+        for contrib in existing:
+            count = contributions.get(contrib, 0)
+            if count > prev_count:
+                # We have found a pair of contributors who are not
+                # in decreasing order, so we should update the
+                # contributors to use the order in new_contrib
+                break
+            prev_count = count
+        else:
+            # Don't update if the only changes in the order are
+            # between contributors with the same number of contributions
+            print("Contributors already up-to-date. No changes written.")
+            return
 
     root["contributors"] = new_contrib
     with open(MOD_JSON_PATH, "w", encoding="utf-8") as f:

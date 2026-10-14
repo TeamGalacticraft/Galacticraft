@@ -44,6 +44,7 @@ public class ElectricShapelessCompressingDisplay implements ElectricCompressingD
         this.processingTime = processingTime;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public ElectricShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
         this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());

@@ -77,11 +77,11 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
         widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
                 Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(recipeDisplay.getInputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(recipeDisplay.getInputEntries().getFirst()));
 
         Point outputPoint = new Point(startPoint.x + OUTPUT_X_1, startPoint.y + OUTPUT_Y_1);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
 
         outputPoint = new Point(startPoint.x + OUTPUT_X_2, startPoint.y + OUTPUT_Y_2);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));

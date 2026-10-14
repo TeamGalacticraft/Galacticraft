@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.accessor;
 
 import dev.galacticraft.api.rocket.RocketData;
+import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.Nullable;
 
 public interface ServerPlayerAccessor {
@@ -42,5 +43,14 @@ public interface ServerPlayerAccessor {
         throw new RuntimeException("This must be overridden!");
     }
 
+    /**
+     * Dimension stored in this player's NBT when they were loaded.
+     */
+    default @Nullable ResourceLocation galacticraft$getSavedLoginDimension() {
+        throw new RuntimeException("This must be overridden!");
+    }
 
+    default void galacticraft$clearSavedLoginDimension() {
+        throw new RuntimeException("This must be overridden!");
+    }
 }

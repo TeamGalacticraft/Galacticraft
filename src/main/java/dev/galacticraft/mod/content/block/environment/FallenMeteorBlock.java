@@ -89,7 +89,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void randomTick(BlockState state, ServerLevel world, BlockPos pos, RandomSource random) {
+    public void randomTick(BlockState state, ServerLevel level, BlockPos pos, RandomSource random) {
         int i = state.getValue(HEAT);
 
         int coolingRate = COOLING_RATES[i];
@@ -99,7 +99,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
         }
 
         if (random.nextInt(coolingRate) == 0) {
-            world.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
+            level.setBlock(pos, state.setValue(HEAT, i - 1), Block.UPDATE_CLIENTS);
         }
     }
 
@@ -166,11 +166,11 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor world, BlockPos pos, BlockPos posFrom) {
+    public BlockState updateShape(BlockState state, Direction direction, BlockState newState, LevelAccessor level, BlockPos pos, BlockPos posFrom) {
         if (state.getValue(WATERLOGGED)) {
-            world.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(world));
+            level.scheduleTick(pos, Fluids.WATER, Fluids.WATER.getTickDelay(level));
         }
-        return super.updateShape(state, direction, newState, world, pos, posFrom);
+        return super.updateShape(state, direction, newState, level, pos, posFrom);
     }
 
     @Override
@@ -186,7 +186,7 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
     }
 
     @Override
-    public void entityInside(BlockState state, Level world, BlockPos pos, Entity entity) {
+    public void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
         if (state.getValue(HEAT) <= 0) {
             return;
         }
@@ -201,10 +201,10 @@ public class FallenMeteorBlock extends FallingBlock implements SimpleWaterlogged
                 return;
             }
 
-            world.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL, 0.5F, 2.6F + (world.random.nextFloat() - world.random.nextFloat()) * 0.8F);
+            level.playSound(null, pos.getX() + 0.5F, pos.getY() + 0.5F, pos.getZ() + 0.5F, SoundEvents.GENERIC_EXTINGUISH_FIRE, SoundSource.NEUTRAL, 0.5F, 2.6F + (level.random.nextFloat() - level.random.nextFloat()) * 0.8F);
 
             for (var i = 0; i < 8; ++i) {
-                world.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
+                level.addParticle(ParticleTypes.LARGE_SMOKE, pos.getX() + Math.random(), pos.getY() + 0.2D + Math.random(), pos.getZ() + Math.random(), 0.0D, 0.0D, 0.0D);
             }
 
             livingEntity.igniteForSeconds(1);

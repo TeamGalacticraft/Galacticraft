@@ -68,4 +68,3 @@ public class TextureUtils {
         return (avgRed << 16) | (avgGreen << 8) | avgBlue;
     }
 }
-

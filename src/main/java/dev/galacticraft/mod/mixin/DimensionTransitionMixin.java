@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.block.special.CryogenicChamberBlock;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -40,32 +41,86 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DimensionTransition.class)
 public abstract class DimensionTransitionMixin {
-    @Inject(method = "missingRespawnBlock", at = @At(value = "HEAD"), cancellable = true)
-    private static void findRespawnAndUseCryoChamber(ServerLevel overworld, Entity entity, DimensionTransition.PostDimensionTransition postDimensionTransition, CallbackInfoReturnable<DimensionTransition> cir) {
-        if (entity instanceof ServerPlayer serverPlayer) {
-            BlockPos blockPos = serverPlayer.getRespawnPosition();
-            float yaw = serverPlayer.getRespawnAngle();
-            ServerLevel serverLevel = serverPlayer.server.getLevel(serverPlayer.getRespawnDimension());
-            if (serverLevel != null && blockPos != null) {
-                if (gc$canRespawn(serverLevel, blockPos)) {
-                    cir.setReturnValue(new DimensionTransition(serverLevel, blockPos.getBottomCenter(), Vec3.ZERO, yaw, 0.0f, postDimensionTransition));
-                }
-            }
+    @Inject(
+            method = "missingRespawnBlock",
+            at = @At("HEAD"),
+            cancellable = true
+    )
+    private static void findRespawnAndUseCryoChamber(
+            ServerLevel overworld,
+            Entity entity,
+            DimensionTransition.PostDimensionTransition postDimensionTransition,
+            CallbackInfoReturnable<DimensionTransition> cir
+    ) {
+        if (!(entity instanceof ServerPlayer serverPlayer)) {
+            return;
+        }
+
+        /*
+         * Do not even ask Minecraft for the world if that respawn dimension
+         * has been explicitly disabled.
+         *
+         * By returning without setting cir here, vanilla's normal
+         * missing-respawn fallback continues and places the player safely in
+         * the overworld.
+         */
+        if (GCConfigUtil.isDimensionDisabled(serverPlayer.server, serverPlayer.getRespawnDimension())) {
+            return;
+        }
+
+        BlockPos blockPos = serverPlayer.getRespawnPosition();
+
+        if (blockPos == null) {
+            return;
+        }
+
+        ServerLevel serverLevel = serverPlayer.server.getLevel(serverPlayer.getRespawnDimension());
+
+        /*
+         * The dimension might not be blacklisted but may still have vanished,
+         * for example because another mod/datapack was removed.
+         */
+        if (serverLevel == null) {
+            return;
+        }
+
+        float yaw = serverPlayer.getRespawnAngle();
+
+        if (gc$canRespawn(serverLevel, blockPos)) {
+            cir.setReturnValue(
+                    new DimensionTransition(
+                            serverLevel,
+                            blockPos.getBottomCenter(),
+                            Vec3.ZERO,
+                            yaw,
+                            0.0F,
+                            postDimensionTransition
+                    )
+            );
         }
     }
 
     @Unique
-    private static boolean gc$canRespawn(Level level, BlockPos blockPos) {
+    private static boolean gc$canRespawn(
+            Level level,
+            BlockPos blockPos
+    ) {
         BlockState baseState = level.getBlockState(blockPos);
+
         if (baseState.getBlock() instanceof CryogenicChamberBlock) {
             Direction direction = baseState.getValue(CryogenicChamberBlock.FACING);
+
             return gc$freeAt(level, blockPos.relative(direction)) && gc$freeAt(level, blockPos.above().relative(direction));
         }
+
         return false;
     }
 
     @Unique
-    private static boolean gc$freeAt(Level level, BlockPos blockPos) {
+    private static boolean gc$freeAt(
+            Level level,
+            BlockPos blockPos
+    ) {
         return !level.getBlockState(blockPos).isSuffocating(level, blockPos);
     }
 }
