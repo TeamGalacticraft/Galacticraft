@@ -224,10 +224,10 @@ public final class AirlockFrameScanner {
     }
 
     private enum EdgeKind {
-        VMIN,
-        VMAX,
-        UMIN,
-        UMAX
+        V_MIN,
+        V_MAX,
+        U_MIN,
+        U_MAX
     }
 
     /**
@@ -347,7 +347,7 @@ public final class AirlockFrameScanner {
             List<Result> results
     ) {
         boolean alongU =
-                edge == EdgeKind.VMIN || edge == EdgeKind.VMAX;
+                edge == EdgeKind.V_MIN || edge == EdgeKind.V_MAX;
 
         int along0 = alongU ? u0 : v0;
         int perpendicular0 = alongU ? v0 : u0;
@@ -357,8 +357,8 @@ public final class AirlockFrameScanner {
          * the rectangle interior.
          */
         int perpendicularDirection = switch (edge) {
-            case VMIN, UMIN -> 1;
-            case VMAX, UMAX -> -1;
+            case V_MIN, U_MIN -> 1;
+            case V_MAX, U_MAX -> -1;
         };
 
         /*
