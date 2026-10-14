@@ -1,5 +1,8 @@
 {
   "values": [
-    "galacticraft:air_lock_seal"
+    "galacticraft:structure_airlock_controller",
+    "galacticraft:structure_airlock_frame",
+    "galacticraft:airlock_seal",
+    "galacticraft:airlock_seal"
   ]
 }

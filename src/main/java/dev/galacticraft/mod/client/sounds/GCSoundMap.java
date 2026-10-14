@@ -43,7 +43,8 @@ public class GCSoundMap {
             Map.entry(MachineStatus.Type.MISSING_ENERGY, Optional.empty()),
             Map.entry(MachineStatus.Type.MISSING_ITEMS, Optional.of(GCSounds.MACHINE_BUZZ)),
             Map.entry(MachineStatus.Type.OUTPUT_FULL, Optional.of(GCSounds.MACHINE_BUZZ)),
-            Map.entry(MachineStatus.Type.OTHER, Optional.of(GCSounds.MACHINE_BUZZ)));
+            Map.entry(MachineStatus.Type.OTHER, Optional.of(GCSounds.MACHINE_BUZZ))
+    );
 
     private static final Map<MachineStatus, Optional<SoundEvent>> EXCEPTIONS = Map.ofEntries(
             Map.entry(MachineStatuses.NOT_ENOUGH_ENERGY, Optional.empty()),
@@ -52,7 +53,11 @@ public class GCSoundMap {
             Map.entry(GCMachineStatuses.COLLECTING, Optional.of(GCSounds.OXYGEN_FAN)),
             Map.entry(GCMachineStatuses.DISTRIBUTING, Optional.of(GCSounds.OXYGEN_FAN)),
             Map.entry(GCMachineStatuses.OXYGEN_DETECTED, Optional.empty()),
-            Map.entry(GCMachineStatuses.NO_OXYGEN_DETECTED, Optional.empty()));
+            Map.entry(GCMachineStatuses.NO_OXYGEN_DETECTED, Optional.empty()),
+            Map.entry(GCMachineStatuses.AIRLOCK_DISABLED, Optional.empty()),
+            Map.entry(GCMachineStatuses.AIRLOCK_PARTIAL, Optional.empty()),
+            Map.entry(GCMachineStatuses.AIRLOCK_ENABLED, Optional.empty())
+    );
 
     public static @Nullable SoundEvent get(MachineStatus status, MachineBlockEntity machine) {
         if (machine instanceof CoalPoweredMachine) {

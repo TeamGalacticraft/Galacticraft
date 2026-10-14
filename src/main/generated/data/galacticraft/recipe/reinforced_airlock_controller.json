@@ -5,6 +5,9 @@
     "M": {
       "item": "galacticraft:compressed_meteoric_iron"
     },
+    "O": {
+      "tag": "c:obsidians/normal"
+    },
     "S": {
       "item": "galacticraft:compressed_steel"
     },
@@ -13,12 +16,12 @@
     }
   },
   "pattern": [
-    "SSS",
+    "OSO",
     "MWM",
-    "SSS"
+    "OSO"
   ],
   "result": {
     "count": 1,
-    "id": "galacticraft:air_lock_controller"
+    "id": "galacticraft:reinforced_airlock_controller"
   }
 }
