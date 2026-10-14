@@ -52,12 +52,12 @@ public class AirlockSealBlock extends Block {
     }
 
     @Override
-    public MapCodec<? extends AirlockSealBlock> codec() {
+    public @NotNull MapCodec<? extends AirlockSealBlock> codec() {
         return CODEC;
     }
 
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return switch (state.getValue(AXIS)) {
             case X -> SHAPE_X;
             case Y -> SHAPE_Y;
