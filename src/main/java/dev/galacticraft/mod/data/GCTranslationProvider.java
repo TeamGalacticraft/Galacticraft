@@ -1237,9 +1237,10 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Ui.AIRLOCK_PROXIMITY_LABEL, "Airlock Proximity:");
         this.add(Ui.AIRLOCK_DEFAULT_NAME, "Airlock Controller");
-        this.add(Ui.AIRLOCK_ENABLED, "Airlock Enabled");
-        this.add(Ui.AIRLOCK_PARTIAL, "Airlock Partially Enabled");
+        this.add(Ui.AIRLOCK_INCOMPLETE, "Airlock Incomplete");
         this.add(Ui.AIRLOCK_DISABLED, "Airlock Disabled");
+        this.add(Ui.AIRLOCK_PARTIAL, "Airlock Partially Enabled");
+        this.add(Ui.AIRLOCK_ENABLED, "Airlock Enabled");
         this.add(Ui.AIRLOCK_OPEN_WHEN_NEAR, "Airlock opens near player");
         this.add(Ui.AIRLOCK_STRUCTURE_MANAGED, "Owner: UNKNOWN");
         this.add(Ui.AIRLOCK_CONFIGURATION_LOCKED, "Configuration Locked");

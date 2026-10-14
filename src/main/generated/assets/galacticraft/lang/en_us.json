@@ -1179,6 +1179,7 @@
   "ui.galacticraft.airlock.default_name": "Airlock Controller",
   "ui.galacticraft.airlock.disabled": "Airlock Disabled",
   "ui.galacticraft.airlock.enabled": "Airlock Enabled",
+  "ui.galacticraft.airlock.incomplete": "Airlock Incomplete",
   "ui.galacticraft.airlock.keycard_open_time": "Keycard Open Time:",
   "ui.galacticraft.airlock.open_when_near": "Airlock opens near player",
   "ui.galacticraft.airlock.partial": "Airlock Partially Enabled",

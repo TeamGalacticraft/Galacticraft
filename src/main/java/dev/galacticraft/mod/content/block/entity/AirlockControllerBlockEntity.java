@@ -109,7 +109,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
     private List<AirlockFrameScanner.Result> lastFrames = Collections.emptyList();
     private Map<Long, AirlockFrameScanner.Result> lastFrameMap = Collections.emptyMap();
-    private AirlockState state = AirlockState.NONE;
+    private AirlockState state = AirlockState.INCOMPLETE;
 
     private int ticks = 0;
 
@@ -146,6 +146,8 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
     }
 
     private static AABB expandedInterior(AirlockFrameScanner.Result frame, double radius) {
+        double expansion = Math.max(radius, 0.0);
+
         AABB interior = switch (frame.plane()) {
             case XY -> new AABB(
                     frame.minX() + 1,
@@ -153,7 +155,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                     frame.minZ(),
                     frame.maxX(),
                     frame.maxY(),
-                    frame.maxZ()
+                    frame.maxZ() + 1
             );
 
             case XZ -> new AABB(
@@ -161,21 +163,21 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
                     frame.minY(),
                     frame.minZ() + 1,
                     frame.maxX(),
-                    frame.maxY(),
+                    frame.maxY() + 1,
                     frame.maxZ()
             );
 
             case YZ -> new AABB(
                     frame.minX(),
                     frame.minY() + 1,
-                    frame.minZ()+ 1,
-                    frame.maxX(),
+                    frame.minZ() + 1,
+                    frame.maxX() + 1,
                     frame.maxY(),
                     frame.maxZ()
             );
         };
 
-        return interior.inflate(Math.max(radius, 0) + 1.0e-4);
+        return interior.inflate(expansion + 1.0e-4);
     }
 
     private static boolean sameFrames(List<AirlockFrameScanner.Result> first, List<AirlockFrameScanner.Result> second) {
@@ -508,15 +510,7 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
             }
         }
 
-        AirlockState newState;
-
-        if (frames.isEmpty() || this.sealedFrames.isEmpty()) {
-            newState = AirlockState.NONE;
-        } else if (this.sealedFrames.size() == frames.size()) {
-            newState = AirlockState.ALL;
-        } else {
-            newState = AirlockState.PARTIAL;
-        }
+        AirlockState newState = getAirlockState(frames);
 
         boolean stateChanged = newState != this.state;
 
@@ -536,6 +530,25 @@ public class AirlockControllerBlockEntity extends MachineBlockEntity {
 
             setChanged();
         }
+    }
+
+    private @NotNull AirlockState getAirlockState(List<AirlockFrameScanner.Result> frames) {
+        AirlockState newState;
+
+        if (frames.isEmpty()) {
+            // The controller is not part of any complete airlock frames.
+            newState = AirlockState.INCOMPLETE;
+        } else if (this.sealedFrames.isEmpty()) {
+            // Complete frames exist, but all airlocks are open.
+            newState = AirlockState.NONE;
+        } else if (this.sealedFrames.size() == frames.size()) {
+            // Every detected airlock is sealed.
+            newState = AirlockState.ALL;
+        } else {
+            // Some airlocks are sealed while others remain open.
+            newState = AirlockState.PARTIAL;
+        }
+        return newState;
     }
 
     private boolean hasAuthorizedPlayerNear(ServerLevel server, AirlockFrameScanner.Result frame) {

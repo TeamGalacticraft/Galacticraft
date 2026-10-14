@@ -28,15 +28,23 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 public enum AirlockState {
 
     /**
-     * No frames are sealed (all airlocks open)
+     * No complete airlock frames have been detected.
+     */
+    INCOMPLETE(GCMachineStatuses.AIRLOCK_INCOMPLETE),
+
+    /**
+     * Complete airlock frames exist, but none are sealed.
+     * All airlocks are open.
      */
     NONE(GCMachineStatuses.AIRLOCK_DISABLED),
+
     /**
-     * At least one frame is sealed, but not all frames are sealed
+     * At least one frame is sealed, but not all frames are sealed.
      */
     PARTIAL(GCMachineStatuses.AIRLOCK_PARTIAL),
+
     /**
-     * All frames are sealed (all airlocks closed)
+     * All detected frames are sealed (all airlocks closed).
      */
     ALL(GCMachineStatuses.AIRLOCK_ENABLED);
 

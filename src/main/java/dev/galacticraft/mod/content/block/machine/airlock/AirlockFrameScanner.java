@@ -55,7 +55,10 @@ import java.util.List;
  *
  * <p>The controller may be anywhere on the perimeter, including a corner.
  *
- * <p>Up to two smallest distinct rectangles are returned per plane.
+ * <p>All geometrically distinct valid rectangles containing the
+ * supplied controller are returned across all three planes.
+ *
+ * <p>There is no fixed limit on the number of rectangles.
  */
 public final class AirlockFrameScanner {
 
@@ -78,10 +81,6 @@ public final class AirlockFrameScanner {
             .thenComparingInt(Result::maxX)
             .thenComparingInt(Result::maxY)
             .thenComparingInt(Result::maxZ);
-
-    private static final Comparator<Result> AREA_ORDER =
-            Comparator.comparingLong(AirlockFrameScanner::area)
-                    .thenComparing(ORDER);
 
     private AirlockFrameScanner() {
     }
@@ -169,18 +168,27 @@ public final class AirlockFrameScanner {
             );
         }
 
-        public int cornerCount() {
-            return this.corners.size();
+        public long area() {
+            return switch (this.plane) {
+                case XY -> (long) (this.maxX - this.minX + 1)
+                        * (long) (this.maxY - this.minY + 1);
+
+                case XZ -> (long) (this.maxX - this.minX + 1)
+                        * (long) (this.maxZ - this.minZ + 1);
+
+                case YZ -> (long) (this.maxY - this.minY + 1)
+                        * (long) (this.maxZ - this.minZ + 1);
+            };
         }
 
-        public boolean hasCorner(CornerKind kind) {
-            for (Corner corner : this.corners) {
-                if (corner.kind() == kind) {
-                    return true;
-                }
-            }
-
-            return false;
+        public boolean sameBounds(Result other) {
+            return this.plane == other.plane
+                    && this.minX == other.minX
+                    && this.minY == other.minY
+                    && this.minZ == other.minZ
+                    && this.maxX == other.maxX
+                    && this.maxY == other.maxY
+                    && this.maxZ == other.maxZ;
         }
     }
 
@@ -193,20 +201,24 @@ public final class AirlockFrameScanner {
 
     /**
      * Scan all three axis-aligned planes containing the controller.
+     *
+     * <p>Every geometrically distinct valid rectangle is returned.
+     * There is no fixed limit on the number of airlocks per plane.
      */
     public static List<Result> scanAll(Level level, BlockPos controller) {
         if (!isFrame(level, controller)) {
             return List.of();
         }
 
-        List<Result> result = new ArrayList<>(6);
+        List<Result> results = new ArrayList<>(12);
 
         for (Plane plane : PLANES) {
-            result.addAll(scanPlane(level, controller, plane));
+            results.addAll(scanPlane(level, controller, plane));
         }
 
-        result.sort(ORDER);
-        return result;
+        results.sort(ORDER);
+
+        return results;
     }
 
     // ---------------------------------------------------------------------
@@ -218,75 +230,40 @@ public final class AirlockFrameScanner {
             BlockPos controller,
             Plane plane
     ) {
-        FrameView view = new FrameView(level, plane, controller.get(plane.normal()));
+        FrameView view = new FrameView(
+                level,
+                plane,
+                controller.get(plane.normal())
+        );
 
         int u0 = projectU(controller, plane);
         int v0 = projectV(controller, plane);
 
-        /*
-         * Each search assumes that the controller lies on one of the four
-         * possible sides.
-         *
-         * The controller may also be a corner. In that case the same
-         * rectangle can be discovered from two adjacent EdgeKinds; the
-         * duplicate is removed below.
-         */
-        Result vMin = findBestRectWithFixedEdge(
-                view,
-                controller,
-                EdgeKind.VMIN,
-                u0,
-                v0
-        );
-
-        Result vMax = findBestRectWithFixedEdge(
-                view,
-                controller,
-                EdgeKind.VMAX,
-                u0,
-                v0
-        );
-
-        Result uMin = findBestRectWithFixedEdge(
-                view,
-                controller,
-                EdgeKind.UMIN,
-                u0,
-                v0
-        );
-
-        Result uMax = findBestRectWithFixedEdge(
-                view,
-                controller,
-                EdgeKind.UMAX,
-                u0,
-                v0
-        );
-
-        List<Result> candidates = new ArrayList<>(4);
-
-        addDistinct(candidates, vMin);
-        addDistinct(candidates, vMax);
-        addDistinct(candidates, uMin);
-        addDistinct(candidates, uMax);
-
-        if (candidates.isEmpty()) {
-            return List.of();
-        }
+        List<Result> candidates = new ArrayList<>();
 
         /*
-         * The class promises the two smallest rectangles on this plane.
+         * The controller may belong to any of the four sides
+         * of a rectangle.
          *
-         * Sorting by area first makes that statement actually true rather
-         * than depending on EdgeKind search order.
+         * Search every possible orientation and collect all
+         * valid rectangles, not just the smallest.
+         *
+         * Rectangles discovered from multiple orientations
+         * are deduplicated by their bounds.
          */
-        candidates.sort(AREA_ORDER);
-
-        if (candidates.size() > 2) {
-            candidates.subList(2, candidates.size()).clear();
+        for (EdgeKind edge : EdgeKind.values()) {
+            findRectsWithFixedEdge(
+                    view,
+                    controller,
+                    edge,
+                    u0,
+                    v0,
+                    candidates
+            );
         }
 
         candidates.sort(ORDER);
+
         return candidates;
     }
 
@@ -296,7 +273,7 @@ public final class AirlockFrameScanner {
         }
 
         for (Result existing : list) {
-            if (sameBounds(existing, result)) {
+            if (existing.sameBounds(result)) {
                 return;
             }
         }
@@ -304,18 +281,8 @@ public final class AirlockFrameScanner {
         list.add(result);
     }
 
-    private static boolean sameBounds(Result a, Result b) {
-        return a.plane() == b.plane()
-                && a.minX() == b.minX()
-                && a.minY() == b.minY()
-                && a.minZ() == b.minZ()
-                && a.maxX() == b.maxX()
-                && a.maxY() == b.maxY()
-                && a.maxZ() == b.maxZ();
-    }
-
     /**
-     * Searches for the smallest rectangle for which {@code controller}
+     * Finds every valid rectangle for which the controller
      * belongs to the specified side.
      *
      * <p>The search operates in logical coordinates:
@@ -325,22 +292,29 @@ public final class AirlockFrameScanner {
      *     <li>{@code perpendicular}: coordinate running toward the opposite side</li>
      * </ul>
      *
-     * <p>This means all four EdgeKinds can use exactly the same algorithm.
+     * <p>All four EdgeKinds use the same algorithm.
+     *
+     * <p>Unlike the previous implementation, this method
+     * collects every valid rectangle instead of selecting
+     * only the smallest one.
      */
-    private static Result findBestRectWithFixedEdge(
+    private static void findRectsWithFixedEdge(
             FrameView view,
             BlockPos controller,
             EdgeKind edge,
             int u0,
-            int v0
+            int v0,
+            List<Result> results
     ) {
-        boolean alongU = edge == EdgeKind.VMIN || edge == EdgeKind.VMAX;
+        boolean alongU =
+                edge == EdgeKind.VMIN || edge == EdgeKind.VMAX;
 
         int along0 = alongU ? u0 : v0;
         int perpendicular0 = alongU ? v0 : u0;
 
         /*
-         * Direction from the controller side toward the rectangle interior.
+         * Direction from the controller side toward
+         * the rectangle interior.
          */
         int perpendicularDirection = switch (edge) {
             case VMIN, UMIN -> 1;
@@ -348,21 +322,20 @@ public final class AirlockFrameScanner {
         };
 
         /*
-         * Find the contiguous frame run passing through the controller.
+         * Find the contiguous frame run passing through
+         * the controller.
          *
-         * This run tells us every possible location for the two corners of
-         * the controller-side edge:
-         *
-         * - Any occupied position in the run can itself be a corner.
-         * - Exactly one position beyond the run can be a missing corner.
-         *
-         * Nothing farther away can be part of this rectangle because that
-         * would introduce a missing non-corner edge block.
+         * Every possible controller-side edge must be
+         * contained within this run, with the exception
+         * of its two optional corner positions.
          */
         int runMin = along0;
         int runMax = along0;
 
-        for (int distance = 1; distance <= MAX_SCAN_DISTANCE; distance++) {
+        for (int distance = 1;
+             distance <= MAX_SCAN_DISTANCE;
+             distance++) {
+
             int along = along0 - distance;
 
             if (!isFrameLogical(
@@ -377,7 +350,10 @@ public final class AirlockFrameScanner {
             runMin = along;
         }
 
-        for (int distance = 1; distance <= MAX_SCAN_DISTANCE; distance++) {
+        for (int distance = 1;
+             distance <= MAX_SCAN_DISTANCE;
+             distance++) {
+
             int along = along0 + distance;
 
             if (!isFrameLogical(
@@ -393,55 +369,37 @@ public final class AirlockFrameScanner {
         }
 
         /*
-         * One position outside the contiguous run is allowed because that
-         * position may simply be an omitted corner.
+         * Allow one position beyond each end of the
+         * contiguous run because corners are optional.
          */
         int candidateMin = runMin - 1;
         int candidateMax = runMax + 1;
 
-        long bestArea = Long.MAX_VALUE;
-        LogicalRect best = null;
-
         /*
-         * Controller may be:
+         * Enumerate every possible pair of endpoints
+         * for the controller-side edge.
          *
-         * - somewhere inside the edge,
-         * - the minimum corner,
-         * - the maximum corner.
+         * The controller must lie between the endpoints.
          *
-         * Therefore minAlong may equal along0 and maxAlong may equal along0.
+         * A valid rectangle must be at least three blocks
+         * wide to contain a non-corner edge block.
          */
-        for (int minAlong = candidateMin; minAlong <= along0; minAlong++) {
+        for (int minAlong = candidateMin;
+             minAlong <= along0;
+             minAlong++) {
 
-            /*
-             * If a result already exists, the minimum possible height is 3.
-             * A width this large can no longer improve the result.
-             */
-            int smallestWidth = Math.max(3, along0 - minAlong + 1);
-
-            if (bestArea != Long.MAX_VALUE
-                    && (long) smallestWidth * 3L > bestArea) {
-                continue;
-            }
-
-            int firstMax = Math.max(along0, minAlong + 2);
+            int firstMax = Math.max(
+                    along0,
+                    minAlong + 2
+            );
 
             for (int maxAlong = firstMax;
                  maxAlong <= candidateMax;
                  maxAlong++) {
 
-                int width = maxAlong - minAlong + 1;
-
-                if (bestArea != Long.MAX_VALUE
-                        && (long) width * 3L > bestArea) {
-                    break;
-                }
-
                 /*
-                 * Everything between the two corners of the controller side
-                 * must be frame.
-                 *
-                 * The corner cells themselves are intentionally ignored.
+                 * Every non-corner block on the
+                 * controller-side edge must be a frame.
                  */
                 if (!edgeInteriorIsFrame(
                         view,
@@ -453,7 +411,45 @@ public final class AirlockFrameScanner {
                     continue;
                 }
 
-                LogicalRect candidate = findNearestOppositeEdge(
+                /*
+                 * Both side edges must have at least one
+                 * frame block immediately inside the
+                 * rectangle.
+                 *
+                 * This is a cheap rejection test that avoids
+                 * scanning outward for endpoint combinations
+                 * that cannot possibly form a rectangle.
+                 */
+                int firstInterior =
+                        perpendicular0 + perpendicularDirection;
+
+                if (!isFrameLogical(
+                        view,
+                        alongU,
+                        minAlong,
+                        firstInterior
+                )) {
+                    continue;
+                }
+
+                if (!isFrameLogical(
+                        view,
+                        alongU,
+                        maxAlong,
+                        firstInterior
+                )) {
+                    continue;
+                }
+
+                /*
+                 * Find the valid opposite edge for this
+                 * particular pair of side endpoints.
+                 *
+                 * We no longer compare areas or discard
+                 * rectangles simply because a smaller
+                 * rectangle has already been discovered.
+                 */
+                LogicalRect rect = findNearestOppositeEdge(
                         view,
                         controller,
                         alongU,
@@ -463,24 +459,23 @@ public final class AirlockFrameScanner {
                         perpendicularDirection
                 );
 
-                if (candidate == null) {
+                if (rect == null) {
                     continue;
                 }
 
-                long candidateArea = candidate.area();
-
-                if (candidateArea < bestArea) {
-                    bestArea = candidateArea;
-                    best = candidate;
-                }
+                /*
+                 * Different searches may discover the
+                 * same rectangle, especially when the
+                 * controller occupies a corner.
+                 *
+                 * Only add geometrically distinct results.
+                 */
+                addDistinct(
+                        results,
+                        createResult(view, rect)
+                );
             }
         }
-
-        if (best == null) {
-            return null;
-        }
-
-        return createResult(view, best);
     }
 
     /**
@@ -876,19 +871,6 @@ public final class AirlockFrameScanner {
         return switch (plane) {
             case XY -> pos.getY();
             case XZ, YZ -> pos.getZ();
-        };
-    }
-
-    private static long area(Result result) {
-        return switch (result.plane()) {
-            case XY -> (long) (result.maxX() - result.minX() + 1)
-                    * (long) (result.maxY() - result.minY() + 1);
-
-            case XZ -> (long) (result.maxX() - result.minX() + 1)
-                    * (long) (result.maxZ() - result.minZ() + 1);
-
-            case YZ -> (long) (result.maxY() - result.minY() + 1)
-                    * (long) (result.maxZ() - result.minZ() + 1);
         };
     }
 
