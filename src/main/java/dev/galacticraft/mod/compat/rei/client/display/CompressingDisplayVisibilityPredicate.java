@@ -22,8 +22,8 @@
 
 package dev.galacticraft.mod.compat.rei.client.display;
 
-import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.architectury.event.EventResult;
+import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.client.registry.display.visibility.DisplayVisibilityPredicate;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
