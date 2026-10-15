@@ -43,11 +43,6 @@ public class GCSounds {
     public static final SoundEvent METEOR_THROW = register("entity.meteor_chunk.throw");
     public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
     public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");
-    // Item
-    public static final SoundEvent BUCKET_EMPTY_FUEL = register("item.bucket.empty_fuel");
-    public static final SoundEvent BUCKET_EMPTY_OIL = register("item.bucket.empty_oil");
-    public static final SoundEvent BUCKET_FILL_FUEL = register("item.bucket.fill_fuel");
-    public static final SoundEvent BUCKET_FILL_OIL = register("item.bucket.fill_oil");
     // Machine
     public static final SoundEvent AIRLOCK_CLOSE = register("machine.airlock.close");
     public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
@@ -67,17 +62,11 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = registerForHolder("music_disc.legacy.spacerace");
     // Player
     public static final SoundEvent CHEST_UNLOCK = register("player.chest.unlock");
-    public static final SoundEvent PARACHUTE = register("player.parachute");
     public static final SoundEvent EMPTY_FUEL = register("player.empty_fuel_bucket");
     public static final SoundEvent EMPTY_OIL = register("player.empty_oil_bucket");
     public static final SoundEvent FILL_FUEL = register("player.fill_fuel_bucket");
     public static final SoundEvent FILL_OIL = register("player.fill_oil_bucket");
-    public static final SoundEvent SPLASH_FUEL = register("player.splash_fuel");
-    public static final SoundEvent SPLASH_FUEL_HIGH_SPEED = register("player.splash_fuel_high_speed");
-    public static final SoundEvent SPLASH_OIL = register("player.splash_oil");
-    public static final SoundEvent SPLASH_OIL_HIGH_SPEED = register("player.splash_oil_high_speed");
-    public static final SoundEvent SWIM_FUEL = register("player.swim_fuel");
-    public static final SoundEvent SWIM_OIL = register("player.swim_oil");
+    public static final SoundEvent PARACHUTE = register("player.parachute");
 
     private static Holder.Reference<SoundEvent> registerForHolder(String id) {
         return SOUNDS.registerForHolder(id, SoundEvent.createVariableRangeEvent(Constant.id(id)));
