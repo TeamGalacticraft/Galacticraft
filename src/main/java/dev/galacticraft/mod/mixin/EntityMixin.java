@@ -62,7 +62,6 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
 import net.minecraft.world.level.material.Fluid;
-import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -72,6 +71,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
@@ -106,7 +106,7 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
 
     @Shadow
-    public abstract boolean isOnFire();
+    public boolean wasOnFire;
 
     @Shadow
     private Vec3 position;
@@ -125,9 +125,6 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Shadow
     public abstract boolean hurt(DamageSource source, float amount);
-
-    @Shadow
-    protected abstract SoundEvent getSwimSound();
 
     @Shadow
     public abstract void playSound(SoundEvent sound, float volume, float pitch);
@@ -167,33 +164,20 @@ public abstract class EntityMixin implements EntityAccessor {
     @Final
     protected abstract void discard();
 
-    @Inject(method = "playSwimSound", at = @At("HEAD"), cancellable = true)
-    private void playCustomSwimSound(float volume, CallbackInfo ci) {
-        BlockPos.MutableBlockPos mutableBlockPos = new BlockPos.MutableBlockPos();
-        FluidState fluidState = this.level().getFluidState(mutableBlockPos);
-        if (fluidState.is(GCFluidTags.FUEL)) {
-            this.playSound(this.getSwimSound(), volume, 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-            ci.cancel();
-        } else if (fluidState.is(GCFluidTags.OIL)) {
-            this.playSound(this.getSwimSound(), volume, 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
-            ci.cancel();
-        }
-    }
-
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
 
-        oilEffects(invulnerable);
+        oilFuelEffects(invulnerable);
         sulfuricAcidEffects(invulnerable);
     }
 
-    // If a flaming entity enters oil, this entity should explode
+    // If a flaming entity enters oil or fuel, this entity should explode
     @Unique
-    private void oilEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028)) {
-            if (this.isOnFire()) {
+    private void oilFuelEffects(boolean invulnerable) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+            if (this.wasOnFire) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if (!invulnerable) {
                     this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
@@ -205,7 +189,7 @@ public abstract class EntityMixin implements EntityAccessor {
     // The entity enters an acid fluid, this entity needs to take damage
     @Unique
     private void sulfuricAcidEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028)) {
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
                 boolean damage = this.timeInAcid >= 30;
                 boolean playSound = true;
@@ -240,6 +224,44 @@ public abstract class EntityMixin implements EntityAccessor {
         } else {
             this.timeInAcid = 0;
         }
+    }
+
+    @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
+    private float  GCSwimPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
+    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
+    private float  GCSplashPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
+    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 1), index = 2)
+    private float  GCHighSpeedSplashPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
+    @Unique
+    private float GCPitchChanger(float pitch) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+            System.out.println("fuel");
+            return this.FuelPitch();
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014)) {
+            System.out.println("oil");
+            return this.OilPitch();
+        }
+        System.out.println("neither");
+        return pitch;
+    }
+
+    @Unique
+    private float FuelPitch() {
+        return 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+    }
+
+    @Unique
+    private float OilPitch() {
+        return 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
