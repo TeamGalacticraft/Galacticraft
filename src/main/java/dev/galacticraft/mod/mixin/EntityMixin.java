@@ -244,13 +244,10 @@ public abstract class EntityMixin implements EntityAccessor {
     @Unique
     private float GCPitchChanger(float pitch) {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
-            System.out.println("fuel");
             return this.FuelPitch();
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014)) {
-            System.out.println("oil");
             return this.OilPitch();
         }
-        System.out.println("neither");
         return pitch;
     }
 
