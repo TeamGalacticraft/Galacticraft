@@ -71,5 +71,14 @@ public class GCFluidTagProvider extends FabricTagProvider.FluidTagProvider {
         // Add fluids here so they can't be inserted into the Fluid Canister
         this.getOrCreateTagBuilder(GCFluidTags.FLUID_CANISTER_EXCLUSIONS)
                 .add(Gases.OXYGEN);
+
+        // Make swimmable
+        this.getOrCreateTagBuilder(FluidTags.WATER)
+                .add(GCFluids.CRUDE_OIL)
+                .add(GCFluids.FLOWING_CRUDE_OIL)
+                .add(GCFluids.FUEL)
+                .add(GCFluids.FLOWING_FUEL)
+                .add(GCFluids.SULFURIC_ACID)
+                .add(GCFluids.FLOWING_SULFURIC_ACID);
     }
 }

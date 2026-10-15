@@ -71,6 +71,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
@@ -105,7 +106,7 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
 
     @Shadow
-    public abstract boolean isOnFire();
+    public boolean wasOnFire;
 
     @Shadow
     private Vec3 position;
@@ -167,17 +168,28 @@ public abstract class EntityMixin implements EntityAccessor {
     private void checkWaterStateGC(CallbackInfo ci) {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
-            if (this.isOnFire()) {
+
+        oilFuelEffects(invulnerable);
+        sulfuricAcidEffects(invulnerable);
+    }
+
+    // If a flaming entity enters oil or fuel, this entity should explode
+    @Unique
+    private void oilFuelEffects(boolean invulnerable) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+            if (this.wasOnFire) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if (!invulnerable) {
                     this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
                 }
             }
         }
+    }
 
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enters an acid fluid, this entity needs to take damage
+    // The entity enters an acid fluid, this entity needs to take damage
+    @Unique
+    private void sulfuricAcidEffects(boolean invulnerable) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028)) {
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
                 boolean damage = this.timeInAcid >= 30;
                 boolean playSound = true;
@@ -202,7 +214,10 @@ public abstract class EntityMixin implements EntityAccessor {
                     this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
                 if (playSound && this.timeInAcid % 5 == 0) {
-                    this.sulfuricAcidEffects();
+                    this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+                    for (int i = 0; i < 4; i++) {
+                        level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
+                    }
                 }
             }
             ++this.timeInAcid;
@@ -211,12 +226,39 @@ public abstract class EntityMixin implements EntityAccessor {
         }
     }
 
+    @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
+    private float  GCSwimPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
+    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
+    private float  GCSplashPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
+    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 1), index = 2)
+    private float  GCHighSpeedSplashPitch(float pitch) {
+        return GCPitchChanger(pitch);
+    }
+
     @Unique
-    private void sulfuricAcidEffects() {
-        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-        for (int i = 0; i < 4; i++) {
-            level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
+    private float GCPitchChanger(float pitch) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+            return this.FuelPitch();
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014)) {
+            return this.OilPitch();
         }
+        return pitch;
+    }
+
+    @Unique
+    private float FuelPitch() {
+        return 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
+    }
+
+    @Unique
+    private float OilPitch() {
+        return 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server

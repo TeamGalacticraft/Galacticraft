@@ -43,7 +43,7 @@ public class GCSounds {
     public static final SoundEvent METEOR_THROW = register("entity.meteor_chunk.throw");
     public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
     public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");
-    // Machine Sounds
+    // Machine
     public static final SoundEvent AIRLOCK_CLOSE = register("machine.airlock.close");
     public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
     public static final SoundEvent CIRCUIT_SCRITCH = register("machine.circuit.scritch");
@@ -62,6 +62,10 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = registerForHolder("music_disc.legacy.spacerace");
     // Player
     public static final SoundEvent CHEST_UNLOCK = register("player.chest.unlock");
+    public static final SoundEvent EMPTY_FUEL = register("player.empty_fuel_bucket");
+    public static final SoundEvent EMPTY_OIL = register("player.empty_oil_bucket");
+    public static final SoundEvent FILL_FUEL = register("player.fill_fuel_bucket");
+    public static final SoundEvent FILL_OIL = register("player.fill_oil_bucket");
     public static final SoundEvent PARACHUTE = register("player.parachute");
 
     private static Holder.Reference<SoundEvent> registerForHolder(String id) {
