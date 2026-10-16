@@ -116,7 +116,11 @@ public class SealerManager {
                 }
                 // If we just combined with a space that was already filled,
                 // we must be in the same space, so we don't need to continue flood fill
-                if (willAlreadySeal) break;
+                if (willAlreadySeal) {
+                    // The remaining blocks are all part of that space or walls, so this space is sealed too
+                    spaceToSeal.floodFillQueue.clear();
+                    break;
+                }
 
                 // If the space has become too large to fill, stop performing flood fill
                 if (spaceToSeal.blocksToSeal.size() > spaceToSeal.sealers.size() * MAX_SEALER_VOLUME) break;
