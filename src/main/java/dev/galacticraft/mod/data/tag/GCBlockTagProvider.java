@@ -566,6 +566,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(slabs)
                 .add(walls)
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
+                .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.SEALABLE_FLUID_PIPES::get).toArray(Block[]::new))
                 .add(GCBlocks.FLAGS.colorMap().values().toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
