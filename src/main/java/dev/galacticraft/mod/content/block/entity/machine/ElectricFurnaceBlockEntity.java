@@ -23,14 +23,12 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
 import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
@@ -40,6 +38,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.screen.CookingMachineMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
@@ -57,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
 
-public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, SmeltingRecipe> {
+public class ElectricFurnaceBlockEntity extends CookingMachineBlockEntity<SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
@@ -82,7 +81,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     );
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, OUTPUT_SLOT);
+        super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOT, 1);
     }
 
     @Override
@@ -118,7 +117,7 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
-        return new RecipeMachineMenu<>(
+        return new CookingMachineMenu<>(
                 GCMenuTypes.ELECTRIC_FURNACE,
                 syncId,
                 player,

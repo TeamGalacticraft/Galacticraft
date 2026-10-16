@@ -22,21 +22,20 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.machinelib.client.api.screen.MachineScreen;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricFurnaceBlockEntity;
+import dev.galacticraft.mod.screen.CookingMachineMenu;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.network.chat.Component;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 
 import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
 
-public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEntity, RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity>> {
-    public ElectricFurnaceScreen(RecipeMachineMenu<SingleRecipeInput, SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
+public class ElectricFurnaceScreen extends MachineScreen<ElectricFurnaceBlockEntity, CookingMachineMenu<SmeltingRecipe, ElectricFurnaceBlockEntity>> {
+    public ElectricFurnaceScreen(CookingMachineMenu<SmeltingRecipe, ElectricFurnaceBlockEntity> handler, Inventory inv, Component title) {
         super(handler, title, SCREEN_TEXTURE);
     }
 
