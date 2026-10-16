@@ -288,12 +288,13 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .color(-1, -1, -1, -1).emit();
         }
 
+        // the end cap is the tile next to the side of the pipe, see PipeBakedModel
         private float capU(float value) {
-            return (value - (0.5f - this.radius)) * 16.0f;
+            return (value - (0.5f - this.radius)) * 16.0f + this.crossSectionWidth();
         }
 
         private float capV(float value) {
-            return value * 16.0f;
+            return (value - (0.5f - this.radius)) * 16.0f;
         }
 
         private float centerStart() {
