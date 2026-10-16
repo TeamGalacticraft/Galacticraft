@@ -340,6 +340,23 @@ public interface Constant {
         String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
         String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
         String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
+        String SEALABLE_FLUID_PIPE = "sealable_fluid_pipe";
+        String WHITE_SEALABLE_FLUID_PIPE = "white_sealable_fluid_pipe";
+        String ORANGE_SEALABLE_FLUID_PIPE = "orange_sealable_fluid_pipe";
+        String MAGENTA_SEALABLE_FLUID_PIPE = "magenta_sealable_fluid_pipe";
+        String LIGHT_BLUE_SEALABLE_FLUID_PIPE = "light_blue_sealable_fluid_pipe";
+        String YELLOW_SEALABLE_FLUID_PIPE = "yellow_sealable_fluid_pipe";
+        String LIME_SEALABLE_FLUID_PIPE = "lime_sealable_fluid_pipe";
+        String PINK_SEALABLE_FLUID_PIPE = "pink_sealable_fluid_pipe";
+        String GRAY_SEALABLE_FLUID_PIPE = "gray_sealable_fluid_pipe";
+        String LIGHT_GRAY_SEALABLE_FLUID_PIPE = "light_gray_sealable_fluid_pipe";
+        String CYAN_SEALABLE_FLUID_PIPE = "cyan_sealable_fluid_pipe";
+        String PURPLE_SEALABLE_FLUID_PIPE = "purple_sealable_fluid_pipe";
+        String BLUE_SEALABLE_FLUID_PIPE = "blue_sealable_fluid_pipe";
+        String BROWN_SEALABLE_FLUID_PIPE = "brown_sealable_fluid_pipe";
+        String GREEN_SEALABLE_FLUID_PIPE = "green_sealable_fluid_pipe";
+        String RED_SEALABLE_FLUID_PIPE = "red_sealable_fluid_pipe";
+        String BLACK_SEALABLE_FLUID_PIPE = "black_sealable_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
