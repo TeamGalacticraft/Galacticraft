@@ -1247,6 +1247,7 @@ public interface Constant {
     }
 
     interface Nbt {
+        String DISPLAYED_FLUID = "DisplayedFluid";
         String GC_API = "GCApi";
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";

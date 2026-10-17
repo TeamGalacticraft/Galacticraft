@@ -31,6 +31,7 @@ import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
+import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -86,6 +87,7 @@ public class GCEventHandlers {
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(GCConfigUtil::clearServer);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> PipeNetworkImpl.clearDisplayedFluids());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
@@ -179,6 +181,8 @@ public class GCEventHandlers {
     }
 
     public static void onServerTick(MinecraftServer server) {
+        PipeNetworkImpl.tickDisplayedFluids(server);
+
         // throw meteors around players
         PlayerLookup.all(server).forEach(player -> {
             ServerLevel level = player.serverLevel();

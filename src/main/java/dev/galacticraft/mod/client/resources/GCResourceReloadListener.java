@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.client.resources;
 
+import dev.galacticraft.api.gas.GasFluid;
+import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.render.entity.BubbleEntityRenderer;
 import dev.galacticraft.mod.content.GCFluids;
@@ -66,5 +68,8 @@ public class GCResourceReloadListener implements SimpleSynchronousResourceReload
         };
 
         FluidRenderHandlerRegistry.INSTANCE.register(GCFluids.LIQUID_OXYGEN, oxygen);
+
+        TextureAtlasSprite oxygenGas = atlas.apply(((GasFluid) Gases.OXYGEN).getTexture());
+        FluidRenderHandlerRegistry.INSTANCE.register(Gases.OXYGEN, (view, pos, state) -> new TextureAtlasSprite[]{oxygenGas, oxygenGas});
     }
 }
