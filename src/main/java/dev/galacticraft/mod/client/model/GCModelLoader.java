@@ -48,7 +48,9 @@ import net.minecraft.client.renderer.texture.TextureManager;
 import net.minecraft.client.resources.model.AtlasSet;
 import net.minecraft.client.resources.model.Material;
 import net.minecraft.client.resources.model.UnbakedModel;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.data.models.model.ModelLocationUtils;
+import net.minecraft.data.models.model.TextureMapping;
 import net.minecraft.resources.FileToIdConverter;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.packs.resources.Resource;
@@ -116,6 +118,9 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 if (ModelLocationUtils.getModelLocation(pipe).equals(resourceId)) {
                     return new PipeUnbakedModel(resourceId, 0.125f);
                 }
+                if (Constant.BakedModel.pipeWalkwayCenterMarker(BuiltInRegistries.BLOCK.getKey(pipe).getPath()).equals(resourceId)) {
+                    return new WalkwayCenterModel(TextureMapping.getBlockTexture(pipe));
+                }
             }
 
             if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
@@ -128,8 +133,6 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
                 return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
             } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {
                 return new WalkwayCenterModel(Constant.id("block/walkway_connector"));
-            } else if (Constant.BakedModel.PIPE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
-                return new WalkwayCenterModel(Constant.id("block/glass_fluid_pipe"));
             } else if (Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
                 return new WalkwayCenterModel(Constant.id("block/aluminum_wire"));
             } else if (Constant.BakedModel.HEAVY_WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {

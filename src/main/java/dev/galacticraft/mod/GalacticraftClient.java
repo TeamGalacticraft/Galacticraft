@@ -180,7 +180,6 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.WIRE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.HEAVY_WIRE_WALKWAY, RenderType.cutout());
-        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.IRON_GRATING, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_TORCH, RenderType.cutout());
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLOWSTONE_WALL_TORCH, RenderType.cutout());
@@ -200,6 +199,10 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.OLIVINE_GLASS, GCBlocks.OLIVINE_GLASS_PANE, GCBlocks.MOON_GLASS, GCBlocks.MOON_GLASS_PANE);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE);
 
+        for (Block walkway : GCBlocks.FLUID_PIPE_WALKWAYS.values()) {
+            BlockRenderLayerMap.INSTANCE.putBlock(walkway, RenderType.translucent());
+        }
+        BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.FLUID_PIPE_WALKWAY, RenderType.cutout());
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());
         }

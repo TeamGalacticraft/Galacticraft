@@ -230,7 +230,10 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // MISC DECOR
         this.block(GCBlocks.WALKWAY, "Walkway");
-        this.block(GCBlocks.FLUID_PIPE_WALKWAY, "Fluid Pipe Walkway");
+        for (Map.Entry<PipeColor, Block> entry : GCBlocks.FLUID_PIPE_WALKWAYS.entrySet()) {
+            PipeColor color = entry.getKey();
+            this.block(entry.getValue(), color == PipeColor.CLEAR ? "Fluid Pipe Walkway" : TranslationProvider.normalizeName(color.getName()) + " Fluid Pipe Walkway");
+        }
         this.block(GCBlocks.WIRE_WALKWAY, "Wire Walkway");
         this.block(GCBlocks.HEAVY_WIRE_WALKWAY, "Heavy Wire Walkway");
         this.block(GCBlocks.TIN_LADDER, "Tin Ladder");

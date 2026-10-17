@@ -461,20 +461,24 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
                 .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.HEAVY_WIRE_WALKWAY).withSuffix("_shapeless"));
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY, 5)
-                .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('P', GCItemTags.GLASS_FLUID_PIPES)
-                .pattern("TTT")
-                .pattern("PTP")
-                .pattern("PPP")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output);
+        for (PipeColor color : PipeColor.values()) {
+            ItemLike pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            ItemLike walkway = GCBlocks.FLUID_PIPE_WALKWAYS.get(color);
+            GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, walkway, 5)
+                    .define('T', GCItems.COMPRESSED_TITANIUM)
+                    .define('P', pipe)
+                    .pattern("TTT")
+                    .pattern("PTP")
+                    .pattern("PPP")
+                    .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
+                    .save(output);
 
-        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY)
-                .requires(GCBlocks.WALKWAY)
-                .requires(GCItemTags.GLASS_FLUID_PIPES)
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.FLUID_PIPE_WALKWAY).withSuffix("_shapeless"));
+            GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, walkway)
+                    .requires(GCBlocks.WALKWAY)
+                    .requires(pipe)
+                    .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
+                    .save(output, RecipeBuilder.getDefaultRecipeId(walkway).withSuffix("_shapeless"));
+        }
 
         // Compressor
         GCShapelessRecipeBuilder.compressing(GCItems.CRACKER, 3)

@@ -119,6 +119,6 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements Abstra
 
     @Override
     protected Block getMatchingBlock(PipeColor color) {
-        return GCBlocks.FLUID_PIPE_WALKWAY;
+        return GCBlocks.FLUID_PIPE_WALKWAYS.get(color);
     }
 }

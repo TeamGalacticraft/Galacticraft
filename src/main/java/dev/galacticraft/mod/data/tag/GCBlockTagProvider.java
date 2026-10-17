@@ -567,6 +567,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(walls)
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.SEALABLE_FLUID_PIPES::get).toArray(Block[]::new))
+                .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.FLUID_PIPE_WALKWAYS::get).toArray(Block[]::new))
                 .add(GCBlocks.FLAGS.colorMap().values().toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,
@@ -608,7 +609,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.HEAVY_WIRE_WALKWAY,
-                        GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.CRYOGENIC_CHAMBER,
                         GCBlocks.CRYOGENIC_CHAMBER_PART,
                         GCBlocks.SOLAR_PANEL_PART,
@@ -710,12 +710,12 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
 
         this.tag(BlockTags.NEEDS_STONE_TOOL)
                 .forceAddTag(GCBlockTags.MACHINES)
+                .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.FLUID_PIPE_WALKWAYS::get).toArray(Block[]::new))
                 .add(
                         GCBlocks.IRON_GRATING,
                         GCBlocks.WALKWAY,
                         GCBlocks.WIRE_WALKWAY,
                         GCBlocks.HEAVY_WIRE_WALKWAY,
-                        GCBlocks.FLUID_PIPE_WALKWAY,
                         GCBlocks.MARS_IRON_ORE,
                         GCBlocks.ASTEROID_IRON_ORE,
                         GCBlocks.MOON_COPPER_ORE,
