@@ -233,7 +233,9 @@ public class GCCreativeModeTabs {
                 output.accept(WALKWAY);
                 output.accept(WIRE_WALKWAY);
                 output.accept(HEAVY_WIRE_WALKWAY);
-                output.accept(FLUID_PIPE_WALKWAY);
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(FLUID_PIPE_WALKWAYS.get(color));
+                }
                 output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
                 output.accept(METEORIC_IRON_DOOR);
@@ -245,6 +247,9 @@ public class GCCreativeModeTabs {
                 output.accept(HEAVY_SEALABLE_ALUMINUM_WIRE);
                 for (PipeColor color : PipeColor.byRainbowOrder()) {
                     output.accept(GLASS_FLUID_PIPES.get(color));
+                }
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(SEALABLE_FLUID_PIPES.get(color));
                 }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);

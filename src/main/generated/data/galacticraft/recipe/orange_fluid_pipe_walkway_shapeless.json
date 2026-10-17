@@ -1,0 +1,16 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "category": "misc",
+  "ingredients": [
+    {
+      "item": "galacticraft:walkway"
+    },
+    {
+      "item": "galacticraft:orange_glass_fluid_pipe"
+    }
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:orange_fluid_pipe_walkway"
+  }
+}

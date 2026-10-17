@@ -36,6 +36,7 @@ import dev.galacticraft.mod.content.block.special.aluminumwire.tier1.SealableAlu
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier2.HeavyAluminumWireBlock;
 import dev.galacticraft.mod.content.block.special.aluminumwire.tier2.HeavySealableAluminumWireBlock;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
+import dev.galacticraft.mod.content.block.special.fluidpipe.SealableFluidPipeBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.FuelPadBlock;
 import dev.galacticraft.mod.content.block.special.launchpad.LaunchPadBlock;
 import dev.galacticraft.mod.content.block.special.walkway.GlassFluidPipeWalkwayBlock;
@@ -286,6 +287,43 @@ public class GCBlocks {
     public static final Block HEAVY_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_ALUMINUM_WIRE, new HeavyAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(Blocks.WHITE_WOOL).forceSolidOn()));
     public static final Block SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_ALUMINUM_WIRE, new SealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
     public static final Block HEAVY_SEALABLE_ALUMINUM_WIRE = BLOCKS.registerWithItem(Constant.Block.HEAVY_SEALABLE_ALUMINUM_WIRE, new HeavySealableAluminumWireBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block())));
+    public static final Block SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(BlockBehaviour.Properties.ofFullCopy(TIN_DECORATION.block()), PipeColor.CLEAR));
+    public static final Block WHITE_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.WHITE_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.WHITE));
+    public static final Block ORANGE_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.ORANGE_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.ORANGE));
+    public static final Block MAGENTA_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.MAGENTA_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.MAGENTA));
+    public static final Block LIGHT_BLUE_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIGHT_BLUE_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.LIGHT_BLUE));
+    public static final Block YELLOW_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.YELLOW_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.YELLOW));
+    public static final Block LIME_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIME_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.LIME));
+    public static final Block PINK_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.PINK_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.PINK));
+    public static final Block GRAY_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GRAY_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.GRAY));
+    public static final Block LIGHT_GRAY_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.LIGHT_GRAY_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.LIGHT_GRAY));
+    public static final Block CYAN_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.CYAN_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.CYAN));
+    public static final Block PURPLE_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.PURPLE_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.PURPLE));
+    public static final Block BLUE_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BLUE_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.BLUE));
+    public static final Block BROWN_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BROWN_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.BROWN));
+    public static final Block GREEN_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GREEN_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.GREEN));
+    public static final Block RED_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.RED_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.RED));
+    public static final Block BLACK_SEALABLE_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.BLACK_SEALABLE_FLUID_PIPE, new SealableFluidPipeBlock(SEALABLE_FLUID_PIPE.properties(), PipeColor.BLACK));
+
+    public static final Map<PipeColor, Block> SEALABLE_FLUID_PIPES = Util.make(new EnumMap<>(PipeColor.class), map -> {
+        map.put(PipeColor.CLEAR, SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.WHITE, WHITE_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.ORANGE, ORANGE_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.MAGENTA, MAGENTA_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_BLUE, LIGHT_BLUE_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.YELLOW, YELLOW_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.LIME, LIME_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.PINK, PINK_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.GRAY, GRAY_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.LIGHT_GRAY, LIGHT_GRAY_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.CYAN, CYAN_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.PURPLE, PURPLE_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.BLUE, BLUE_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.BROWN, BROWN_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.GREEN, GREEN_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.RED, RED_SEALABLE_FLUID_PIPE);
+        map.put(PipeColor.BLACK, BLACK_SEALABLE_FLUID_PIPE);
+    });
 
     // GLASS FLUID PIPES
     public static final Block GLASS_FLUID_PIPE = BLOCKS.registerWithItem(Constant.Block.GLASS_FLUID_PIPE, new GlassFluidPipeBlock(BlockBehaviour.Properties.of().instrument(NoteBlockInstrument.HAT).sound(SoundType.GLASS).requiresCorrectToolForDrops().forceSolidOn(), PipeColor.CLEAR));
@@ -329,6 +367,41 @@ public class GCBlocks {
     // MISC DECOR
     public static final Block WALKWAY = BLOCKS.registerWithItem(Constant.Block.WALKWAY, new WalkwayBlock(BlockBehaviour.Properties.of().mapColor(MapColor.METAL).strength(5.0f, 5.0f).sound(SoundType.METAL).requiresCorrectToolForDrops().noOcclusion()));
     public static final Block FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(WALKWAY), PipeColor.CLEAR));
+    public static final Block WHITE_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WHITE_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.WHITE));
+    public static final Block ORANGE_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.ORANGE_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.ORANGE));
+    public static final Block MAGENTA_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.MAGENTA_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.MAGENTA));
+    public static final Block LIGHT_BLUE_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.LIGHT_BLUE_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.LIGHT_BLUE));
+    public static final Block YELLOW_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.YELLOW_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.YELLOW));
+    public static final Block LIME_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.LIME_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.LIME));
+    public static final Block PINK_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.PINK_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.PINK));
+    public static final Block GRAY_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.GRAY_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.GRAY));
+    public static final Block LIGHT_GRAY_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.LIGHT_GRAY_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.LIGHT_GRAY));
+    public static final Block CYAN_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.CYAN_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.CYAN));
+    public static final Block PURPLE_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.PURPLE_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.PURPLE));
+    public static final Block BLUE_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.BLUE_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.BLUE));
+    public static final Block BROWN_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.BROWN_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.BROWN));
+    public static final Block GREEN_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.GREEN_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.GREEN));
+    public static final Block RED_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.RED_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.RED));
+    public static final Block BLACK_FLUID_PIPE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.BLACK_FLUID_PIPE_WALKWAY, new GlassFluidPipeWalkwayBlock(FLUID_PIPE_WALKWAY.properties(), PipeColor.BLACK));
+    public static final Map<PipeColor, Block> FLUID_PIPE_WALKWAYS = Util.make(new EnumMap<>(PipeColor.class), map -> {
+        map.put(PipeColor.CLEAR, FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.WHITE, WHITE_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.ORANGE, ORANGE_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.MAGENTA, MAGENTA_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.LIGHT_BLUE, LIGHT_BLUE_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.YELLOW, YELLOW_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.LIME, LIME_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.PINK, PINK_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.GRAY, GRAY_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.LIGHT_GRAY, LIGHT_GRAY_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.CYAN, CYAN_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.PURPLE, PURPLE_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.BLUE, BLUE_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.BROWN, BROWN_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.GREEN, GREEN_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.RED, RED_FLUID_PIPE_WALKWAY);
+        map.put(PipeColor.BLACK, BLACK_FLUID_PIPE_WALKWAY);
+    });
     public static final Block WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.WIRE_WALKWAY, new WireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
     public static final Block HEAVY_WIRE_WALKWAY = BLOCKS.registerWithItem(Constant.Block.HEAVY_WIRE_WALKWAY, new HeavyWireWalkwayBlock(BlockBehaviour.Properties.ofFullCopy(WALKWAY)));
     public static final Block TIN_LADDER = BLOCKS.registerWithItem(Constant.Block.TIN_LADDER, new TinLadderBlock(BlockBehaviour.Properties.of().forceSolidOff().noOcclusion().pushReaction(PushReaction.DESTROY).strength(1.0f, 1.0f).sound(SoundType.METAL).requiresCorrectToolForDrops()));

@@ -182,7 +182,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.VAPOR_SPOUT, this.createSingleItemTableWithSilkTouch(GCBlocks.VAPOR_SPOUT, GCBlocks.SOFT_VENUS_ROCK));
 
         this.dropSelf(GCBlocks.WALKWAY);
-        this.dropSelf(GCBlocks.FLUID_PIPE_WALKWAY);
+        for (Block walkway : GCBlocks.FLUID_PIPE_WALKWAYS.values()) {
+            this.dropSelf(walkway);
+        }
         this.dropSelf(GCBlocks.WIRE_WALKWAY);
         this.dropSelf(GCBlocks.HEAVY_WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
@@ -217,6 +219,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.HEAVY_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+        for (Block pipe : GCBlocks.SEALABLE_FLUID_PIPES.values()) {
+            this.dropSelf(pipe);
+        }
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             this.dropSelf(pipe);
