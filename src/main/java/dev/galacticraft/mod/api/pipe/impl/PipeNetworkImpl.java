@@ -50,6 +50,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSnapshot> implements PipeNetwork {
+    /**
+     * The number of pipe networks that are being built, see {@link #isBuilding()}.
+     */
+    private static int building = 0;
+
     private final @NotNull ServerLevel level;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant> @Nullable []> pipes = new Object2ObjectOpenHashMap<>(1);
     private final long maxTransferRate;
@@ -63,7 +68,21 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         this.level = level;
         this.maxTransferRate = maxTransferRate;
         this.tickId = this.level.getServer().getTickCount();
-        this.addPipe(pos, null);
+        building++;
+        try {
+            this.addPipe(pos, null);
+        } finally {
+            building--;
+        }
+    }
+
+    /**
+     * {@return whether a pipe network is being built right now}
+     * Its pipes shouldn't build their own network then: the network being built will include them,
+     * and building another one at the same time marks one of them for removal, or never ends (#337).
+     */
+    public static boolean isBuilding() {
+        return building > 0;
     }
 
     private void addPipe(@NotNull BlockPos pos, @Nullable FluidPipe pipe) {

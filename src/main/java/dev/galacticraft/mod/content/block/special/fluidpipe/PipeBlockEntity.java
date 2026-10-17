@@ -85,7 +85,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public Storage<FluidVariant> getInsertable() {
-        if (this.network == null || this.network.markedForRemoval()) {
+        if ((this.network == null || this.network.markedForRemoval()) && !PipeNetworkImpl.isBuilding()) {
             this.createNetwork();
         }
         return this;
@@ -104,6 +104,8 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
         if (this.network == null || this.network.markedForRemoval()) {
+            // The network that is being built will include this one
+            if (PipeNetworkImpl.isBuilding()) return;
             this.createNetwork();
         }
         if (this.network != null) {
@@ -114,6 +116,10 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
+        // Looked up while another network was being built, so it doesn't have one yet
+        if (this.network == null || this.network.markedForRemoval()) {
+            this.createNetwork();
+        }
         if (this.network != null) {
             return this.network.insert(resource, Math.min(this.maxTransferRate, maxAmount), transaction);
         }

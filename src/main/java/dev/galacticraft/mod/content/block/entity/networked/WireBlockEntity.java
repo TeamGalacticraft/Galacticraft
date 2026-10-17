@@ -92,7 +92,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
 
     @Override
     public EnergyStorage getInsertable() {
-        if (this.network == null || this.network.markedForRemoval()) {
+        if ((this.network == null || this.network.markedForRemoval()) && !WireNetworkImpl.isBuilding()) {
             this.createNetwork();
         }
         return this;
@@ -111,6 +111,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
         if (this.network == null || this.network.markedForRemoval()) {
+            // The network that is being built will include this one
+            if (WireNetworkImpl.isBuilding()) return;
             this.createNetwork();
         }
         if (this.network != null) {
@@ -152,6 +154,10 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     @Override
     public long insert(long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
+        // Looked up while another network was being built, so it doesn't have one yet
+        if (this.network == null || this.network.markedForRemoval()) {
+            this.createNetwork();
+        }
         if (this.network != null) {
             return this.network.insert(Math.min(this.maxTransferRate, maxAmount), transaction);
         }
