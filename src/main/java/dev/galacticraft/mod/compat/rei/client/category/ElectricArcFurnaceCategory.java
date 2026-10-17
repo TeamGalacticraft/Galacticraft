@@ -22,12 +22,14 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.math.Point;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.gui.Renderer;
+import me.shedaniel.rei.api.client.gui.widgets.Slot;
 import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
@@ -85,7 +87,14 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
 
         outputPoint = new Point(startPoint.x + OUTPUT_X_2, startPoint.y + OUTPUT_Y_2);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput());
+        Slot bonusSlot = Widgets.createSlot(outputPoint).disableBackground().markOutput();
+        float bonusChance = Galacticraft.CONFIG.electricArcFurnaceBonusChance();
+        if (bonusChance > 0.0F) {
+            ItemStack result = recipeDisplay.getOutputEntries().getFirst().getFirst().castValue();
+            bonusSlot.entry(EntryStacks.of(result.copyWithCount(1))
+                    .tooltip(Component.translatable(Translations.RecipeCategory.BONUS_CHANCE, Math.round(bonusChance * 100))));
+        }
+        widgets.add(bonusSlot);
         return widgets;
     }
 
