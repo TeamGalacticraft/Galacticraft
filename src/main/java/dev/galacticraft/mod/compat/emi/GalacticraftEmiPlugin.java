@@ -32,6 +32,7 @@ import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.compat.PipeColorVariants;
 import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
 import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -56,6 +57,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 
 import java.util.ArrayList;
@@ -110,6 +112,11 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(CANNING, FOOD_CANNER);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
+
+        // EMI can't group stacks, so only show the clear variant of each colored pipe in the index
+        for (Block block : PipeColorVariants.colored()) {
+            registry.removeEmiStacks(EmiStack.of(block));
+        }
 
         registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
                 new MachineRecipeHandler<>(
