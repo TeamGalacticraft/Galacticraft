@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.vanilla.MachineTakeHandler;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.mod.Constant;
 import it.unimi.dsi.fastutil.objects.Object2IntMap;
@@ -32,6 +33,7 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.ExperienceOrb;
@@ -42,14 +44,16 @@ import net.minecraft.world.item.crafting.SingleRecipeInput;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.ApiStatus;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.VisibleForTesting;
 
 /**
  * A machine that processes vanilla cooking recipes and stores the experience earned from them,
  * in the same way as a vanilla furnace.
  * The experience is awarded when a player takes items from an output slot, or when the machine is broken.
  */
-public abstract class CookingMachineBlockEntity<R extends AbstractCookingRecipe> extends BasicRecipeMachineBlockEntity<SingleRecipeInput, R> {
+public abstract class CookingMachineBlockEntity<R extends AbstractCookingRecipe> extends BasicRecipeMachineBlockEntity<SingleRecipeInput, R> implements MachineTakeHandler {
     private final Object2IntOpenHashMap<ResourceLocation> recipesUsed = new Object2IntOpenHashMap<>();
 
     protected CookingMachineBlockEntity(BlockEntityType<? extends CookingMachineBlockEntity<R>> type, BlockPos pos, BlockState state, RecipeType<R> recipeType, StorageSpec spec,
@@ -67,6 +71,8 @@ public abstract class CookingMachineBlockEntity<R extends AbstractCookingRecipe>
     /**
      * {@return the number of times each recipe has been crafted since the experience was last collected}
      */
+    @VisibleForTesting
+    @ApiStatus.Internal
     public Object2IntMap<ResourceLocation> getRecipesUsed() {
         return this.recipesUsed;
     }
@@ -86,7 +92,11 @@ public abstract class CookingMachineBlockEntity<R extends AbstractCookingRecipe>
             });
         }
         this.recipesUsed.clear();
-        this.setChanged();
+    }
+
+    @Override
+    public void onTake(ServerPlayer player) {
+        this.popExperience(player.serverLevel(), player.position());
     }
 
     private static void createExperience(ServerLevel level, Vec3 pos, int count, float experience) {
