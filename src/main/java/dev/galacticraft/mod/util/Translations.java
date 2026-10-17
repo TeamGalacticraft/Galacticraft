@@ -76,6 +76,7 @@ public interface Translations {
         String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
         String CANNING = PREFIX + "canning";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
+        String BONUS_CHANCE = PREFIX + "bonus_chance";
 
         String REI_TIME = "category.rei.campfire.time";
         String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
