@@ -20,6 +20,8 @@
     "EntityMixin",
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
+    "FreefallEntityMixin",
+    "FreefallLivingEntityMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
     "LevelMixin",
