@@ -97,12 +97,12 @@ public class ElectricFurnaceBlockEntity extends CookingMachineBlockEntity<Smelti
 
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricFurnaceEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
     protected void extractResourcesToWork() {
-        this.energyStorage().extract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate());
+        this.energyStorage().extract(Galacticraft.CONFIG.electricFurnaceEnergyConsumptionRate());
     }
 
     @Override
