@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
@@ -97,7 +98,7 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
                 .setOutputSlotBackground();
         if (bonusChance > 0.0F) {
             bonusSlot.addItemStack(recipe.getResultItem(null).copyWithCount(1))
-                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100))));
+                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100)).setStyle(Constant.Text.GOLD_STYLE)));
         }
     }
 

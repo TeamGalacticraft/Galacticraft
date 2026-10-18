@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.compat.rei.client.category;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.compat.rei.common.GalacticraftREIServerPlugin;
 import dev.galacticraft.mod.compat.rei.common.display.ElectricArcFurnaceDisplay;
@@ -92,7 +93,7 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
         Slot bonusSlot = Widgets.createSlot(outputPoint).disableBackground().markOutput();
         float bonusChance = Galacticraft.CONFIG.electricArcFurnaceBonusChance();
         if (bonusChance > 0.0F) {
-            Component component = Component.translatable(Translations.RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100));
+            Component component = Component.translatable(Translations.RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100)).setStyle(Constant.Text.GOLD_STYLE);
             bonusSlot.entries(entryIngredient.<ItemStack>castAsList().stream().map(
                     entry -> EntryStacks.of(entry.getValue().copyWithCount(1)).tooltip(component)
             ).toList());
