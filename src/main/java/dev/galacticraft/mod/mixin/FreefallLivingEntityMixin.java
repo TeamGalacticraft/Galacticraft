@@ -112,12 +112,13 @@ public abstract class FreefallLivingEntityMixin extends Entity {
 
     @Inject(method = "travel", at = @At("RETURN"))
     private void gc$limitFreefallSpeed(Vec3 movementInput, CallbackInfo ci) {
-        if (this.galacticraft$inFreefall && (Object) this instanceof Player) {
+        if (this.galacticraft$inFreefall) {
+            double max = (Object) this instanceof Player ? Freefall.MAX_PLAYER_SPEED : Freefall.MAX_ENTITY_SPEED;
             Vec3 movement = this.getDeltaMovement();
             this.setDeltaMovement(
-                    Mth.clamp(movement.x, -Freefall.MAX_PLAYER_SPEED, Freefall.MAX_PLAYER_SPEED),
-                    Mth.clamp(movement.y, -Freefall.MAX_PLAYER_SPEED, Freefall.MAX_PLAYER_SPEED),
-                    Mth.clamp(movement.z, -Freefall.MAX_PLAYER_SPEED, Freefall.MAX_PLAYER_SPEED)
+                    Mth.clamp(movement.x, -max, max),
+                    Mth.clamp(movement.y, -max, max),
+                    Mth.clamp(movement.z, -max, max)
             );
         }
         this.galacticraft$inFreefall = false;

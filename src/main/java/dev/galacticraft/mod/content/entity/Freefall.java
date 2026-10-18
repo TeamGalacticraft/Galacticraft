@@ -53,6 +53,10 @@ public final class Freefall {
      */
     public static final double MAX_PLAYER_SPEED = 0.7;
     /**
+     * The maximum speed of other floating living entities along each axis, as nothing slows them down.
+     */
+    public static final double MAX_ENTITY_SPEED = 10.0;
+    /**
      * The upward speed each tick of holding jump on a surface adds when it is released.
      */
     public static final double PUSH_OFF_SPEED_PER_TICK = 0.0145;
