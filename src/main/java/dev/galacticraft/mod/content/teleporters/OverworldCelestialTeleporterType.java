@@ -31,6 +31,7 @@ import dev.galacticraft.impl.universe.celestialbody.landable.teleporter.config.D
 import dev.galacticraft.mod.attachments.GCServerPlayer;
 import dev.galacticraft.mod.content.GCEntityTypes;
 import dev.galacticraft.mod.content.entity.ParachestEntity;
+import dev.galacticraft.mod.content.entity.Parachute;
 import dev.galacticraft.mod.content.item.ParachuteItem;
 import net.minecraft.core.NonNullList;
 import net.minecraft.server.level.ServerLevel;
@@ -83,5 +84,8 @@ public class OverworldCelestialTeleporterType<Config extends CelestialTeleporter
             }
         }
         entity.teleportTo(level, entity.getX(), level.getMaxBuildHeight() + 20.0, entity.getZ(), NO_RELATIVE_MOVEMENT, entity.getYRot(), entity.getXRot());
+        if (entity instanceof ServerPlayer player && body.config() instanceof PlanetConfig planetConfig && planetConfig.celestialHandler().useParachute()) {
+            Parachute.deploy(player);
+        }
     }
 }

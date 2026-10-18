@@ -30,6 +30,7 @@
     "MinecraftServerDimensionMixin",
     "ModelProviderMixin",
     "MultiNoiseBiomeSourceParameterListPresetAccessor",
+    "ParachutePlayerMixin",
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",

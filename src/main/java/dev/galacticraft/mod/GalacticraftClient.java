@@ -332,6 +332,7 @@ public class GalacticraftClient implements ClientModInitializer {
                 registrationHelper.register(new OxygenMaskRenderLayer<>(playerRenderer));
                 registrationHelper.register(new OxygenTanksRenderLayer<>(playerRenderer));
                 registrationHelper.register(new ParrotOxygenGearRenderLayer<>(playerRenderer));
+                registrationHelper.register(new ParachuteRenderLayer<>(playerRenderer, context.bakeLayer(GCEntityModelLayer.PARACHEST)));
             } else if (entityType == EntityType.WOLF) {
                 var wolfRenderer = (RenderLayerParent<Wolf, EntityModel<Wolf>>) entityRenderer;
                 registrationHelper.register(new PetOxygenMaskRenderLayer<>(wolfRenderer));
