@@ -34,6 +34,7 @@ import me.shedaniel.rei.api.client.gui.widgets.Widget;
 import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
+import me.shedaniel.rei.api.common.entry.EntryIngredient;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -81,18 +82,20 @@ public class ElectricArcFurnaceCategory implements DisplayCategory<ElectricArcFu
                 Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
         widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(recipeDisplay.getInputEntries().getFirst()));
 
+        EntryIngredient entryIngredient = recipeDisplay.getOutputEntries().getFirst();
         Point outputPoint = new Point(startPoint.x + OUTPUT_X_1, startPoint.y + OUTPUT_Y_1);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(entryIngredient));
 
         outputPoint = new Point(startPoint.x + OUTPUT_X_2, startPoint.y + OUTPUT_Y_2);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
         Slot bonusSlot = Widgets.createSlot(outputPoint).disableBackground().markOutput();
         float bonusChance = Galacticraft.CONFIG.electricArcFurnaceBonusChance();
         if (bonusChance > 0.0F) {
-            ItemStack result = recipeDisplay.getOutputEntries().getFirst().getFirst().castValue();
-            bonusSlot.entry(EntryStacks.of(result.copyWithCount(1))
-                    .tooltip(Component.translatable(Translations.RecipeCategory.BONUS_CHANCE, Math.round(bonusChance * 100))));
+            Component component = Component.translatable(Translations.RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100));
+            bonusSlot.entries(entryIngredient.<ItemStack>castAsList().stream().map(
+                    entry -> EntryStacks.of(entry.getValue().copyWithCount(1)).tooltip(component)
+            ).toList());
         }
         widgets.add(bonusSlot);
         return widgets;

@@ -76,7 +76,6 @@ public interface Translations {
         String ELECTRIC_ARC_FURNACE = PREFIX + "blasting.electric";
         String CANNING = PREFIX + "canning";
         String ROCKET_WORKBENCH = PREFIX + "rocket";
-        String BONUS_CHANCE = PREFIX + "bonus_chance";
 
         String REI_TIME = "category.rei.campfire.time";
         String REI_TIME_AND_XP = "category.rei.cooking.time&xp";
@@ -84,6 +83,7 @@ public interface Translations {
         String JEI_XP = "gui.jei.category.smelting.experience";
         String EMI_TIME = "emi.cooking.time";
         String EMI_XP = "emi.cooking.experience";
+        String ELECTRIC_ARC_FURNACE_BONUS_CHANCE = ELECTRIC_ARC_FURNACE + ".bonus_chance";
     }
 
     interface Waila {

@@ -97,7 +97,7 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
                 .setOutputSlotBackground();
         if (bonusChance > 0.0F) {
             bonusSlot.addItemStack(recipe.getResultItem(null).copyWithCount(1))
-                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(RecipeCategory.BONUS_CHANCE, Math.round(bonusChance * 100))));
+                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100))));
         }
     }
 
