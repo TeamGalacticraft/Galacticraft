@@ -96,6 +96,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.CANNING, "Canning");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "%s%% Chance");
     }
 
     protected void generateBlockTranslations() {
