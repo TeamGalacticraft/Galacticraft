@@ -90,6 +90,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -98,6 +99,7 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
@@ -122,6 +124,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     private static final double CRASH_MIN_HORIZ_SQR = 0.0 * 0.0;
     private static final double CRASH_MIN_UP_SQR = 0.0 * 0.0;
     private static final double CRASH_GROUND_Y_SPEED = -0.0;
+    /**
+     * How far the exhaust of a launched rocket reaches, in blocks.
+     */
+    private static final double EXHAUST_LENGTH = 8.0D;
 
     private int crashArmTimer = 0;
     private boolean crashed = false;
@@ -625,6 +631,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         if (getLaunchStage() == LaunchStage.LAUNCHED) this.timeSinceLaunch++;
         else this.timeSinceLaunch = 0;
 
+        if (getLaunchStage() == LaunchStage.LAUNCHED || getLaunchStage() == LaunchStage.IGNITED) {
+            this.igniteEntitiesInExhaust();
+        }
+
         if (isOnFire()) {
             for (int i = 0; i < 4; i++) {
                 level().explode(this,
@@ -788,6 +798,33 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         }
 
         this.setDeltaMovement(new Vec3(velX, velY, velZ));
+    }
+
+    /**
+     * Sets living entities in the exhaust of the rocket on fire, except its passengers.
+     * The flame particles only exist on the client, so this follows them on the server:
+     * once launched, the exhaust runs from the nozzle until it hits a block, and while ignited it spreads around the nozzle.
+     */
+    public void igniteEntitiesInExhaust() {
+        double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+        Vec3 exhaust = new Vec3(
+                2 * sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD),
+                -Mth.cos(this.getXRot() * Mth.DEG_TO_RAD),
+                -2 * sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD)
+        );
+        Vec3 nozzle = this.position().add(exhaust.x, exhaust.y + 1.2D, exhaust.z);
+
+        AABB area;
+        if (this.getLaunchStage() == LaunchStage.LAUNCHED) {
+            Vec3 end = this.level().clip(new ClipContext(nozzle, nozzle.add(exhaust.normalize().scale(EXHAUST_LENGTH)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getLocation();
+            area = new AABB(nozzle, end).inflate(1.5D);
+        } else {
+            area = new AABB(nozzle, nozzle).inflate(2.0D, 1.0D, 2.0D);
+        }
+
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, area, entity -> entity.isAlive() && !entity.isOnFire() && !this.hasPassenger(entity))) {
+            entity.igniteForSeconds(3);
+        }
     }
 
     protected void spawnParticles() {
