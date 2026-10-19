@@ -175,7 +175,7 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
         this.copy(GCBlockTags.GLASS_FLUID_PIPES, GCItemTags.GLASS_FLUID_PIPES);
         this.copy(GCBlockTags.STAINED_GLASS_FLUID_PIPES, GCItemTags.STAINED_GLASS_FLUID_PIPES);
         this.copy(GCBlockTags.SEALABLE_FLUID_PIPES, GCItemTags.SEALABLE_FLUID_PIPES);
-        this.copy(GCBlockTags.DYED_SEALABLE_FLUID_PIPES, GCItemTags.DYED_SEALABLE_FLUID_PIPES);
+        this.copy(GCBlockTags.STAINED_SEALABLE_FLUID_PIPES, GCItemTags.STAINED_SEALABLE_FLUID_PIPES);
         for (Map.Entry<DyeColor, TagKey<Item>> entry : DYED_ITEM_TAGS.entrySet()) {
             PipeColor color = PipeColor.fromDye(entry.getKey());
             this.tag(entry.getValue()).add(GCBlocks.GLASS_FLUID_PIPES.get(color).asItem(), GCBlocks.SEALABLE_FLUID_PIPES.get(color).asItem());

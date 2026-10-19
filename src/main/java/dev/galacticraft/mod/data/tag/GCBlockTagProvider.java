@@ -410,14 +410,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         );
 
         this.tag(GCBlockTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE).addTag(GCBlockTags.STAINED_GLASS_FLUID_PIPES);
-        this.tag(GCBlockTags.SEALABLE_FLUID_PIPES).add(GCBlocks.SEALABLE_FLUID_PIPE).addTag(GCBlockTags.DYED_SEALABLE_FLUID_PIPES);
+        this.tag(GCBlockTags.SEALABLE_FLUID_PIPES).add(GCBlocks.SEALABLE_FLUID_PIPE).addTag(GCBlockTags.STAINED_SEALABLE_FLUID_PIPES);
         for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
             PipeColor color = PipeColor.fromDye(entry.getKey());
             Block glassPipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
             Block sealablePipe = GCBlocks.SEALABLE_FLUID_PIPES.get(color);
             this.tag(entry.getValue()).add(glassPipe, sealablePipe);
             this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(glassPipe);
-            this.tag(GCBlockTags.DYED_SEALABLE_FLUID_PIPES).add(sealablePipe);
+            this.tag(GCBlockTags.STAINED_SEALABLE_FLUID_PIPES).add(sealablePipe);
         }
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);

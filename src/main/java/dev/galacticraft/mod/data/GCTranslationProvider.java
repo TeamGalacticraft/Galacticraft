@@ -662,7 +662,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
         this.tag(GCItemTags.SEALABLE_FLUID_PIPES, "Sealable Fluid Pipes");
-        this.tag(GCItemTags.DYED_SEALABLE_FLUID_PIPES, "Dyed Sealable Fluid Pipes");
+        this.tag(GCItemTags.STAINED_SEALABLE_FLUID_PIPES, "Stained Sealable Fluid Pipes");
 
         this.tag(GCItemTags.FLAGS, "Flags");
 
