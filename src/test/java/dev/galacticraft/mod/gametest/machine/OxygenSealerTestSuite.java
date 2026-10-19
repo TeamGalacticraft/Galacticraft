@@ -70,10 +70,10 @@ public final class OxygenSealerTestSuite extends MachineGameTest<OxygenSealerBlo
         context.runAfterDelay(OxygenSealerBlockEntity.SEAL_CHECK_TIME * 2, () -> context.succeedWhenBlockPresent(Blocks.TORCH, torchPos));
     }
 
-    @GameTest(batch = "nonBreathable", template = EMPTY_ROOM)
+    @GameTest(batch = "nonBreathable", template = EMPTY_ROOM, skyAccess = true)
     public void sealableFluidPipeInWallTest(GameTestHelper context) {
         // Replace part of a wall, the room should still be sealed
-        context.setBlock(new BlockPos(4, 2, 2), GCBlocks.SEALABLE_FLUID_PIPE.defaultBlockState());
+        context.setBlock(new BlockPos(2, 5, 2), GCBlocks.SEALABLE_FLUID_PIPE.defaultBlockState());
         this.notExtinguishedInSealedRoomTest(context);
     }
 }

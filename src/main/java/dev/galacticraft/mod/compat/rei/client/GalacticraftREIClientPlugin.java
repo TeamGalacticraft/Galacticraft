@@ -146,6 +146,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
                 stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
+
         for (Map<PipeColor, Block> family : PipeColorVariants.FAMILIES) {
             Block clear = family.get(PipeColor.CLEAR);
             Set<Item> items = family.values().stream().map(Block::asItem).collect(Collectors.toSet());
