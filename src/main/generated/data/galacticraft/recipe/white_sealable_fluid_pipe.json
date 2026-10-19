@@ -1,0 +1,19 @@
+{
+  "type": "minecraft:crafting_shaped",
+  "category": "misc",
+  "key": {
+    "P": {
+      "item": "galacticraft:white_glass_fluid_pipe"
+    },
+    "T": {
+      "item": "galacticraft:tin_decoration"
+    }
+  },
+  "pattern": [
+    "TPT"
+  ],
+  "result": {
+    "count": 1,
+    "id": "galacticraft:white_sealable_fluid_pipe"
+  }
+}

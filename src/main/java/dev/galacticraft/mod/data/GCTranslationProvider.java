@@ -243,6 +243,10 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.HEAVY_ALUMINUM_WIRE, "Heavy Aluminum Wire");
         this.block(GCBlocks.SEALABLE_ALUMINUM_WIRE, "Sealable Aluminum Wire");
         this.block(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, "Heavy Sealable Aluminum Wire");
+        for (Map.Entry<PipeColor, Block> entry : GCBlocks.SEALABLE_FLUID_PIPES.entrySet()) {
+            PipeColor color = entry.getKey();
+            this.block(entry.getValue(), color == PipeColor.CLEAR ? "Sealable Fluid Pipe" : TranslationProvider.normalizeName(color.getName()) + " Sealable Fluid Pipe");
+        }
         this.block(GCBlocks.GLASS_FLUID_PIPE, "Glass Fluid Pipe");
         this.block(GCBlocks.FUELING_PAD, "Fueling Pad");
         this.block(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
@@ -657,6 +661,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
+        this.tag(GCItemTags.SEALABLE_FLUID_PIPES, "Sealable Fluid Pipes");
+        this.tag(GCItemTags.STAINED_SEALABLE_FLUID_PIPES, "Stained Sealable Fluid Pipes");
 
         this.tag(GCItemTags.FLAGS, "Flags");
 
