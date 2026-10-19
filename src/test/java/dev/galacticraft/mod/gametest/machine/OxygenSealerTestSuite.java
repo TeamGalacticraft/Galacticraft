@@ -69,4 +69,15 @@ public final class OxygenSealerTestSuite extends MachineGameTest<OxygenSealerBlo
         // Another oxygen sealer check should have been performed since the torch was placed
         context.runAfterDelay(OxygenSealerBlockEntity.SEAL_CHECK_TIME * 2, () -> context.succeedWhenBlockPresent(Blocks.TORCH, torchPos));
     }
+
+    @GameTest(batch = "nonBreathable", template = EMPTY_ROOM)
+    public void twoSealersInSealedRoomTest(GameTestHelper context) {
+        // The first sealer can seal the room on its own, which must not stop the second one from being sealed
+        final var secondSealerPos = new BlockPos(3, 2, 1);
+        context.setBlock(secondSealerPos, GCBlocks.OXYGEN_SEALER.defaultBlockState());
+        OxygenSealerBlockEntity blockEntity = context.getBlockEntity(secondSealerPos);
+        blockEntity.itemStorage().slot(OxygenSealerBlockEntity.CHARGE_SLOT).set(GCItems.INFINITE_BATTERY, 1);
+        blockEntity.itemStorage().slot(OxygenSealerBlockEntity.OXYGEN_INPUT_SLOT).set(GCItems.INFINITE_OXYGEN_TANK, 1);
+        this.notExtinguishedInSealedRoomTest(context);
+    }
 }
