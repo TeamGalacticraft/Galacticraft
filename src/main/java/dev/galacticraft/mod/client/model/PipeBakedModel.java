@@ -256,7 +256,7 @@ public class PipeBakedModel implements BakedModel {
                 if (pipe.isConnected(direction)) {
                     this.meshes.get(direction).outputTo(emitter);
                     this.renderReducerCap(getter, blockPos, direction, emitter);
-                } else {
+                } else if (!continuesTo(pipe, direction)) {
                     this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius);
                 }
             }
@@ -265,6 +265,13 @@ public class PipeBakedModel implements BakedModel {
                 this.walkway.emit(pipe, holder.getWalkway(), emitter, randomSupplier.get());
             }
         }
+    }
+
+    /**
+     * {@return whether the pipe continues on the given side: to a connection, or to its walkway}
+     */
+    private static boolean continuesTo(Connected pipe, Direction direction) {
+        return pipe.isConnected(direction) || pipe instanceof WalkwayHolder holder && holder.getWalkway() == direction;
     }
 
     private void renderReducerCap(BlockAndTintGetter getter, BlockPos blockPos, Direction direction, QuadEmitter emitter) {

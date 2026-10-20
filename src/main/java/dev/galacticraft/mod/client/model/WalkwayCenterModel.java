@@ -92,11 +92,20 @@ public class WalkwayCenterModel implements UnbakedModel {
         private final TextureAtlasSprite sprite;
         private final Map<Direction, Mesh> meshes;
         private final float radius;
+        /**
+         * The texture of the end of the arm at the walkway, or {@code null} to use the end cap of the pipe.
+         */
+        private final @Nullable TextureAtlasSprite endSprite;
 
         public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
+            this(textureGetter, texture, radius, null);
+        }
+
+        public Baked(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, @Nullable ResourceLocation endTexture) {
             this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
             this.meshes = new EnumMap<>(Direction.class);
             this.radius = radius;
+            this.endSprite = endTexture == null ? null : textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, endTexture));
 
             float min = 0.5f - radius;
             float max = 0.5f + radius;
@@ -120,7 +129,7 @@ public class WalkwayCenterModel implements UnbakedModel {
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
             }
-            this.emitCapQuad(emitter, Direction.DOWN, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.DOWN, min, max, edgeMin);
             this.meshes.put(Direction.DOWN, meshBuilder.build());
 
             for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -133,7 +142,7 @@ public class WalkwayCenterModel implements UnbakedModel {
                         .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                         .color(-1, -1, -1, -1).emit();
             }
-            this.emitCapQuad(emitter, Direction.UP, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.UP, min, max, edgeMin);
             this.meshes.put(Direction.UP, meshBuilder.build());
 
             emitter
@@ -168,7 +177,7 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .uv(3, crossSectionWidth, centerEnd)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            this.emitCapQuad(emitter, Direction.NORTH, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.NORTH, min, max, edgeMin);
             this.meshes.put(Direction.NORTH, meshBuilder.build());
 
             emitter
@@ -203,7 +212,7 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .uv(3, crossSectionWidth, 1)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            this.emitCapQuad(emitter, Direction.SOUTH, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.SOUTH, min, max, edgeMin);
             this.meshes.put(Direction.SOUTH, meshBuilder.build());
 
             emitter
@@ -238,7 +247,7 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .uv(3, crossSectionWidth, 15)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            this.emitCapQuad(emitter, Direction.EAST, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.EAST, min, max, edgeMin);
             this.meshes.put(Direction.EAST, meshBuilder.build());
 
             emitter
@@ -273,8 +282,29 @@ public class WalkwayCenterModel implements UnbakedModel {
                     .uv(3, crossSectionWidth, centerStart)
                     .spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
                     .color(-1, -1, -1, -1).emit();
-            this.emitCapQuad(emitter, Direction.WEST, min, min, max, max, edgeMin);
+            this.emitEndQuad(emitter, Direction.WEST, min, max, edgeMin);
             this.meshes.put(Direction.WEST, meshBuilder.build());
+        }
+
+        /**
+         * Emits the end of the arm at the walkway, with the end texture if there is one.
+         */
+        private void emitEndQuad(QuadEmitter emitter, Direction direction, float min, float max, float depth) {
+            if (this.endSprite == null) {
+                this.emitCapQuad(emitter, direction, min, min, max, max, depth);
+                return;
+            }
+
+            // The end texture has the end in its top left corner, with the same pixel size as the pipe
+            float width = this.crossSectionWidth();
+            emitter
+                    .square(direction, min, min, max, max, depth)
+                    .uv(0, 0, 0)
+                    .uv(1, 0, width)
+                    .uv(2, width, width)
+                    .uv(3, width, 0)
+                    .spriteBake(this.endSprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                    .color(-1, -1, -1, -1).emit();
         }
 
         private void emitCapQuad(QuadEmitter emitter, Direction direction, float minX, float minY, float maxX, float maxY, float depth) {

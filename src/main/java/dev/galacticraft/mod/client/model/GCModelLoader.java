@@ -116,14 +116,14 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
             for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
                 if (ModelLocationUtils.getModelLocation(pipe).equals(resourceId)) {
-                    return new PipeUnbakedModel(resourceId, 0.125f, WALKWAY_PLATFORM);
+                    return new PipeUnbakedModel(resourceId, 0.125f, WALKWAY_PLATFORM, null);
                 }
             }
 
             if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f, WALKWAY_PLATFORM);
+                return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f, WALKWAY_PLATFORM, Constant.id("block/aluminum_wire_walkway_end"));
             } else if (ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE).equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f, HEAVY_WIRE_WALKWAY_PLATFORM);
+                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f, HEAVY_WIRE_WALKWAY_PLATFORM, Constant.id("block/heavy_aluminum_wire_walkway_end"));
             } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
             } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {

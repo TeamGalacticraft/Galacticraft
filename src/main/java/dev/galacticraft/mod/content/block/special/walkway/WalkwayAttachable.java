@@ -27,7 +27,6 @@ import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.content.GCBlocks;
-import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -44,7 +43,6 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.phys.BlockHitResult;
-import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -62,19 +60,6 @@ public interface WalkwayAttachable {
      * How far the walkway platform reaches from its side of the block.
      */
     double PLATFORM_DEPTH = 3.0 / 16.0;
-
-    static void registerEvents() {
-        PlayerBlockBreakEvents.BEFORE.register((level, player, pos, state, blockEntity) -> {
-            if (state.getBlock() instanceof WalkwayAttachable && blockEntity instanceof WalkwayHolder holder && holder.hasWalkway()) {
-                HitResult hit = player.pick(player.blockInteractionRange(), 1.0f, false);
-                // Without a hit on this block, remove the walkway first
-                Vec3 location = hit instanceof BlockHitResult blockHit && blockHit.getBlockPos().equals(pos) ? hit.getLocation() : null;
-                breakPart(level, player, pos, state, holder, location);
-                return false;
-            }
-            return true;
-        });
-    }
 
     /**
      * {@return the shape of a pipe or wire, including its walkway if it has one}

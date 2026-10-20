@@ -38,6 +38,7 @@ import net.minecraft.client.resources.model.ModelBaker;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.RandomSource;
+import org.jetbrains.annotations.Nullable;
 
 import java.util.EnumMap;
 import java.util.Map;
@@ -68,12 +69,12 @@ public class PipeWalkwayModel {
      */
     private final RenderMaterial material = RendererAccess.INSTANCE.getRenderer().materialFinder().blendMode(BlendMode.CUTOUT).find();
 
-    public PipeWalkwayModel(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation platform, ResourceLocation texture, float radius) {
+    public PipeWalkwayModel(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation platform, ResourceLocation texture, float radius, @Nullable ResourceLocation endTexture) {
         this.platforms = new EnumMap<>(Direction.class);
         for (Direction direction : Direction.values()) {
             this.platforms.put(direction, baker.bake(platform, ROTATIONS.get(direction)));
         }
-        this.arm = new WalkwayCenterModel.Baked(textureGetter, texture, radius);
+        this.arm = new WalkwayCenterModel.Baked(textureGetter, texture, radius, endTexture);
     }
 
     public void emit(Connected connected, Direction walkway, QuadEmitter emitter, RandomSource random) {

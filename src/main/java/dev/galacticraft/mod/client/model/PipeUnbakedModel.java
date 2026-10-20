@@ -40,15 +40,20 @@ public class PipeUnbakedModel implements UnbakedModel {
      * The model of the platform of a walkway attached to the pipe, or {@code null} if walkways can't be attached to it.
      */
     private final @Nullable ResourceLocation walkwayPlatform;
+    /**
+     * The texture of the end of the pipe under a walkway, or {@code null} to use its end cap.
+     */
+    private final @Nullable ResourceLocation walkwayEnd;
 
     public PipeUnbakedModel(ResourceLocation texture, float radius) {
-        this(texture, radius, null);
+        this(texture, radius, null, null);
     }
 
-    public PipeUnbakedModel(ResourceLocation texture, float radius, @Nullable ResourceLocation walkwayPlatform) {
+    public PipeUnbakedModel(ResourceLocation texture, float radius, @Nullable ResourceLocation walkwayPlatform, @Nullable ResourceLocation walkwayEnd) {
         this.texture = texture;
         this.radius = radius;
         this.walkwayPlatform = walkwayPlatform;
+        this.walkwayEnd = walkwayEnd;
     }
 
     @Override
@@ -63,7 +68,7 @@ public class PipeUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
-        PipeWalkwayModel walkway = this.walkwayPlatform == null ? null : new PipeWalkwayModel(baker, textureGetter, this.walkwayPlatform, this.texture, this.radius);
+        PipeWalkwayModel walkway = this.walkwayPlatform == null ? null : new PipeWalkwayModel(baker, textureGetter, this.walkwayPlatform, this.texture, this.radius, this.walkwayEnd);
         return new PipeBakedModel(textureGetter, this.texture, this.radius, walkway);
     }
 }
