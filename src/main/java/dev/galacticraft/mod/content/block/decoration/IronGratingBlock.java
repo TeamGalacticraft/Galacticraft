@@ -71,16 +71,13 @@ public class IronGratingBlock extends Block implements FluidLoggable {
     @Nullable
     @Override
     public BlockState getStateForPlacement(BlockPlaceContext blockPlaceContext) {
-        BlockState state = this.defaultBlockState().setValue(STATE, State.LOWER);
-        state = FluidLoggable.applyFluidState(blockPlaceContext.getLevel(), state, blockPlaceContext.getClickedPos());
+        BlockPos blockPos = blockPlaceContext.getClickedPos();
+        BlockState state = FluidLoggable.applyFluidState(blockPlaceContext.getLevel(), this.defaultBlockState(), blockPos);
 
         Direction direction = blockPlaceContext.getClickedFace();
-        BlockPos blockPos = blockPlaceContext.getClickedPos();
-        if (direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - (double) blockPos.getY() > 0.5))) {
-            state.setValue(STATE, State.UPPER);
-        }
-
-        return state;
+        return direction != Direction.DOWN && (direction == Direction.UP || !(blockPlaceContext.getClickLocation().y - blockPos.getY() > 0.5))
+                ? state.setValue(STATE, State.LOWER)
+                : state;
     }
 
     @Override
