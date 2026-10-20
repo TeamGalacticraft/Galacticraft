@@ -24,6 +24,9 @@ package dev.galacticraft.mod.api.block;
 
 import com.google.common.collect.Lists;
 import dev.galacticraft.mod.Constant;
+import net.fabricmc.loader.api.FabricLoader;
+import net.fabricmc.loader.api.ModContainer;
+import net.fabricmc.loader.api.metadata.CustomValue;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -51,6 +54,8 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     FluidState EMPTY_STATE = Fluids.EMPTY.defaultFluidState();
@@ -58,19 +63,49 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
     String DOT_REP = "_gc_dot_";
     String DASH_REP = "_gc_dash_"; // yes this is bad.... but who's going to name a mod/fluid something like that
     String COLON_REP = "_gc_colon_";
+    /**
+     * The key of a custom value in {@code fabric.mod.json} that other mods can use to make their fluids fluid loggable,
+     * e.g. {@code "custom": {"galacticraft:fluidloggable": ["mymod:oil", "mymod:flowing_oil"]}}.
+     */
+    String FLUIDLOGGABLE_KEY = Constant.MOD_ID + ":fluidloggable";
 
+    /**
+     * The possible values of {@link #FLUID}. This is a fixed list of fluid IDs rather than the contents of the fluid registry,
+     * so it doesn't depend on when the fluids are registered, and it is the same on the client and the server.
+     */
     Property<ResourceLocation> FLUID = new Property<>("fluid", ResourceLocation.class) {
-        private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list ->
-        {
-            if (list.isEmpty()) {
-                for (var fluid : BuiltInRegistries.FLUID) {
-                    if (fluid instanceof FlowingFluid) {
-                        list.add(BuiltInRegistries.FLUID.getKey(fluid));
-                    }
+        private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list -> {
+            Set<ResourceLocation> fluids = new TreeSet<>(List.of(
+                    BuiltInRegistries.FLUID.getKey(Fluids.WATER),
+                    BuiltInRegistries.FLUID.getKey(Fluids.FLOWING_WATER),
+                    BuiltInRegistries.FLUID.getKey(Fluids.LAVA),
+                    BuiltInRegistries.FLUID.getKey(Fluids.FLOWING_LAVA),
+                    Constant.id(Constant.Fluid.CRUDE_OIL_STILL),
+                    Constant.id(Constant.Fluid.CRUDE_OIL_FLOWING),
+                    Constant.id(Constant.Fluid.FUEL_STILL),
+                    Constant.id(Constant.Fluid.FUEL_FLOWING),
+                    Constant.id(Constant.Fluid.SULFURIC_ACID_STILL),
+                    Constant.id(Constant.Fluid.SULFURIC_ACID_FLOWING)
+            ));
+            for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
+                CustomValue value = mod.getMetadata().getCustomValue(FLUIDLOGGABLE_KEY);
+                if (value == null) continue;
+                if (value.getType() != CustomValue.CvType.ARRAY) {
+                    Constant.LOGGER.warn("Ignoring '{}' of mod {}: expected an array of fluid IDs", FLUIDLOGGABLE_KEY, mod.getMetadata().getId());
+                    continue;
                 }
-                list.add(Constant.Misc.EMPTY);
-                list.add(INVALID);
+                for (CustomValue entry : value.getAsArray()) {
+                    ResourceLocation id = entry.getType() == CustomValue.CvType.STRING ? ResourceLocation.tryParse(entry.getAsString()) : null;
+                    if (id == null || !id.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP).matches("[a-z0-9_]+")) {
+                        Constant.LOGGER.warn("Ignoring fluid '{}' in '{}' of mod {}: not a valid fluid ID", entry, FLUIDLOGGABLE_KEY, mod.getMetadata().getId());
+                        continue;
+                    }
+                    fluids.add(id);
+                }
             }
+            list.addAll(fluids);
+            list.add(Constant.Misc.EMPTY);
+            list.add(INVALID);
         });
 
         @Override
@@ -80,7 +115,9 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
         @Override
         public @NotNull Optional<ResourceLocation> getValue(String name) {
-            return Optional.of(ResourceLocation.parse(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")));
+            // Values that aren't in the list (e.g. from a mod that was removed) are left out, so the block loads without a fluid
+            return Optional.ofNullable(ResourceLocation.tryParse(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")))
+                    .filter(VALUES::contains);
         }
 
         @Override
@@ -91,14 +128,21 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         }
     };
 
+    /**
+     * {@return whether fluid loggable blocks can hold the given fluid}
+     */
+    static boolean canHold(Fluid fluid) {
+        return fluid instanceof FlowingFluid && FLUID.getPossibleValues().contains(BuiltInRegistries.FLUID.getKey(fluid));
+    }
+
     @Override
     default boolean canPlaceLiquid(@Nullable Player player, BlockGetter view, BlockPos pos, BlockState state, Fluid fluid) {
-        return fluid instanceof FlowingFluid;
+        return canHold(fluid);
     }
 
     @Override
     default boolean placeLiquid(LevelAccessor world, BlockPos pos, BlockState state, FluidState fluidState) {
-        if (!(fluidState.getType() instanceof FlowingFluid))
+        if (!canHold(fluidState.getType()))
             return false;
         if (!hasFluid(state)) {
             if (!world.isClientSide()) {
@@ -181,6 +225,9 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
 
     static BlockState applyFluidState(Level level, BlockState blockState, BlockPos pos) {
         FluidState fluidState = level.getFluidState(pos);
+        if (!canHold(fluidState.getType())) {
+            fluidState = EMPTY_STATE;
+        }
         return blockState
                 .setValue(FLUID, BuiltInRegistries.FLUID.getKey(fluidState.getType()))
                 .setValue(FlowingFluid.LEVEL, Math.max(fluidState.getAmount(), 1))
