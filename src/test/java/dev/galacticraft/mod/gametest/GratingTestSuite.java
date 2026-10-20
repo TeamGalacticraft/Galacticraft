@@ -33,6 +33,7 @@ import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -277,5 +278,15 @@ public class GratingTestSuite implements GalacticraftGameTest {
         context.setBlock(pos, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.CRUDE_OIL)));
         var pig = context.spawn(EntityType.PIG, pos);
         context.succeedWhen(() -> context.assertTrue(pig.hasEffect(MobEffects.BLINDNESS), "Expected the pig to be blinded by the crude oil in the grating"));
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void fluidsFromModMetadataTest(GameTestHelper context) {
+        // The test mod lists one valid fluid ID, a number and an invalid ID in its fabric.mod.json
+        var values = FluidLoggable.FLUID.getPossibleValues();
+        context.assertTrue(values.contains(ResourceLocation.fromNamespaceAndPath("galacticraft-test", "test_fluid")), "Expected the fluid from the test mod to be fluid loggable");
+        context.assertTrue(values.stream().noneMatch(id -> id.getNamespace().equals("minecraft") && id.getPath().contains("fluid!")), "Expected the invalid fluid ID to be ignored");
+        context.assertTrue(values.size() == 13, "Expected 13 values but found %s: %s".formatted(values.size(), values));
+        context.succeed();
     }
 }

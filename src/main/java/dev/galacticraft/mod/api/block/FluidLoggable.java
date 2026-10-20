@@ -71,11 +71,11 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
      */
     String FLUIDLOGGABLE_KEY = Constant.MOD_ID + ":fluidloggable";
 
-    /**
-     * The possible values of {@link #FLUID}. This is a fixed list of fluid IDs rather than the contents of the fluid registry,
-     * so it doesn't depend on when the fluids are registered, and it is the same on the client and the server.
-     */
     Property<ResourceLocation> FLUID = new Property<>("fluid", ResourceLocation.class) {
+        /**
+         * The possible values: a fixed list of fluid IDs rather than the contents of the fluid registry,
+         * so it doesn't depend on when the fluids are registered, and it is the same on the client and the server.
+         */
         private static final List<ResourceLocation> VALUES = Util.make(Lists.newArrayList(), list -> {
             Set<ResourceLocation> fluids = new TreeSet<>(List.of(
                     BuiltInRegistries.FLUID.getKey(Fluids.WATER),
@@ -89,22 +89,33 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
                     Constant.id(Constant.Fluid.SULFURIC_ACID_STILL),
                     Constant.id(Constant.Fluid.SULFURIC_ACID_FLOWING)
             ));
+
+            // Fluids that other mods add in their fabric.mod.json
             for (ModContainer mod : FabricLoader.getInstance().getAllMods()) {
                 CustomValue value = mod.getMetadata().getCustomValue(FLUIDLOGGABLE_KEY);
                 if (value == null) continue;
+
+                String modId = mod.getMetadata().getId();
                 if (value.getType() != CustomValue.CvType.ARRAY) {
-                    Constant.LOGGER.warn("Ignoring '{}' of mod {}: expected an array of fluid IDs", FLUIDLOGGABLE_KEY, mod.getMetadata().getId());
+                    Constant.LOGGER.warn("Ignoring '{}' of mod {}: expected an array of fluid IDs, but found {}", FLUIDLOGGABLE_KEY, modId, value.getType());
                     continue;
                 }
+
                 for (CustomValue entry : value.getAsArray()) {
-                    ResourceLocation id = entry.getType() == CustomValue.CvType.STRING ? ResourceLocation.tryParse(entry.getAsString()) : null;
-                    if (id == null || !id.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP).matches("[a-z0-9_]+")) {
-                        Constant.LOGGER.warn("Ignoring fluid '{}' in '{}' of mod {}: not a valid fluid ID", entry, FLUIDLOGGABLE_KEY, mod.getMetadata().getId());
+                    if (entry.getType() != CustomValue.CvType.STRING) {
+                        Constant.LOGGER.warn("Ignoring an entry in '{}' of mod {}: expected a fluid ID, but found {}", FLUIDLOGGABLE_KEY, modId, entry.getType());
+                        continue;
+                    }
+
+                    ResourceLocation id = ResourceLocation.tryParse(entry.getAsString());
+                    if (id == null || toValueName(id) == null) {
+                        Constant.LOGGER.warn("Ignoring fluid '{}' in '{}' of mod {}: not a valid fluid ID", entry.getAsString(), FLUIDLOGGABLE_KEY, modId);
                         continue;
                     }
                     fluids.add(id);
                 }
             }
+
             list.addAll(fluids);
             list.add(Constant.Misc.EMPTY);
             list.add(INVALID);
@@ -118,17 +129,39 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         @Override
         public @NotNull Optional<ResourceLocation> getValue(String name) {
             // Values that aren't in the list (e.g. from a mod that was removed) are left out, so the block loads without a fluid
-            return Optional.ofNullable(ResourceLocation.tryParse(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":")))
-                    .filter(VALUES::contains);
+            return Optional.ofNullable(fromValueName(name)).filter(VALUES::contains);
         }
 
         @Override
         public @NotNull String getName(ResourceLocation value) {
-            if (value.toString().contains(DOT_REP) || value.toString().contains(DASH_REP) || value.toString().contains(COLON_REP))
-                throw new RuntimeException("Bad fluid!" + value);
-            return value.toString().replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
+            String name = toValueName(value);
+            if (name == null) {
+                throw new IllegalArgumentException("Fluid ID can't be used as a block state value: " + value);
+            }
+            return name;
         }
     };
+
+    /**
+     * {@return the name of the given fluid ID as a value of {@link #FLUID}, or {@code null} if it can't be one}
+     * Block state values may only contain {@code [a-z0-9_]}, so the other characters of the ID are replaced.
+     */
+    private static @Nullable String toValueName(ResourceLocation id) {
+        String string = id.toString();
+        if (string.contains(DOT_REP) || string.contains(DASH_REP) || string.contains(COLON_REP)) {
+            return null;
+        }
+
+        String name = string.replace(".", DOT_REP).replace("-", DASH_REP).replace(":", COLON_REP);
+        return name.matches("[a-z0-9_]+") ? name : null;
+    }
+
+    /**
+     * {@return the fluid ID of the given value name of {@link #FLUID}, or {@code null} if it isn't a valid ID}
+     */
+    private static @Nullable ResourceLocation fromValueName(String name) {
+        return ResourceLocation.tryParse(name.replace(DOT_REP, ".").replace(DASH_REP, "-").replace(COLON_REP, ":"));
+    }
 
     /**
      * {@return whether fluid loggable blocks can hold the given fluid}
