@@ -32,6 +32,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -40,6 +41,7 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.LiquidBlockContainer;
+import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.StateHolder;
@@ -133,6 +135,33 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
      */
     static boolean canHold(Fluid fluid) {
         return fluid instanceof FlowingFluid && FLUID.getPossibleValues().contains(BuiltInRegistries.FLUID.getKey(fluid));
+    }
+
+    /**
+     * Makes fluid loggable blocks give off the light of the fluid they hold, like lava.
+     */
+    static BlockBehaviour.Properties withFluidLight(BlockBehaviour.Properties properties) {
+        return properties.lightLevel(FluidLoggable::getLightEmission);
+    }
+
+    /**
+     * {@return the light level of the block of the fluid in the given state}
+     * This is called when the block is created, so a fluid that isn't registered yet gives off no light.
+     */
+    static int getLightEmission(BlockState state) {
+        FluidState fluidState = createFluidState(state);
+        return fluidState.isEmpty() ? 0 : fluidState.createLegacyBlock().getLightEmission();
+    }
+
+    /**
+     * Applies the effects of the block of the fluid in the given state to an entity inside it, e.g. the blindness of crude oil.
+     * Effects that come from the fluid itself, like burning in lava, already work through {@link #createFluidState(BlockState)}.
+     */
+    static void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        FluidState fluidState = createFluidState(state);
+        if (!fluidState.isEmpty()) {
+            fluidState.createLegacyBlock().entityInside(level, pos, entity);
+        }
     }
 
     @Override

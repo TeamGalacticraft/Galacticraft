@@ -29,8 +29,10 @@ import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.util.StringRepresentable;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -53,7 +55,7 @@ public class IronGratingBlock extends Block implements FluidLoggable {
     private static final VoxelShape LOWER_SHAPE = Block.box(0.0D, 6.0D, 0.0D, 16.0D, 8.0D, 16.0D);
 
     public IronGratingBlock(Properties settings) {
-        super(settings);
+        super(FluidLoggable.withFluidLight(settings));
         this.registerDefaultState(this.getStateDefinition().any()
                 .setValue(FLUID, ResourceLocation.withDefaultNamespace("invalid"))
                 .setValue(FlowingFluid.LEVEL, 8)
@@ -100,6 +102,12 @@ public class IronGratingBlock extends Block implements FluidLoggable {
     @Override
     public @NotNull FluidState getFluidState(BlockState state) {
         return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
     }
 
     @Override

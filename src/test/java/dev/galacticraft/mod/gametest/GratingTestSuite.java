@@ -34,11 +34,14 @@ import net.minecraft.gametest.framework.GameTestHelper;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.NbtUtils;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
 /**
@@ -242,5 +245,37 @@ public class GratingTestSuite implements GalacticraftGameTest {
         } else {
             context.succeed();
         }
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void gratingWithLavaGivesOffLightTest(GameTestHelper context) {
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState();
+        int lavaLight = Blocks.LAVA.defaultBlockState().getLightEmission();
+
+        for (var fluid : new Fluid[]{Fluids.LAVA, Fluids.FLOWING_LAVA, Fluids.WATER}) {
+            int expected = fluid.isSame(Fluids.LAVA) ? lavaLight : 0;
+            int light = grating.setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(fluid)).getLightEmission();
+            if (light != expected) {
+                context.fail("Expected a grating with %s to give off light level %d but found %d instead!".formatted(BuiltInRegistries.FLUID.getKey(fluid), expected, light));
+                return;
+            }
+        }
+        context.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void entityBurnsInGratingWithLavaTest(GameTestHelper context) {
+        var pos = new BlockPos(4, 1, 4);
+        context.setBlock(pos, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.LAVA)));
+        var pig = context.spawn(EntityType.PIG, pos);
+        context.succeedWhen(() -> context.assertTrue(pig.isOnFire(), "Expected the pig to burn in the lava in the grating"));
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void entityGetsCrudeOilEffectsInGratingTest(GameTestHelper context) {
+        var pos = new BlockPos(4, 1, 4);
+        context.setBlock(pos, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.CRUDE_OIL)));
+        var pig = context.spawn(EntityType.PIG, pos);
+        context.succeedWhen(() -> context.assertTrue(pig.hasEffect(MobEffects.BLINDNESS), "Expected the pig to be blinded by the crude oil in the grating"));
     }
 }
