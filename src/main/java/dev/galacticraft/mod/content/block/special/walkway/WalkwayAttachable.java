@@ -27,6 +27,7 @@ import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.content.GCBlocks;
+import net.fabricmc.fabric.api.block.BlockPickInteractionAware;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.sounds.SoundSource;
@@ -43,6 +44,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.Nullable;
@@ -55,11 +57,23 @@ import org.jetbrains.annotations.Nullable;
  *     <li>Breaking it only removes the part that is aimed at: the walkway, or the pipe or wire, which leaves a standalone walkway.</li>
  * </ul>
  */
-public interface WalkwayAttachable {
+public interface WalkwayAttachable extends BlockPickInteractionAware {
     /**
      * How far the walkway platform reaches from its side of the block.
      */
     double PLATFORM_DEPTH = 3.0 / 16.0;
+
+    /**
+     * {@return a walkway when the player aims at the walkway, otherwise the pipe or wire}
+     */
+    @Override
+    default ItemStack getPickedStack(BlockState state, BlockGetter level, BlockPos pos, @Nullable Player player, @Nullable HitResult result) {
+        if (result != null && level.getBlockEntity(pos) instanceof WalkwayHolder holder && holder.getWalkway() != null
+                && isOnPlatform(holder.getWalkway(), result.getLocation().subtract(Vec3.atLowerCornerOf(pos)))) {
+            return new ItemStack(GCBlocks.WALKWAY);
+        }
+        return new ItemStack(state.getBlock());
+    }
 
     /**
      * {@return the shape of a pipe or wire, including its walkway if it has one}

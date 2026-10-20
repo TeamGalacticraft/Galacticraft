@@ -136,6 +136,20 @@ public class WalkwayTestSuite implements GalacticraftGameTest {
         context.succeed();
     }
 
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void pickWalkwayOrPipeTest(GameTestHelper context) {
+        this.placeWithWalkway(context, Direction.UP);
+        BlockPos absolute = context.absolutePos(POS);
+        BlockState state = context.getLevel().getBlockState(absolute);
+        WalkwayAttachable block = (WalkwayAttachable) state.getBlock();
+
+        ItemStack onWalkway = block.getPickedStack(state, context.getLevel(), absolute, null, new BlockHitResult(Vec3.atLowerCornerOf(absolute).add(0.5, 1.0, 0.5), Direction.UP, absolute, false));
+        ItemStack onPipe = block.getPickedStack(state, context.getLevel(), absolute, null, new BlockHitResult(Vec3.atLowerCornerOf(absolute).add(0.375, 0.5, 0.5), Direction.WEST, absolute, false));
+        context.assertTrue(onWalkway.is(GCBlocks.WALKWAY.asItem()), "Expected to pick a walkway but got %s".formatted(onWalkway));
+        context.assertTrue(onPipe.is(GCBlocks.GLASS_FLUID_PIPE.asItem()), "Expected to pick a glass fluid pipe but got %s".formatted(onPipe));
+        context.succeed();
+    }
+
     private void placeWithWalkway(GameTestHelper context, Direction walkway) {
         context.setBlock(POS, GCBlocks.GLASS_FLUID_PIPE);
         this.use(context, new ItemStack(GCBlocks.WALKWAY), walkway);

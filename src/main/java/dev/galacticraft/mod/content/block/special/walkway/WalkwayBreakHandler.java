@@ -26,6 +26,7 @@ import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerTickEvents;
 import net.fabricmc.fabric.api.event.player.PlayerBlockBreakEvents;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.Direction;
 import net.minecraft.network.protocol.Packet;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -44,6 +45,7 @@ public final class WalkwayBreakHandler {
      * Block entities to send to the players that broke part of them. The client of the player already removed the block,
      * so it ignores block entity data until the server confirms the break at the end of the tick.
      * Without sending it again, the block comes back with an empty block entity, e.g. without its connections.
+     * The client also updated the connections of the neighbors when it removed the block, so they are sent again too.
      */
     private static final List<PendingUpdate> PENDING = new ArrayList<>();
 
@@ -68,14 +70,23 @@ public final class WalkwayBreakHandler {
         // The break is confirmed when the connection ticks, which is before the end of the server tick
         ServerTickEvents.END_SERVER_TICK.register(server -> {
             for (PendingUpdate update : PENDING) {
-                BlockEntity blockEntity = update.player().level().getBlockEntity(update.pos());
-                Packet<?> packet = blockEntity != null ? blockEntity.getUpdatePacket() : null;
-                if (packet != null && !update.player().hasDisconnected()) {
-                    update.player().connection.send(packet);
+                if (update.player().hasDisconnected()) continue;
+                // The neighbors too: they updated their connections on the client when it removed the block
+                sendBlockEntity(update.player(), update.pos());
+                for (Direction direction : Direction.values()) {
+                    sendBlockEntity(update.player(), update.pos().relative(direction));
                 }
             }
             PENDING.clear();
         });
+    }
+
+    private static void sendBlockEntity(ServerPlayer player, BlockPos pos) {
+        BlockEntity blockEntity = player.level().getBlockEntity(pos);
+        Packet<?> packet = blockEntity != null ? blockEntity.getUpdatePacket() : null;
+        if (packet != null) {
+            player.connection.send(packet);
+        }
     }
 
     private record PendingUpdate(ServerPlayer player, BlockPos pos) {
