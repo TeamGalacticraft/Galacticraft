@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
@@ -46,10 +47,11 @@ import org.jetbrains.annotations.Nullable;
 import java.util.Collections;
 import java.util.Iterator;
 
-public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant> {
+public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant>, WalkwayHolder {
     private @Nullable PipeNetwork network = null;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
+    private @Nullable Direction walkway = null;
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
@@ -102,6 +104,20 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     }
 
     @Override
+    public @Nullable Direction getWalkway() {
+        return this.walkway;
+    }
+
+    @Override
+    public void setWalkway(@Nullable Direction walkway) {
+        this.walkway = walkway;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
         if (this.network == null || this.network.markedForRemoval()) {
             this.createNetwork();
@@ -140,6 +156,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
+        this.walkway = WalkwayHolder.readWalkwayNbt(nbt);
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -150,6 +167,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
+        this.writeWalkwayNbt(nbt);
     }
 
     @Override

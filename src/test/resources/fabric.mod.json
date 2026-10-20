@@ -43,7 +43,8 @@
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
       "dev.galacticraft.mod.gametest.ExtinguishableTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
-      "dev.galacticraft.mod.gametest.WireTestSuite"
+      "dev.galacticraft.mod.gametest.WireTestSuite",
+      "dev.galacticraft.mod.gametest.WalkwayTestSuite"
     ]
   },
   "mixins": [],

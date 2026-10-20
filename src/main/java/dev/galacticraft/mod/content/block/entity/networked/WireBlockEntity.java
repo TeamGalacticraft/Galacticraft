@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.api.wire.Wire;
 import dev.galacticraft.mod.api.wire.WireNetwork;
 import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
@@ -43,11 +44,12 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage {
+public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage, WalkwayHolder {
     @Nullable
     private WireNetwork network;
     private final int maxTransferRate;
     private final boolean[] connections = new boolean[6];
+    private @Nullable Direction walkway = null;
 
     public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
         super(type, pos, state);
@@ -109,6 +111,20 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     }
 
     @Override
+    public @Nullable Direction getWalkway() {
+        return this.walkway;
+    }
+
+    @Override
+    public void setWalkway(@Nullable Direction walkway) {
+        this.walkway = walkway;
+        this.setChanged();
+        if (this.level != null) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_ALL);
+        }
+    }
+
+    @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
         if (this.network == null || this.network.markedForRemoval()) {
             this.createNetwork();
@@ -122,12 +138,14 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage 
     protected void saveAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.saveAdditional(nbt, registryLookup);
         this.writeConnectionNbt(nbt);
+        this.writeWalkwayNbt(nbt);
     }
 
     @Override
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
+        this.walkway = WalkwayHolder.readWalkwayNbt(nbt);
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);

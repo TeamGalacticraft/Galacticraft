@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -63,11 +64,13 @@ public class PipeBakedModel implements BakedModel {
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;
     private final float radius;
+    private final @Nullable PipeWalkwayModel walkway;
 
-    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius) {
+    public PipeBakedModel(Function<Material, TextureAtlasSprite> textureGetter, ResourceLocation texture, float radius, @Nullable PipeWalkwayModel walkway) {
         this.sprite = textureGetter.apply(new Material(InventoryMenu.BLOCK_ATLAS, texture));
         this.meshes = new EnumMap<>(Direction.class);
         this.radius = radius;
+        this.walkway = walkway;
 
         float min = 0.5f - this.radius;
         float max = 0.5f + this.radius;
@@ -256,6 +259,10 @@ public class PipeBakedModel implements BakedModel {
                 } else {
                     this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius);
                 }
+            }
+
+            if (this.walkway != null && pipe instanceof WalkwayHolder holder && holder.getWalkway() != null) {
+                this.walkway.emit(pipe, holder.getWalkway(), emitter, randomSupplier.get());
             }
         }
     }

@@ -308,13 +308,19 @@ public class WalkwayCenterModel implements UnbakedModel {
             return this.centerEnd() - this.centerStart();
         }
 
+        /**
+         * Emits the arm from the center of the pipe to the walkway on the given side, unless the pipe is connected on that side.
+         */
+        public void emitArm(Connected connected, Direction walkway, QuadEmitter emitter) {
+            if (!connected.isConnected(walkway)) {
+                this.meshes.get(walkway).outputTo(emitter);
+            }
+        }
+
         @Override
         public void emitBlockQuads(BlockAndTintGetter blockView, BlockState state, BlockPos pos, Supplier<RandomSource> randomSupplier, RenderContext context) {
             if (blockView.getBlockEntity(pos) instanceof Connected connected) {
-                Direction facing = state.getValue(BlockStateProperties.FACING);
-                if (!connected.isConnected(facing)) {
-                    this.meshes.get(facing).outputTo(context.getEmitter());
-                }
+                this.emitArm(connected, state.getValue(BlockStateProperties.FACING), context.getEmitter());
             } else {
                 Constant.LOGGER.warn("Walkway center model loaded for block that's not a Connected entity");
             }

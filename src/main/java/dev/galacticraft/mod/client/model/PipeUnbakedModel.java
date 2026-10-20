@@ -30,20 +30,30 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 import java.util.function.Function;
 
 public class PipeUnbakedModel implements UnbakedModel {
     private final ResourceLocation texture;
     private final float radius;
+    /**
+     * The model of the platform of a walkway attached to the pipe, or {@code null} if walkways can't be attached to it.
+     */
+    private final @Nullable ResourceLocation walkwayPlatform;
 
     public PipeUnbakedModel(ResourceLocation texture, float radius) {
+        this(texture, radius, null);
+    }
+
+    public PipeUnbakedModel(ResourceLocation texture, float radius, @Nullable ResourceLocation walkwayPlatform) {
         this.texture = texture;
         this.radius = radius;
+        this.walkwayPlatform = walkwayPlatform;
     }
 
     @Override
     public @NotNull Collection<ResourceLocation> getDependencies() {
-        return Collections.emptyList();
+        return this.walkwayPlatform == null ? Collections.emptyList() : List.of(this.walkwayPlatform);
     }
 
     @Override
@@ -53,6 +63,7 @@ public class PipeUnbakedModel implements UnbakedModel {
     @Nullable
     @Override
     public BakedModel bake(ModelBaker baker, Function<Material, TextureAtlasSprite> textureGetter, ModelState state) {
-        return new PipeBakedModel(textureGetter, this.texture, this.radius);
+        PipeWalkwayModel walkway = this.walkwayPlatform == null ? null : new PipeWalkwayModel(baker, textureGetter, this.walkwayPlatform, this.texture, this.radius);
+        return new PipeBakedModel(textureGetter, this.texture, this.radius, walkway);
     }
 }
