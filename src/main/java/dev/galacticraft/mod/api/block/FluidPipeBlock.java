@@ -28,6 +28,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Pullable;
+import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
@@ -171,7 +172,12 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     protected void setColorAndBlock(Level level, BlockPos pos, BlockState state, PipeColor color) {
         BlockState newState = this.setColor(state, color);
+        // The block entity is replaced along with the block, so keep its walkway
+        Direction walkway = level.getBlockEntity(pos) instanceof WalkwayHolder holder ? holder.getWalkway() : null;
         level.setBlockAndUpdate(pos, newState);
+        if (walkway != null && level.getBlockEntity(pos) instanceof WalkwayHolder holder) {
+            holder.setWalkway(walkway);
+        }
         for (Direction direction : Direction.values()) {
             ((FluidPipeBlock)newState.getBlock()).updateConnection(newState, pos, direction, pos.relative(direction), level);
         }

@@ -231,9 +231,6 @@ public class GCTranslationProvider extends TranslationProvider {
 
         // MISC DECOR
         this.block(GCBlocks.WALKWAY, "Walkway");
-        this.block(GCBlocks.FLUID_PIPE_WALKWAY, "Fluid Pipe Walkway");
-        this.block(GCBlocks.WIRE_WALKWAY, "Wire Walkway");
-        this.block(GCBlocks.HEAVY_WIRE_WALKWAY, "Heavy Wire Walkway");
         this.block(GCBlocks.TIN_LADDER, "Tin Ladder");
         this.block(GCBlocks.IRON_GRATING, "Iron Grating");
         this.block(GCBlocks.METEORIC_IRON_DOOR, "Meteoric Iron Door");

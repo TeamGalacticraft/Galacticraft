@@ -82,6 +82,8 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
     );
     public static final Codec<GCUnbakedModel> MODEL_CODEC = MODEL_TYPE_CODEC.dispatch(TYPE_KEY.toString(), GCUnbakedModel::getType, GCUnbakedModel.GCModelType::codec);
     private static final ResourceLocation PARACHEST_ITEM = Constant.id("item/parachest");
+    private static final ResourceLocation WALKWAY_PLATFORM = Constant.id("block/walkway");
+    private static final ResourceLocation HEAVY_WIRE_WALKWAY_PLATFORM = Constant.id("block/heavy_wire_walkway");
 
     public static final ResourceLocation CANNED_FOOD_ROUND = Constant.id("block/canned_food_round");
     public static final ResourceLocation CANNED_FOOD_SQUARE = Constant.id("block/canned_food_square");
@@ -114,26 +116,18 @@ public class GCModelLoader implements ModelLoadingPlugin, IdentifiableResourceRe
 
             for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
                 if (ModelLocationUtils.getModelLocation(pipe).equals(resourceId)) {
-                    return new PipeUnbakedModel(resourceId, 0.125f);
+                    return new PipeUnbakedModel(resourceId, 0.125f, WALKWAY_PLATFORM, null);
                 }
             }
 
             if (ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE).equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f);
+                return new PipeUnbakedModel(Constant.id("block/aluminum_wire"), 0.125f, WALKWAY_PLATFORM, Constant.id("block/aluminum_wire_walkway_end"));
             } else if (ModelLocationUtils.getModelLocation(GCBlocks.HEAVY_ALUMINUM_WIRE).equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
-            } else if (Constant.BakedModel.HEAVY_WIRE_WALKWAY_MARKER.equals(resourceId)) {
-                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
+                return new PipeUnbakedModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f, HEAVY_WIRE_WALKWAY_PLATFORM, Constant.id("block/heavy_aluminum_wire_walkway_end"));
             } else if (Constant.BakedModel.WALKWAY_CONNECTOR_MARKER.equals(resourceId)) {
                 return new PipeUnbakedModel(Constant.id("block/walkway_connector"), 0.125f);
             } else if (Constant.BakedModel.WALKWAY_CENTER_MARKER.equals(resourceId)) {
                 return new WalkwayCenterModel(Constant.id("block/walkway_connector"));
-            } else if (Constant.BakedModel.PIPE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
-                return new WalkwayCenterModel(Constant.id("block/glass_fluid_pipe"));
-            } else if (Constant.BakedModel.WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
-                return new WalkwayCenterModel(Constant.id("block/aluminum_wire"));
-            } else if (Constant.BakedModel.HEAVY_WIRE_WALKWAY_CENTER_MARKER.equals(resourceId)) {
-                return new WalkwayCenterModel(Constant.id("block/heavy_aluminum_wire"), 0.1875f);
             } else if (Constant.BakedModel.VACUUM_GLASS_MODEL.equals(resourceId)) {
                 return VacuumGlassUnbakedModel.INSTANCE;
             } else if (PARACHEST_ITEM.equals(resourceId)) {

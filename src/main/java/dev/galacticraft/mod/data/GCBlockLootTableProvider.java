@@ -182,9 +182,6 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.add(GCBlocks.VAPOR_SPOUT, this.createSingleItemTableWithSilkTouch(GCBlocks.VAPOR_SPOUT, GCBlocks.SOFT_VENUS_ROCK));
 
         this.dropSelf(GCBlocks.WALKWAY);
-        this.dropSelf(GCBlocks.FLUID_PIPE_WALKWAY);
-        this.dropSelf(GCBlocks.WIRE_WALKWAY);
-        this.dropSelf(GCBlocks.HEAVY_WIRE_WALKWAY);
         this.dropSelf(GCBlocks.TIN_LADDER);
         this.dropSelf(GCBlocks.IRON_GRATING);
         this.dropSelf(GCBlocks.METEORIC_IRON_DOOR);

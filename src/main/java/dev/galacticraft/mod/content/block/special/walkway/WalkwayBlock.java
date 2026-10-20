@@ -25,10 +25,17 @@ package dev.galacticraft.mod.content.block.special.walkway;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.sounds.SoundSource;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -36,11 +43,13 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
 import net.minecraft.world.level.block.Rotation;
+import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.SupportType;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
@@ -103,6 +112,29 @@ public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements
     protected @NotNull BlockState updateShape(BlockState state, Direction direction, BlockState neighborState, LevelAccessor levelAccessor, BlockPos pos, BlockPos neighborPos) {
         FluidLoggable.tryScheduleFluidTick(levelAccessor, state, pos);
         return super.updateShape(state, direction, neighborState, levelAccessor, pos, neighborPos);
+    }
+
+    /**
+     * Puts a pipe or wire in the walkway when it is used on it, see {@link WalkwayAttachable}.
+     */
+    @Override
+    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        if (!(stack.getItem() instanceof BlockItem item) || !(item.getBlock() instanceof WalkwayAttachable)) {
+            return super.useItemOn(stack, state, level, pos, player, hand, hit);
+        }
+
+        if (!level.isClientSide()) {
+            BlockState newState = WalkwayAttachable.copyFluid(state, item.getBlock().defaultBlockState());
+            level.setBlockAndUpdate(pos, newState);
+            newState.getBlock().setPlacedBy(level, pos, newState, player, stack);
+            if (level.getBlockEntity(pos) instanceof WalkwayHolder holder) {
+                holder.setWalkway(state.getValue(BlockStateProperties.FACING));
+            }
+            SoundType sound = newState.getSoundType();
+            level.playSound(null, pos, sound.getPlaceSound(), SoundSource.BLOCKS, (sound.getVolume() + 1.0f) / 2.0f, sound.getPitch() * 0.8f);
+            stack.consume(1, player);
+        }
+        return ItemInteractionResult.sidedSuccess(level.isClientSide());
     }
 
     @Override

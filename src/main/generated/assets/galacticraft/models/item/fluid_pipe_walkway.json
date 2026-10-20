@@ -1,6 +1,0 @@
-{
-  "parent": "galacticraft:item/template_walkway_inventory",
-  "textures": {
-    "texture": "galacticraft:block/glass_fluid_pipe"
-  }
-}

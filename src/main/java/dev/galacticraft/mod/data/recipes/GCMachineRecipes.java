@@ -431,51 +431,6 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.WIRE_WALKWAY, 5)
-                .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('W', GCBlocks.ALUMINUM_WIRE)
-                .pattern("TTT")
-                .pattern("WTW")
-                .pattern("WWW")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output);
-
-        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.WIRE_WALKWAY)
-                .requires(GCBlocks.WALKWAY)
-                .requires(GCBlocks.ALUMINUM_WIRE)
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.WIRE_WALKWAY).withSuffix("_shapeless"));
-
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_WIRE_WALKWAY, 5)
-                .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('W', GCBlocks.HEAVY_ALUMINUM_WIRE)
-                .pattern("TTT")
-                .pattern("WTW")
-                .pattern("WWW")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output);
-
-        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.HEAVY_WIRE_WALKWAY)
-                .requires(GCBlocks.WALKWAY)
-                .requires(GCBlocks.HEAVY_ALUMINUM_WIRE)
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.HEAVY_WIRE_WALKWAY).withSuffix("_shapeless"));
-
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY, 5)
-                .define('T', GCItems.COMPRESSED_TITANIUM)
-                .define('P', GCItemTags.GLASS_FLUID_PIPES)
-                .pattern("TTT")
-                .pattern("PTP")
-                .pattern("PPP")
-                .unlockedBy(getHasName(GCItems.COMPRESSED_TITANIUM), has(GCItems.COMPRESSED_TITANIUM))
-                .save(output);
-
-        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.FLUID_PIPE_WALKWAY)
-                .requires(GCBlocks.WALKWAY)
-                .requires(GCItemTags.GLASS_FLUID_PIPES)
-                .unlockedBy(getHasName(GCBlocks.WALKWAY), has(GCBlocks.WALKWAY))
-                .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.FLUID_PIPE_WALKWAY).withSuffix("_shapeless"));
-
         // Compressor
         GCShapelessRecipeBuilder.compressing(GCItems.CRACKER, 3)
                 .unlockedBy(getHasName(Items.BREAD), has(Items.BREAD))

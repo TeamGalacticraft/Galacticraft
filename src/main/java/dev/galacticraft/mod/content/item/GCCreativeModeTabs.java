@@ -231,9 +231,6 @@ public class GCCreativeModeTabs {
 
                 // MISC DECOR
                 output.accept(WALKWAY);
-                output.accept(WIRE_WALKWAY);
-                output.accept(HEAVY_WIRE_WALKWAY);
-                output.accept(FLUID_PIPE_WALKWAY);
                 output.accept(TIN_LADDER);
                 output.accept(IRON_GRATING);
                 output.accept(METEORIC_IRON_DOOR);

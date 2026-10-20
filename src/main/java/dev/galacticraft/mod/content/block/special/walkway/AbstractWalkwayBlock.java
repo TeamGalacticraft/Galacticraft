@@ -50,7 +50,11 @@ public interface AbstractWalkwayBlock {
     }
 
     static @NotNull VoxelShape getShape(Connected connected, BlockState blockState, float pipeRadius) {
-        return getShapes(pipeRadius).get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), blockState.getValue(BlockStateProperties.FACING)));
+        return getShape(connected, blockState.getValue(BlockStateProperties.FACING), pipeRadius);
+    }
+
+    static @NotNull VoxelShape getShape(Connected connected, Direction facing, float pipeRadius) {
+        return getShapes(pipeRadius).get(Pair.of(PipeShapedBlock.generateAABBIndex(connected), facing));
     }
 
     // Returns a shape with all connections active

@@ -28,21 +28,28 @@ import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
+import dev.galacticraft.mod.content.block.special.walkway.WalkwayAttachable;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.InteractionHand;
+import net.minecraft.world.ItemInteractionResult;
+import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.block.state.StateDefinition;
 import net.minecraft.world.level.material.FluidState;
+import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable {
+public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable, WalkwayAttachable {
     public GlassFluidPipeBlock(Properties settings, PipeColor color) {
         super(settings, color);
 
@@ -56,10 +63,6 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
         FluidLoggable.addStateDefinitions(compositeStateBuilder);
     }
 
-    @Override
-    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
-        return super.getShape(state, world, pos, context);
-    }
 
     @Override
     public @NotNull BlockState getStateForPlacement(BlockPlaceContext ctx) {
@@ -103,5 +106,16 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     @Override
     protected Block getMatchingBlock(PipeColor color) {
         return GCBlocks.GLASS_FLUID_PIPES.get(color);
+    }
+
+    @Override
+    protected @NotNull VoxelShape getShape(BlockState state, BlockGetter level, BlockPos pos, CollisionContext context) {
+        return WalkwayAttachable.getShape(this, level, pos);
+    }
+
+    @Override
+    protected @NotNull ItemInteractionResult useItemOn(ItemStack stack, BlockState state, Level level, BlockPos pos, Player player, InteractionHand hand, BlockHitResult hit) {
+        ItemInteractionResult result = WalkwayAttachable.tryAttachWalkway(stack, level, pos, player, hit);
+        return result != null ? result : super.useItemOn(stack, state, level, pos, player, hand, hit);
     }
 }
