@@ -46,14 +46,17 @@ import net.minecraft.client.resources.model.Material;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.FastColor;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.inventory.InventoryMenu;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockAndTintGetter;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluids;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -287,23 +290,29 @@ public class PipeBakedModel implements BakedModel {
         if (fluid.isBlank()) return;
 
         TextureAtlasSprite fluidSprite = FluidVariantRendering.getSprite(fluid);
-        if (fluidSprite == null) return;
+        if (fluidSprite == null) {
+            // Like MachineLib, show fluids without a texture as tinted water
+            fluidSprite = FluidVariantRendering.getSprite(FluidVariant.of(Fluids.WATER));
+            if (fluidSprite == null) return;
+        }
         // Fluid colors don't always include alpha, the transparency comes from the texture
-        int color = 0xFF000000 | FluidVariantRendering.getColor(fluid, getter, blockPos);
+        int color = FastColor.ARGB32.opaque(FluidVariantRendering.getColor(fluid, getter, blockPos));
 
         float min = 0.5f - this.radius + FLUID_INSET;
         float max = 0.5f + this.radius - FLUID_INSET;
 
         // The center, with an opening on every connected side
+        List<Direction> connected = new ArrayList<>(6);
         for (Direction face : Direction.values()) {
-            if (!pipe.isConnected(face)) {
+            if (pipe.isConnected(face)) {
+                connected.add(face);
+            } else {
                 this.emitFluidFace(emitter, face, min, min, min, max, max, max, fluidSprite, color);
             }
         }
 
         // An arm from the center to the edge of the block for every connection, without its ends
-        for (Direction direction : Direction.values()) {
-            if (!pipe.isConnected(direction)) continue;
+        for (Direction direction : connected) {
             float x0 = direction == Direction.WEST ? 0 : direction == Direction.EAST ? max : min;
             float x1 = direction == Direction.WEST ? min : direction == Direction.EAST ? 1 : max;
             float y0 = direction == Direction.DOWN ? 0 : direction == Direction.UP ? max : min;

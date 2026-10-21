@@ -22,8 +22,7 @@
 
 package dev.galacticraft.mod.mixin.client;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
-import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.content.block.special.fluidpipe.GlassFluidPipeBlock;
 import net.minecraft.client.renderer.ItemBlockRenderTypes;
 import net.minecraft.client.renderer.RenderType;
@@ -38,9 +37,8 @@ import org.spongepowered.asm.mixin.injection.At;
  */
 @Mixin(ItemBlockRenderTypes.class)
 public abstract class ItemBlockRenderTypesMixin {
-    @WrapOperation(method = "getRenderType(Lnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/client/renderer/RenderType;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemBlockRenderTypes;getChunkRenderType(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/RenderType;"))
-    private static RenderType drawGlassPipesTranslucent_gc(BlockState state, Operation<RenderType> original) {
-        RenderType renderType = original.call(state);
+    @ModifyExpressionValue(method = "getRenderType(Lnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/client/renderer/RenderType;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemBlockRenderTypes;getChunkRenderType(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/RenderType;"))
+    private static RenderType galacticraft$drawGlassPipesTranslucent(RenderType renderType, BlockState state) {
         return renderType == RenderType.tripwire() && state.getBlock() instanceof GlassFluidPipeBlock ? RenderType.translucent() : renderType;
     }
 }

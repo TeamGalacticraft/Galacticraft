@@ -75,6 +75,7 @@ public class GCEventHandlers {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(GCEventHandlers::onPlayerChangeWorld);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
+        ServerTickEvents.END_SERVER_TICK.register(PipeNetworkImpl::tickDisplayedFluids);
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             recoverPlayerFromUnavailableDimension(server, handler.player);
@@ -181,8 +182,6 @@ public class GCEventHandlers {
     }
 
     public static void onServerTick(MinecraftServer server) {
-        PipeNetworkImpl.tickDisplayedFluids(server);
-
         // throw meteors around players
         PlayerLookup.all(server).forEach(player -> {
             ServerLevel level = player.serverLevel();

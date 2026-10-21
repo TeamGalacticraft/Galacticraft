@@ -16,11 +16,6 @@
       "prefix": "model/"
     },
     {
-      "type": "directory",
-      "source": "gas",
-      "prefix": "gas/"
-    },
-    {
       "type": "minecraft:single",
       "resource": "galacticraft:model/sphere"
     }

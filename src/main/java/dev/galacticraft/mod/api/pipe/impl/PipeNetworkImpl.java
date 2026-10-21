@@ -281,7 +281,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
             if (this.level.getBlockEntity(pos) instanceof PipeBlockEntity pipe) {
                 // Pipes that have moved to another network show what that network is transferring
                 PipeNetwork network = pipe.getNetwork();
-                pipe.setDisplayedFluid(network == this || !(network instanceof PipeNetworkImpl other) ? variant : other.displayedVariant);
+                pipe.setDisplayedFluid(network != this && network instanceof PipeNetworkImpl other ? other.displayedVariant : variant);
             }
         }
     }
