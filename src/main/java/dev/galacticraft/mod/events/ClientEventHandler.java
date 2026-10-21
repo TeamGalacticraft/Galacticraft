@@ -33,6 +33,7 @@ import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
 import dev.galacticraft.mod.client.gui.overlay.RocketOverlay;
 import dev.galacticraft.mod.client.render.FootprintRenderer;
 import dev.galacticraft.mod.client.render.GCBlockOutlineRenderer;
+import dev.galacticraft.mod.client.render.GridDebugRenderer;
 import dev.galacticraft.mod.client.render.dimension.SatelliteSkyRenderer;
 import dev.galacticraft.mod.client.sounds.GCSoundManager;
 import dev.galacticraft.mod.client.sounds.RocketSound;
@@ -54,6 +55,7 @@ public class ClientEventHandler {
         ClientTickEvents.END_CLIENT_TICK.register(ClientEventHandler::clientTick);
         WorldRenderEvents.BLOCK_OUTLINE.register(GCBlockOutlineRenderer::renderBlockOutlines);
         WorldRenderEvents.LAST.register(FootprintRenderer::renderFootprints);
+        WorldRenderEvents.AFTER_TRANSLUCENT.register(GridDebugRenderer::render);
         ClientTickEvents.END_WORLD_TICK.register(ClientEventHandler::tickFootprints);
         MachineStatusEvents.MACHINE_STATUS_CHANGED.register(GCSoundManager::onStatusChanged);
         HudRenderCallback.EVENT.register(OxygenOverlay::onHudRender);

@@ -24,6 +24,7 @@ package dev.galacticraft.mod.client.network;
 
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.network.s2c.*;
+import dev.galacticraft.mod.network.s2c.GridDebugPayload;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 
@@ -36,6 +37,7 @@ public class GCClientPacketReceiver {
         register(FootprintRemovedPacket.TYPE);
         register(ResetPerspectivePacket.TYPE);
         register(CapeAssignmentsPacket.TYPE);
+        register(GridDebugPayload.TYPE);
     }
 
     public static <P extends S2CPayload> void register(CustomPacketPayload.Type<P> type) {

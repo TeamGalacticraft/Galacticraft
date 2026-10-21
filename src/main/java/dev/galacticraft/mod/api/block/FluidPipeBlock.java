@@ -29,6 +29,7 @@ import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.api.block.entity.Pullable;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
+import dev.galacticraft.mod.api.grid.fluid.FluidGrid;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
@@ -76,7 +77,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
         if (!level.isClientSide() && Galacticraft.CONFIG.isDebugLogEnabled() && FabricLoader.getInstance().isDevelopmentEnvironment()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof FluidPipe pipe) {
-                Constant.LOGGER.info("Network: {}", pipe.getNetwork());
+                Constant.LOGGER.info("Grid: {}, node: {}", pipe.getGrid(), pipe.getNode());
             }
         }
         return super.useWithoutItem(state, level, pos, player, hit);
@@ -111,6 +112,9 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     public boolean canConnectTo(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos, BlockState thisState) {
         if (level.getBlockState(neighborPos).getBlock() instanceof FluidPipeBlock pipe && !this.color.canConnectTo(pipe.color)) {
             return false;
+        } else if (!level.isClientSide() && level.getBlockEntity(thisPos) instanceof FluidPipe thisPipe && level.getBlockEntity(neighborPos) instanceof FluidPipe otherPipe
+                && !FluidGrid.canHoldTogether(thisPipe.getGrid(), otherPipe.getGrid())) {
+            return false; // Pipes holding different fluids stay apart until one of them is empty
         } else {
             return FluidUtil.canAccessFluid(level, neighborPos, direction);
         }
@@ -147,9 +151,7 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
 
     @Override
     protected void onConnectionChanged(Level level, BlockPos thisPos, Direction direction, BlockPos neighborPos) {
-        if (level.getBlockEntity(thisPos) instanceof FluidPipe pipe) {
-            pipe.updateConnection(level.getBlockState(thisPos), thisPos, neighborPos, direction);
-        }
+        // The grid follows block updates by itself
     }
 
     // Taken from AE2's Color Applicator implementation

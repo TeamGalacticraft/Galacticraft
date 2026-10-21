@@ -74,13 +74,13 @@ public class GCApiLookupProviders {
         MachineBlockEntity.registerProviders(MACHINE_BLOCKS);
 
         FluidStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((FluidPipe) blockEntity).canConnect(direction)) return null;
-            return ((FluidPipe) blockEntity).getInsertable();
+            if (direction == null) return null;
+            return ((FluidPipe) blockEntity).getFluidStorage();
         }, PIPE_TYPES);
 
         EnergyStorage.SIDED.registerForBlockEntities((blockEntity, direction) -> {
-            if (direction == null || !((Wire) blockEntity).canConnect(direction)) return null;
-            return ((Wire) blockEntity).getInsertable();
+            if (direction == null) return null;
+            return ((Wire) blockEntity).getEnergyStorage();
         }, WIRE_TYPES);
 
         FluidStorage.ITEM.registerForItems((itemStack, context) -> {

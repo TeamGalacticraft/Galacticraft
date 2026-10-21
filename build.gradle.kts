@@ -143,6 +143,7 @@ loom {
             source(sourceSets.test.get())
             property("fabric-api.gametest")
             property("fabric-api.gametest.report-file", "${project.layout.buildDirectory.get().file("junit.xml")}")
+            vmArg("-ea:dev.galacticraft.mod.api.grid...") // check the grid invariants
         }
 
         afterEvaluate {

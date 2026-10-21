@@ -20,38 +20,11 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.api.wire;
+package dev.galacticraft.mod.api.grid;
 
-import net.minecraft.util.StringRepresentable;
-
-public enum WireConnectionType implements StringRepresentable {
-    /**
-     * The wire is not connected to anything.
-     */
-    NONE,
-
-    /**
-     * The wire is connected to another wire.
-     */
-    WIRE,
-
-    /**
-     * The wire is connected to an result face of an energy holding block.
-     */
-    ENERGY_INPUT,
-
-    /**
-     * The wire is connected to an input face of an energy holding block.
-     */
-    ENERGY_OUTPUT,
-
-    /**
-     * The wire is connected to a directionless energy face of an energy holding block.
-     */
-    ENERGY_IO;
-
-    @Override
-    public String getSerializedName() {
-        return name().toLowerCase();
-    }
+/**
+ * A duct that is told when its grid changes in a way the client should see, like the fluid it carries.
+ */
+public interface GridHostUpdateable {
+    void update();
 }

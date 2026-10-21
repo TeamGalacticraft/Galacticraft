@@ -22,21 +22,28 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.FluidPipeBlock;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
+import dev.galacticraft.mod.api.grid.GridContainer;
+import dev.galacticraft.mod.api.grid.GridHostUpdateable;
+import dev.galacticraft.mod.api.grid.GridType;
+import dev.galacticraft.mod.api.grid.GridTypes;
+import dev.galacticraft.mod.api.grid.fluid.DuctFluidStorage;
+import dev.galacticraft.mod.api.grid.fluid.FluidDuct;
+import dev.galacticraft.mod.api.grid.fluid.FluidGrid;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
-import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.storage.StorageView;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,14 +51,13 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.Collections;
-import java.util.Iterator;
-
-public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant>, WalkwayHolder {
-    private @Nullable PipeNetwork network = null;
-    private final long maxTransferRate; // 1 bucket per second
+public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, WalkwayHolder, GridHostUpdateable {
+    private @Nullable FluidGrid grid;
+    private final long maxTransferRate;
+    private final DuctFluidStorage fluidStorage = new DuctFluidStorage(this);
     private final boolean[] connections = new boolean[6];
     private @Nullable Direction walkway = null;
+    private @NotNull FluidVariant displayedFluid = FluidVariant.blank();
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
@@ -59,38 +65,80 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     }
 
     @Override
-    public void forceCreateNetwork() {
-        this.createNetwork();
+    public Level getHostLevel() {
+        return this.level;
     }
 
-    private void createNetwork() {
-        assert this.network == null || this.network.markedForRemoval();
-        if (!this.level.isClientSide) {
-            this.network = new PipeNetworkImpl((ServerLevel) this.level, this.maxTransferRate, this.getBlockPos());
+    @Override
+    public BlockPos getHostPos() {
+        return this.worldPosition;
+    }
+
+    @Override
+    public GridType<FluidGrid> getGridType() {
+        return GridTypes.FLUID;
+    }
+
+    @Override
+    public @Nullable FluidGrid getGrid() {
+        if (!(this.level instanceof ServerLevel serverLevel)) {
+            return null;
+        }
+        if (this.grid == null || this.grid.isRemoved()) {
+            this.grid = GridContainer.get(serverLevel).getGrid(GridTypes.FLUID, this.worldPosition);
+        }
+        return this.grid;
+    }
+
+    @Override
+    public void setGrid(@Nullable FluidGrid grid) {
+        this.grid = grid;
+    }
+
+    @Override
+    public boolean canConnectToDuct(FluidDuct other, Direction direction) {
+        return other instanceof PipeBlockEntity pipe
+                && this.getBlockState().getBlock() instanceof FluidPipeBlock thisBlock
+                && pipe.getBlockState().getBlock() instanceof FluidPipeBlock otherBlock
+                && thisBlock.color.canConnectTo(otherBlock.color);
+    }
+
+    @Override
+    public void onGridConnectionChanged(Direction direction) {
+        if (this.getBlockState().getBlock() instanceof PipeShapedBlock<?> block) {
+            block.refreshConnection(this.level, this.worldPosition, direction);
         }
     }
 
     @Override
-    public void setNetwork(@Nullable PipeNetwork network) {
-        if ((this.network == null || this.network.markedForRemoval()) && (network != null && !network.markedForRemoval())) {
-            this.network = network;
-            this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
-        } else {
-            this.network = network;
+    public void update() {
+        FluidGrid grid = this.getGrid();
+        this.setDisplayedFluid(grid == null ? FluidVariant.blank() : grid.getDisplayedFluid());
+    }
+
+    /**
+     * {@return the fluid that is flowing through this pipe, as far as the client needs to know to render it}
+     */
+    public @NotNull FluidVariant getDisplayedFluid() {
+        return this.displayedFluid;
+    }
+
+    /**
+     * Sets the fluid flowing through this pipe and sends it to the client if it changed.
+     *
+     * @param fluid the fluid flowing through this pipe, or blank if nothing is flowing
+     */
+    public void setDisplayedFluid(@NotNull FluidVariant fluid) {
+        if (this.displayedFluid.equals(fluid)) return;
+        this.displayedFluid = fluid;
+        if (this.level != null && !this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
         }
     }
 
     @Override
-    public @Nullable PipeNetwork getNetwork() {
-        return this.network;
-    }
-
-    @Override
-    public Storage<FluidVariant> getInsertable() {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        return this;
+    public Storage<FluidVariant> getFluidStorage() {
+        return this.fluidStorage;
     }
 
     @Override
@@ -119,37 +167,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        if (this.network != null) {
-            this.network.updateConnection(pos, neighborPos, direction);
-        }
-    }
-
-    @Override
-    public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notNegative(maxAmount);
-        if (this.network != null) {
-            return this.network.insert(resource, Math.min(this.maxTransferRate, maxAmount), transaction);
-        }
-
-        return 0;
-    }
-
-    @Override
-    public long extract(FluidVariant resource, long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
-    public boolean supportsInsertion() {
-        return this.maxTransferRate > 0;
-    }
-
-    @Override
-    public @NotNull Iterator<StorageView<FluidVariant>> iterator() {
-        return Collections.emptyIterator();
+        // The grid follows block updates by itself, see PipeShapedBlock
     }
 
     @Override
@@ -157,6 +175,10 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
         this.walkway = WalkwayHolder.readWalkwayNbt(nbt);
+        // Only sent to the client, never saved
+        this.displayedFluid = nbt.contains(Constant.Nbt.DISPLAYED_FLUID)
+                ? FluidVariant.CODEC.parse(registryLookup.createSerializationContext(NbtOps.INSTANCE), nbt.get(Constant.Nbt.DISPLAYED_FLUID)).result().orElse(FluidVariant.blank())
+                : FluidVariant.blank();
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -177,6 +199,11 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return this.saveWithoutMetadata(registryLookup);
+        CompoundTag nbt = this.saveWithoutMetadata(registryLookup);
+        if (!this.displayedFluid.isBlank()) {
+            FluidVariant.CODEC.encodeStart(registryLookup.createSerializationContext(NbtOps.INSTANCE), this.displayedFluid).result()
+                    .ifPresent(tag -> nbt.put(Constant.Nbt.DISPLAYED_FLUID, tag));
+        }
+        return nbt;
     }
 }

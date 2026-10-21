@@ -23,47 +23,27 @@
 package dev.galacticraft.mod.api.wire;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
-import net.minecraft.core.Direction;
-import org.jetbrains.annotations.ApiStatus;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
+import dev.galacticraft.mod.api.grid.energy.EnergyDuct;
 import team.reborn.energy.api.EnergyStorage;
 
-public interface Wire extends Connected {
+/**
+ * A wire: a duct of an {@link dev.galacticraft.mod.api.grid.energy.EnergyGrid}.
+ */
+public interface Wire extends Connected, EnergyDuct {
     /**
-     * Sets the {@link WireNetwork} associated with this wire
-     *
-     * @param network The network to associate with
+     * {@return the energy storage this wire exposes to the blocks around it}
      */
-    void setNetwork(@Nullable WireNetwork network);
+    EnergyStorage getEnergyStorage();
 
     /**
-     * Returns the associated {@link WireNetwork}
+     * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire per tick.
      *
-     * @return The associated {@link WireNetwork}
-     */
-    @Contract(pure = true)
-    @Nullable WireNetwork getNetwork();
-
-    /**
-     * Returns whether this wire is able to connect to another block on the specified face/direction
-     *
-     * @param direction the direction offset to the block to check adjacency to
-     * @return Whether this wire is able to connect to another block on the specified face/direction
-     */
-    default boolean canConnect(Direction direction) {
-        return true; // CALLERS: ((Wire)world.getBlockEntity(pos.offset(direction)).canConnect(direction.getOpposite());
-    }
-
-    EnergyStorage getInsertable();
-
-    /**
-     * Returns the maximum amount of energy (in gJ) allowed to be transferred through this wire.
-     *
-     * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire.
+     * @return the maximum amount of energy (in gJ) allowed to be transferred through this wire per tick.
      */
     int getMaxTransferRate();
 
-    @ApiStatus.Internal
-    void forceCreateNetwork();
+    @Override
+    default long getTransferRate() {
+        return this.getMaxTransferRate();
+    }
 }

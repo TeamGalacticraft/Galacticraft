@@ -23,12 +23,14 @@
 package dev.galacticraft.mod.content.block.entity.networked;
 
 import dev.galacticraft.mod.Galacticraft;
+import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
+import dev.galacticraft.mod.api.grid.GridContainer;
+import dev.galacticraft.mod.api.grid.GridType;
+import dev.galacticraft.mod.api.grid.GridTypes;
+import dev.galacticraft.mod.api.grid.energy.DuctEnergyStorage;
+import dev.galacticraft.mod.api.grid.energy.EnergyGrid;
 import dev.galacticraft.mod.api.wire.Wire;
-import dev.galacticraft.mod.api.wire.WireNetwork;
-import dev.galacticraft.mod.api.wire.impl.WireNetworkImpl;
-import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
-import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
@@ -37,6 +39,7 @@ import net.minecraft.network.protocol.Packet;
 import net.minecraft.network.protocol.game.ClientGamePacketListener;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.entity.BlockEntityType;
@@ -44,65 +47,85 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
-public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage, WalkwayHolder {
-    @Nullable
-    private WireNetwork network;
+public class WireBlockEntity extends BlockEntity implements Wire, WalkwayHolder {
+    /**
+     * How much a wire adds to the energy buffer of its grid when it is a node.
+     */
+    public static final long T1_NODE_CAPACITY = 400;
+    public static final long T2_NODE_CAPACITY = 800;
+
+    private @Nullable EnergyGrid grid;
     private final int maxTransferRate;
+    private final long nodeCapacity;
+    private final DuctEnergyStorage energyStorage = new DuctEnergyStorage(this);
     private final boolean[] connections = new boolean[6];
     private @Nullable Direction walkway = null;
 
-    public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate) {
+    public WireBlockEntity(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state, int maxTransferRate, long nodeCapacity) {
         super(type, pos, state);
         this.maxTransferRate = maxTransferRate;
+        this.nodeCapacity = nodeCapacity;
     }
 
     public static WireBlockEntity createT1(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.wireTransferLimit());
+        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.wireTransferLimit(), T1_NODE_CAPACITY);
     }
 
     public static WireBlockEntity createT2(BlockEntityType<? extends WireBlockEntity> type, BlockPos pos, BlockState state) {
-        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.heavyWireTransferLimit());
+        return new WireBlockEntity(type, pos, state, (int) Galacticraft.CONFIG.heavyWireTransferLimit(), T2_NODE_CAPACITY);
     }
 
     @Override
-    public void forceCreateNetwork() {
-        this.createNetwork();
+    public Level getHostLevel() {
+        return this.level;
     }
 
-    public void createNetwork() {
-        assert this.network == null || this.network.markedForRemoval();
-        if (!this.level.isClientSide) {
-            this.network = new WireNetworkImpl((ServerLevel) this.level, this.maxTransferRate, this.getBlockPos());
+    @Override
+    public BlockPos getHostPos() {
+        return this.worldPosition;
+    }
+
+    @Override
+    public GridType<EnergyGrid> getGridType() {
+        return GridTypes.ENERGY;
+    }
+
+    @Override
+    public @Nullable EnergyGrid getGrid() {
+        if (!(this.level instanceof ServerLevel serverLevel)) {
+            return null;
+        }
+        if (this.grid == null || this.grid.isRemoved()) {
+            this.grid = GridContainer.get(serverLevel).getGrid(GridTypes.ENERGY, this.worldPosition);
+        }
+        return this.grid;
+    }
+
+    @Override
+    public void setGrid(@Nullable EnergyGrid grid) {
+        this.grid = grid;
+    }
+
+    @Override
+    public void onGridConnectionChanged(Direction direction) {
+        if (this.getBlockState().getBlock() instanceof PipeShapedBlock<?> block) {
+            block.refreshConnection(this.level, this.worldPosition, direction);
         }
     }
 
     @Override
-    public void setNetwork(@Nullable WireNetwork network) {
-        if ((this.network == null || this.network.markedForRemoval()) && (network != null && !network.markedForRemoval())) {
-            this.network = network;
-            this.level.updateNeighborsAt(this.getBlockPos(), this.getBlockState().getBlock());
-        } else {
-            this.network = network;
-        }
-    }
-
-    @Override
-    @Nullable
-    public WireNetwork getNetwork() {
-        return this.network;
-    }
-
-    @Override
-    public EnergyStorage getInsertable() {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        return this;
+    public EnergyStorage getEnergyStorage() {
+        return this.energyStorage;
     }
 
     @Override
     public int getMaxTransferRate() {
         return this.maxTransferRate;
+    }
+
+    @Override
+    public long getNodeCapacity() {
+        return this.nodeCapacity;
     }
 
     @Override
@@ -126,12 +149,7 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage,
 
     @Override
     public void updateConnection(BlockState state, BlockPos pos, BlockPos neighborPos, Direction direction) {
-        if (this.network == null || this.network.markedForRemoval()) {
-            this.createNetwork();
-        }
-        if (this.network != null) {
-            this.network.updateConnection(pos, neighborPos, direction);
-        }
+        // The grid follows block updates by itself, see PipeShapedBlock
     }
 
     @Override
@@ -160,40 +178,5 @@ public class WireBlockEntity extends BlockEntity implements Wire, EnergyStorage,
     @Override
     public Packet<ClientGamePacketListener> getUpdatePacket() {
         return ClientboundBlockEntityDataPacket.create(this);
-    }
-
-    @Override
-    public boolean supportsInsertion() {
-        return this.maxTransferRate > 0;
-    }
-
-    @Override
-    public long insert(long maxAmount, TransactionContext transaction) {
-        StoragePreconditions.notNegative(maxAmount);
-        if (this.network != null) {
-            return this.network.insert(Math.min(this.maxTransferRate, maxAmount), transaction);
-        }
-
-        return 0;
-    }
-
-    @Override
-    public boolean supportsExtraction() {
-        return true; //todo: do we want to expose extraction since we push energy out?
-    }
-
-    @Override
-    public long extract(long maxAmount, TransactionContext transaction) {
-        return 0;
-    }
-
-    @Override
-    public long getAmount() {
-        return 0;
-    }
-
-    @Override
-    public long getCapacity() {
-        return this.maxTransferRate;
     }
 }

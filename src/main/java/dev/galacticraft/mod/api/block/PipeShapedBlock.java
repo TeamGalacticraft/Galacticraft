@@ -23,8 +23,11 @@
 package dev.galacticraft.mod.api.block;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.grid.Duct;
+import dev.galacticraft.mod.api.grid.GridContainer;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
@@ -80,6 +83,33 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
         }
     }
 
+    /**
+     * Checks again whether this block connects to the block on the given side, like after a neighbor update.
+     */
+    public void refreshConnection(Level level, BlockPos pos, Direction side) {
+        BlockState state = level.getBlockState(pos);
+        if (state.getBlock() == this && this.updateConnection(state, pos, side, pos.relative(side), level)) {
+            this.onConnectionChanged(level, pos, side, pos.relative(side));
+        }
+    }
+
+    @Override
+    protected void onPlace(BlockState state, Level level, BlockPos pos, BlockState oldState, boolean movedByPiston) {
+        super.onPlace(state, level, pos, oldState, movedByPiston);
+        // The only place a duct joins a grid: item placement on Fabric also ends up here
+        if (level instanceof ServerLevel serverLevel && !oldState.is(state.getBlock()) && level.getBlockEntity(pos) instanceof Duct<?, ?> duct) {
+            GridContainer.get(serverLevel).onDuctPlaced(duct);
+        }
+    }
+
+    @Override
+    protected void onRemove(BlockState state, Level level, BlockPos pos, BlockState newState, boolean movedByPiston) {
+        if (level instanceof ServerLevel serverLevel && !state.is(newState.getBlock()) && level.getBlockEntity(pos) instanceof Duct<?, ?> duct) {
+            GridContainer.get(serverLevel).onDuctRemoved(duct);
+        }
+        super.onRemove(state, level, pos, newState, movedByPiston);
+    }
+
     @Override
     public void setPlacedBy(Level level, BlockPos pos, BlockState state, @Nullable LivingEntity placer, ItemStack itemStack) {
         super.setPlacedBy(level, pos, state, placer, itemStack);
@@ -99,6 +129,9 @@ public abstract class PipeShapedBlock<BE extends BlockEntity & Connected> extend
 
         if (this.updateConnection(state, pos, direction, neighborPos, level)) {
             this.onConnectionChanged(level, pos, direction, neighborPos);
+        }
+        if (level instanceof ServerLevel serverLevel && level.getBlockEntity(pos) instanceof Duct<?, ?> duct) {
+            GridContainer.get(serverLevel).onDuctNeighborChanged(duct);
         }
     }
 

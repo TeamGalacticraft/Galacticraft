@@ -24,11 +24,13 @@ package dev.galacticraft.mod.network;
 
 import dev.galacticraft.mod.network.c2s.*;
 import dev.galacticraft.mod.network.s2c.*;
+import dev.galacticraft.mod.network.s2c.GridDebugPayload;
 import net.fabricmc.fabric.api.networking.v1.PayloadTypeRegistry;
 
 public class GCPackets {
     public static void register() {
         PayloadTypeRegistry.playS2C().register(BubbleSizePayload.TYPE, BubbleSizePayload.STREAM_CODEC);
+        PayloadTypeRegistry.playS2C().register(GridDebugPayload.TYPE, GridDebugPayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(BubbleUpdatePayload.TYPE, BubbleUpdatePayload.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(FootprintPacket.TYPE, FootprintPacket.STREAM_CODEC);
         PayloadTypeRegistry.playS2C().register(FootprintRemovedPacket.TYPE, FootprintRemovedPacket.STREAM_CODEC);

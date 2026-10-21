@@ -31,6 +31,7 @@ import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
+import dev.galacticraft.mod.api.grid.GridEvents;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -72,6 +73,7 @@ public class GCEventHandlers {
         GCSleepEventHandlers.init();
         GCInteractionEventHandlers.init();
         WalkwayBreakHandler.register();
+        GridEvents.register();
 
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(GCEventHandlers::onPlayerChangeWorld);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);

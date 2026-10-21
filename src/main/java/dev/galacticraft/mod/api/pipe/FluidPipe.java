@@ -23,46 +23,28 @@
 package dev.galacticraft.mod.api.pipe;
 
 import dev.galacticraft.mod.api.block.entity.Connected;
+import dev.galacticraft.mod.api.grid.fluid.FluidDuct;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
-import net.minecraft.core.Direction;
-import org.jetbrains.annotations.Contract;
-import org.jetbrains.annotations.Nullable;
 
-public interface FluidPipe extends Connected {
+/**
+ * A fluid pipe: a duct of a {@link dev.galacticraft.mod.api.grid.fluid.FluidGrid}.
+ */
+public interface FluidPipe extends Connected, FluidDuct {
     /**
-     * Sets the {@link PipeNetwork} associated with this pipe
-     *
-     * @param network The network to associate with
+     * {@return the fluid storage this pipe exposes to the blocks around it}
      */
-    void setNetwork(@Nullable PipeNetwork network);
+    Storage<FluidVariant> getFluidStorage();
 
     /**
-     * Returns the associated {@link PipeNetwork}
+     * Returns the maximum amount of fluid allowed to be transferred through this pipe per tick.
      *
-     * @return The associated {@link PipeNetwork}
-     */
-    @Contract(pure = true)
-    @Nullable PipeNetwork getNetwork();
-
-    /**
-     * Returns whether this pipe is able to connect to another block on the specified face/direction
-     *
-     * @param direction the direction offset to the block to check adjacency to
-     * @return Whether this pipe is able to connect to another block on the specified face/direction
-     */
-    default boolean canConnect(Direction direction) {
-        return true;
-    }
-
-    Storage<FluidVariant> getInsertable();
-
-    /**
-     * Returns the maximum amount of fluid allowed to be transferred through this pipe.
-     *
-     * @return the maximum amount of fluid allowed to be transferred through this pipe.
+     * @return the maximum amount of fluid allowed to be transferred through this pipe per tick.
      */
     long getMaxTransferRate();
 
-    void forceCreateNetwork();
+    @Override
+    default long getTransferRate() {
+        return this.getMaxTransferRate();
+    }
 }
