@@ -47,6 +47,11 @@ import java.util.List;
 import java.util.Objects;
 
 public class WireNetworkImpl extends SnapshotParticipant<Long> implements WireNetwork {
+    /**
+     * The number of wire networks that are being built, see {@link #isBuilding()}.
+     */
+    private static int building = 0;
+
     private final @NotNull ServerLevel level;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, EnergyStorage @Nullable []> wires = new Object2ObjectOpenHashMap<>(1);
     private final long maxTransferRate;
@@ -59,7 +64,21 @@ public class WireNetworkImpl extends SnapshotParticipant<Long> implements WireNe
         this.level = level;
         this.maxTransferRate = maxTransferRate;
         this.tickId = this.level.getServer().getTickCount();
-        this.addWire(pos, null);
+        building++;
+        try {
+            this.addWire(pos, null);
+        } finally {
+            building--;
+        }
+    }
+
+    /**
+     * {@return whether a wire network is being built right now}
+     * Its wires shouldn't build their own network then: the network being built will include them,
+     * and building another one at the same time marks one of them for removal, or never ends (#337).
+     */
+    public static boolean isBuilding() {
+        return building > 0;
     }
 
     private void addWire(@NotNull BlockPos pos, @Nullable Wire wire) {
