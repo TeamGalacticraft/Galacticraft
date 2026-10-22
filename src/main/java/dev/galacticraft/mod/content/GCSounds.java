@@ -62,10 +62,6 @@ public class GCSounds {
     public static final Holder.Reference<SoundEvent> MUSIC_LEGACY_SPACERACE = registerForHolder("music_disc.legacy.spacerace");
     // Player
     public static final SoundEvent CHEST_UNLOCK = register("player.chest.unlock");
-    public static final SoundEvent EMPTY_FUEL = register("player.empty_fuel_bucket");
-    public static final SoundEvent EMPTY_OIL = register("player.empty_oil_bucket");
-    public static final SoundEvent FILL_FUEL = register("player.fill_fuel_bucket");
-    public static final SoundEvent FILL_OIL = register("player.fill_oil_bucket");
     public static final SoundEvent PARACHUTE = register("player.parachute");
 
     private static Holder.Reference<SoundEvent> registerForHolder(String id) {
