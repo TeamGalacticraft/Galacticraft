@@ -63,6 +63,12 @@ public class GridContainer extends SavedData {
     private static final String GRID_ID = "Id";
     private static final String GRID_TYPE = "Type";
     private static final String BLOCKED = "Blocked";
+    private static final String VERSION = "Version";
+    /**
+     * The version of the saved grids. Grids saved with another version are dropped on load and built again from the ducts,
+     * for when the way ducts form grids changed.
+     */
+    private static final int DATA_VERSION = 2;
 
     private final ServerLevel level;
     /**
@@ -549,6 +555,7 @@ public class GridContainer extends SavedData {
 
     @Override
     public CompoundTag save(CompoundTag tag, HolderLookup.Provider registries) {
+        tag.putInt(VERSION, DATA_VERSION);
         ListTag grids = new ListTag();
         for (Grid<?, ?> grid : this.grids.values()) {
             CompoundTag gridTag = grid.save(registries);
@@ -568,6 +575,11 @@ public class GridContainer extends SavedData {
 
     private static GridContainer load(ServerLevel level, CompoundTag tag, HolderLookup.Provider registries) {
         GridContainer container = new GridContainer(level);
+        if (tag.getInt(VERSION) != DATA_VERSION) {
+            // The ducts join new grids when they are loaded
+            Constant.LOGGER.info("Rebuilding the grids of {}, they were saved by another version", level.dimension().location());
+            return container;
+        }
         ListTag grids = tag.getList(GRIDS, Tag.TAG_COMPOUND);
         for (int i = 0; i < grids.size(); i++) {
             CompoundTag gridTag = grids.getCompound(i);
