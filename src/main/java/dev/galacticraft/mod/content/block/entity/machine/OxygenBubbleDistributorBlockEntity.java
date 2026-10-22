@@ -83,7 +83,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
-                    Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate() * 2,
+                    Galacticraft.CONFIG.oxygenBubbleDistributorEnergyConsumptionRate() * 2,
                     0
             ),
             MachineFluidStorage.spec(
