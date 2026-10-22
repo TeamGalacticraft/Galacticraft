@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
@@ -58,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
-public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
+public class ElectricArcFurnaceBlockEntity extends CookingMachineBlockEntity<BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOTS = 2;
