@@ -23,16 +23,19 @@
 package dev.galacticraft.mod.gametest.machine;
 
 import dev.galacticraft.machinelib.api.gametest.RecipeGameTest;
+import dev.galacticraft.machinelib.api.gametest.annotation.MachineTest;
 import dev.galacticraft.machinelib.api.gametest.annotation.TestSuite;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.ElectricArcFurnaceBlockEntity;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.gametest.framework.GameTestGenerator;
 import net.minecraft.gametest.framework.TestFunction;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.SingleRecipeInput;
 import org.jetbrains.annotations.NotNull;
+import org.junit.jupiter.api.Assertions;
 
 import java.util.List;
 
@@ -43,6 +46,13 @@ public final class ElectricArcFurnaceTestSuite extends RecipeGameTest<SingleReci
                 machine -> machine.energyStorage().setEnergy(Long.MAX_VALUE / 2),
                 machine -> machine.itemStorage().slot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1)
         ), ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS, ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 100);
+    }
+
+    @MachineTest(workTime = 100)
+    public Runnable storeExperience(ElectricArcFurnaceBlockEntity machine) {
+        machine.energyStorage().setEnergy(Long.MAX_VALUE / 2);
+        machine.itemStorage().slot(ElectricArcFurnaceBlockEntity.INPUT_SLOT).set(Items.RAW_IRON, 1);
+        return () -> Assertions.assertEquals(1, machine.getRecipesUsed().getInt(ResourceLocation.withDefaultNamespace("iron_ingot_from_blasting_raw_iron")), "Failed to store the experience of the crafted recipe!");
     }
 
     @Override

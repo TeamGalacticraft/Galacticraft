@@ -217,6 +217,9 @@ public class GCBlockLootTableProvider extends FabricBlockLootTableProvider {
         this.dropSelf(GCBlocks.HEAVY_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         this.dropSelf(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+        for (Block pipe : GCBlocks.SEALABLE_FLUID_PIPES.values()) {
+            this.dropSelf(pipe);
+        }
 
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
             this.dropSelf(pipe);

@@ -60,11 +60,7 @@ public class ElectricArcFurnaceDisplay extends BasicDisplay {
 
     @SuppressWarnings("UnstableApiUsage")
     public ElectricArcFurnaceDisplay(RecipeHolder<BlastingRecipe> recipe) {
-        super(getInputs(recipe), Collections.singletonList(
-                EntryIngredients.ofItemStacks(List.of(recipe.value().getResultItem(registryAccess()),
-                        recipe.value().getResultItem(registryAccess()).copyWithCount(recipe.value().getResultItem(registryAccess()).getCount() * 2)
-                ))
-        ));
+        super(getInputs(recipe), Collections.singletonList(EntryIngredients.of(recipe.value().getResultItem(registryAccess()))));
         this.processingTime = (int) (recipe.value().getCookingTime() / 1.5F);
         this.xp = recipe.value().getExperience();
     }
