@@ -71,7 +71,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.UUID;
@@ -224,41 +223,6 @@ public abstract class EntityMixin implements EntityAccessor {
         } else {
             this.timeInAcid = 0;
         }
-    }
-
-    @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
-    private float  GCSwimPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
-    private float  GCSplashPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 1), index = 2)
-    private float  GCHighSpeedSplashPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @Unique
-    private float GCPitchChanger(float pitch) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
-            return this.FuelPitch();
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014)) {
-            return this.OilPitch();
-        }
-        return pitch;
-    }
-
-    @Unique
-    private float FuelPitch() {
-        return 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-    }
-
-    @Unique
-    private float OilPitch() {
-        return 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
