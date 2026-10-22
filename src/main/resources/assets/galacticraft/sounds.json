@@ -93,42 +93,6 @@
       }
     ]
   },
-  "item.bucket.empty_fuel": {
-    "subtitle": "subtitles.galacticraft.item.bucket.empty_fuel",
-    "sounds": [
-      {
-        "name": "galacticraft:item/bucket",
-        "stream": false
-      }
-    ]
-  },
-  "item.bucket.empty_oil": {
-    "subtitle": "subtitles.galacticraft.item.bucket.empty_oil",
-    "sounds": [
-      {
-        "name": "galacticraft:item/bucket",
-        "stream": false
-      }
-    ]
-  },
-  "item.bucket.fill_fuel": {
-    "subtitle": "subtitles.galacticraft.item.bucket.fill_fuel",
-    "sounds": [
-      {
-        "name": "galacticraft:item/bucket",
-        "stream": false
-      }
-    ]
-  },
-  "item.bucket.fill_oil": {
-    "subtitle": "subtitles.galacticraft.item.bucket.fill_oil",
-    "sounds": [
-      {
-        "name": "galacticraft:item/bucket",
-        "stream": false
-      }
-    ]
-  },
   "machine.airlock.close": {
     "subtitle": "subtitles.galacticraft.machine.airlock.close",
     "sounds": [
@@ -285,38 +249,6 @@
         "name": "galacticraft:player/chest/unlock",
         "stream": false
       }
-    ]
-  },
-  "player.empty_fuel_bucket": {
-    "subtitle": "subtitles.galacticraft.player.empty_fuel_bucket",
-    "sounds": [
-      "galacticraft:fluid/fuel/empty_fuel_bucket1",
-      "galacticraft:fluid/fuel/empty_fuel_bucket2",
-      "galacticraft:fluid/fuel/empty_fuel_bucket3"
-    ]
-  },
-  "player.empty_oil_bucket": {
-    "subtitle": "subtitles.galacticraft.player.empty_oil_bucket",
-    "sounds": [
-      "galacticraft:fluid/oil/empty_oil_bucket1",
-      "galacticraft:fluid/oil/empty_oil_bucket2",
-      "galacticraft:fluid/oil/empty_oil_bucket3"
-    ]
-  },
-  "player.fill_fuel_bucket": {
-    "subtitle": "subtitles.galacticraft.player.fill_fuel_bucket",
-    "sounds": [
-      "galacticraft:fluid/fuel/fill_fuel_bucket1",
-      "galacticraft:fluid/fuel/fill_fuel_bucket2",
-      "galacticraft:fluid/fuel/fill_fuel_bucket3"
-    ]
-  },
-  "player.fill_oil_bucket": {
-    "subtitle": "subtitles.galacticraft.player.fill_oil_bucket",
-    "sounds": [
-      "galacticraft:fluid/oil/fill_oil_bucket1",
-      "galacticraft:fluid/oil/fill_oil_bucket2",
-      "galacticraft:fluid/oil/fill_oil_bucket3"
     ]
   },
   "player.parachute": {
