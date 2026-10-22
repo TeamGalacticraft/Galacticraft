@@ -26,7 +26,7 @@ import dev.galacticraft.mod.api.grid.Duct;
 import net.minecraft.core.Direction;
 
 /**
- * A duct of an {@link EnergyGrid}, like a wire. All energy ducts connect to each other, whatever their tier.
+ * A duct of an {@link EnergyGrid}, like a wire.
  */
 public interface EnergyDuct extends Duct<EnergyGrid, EnergyGridNode> {
     /**

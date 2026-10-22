@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.api.grid.energy;
 
+import dev.galacticraft.mod.api.grid.Duct;
 import dev.galacticraft.mod.api.grid.Grid;
 import dev.galacticraft.mod.api.grid.GridHelper;
 import dev.galacticraft.mod.api.grid.GridTypes;
@@ -156,11 +157,32 @@ public class EnergyGrid extends Grid<EnergyGrid, EnergyGridNode> {
     }
 
     @Override
-    public boolean canConnectOnSide(BlockPos pos, Direction side) {
-        if (!this.level.isLoaded(pos) || GridHelper.getDuct(this.level, pos) != null) {
-            return false; // Ducts are connected through the grid, not externally
+    public boolean canConnectOnSide(BlockPos ductPos, Direction direction) {
+        BlockPos pos = ductPos.relative(direction);
+        if (!this.level.isLoaded(pos)) {
+            return false;
         }
-        return EnergyStorage.SIDED.find(this.level, pos, side) != null;
+        Duct<?, ?> other = GridHelper.getDuct(this.level, pos);
+        if (other != null) {
+            // Ducts that can't share a grid, like wires of another tier, are connected like any other block
+            Duct<?, ?> self = GridHelper.getDuct(this.level, ductPos);
+            return other instanceof EnergyDuct && self != null
+                    && !(self.canConnectTo(other, direction) && other.canConnectTo(self, direction.getOpposite()));
+        }
+        return EnergyStorage.SIDED.find(this.level, pos, direction.getOpposite()) != null;
+    }
+
+    /**
+     * {@return how much energy to move to the given grid so both are equally full, or 0 if this grid isn't fuller}
+     * Moving energy only from the fuller grid keeps two connected grids from passing it back and forth.
+     */
+    public long amountToBalance(EnergyGrid other) {
+        double energy = this.storage.getEnergy();
+        double capacity = this.storage.getCapacity();
+        double otherEnergy = other.storage.getEnergy();
+        double otherCapacity = other.storage.getCapacity();
+        double difference = energy * otherCapacity - otherEnergy * capacity;
+        return difference <= 0 ? 0 : (long) (difference / (capacity + otherCapacity));
     }
 
     public EnergyGridStorage getStorage() {

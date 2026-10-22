@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity.networked;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.WalkwayHolder;
+import dev.galacticraft.mod.api.grid.Duct;
 import dev.galacticraft.mod.api.grid.GridContainer;
 import dev.galacticraft.mod.api.grid.GridType;
 import dev.galacticraft.mod.api.grid.GridTypes;
@@ -104,6 +105,15 @@ public class WireBlockEntity extends BlockEntity implements Wire, WalkwayHolder 
     @Override
     public void setGrid(@Nullable EnergyGrid grid) {
         this.grid = grid;
+    }
+
+    /**
+     * Wires only share a grid with wires of the same tier. Wires of another tier are connected like any other block,
+     * so the energy that passes between them is limited by the lower tier.
+     */
+    @Override
+    public boolean canConnectTo(Duct<?, ?> other, Direction direction) {
+        return other instanceof WireBlockEntity wire && wire.getType() == this.getType();
     }
 
     @Override

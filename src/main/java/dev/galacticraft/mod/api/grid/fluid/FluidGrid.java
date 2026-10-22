@@ -217,11 +217,12 @@ public class FluidGrid extends Grid<FluidGrid, FluidGridNode> {
     }
 
     @Override
-    public boolean canConnectOnSide(BlockPos pos, Direction side) {
+    public boolean canConnectOnSide(BlockPos ductPos, Direction direction) {
+        BlockPos pos = ductPos.relative(direction);
         if (!this.level.isLoaded(pos) || GridHelper.getDuct(this.level, pos) != null) {
             return false; // Ducts are connected through the grid, not externally
         }
-        return FluidStorage.SIDED.find(this.level, pos, side) != null;
+        return FluidStorage.SIDED.find(this.level, pos, direction.getOpposite()) != null;
     }
 
     public FluidGridStorage getStorage() {

@@ -125,10 +125,10 @@ public abstract class Grid<G extends Grid<G, N>, N extends GridNode<G>> {
     public abstract void onSplit(List<G> others);
 
     /**
-     * {@return whether this grid can connect to the block at the given position, on the given side of that block}
-     * Other ducts are never connected this way.
+     * {@return whether the duct at the given position can connect to the block on the given side of it, outside this grid}
+     * Ducts that join this grid are never connected this way. The block on that side is in a loaded chunk.
      */
-    public abstract boolean canConnectOnSide(BlockPos pos, Direction side);
+    public abstract boolean canConnectOnSide(BlockPos ductPos, Direction direction);
 
     /**
      * {@return whether this grid can connect to any block next to the given position}
@@ -136,8 +136,7 @@ public abstract class Grid<G extends Grid<G, N>, N extends GridNode<G>> {
      */
     public boolean canConnectExternally(BlockPos pos) {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
-            BlockPos neighbor = pos.relative(dir);
-            if (!this.level.isLoaded(neighbor) || this.canConnectOnSide(neighbor, dir.getOpposite())) {
+            if (!this.level.isLoaded(pos.relative(dir)) || this.canConnectOnSide(pos, dir)) {
                 return true;
             }
         }

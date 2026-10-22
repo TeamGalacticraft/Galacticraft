@@ -128,22 +128,52 @@ public class WireTestSuite implements GalacticraftGameTest {
     }
 
     @GameTest(template = GRID_ROOM)
-    public void mixedTiersShareOneGridTest(GameTestHelper context) {
+    public void tiersAreSeparateGridsTest(GameTestHelper context) {
         context.setBlock(new BlockPos(0, 1, 0), GCBlocks.HEAVY_ALUMINUM_WIRE);
         this.line(context, GCBlocks.ALUMINUM_WIRE, 1, 3, 0);
         context.setBlock(new BlockPos(4, 1, 0), GCBlocks.HEAVY_ALUMINUM_WIRE);
 
-        EnergyGrid grid = this.grid(context, 0, 0);
-        context.assertTrue(grid == this.grid(context, 2, 0) && grid == this.grid(context, 4, 0), "Expected normal and heavy wires in one grid");
-        this.assertShape(context, grid, 2, 1);
-        EnergyGridNode end = this.node(context, 4, 0);
-        context.assertTrue(end != null && end.getNodeCapacity() == WireBlockEntity.T2_NODE_CAPACITY, "Expected a heavy wire node to add the heavy buffer size");
-
-        // A normal wire at the end is a node with the normal buffer size
-        context.setBlock(new BlockPos(4, 1, 0), GCBlocks.ALUMINUM_WIRE);
-        EnergyGridNode normalEnd = this.node(context, 4, 0);
-        context.assertTrue(normalEnd != null && normalEnd.getNodeCapacity() == WireBlockEntity.T1_NODE_CAPACITY, "Expected a normal wire node to add the normal buffer size");
+        EnergyGrid normal = this.grid(context, 2, 0);
+        context.assertTrue(normal != this.grid(context, 0, 0) && normal != this.grid(context, 4, 0) && this.grid(context, 0, 0) != this.grid(context, 4, 0),
+                "Expected the heavy wires and the normal wires in separate grids");
+        this.assertShape(context, normal, 2, 1);
+        context.assertTrue(this.node(context, 1, 0) != null && this.node(context, 3, 0) != null, "Expected nodes where the normal wires touch the heavy wires");
+        context.assertTrue(((Wire) this.wire(context, 0, 0)).isConnected(Direction.EAST), "Expected wires of different tiers to still look connected");
+        EnergyGridNode heavy = this.node(context, 4, 0);
+        context.assertTrue(heavy != null && heavy.getNodeCapacity() == WireBlockEntity.T2_NODE_CAPACITY, "Expected a heavy wire node to add the heavy buffer size");
+        context.assertTrue(this.node(context, 3, 0).getNodeCapacity() == WireBlockEntity.T1_NODE_CAPACITY, "Expected a normal wire node to add the normal buffer size");
         context.succeed();
+    }
+
+    @GameTest(template = GRID_ROOM)
+    public void transferBetweenTiersIsLimitedByLowerTierTest(GameTestHelper context) {
+        this.line(context, GCBlocks.HEAVY_ALUMINUM_WIRE, 0, 2, 0);
+        this.line(context, GCBlocks.ALUMINUM_WIRE, 3, 5, 0);
+        EnergyGrid heavy = this.grid(context, 0, 0);
+        EnergyGrid normal = this.grid(context, 5, 0);
+        heavy.getStorage().setEnergy(5000);
+        long rate = ((Wire) this.wire(context, 3, 0)).getMaxTransferRate();
+
+        runFinalTaskAt(context, 5, () -> {
+            long moved = normal.getStorage().getEnergy();
+            context.assertTrue(moved > 0, "Expected energy to move from the heavy grid to the normal grid");
+            context.assertTrue(moved <= 5 * rate, "Expected at most %s per tick to pass the normal wire, but %s moved in 5 ticks".formatted(rate, moved));
+            context.assertTrue(heavy.getStorage().getEnergy() + moved == 5000, "Expected no energy to be lost or made");
+        });
+    }
+
+    @GameTest(template = GRID_ROOM)
+    public void energyDoesNotFlowBackBetweenTiersTest(GameTestHelper context) {
+        this.line(context, GCBlocks.HEAVY_ALUMINUM_WIRE, 0, 1, 0);
+        this.line(context, GCBlocks.ALUMINUM_WIRE, 2, 3, 0);
+        EnergyGrid heavy = this.grid(context, 0, 0);
+        EnergyGrid normal = this.grid(context, 3, 0);
+        heavy.getStorage().setEnergy(1000);
+        normal.getStorage().setEnergy(1000);
+
+        // Both grids are equally full, so nothing should move either way
+        runFinalTaskAt(context, 3, () -> context.assertTrue(heavy.getStorage().getEnergy() == 1000 && normal.getStorage().getEnergy() == 1000,
+                "Expected equally full grids to keep their energy, got %s and %s".formatted(heavy.getStorage().getEnergy(), normal.getStorage().getEnergy())));
     }
 
     @GameTest(template = GRID_ROOM)
@@ -228,7 +258,7 @@ public class WireTestSuite implements GalacticraftGameTest {
 
     @GameTest(template = GRID_ROOM)
     public void gridSaveRoundTripTest(GameTestHelper context) {
-        this.line(context, GCBlocks.ALUMINUM_WIRE, 0, 4, 0);
+        this.line(context, GCBlocks.HEAVY_ALUMINUM_WIRE, 0, 4, 0);
         context.setBlock(new BlockPos(4, 1, 1), GCBlocks.HEAVY_ALUMINUM_WIRE);
         EnergyGrid grid = this.grid(context, 0, 0);
         grid.getStorage().setEnergy(1234);

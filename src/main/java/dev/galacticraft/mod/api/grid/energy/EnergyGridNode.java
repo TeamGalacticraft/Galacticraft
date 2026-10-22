@@ -69,7 +69,7 @@ public class EnergyGridNode extends GridNode<EnergyGrid> {
     protected void cacheConnections() {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
             BlockPos neighbor = this.pos.relative(dir);
-            if (this.getLevel().isLoaded(neighbor) && this.grid.canConnectOnSide(neighbor, dir.getOpposite())) {
+            if (this.getLevel().isLoaded(neighbor) && this.grid.canConnectOnSide(this.pos, dir)) {
                 this.connections.add(dir);
             }
         }
@@ -104,8 +104,21 @@ public class EnergyGridNode extends GridNode<EnergyGrid> {
             return 0;
         }
 
+        long offer = Math.min(energy, budget);
+        if (storage instanceof DuctEnergyStorage duct) {
+            // Another grid, like one of wires of another tier: only even out how full both grids are
+            EnergyGrid other = duct.getGrid();
+            if (other == null || other == this.grid) {
+                return 0;
+            }
+            offer = Math.min(offer, this.grid.amountToBalance(other));
+            if (offer <= 0) {
+                return 0;
+            }
+        }
+
         try (Transaction transaction = Transaction.openOuter()) {
-            long moved = storage.insert(Math.min(energy, budget), transaction);
+            long moved = storage.insert(offer, transaction);
             this.grid.getStorage().extract(moved, transaction);
             transaction.commit();
             return moved;

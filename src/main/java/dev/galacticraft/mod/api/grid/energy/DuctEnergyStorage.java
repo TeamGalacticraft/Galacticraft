@@ -25,6 +25,7 @@ package dev.galacticraft.mod.api.grid.energy;
 import net.fabricmc.fabric.api.transfer.v1.storage.StoragePreconditions;
 import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
+import org.jetbrains.annotations.Nullable;
 import team.reborn.energy.api.EnergyStorage;
 
 /**
@@ -47,6 +48,13 @@ public class DuctEnergyStorage extends SnapshotParticipant<Long> implements Ener
             this.received = 0;
         }
         return Math.max(0, this.duct.getTransferRate() - this.received);
+    }
+
+    /**
+     * {@return the grid this storage belongs to, or {@code null} if the wire isn't in one}
+     */
+    public @Nullable EnergyGrid getGrid() {
+        return this.duct.getGrid();
     }
 
     @Override

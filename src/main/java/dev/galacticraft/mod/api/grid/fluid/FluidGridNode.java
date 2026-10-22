@@ -61,7 +61,7 @@ public class FluidGridNode extends GridNode<FluidGrid> {
     protected void cacheConnections() {
         for (Direction dir : Constant.Misc.DIRECTIONS) {
             BlockPos neighbor = this.pos.relative(dir);
-            if (this.getLevel().isLoaded(neighbor) && this.grid.canConnectOnSide(neighbor, dir.getOpposite())) {
+            if (this.getLevel().isLoaded(neighbor) && this.grid.canConnectOnSide(this.pos, dir)) {
                 this.connections.add(dir);
             }
         }
