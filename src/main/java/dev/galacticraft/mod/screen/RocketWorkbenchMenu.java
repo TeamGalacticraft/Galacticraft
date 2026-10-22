@@ -33,6 +33,7 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import dev.galacticraft.mod.content.rocket.part.data.ExplosiveRocketData;
 import dev.galacticraft.mod.content.rocket.part.data.RocketUpgradeData;
+import dev.galacticraft.mod.content.rocket.part.data.StorageRocketData;
 import dev.galacticraft.mod.machine.storage.VariableSizedContainer;
 import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.tag.GCItemTags;
@@ -229,6 +230,8 @@ public class RocketWorkbenchMenu extends AbstractContainerMenu implements Variab
             upgradeData = Optional.of(new ExplosiveRocketData(BuiltInRegistries.BLOCK.getKey(tntBlock)));
         } else if (upgradeStack.is(GCItemTags.ROCKET_STORAGE_UPGRADE_ITEMS)) {
             upgrade = Optional.of(new EitherHolder<>(GCRocketParts.STORAGE_UPGRADE));
+            upgradeData = Optional.of(new StorageRocketData(1)); // 1 for now.
+            // TODO: upgradeData (Tier 1 rockets only have one chest slot? Then Tier 2 has two, Tier 3 has three, etc.)
         }
 
         return new RocketData(
