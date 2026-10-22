@@ -27,6 +27,7 @@ import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.machinelib.client.api.event.MachineStatusEvents;
 import dev.galacticraft.mod.client.GCKeyBinds;
+import dev.galacticraft.mod.client.ParachuteCamera;
 import dev.galacticraft.mod.client.gui.overlay.CountdownOverlay;
 import dev.galacticraft.mod.client.gui.overlay.LanderOverlay;
 import dev.galacticraft.mod.client.gui.overlay.OxygenOverlay;
@@ -81,6 +82,7 @@ public class ClientEventHandler {
     public static void clientTick(Minecraft client) {
         OxygenOverlay.clientTick();
         LanderOverlay.clientTick();
+        ParachuteCamera.clientTick(client);
         GCKeyBinds.handleKeybinds(client);
     }
 

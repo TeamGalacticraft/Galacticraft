@@ -360,7 +360,8 @@
         "dev/galacticraft/mod/accessor/GCLevelAccessor"
       ],
       "net/minecraft/class_1657": [
-        "dev/galacticraft/mod/accessor/CryogenicAccessor"
+        "dev/galacticraft/mod/accessor/CryogenicAccessor",
+        "dev/galacticraft/mod/accessor/ParachuteAccessor"
       ],
       "net/minecraft/class_1297": [
         "dev/galacticraft/mod/accessor/EntityAccessor"

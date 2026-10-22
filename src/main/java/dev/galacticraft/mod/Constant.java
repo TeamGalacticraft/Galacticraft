@@ -1309,6 +1309,7 @@ public interface Constant {
         String ITEMS = "Items";
         String GASES = "Gases";
         String CRYOGENIC_COOLDOWN = "CryogenicCooldown";
+        String PARACHUTING = "Parachuting";
         String DOCKED_UUID = "DockedUuid";
         String CAN_CONTENTS = "CanContents";
         String CAN_COUNT = "CanCount";
