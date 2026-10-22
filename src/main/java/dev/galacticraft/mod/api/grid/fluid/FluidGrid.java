@@ -45,9 +45,9 @@ import java.util.UUID;
  * Ported from ThermalDynamics' {@code FluidGrid} (by King Lemming).
  */
 public class FluidGrid extends Grid<FluidGrid, FluidGridNode> {
-    public static final long MIN_CAPACITY = 8 * FluidConstants.BUCKET;
-    public static final long NODE_CAPACITY = FluidConstants.BUCKET / 10;
-    public static final long DEFAULT_TRANSFER_RATE = FluidConstants.BUCKET / 50;
+    public static final long MIN_CAPACITY = 10 * FluidConstants.BUCKET;
+    public static final long NODE_CAPACITY = FluidConstants.BUCKET;
+    public static final long DEFAULT_TRANSFER_RATE = FluidConstants.BUCKET / 20;
     /**
      * How long the pipes keep showing their fluid after the grid ran empty, so they don't flicker.
      */

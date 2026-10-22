@@ -52,8 +52,8 @@ public class WireBlockEntity extends BlockEntity implements Wire, WalkwayHolder 
     /**
      * How much a wire adds to the energy buffer of its grid when it is a node.
      */
-    public static final long T1_NODE_CAPACITY = 400;
-    public static final long T2_NODE_CAPACITY = 800;
+    public static final long T1_NODE_CAPACITY = 500;
+    public static final long T2_NODE_CAPACITY = 1000;
 
     private @Nullable EnergyGrid grid;
     private final int maxTransferRate;

@@ -68,7 +68,7 @@ public class GridContainer extends SavedData {
      * The version of the saved grids. Grids saved with another version are dropped on load and built again from the ducts,
      * for when the way ducts form grids changed.
      */
-    private static final int DATA_VERSION = 2;
+    private static final int DATA_VERSION = 3;
 
     private final ServerLevel level;
     /**

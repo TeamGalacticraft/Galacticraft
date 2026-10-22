@@ -43,8 +43,8 @@ import java.util.UUID;
  */
 public class EnergyGrid extends Grid<EnergyGrid, EnergyGridNode> {
     public static final long MIN_CAPACITY = 10_000;
-    public static final long DEFAULT_NODE_CAPACITY = 400;
-    public static final long DEFAULT_TRANSFER_RATE = 128;
+    public static final long DEFAULT_NODE_CAPACITY = 500;
+    public static final long DEFAULT_TRANSFER_RATE = 2500;
 
     protected final EnergyGridStorage storage = new EnergyGridStorage(MIN_CAPACITY);
 
