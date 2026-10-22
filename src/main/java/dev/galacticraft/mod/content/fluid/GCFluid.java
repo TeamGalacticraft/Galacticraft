@@ -37,7 +37,7 @@ import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 
-public abstract class BasicFluid extends FlowingFluid {
+public abstract class GCFluid extends FlowingFluid {
     private final boolean infinite;
     private final boolean randomTicks;
     private final int flowSpeed;
@@ -45,7 +45,7 @@ public abstract class BasicFluid extends FlowingFluid {
     private final int tickRate;
     private final float blastResistance;
 
-    public BasicFluid(boolean infinite, boolean randomTicks, int flowSpeed, int levelDecrease, int tickRate, float blastResistance) {
+    public GCFluid(boolean infinite, boolean randomTicks, int flowSpeed, int levelDecrease, int tickRate, float blastResistance) {
         super();
         this.infinite = infinite;
         this.randomTicks = randomTicks;
@@ -130,7 +130,7 @@ public abstract class BasicFluid extends FlowingFluid {
 
     @Override
     public String toString() {
-        return "BasicFluid{" +
+        return "GCFluid{" +
                 "isStill=" + isStill() +
                 ", infinite=" + infinite +
                 ", randomTicks=" + randomTicks +
