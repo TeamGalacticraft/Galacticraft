@@ -246,6 +246,9 @@ public class GCCreativeModeTabs {
                 for (PipeColor color : PipeColor.byRainbowOrder()) {
                     output.accept(GLASS_FLUID_PIPES.get(color));
                 }
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(SEALABLE_FLUID_PIPES.get(color));
+                }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
                 output.accept(ROCKET_WORKBENCH);

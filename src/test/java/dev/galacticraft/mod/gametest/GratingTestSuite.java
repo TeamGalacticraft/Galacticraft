@@ -24,21 +24,29 @@ package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.block.decoration.IronGratingBlock;
+import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.gametest.framework.GameTest;
 import net.minecraft.gametest.framework.GameTestHelper;
+import net.minecraft.nbt.NbtOps;
+import net.minecraft.nbt.NbtUtils;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.FluidTags;
+import net.minecraft.world.effect.MobEffects;
+import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.entity.DispenserBlockEntity;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 
 /**
  * Grating tests.
- * FIXME: Currently custom fluids are broken (blocks are loaded before all fluids are registered)
  */
 public class GratingTestSuite implements GalacticraftGameTest {
     @GameTest(template = EMPTY_STRUCTURE)
@@ -153,28 +161,29 @@ public class GratingTestSuite implements GalacticraftGameTest {
         }));
     }
 
-//    @GameTest(template = EMPTY_STRUCTURE)
-//    public void dispenserDispenseCustomFluidToGrating(GameTestHelper context) {
-//        final var pos1 = new BlockPos(3, 0, 5);
-//        final var pos2 = new BlockPos(3, 1, 5);
-//        final var pos3 = new BlockPos(3, 0, 4);
-//        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER);
-//
-//        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
-//        context.setBlock(pos3, grating);
-//        var blockEntity = context.getBlockEntity(pos1);
-//
-//        if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-//            dispenserBlockEntity.addItem(new ItemStack(GCItems.FUEL_BUCKET));
-//        }
-//
-//        context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
-//        context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
-//            if (!context.getBlockState(pos3).getFluidState().is(GCFluids.FUEL)) {
-//                context.fail("Expected fuel but found %s instead!".formatted(BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-//            }
-//        }));
-//    }
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void dispenserDispenseCustomFluidToGrating(GameTestHelper context) {
+        final var pos1 = new BlockPos(3, 0, 5);
+        final var pos2 = new BlockPos(3, 1, 5);
+        final var pos3 = new BlockPos(3, 0, 4);
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER);
+
+        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
+        context.setBlock(pos3, grating);
+        var blockEntity = context.getBlockEntity(pos1);
+
+        if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
+            dispenserBlockEntity.setItem(0, new ItemStack(GCItems.FUEL_BUCKET));
+            dispenserBlockEntity.setChanged();
+        }
+
+        context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
+        context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
+            if (!context.getBlockState(pos3).getFluidState().is(GCFluids.FUEL)) {
+                context.fail("Expected fuel but found %s instead!".formatted(BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
+            }
+        }));
+    }
 
     @GameTest(template = EMPTY_STRUCTURE)
     public void dispenserPickupFluidFromGrating(GameTestHelper context) {
@@ -200,26 +209,84 @@ public class GratingTestSuite implements GalacticraftGameTest {
         }));
     }
 
-//    @GameTest(template = EMPTY_STRUCTURE)
-//    public void dispenserPickupCustomFluidFromGrating(GameTestHelper context) {
-//        final var pos1 = new BlockPos(3, 0, 5);
-//        final var pos2 = new BlockPos(3, 1, 5);
-//        final var pos3 = new BlockPos(3, 0, 4);
-//        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.FUEL));
-//
-//        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
-//        context.setBlock(pos3, grating);
-//        var blockEntity = context.getBlockEntity(pos1);
-//
-//        if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
-//            dispenserBlockEntity.addItem(new ItemStack(Items.BUCKET));
-//        }
-//
-//        context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
-//        context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
-//            if (context.getBlockState(pos3).getFluidState().is(GCFluids.FUEL)) {
-//                context.fail("Expected grating without fuel but found %s instead!".formatted(BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
-//            }
-//        }));
-//    }
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void dispenserPickupCustomFluidFromGrating(GameTestHelper context) {
+        final var pos1 = new BlockPos(3, 0, 5);
+        final var pos2 = new BlockPos(3, 1, 5);
+        final var pos3 = new BlockPos(3, 0, 4);
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.FUEL));
+
+        context.setBlock(pos1, Blocks.DISPENSER.defaultBlockState());
+        context.setBlock(pos3, grating);
+        var blockEntity = context.getBlockEntity(pos1);
+
+        if (blockEntity instanceof DispenserBlockEntity dispenserBlockEntity) {
+            dispenserBlockEntity.setItem(0, new ItemStack(Items.BUCKET));
+            dispenserBlockEntity.setChanged();
+        }
+
+        context.runAtTickTime(context.getTick() + 10L, () -> context.setBlock(pos2, Blocks.REDSTONE_BLOCK.defaultBlockState()));
+        context.runAtTickTime(context.getTick() + 50L, () -> context.succeedWhen(() -> {
+            if (context.getBlockState(pos3).getFluidState().is(GCFluids.FUEL)) {
+                context.fail("Expected grating without fuel but found %s instead!".formatted(BuiltInRegistries.FLUID.getKey(context.getBlockState(pos3).getFluidState().getType())), pos3);
+            }
+        }));
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void gratingWithUnknownFluidLoadsEmptyTest(GameTestHelper context) {
+        var tag = NbtUtils.writeBlockState(GCBlocks.IRON_GRATING.defaultBlockState().setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.WATER)));
+        tag.getCompound("Properties").putString(FluidLoggable.FLUID.getName(), "othermod_gc_colon_oil");
+        BlockState state = BlockState.CODEC.parse(NbtOps.INSTANCE, tag).getOrThrow();
+
+        if (!state.is(GCBlocks.IRON_GRATING)) {
+            context.fail("Expected an iron grating but found %s instead!".formatted(state));
+        } else if (!state.getFluidState().isEmpty()) {
+            context.fail("Expected grating without fluid but found %s instead!".formatted(BuiltInRegistries.FLUID.getKey(state.getFluidState().getType())));
+        } else {
+            context.succeed();
+        }
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void gratingWithLavaGivesOffLightTest(GameTestHelper context) {
+        var grating = GCBlocks.IRON_GRATING.defaultBlockState();
+        int lavaLight = Blocks.LAVA.defaultBlockState().getLightEmission();
+
+        for (var fluid : new Fluid[]{Fluids.LAVA, Fluids.FLOWING_LAVA, Fluids.WATER}) {
+            int expected = fluid.isSame(Fluids.LAVA) ? lavaLight : 0;
+            int light = grating.setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(fluid)).getLightEmission();
+            if (light != expected) {
+                context.fail("Expected a grating with %s to give off light level %d but found %d instead!".formatted(BuiltInRegistries.FLUID.getKey(fluid), expected, light));
+                return;
+            }
+        }
+        context.succeed();
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void entityBurnsInGratingWithLavaTest(GameTestHelper context) {
+        var pos = new BlockPos(4, 1, 4);
+        context.setBlock(pos, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(Fluids.LAVA)));
+        var pig = context.spawn(EntityType.PIG, pos);
+        context.succeedWhen(() -> context.assertTrue(pig.isOnFire(), "Expected the pig to burn in the lava in the grating"));
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void entityGetsCrudeOilEffectsInGratingTest(GameTestHelper context) {
+        var pos = new BlockPos(4, 1, 4);
+        context.setBlock(pos, GCBlocks.IRON_GRATING.defaultBlockState().setValue(IronGratingBlock.STATE, IronGratingBlock.State.LOWER).setValue(FluidLoggable.FLUID, BuiltInRegistries.FLUID.getKey(GCFluids.CRUDE_OIL)));
+        var pig = context.spawn(EntityType.PIG, pos);
+        context.succeedWhen(() -> context.assertTrue(pig.hasEffect(MobEffects.BLINDNESS), "Expected the pig to be blinded by the crude oil in the grating"));
+    }
+
+    @GameTest(template = EMPTY_STRUCTURE)
+    public void fluidsFromModMetadataTest(GameTestHelper context) {
+        // The test mod lists one valid fluid ID, a number and an invalid ID in its fabric.mod.json
+        var values = FluidLoggable.FLUID.getPossibleValues();
+        context.assertTrue(values.contains(ResourceLocation.fromNamespaceAndPath("galacticraft-test", "test_fluid")), "Expected the fluid from the test mod to be fluid loggable");
+        context.assertTrue(values.stream().noneMatch(id -> id.getNamespace().equals("minecraft") && id.getPath().contains("fluid!")), "Expected the invalid fluid ID to be ignored");
+        context.assertTrue(values.size() == 13, "Expected 13 values but found %s: %s".formatted(values.size(), values));
+        context.succeed();
+    }
 }

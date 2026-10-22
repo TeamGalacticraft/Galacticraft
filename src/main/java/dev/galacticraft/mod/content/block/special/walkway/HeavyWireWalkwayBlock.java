@@ -29,8 +29,10 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -49,7 +51,7 @@ public class HeavyWireWalkwayBlock extends WireBlock implements AbstractWalkwayB
     private static final float PIPE_RADIUS = 0.1875f;
 
     public HeavyWireWalkwayBlock(Properties settings) {
-        super(PIPE_RADIUS, settings);
+        super(PIPE_RADIUS, FluidLoggable.withFluidLight(settings));
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
         defaultState = AbstractWalkwayBlock.applyDefaultState(defaultState);
@@ -86,6 +88,12 @@ public class HeavyWireWalkwayBlock extends WireBlock implements AbstractWalkwayB
     @Override
     public @NotNull FluidState getFluidState(BlockState blockState) {
         return FluidLoggable.createFluidState(blockState);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
     }
 
     @Override
