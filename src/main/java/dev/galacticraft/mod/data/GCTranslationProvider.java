@@ -1095,6 +1095,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE, "Oxygen Sealer Energy Consumption Rate/t");
         this.add(Config.OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE, "Oxygen Sealer Oxygen Consumption Rate/t");
         this.add(Config.MAX_SEALING_POWER, "Maximum Sealing Power");
+        this.add(Config.OXYGEN_BUBBLE_DISTRIBUTOR_ENERGY_CONSUMPTION_RATE, "Bubble Distributor Energy Consumption Rate/t");
         this.add(Config.REFINERY_ENERGY_CONSUMPTION_RATE, "Refinery Energy Consumption Rate/t");
         this.add(Config.FUEL_LOADER_ENERGY_CONSUMPTION_RATE, "Fuel Loader Energy Consumption Rate/t");
         this.add(Config.FOOD_CANNER_ENERGY_CONSUMPTION_RATE, "Food Canner Energy Consumption Rate/t");
