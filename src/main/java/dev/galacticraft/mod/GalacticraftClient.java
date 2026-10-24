@@ -200,8 +200,10 @@ public class GalacticraftClient implements ClientModInitializer {
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.translucent(), GCBlocks.OLIVINE_GLASS, GCBlocks.OLIVINE_GLASS_PANE, GCBlocks.MOON_GLASS, GCBlocks.MOON_GLASS_PANE);
         BlockRenderLayerMap.INSTANCE.putBlocks(RenderType.cutout(), GCBlocks.MOON_WEED, GCBlocks.MOON_SHRUBS, GCBlocks.MOON_TANGLE);
 
+        // The tripwire layer is drawn after the translucent layer, so the glass is always drawn after the fluid inside it, which is translucent.
+        // In the translucent layer, faces of the glass that were sorted before the fluid behind them hid it.
         for (Block pipe : GCBlocks.GLASS_FLUID_PIPES.values()) {
-            BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.translucent());
+            BlockRenderLayerMap.INSTANCE.putBlock(pipe, RenderType.tripwire());
         }
         BlockRenderLayerMap.INSTANCE.putBlock(GCBlocks.GLASS_FLUID_PIPE, RenderType.cutout());
 
