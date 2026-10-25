@@ -58,7 +58,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
         return () -> Assertions.assertNotEquals(0, machine.getFuelLength(), "Failed to burn fuel");
     }
 
-    @MachineTest(workTime = 321)
+    @MachineTest(workTime = 401)
     public Runnable multipleFuelBurning(CoalGeneratorBlockEntity machine) {
         ItemResourceSlot slot = machine.itemStorage().slot(CoalGeneratorBlockEntity.INPUT_SLOT);
 
@@ -68,7 +68,7 @@ public final class CoalGeneratorTestSuite extends MachineGameTest<CoalGeneratorB
 
     @MachineTest(workTime = 250)
     public Runnable heat(CoalGeneratorBlockEntity machine) {
-        machine.setFuelLength(CoalGeneratorBlockEntity.FUEL_MAP.getInt(Items.COAL));
+        machine.setFuelLength(CoalGeneratorBlockEntity.getItemFuelLength(Items.COAL));
         return () -> Assertions.assertEquals(1, machine.getHeat(), "Coal generator did not heat up!");
     }
 
