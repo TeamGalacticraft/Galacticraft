@@ -1027,7 +1027,7 @@ public interface Constant {
         int SIDE_BUTTON_GRADIENT_U = 0;
         int SIDE_BUTTON_GRADIENT_V = 234;
         int SIDE_BUTTON_GRADIENT_WIDTH = 86;
-        int SIDE_BUTTON_GRADIENTn_HEIGHT = 20;
+        int SIDE_BUTTON_GRADIENT_HEIGHT = 20;
 
         int TOP_RIGHT_ACTION_BUTTON_U = 134;
         int TOP_RIGHT_ACTION_BUTTON_V = 211;

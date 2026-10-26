@@ -35,6 +35,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.satellite.Orbitable;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.util.Graphics;
 import dev.galacticraft.mod.network.c2s.PlanetTeleportPayload;
 import dev.galacticraft.mod.network.c2s.SatelliteCreationPayload;
@@ -736,7 +737,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
 
             texture.blit(LHS + 4, LHS, 83, 12, CATALOG_BACKING_U, CATALOG_BACKING_V, CATALOG_BACKING_WIDTH, CATALOG_BACKING_HEIGHT, BLUE);
 
-            int scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
+            int scale;
+
+            if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                scale = 95;
+            } else {
+                scale = (int) Math.min(95, this.ticksSinceMenuOpenF * 12.0F);
+            }
+
             boolean planetZoomedNotMoon = this.isZoomed() && !this.isGrandchildBody(this.selectedParent);
 
             texture.blit(LHS - 95 + scale, LHS + 12, 95, 41, PARENT_LABEL_U, PARENT_LABEL_V, PARENT_LABEL_WIDTH, PARENT_LABEL_HEIGHT, BLUE);
@@ -841,7 +849,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
     private void drawZoomTooltip(Graphics.TextureColor texture) {
         int sliderPos = this.zoomTooltipPos;
         if (this.zoomTooltipPos != 38) {
-            sliderPos = Math.min((int) this.ticksSinceSelectionF * 2, 38);
+            sliderPos = Galacticraft.CONFIG.disableCelestialMapAnimations() ? 38 : Math.min((int) this.ticksSinceSelectionF * 2, 38);
             this.zoomTooltipPos = sliderPos;
         }
 
@@ -1107,7 +1115,14 @@ public class CelestialSelectionScreen extends CelestialScreen {
         for (int i = 0; i < children.size(); i++) {
             CelestialBody<?, ?> child = children.get(i);
             int xOffset = xOffsetBase + (child.equals(this.selectedBody) ? 5 : 0);
-            int scale = Mth.clamp((int) (this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0, 95);
+
+            int scale;
+            if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                scale = 95;
+            } else {
+                scale = Mth.clamp((int) (this.ticksSinceMenuOpenF * 25.0F) - 95 * i, 0, 95);
+            }
+
             float brightness = child.equals(this.selectedBody) ? 0.2F : 0.0F;
 
             int gradientColor = this.childGradientColor(child, scale, brightness);
@@ -1118,7 +1133,7 @@ public class CelestialSelectionScreen extends CelestialScreen {
                     255
             );
 
-            texture.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, SIDE_BUTTON_GRADIENT_U, SIDE_BUTTON_GRADIENT_V, SIDE_BUTTON_GRADIENT_WIDTH, SIDE_BUTTON_GRADIENTn_HEIGHT, gradientColor);
+            texture.blit(3 + xOffset, yOffsetBase + yOffset + 1, 86, 10, SIDE_BUTTON_GRADIENT_U, SIDE_BUTTON_GRADIENT_V, SIDE_BUTTON_GRADIENT_WIDTH, SIDE_BUTTON_GRADIENT_HEIGHT, gradientColor);
             texture.blit(2 + xOffset, yOffsetBase + yOffset, 93, 12, SIDE_BUTTON_U, SIDE_BUTTON_V, SIDE_BUTTON_WIDTH, SIDE_BUTTON_HEIGHT, buttonColor);
 
             if (scale > 0) {
@@ -1130,7 +1145,8 @@ public class CelestialSelectionScreen extends CelestialScreen {
             if (recursive && child.equals(this.selectedBody)) {
                 List<CelestialBody<?, ?>> grandchildren = this.getChildren(child);
                 if (!grandchildren.isEmpty()) {
-                    if (this.animateGrandchildren == 14 * grandchildren.size()) {
+                    if (Galacticraft.CONFIG.disableCelestialMapAnimations() || this.animateGrandchildren == 14 * grandchildren.size()) {
+                        this.animateGrandchildren = 14 * grandchildren.size();
                         yOffset += this.drawChildButtons(texture, grandchildren, 10, yOffset, false);
                     } else {
                         if (this.animateGrandchildren >= 14) {
