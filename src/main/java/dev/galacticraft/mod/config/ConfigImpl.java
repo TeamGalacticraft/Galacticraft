@@ -65,7 +65,7 @@ public class ConfigImpl implements Config {
     private long heavyWireMaxTransferPerTick = 256;
     private long machineEnergyStorageSize = 30_000;
     private long energyStorageModuleStorageSize = 300_000;
-    private long coalGeneratorEnergyProductionRate = 120; // /t
+    private long coalGeneratorEnergyProductionRate = 10; // /t
     private long solarPanelEnergyProductionRate = 44;
     private long circuitFabricatorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long electricCompressorEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
@@ -651,7 +651,7 @@ public class ConfigImpl implements Config {
                     config.coalGeneratorEnergyProductionRate())
                     .setTooltip(tooltipSingularSub.apply(Translations.Config.COAL_GENERATOR_ENERGY_PRODUCTION_RATE))
                     .setSaveConsumer(config::setCoalGeneratorEnergyProductionRate)
-                    .setDefaultValue(120)
+                    .setDefaultValue(10)
                     .build()
             );
 

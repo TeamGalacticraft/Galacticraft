@@ -41,9 +41,8 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.machine.CoalGeneratorBlock;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.CoalGeneratorMenu;
-import it.unimi.dsi.fastutil.objects.Object2IntArrayMap;
-import it.unimi.dsi.fastutil.objects.Object2IntMap;
-import net.minecraft.Util;
+import dev.galacticraft.mod.tag.GCItemTags;
+import net.fabricmc.fabric.api.registry.FuelRegistry;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
@@ -56,8 +55,7 @@ import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.Items;
+import net.minecraft.world.level.ItemLike;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -65,16 +63,21 @@ import net.minecraft.world.level.block.state.properties.BlockStateProperties;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+/**
+ * From the <a href="https://github.com/TechReborn/Energy#conventions">Conventions</a> section of the Energy API:
+ * <p>
+ * To ensure good interop between all the mods using this API, here are a few conventions that should be followed.
+ * <p>
+ * Reference energy values: 1 coal = 4000
+ * <p>
+ * This is attained when the coal generator is operating at maximum heat with an energy production rate of 10.
+ * <p>
+ * Items already registered as furnace fuels should be added to {@link GCItemTags#COAL_GENERATOR_FUELS}
+ * to be allowed in the coal generator as well, with fuels burning four times faster than normal.
+ */
 public class CoalGeneratorBlockEntity extends MachineBlockEntity implements CoalPoweredMachine {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
-    @VisibleForTesting
-    public static final Object2IntMap<Item> FUEL_MAP = Util.make(new Object2IntArrayMap<>(3), (map) -> {
-        map.defaultReturnValue(0);
-        map.put(Items.COAL_BLOCK, 320 * 10);
-        map.put(Items.COAL, 320);
-        map.put(Items.CHARCOAL, 310);
-    });
 
     private static final StorageSpec SPEC = StorageSpec.of(
             MachineItemStorage.spec(
@@ -85,7 +88,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
                             .icon(Pair.of(InventoryMenu.BLOCK_ATLAS, Constant.SlotSprite.ENERGY)),
                     ItemResourceSlot.builder(TransferType.INPUT)
                             .pos(80, 44)
-                            .filter((item, tag) -> CoalGeneratorBlockEntity.FUEL_MAP.containsKey(item))
+                            .filter((item, tag) -> CoalGeneratorBlockEntity.getItemFuelLength(item) > 0)
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
@@ -102,13 +105,6 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
     private boolean lit = false;
     private boolean curr = false;
     private boolean prev = false;
-
-    /*
-     * Energy stats:
-     * T1 machine: uses 30gJ/t
-     * Coal Generator: generates 120gJ/t (max heat)
-     * At max heat 1 Coal generates 44,160gJ
-     */
 
     public CoalGeneratorBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.COAL_GENERATOR, pos, state, SPEC);
@@ -217,7 +213,7 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
             if (slot.getModifications() != this.fuelSlotModCount) {
                 this.fuelSlotModCount = slot.getModifications();
 
-                int time = FUEL_MAP.getInt(slot.getResource());
+                int time = getItemFuelLength(slot.getResource());
 
                 if (time > 0 && slot.consumeOne() != null) {
                     this.fuelLength = time;
@@ -231,6 +227,16 @@ public class CoalGeneratorBlockEntity extends MachineBlockEntity implements Coal
         }
 
         return GCMachineStatuses.NOT_ENOUGH_OXYGEN;
+    }
+
+    public static int getItemFuelLength(@Nullable ItemLike item) {
+        if (item == null || !item.asItem().getDefaultInstance().is(GCItemTags.COAL_GENERATOR_FUELS)) {
+            return 0;
+        }
+
+        Integer time = FuelRegistry.INSTANCE.get(item);
+
+        return time != null ? time / 4 : 0;
     }
 
     public int getFuelLength() {

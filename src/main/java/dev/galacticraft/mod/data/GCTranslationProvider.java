@@ -668,6 +668,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.BATTERIES, "Batteries");
 
+        this.tag(GCItemTags.COAL_GENERATOR_FUELS, "Coal Generator Fuels");
+
         this.tag(GCItemTags.SILICONS, "Silicon");
         this.tag(GCItemTags.OLIVINE_SHARDS, "Olivine Shards");
         this.tag(GCItemTags.LUNAR_SAPPHIRES, "Lunar Sapphires");
