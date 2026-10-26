@@ -108,7 +108,7 @@ public interface Config {
     boolean disableInvalidOxygenFlashing();
 
     boolean disableCelestialMapAnimations();
-  
+
     boolean enableSpaceStationCreation();
 
     List<String> disabledCelestialScreenDimensions();
