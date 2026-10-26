@@ -246,6 +246,7 @@ public interface Translations {
         String DISABLE_SPACE_RACE_SCREEN_ANIMATION = "config.galacticraft.accessibility.reduced_motions.disable_space_race_screen_animation";
         String DISABLE_ROCKET_SHAKE = "config.galacticraft.accessibility.reduced_motions.disable_rocket_shake";
         String DISABLE_INVALID_OXYGEN_FLASHING = "config.galacticraft.accessibility.reduced_motions.disable_invalid_oxygen_flashing";
+        String DISABLE_CELESTIAL_MAP_ANIMATIONS = "config.galacticraft.accessibility.reduced_motions.disable_celestial_map_animations";
 
         String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
 

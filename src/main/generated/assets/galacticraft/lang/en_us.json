@@ -663,6 +663,7 @@
   "commands.galacticraft.oxygen.set.single": "Set oxygen at block",
   "config.galacticraft.accessibility": "Accessibility",
   "config.galacticraft.accessibility.reduced_motions": "Reduced Motions",
+  "config.galacticraft.accessibility.reduced_motions.disable_celestial_map_animations": "Disable Celestial Map Animations",
   "config.galacticraft.accessibility.reduced_motions.disable_invalid_oxygen_flashing": "Disable Invalid Oxygen Setup Flashing Text",
   "config.galacticraft.accessibility.reduced_motions.disable_rocket_shake": "Disable Rocket Shake",
   "config.galacticraft.accessibility.reduced_motions.disable_space_race_screen_animation": "Disable Space Race Screen Animation",

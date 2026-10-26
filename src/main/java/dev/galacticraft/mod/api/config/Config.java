@@ -106,6 +106,8 @@ public interface Config {
     boolean disableRocketShake();
 
     boolean disableInvalidOxygenFlashing();
+
+    boolean disableCelestialMapAnimations();
   
     boolean enableSpaceStationCreation();
 

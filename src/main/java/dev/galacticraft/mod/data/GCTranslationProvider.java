@@ -1137,6 +1137,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(Config.DISABLE_SPACE_RACE_SCREEN_ANIMATION, "Disable Space Race Screen Animation");
         this.add(Config.DISABLE_ROCKET_SHAKE, "Disable Rocket Shake");
         this.add(Config.DISABLE_INVALID_OXYGEN_FLASHING, "Disable Invalid Oxygen Setup Flashing Text");
+        this.add(Config.DISABLE_CELESTIAL_MAP_ANIMATIONS, "Disable Celestial Map Animations");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");

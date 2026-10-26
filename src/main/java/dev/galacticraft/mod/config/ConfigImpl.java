@@ -101,6 +101,7 @@ public class ConfigImpl implements Config {
     private boolean disableSpaceRaceScreenAnimation = false;
     private boolean disableRocketShake = false;
     private boolean disableInvalidOxygenFlashing = false;
+    private boolean disableCelestialMapAnimations = false;
     private boolean enableSpaceStationCreation = true;
 
     private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
@@ -490,6 +491,17 @@ public class ConfigImpl implements Config {
 
     public void setDisableInvalidOxygenFlashing(boolean disableInvalidOxygenFlashing) {
         this.disableInvalidOxygenFlashing = disableInvalidOxygenFlashing;
+    }
+
+    @Override
+    public boolean disableCelestialMapAnimations() {
+        return this.disableCelestialMapAnimations;
+    }
+
+    public void setDisableCelestialMapAnimations(boolean disableCelestialMapAnimations) {
+        this.disableCelestialMapAnimations = disableCelestialMapAnimations;
+    }
+
     public boolean enableSpaceStationCreation() {
         return this.enableSpaceStationCreation;
     }
@@ -1125,6 +1137,16 @@ public class ConfigImpl implements Config {
                     config.disableInvalidOxygenFlashing())
                     .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_INVALID_OXYGEN_FLASHING))
                     .setSaveConsumer(config::setDisableInvalidOxygenFlashing)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
+            reducedMotions.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.DISABLE_CELESTIAL_MAP_ANIMATIONS),
+                    config.disableCelestialMapAnimations())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_CELESTIAL_MAP_ANIMATIONS))
+                    .setSaveConsumer(config::setDisableCelestialMapAnimations)
                     .setDefaultValue(false)
                     .build()
             );

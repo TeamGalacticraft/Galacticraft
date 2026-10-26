@@ -25,6 +25,7 @@ package dev.galacticraft.impl.universe.display.type;
 import com.mojang.math.Axis;
 import com.mojang.serialization.Codec;
 import dev.galacticraft.impl.universe.display.config.IconCelestialDisplayConfig;
+import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import org.joml.Vector4f;
@@ -38,7 +39,7 @@ public class SpinningIconCelestialDisplayType extends IconCelestialDisplayType {
 
     @Override
     public Vector4f render(GuiGraphics graphics, int size, double mouseX, double mouseY, float delta, IconCelestialDisplayConfig config) {
-        float degrees = Minecraft.getInstance().level.getGameTime() * 66.666666666666F / 10.0F % 360.0f;
+        float degrees = Galacticraft.CONFIG.disableCelestialMapAnimations() ? 0.0F : Minecraft.getInstance().level.getGameTime() * 66.666666666666F / 10.0F % 360.0f;
         graphics.pose().mulPose(Axis.ZP.rotationDegrees(degrees));
         Vector4f render = super.render(graphics, size, mouseX, mouseY, delta, config);
         graphics.pose().mulPose(Axis.ZN.rotationDegrees(degrees)); // revert changes to the pose for position tracking
