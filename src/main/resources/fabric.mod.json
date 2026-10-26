@@ -130,6 +130,12 @@
       }
     },
     {
+      "name": "olavjens777",
+      "contact": {
+        "homepage": "https://github.com/olavjens777"
+      }
+    },
+    {
       "name": "AlexIIL",
       "contact": {
         "homepage": "https://github.com/AlexIIL"
@@ -145,12 +151,6 @@
       "name": "BeyondTheHorizons",
       "contact": {
         "homepage": "https://github.com/BeyondTheHorizons"
-      }
-    },
-    {
-      "name": "olavjens777",
-      "contact": {
-        "homepage": "https://github.com/olavjens777"
       }
     },
     {
@@ -208,12 +208,6 @@
       }
     },
     {
-      "name": "claude",
-      "contact": {
-        "homepage": "https://github.com/claude"
-      }
-    },
-    {
       "name": "christopherweinhardt",
       "contact": {
         "homepage": "https://github.com/christopherweinhardt"
@@ -229,6 +223,12 @@
       "name": "benreid24",
       "contact": {
         "homepage": "https://github.com/benreid24"
+      }
+    },
+    {
+      "name": "claude",
+      "contact": {
+        "homepage": "https://github.com/claude"
       }
     },
     {
