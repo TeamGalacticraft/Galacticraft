@@ -29,6 +29,7 @@ import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
+import dev.galacticraft.mod.compat.PipeColorVariants;
 import dev.galacticraft.mod.compat.jei.category.*;
 import dev.galacticraft.mod.compat.jei.handlers.*;
 import dev.galacticraft.mod.compat.jei.replacers.*;
@@ -45,6 +46,7 @@ import dev.galacticraft.mod.screen.GCMenuTypes;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.IAdvancedRegistration;
@@ -54,10 +56,12 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingRecipe;
+import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeManager;
 import net.minecraft.world.item.crafting.RecipeType;
@@ -173,7 +177,7 @@ public class GCJEIPlugin implements IModPlugin {
         RecipeManager manager = Minecraft.getInstance().level.getRecipeManager();
 
         List<CompressingRecipe> compressingRecipes = manager.getAllRecipesFor(GCRecipes.COMPRESSING_TYPE).stream().map(RecipeHolder::value)
-                .filter(recipe -> recipe.getIngredients().stream().allMatch(ingredient -> !ingredient.isEmpty())).toList();
+                .filter(recipe -> recipe.getIngredients().stream().noneMatch(Ingredient::isEmpty)).toList();
 
         registration.addRecipes(GCJEIRecipeTypes.FABRICATION, manager.getAllRecipesFor(GCRecipes.FABRICATION_TYPE).stream().map(RecipeHolder::value).toList());
         registration.addRecipes(GCJEIRecipeTypes.COMPRESSING, compressingRecipes);
@@ -183,9 +187,16 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipes(GCJEIRecipeTypes.ROCKET, manager.getAllRecipesFor(GCRecipes.ROCKET_TYPE).stream().map(RecipeHolder::value).toList());
 
         IJeiHelpers jeiHelpers = registration.getJeiHelpers();
-        var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);;
+        var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);
         var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
         registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        // JEI can't group ingredients, so only show the clear variant of each colored pipe in the ingredient list
+        jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK,
+                PipeColorVariants.colored().stream().map(ItemStack::new).toList());
     }
 
     @Override

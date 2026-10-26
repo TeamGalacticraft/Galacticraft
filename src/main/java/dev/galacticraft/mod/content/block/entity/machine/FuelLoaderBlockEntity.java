@@ -112,7 +112,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     private int amount = 0;
     private int progress = 0;
     public Dockable linkedRocket = null;
-    private List<Direction> check = new ArrayList<Direction>();
+    private List<Direction> check = new ArrayList<>();
 
     public FuelLoaderBlockEntity(BlockPos pos, BlockState state) {
         super(GCBlockEntityTypes.FUEL_LOADER, pos, state, SPEC);
@@ -188,7 +188,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         if (this.check.size() > 0) {
             for (Direction direction : this.check) {
                 BlockPos launchPad = this.worldPosition.relative(direction);
@@ -215,7 +215,7 @@ public class FuelLoaderBlockEntity extends MachineBlockEntity {
     }
 
     @Override
-    public void tickDisabled(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+    public void tickDisabled(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
         this.incrementProgress(false);
     }
 

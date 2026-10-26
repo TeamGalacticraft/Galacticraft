@@ -29,6 +29,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.WalkwayBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
 import net.minecraft.world.level.Level;
@@ -49,7 +50,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements AbstractWalkwayBlock, FluidLoggable {
     public WalkwayBlock(Properties properties) {
-        super(0.125f, properties);
+        super(0.125f, FluidLoggable.withFluidLight(properties));
 
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
@@ -65,7 +66,7 @@ public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements
 
     @Override
     protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+        return blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override
@@ -97,6 +98,12 @@ public class WalkwayBlock extends PipeShapedBlock<WalkwayBlockEntity> implements
     @Override
     protected @NotNull FluidState getFluidState(BlockState state) {
         return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
     }
 
     @Override

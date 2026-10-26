@@ -28,7 +28,6 @@ import dev.galacticraft.machinelib.api.menu.SynchronizedMenuType;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
-import dev.galacticraft.mod.recipe.FabricationRecipe;
 import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerType;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -42,7 +41,7 @@ public class GCMenuTypes {
     public static final MenuType<SolarPanelMenu<BasicSolarPanelBlockEntity>> BASIC_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
     public static final MenuType<SolarPanelMenu<AdvancedSolarPanelBlockEntity>> ADVANCED_SOLAR_PANEL = SynchronizedMenuType.create(SolarPanelMenu::new);
 
-    public static final MenuType<RecipeMachineMenu<RecipeInput, FabricationRecipe, CircuitFabricatorBlockEntity>> CIRCUIT_FABRICATOR = SynchronizedMenuType.create(RecipeMachineMenu::new, 94);
+    public static final MenuType<CircuitFabricatorMenu> CIRCUIT_FABRICATOR = SynchronizedMenuType.create(CircuitFabricatorMenu::new);
     public static final MenuType<CompressorMenu> COMPRESSOR = SynchronizedMenuType.create(CompressorMenu::new);
 
     public static final MenuType<RecipeMachineMenu<CraftingInput, CompressingRecipe, ElectricCompressorBlockEntity>> ELECTRIC_COMPRESSOR = SynchronizedMenuType.createSimple(RecipeMachineMenu::new);
@@ -52,6 +51,7 @@ public class GCMenuTypes {
     public static final MenuType<MachineMenu<RefineryBlockEntity>> REFINERY = SynchronizedMenuType.create(MachineMenu::new, 84);
 
     public static final MenuType<OxygenCollectorMenu> OXYGEN_COLLECTOR = SynchronizedMenuType.create(OxygenCollectorMenu::new);
+    public static final MenuType<OxygenDetectorMenu> OXYGEN_DETECTOR = SynchronizedMenuType.create(OxygenDetectorMenu::new);
 
     public static final MenuType<MachineMenu<OxygenCompressorBlockEntity>> OXYGEN_COMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
     public static final MenuType<MachineMenu<OxygenDecompressorBlockEntity>> OXYGEN_DECOMPRESSOR = SynchronizedMenuType.createSimple(MachineMenu::new);
@@ -89,6 +89,7 @@ public class GCMenuTypes {
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.REFINERY_MENU), REFINERY);
 
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COLLECTOR_MENU), OXYGEN_COLLECTOR);
+        Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DETECTOR_MENU), OXYGEN_DETECTOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_COMPRESSOR_MENU), OXYGEN_COMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.OXYGEN_DECOMPRESSOR_MENU), OXYGEN_DECOMPRESSOR);
         Registry.register(BuiltInRegistries.MENU, Constant.id(Constant.Menu.BUBBLE_DISTRIBUTOR_MENU), OXYGEN_BUBBLE_DISTRIBUTOR);

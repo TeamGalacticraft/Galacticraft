@@ -101,7 +101,7 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
 
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
 
         widgets.add(Widgets.createSlot(new Point(startPoint.x + FUEL_X, startPoint.y + FUEL_Y)).entries(AbstractFurnaceBlockEntity.getFuel().keySet().stream().map(EntryStacks::of).toList()));
         widgets.add(Widgets.createBurningFire(new Point(startPoint.x + FIRE_X, startPoint.y + FIRE_Y)).animationDurationMS(10000));
@@ -152,10 +152,5 @@ public class DefaultCompressingCategory implements DisplayCategory<DefaultCompre
     @Override
     public int getDisplayHeight() {
         return RECIPE_VIEWER_HEIGHT + 10;
-    }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
     }
 }

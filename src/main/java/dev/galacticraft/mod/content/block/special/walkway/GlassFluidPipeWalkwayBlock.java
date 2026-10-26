@@ -32,8 +32,10 @@ import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEn
 import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Mirror;
@@ -50,7 +52,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements AbstractWalkwayBlock, FluidLoggable {
     public GlassFluidPipeWalkwayBlock(Properties settings, PipeColor color) {
-        super(settings, color);
+        super(FluidLoggable.withFluidLight(settings), color);
 
         BlockState state = this.getStateDefinition().any();
         state = FluidLoggable.applyDefaultState(state);
@@ -96,6 +98,12 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements Abstra
     }
 
     @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
+    }
+
+    @Override
     public void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> stateBuilder) {
         FluidLoggable.addStateDefinitions(stateBuilder);
         AbstractWalkwayBlock.addStateDefinitions(stateBuilder);
@@ -103,7 +111,7 @@ public class GlassFluidPipeWalkwayBlock extends FluidPipeBlock implements Abstra
 
     @Override
     protected BlockState rotate(BlockState blockState, Rotation rotation) {
-        return (BlockState)blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
+        return blockState.setValue(BlockStateProperties.FACING, rotation.rotate(blockState.getValue(BlockStateProperties.FACING)));
     }
 
     @Override

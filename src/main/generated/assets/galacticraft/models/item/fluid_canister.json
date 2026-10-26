@@ -1,0 +1,44 @@
+{
+  "parent": "minecraft:item/generated",
+  "overrides": [
+    {
+      "model": "galacticraft:item/fluid_canister_1",
+      "predicate": {
+        "galacticraft:fill_level": 0.16
+      }
+    },
+    {
+      "model": "galacticraft:item/fluid_canister_2",
+      "predicate": {
+        "galacticraft:fill_level": 0.33
+      }
+    },
+    {
+      "model": "galacticraft:item/fluid_canister_3",
+      "predicate": {
+        "galacticraft:fill_level": 0.5
+      }
+    },
+    {
+      "model": "galacticraft:item/fluid_canister_4",
+      "predicate": {
+        "galacticraft:fill_level": 0.66
+      }
+    },
+    {
+      "model": "galacticraft:item/fluid_canister_5",
+      "predicate": {
+        "galacticraft:fill_level": 0.83
+      }
+    },
+    {
+      "model": "galacticraft:item/fluid_canister_6",
+      "predicate": {
+        "galacticraft:fill_level": 1.0
+      }
+    }
+  ],
+  "textures": {
+    "layer0": "galacticraft:item/fluid_canister_base"
+  }
+}

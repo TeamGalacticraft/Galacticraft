@@ -66,7 +66,10 @@ to keep them small and ensure a quick review process.
 ### Code style
 Mainly:
 * Indent using four spaces
-* Braces `{}` go on the same line
+* A keyword followed by a parenthesis should be separated by a space, e.g. `if (condition)` not `if(condition)`
+* Put a space after each comma in an argument list, e.g. `a, b, c` not `a,b,c`
+* Put spaces around operators, e.g. `y = m * x + c` not `y=m*x+c`
+* Opening braces `{}` go on the same line, not a new line
 
 Overall, follow the style of the file you're in.
 Feel free to use `var` for variables with obvious types.
@@ -96,7 +99,7 @@ This can be found as the `Data Generation` configuration in your IDE, or run fro
 #### License Headers
 If you've added any new classes, be sure to check that they have the standard [license header][license header] applied.
 
-If any files are missing the header, you can add it by executing the following Gradle task, which also removes unused imports and replaces tabs with spaces:
+If any files are missing the header, you can add it by executing the following Gradle task, which also removes unused imports, reorders imports and replaces tabs with spaces:
 ```shell
 ./gradlew spotlessApply
 ```

@@ -68,7 +68,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Shadow @Nullable private Slot destroyItemSlot;
     @Shadow @Final private static SimpleContainer CONTAINER;
-    @Unique private final List<AccessorySlot> gc$slots = new ArrayList<>();
+    @Unique private final List<CreativeModeInventoryScreen.SlotWrapper> gc$slots = new ArrayList<>();
 
     @Unique private RadioButton creativeSwitchButton;
 
@@ -139,32 +139,46 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
-
-        //Item duplication support
-        if (button == 2) {
+        if (isGCInventoryEnabled() && selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             Slot slot = gc$findSlot(mouseX, mouseY);
             if (slot != null) {
-                getMenu().setCarried(slot.getItem().copy());
-            }
-            return;
-        }
-
-        if (selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
-            if (isGCInventoryEnabled()) {
                 ItemStack carried = getMenu().getCarried();
-                Slot slot = gc$findSlot(mouseX, mouseY);
-                if (slot != null) {
-                    //Quick stack
-                    if (Screen.hasShiftDown()) {
-                        gcTryQuickStackToPlayerInv(slot);
-                    } else if (carried.isEmpty() || slot.mayPlace(carried)) {
-                        getMenu().setCarried(slot.getItem());
-                        slot.set(carried);
-                        slot.setChanged();
-                        ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), carried.isEmpty() ? 0 : 1, carried));
+
+                if (this.minecraft.options.keyPickItem.matchesMouse(button) && this.minecraft.gameMode.hasInfiniteItems()) {
+                    // Item duplication support
+                    if (carried.isEmpty()) {
+                        ItemStack itemStack = slot.getItem();
+                        getMenu().setCarried(itemStack.copyWithCount(itemStack.getMaxStackSize()));
                     }
-                    cir.setReturnValue(true);
-                    return;
+                } else if (Screen.hasShiftDown()) {
+                    gcTryQuickStackToPlayerInv(slot);
+                } else if (carried.isEmpty() || slot.mayPlace(carried)) {
+                    getMenu().setCarried(slot.getItem());
+                    slot.set(carried);
+                    slot.setChanged();
+                    ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), carried.isEmpty() ? 0 : 1, carried));
+                }
+
+                cir.setReturnValue(true);
+            }
+        }
+    }
+
+    @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
+    private void onSlotClicked(Slot slot, int slotId, int button, ClickType clickType, CallbackInfo ci) {
+        if (isGCInventoryEnabled() && selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
+            if (clickType == ClickType.QUICK_MOVE) {
+                if (gcTryQuickStackToGCInv(slot)) {
+                    ci.cancel();
+                }
+            } else if (slot != null && slot.container == this.minecraft.player.galacticraft$getGearInv()) {
+                if (clickType == ClickType.THROW && slot.hasItem()) {
+                    ItemStack dropped = slot.remove(button == 0 ? 1 : slot.getItem().getMaxStackSize());
+                    ItemStack remaining = slot.getItem();
+                    this.minecraft.player.drop(dropped, true);
+                    this.minecraft.gameMode.handleCreativeModeItemDrop(dropped);
+                    ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, slot.getContainerSlot(), remaining.isEmpty() ? 0 : 1, remaining));
+                    ci.cancel();
                 }
             }
         }
@@ -186,7 +200,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Unique
     private Slot gc$findSlot(double x, double y) {
         for (int i = 0; i < gc$slots.size(); ++i) {
-            Slot slot = (Slot) gc$slots.get(i);
+            Slot slot = gc$slots.get(i);
             if (isHovering(slot.x, slot.y, 16, 16, x, y) && slot.isActive()) {
                 return slot;
             }
@@ -213,14 +227,19 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
 
     @Unique
     private void generateGCSlot(int x, int y, int idx) {
-        gc$slots.add(new AccessorySlot(
-                minecraft.player.galacticraft$getGearInv(),
-                minecraft.player,
+        gc$slots.add(new CreativeModeInventoryScreen.SlotWrapper(
+                new AccessorySlot(
+                        minecraft.player.galacticraft$getGearInv(),
+                        minecraft.player,
+                        idx,
+                        x,
+                        y,
+                        GCAccessorySlots.SLOT_TAGS.get(idx),
+                        GCAccessorySlots.SLOT_SPRITES.get(idx)
+                ),
                 idx,
                 x,
-                y,
-                GCAccessorySlots.SLOT_TAGS.get(idx),
-                GCAccessorySlots.SLOT_SPRITES.get(idx)
+                y
         ));
     }
 
@@ -262,13 +281,6 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
                 minecraft.player.inventoryMenu.broadcastChanges();
                 return;
             }
-        }
-    }
-
-    @Inject(method = "slotClicked", at = @At("HEAD"))
-    protected void slotClicked(Slot region, int slotId, int button, ClickType actionType, CallbackInfo ci) {
-        if (region != null && actionType == ClickType.QUICK_MOVE) {
-            gcTryQuickStackToGCInv(region);
         }
     }
 

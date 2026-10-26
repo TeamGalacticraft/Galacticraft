@@ -1,0 +1,19 @@
+{
+  "values": [
+    "galacticraft:moon_copper_ore",
+    "galacticraft:lunaslate_copper_ore",
+    "galacticraft:mars_copper_ore",
+    "galacticraft:venus_copper_ore",
+    "galacticraft:silicon_ore",
+    "galacticraft:deepslate_silicon_ore",
+    "galacticraft:asteroid_silicon_ore",
+    "galacticraft:tin_ore",
+    "galacticraft:deepslate_tin_ore",
+    "galacticraft:moon_tin_ore",
+    "galacticraft:lunaslate_tin_ore",
+    "galacticraft:mars_tin_ore",
+    "galacticraft:venus_tin_ore",
+    "galacticraft:moon_cheese_ore",
+    "galacticraft:olivine_basalt"
+  ]
+}

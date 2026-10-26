@@ -39,8 +39,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.texture.TextureAtlas;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.world.inventory.InventoryMenu;
 
 import java.util.function.Supplier;
 
@@ -66,8 +66,8 @@ public record BakedModelRocketPartRenderer(ResourceLocation model,
         pose.scale(10, 10, 10);
 
         PoseStack.Pose entry = pose.last();
-        Minecraft.getInstance().getTextureManager().getTexture(TextureAtlas.LOCATION_BLOCKS).setFilter(false, false);
-        RenderSystem.setShaderTexture(0, TextureAtlas.LOCATION_BLOCKS);
+        Minecraft.getInstance().getTextureManager().getTexture(InventoryMenu.BLOCK_ATLAS).setFilter(false, false);
+        RenderSystem.setShaderTexture(0, InventoryMenu.BLOCK_ATLAS);
 //        RenderSystem.setShaderTexture(0, this.model.get().getParticleIcon().atlasLocation());
         RenderSystem.disableBlend();
         RenderSystem.disableDepthTest();

@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
@@ -57,7 +56,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.ElectricFurnace.*;
 
-public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, SmeltingRecipe> {
+public class ElectricFurnaceBlockEntity extends CookingMachineBlockEntity<SmeltingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOT = 2;
@@ -82,12 +81,12 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
     );
 
     public ElectricFurnaceBlockEntity(BlockPos pos, BlockState state) {
-        super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, OUTPUT_SLOT);
+        super(GCBlockEntityTypes.ELECTRIC_FURNACE, pos, state, RecipeType.SMELTING, SPEC, INPUT_SLOT, 1, OUTPUT_SLOT, 1);
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
     }
 
@@ -98,12 +97,12 @@ public class ElectricFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<Si
 
     @Override
     protected @Nullable MachineStatus hasResourcesToWork() {
-        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
+        return this.energyStorage().canExtract(Galacticraft.CONFIG.electricFurnaceEnergyConsumptionRate()) ? null : MachineStatuses.NOT_ENOUGH_ENERGY;
     }
 
     @Override
     protected void extractResourcesToWork() {
-        this.energyStorage().extract(Galacticraft.CONFIG.electricCompressorEnergyConsumptionRate());
+        this.energyStorage().extract(Galacticraft.CONFIG.electricFurnaceEnergyConsumptionRate());
     }
 
     @Override

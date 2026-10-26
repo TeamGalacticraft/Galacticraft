@@ -27,6 +27,7 @@ import com.terraformersmc.modmenu.api.ConfigScreenFactory;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import me.shedaniel.clothconfig2.api.ConfigBuilder;
 import me.shedaniel.clothconfig2.api.ConfigCategory;
@@ -51,6 +52,8 @@ import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.function.BiFunction;
 import java.util.function.Function;
 
@@ -70,6 +73,7 @@ public class ConfigImpl implements Config {
     private long electricArcFurnaceEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private float electricArcFurnaceBonusChance = 0.25F;
     private long oxygenCollectorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
+    private long oxygenCollectorProductionLimit = 50 * FluidUtil.MILLIBUCKET;
     private long oxygenCompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenDecompressorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
@@ -79,6 +83,7 @@ public class ConfigImpl implements Config {
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private boolean squareCannedFood = false;
+    private long fluidCanisterCapacity = FluidConstants.BUCKET;
     private long smallOxygenTankCapacity = FluidConstants.BUCKET;
     private long mediumOxygenTankCapacity = 2 * FluidConstants.BUCKET;
     private long largeOxygenTankCapacity = 3 * FluidConstants.BUCKET;
@@ -96,6 +101,11 @@ public class ConfigImpl implements Config {
     private boolean disableSpaceRaceScreenAnimation = false;
     private boolean disableRocketShake = false;
     private boolean disableInvalidOxygenFlashing = false;
+    private boolean enableSpaceStationCreation = true;
+
+    private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
+
+    private List<String> disabledDimensions = new ArrayList<>();
 
     public ConfigImpl(File file) {
         this.gson = new GsonBuilder()
@@ -235,6 +245,15 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public long oxygenCollectorProductionLimit() {
+        return oxygenCollectorProductionLimit;
+    }
+
+    public void setOxygenCollectorProductionLimit(long amount) {
+        this.oxygenCollectorProductionLimit = amount;
+    }
+
+    @Override
     public long oxygenCompressorEnergyConsumptionRate() {
         return oxygenCompressorEnergyConsumptionRate;
     }
@@ -318,6 +337,15 @@ public class ConfigImpl implements Config {
             Constant.LOGGER.info("Reload resource packs");
             Minecraft.getInstance().reloadResourcePacks();
         }
+    }
+
+    @Override
+    public long fluidCanisterCapacity() {
+        return this.fluidCanisterCapacity;
+    }
+
+    public void setFluidCanisterCapacity(long capacity) {
+        this.fluidCanisterCapacity = capacity;
     }
 
     @Override
@@ -462,6 +490,34 @@ public class ConfigImpl implements Config {
 
     public void setDisableInvalidOxygenFlashing(boolean disableInvalidOxygenFlashing) {
         this.disableInvalidOxygenFlashing = disableInvalidOxygenFlashing;
+    public boolean enableSpaceStationCreation() {
+        return this.enableSpaceStationCreation;
+    }
+
+    public void setEnableSpaceStationCreation(boolean enableSpaceStationCreation) {
+        this.enableSpaceStationCreation = enableSpaceStationCreation;
+    }
+
+    @Override
+    public List<String> disabledCelestialScreenDimensions() {
+        return this.disabledCelestialScreenDimensions;
+    }
+
+    public void setDisabledCelestialScreenDimensions(List<String> disabledCelestialScreenDimensions) {
+        this.disabledCelestialScreenDimensions = disabledCelestialScreenDimensions == null
+                ? new ArrayList<>()
+                : new ArrayList<>(disabledCelestialScreenDimensions);
+    }
+
+    @Override
+    public List<String> disabledDimensions() {
+        return this.disabledDimensions;
+    }
+
+    public void setDisabledDimensions(List<String> disabledDimensions) {
+        this.disabledDimensions = disabledDimensions == null
+                ? new ArrayList<>()
+                : new ArrayList<>(disabledDimensions);
     }
 
     public void load() {
@@ -700,6 +756,16 @@ public class ConfigImpl implements Config {
 
             machines.add(new LongFieldBuilder(
                     Component.translatable(Translations.Config.RESET),
+                    labelSub.apply(Translations.Config.OXYGEN_COLLECTOR_PRODUCTION_LIMIT),
+                    config.oxygenCollectorProductionLimit())
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COLLECTOR_PRODUCTION_LIMIT))
+                    .setSaveConsumer(config::setOxygenCollectorProductionLimit)
+                    .setDefaultValue(50 * FluidUtil.MILLIBUCKET)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
                     labelSub.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE),
                     config.oxygenCompressorEnergyConsumptionRate())
                     .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_COMPRESSOR_ENERGY_CONSUMPTION_RATE))
@@ -808,6 +874,49 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
+            // --- SERVER CONFIG ---
+
+            ConfigCategory server = b.getOrCreateCategory(Component.translatable(Translations.Config.SERVER));
+
+            // --- SERVER SIDE DIMENSION CONFIG ---
+            SubCategoryBuilder serverSideDimension = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SERVER_SIDE_DIMENSION));
+
+            serverSideDimension.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION),
+                    config.enableSpaceStationCreation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.ENABLE_SPACE_STATION_CREATION))
+                    .setSaveConsumer(config::setEnableSpaceStationCreation)
+                    .setDefaultValue(true)
+                    .build()
+            );
+
+            serverSideDimension.add(ConfigEntryBuilder.create()
+                    .startStrList(
+                            Component.translatable(Translations.Config.DISABLED_DIMENSIONS),
+                            new ArrayList<>(config.disabledDimensions())
+                    )
+                    .setTooltip(Component.translatable(Translations.Config.DISABLED_DIMENSIONS_DESC))
+                    .setDefaultValue(List.of())
+                    .setSaveConsumer(config::setDisabledDimensions)
+                    .requireRestart()
+                    .build()
+            );
+
+            serverSideDimension.add(ConfigEntryBuilder.create()
+                    .startStrList(
+                            Component.translatable(Translations.Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS),
+                            new ArrayList<>(config.disabledCelestialScreenDimensions())
+                    )
+                    .setTooltip(Component.translatable(Translations.Config.DISABLED_CELESTIAL_SCREEN_DIMENSIONS_DESC))
+                    .setDefaultValue(List.of())
+                    .setSaveConsumer(config::setDisabledCelestialScreenDimensions)
+                    .requireRestart()
+                    .build()
+            );
+
+            server.addEntry(serverSideDimension.build());
+
             // --- SKYBOX CONFIG ---
 
             SubCategoryBuilder skybox = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.SKYBOX));
@@ -825,7 +934,21 @@ public class ConfigImpl implements Config {
                     .build()
             );
 
-            b.getOrCreateCategory(Component.translatable(Translations.Config.MISC)).addEntry(creative.build());
+            ConfigCategory misc = b.getOrCreateCategory(Component.translatable(Translations.Config.MISC));
+
+            misc.addEntry(creative.build());
+
+            misc.addEntry(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.FLUID_CANISTER_CAPACITY),
+                    config.fluidCanisterCapacity())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.FLUID_CANISTER_CAPACITY))
+                    .setSaveConsumer(config::setFluidCanisterCapacity)
+                    .setDefaultValue(FluidConstants.BUCKET)
+                    .setMin(0)
+                    .setMax(Long.MAX_VALUE)
+                    .build()
+            );
 
             // --- LIFE SUPPORT CONFIG ---
 

@@ -95,14 +95,13 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
     @Override
     public void render(PoseStack matrices, MultiBufferSource vertexConsumers, int light, T entity, float limbAngle, float limbDistance, float tickDelta, float animationProgress, float headYaw, float headPitch) {
         VertexConsumer vertexConsumer = vertexConsumers.getBuffer(RenderType.entityCutoutNoCull(this.getTextureLocation(entity), true));
-        TamableAnimal animal = (TamableAnimal) entity;
 
-        if (this.mask != null && animal.galacticraft$hasMask()) {
+        if (this.mask != null && entity.galacticraft$hasMask()) {
             matrices.pushPose();
-            if (animal.isBaby()) {
-                if (animal instanceof Wolf) {
+            if (entity.isBaby()) {
+                if (entity instanceof Wolf) {
                     matrices.translate(0.0F, 0.3125F, 0.125F);
-                } else if (animal instanceof Cat) {
+                } else if (entity instanceof Cat) {
                     matrices.scale(0.75F, 0.75F, 0.75F);
                     matrices.translate(0.0F, 0.625F, 0.25F);
                 }
@@ -116,18 +115,18 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
             matrices.popPose();
         }
 
-        if (animal.galacticraft$hasGear()) {
-            ModelPart oxygenPipe = animal.isInSittingPose() ? this.pipeSitting : this.pipe;
+        if (entity.galacticraft$hasGear()) {
+            ModelPart oxygenPipe = entity.isInSittingPose() ? this.pipeSitting : this.pipe;
             if (oxygenPipe != null) {
                 matrices.pushPose();
                 oxygenPipe.copyFrom(this.body);
 
-                if (animal.isBaby()) {
+                if (entity.isBaby()) {
                     matrices.scale(0.5F, 0.5F, 0.5F);
                     matrices.translate(0.0F, 1.5F, 0.0F);
 
-                    if (animal instanceof Cat) {
-                        if (animal.isInSittingPose()) {
+                    if (entity instanceof Cat) {
+                        if (entity.isInSittingPose()) {
                             oxygenPipe.y += 2.12132F;
                             oxygenPipe.z += 2.12132F;
                         } else {

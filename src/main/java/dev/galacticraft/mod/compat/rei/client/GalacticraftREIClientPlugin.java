@@ -24,11 +24,13 @@ package dev.galacticraft.mod.compat.rei.client;
 
 import dev.galacticraft.machinelib.api.menu.RecipeMachineMenu;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
 import dev.galacticraft.mod.client.gui.screen.ingame.CircuitFabricatorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
+import dev.galacticraft.mod.compat.PipeColorVariants;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCanningCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultCompressingCategory;
 import dev.galacticraft.mod.compat.rei.client.category.DefaultFabricationCategory;
@@ -45,9 +47,9 @@ import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
-import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import me.shedaniel.math.Rectangle;
@@ -63,12 +65,19 @@ import me.shedaniel.rei.api.common.entry.type.VanillaEntryTypes;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import me.shedaniel.rei.plugin.client.categories.crafting.filler.CraftingRecipeFiller;
 import me.shedaniel.rei.plugin.common.BuiltinPlugin;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.Component;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.BlastingRecipe;
 import net.minecraft.world.item.crafting.RecipeType;
 import net.minecraft.world.item.crafting.SmeltingRecipe;
 import net.minecraft.world.level.ItemLike;
+import net.minecraft.world.level.block.Block;
+
+import java.util.Map;
+import java.util.Set;
+import java.util.stream.Collectors;
 
 public class GalacticraftREIClientPlugin implements REIClientPlugin {
     private static final CraftingRecipeFiller<?>[] CRAFTING_RECIPE_FILLERS = new CraftingRecipeFiller[]{
@@ -133,9 +142,17 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerCollapsibleEntries(CollapsibleEntryRegistry registry) {
         registry.group(Constant.id(Constant.Item.CANNED_FOOD), Component.translatable(GCItems.CANNED_FOOD.getDescriptionId()),
                 stack -> stack.getType() == VanillaEntryTypes.ITEM && stack.<ItemStack>castValue().is(GCItems.CANNED_FOOD));
+
+        for (Map<PipeColor, Block> family : PipeColorVariants.FAMILIES) {
+            Block clear = family.get(PipeColor.CLEAR);
+            Set<Item> items = family.values().stream().map(Block::asItem).collect(Collectors.toSet());
+            registry.group(BuiltInRegistries.BLOCK.getKey(clear), Component.translatable(clear.getDescriptionId()),
+                    stack -> stack.getType() == VanillaEntryTypes.ITEM && items.contains(stack.<ItemStack>castValue().getItem()));
+        }
     }
 
     @Override
@@ -188,6 +205,7 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void registerTransferHandlers(TransferHandlerRegistry registry) {
         registry.register(SimpleTransferHandler.create(RecipeMachineMenu.class, GalacticraftREIServerPlugin.FABRICATION,
                 new SimpleTransferHandler.IntRange(1, 6)

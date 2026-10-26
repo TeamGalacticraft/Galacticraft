@@ -149,6 +149,7 @@ public class GCItems {
     public static final Item BEEF_PATTY = ITEMS.register(Constant.Item.BEEF_PATTY, new Item(new Item.Properties().food(GCFoodComponent.BEEF_PATTY)));
     public static final Item BURGER_BUN = ITEMS.register(Constant.Item.BURGER_BUN, new Item(new Item.Properties().food(GCFoodComponent.BURGER_BUN)));
     public static final Item CHEESEBURGER = ITEMS.register(Constant.Item.CHEESEBURGER, new Item(new Item.Properties().food(GCFoodComponent.CHEESEBURGER)));
+    public static final Item MOON_TANGLE_FRUIT = ITEMS.register(Constant.Item.MOON_TANGLE_FRUIT, new MoonTangleFruitItem(new Item.Properties().food(GCFoodComponent.MOON_TANGLE_FRUIT)));
 
     // THROWABLE METEOR CHUNKS
     public static final Item THROWABLE_METEOR_CHUNK = ITEMS.register(Constant.Item.THROWABLE_METEOR_CHUNK, new ThrowableMeteorChunkItem(new Item.Properties().stacksTo(16)));
@@ -174,6 +175,8 @@ public class GCItems {
     public static final Item TITANIUM_HOE = ITEMS.register(Constant.Item.TITANIUM_HOE, new HoeItem(GCTiers.TITANIUM, new Item.Properties().attributes(HoeItem.createAttributes(GCTiers.TITANIUM, -3.0F, -1.0F))));
 
     public static final Item STANDARD_WRENCH = ITEMS.register(Constant.Item.STANDARD_WRENCH, new StandardWrenchItem(new Item.Properties().durability(256)));
+
+    public static final Item FLUID_CANISTER = ITEMS.register(Constant.Item.FLUID_CANISTER, new FluidCanisterItem(new Item.Properties().stacksTo(1), Galacticraft.CONFIG.fluidCanisterCapacity()));
 
     // ARMOR
     public static final Item HEAVY_DUTY_HELMET = ITEMS.register(Constant.Item.HEAVY_DUTY_HELMET, new ArmorItem(GCArmorMaterials.HEAVY_DUTY, ArmorItem.Type.HELMET, new Item.Properties().stacksTo(1)));

@@ -36,7 +36,6 @@ import me.shedaniel.rei.api.client.gui.widgets.Widgets;
 import me.shedaniel.rei.api.client.registry.display.DisplayCategory;
 import me.shedaniel.rei.api.common.category.CategoryIdentifier;
 import me.shedaniel.rei.api.common.entry.EntryIngredient;
-import me.shedaniel.rei.api.common.entry.EntryStack;
 import me.shedaniel.rei.api.common.util.EntryStacks;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -81,7 +80,7 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
         widgets.add(progressWidget);
 
         // Top slot
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(ingredients.getFirst()));
 
         // Grid slots
         for (int i = 0; i < 16; i++) {
@@ -94,13 +93,13 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
 
         // Middle slot
         widgets.add(Widgets.createSlot(new Point(startPoint.x + CURRENT_X, startPoint.y + CURRENT_Y)).entries(
-                recipeDisplay.getOutputEntries().get(0).stream().map(
-                        entry -> ((EntryStack<ItemStack>) entry.copy()).withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
+                recipeDisplay.getOutputEntries().getFirst().<ItemStack>castAsList().stream().map(
+                        entry -> entry.copy().withRenderer(progressWidget.getEntryRenderer(GCItems.CANNED_FOOD.getDefaultInstance()))
                 ).toList()
         ));
 
         // Bottom slot
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y)).markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
 
         return widgets;
     }
@@ -113,10 +112,5 @@ public class DefaultCanningCategory implements DisplayCategory<DefaultCanningDis
     @Override
     public int getDisplayWidth(DefaultCanningDisplay display) {
         return RECIPE_VIEWER_WIDTH + 10;
-    }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
     }
 }

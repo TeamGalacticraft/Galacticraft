@@ -22,20 +22,26 @@
 
 package dev.galacticraft.mod.compat.waila;
 
+import dev.galacticraft.mod.compat.waila.provider.CannedFoodProvider;
 import dev.galacticraft.mod.compat.waila.provider.FlagNameProvider;
 import dev.galacticraft.mod.compat.waila.provider.FuelLevelProvider;
 import dev.galacticraft.mod.compat.waila.provider.OxygenLevelProvider;
+import dev.galacticraft.mod.content.block.decoration.CannedFoodBlock;
 import dev.galacticraft.mod.content.block.decoration.FlagBlock;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import mcp.mobius.waila.api.IClientRegistrar;
 import mcp.mobius.waila.api.IWailaClientPlugin;
 import net.minecraft.world.entity.LivingEntity;
 
+@SuppressWarnings("unused")
 public class GalacticraftWailaClientPlugin implements IWailaClientPlugin {
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void register(IClientRegistrar registrar) {
         registrar.redirect(FlagNameProvider.INSTANCE, FlagBlock.class);
         registrar.body(FuelLevelProvider.INSTANCE, RocketEntity.class, 1050);
         registrar.body(OxygenLevelProvider.INSTANCE, LivingEntity.class, 1050);
+        registrar.icon(CannedFoodProvider.INSTANCE, CannedFoodBlock.class, 1050);
+        registrar.body(CannedFoodProvider.INSTANCE, CannedFoodBlock.class, 1050);
     }
 }

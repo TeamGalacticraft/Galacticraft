@@ -88,6 +88,9 @@ public interface Constant {
         // Natural
         String MOON_TURF = "moon_turf";
         String MOON_SURFACE_ROCK = "moon_surface_rock";
+        String MOON_SURFACE_ROCK_STAIRS = "moon_surface_rock_stairs";
+        String MOON_SURFACE_ROCK_SLAB = "moon_surface_rock_slab";
+        String MOON_SURFACE_ROCK_WALL = "moon_surface_rock_wall";
         String MOON_DUNGEON_BRICK = "moon_dungeon_brick";
 
         String MOON_ROCK = "moon_rock";
@@ -236,6 +239,11 @@ public interface Constant {
         String HEAVY_WIRE_WALKWAY = "heavy_wire_walkway";
         String FLUID_PIPE_WALKWAY = "fluid_pipe_walkway";
 
+        String OLIVINE_GLASS = "olivine_glass";
+        String OLIVINE_GLASS_PANE = "olivine_glass_pane";
+        String MOON_GLASS = "moon_glass";
+        String MOON_GLASS_PANE = "moon_glass_pane";
+
         String FLAG = "flag";
 
         //  Environment
@@ -332,6 +340,23 @@ public interface Constant {
         String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
         String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
         String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
+        String SEALABLE_FLUID_PIPE = "sealable_fluid_pipe";
+        String WHITE_SEALABLE_FLUID_PIPE = "white_sealable_fluid_pipe";
+        String ORANGE_SEALABLE_FLUID_PIPE = "orange_sealable_fluid_pipe";
+        String MAGENTA_SEALABLE_FLUID_PIPE = "magenta_sealable_fluid_pipe";
+        String LIGHT_BLUE_SEALABLE_FLUID_PIPE = "light_blue_sealable_fluid_pipe";
+        String YELLOW_SEALABLE_FLUID_PIPE = "yellow_sealable_fluid_pipe";
+        String LIME_SEALABLE_FLUID_PIPE = "lime_sealable_fluid_pipe";
+        String PINK_SEALABLE_FLUID_PIPE = "pink_sealable_fluid_pipe";
+        String GRAY_SEALABLE_FLUID_PIPE = "gray_sealable_fluid_pipe";
+        String LIGHT_GRAY_SEALABLE_FLUID_PIPE = "light_gray_sealable_fluid_pipe";
+        String CYAN_SEALABLE_FLUID_PIPE = "cyan_sealable_fluid_pipe";
+        String PURPLE_SEALABLE_FLUID_PIPE = "purple_sealable_fluid_pipe";
+        String BLUE_SEALABLE_FLUID_PIPE = "blue_sealable_fluid_pipe";
+        String BROWN_SEALABLE_FLUID_PIPE = "brown_sealable_fluid_pipe";
+        String GREEN_SEALABLE_FLUID_PIPE = "green_sealable_fluid_pipe";
+        String RED_SEALABLE_FLUID_PIPE = "red_sealable_fluid_pipe";
+        String BLACK_SEALABLE_FLUID_PIPE = "black_sealable_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
@@ -382,6 +407,13 @@ public interface Constant {
         String OXYGEN_STORAGE_MODULE = "oxygen_storage_module";
         String MOON_DIRT_PATH = "moon_dirt_path";
         String CANNED_FOOD = "canned_food";
+
+        String MOON_WEED = "moon_weed";
+        String MOON_SHRUBS = "moon_shrubs";
+        String MOON_MOSS = "moon_moss";
+        String MOON_TANGLE = "moon_tangle";
+        String METEORIC_IRON_DOOR = "meteoric_iron_door";
+        String BUDDING_OLIVINE = "budding_olivine";
     }
 
     interface Fluid {
@@ -520,6 +552,7 @@ public interface Constant {
         String BATTERY = "battery";
         String INFINITE_BATTERY = "infinite_battery";
         String INFINITE_INDICATOR = "infinite_indicator";
+        String FLUID_CANISTER = "fluid_canister";
 
         //Fluid buckets
         String CRUDE_OIL_BUCKET = "crude_oil_bucket";
@@ -580,6 +613,7 @@ public interface Constant {
         String BASIC_ROCKET_BODY_SCHEMATIC = "basic_rocket_body_schematic";
         String BASIC_ROCKET_FINS_SCHEMATIC = "basic_rocket_fins_schematic";
         String BASIC_ROCKET_ENGINE_SCHEMATIC = "basic_rocket_engine_schematic";
+        String MOON_TANGLE_FRUIT = "moon_tangle_fruit";
     }
 
     interface Particle {
@@ -614,6 +648,7 @@ public interface Constant {
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation OXYGEN_DETECTOR_SCREEN = id("textures/gui/oxygen_detector_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -1177,6 +1212,7 @@ public interface Constant {
         String ELECTRIC_FURNACE_MENU = "electric_furnace_menu";
         String ELECTRIC_ARC_FURNACE_MENU = "electric_arc_furnace_menu";
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
+        String OXYGEN_DETECTOR_MENU = "oxygen_detector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
         String FOOD_CANNER_MENU = "food_canner_menu";
@@ -1240,6 +1276,7 @@ public interface Constant {
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
+        String RECIPES_USED = "RecipesUsed";
         String TRANSFERRING_CAN = "TransferringCan";
         String TRANSFERRING_FOOD = "TransferringFood";
         String STORAGE = "StorageStack";

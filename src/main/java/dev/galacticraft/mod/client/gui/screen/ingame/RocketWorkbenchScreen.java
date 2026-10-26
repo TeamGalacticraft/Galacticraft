@@ -36,8 +36,8 @@ import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.gui.screens.inventory.SmithingScreen;
 import net.minecraft.client.renderer.LightTexture;
 import net.minecraft.client.renderer.entity.EntityRenderDispatcher;
-import net.minecraft.util.Mth;
 import net.minecraft.network.chat.Component;
+import net.minecraft.util.Mth;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.Slot;
 import org.jetbrains.annotations.Nullable;
@@ -55,12 +55,11 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
 
     public RocketWorkbenchScreen(RocketWorkbenchMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
-        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.inventoryLabelX = this.inventoryLabelY = Integer.MAX_VALUE;
+
+        this.entity = new RocketEntity(GCEntityTypes.ROCKET, menu.workbench.getLevel());
         this.entity.setData(menu.previewRocket());
         this.entity.setYRot(60);
-
-        menu.workbench.ingredients.addListener(this);
     }
 
     @Override
@@ -85,9 +84,19 @@ public class RocketWorkbenchScreen extends AbstractContainerScreen<RocketWorkben
     }
 
     @Override
+    public void added() {
+        super.added();
+        this.menu.workbench.ingredients.addListener(this);
+        this.menu.workbench.ingredients.addListener(this.menu);
+        this.menu.workbench.chests.addListener(this.menu);
+    }
+
+    @Override
     public void removed() {
         super.removed();
         this.menu.workbench.ingredients.removeListener(this);
+        this.menu.workbench.ingredients.removeListener(this.menu);
+        this.menu.workbench.chests.removeListener(this.menu);
     }
 
     @Override

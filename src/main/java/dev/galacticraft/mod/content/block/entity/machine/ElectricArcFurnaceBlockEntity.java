@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.content.block.entity.machine;
 
 import com.mojang.datafixers.util.Pair;
-import dev.galacticraft.machinelib.api.block.entity.BasicRecipeMachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
@@ -43,7 +42,6 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import net.minecraft.core.BlockPos;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -59,7 +57,7 @@ import org.jetbrains.annotations.Nullable;
 
 import static dev.galacticraft.mod.Constant.ElectricArcFurnace.*;
 
-public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity<SingleRecipeInput, BlastingRecipe> {
+public class ElectricArcFurnaceBlockEntity extends CookingMachineBlockEntity<BlastingRecipe> {
     public static final int CHARGE_SLOT = 0;
     public static final int INPUT_SLOT = 1;
     public static final int OUTPUT_SLOTS = 2;
@@ -91,8 +89,8 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     }
 
     @Override
-    protected void tickConstant(@NotNull ServerLevel world, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
-        super.tickConstant(world, pos, state, profiler);
+    protected void tickConstant(@NotNull ServerLevel level, @NotNull BlockPos pos, @NotNull BlockState state, @NotNull ProfilerFiller profiler) {
+        super.tickConstant(level, pos, state, profiler);
         this.chargeFromSlot(CHARGE_SLOT);
     }
 
@@ -134,7 +132,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
     @Override
     protected boolean canOutputStacks(@NotNull RecipeHolder<BlastingRecipe> recipe) {
         ItemStack assembled = recipe.value().assemble(this.craftingInv(), this.level.registryAccess());
-        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2);
+        return this.outputSlots.canInsert(assembled.getItem(), assembled.getComponentsPatch(), assembled.getCount() * 2L);
     }
 
     @Override
@@ -142,7 +140,7 @@ public class ElectricArcFurnaceBlockEntity extends BasicRecipeMachineBlockEntity
         return new RecipeMachineMenu<>(
                 GCMenuTypes.ELECTRIC_ARC_FURNACE,
                 syncId,
-                (ServerPlayer) player,
+                player,
                 this
         );
     }

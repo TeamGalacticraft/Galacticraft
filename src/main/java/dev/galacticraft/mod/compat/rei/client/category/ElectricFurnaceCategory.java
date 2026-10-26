@@ -76,22 +76,17 @@ public class ElectricFurnaceCategory implements DisplayCategory<ElectricFurnaceD
         double processingTime = recipeDisplay.getProcessingTime() * 50.0D;
         widgets.add(new CustomArrowWidget(SCREEN_TEXTURE, new Rectangle(startPoint.x + PROGRESS_X, startPoint.y + PROGRESS_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT), PROGRESS_U, PROGRESS_V, processingTime));
         widgets.add(Widgets.createLabel(new Point(bounds.getCenterX(), bounds.y + 5),
-                Component.translatable(Translations.RecipeCategory.REI_TIME, FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
-        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(recipeDisplay.getInputEntries().get(0)));
+                Component.translatable(Translations.RecipeCategory.REI_TIME_AND_XP, FORMAT.format(recipeDisplay.getXp()), FORMAT.format(processingTime / 1000.0D))).noShadow().centered().color(0xFF404040, 0xFFBBBBBB));
+        widgets.add(Widgets.createSlot(new Point(startPoint.x + INPUT_X, startPoint.y + INPUT_Y)).markInput().entries(recipeDisplay.getInputEntries().getFirst()));
 
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createResultSlotBackground(outputPoint));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
         return widgets;
     }
 
     @Override
     public int getDisplayHeight() {
         return REI_HEIGHT + 10;
-    }
-
-    @Override
-    public int getMaximumDisplaysPerPage() {
-        return 99;
     }
 }

@@ -198,6 +198,19 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .emiDefaultRecipe(true)
                 .save(output);
 
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_DETECTOR)
+                .define('S', GCItems.COMPRESSED_STEEL)
+                .define('W', GCItems.BASIC_WAFER)
+                .define('V', GCItems.OXYGEN_VENT)
+                .define('R', Items.REDSTONE)
+                .define('A', GCItems.COMPRESSED_ALUMINUM)
+                .pattern("SSS")
+                .pattern("VWV")
+                .pattern("RAR")
+                .unlockedBy(getHasName(GCItems.OXYGEN_CONCENTRATOR), has(GCItems.OXYGEN_CONCENTRATOR))
+                .emiDefaultRecipe(true)
+                .save(output);
+
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.OXYGEN_COMPRESSOR)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('B', GCItems.COMPRESSED_BRONZE)
@@ -383,7 +396,7 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCBlocks.ALUMINUM_WIRE), has(GCBlocks.ALUMINUM_WIRE))
                 .save(output, RecipeBuilder.getDefaultRecipeId(GCBlocks.HEAVY_ALUMINUM_WIRE).withSuffix("_mirrored"));
 
-        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE, 6)
+        GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_ALUMINUM_WIRE)
                 .define('T', GCBlocks.TIN_DECORATION)
                 .define('W', GCBlocks.ALUMINUM_WIRE)
                 .pattern("TWT")
@@ -398,6 +411,17 @@ public class GCMachineRecipes extends FabricRecipeProvider {
                 .unlockedBy(getHasName(GCBlocks.HEAVY_ALUMINUM_WIRE), has(GCBlocks.HEAVY_ALUMINUM_WIRE))
                 .emiDefaultRecipe(true)
                 .save(output);
+
+        for (PipeColor color : PipeColor.values()) {
+            ItemLike pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.SEALABLE_FLUID_PIPES.get(color))
+                    .define('T', GCBlocks.TIN_DECORATION)
+                    .define('P', pipe)
+                    .pattern("TPT")
+                    .unlockedBy(getHasName(pipe), has(pipe))
+                    .emiDefaultRecipe(true)
+                    .save(output);
+        }
 
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.WALKWAY, 5)
                 .define('T', GCItems.COMPRESSED_TITANIUM)

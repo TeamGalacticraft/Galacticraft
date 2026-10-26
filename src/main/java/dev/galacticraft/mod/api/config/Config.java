@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.api.config;
 
+import java.util.List;
+
 public interface Config {
     boolean isAlphaWarningHidden();
 
@@ -51,6 +53,8 @@ public interface Config {
 
     long oxygenCollectorEnergyConsumptionRate();
 
+    long oxygenCollectorProductionLimit();
+
     long oxygenCompressorEnergyConsumptionRate();
 
     long oxygenDecompressorEnergyConsumptionRate();
@@ -68,6 +72,8 @@ public interface Config {
     long foodCannerEnergyConsumptionRate();
 
     boolean squareCannedFood();
+
+    long fluidCanisterCapacity();
 
     long smallOxygenTankCapacity();
 
@@ -100,6 +106,12 @@ public interface Config {
     boolean disableRocketShake();
 
     boolean disableInvalidOxygenFlashing();
+  
+    boolean enableSpaceStationCreation();
+
+    List<String> disabledCelestialScreenDimensions();
+
+    List<String> disabledDimensions();
 
     void load();
 
