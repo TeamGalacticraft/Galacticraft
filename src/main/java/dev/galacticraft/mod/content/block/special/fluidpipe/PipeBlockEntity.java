@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.special.fluidpipe;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
 import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
@@ -34,6 +35,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.nbt.NbtOps;
 import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
@@ -50,6 +52,7 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     private @Nullable PipeNetwork network = null;
     private final long maxTransferRate; // 1 bucket per second
     private final boolean[] connections = new boolean[6];
+    private @NotNull FluidVariant displayedFluid = FluidVariant.blank();
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {
         super(type, pos, state);
@@ -111,6 +114,26 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
         }
     }
 
+    /**
+     * {@return the fluid that is flowing through this pipe, as far as the client needs to know to render it}
+     */
+    public @NotNull FluidVariant getDisplayedFluid() {
+        return this.displayedFluid;
+    }
+
+    /**
+     * Sets the fluid flowing through this pipe and sends it to the client if it changed.
+     *
+     * @param fluid the fluid flowing through this pipe, or blank if nothing is flowing
+     */
+    public void setDisplayedFluid(@NotNull FluidVariant fluid) {
+        if (this.displayedFluid.equals(fluid)) return;
+        this.displayedFluid = fluid;
+        if (this.level != null && !this.level.isClientSide) {
+            this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_CLIENTS);
+        }
+    }
+
     @Override
     public long insert(FluidVariant resource, long maxAmount, TransactionContext transaction) {
         StoragePreconditions.notNegative(maxAmount);
@@ -140,6 +163,10 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
     protected void loadAdditional(CompoundTag nbt, HolderLookup.Provider registryLookup) {
         super.loadAdditional(nbt, registryLookup);
         this.readConnectionNbt(nbt);
+        // Only sent to the client, never saved
+        this.displayedFluid = nbt.contains(Constant.Nbt.DISPLAYED_FLUID)
+                ? FluidVariant.CODEC.parse(registryLookup.createSerializationContext(NbtOps.INSTANCE), nbt.get(Constant.Nbt.DISPLAYED_FLUID)).result().orElse(FluidVariant.blank())
+                : FluidVariant.blank();
 
         if (this.level != null && this.level.isClientSide) {
             this.level.sendBlockUpdated(this.getBlockPos(), this.getBlockState(), this.getBlockState(), Block.UPDATE_IMMEDIATE);
@@ -159,6 +186,11 @@ public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, 
 
     @Override
     public @NotNull CompoundTag getUpdateTag(HolderLookup.Provider registryLookup) {
-        return this.saveWithoutMetadata(registryLookup);
+        CompoundTag nbt = this.saveWithoutMetadata(registryLookup);
+        if (!this.displayedFluid.isBlank()) {
+            FluidVariant.CODEC.encodeStart(registryLookup.createSerializationContext(NbtOps.INSTANCE), this.displayedFluid).result()
+                    .ifPresent(tag -> nbt.put(Constant.Nbt.DISPLAYED_FLUID, tag));
+        }
+        return nbt;
     }
 }

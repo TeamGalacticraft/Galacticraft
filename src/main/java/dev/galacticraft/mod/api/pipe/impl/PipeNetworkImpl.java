@@ -26,9 +26,11 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
+import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
+import it.unimi.dsi.fastutil.objects.ReferenceOpenHashSet;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidStorage;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -37,6 +39,7 @@ import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.fabricmc.fabric.api.transfer.v1.transaction.base.SnapshotParticipant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.entity.BlockEntity;
@@ -48,8 +51,18 @@ import org.jetbrains.annotations.VisibleForTesting;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
+import java.util.Set;
 
 public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSnapshot> implements PipeNetwork {
+    /**
+     * The number of ticks without any transfer after which the pipes of a network are shown empty again.
+     */
+    private static final int DISPLAY_TIMEOUT = 10;
+    /**
+     * The networks whose pipes currently show a fluid, so they can be cleared when the flow stops.
+     */
+    private static final Set<PipeNetworkImpl> DISPLAYING = new ReferenceOpenHashSet<>();
+
     private final @NotNull ServerLevel level;
     private final @NotNull Object2ObjectOpenHashMap<BlockPos, Storage<FluidVariant> @Nullable []> pipes = new Object2ObjectOpenHashMap<>(1);
     private final long maxTransferRate;
@@ -58,6 +71,8 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
     private int tickId;
     private long transferred = 0;
     private @Nullable FluidVariant currentVariant = null; //can transfer <maxTransferRate> amount of fluid of 1 type per tick
+    private @NotNull FluidVariant displayedVariant = FluidVariant.blank();
+    private int lastTransferTick;
 
     public PipeNetworkImpl(@NotNull ServerLevel level, long maxTransferRate, @NotNull BlockPos pos) {
         this.level = level;
@@ -83,6 +98,9 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         }
         pipe.setNetwork(this);
         this.pipes.put(pos, null);
+        if (pipe instanceof PipeBlockEntity pipeBlockEntity) {
+            pipeBlockEntity.setDisplayedFluid(this.displayedVariant);
+        }
 
         FluidPipeBlock pipeBlock = (FluidPipeBlock) this.level.getBlockState(pos).getBlock();
 
@@ -239,6 +257,58 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
 
         this.activeTransaction = false;
         return this.transferred - baseTransferred;
+    }
+
+    @Override
+    protected void onFinalCommit() {
+        if (this.transferred > 0 && this.currentVariant != null) {
+            this.lastTransferTick = this.tickId;
+            if (!this.currentVariant.equals(this.displayedVariant)) {
+                this.setDisplayedVariant(this.currentVariant);
+            }
+        }
+    }
+
+    private void setDisplayedVariant(@NotNull FluidVariant variant) {
+        this.displayedVariant = variant;
+        if (variant.isBlank()) {
+            DISPLAYING.remove(this);
+        } else {
+            DISPLAYING.add(this);
+        }
+
+        for (BlockPos pos : this.pipes.keySet()) {
+            if (this.level.getBlockEntity(pos) instanceof PipeBlockEntity pipe) {
+                // Pipes that have moved to another network show what that network is transferring
+                PipeNetwork network = pipe.getNetwork();
+                pipe.setDisplayedFluid(network != this && network instanceof PipeNetworkImpl other ? other.displayedVariant : variant);
+            }
+        }
+    }
+
+    /**
+     * Shows the pipes of networks that stopped transferring as empty again.
+     * Networks that were marked for removal can still be transferring through pipes that weren't moved to another network yet,
+     * so they are only cleared once they stop transferring too.
+     *
+     * @param server the server that is ticking
+     */
+    public static void tickDisplayedFluids(@NotNull MinecraftServer server) {
+        if (DISPLAYING.isEmpty()) return;
+
+        int tick = server.getTickCount();
+        for (PipeNetworkImpl network : List.copyOf(DISPLAYING)) {
+            if (tick - network.lastTransferTick > DISPLAY_TIMEOUT) {
+                network.setDisplayedVariant(FluidVariant.blank());
+            }
+        }
+    }
+
+    /**
+     * Forgets the networks of a server that stopped, as they are kept across worlds in singleplayer otherwise.
+     */
+    public static void clearDisplayedFluids() {
+        DISPLAYING.clear();
     }
 
     @Override
