@@ -221,6 +221,7 @@ public interface Translations {
         String OXYGEN_SEALER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_energy_consumption_rate";
         String OXYGEN_SEALER_OXYGEN_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_sealer_oxygen_consumption_rate";
         String MAX_SEALING_POWER = "config.galacticraft.machines.max_sealing_power";
+        String OXYGEN_BUBBLE_DISTRIBUTOR_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.oxygen_bubble_distributor_energy_consumption_rate";
         String REFINERY_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.refinery_energy_consumption_rate";
         String FUEL_LOADER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.fuel_loader_energy_consumption_rate";
         String FOOD_CANNER_ENERGY_CONSUMPTION_RATE = "config.galacticraft.energy.machines.food_canner_energy_consumption_rate";
