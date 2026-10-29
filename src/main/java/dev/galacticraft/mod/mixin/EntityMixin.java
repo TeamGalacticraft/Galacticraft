@@ -35,11 +35,14 @@ import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.fluid.FluidHelpers;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
+import net.minecraft.core.particles.ParticleOptions;
+import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
@@ -200,15 +203,15 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
 
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
-            doWaterEffects(0.34F);
+            doWaterEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             doExplosion(invulnerable);
-            doWaterEffects(0.54F);
+            doWaterEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
             bl = true;
         }
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
-            doWaterEffects();
+            doWaterEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
             bl = true;
         } else {this.timeInAcid = 0;}
@@ -216,27 +219,18 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
         ci.setReturnValue(vanillaReturn || bl);
     }
 
-    // Default water behavior
+
     @Unique
-    private void doWaterEffects() {
+    private void doWaterEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
         if (!this.wasTouchingFluid && !this.firstTick) {
-            this.doGCSplashEffect(1.0F);
+            this.doGCSplashEffect(pitch, bubble, splash);
         }
         this.resetFallDistance();
         this.wasTouchingFluid = true;
     }
 
     @Unique
-    private void doWaterEffects(float pitch) {
-        if (!this.wasTouchingFluid && !this.firstTick) {
-            this.doGCSplashEffect(pitch);
-        }
-        this.resetFallDistance();
-        this.wasTouchingFluid = true;
-    }
-
-    @Unique
-    protected void doGCSplashEffect(float pitch) {
+    protected void doGCSplashEffect(float pitch, ParticleOptions bubble, ParticleOptions splash) {
         Entity entity = (Entity) Objects.requireNonNullElse(this.getControllingPassenger(), this);
         float f = entity == (Object) this ? 0.2F : 0.9F;
         Vec3 vec3 = entity.getDeltaMovement();
@@ -252,13 +246,13 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
         for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
             double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
             double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            this.level().addParticle(ParticleTypes.BUBBLE, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * (double)0.2F, vec3.z);
+            this.level().addParticle(bubble, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * (double)0.2F, vec3.z);
         }
 
         for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
             double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
             double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            this.level().addParticle(ParticleTypes.SPLASH, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
+            this.level().addParticle(splash, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
         }
 
         this.gameEvent(GameEvent.SPLASH);

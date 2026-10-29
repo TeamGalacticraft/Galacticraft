@@ -619,10 +619,16 @@ public interface Constant {
     interface Particle {
         String DRIPPING_CRUDE_OIL = "dripping_crude_oil";
         String FALLING_CRUDE_OIL = "falling_crude_oil";
+        String OIL_BUBBLE = "bubble_oil";
+        String OIL_SPLASH = "splash_oil";
         String DRIPPING_FUEL = "dripping_fuel";
         String FALLING_FUEL = "falling_fuel";
+        String FUEL_BUBBLE = "bubble_fuel";
+        String FUEL_SPLASH = "splash_fuel";
         String DRIPPING_SULFURIC_ACID = "dripping_sulfuric_acid";
         String FALLING_SULFURIC_ACID = "falling_sulfuric_acid";
+        String ACID_BUBBLE = "bubble_acid";
+        String ACID_SPLASH = "splash_acid";
 
         String CRYOGENIC_PARTICLE = "cryogenic_particle";
         String LANDER_FLAME = "lander_flame_particle";
