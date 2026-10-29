@@ -73,6 +73,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 import java.util.UUID;
 
@@ -164,38 +165,42 @@ public abstract class EntityMixin implements EntityAccessor {
     @Final
     protected abstract void discard();
 
-    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
-    private void checkWaterStateGC(CallbackInfo ci) {
+    @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
+    private void checkFluidStateGC(CallbackInfoReturnable<Boolean> ci) {
+        boolean vanillaReturn = ci.getReturnValue();
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
 
-        oilFuelEffects(invulnerable);
-        sulfuricAcidEffects(invulnerable);
+        boolean ofbl = oilFuelEffects(invulnerable);
+        boolean sabl = sulfuricAcidEffects(invulnerable);
+        ci.setReturnValue(vanillaReturn || ofbl || sabl);
     }
 
     // If a flaming entity enters oil or fuel, this entity should explode
     @Unique
-    private void oilFuelEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+    private boolean oilFuelEffects(boolean invulnerable) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             if (this.wasOnFire) {
                 level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
                 if (!invulnerable) {
                     this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
                 }
             }
+            return true;
         }
+        return false;
     }
 
     // The entity enters an acid fluid, this entity needs to take damage
     @Unique
-    private void sulfuricAcidEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028)) {
+    private boolean sulfuricAcidEffects(boolean invulnerable) {
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
                 boolean damage = this.timeInAcid >= 30;
                 boolean playSound = true;
                 if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
                     this.discard();
-                    return;
+                    return true;
                 }
 
                 if ((Object) this instanceof ItemEntity itemEntity) {
@@ -221,8 +226,10 @@ public abstract class EntityMixin implements EntityAccessor {
                 }
             }
             ++this.timeInAcid;
+            return true;
         } else {
             this.timeInAcid = 0;
+            return false;
         }
     }
 
