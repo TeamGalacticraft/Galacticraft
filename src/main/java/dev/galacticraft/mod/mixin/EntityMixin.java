@@ -32,6 +32,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
+import dev.galacticraft.mod.content.fluid.FluidHelpers;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
@@ -78,7 +79,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAccessor {
+public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;
@@ -233,6 +234,8 @@ public abstract class EntityMixin implements EntityAccessor {
         }
     }
 
+
+    // These are only necessary for changing existing sounds. If custom sounds we can delete this
     @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
     private float  GCSwimPitch(float pitch) {
         return GCPitchChanger(pitch);
@@ -250,9 +253,9 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Unique
     private float GCPitchChanger(float pitch) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.014)) {
+        if (isTouchingFluid((Entity) (Object) this, GCFluidTags.FUEL)) {
             return this.FuelPitch();
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.014)) {
+        } else if (isTouchingFluid((Entity) (Object) this, GCFluidTags.OIL)) {
             return this.OilPitch();
         }
         return pitch;
