@@ -51,9 +51,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.entity.projectile.Projectile;
@@ -62,6 +60,7 @@ import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
+import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
@@ -76,6 +75,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
+import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Entity.class)
@@ -176,6 +176,21 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     @Shadow
     protected boolean firstTick;
 
+    @Shadow
+    abstract public LivingEntity getControllingPassenger();
+
+    @Shadow
+    private EntityDimensions dimensions;
+
+    @Shadow
+    protected abstract SoundEvent getSwimSplashSound();
+
+    @Shadow
+    protected abstract SoundEvent getSwimHighSpeedSplashSound();
+
+    @Shadow
+    public abstract void gameEvent(Holder<GameEvent> event);
+
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
     private void checkFluidStateGC(CallbackInfoReturnable<Boolean> ci) {
         boolean vanillaReturn = ci.getReturnValue();
@@ -185,14 +200,15 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
 
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
-            // other oil specific stuff
+            doWaterEffects(0.34F);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             doExplosion(invulnerable);
-            // other oil specific stuff
+            doWaterEffects(0.54F);
             bl = true;
         }
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
+            doWaterEffects();
             sulfuricAcidEffects(invulnerable);
             bl = true;
         } else {this.timeInAcid = 0;}
@@ -200,15 +216,52 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
         ci.setReturnValue(vanillaReturn || bl);
     }
 
+    // Default water behavior
     @Unique
-    private void updateInWaterStateAndDoGCEffects() {
+    private void doWaterEffects() {
         if (!this.wasTouchingFluid && !this.firstTick) {
-            this.doWaterSplashEffect();
+            this.doGCSplashEffect(1.0F);
         }
-
         this.resetFallDistance();
         this.wasTouchingFluid = true;
-        this.clearFire();
+    }
+
+    @Unique
+    private void doWaterEffects(float pitch) {
+        if (!this.wasTouchingFluid && !this.firstTick) {
+            this.doGCSplashEffect(pitch);
+        }
+        this.resetFallDistance();
+        this.wasTouchingFluid = true;
+    }
+
+    @Unique
+    protected void doGCSplashEffect(float pitch) {
+        Entity entity = (Entity) Objects.requireNonNullElse(this.getControllingPassenger(), this);
+        float f = entity == (Object) this ? 0.2F : 0.9F;
+        Vec3 vec3 = entity.getDeltaMovement();
+        float g = Math.min(1.0F, (float)Math.sqrt(vec3.x * vec3.x * (double)0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double)0.2F) * f);
+        if (g < 0.25F) {
+            this.playSound(this.getSwimSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+        } else {
+            this.playSound(this.getSwimHighSpeedSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+        }
+
+        float h = (float)Mth.floor(this.getY());
+
+        for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
+            double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
+            double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
+            this.level().addParticle(ParticleTypes.BUBBLE, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * (double)0.2F, vec3.z);
+        }
+
+        for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
+            double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
+            double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
+            this.level().addParticle(ParticleTypes.SPLASH, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
+        }
+
+        this.gameEvent(GameEvent.SPLASH);
     }
 
     @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
