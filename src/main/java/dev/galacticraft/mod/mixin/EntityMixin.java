@@ -169,71 +169,77 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
     private void checkFluidStateGC(CallbackInfoReturnable<Boolean> ci) {
         boolean vanillaReturn = ci.getReturnValue();
-        Player player = level.getPlayerByUUID(uuid);
-        boolean invulnerable = player != null && player.getAbilities().invulnerable;
-
-        boolean ofbl = oilFuelEffects(invulnerable);
-        boolean sabl = sulfuricAcidEffects(invulnerable);
-        ci.setReturnValue(vanillaReturn || ofbl || sabl);
+        boolean bl = updateInWaterStateAndDoGCFluidPushing();
+        ci.setReturnValue(vanillaReturn || bl);
     }
 
-    // If a flaming entity enters oil or fuel, this entity should explode
     @Unique
-    private boolean oilFuelEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
-            if (this.wasOnFire) {
-                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if (!invulnerable) {
-                    this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
-                }
-            }
-            return true;
+    private boolean updateInWaterStateAndDoGCFluidPushing() {
+        Player player = level.getPlayerByUUID(uuid);
+        boolean invulnerable = player != null && player.getAbilities().invulnerable;
+        boolean bl = false;
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
+            doExplosion(invulnerable);
+            // other oil specific stuff
+            bl = true;
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
+            doExplosion(invulnerable);
+            // other oil specific stuff
+            bl = true;
         }
-        return false;
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
+            sulfuricAcidEffects(invulnerable);
+            bl = true;
+        } else {this.timeInAcid = 0;}
+        return bl;
+    }
+
+    // If a flaming entity enters an explosive substance, this entity should explode
+    @Unique
+    private void doExplosion(boolean invulnerable) {
+        if (this.wasOnFire) {
+            level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
+            if (!invulnerable) {
+                this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
+            }
+        }
     }
 
     // The entity enters an acid fluid, this entity needs to take damage
     @Unique
-    private boolean sulfuricAcidEffects(boolean invulnerable) {
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
-            if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
-                boolean damage = this.timeInAcid >= 30;
-                boolean playSound = true;
-                if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
-                    this.discard();
-                    return true;
-                }
+    private void sulfuricAcidEffects(boolean invulnerable) {
+        if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
+            boolean damage = this.timeInAcid >= 30;
+            boolean playSound = true;
+            if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
+                this.discard();
+                return;
+            }
 
-                if ((Object) this instanceof ItemEntity itemEntity) {
-                    ItemStack itemStack = itemEntity.getItem();
-                    if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
-                        damage = false;
-                        playSound = false;
-                    } else if (damage) {
-                        damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
-                    }
-                } else {
-                    damage = true;
+            if ((Object) this instanceof ItemEntity itemEntity) {
+                ItemStack itemStack = itemEntity.getItem();
+                if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
+                    damage = false;
+                    playSound = false;
+                } else if (damage) {
+                    damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
                 }
+            } else {
+                damage = true;
+            }
 
-                if (damage) {
-                    this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
-                }
-                if (playSound && this.timeInAcid % 5 == 0) {
-                    this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-                    for (int i = 0; i < 4; i++) {
-                        level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
-                    }
+            if (damage) {
+                this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
+            }
+            if (playSound && this.timeInAcid % 5 == 0) {
+                this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+                for (int i = 0; i < 4; i++) {
+                    level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
                 }
             }
-            ++this.timeInAcid;
-            return true;
-        } else {
-            this.timeInAcid = 0;
-            return false;
         }
+        ++this.timeInAcid;
     }
-
 
     // These are only necessary for changing existing sounds. If custom sounds we can delete this
     @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
@@ -254,21 +260,11 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     @Unique
     private float GCPitchChanger(float pitch) {
         if (isTouchingFluid((Entity) (Object) this, GCFluidTags.FUEL)) {
-            return this.FuelPitch();
+            return FuelPitch((Entity) (Object) this);
         } else if (isTouchingFluid((Entity) (Object) this, GCFluidTags.OIL)) {
-            return this.OilPitch();
+            return OilPitch((Entity) (Object) this);
         }
         return pitch;
-    }
-
-    @Unique
-    private float FuelPitch() {
-        return 0.54F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
-    }
-
-    @Unique
-    private float OilPitch() {
-        return 0.34F + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F;
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
