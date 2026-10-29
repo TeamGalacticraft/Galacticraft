@@ -83,6 +83,7 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;
+    private @Unique boolean wasTouchingFluid;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
@@ -166,18 +167,22 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
     @Final
     protected abstract void discard();
 
+    @Shadow
+    public abstract void resetFallDistance();
+
+    @Shadow
+    public abstract void clearFire();
+
+    @Shadow
+    protected boolean firstTick;
+
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
     private void checkFluidStateGC(CallbackInfoReturnable<Boolean> ci) {
         boolean vanillaReturn = ci.getReturnValue();
-        boolean bl = updateInWaterStateAndDoGCFluidPushing();
-        ci.setReturnValue(vanillaReturn || bl);
-    }
-
-    @Unique
-    private boolean updateInWaterStateAndDoGCFluidPushing() {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
         boolean bl = false;
+
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
             // other oil specific stuff
@@ -191,7 +196,25 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
             sulfuricAcidEffects(invulnerable);
             bl = true;
         } else {this.timeInAcid = 0;}
-        return bl;
+
+        ci.setReturnValue(vanillaReturn || bl);
+    }
+
+    @Unique
+    private void updateInWaterStateAndDoGCEffects() {
+        if (!this.wasTouchingFluid && !this.firstTick) {
+            this.doWaterSplashEffect();
+        }
+
+        this.resetFallDistance();
+        this.wasTouchingFluid = true;
+        this.clearFire();
+    }
+
+    @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
+    private void isInGCFluid(CallbackInfoReturnable<Boolean> ci) {
+        boolean vanillaReturn = ci.getReturnValue();
+        ci.setReturnValue(vanillaReturn || this.wasTouchingFluid);
     }
 
     // If a flaming entity enters an explosive substance, this entity should explode
