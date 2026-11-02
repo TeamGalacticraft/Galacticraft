@@ -79,6 +79,7 @@ public class ConfigImpl implements Config {
     private long oxygenSealerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long oxygenSealerOxygenConsumptionRate = 1000;
     private long maxSealingPower = 1024;
+    private long oxygenBubbleDistributorEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long refineryEnergyConsumptionRate = Constant.Energy.T2_MACHINE_ENERGY_USAGE;
     private long fuelLoaderEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
     private long foodCannerEnergyConsumptionRate = Constant.Energy.T1_MACHINE_ENERGY_USAGE;
@@ -293,6 +294,15 @@ public class ConfigImpl implements Config {
 
     public void setMaxSealingPower(long amount) {
         this.maxSealingPower = amount;
+    }
+
+    @Override
+    public long oxygenBubbleDistributorEnergyConsumptionRate() {
+        return oxygenBubbleDistributorEnergyConsumptionRate;
+    }
+
+    public void setOxygenBubbleDistributorEnergyConsumptionRate(long amount) {
+        this.oxygenBubbleDistributorEnergyConsumptionRate = amount;
     }
 
     @Override
@@ -786,6 +796,16 @@ public class ConfigImpl implements Config {
                     .setTooltip(tooltipSingularSub.apply(Translations.Config.MAX_SEALING_POWER))
                     .setSaveConsumer(config::setMaxSealingPower)
                     .setDefaultValue(1024)
+                    .build()
+            );
+
+            machines.add(new LongFieldBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    labelSub.apply(Translations.Config.OXYGEN_BUBBLE_DISTRIBUTOR_ENERGY_CONSUMPTION_RATE),
+                    config.oxygenBubbleDistributorEnergyConsumptionRate())
+                    .setTooltip(tooltipSingularSub.apply(Translations.Config.OXYGEN_BUBBLE_DISTRIBUTOR_ENERGY_CONSUMPTION_RATE))
+                    .setSaveConsumer(config::setOxygenBubbleDistributorEnergyConsumptionRate)
+                    .setDefaultValue(10)
                     .build()
             );
 
