@@ -212,6 +212,10 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCItems.BATTERY)
                 .add(GCItems.INFINITE_BATTERY);
 
+        this.tag(GCItemTags.COAL_GENERATOR_FUELS)
+                .forceAddTag(ItemTags.COALS)
+                .forceAddTag(ConventionalItemTags.STORAGE_BLOCKS_COAL);
+
         // ORE TAGS
         this.copy(GCBlockTags.ORE_BEARING_GROUND_MOON_ROCK, GCItemTags.ORE_BEARING_GROUND_MOON_ROCK);
         this.copy(GCBlockTags.ORE_BEARING_GROUND_MOON_BASALT, GCItemTags.ORE_BEARING_GROUND_MOON_BASALT);

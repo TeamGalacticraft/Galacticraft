@@ -56,6 +56,8 @@ public class GCItemTags {
 
     public static final TagKey<Item> BATTERIES = commonTag("batteries");
 
+    public static final TagKey<Item> COAL_GENERATOR_FUELS = galacticraftTag("coal_generator_fuels");
+
     public static final TagKey<Item> SILICONS = commonTag("silicon");
     public static final TagKey<Item> OLIVINE_SHARDS = commonTag("gems/olivine");
     public static final TagKey<Item> LUNAR_SAPPHIRES = commonTag("gems/lunar_sapphire");
