@@ -31,6 +31,7 @@ import dev.galacticraft.impl.network.s2c.GearInvPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.accessor.ServerPlayerAccessor;
+import dev.galacticraft.mod.api.pipe.impl.PipeNetworkImpl;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCCelestialBodies;
 import dev.galacticraft.mod.content.GCEntityTypes;
@@ -74,6 +75,7 @@ public class GCEventHandlers {
         ServerEntityWorldChangeEvents.AFTER_PLAYER_CHANGE_WORLD.register(GCEventHandlers::onPlayerChangeWorld);
         ServerTickEvents.END_WORLD_TICK.register(GCEventHandlers::onWorldTick);
         ServerTickEvents.END_SERVER_TICK.register(GCEventHandlers::onServerTick);
+        ServerTickEvents.END_SERVER_TICK.register(PipeNetworkImpl::tickDisplayedFluids);
 
         ServerPlayConnectionEvents.JOIN.register((handler, sender, server) -> {
             recoverPlayerFromUnavailableDimension(server, handler.player);
@@ -86,6 +88,7 @@ public class GCEventHandlers {
         });
 
         ServerLifecycleEvents.SERVER_STOPPED.register(GCConfigUtil::clearServer);
+        ServerLifecycleEvents.SERVER_STOPPED.register(server -> PipeNetworkImpl.clearDisplayedFluids());
     }
 
     @SuppressWarnings({"rawtypes", "unchecked"})
