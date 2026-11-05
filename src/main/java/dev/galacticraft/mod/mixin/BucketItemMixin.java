@@ -42,6 +42,7 @@ import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.Fluids;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.Nullable;
+import org.objectweb.asm.Opcodes;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -96,7 +97,7 @@ public abstract class BucketItemMixin extends Item {
 
     @ModifyVariable(method = "use", at = @At("STORE"),
             slice = @Slice(
-                    from = @At(value = "FIELD", target = "net/minecraft/world/level/material/Fluids.WATER:Lnet/minecraft/world/level/material/FlowingFluid;")),
+                    from = @At(value = "FIELD", target = "net/minecraft/world/level/material/Fluids.WATER:Lnet/minecraft/world/level/material/FlowingFluid;", opcode = Opcodes.GETSTATIC)),
             index = 10, ordinal = 2)
     private BlockPos checkIfFluidLoggableOnUse_gc(BlockPos defaultValue, Level level, Player player, InteractionHand interactionHand) {
         var blockHitResult = getPlayerPOVHitResult(level, player, this.content == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);

@@ -67,7 +67,7 @@ public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen
     @Shadow protected abstract void selectTab(CreativeModeTab group);
 
     @Shadow @Nullable private Slot destroyItemSlot;
-    @Shadow @Final private static SimpleContainer CONTAINER;
+    @Shadow @Final static SimpleContainer CONTAINER;
     @Unique private final List<CreativeModeInventoryScreen.SlotWrapper> gc$slots = new ArrayList<>();
 
     @Unique private RadioButton creativeSwitchButton;

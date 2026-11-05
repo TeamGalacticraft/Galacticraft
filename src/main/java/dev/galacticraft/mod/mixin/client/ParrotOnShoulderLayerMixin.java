@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public abstract class ParrotOnShoulderLayerMixin<T extends Player> {
     @Shadow
     @Final
-    public ParrotModel model;
+    private ParrotModel model;
 
     @Inject(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/world/entity/player/Player;FFFFZ)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/EntityType;byString(Ljava/lang/String;)Ljava/util/Optional;"))
     private void galacticraft$hideFeather(CallbackInfo ci, @Local CompoundTag compoundTag) {
