@@ -22,17 +22,13 @@
 
 package dev.galacticraft.mod.content.fluid;
 
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.AABB;
-import org.spongepowered.asm.mixin.Unique;
 
 public interface FluidHelpers {
     default boolean isTouchingFluid(Entity entity, TagKey<Fluid> tag) {

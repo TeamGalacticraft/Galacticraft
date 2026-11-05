@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.client.particle;
 
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
