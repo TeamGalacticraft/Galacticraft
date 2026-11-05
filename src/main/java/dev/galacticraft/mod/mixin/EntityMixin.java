@@ -202,29 +202,32 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
 
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
-            doWaterEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
+            doWaterlikeEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             doExplosion(invulnerable);
-            doWaterEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
+            doWaterlikeEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
             bl = true;
+        } else {
+            this.wasTouchingFluid = false;
+            System.out.println("no touch");
         }
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
-            doWaterEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
+            doWaterlikeEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
             bl = true;
         } else {
             this.wasTouchingFluid = false;
             this.timeInAcid = 0;
         }
-
         ci.setReturnValue(vanillaReturn || bl);
     }
 
 
     @Unique
-    private void doWaterEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
+    private void doWaterlikeEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
         if (!this.wasTouchingFluid && !this.firstTick) {
+            System.out.println("splash");
             this.doGCSplashEffect(pitch, bubble, splash);
         }
         this.resetFallDistance();
