@@ -23,11 +23,9 @@
 package dev.galacticraft.mod.client.particle;
 
 import dev.galacticraft.mod.particle.GCParticleTypes;
-import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.BubbleParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
