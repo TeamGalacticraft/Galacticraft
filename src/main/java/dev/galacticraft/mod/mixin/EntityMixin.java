@@ -48,6 +48,7 @@ import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.sounds.SoundEvents;
+import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
@@ -208,11 +209,7 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
             doExplosion(invulnerable);
             doWaterlikeEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
             bl = true;
-        } else {
-            this.wasTouchingFluid = false;
-            System.out.println("no touch");
-        }
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
+        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
             doWaterlikeEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
             bl = true;
@@ -223,11 +220,9 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
         ci.setReturnValue(vanillaReturn || bl);
     }
 
-
     @Unique
     private void doWaterlikeEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
         if (!this.wasTouchingFluid && !this.firstTick) {
-            System.out.println("splash");
             this.doGCSplashEffect(pitch, bubble, splash);
         }
         this.resetFallDistance();
