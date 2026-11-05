@@ -101,6 +101,14 @@ public interface Config {
 
     boolean enableCreativeGearInv();
 
+    boolean disableSpaceRaceScreenAnimation();
+
+    boolean disableRocketShake();
+
+    boolean disableInvalidOxygenFlashing();
+
+    boolean disableCelestialMapAnimations();
+
     boolean enableSpaceStationCreation();
 
     List<String> disabledCelestialScreenDimensions();

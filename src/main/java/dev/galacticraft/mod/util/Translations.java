@@ -240,6 +240,14 @@ public interface Translations {
         String METEOR_SPAWN_MULTIPLIER = "config.galacticraft.difficulty.meteor_spawn_multiplier";
         String BOSS_HEALTH_MODIFIER = "config.galacticraft.difficulty.dungeon_boss_health_multiplier";
         String BOSS_HEALTH_MODIFIER_DESC = "config.galacticraft.difficulty.dungeon_boss_health_multiplier.desc";
+
+        String ACCESSIBILITY = "config.galacticraft.accessibility";
+        String REDUCED_MOTIONS = "config.galacticraft.accessibility.reduced_motions";
+        String DISABLE_SPACE_RACE_SCREEN_ANIMATION = "config.galacticraft.accessibility.reduced_motions.disable_space_race_screen_animation";
+        String DISABLE_ROCKET_SHAKE = "config.galacticraft.accessibility.reduced_motions.disable_rocket_shake";
+        String DISABLE_INVALID_OXYGEN_FLASHING = "config.galacticraft.accessibility.reduced_motions.disable_invalid_oxygen_flashing";
+        String DISABLE_CELESTIAL_MAP_ANIMATIONS = "config.galacticraft.accessibility.reduced_motions.disable_celestial_map_animations";
+
         String ENABLE_SPACE_STATION_CREATION = "config.galacticraft.enable_space_station_creation";
 
         String DISABLED_DIMENSIONS = "config.galacticraft.disabled_dimensions";

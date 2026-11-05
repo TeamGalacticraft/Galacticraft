@@ -30,17 +30,11 @@ import net.minecraft.client.Camera;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.*;
 import net.minecraft.client.renderer.LightTexture;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
-
-import java.util.List;
-import java.util.UUID;
 
 public class LaunchFlameParticle extends TextureSheetParticle {
     private final SpriteSet sprites;
     private final float smokeParticleScale;
     private final boolean spawnSmokeShort;
-    private final UUID ridingEntity;
 
     public LaunchFlameParticle(ClientLevel level, double posX, double posY, double posZ, double motX, double motY, double motZ, boolean launched, EntityParticleOption particleData, SpriteSet sprites) {
         super(level, posX, posY, posZ, 0.0D, 0.0D, 0.0D);
@@ -55,7 +49,6 @@ public class LaunchFlameParticle extends TextureSheetParticle {
         this.lifetime = (int) (this.lifetime * 1F);
         this.hasPhysics = true;
         this.spawnSmokeShort = launched;
-        this.ridingEntity = particleData.getUuid();
         this.sprites = sprites;
         this.setSpriteFromAge(sprites);
     }
@@ -114,19 +107,6 @@ public class LaunchFlameParticle extends TextureSheetParticle {
             this.xd *= 0.9599999785423279D;
             this.yd *= 0.9599999785423279D;
             this.zd *= 0.9599999785423279D;
-
-            if (this.level.random.nextInt(5) == 1) {
-                final List<Entity> entities = this.level.getEntitiesOfClass(Entity.class, this.getBoundingBox().inflate(1.0D, 0.5D, 1.0D));
-
-                if (entities != null) {
-                    for (Entity entity : entities) {
-                        if (entity instanceof LivingEntity && entity.isAlive() && !entity.isOnFire() && !entity.getUUID().equals(this.ridingEntity)) {
-                            entity.igniteForSeconds(3);
-//                            GalacticraftCore.packetPipeline.sendToServer(new PacketSimple(EnumSimplePacket.S_SET_ENTITY_FIRE, GCCoreUtil.getDimensionType(entity.level()), new Object[]{entity.getEntityId()}));
-                        }
-                    }
-                }
-            }
         }
     }
 

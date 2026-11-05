@@ -26,6 +26,7 @@ import com.mojang.blaze3d.platform.NativeImage;
 import dev.galacticraft.impl.network.c2s.FlagDataPayload;
 import dev.galacticraft.impl.network.c2s.TeamNamePayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.util.Translations;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
@@ -172,9 +173,18 @@ public class SpaceRaceScreen extends Screen {
 
     @Override
     public void renderBackground(GuiGraphics graphics, int mouseX, int mouseY, float delta) {
+
+        int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
+        int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
+
+        if (Galacticraft.CONFIG.disableSpaceRaceScreenAnimation()) {
+            this.animationCompleted = true;
+            this.backgroundWidth = maxWidth;
+            this.backgroundHeight = maxHeight;
+            this.repositionElements();
+        }
+
         if (!this.animationCompleted) {
-            int maxWidth = (int) (this.width - (getXMargins() * 1.5D));
-            int maxHeight = (int) (this.height - (getYMargins() * 1.5D));
 
             if (this.backgroundWidth >= maxWidth && this.backgroundHeight >= maxHeight) {
                 this.repositionElements();
