@@ -213,7 +213,10 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
             doWaterEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
             bl = true;
-        } else {this.timeInAcid = 0;}
+        } else {
+            this.wasTouchingFluid = false;
+            this.timeInAcid = 0;
+        }
 
         ci.setReturnValue(vanillaReturn || bl);
     }

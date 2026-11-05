@@ -28,6 +28,8 @@ import net.minecraft.resources.ResourceLocation;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
 
+import java.util.List;
+
 public class GCFluidTags {
     public static final TagKey<Fluid> OIL = galacticraftTag("oil");
     public static final TagKey<Fluid> OIL_COMMON = commonTag("oil");
@@ -50,4 +52,12 @@ public class GCFluidTags {
 
     public static void register() {
     }
+    public static final List<TagKey<Fluid>> SWIMMABLE = List.of(
+            OIL,
+            OIL_COMMON,
+            FUEL,
+            FUEL_COMMON,
+            SULFURIC_ACID,
+            SULFURIC_ACID_COMMON
+    );
 }

@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.client.particle;
 
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -38,7 +39,7 @@ public record BubbleAcidProvider(SpriteSet spriteProvider) implements ParticlePr
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new BubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.ACID_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
+        var particle = new GCBubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.ACID_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
         particle.setColor(151f / 255f, 245f / 255f, 70f / 255f);
         return particle;
     }
