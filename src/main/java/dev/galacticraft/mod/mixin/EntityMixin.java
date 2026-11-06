@@ -73,7 +73,6 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyArg;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -308,32 +307,6 @@ public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
             }
         }
         ++this.timeInAcid;
-    }
-
-    // These are only necessary for changing existing sounds. If custom sounds we can delete this
-    @ModifyArg(method = "playSwimSound", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
-    private float  GCSwimPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 0), index = 2)
-    private float  GCSplashPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @ModifyArg(method = "doWaterSplashEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;playSound(Lnet/minecraft/sounds/SoundEvent;FF)V", ordinal = 1), index = 2)
-    private float  GCHighSpeedSplashPitch(float pitch) {
-        return GCPitchChanger(pitch);
-    }
-
-    @Unique
-    private float GCPitchChanger(float pitch) {
-        if (isTouchingFluid((Entity) (Object) this, GCFluidTags.FUEL)) {
-            return FuelPitch((Entity) (Object) this);
-        } else if (isTouchingFluid((Entity) (Object) this, GCFluidTags.OIL)) {
-            return OilPitch((Entity) (Object) this);
-        }
-        return pitch;
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
