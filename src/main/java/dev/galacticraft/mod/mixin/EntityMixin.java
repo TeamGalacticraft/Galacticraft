@@ -191,8 +191,14 @@ public abstract class EntityMixin implements EntityAccessor  {
     @Shadow
     public abstract void gameEvent(Holder<GameEvent> event);
 
+    @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
+    private void gc$isInAnyFluid(CallbackInfoReturnable<Boolean> ci) {
+        boolean vanillaReturn = ci.getReturnValue();
+        ci.setReturnValue(vanillaReturn || this.wasTouchingFluid);
+    }
+
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
-    private void checkFluidStateGC(CallbackInfoReturnable<Boolean> ci) {
+    private void gc$checkFluidState(CallbackInfoReturnable<Boolean> ci) {
         boolean vanillaReturn = ci.getReturnValue();
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
@@ -253,10 +259,9 @@ public abstract class EntityMixin implements EntityAccessor  {
         this.gameEvent(GameEvent.SPLASH);
     }
 
-    @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
-    private void isInGCFluid(CallbackInfoReturnable<Boolean> ci) {
-        boolean vanillaReturn = ci.getReturnValue();
-        ci.setReturnValue(vanillaReturn || this.wasTouchingFluid);
+    @Unique
+    public boolean isInGCFluid() {
+        return this.wasTouchingFluid;
     }
 
     // If a flaming entity enters an explosive substance, this entity should explode
