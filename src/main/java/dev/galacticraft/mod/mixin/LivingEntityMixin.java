@@ -66,7 +66,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor, EntityFluidAccessor {
+public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
 
     @Unique
@@ -219,7 +219,8 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
     private void gc$fluidTravel(Vec3 movementInput, CallbackInfo ci) {
-        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !gc$getWasTouchingGCFluid()) {
+        EntityFluidAccessor fluidAccessor = (EntityFluidAccessor) this;
+        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !fluidAccessor.gc$getWasTouchingGCFluid()) {
             return;
         }
         double gravity = this.getGravity();
