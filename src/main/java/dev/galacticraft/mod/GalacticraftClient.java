@@ -207,10 +207,16 @@ public class GalacticraftClient implements ClientModInitializer {
 
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_CRUDE_OIL, DrippingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_CRUDE_OIL, FallingCrudeOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.OIL_BUBBLE, BubbleCrudeOilProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.OIL_SPLASH, SplashingCrudeOilProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_FUEL, DrippingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_FUEL, FallingFuelProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FUEL_BUBBLE, BubbleFuelProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FUEL_SPLASH, SplashingFuelProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.DRIPPING_SULFURIC_ACID, DrippingSulfuricAcidProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.FALLING_SULFURIC_ACID, FallingSulfuricAcidProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_BUBBLE, BubbleAcidProvider::new);
+        ParticleFactoryRegistry.getInstance().register(GCParticleTypes.ACID_SPLASH, SplashingAcidProvider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.CRYOGENIC_PARTICLE, CryoFreezeParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.LANDER_FLAME_PARTICLE, LanderParticle.Provider::new);
         ParticleFactoryRegistry.getInstance().register(GCParticleTypes.SPARK_PARTICLE, SparksParticle.Provider::new);
