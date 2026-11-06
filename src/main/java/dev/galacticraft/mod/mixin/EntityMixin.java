@@ -245,13 +245,11 @@ public abstract class EntityMixin implements EntityAccessor  {
             double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
             this.level().addParticle(bubble, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * (double)0.2F, vec3.z);
         }
-
         for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
             double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
             double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
             this.level().addParticle(splash, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
         }
-
         this.gameEvent(GameEvent.SPLASH);
     }
 
@@ -275,6 +273,7 @@ public abstract class EntityMixin implements EntityAccessor  {
     // The entity enters an acid fluid, this entity needs to take damage
     @Unique
     private void sulfuricAcidEffects(boolean invulnerable) {
+        this.clearFire();
         if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
             boolean damage = this.timeInAcid >= 30;
             boolean playSound = true;
