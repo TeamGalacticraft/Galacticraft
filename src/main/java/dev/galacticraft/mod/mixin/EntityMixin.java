@@ -30,6 +30,7 @@ import dev.galacticraft.api.universe.celestialbody.landable.Landable;
 import dev.galacticraft.api.universe.celestialbody.landable.teleporter.CelestialTeleporter;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
+import dev.galacticraft.mod.accessor.EntityFluidAccessor;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.events.GCEventHandlers;
@@ -79,11 +80,12 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAccessor  {
+public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;
     private @Unique boolean wasTouchingFluid;
+    private @Unique @Nullable TagKey<Fluid> inFluidType;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
@@ -191,10 +193,31 @@ public abstract class EntityMixin implements EntityAccessor  {
     @Shadow
     public abstract void gameEvent(Holder<GameEvent> event);
 
+    @Override
+    @Nullable
+    public TagKey<Fluid> gc$getInFluidType() {
+        return inFluidType;
+    }
+
+    @Override
+    public void gc$setInFluidType(@Nullable TagKey<Fluid> fluidType) {
+        inFluidType = fluidType;
+    }
+
+    @Override
+    public boolean gc$getWasTouchingGCFluid() {
+        return wasTouchingFluid;
+    }
+
+    @Override
+    public void gc$setWasTouchingGCFluid(boolean value) {
+        wasTouchingFluid = value;
+    }
+
     @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
     private void gc$isInAnyFluid(CallbackInfoReturnable<Boolean> ci) {
         boolean vanillaReturn = ci.getReturnValue();
-        ci.setReturnValue(vanillaReturn || this.wasTouchingFluid);
+        ci.setReturnValue(vanillaReturn || this.gc$getWasTouchingGCFluid());
     }
 
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
@@ -207,17 +230,21 @@ public abstract class EntityMixin implements EntityAccessor  {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
             doWaterlikeEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
+            gc$setInFluidType(GCFluidTags.OIL);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             doExplosion(invulnerable);
             doWaterlikeEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
+            gc$setInFluidType(GCFluidTags.FUEL);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
             doWaterlikeEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
+            gc$setInFluidType(GCFluidTags.SULFURIC_ACID);
             bl = true;
         } else {
-            this.wasTouchingFluid = false;
+            gc$setWasTouchingGCFluid(false);
+            gc$setInFluidType(null);
             this.timeInAcid = 0;
         }
         ci.setReturnValue(vanillaReturn || bl);
@@ -225,11 +252,11 @@ public abstract class EntityMixin implements EntityAccessor  {
 
     @Unique
     private void doWaterlikeEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
-        if (!this.wasTouchingFluid && !this.firstTick) {
+        if (!this.gc$getWasTouchingGCFluid() && !this.firstTick) {
             this.doGCSplashEffect(pitch, bubble, splash);
         }
         this.resetFallDistance();
-        this.wasTouchingFluid = true;
+        gc$setWasTouchingGCFluid(true);
     }
 
     @Unique
@@ -257,11 +284,6 @@ public abstract class EntityMixin implements EntityAccessor  {
             this.level().addParticle(splash, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
         }
         this.gameEvent(GameEvent.SPLASH);
-    }
-
-    @Unique
-    public boolean isInGCFluid() {
-        return this.wasTouchingFluid;
     }
 
     // If a flaming entity enters an explosive substance, this entity should explode

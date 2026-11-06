@@ -29,6 +29,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.accessor.EntityFluidAccessor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.TinLadderBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
@@ -44,6 +45,7 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +66,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor, EntityFluidAccessor {
     @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
 
     @Unique
@@ -75,6 +77,9 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
     @Shadow
     public abstract void setYHeadRot(float f);
+
+    @Shadow
+    public abstract boolean isAffectedByPotions();
 
     @Unique
     public int cryogenicChamberCooldown;
@@ -196,7 +201,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Inject(method = "onClimbable", at = @At("TAIL"), cancellable = true)
-    private void galacticraft$onClimbable(CallbackInfoReturnable<Boolean> cir) {
+    private void gc$onClimbable(CallbackInfoReturnable<Boolean> cir) {
         // Make the back side of tin ladders climbable
         BlockPos blockPos = this.blockPosition();
         for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -208,4 +213,21 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
             }
         }
     }
+
+    @Shadow
+    protected abstract boolean isAffectedByFluids();
+
+    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
+    private void gc$fluidTravel(Vec3 movementInput, CallbackInfo ci) {
+        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !gc$getWasTouchingGCFluid()) {
+            return;
+        }
+        double gravity = this.getGravity();
+        boolean falling = this.getDeltaMovement().y <= 0.0;
+        this.moveRelative(0.02F, movementInput);
+        this.move(MoverType.SELF, this.getDeltaMovement());
+
+    }
+
+
 }
