@@ -32,7 +32,6 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.content.fluid.FluidHelpers;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.particle.GCParticleTypes;
@@ -80,7 +79,7 @@ import java.util.Objects;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements FluidHelpers, EntityAccessor  {
+public abstract class EntityMixin implements EntityAccessor  {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;
