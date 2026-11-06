@@ -36,7 +36,7 @@ public record BubbleFuelProvider(SpriteSet spriteProvider) implements ParticlePr
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         var particle = new GCBubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.FUEL_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
-        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
+        particle.setColor(1.0f, 1.0f, -0.5f);
         return particle;
     }
 }

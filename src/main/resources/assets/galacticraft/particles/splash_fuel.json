@@ -1,8 +1,8 @@
 {
   "textures": [
-    "minecraft:splash_0",
-    "minecraft:splash_1",
-    "minecraft:splash_2",
-    "minecraft:splash_3"
+    "galacticraft:generic_splash_0",
+    "galacticraft:generic_splash_1",
+    "galacticraft:generic_splash_2",
+    "galacticraft:generic_splash_3"
   ]
 }
