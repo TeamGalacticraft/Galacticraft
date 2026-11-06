@@ -239,10 +239,11 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
     private void gc$fluidTravel(Vec3 movementInput, CallbackInfo ci) {
         EntityFluidAccessor fluidAccessor = (EntityFluidAccessor) this;
-        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !fluidAccessor.gc$getWasTouchingGCFluid()) {
+        TagKey<Fluid> fluidType = fluidAccessor.gc$getInFluidType();
+        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !fluidAccessor.gc$getWasTouchingGCFluid() || fluidType == null) {
             return;
         }
-        TagKey<Fluid> fluidType = fluidAccessor.gc$getInFluidType();
+
         double d = this.getGravity();
         boolean bl = this.getDeltaMovement().y <= 0.0;
         double e = this.getY();
