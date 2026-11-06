@@ -229,16 +229,16 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
 
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doExplosion(invulnerable);
-            doWaterlikeEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
+            doFluidEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
             gc$setInFluidType(GCFluidTags.OIL);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
             doExplosion(invulnerable);
-            doWaterlikeEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
+            doFluidEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
             gc$setInFluidType(GCFluidTags.FUEL);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
-            doWaterlikeEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
+            doFluidEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
             sulfuricAcidEffects(invulnerable);
             gc$setInFluidType(GCFluidTags.SULFURIC_ACID);
             bl = true;
@@ -251,7 +251,7 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
     }
 
     @Unique
-    private void doWaterlikeEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
+    private void doFluidEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
         if (!this.gc$getWasTouchingGCFluid() && !this.firstTick) {
             this.doGCSplashEffect(pitch, bubble, splash);
         }

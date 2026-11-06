@@ -34,6 +34,7 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.TinLadderBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -41,6 +42,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -48,10 +50,12 @@ import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -217,18 +221,80 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Shadow
     protected abstract boolean isAffectedByFluids();
 
+    @Shadow
+    public abstract void calculateEntityAnimation(boolean flutter);
+
+    @Shadow
+    protected abstract float getWaterSlowDown();
+
+    @Shadow
+    public abstract float getSpeed();
+
+    @Shadow
+    public abstract boolean onClimbable();
+
+    @Shadow
+    public abstract Vec3 getFluidFallingAdjustedMovement(double gravity, boolean falling, Vec3 motion);
+
     @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
     private void gc$fluidTravel(Vec3 movementInput, CallbackInfo ci) {
         EntityFluidAccessor fluidAccessor = (EntityFluidAccessor) this;
         if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !fluidAccessor.gc$getWasTouchingGCFluid()) {
             return;
         }
-        double gravity = this.getGravity();
-        boolean falling = this.getDeltaMovement().y <= 0.0;
-        this.moveRelative(0.02F, movementInput);
+        TagKey<Fluid> fluidType = fluidAccessor.gc$getInFluidType();
+        double d = this.getGravity();
+        boolean bl = this.getDeltaMovement().y <= 0.0;
+        double e = this.getY();
+        float f = 0.8F;
+        float g = 0.02F;
+
+        if (GCFluidTags.WATER_BASED.contains(fluidType)) {
+            f = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
+            float h = (float) this.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY);
+            if (!this.onGround()) {
+                h *= 0.5F;
+            }
+
+            if (h > 0.0F) {
+                f += (0.54600006F - f) * h;
+                g += (this.getSpeed() - g) * h;
+            }
+        }
+
+        this.moveRelative(g, movementInput);
         this.move(MoverType.SELF, this.getDeltaMovement());
+        Vec3 vec32 = this.getDeltaMovement();
 
+        if (GCFluidTags.THICK.contains(fluidType)) {
+            if (this.getFluidHeight(fluidType) <= this.getFluidJumpThreshold()) {
+                this.setDeltaMovement(this.getDeltaMovement().multiply((double) 0.5F, (double) 0.8F, (double) 0.5F));
+                vec32 = this.getFluidFallingAdjustedMovement(d, bl, this.getDeltaMovement());
+                this.setDeltaMovement(vec32);
+            } else {
+                this.setDeltaMovement(this.getDeltaMovement().scale((double) 0.5F));
+            }
+            if (d != (double)0.0F) {
+                this.setDeltaMovement(this.getDeltaMovement().add((double)0.0F, -d / (double)4.0F, (double)0.0F));
+            }
+            vec32 = this.getDeltaMovement();
+
+        } else {
+            Vec3 vec3 = vec32;
+            if (this.horizontalCollision && this.onClimbable()) {
+                vec3 = new Vec3(vec3.x, 0.2, vec3.z);
+            }
+            this.setDeltaMovement(vec3.multiply((double) f, (double) 0.8F, (double) f));
+            vec32 = this.getFluidFallingAdjustedMovement(d, bl, this.getDeltaMovement());
+            this.setDeltaMovement(vec32);
+
+        }
+
+        if (this.horizontalCollision && this.isFree(vec32.x, vec32.y + (double) 0.6F - this.getY() + e, vec32.z)) {
+            this.setDeltaMovement(vec32.x, (double) 0.3F, vec32.z);
+        }
+
+        this.calculateEntityAnimation(this instanceof FlyingAnimal);
+        ci.cancel();
     }
-
-
 }
