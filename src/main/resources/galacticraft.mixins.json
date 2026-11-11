@@ -52,6 +52,7 @@
     "client.FogRendererMixin",
     "client.GameRendererMixin",
     "client.HumanoidModelMixin",
+    "client.ItemBlockRenderTypesMixin",
     "client.ItemInHandRendererMixin",
     "client.LevelRendererMixin",
     "client.LightningBoltMixin",
