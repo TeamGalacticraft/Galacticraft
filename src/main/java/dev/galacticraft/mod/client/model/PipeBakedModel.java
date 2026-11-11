@@ -49,6 +49,7 @@ import net.minecraft.world.level.block.state.BlockState;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.EnumMap;
 import java.util.List;
@@ -57,8 +58,27 @@ import java.util.function.Function;
 import java.util.function.Supplier;
 
 @Environment(EnvType.CLIENT)
+/**
+ * A pipe or wire, rendered from a single texture with the following layout, where {@code w} is the width of the pipe in pixels:
+ * <ul>
+ *     <li>columns {@code 0} to {@code w}: the side of the pipe, along the full height of the texture</li>
+ *     <li>{@code w x w} at {@code (w, 0)}: the end cap, shown where the pipe ends and on the center of junctions of more than two pipes</li>
+ *     <li>{@code w x w} at {@code (w, w)}: the corner, connecting the left and top edges, shown on the center of a bend</li>
+ * </ul>
+ */
 public class PipeBakedModel implements BakedModel {
     private static final float EDGE_FACE_DEPTH = 0.001f;
+    /**
+     * The rotations and reflections of a tile, as {@code {uu, uv, vu, vv}}.
+     */
+    private static final int[][] TRANSFORMS = {
+            {1, 0, 0, 1}, {-1, 0, 0, 1}, {1, 0, 0, -1}, {-1, 0, 0, -1},
+            {0, 1, 1, 0}, {0, -1, 1, 0}, {0, 1, -1, 0}, {0, -1, -1, 0}
+    };
+    /**
+     * The connections of the corner tile: left and top.
+     */
+    private static final int[][] CORNER = {{-1, 0}, {0, -1}};
 
     private final TextureAtlasSprite sprite;
     private final Map<Direction, Mesh> meshes;
@@ -254,10 +274,139 @@ public class PipeBakedModel implements BakedModel {
                     this.meshes.get(direction).outputTo(emitter);
                     this.renderReducerCap(getter, blockPos, direction, emitter);
                 } else {
-                    this.emitCapQuad(emitter, direction, 0.5f - this.radius, 0.5f - this.radius, 0.5f + this.radius, 0.5f + this.radius, 0.5f - this.radius);
+                    this.emitCenterQuad(pipe, emitter, direction);
                 }
             }
         }
+    }
+
+    /**
+     * Emits an unconnected face of the center of the pipe.
+     * Junctions of more than two pipes and faces without connections in their plane show the end cap,
+     * faces with connections along one axis show the side of the pipe, and faces of a bend show the corner.
+     */
+    private void emitCenterQuad(Connected pipe, QuadEmitter emitter, Direction face) {
+        float min = 0.5f - this.radius;
+        float max = 0.5f + this.radius;
+        int total = 0;
+        for (Direction direction : Direction.values()) {
+            if (pipe.isConnected(direction)) {
+                total++;
+            }
+        }
+
+        // the plane of the face, as seen in the tiles: u runs left to right, v runs top to bottom
+        Direction u = face.getAxis() == Direction.Axis.Y ? Direction.EAST : face.getClockWise();
+        Direction v = face.getAxis() == Direction.Axis.Y ? Direction.SOUTH : Direction.DOWN;
+        List<int[]> connections = new ArrayList<>(4);
+        Direction.Axis axis = null;
+        for (Direction direction : new Direction[]{u, u.getOpposite(), v, v.getOpposite()}) {
+            if (pipe.isConnected(direction)) {
+                connections.add(new int[]{direction == u ? 1 : direction == u.getOpposite() ? -1 : 0, direction == v ? 1 : direction == v.getOpposite() ? -1 : 0});
+                axis = connections.size() == 1 || axis == direction.getAxis() ? direction.getAxis() : null;
+            }
+        }
+
+        if (connections.isEmpty() || total > 2) {
+            this.emitCapQuad(emitter, face, min, min, max, max, min);
+        } else if (axis != null) {
+            this.emitCenterSideQuad(emitter, face, axis);
+        } else {
+            this.emitCornerQuad(emitter, face, u, v, connections);
+        }
+    }
+
+    /**
+     * Emits the side of the center of a pipe that runs along the given axis.
+     * The texture is mapped in the same orientation as the sides of the connections, so that the side continues from one connection to the other.
+     */
+    private void emitCenterSideQuad(QuadEmitter emitter, Direction face, Direction.Axis axis) {
+        float min = 0.5f - this.radius;
+        float max = 0.5f + this.radius;
+        float width = this.crossSectionWidth();
+        float start = this.centerStart();
+        float end = this.centerEnd();
+        emitter.square(face, min, min, max, max, min);
+        boolean alongX = switch (axis) {
+            case X -> true;
+            case Y -> false;
+            case Z -> face.getAxis() == Direction.Axis.X;
+        };
+        if (alongX) {
+            boolean flipped = axis == Direction.Axis.X && face.getAxis() == Direction.Axis.Y;
+            emitter.uv(0, flipped ? width : 0, start)
+                    .uv(1, flipped ? 0 : width, start)
+                    .uv(2, flipped ? 0 : width, end)
+                    .uv(3, flipped ? width : 0, end);
+        } else {
+            emitter.uv(0, 0, start)
+                    .uv(1, 0, end)
+                    .uv(2, width, end)
+                    .uv(3, width, start);
+        }
+        emitter.spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+    }
+
+    /**
+     * Emits the corner tile, rotated and/or mirrored so that its edges line up with the given connections.
+     */
+    private void emitCornerQuad(QuadEmitter emitter, Direction face, Direction u, Direction v, List<int[]> connections) {
+        float min = 0.5f - this.radius;
+        float max = 0.5f + this.radius;
+        float width = this.crossSectionWidth();
+        int[] transform = findTransform(connections);
+        emitter.square(face, min, min, max, max, min);
+        for (int i = 0; i < 4; i++) {
+            float pu = planeCoordinate(emitter, i, u, min, max);
+            float pv = planeCoordinate(emitter, i, v, min, max);
+            float tu = transform[0] * pu + transform[1] * pv;
+            float tv = transform[2] * pu + transform[3] * pv;
+            emitter.uv(i, width + (tu + 1) * 0.5f * width, width + (tv + 1) * 0.5f * width);
+        }
+        emitter.spriteBake(this.sprite, MutableQuadView.BAKE_NORMALIZED & MutableQuadView.BAKE_LOCK_UV)
+                .color(-1, -1, -1, -1).emit();
+    }
+
+    /**
+     * {@return the transform that rotates and/or mirrors the given connections onto the connections of the corner tile}
+     */
+    private static int[] findTransform(List<int[]> connections) {
+        for (int[] transform : TRANSFORMS) {
+            boolean matches = true;
+            for (int[] connection : connections) {
+                int tu = transform[0] * connection[0] + transform[1] * connection[1];
+                int tv = transform[2] * connection[0] + transform[3] * connection[1];
+                boolean found = false;
+                for (int[] edge : CORNER) {
+                    if (edge[0] == tu && edge[1] == tv) {
+                        found = true;
+                        break;
+                    }
+                }
+                if (!found) {
+                    matches = false;
+                    break;
+                }
+            }
+            if (matches) {
+                return transform;
+            }
+        }
+        throw new IllegalStateException("No transform found for the connections of a pipe");
+    }
+
+    /**
+     * {@return the position of a vertex in the given direction, from -1 to 1 across the center of the pipe}
+     */
+    private static float planeCoordinate(QuadEmitter emitter, int vertex, Direction direction, float min, float max) {
+        float position = switch (direction.getAxis()) {
+            case X -> emitter.x(vertex);
+            case Y -> emitter.y(vertex);
+            case Z -> emitter.z(vertex);
+        };
+        float coordinate = (position - min) / (max - min) * 2 - 1;
+        return direction.getAxisDirection() == Direction.AxisDirection.POSITIVE ? coordinate : -coordinate;
     }
 
     private void renderReducerCap(BlockAndTintGetter getter, BlockPos blockPos, Direction direction, QuadEmitter emitter) {
@@ -293,12 +442,13 @@ public class PipeBakedModel implements BakedModel {
                 .color(-1, -1, -1, -1).emit();
     }
 
+    // the end cap is the tile next to the side of the pipe
     private float capU(float value) {
-        return (value - (0.5f - this.radius)) * 16.0f;
+        return (value - (0.5f - this.radius)) * 16.0f + this.crossSectionWidth();
     }
 
     private float capV(float value) {
-        return value * 16.0f;
+        return (value - (0.5f - this.radius)) * 16.0f;
     }
 
     private float centerStart() {
