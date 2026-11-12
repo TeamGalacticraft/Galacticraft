@@ -65,6 +65,8 @@ public interface Config {
 
     long maxSealingPower();
 
+    long oxygenBubbleDistributorEnergyConsumptionRate();
+
     long refineryEnergyConsumptionRate();
 
     long fuelLoaderEnergyConsumptionRate();
