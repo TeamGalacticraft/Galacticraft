@@ -19,6 +19,7 @@
     "DimensionTypeMixin",
     "EntityMixin",
     "FireworkRocketItemMixin",
+    "FloatGoalMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
