@@ -25,6 +25,7 @@ package dev.galacticraft.mod.content.block.entity.machine;
 import com.mojang.datafixers.util.Pair;
 import dev.galacticraft.machinelib.api.block.entity.MachineBlockEntity;
 import dev.galacticraft.machinelib.api.block.entity.RecipeMachineBlockEntity;
+import dev.galacticraft.machinelib.api.compat.transfer.MachineInsertHandler;
 import dev.galacticraft.machinelib.api.compat.vanilla.RecipeHelper;
 import dev.galacticraft.machinelib.api.filter.ResourceFilters;
 import dev.galacticraft.machinelib.api.machine.MachineStatus;
@@ -32,6 +33,7 @@ import dev.galacticraft.machinelib.api.machine.MachineStatuses;
 import dev.galacticraft.machinelib.api.menu.MachineMenu;
 import dev.galacticraft.machinelib.api.storage.MachineEnergyStorage;
 import dev.galacticraft.machinelib.api.storage.MachineItemStorage;
+import dev.galacticraft.machinelib.api.storage.ResourceStorage;
 import dev.galacticraft.machinelib.api.storage.StorageSpec;
 import dev.galacticraft.machinelib.api.storage.slot.ItemResourceSlot;
 import dev.galacticraft.machinelib.api.transfer.TransferType;
@@ -43,14 +45,20 @@ import dev.galacticraft.mod.machine.GCMachineStatuses;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CircuitFabricatorMenu;
+import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
+import net.fabricmc.fabric.api.transfer.v1.storage.TransferVariant;
+import net.fabricmc.fabric.api.transfer.v1.transaction.TransactionContext;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.NonNullList;
+import net.minecraft.core.component.DataComponentPatch;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.util.Mth;
 import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.InventoryMenu;
+import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.RecipeHolder;
 import net.minecraft.world.item.crafting.RecipeInput;
@@ -63,7 +71,7 @@ import java.util.List;
 
 import static dev.galacticraft.mod.Constant.CircuitFabricator.*;
 
-public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> {
+public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<RecipeInput, FabricationRecipe> implements MachineInsertHandler<Item, ItemResourceSlot> {
     public static final int CHARGE_SLOT = 0;
     public static final int DIAMOND_SLOT = 1;
     public static final int SILICON_SLOT_1 = 2;
@@ -216,5 +224,47 @@ public class CircuitFabricatorBlockEntity extends RecipeMachineBlockEntity<Recip
     @Override
     public @Nullable MachineMenu<? extends MachineBlockEntity> createMenu(int syncId, Inventory inv, Player player) {
         return new CircuitFabricatorMenu(syncId, player, this);
+    }
+
+    @Override
+    public long insert(ResourceStorage<Item, ItemResourceSlot> storage, TransferVariant<Item> variant, long maxAmount, TransactionContext transaction) {
+        if (variant instanceof ItemVariant itemVariant) {
+            Item item = itemVariant.getItem();
+            DataComponentPatch components = itemVariant.getComponents();
+            return insertSilicon(storage, item, components, maxAmount, transaction);
+        }
+        return 0;
+    }
+
+    public static long insertSilicon(ResourceStorage<Item, ItemResourceSlot> storage, Item item, DataComponentPatch components, long available, TransactionContext transaction) {
+        ItemResourceSlot slot1 = storage.slot(SILICON_SLOT_1);
+        ItemResourceSlot slot2 = storage.slot(SILICON_SLOT_2);
+
+        long slot1Count = slot1.getAmount();
+        long slot2Count = slot2.getAmount();
+        long originalCount = slot1Count + slot2Count;
+
+        if (slot1Count > 0 && !slot1.contains(item, components)) {
+            return 0;
+        } else if (slot2Count > 0 && !slot2.contains(item, components)) {
+            return 0;
+        }
+
+        long slot1Capacity = slot1.getFilter().test(item, components) ? slot1.getCapacityFor(item, components) : 0;
+        long slot2Capacity = slot2.getFilter().test(item, components) ? slot2.getCapacityFor(item, components) : 0;
+
+        long toInsert = Mth.clamp(slot1Capacity + slot2Capacity - originalCount, 0, available);
+        long inserted = 0;
+
+        if (toInsert > 0) {
+            long totalCount = originalCount + toInsert;
+            long toInsert2 = Mth.clamp((totalCount / 2) - slot2Count, 0, toInsert);
+            long toInsert1 = toInsert - toInsert2;
+
+            inserted += storage.slot(SILICON_SLOT_1).insert(item, components, toInsert1, transaction);
+            inserted += storage.slot(SILICON_SLOT_2).insert(item, components, toInsert2, transaction);
+        }
+
+        return inserted;
     }
 }
