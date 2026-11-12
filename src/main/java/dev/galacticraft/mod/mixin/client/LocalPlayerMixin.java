@@ -101,7 +101,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
 
     }
 
-    @Inject(method = "startRiding", at = @At("TAIL"), cancellable = true)
+    @Inject(method = "startRiding", at = @At("TAIL"))
     private void gc$enterAdvancedVehicle(Entity vehicle, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if (vehicle instanceof RocketEntity) {
             this.minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
@@ -110,7 +110,7 @@ public abstract class LocalPlayerMixin extends AbstractClientPlayer {
         }
     }
 
-    @Inject(method = "removeVehicle", at = @At("HEAD"), cancellable = true)
+    @Inject(method = "removeVehicle", at = @At("HEAD"))
     private void gc$exitAdvancedVehicle(CallbackInfo ci) {
         Entity vehicle = this.getVehicle();
         if (vehicle instanceof AdvancedVehicle) {

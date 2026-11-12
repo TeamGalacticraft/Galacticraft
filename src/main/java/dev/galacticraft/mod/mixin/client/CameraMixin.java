@@ -59,10 +59,10 @@ public abstract class CameraMixin {
     protected abstract void move(float x, float y, float z);
 
     @Shadow
-    protected abstract float getXRot();
+    public abstract float getXRot();
 
     @Shadow
-    protected abstract float getYRot();
+    public abstract float getYRot();
 
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
