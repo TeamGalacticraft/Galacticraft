@@ -47,10 +47,8 @@ import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.MoverType;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.entity.animal.FlyingAnimal;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
@@ -218,109 +216,8 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
         }
     }
 
-    @Shadow
-    protected abstract boolean isAffectedByFluids();
-
-    @Shadow
-    public abstract void calculateEntityAnimation(boolean flutter);
-
-    @Shadow
-    protected abstract float getWaterSlowDown();
-
-    @Shadow
-    public abstract float getSpeed();
-
-    @Shadow
-    public abstract boolean onClimbable();
-
-    @Shadow
-    public abstract Vec3 getFluidFallingAdjustedMovement(double gravity, boolean falling, Vec3 motion);
-
-    @Inject(method = "travel", at = @At("HEAD"), cancellable = true)
-    private void gc$fluidTravel(Vec3 movementInput, CallbackInfo ci) {
-        EntityFluidAccessor fluidAccessor = (EntityFluidAccessor) this;
-        TagKey<Fluid> fluidType = fluidAccessor.gc$getInFluidType();
-        if (!this.isControlledByLocalInstance() || !this.isAffectedByFluids() || !fluidAccessor.gc$getWasTouchingGCFluid() || fluidType == null) {
-            return;
-        }
-
-        double d = this.getGravity();
-        boolean bl = this.getDeltaMovement().y <= 0.0;
-        double e = this.getY();
-        float f = 0.8F;
-        float g = 0.02F;
-
-        if (GCFluidTags.THIN.contains(fluidType)) {
-            f = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
-            float h = (float) this.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY);
-            if (!this.onGround()) {
-                h *= 0.5F;
-            }
-
-            if (h > 0.0F) {
-                f += (0.54600006F - f) * h;
-                g += (this.getSpeed() - g) * h;
-            }
-        }
-
-        this.moveRelative(g, movementInput);
-        this.move(MoverType.SELF, this.getDeltaMovement());
-        Vec3 vec32 = this.getDeltaMovement();
-
-        if (GCFluidTags.THICK.contains(fluidType)) {
-            if (this.getFluidHeight(fluidType) <= this.getFluidJumpThreshold()) {
-                this.setDeltaMovement(this.getDeltaMovement().multiply((double) 0.5F, (double) 0.8F, (double) 0.5F));
-                vec32 = this.getFluidFallingAdjustedMovement(d, bl, this.getDeltaMovement());
-                this.setDeltaMovement(vec32);
-            } else {
-                this.setDeltaMovement(this.getDeltaMovement().scale((double) 0.5F));
-            }
-            if (d != (double)0.0F) {
-                this.setDeltaMovement(this.getDeltaMovement().add((double)0.0F, -d / (double)4.0F, (double)0.0F));
-            }
-            vec32 = this.getDeltaMovement();
-
-        } else {
-            Vec3 vec3 = vec32;
-            if (this.horizontalCollision && this.onClimbable()) {
-                vec3 = new Vec3(vec3.x, 0.2, vec3.z);
-            }
-            this.setDeltaMovement(vec3.multiply((double) f, (double) 0.8F, (double) f));
-            vec32 = this.getFluidFallingAdjustedMovement(d, bl, this.getDeltaMovement());
-            this.setDeltaMovement(vec32);
-
-        }
-
-        if (this.horizontalCollision && this.isFree(vec32.x, vec32.y + (double) 0.6F - this.getY() + e, vec32.z)) {
-            this.setDeltaMovement(vec32.x, (double) 0.3F, vec32.z);
-        }
-
-        this.calculateEntityAnimation(this instanceof FlyingAnimal);
-        ci.cancel();
-    }
-
     @Unique
-    private TagKey<Fluid> gc$getInFluidType(LivingEntity entity) {
-        return ((EntityFluidAccessor)  entity).gc$getInFluidType();
-    }
-
-    @Unique
-    private boolean gc$getWasTouchingGCFluid(LivingEntity entity) {
-        return ((EntityFluidAccessor) entity).gc$getWasTouchingGCFluid();
-    }
-
-    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
-    private double gc$wrapWaterHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
-        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
-        if (fluidType != null) {
-            System.out.println(entity.getFluidHeight(fluidType));
-            return entity.getFluidHeight(fluidType);
-        }
-        return original.call(entity, tag);
-    }
-
-    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
-    private boolean gc$modifyIsInWater(boolean inWater) {
+    private boolean gc$getInThinFluid(boolean inWater) {
         LivingEntity entity = (LivingEntity) (Object) this;
         TagKey<Fluid> fluidType = gc$getInFluidType(entity);
         if (fluidType != null) {
@@ -329,13 +226,61 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
         return inWater;
     }
 
-    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
-    private boolean gc$modifyIsInLava(boolean inLava) {
+    @Unique
+    private boolean gc$getInThickFluid(boolean inLava) {
         LivingEntity entity = (LivingEntity) (Object) this;
         TagKey<Fluid> fluidType = gc$getInFluidType(entity);
         if (fluidType != null) {
             return inLava || GCFluidTags.THICK.contains(gc$getInFluidType(entity));
         }
         return inLava;
+    }
+
+    @Unique
+    private TagKey<Fluid> gc$getInFluidType(LivingEntity entity) {
+        return ((EntityFluidAccessor)  entity).gc$getInFluidType();
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
+    private double gc$wrapLavaHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return entity.getFluidHeight(fluidType);
+        }
+        return original.call(entity, tag);
+    }
+
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
+    private double gc$wrapWaterHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return entity.getFluidHeight(fluidType);
+        }
+        return original.call(entity, tag);
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    private boolean gc$modifyDolphinsGraceCheck(boolean hasDolphinsGrace) {
+        return hasDolphinsGrace && this.isInWater();
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean gc$modifyTravelIsInWater(boolean inWater) {
+        return gc$getInThinFluid(inWater);
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean gc$modifyAiStepIsInWater(boolean inWater) {
+        return gc$getInThinFluid(inWater);
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
+    private boolean gc$modifyTravelIsInLava(boolean inLava) {
+        return gc$getInThickFluid(inLava);
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
+    private boolean gc$modifyAIStepIsInLava(boolean inLava) {
+        return gc$getInThickFluid(inLava);
     }
 }
