@@ -35,7 +35,7 @@ import net.minecraft.world.level.material.Fluid;
 @Environment(EnvType.CLIENT)
 public class GCBubbleParticle extends TextureSheetParticle {
     private TagKey<Fluid> fluidTag;
-    GCBubbleParticle(ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
+    GCBubbleParticle(ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         super(clientLevel, d, e, f, g, h, i);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= this.random.nextFloat() * 0.6F + 0.2F;
