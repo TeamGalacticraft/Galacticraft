@@ -1,5 +1,5 @@
-# Linux files (LF)
-*.bat           text eol=lf
+# Windows files (CRLF)
+*.bat           text eol=crlf
 
 # Text
 *.properties    text
