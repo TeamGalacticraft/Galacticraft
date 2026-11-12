@@ -11,6 +11,7 @@
     "AbstractSkeletonEntityAccessor",
     "AnimalMixin",
     "BlockBehaviourMixin",
+    "BlockBehaviourNotBaseMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
     "CakeBlockMixin",
@@ -19,6 +20,7 @@
     "DimensionTypeMixin",
     "EntityMixin",
     "FireworkRocketItemMixin",
+    "FloatGoalMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
     "ItemStackMixin",
@@ -33,7 +35,8 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin"
+    "SpiderMixin",
+    "WaterAvoidingRandomStrollGoalMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",

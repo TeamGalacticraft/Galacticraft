@@ -29,10 +29,12 @@ import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.CryogenicAccessor;
+import dev.galacticraft.mod.accessor.EntityFluidAccessor;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.TinLadderBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
@@ -40,6 +42,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.syncher.EntityDataAccessor;
 import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
+import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -50,6 +53,7 @@ import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -196,7 +200,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Inject(method = "onClimbable", at = @At("TAIL"), cancellable = true)
-    private void galacticraft$onClimbable(CallbackInfoReturnable<Boolean> cir) {
+    private void gc$onClimbable(CallbackInfoReturnable<Boolean> cir) {
         // Make the back side of tin ladders climbable
         BlockPos blockPos = this.blockPosition();
         for (Direction direction : Direction.Plane.HORIZONTAL) {
@@ -207,5 +211,74 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
                 return;
             }
         }
+    }
+
+    @Unique
+    private TagKey<Fluid> gc$getInFluidType(LivingEntity entity) {
+        return ((EntityFluidAccessor)  entity).gc$getInFluidType();
+    }
+
+    @Unique
+    private boolean gc$getInThinFluid(boolean inWater) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return inWater || GCFluidTags.THIN.contains(gc$getInFluidType(entity));
+        }
+        return inWater;
+    }
+
+    @Unique
+    private boolean gc$getInThickFluid(boolean inLava) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return inLava || GCFluidTags.THICK.contains(gc$getInFluidType(entity));
+        }
+        return inLava;
+    }
+
+    @Unique
+    private double gc$wrapFluidHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return entity.getFluidHeight(fluidType);
+        }
+        return original.call(entity, tag);
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean gc$modifyTravelIsInWater(boolean inWater) {
+        return gc$getInThinFluid(inWater);
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
+    private boolean gc$modifyDolphinsGraceCheck(boolean hasDolphinsGrace) {
+        return hasDolphinsGrace && this.isInWater();
+    }
+
+    @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
+    private boolean gc$modifyTravelIsInLava(boolean inLava) {
+        return gc$getInThickFluid(inLava);
+    }
+
+    @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
+    private double gc$wrapLavaHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        return gc$wrapFluidHeight(entity, tag, original);
+    }
+
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
+    private double gc$wrapWaterHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        return gc$wrapFluidHeight(entity, tag, original);
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean gc$modifyAiStepIsInWater(boolean inWater) {
+        return gc$getInThinFluid(inWater);
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
+    private boolean gc$modifyAIStepIsInLava(boolean inLava) {
+        return gc$getInThickFluid(inLava);
     }
 }

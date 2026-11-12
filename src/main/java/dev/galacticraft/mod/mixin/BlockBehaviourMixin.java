@@ -22,10 +22,13 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.mod.content.item.StandardWrenchItem;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.tag.GCBlockTags;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
@@ -39,6 +42,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.BlockHitResult;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -91,5 +96,15 @@ public abstract class BlockBehaviourMixin {
             // on a block with a wrench to allow the wrench to rotate the block instead
             cir.setReturnValue(ItemInteractionResult.FAIL);
         }
+    }
+}
+
+@Mixin(BlockBehaviour.class)
+abstract class BlockBehaviourNotBaseMixin {
+    @WrapOperation(method = "isPathfindable(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/pathfinder/PathComputationType;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z"))
+    private boolean gc$includeGcFluidsInWaterPathfinding(FluidState instance, TagKey<Fluid> tag, Operation<Boolean> original) {
+        boolean vanillaResult = original.call(instance, tag);
+
+        return vanillaResult || GCFluidTags.SWIMMABLE.stream().anyMatch(instance::is);
     }
 }
