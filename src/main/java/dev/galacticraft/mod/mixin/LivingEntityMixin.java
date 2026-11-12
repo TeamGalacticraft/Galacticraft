@@ -80,9 +80,6 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     @Shadow
     public abstract void setYHeadRot(float f);
 
-    @Shadow
-    public abstract boolean isAffectedByPotions();
-
     @Unique
     public int cryogenicChamberCooldown;
 
