@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import dev.galacticraft.api.registry.AddonRegistries;
@@ -214,10 +215,9 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
         wasTouchingFluid = value;
     }
 
-    @Inject(method="isInLiquid", at = @At("RETURN"), cancellable = true)
-    private void gc$isInAnyFluid(CallbackInfoReturnable<Boolean> ci) {
-        boolean vanillaReturn = ci.getReturnValue();
-        ci.setReturnValue(vanillaReturn || this.gc$getWasTouchingGCFluid());
+    @ModifyReturnValue(method = "isInLiquid", at = @At(value = "RETURN"))
+    private boolean gc$isInAnyFluid(boolean original) {
+        return original || this.gc$getWasTouchingGCFluid();
     }
 
     @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
