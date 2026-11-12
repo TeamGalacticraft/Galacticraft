@@ -26,7 +26,7 @@ import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.block.FluidPipeBlock;
 import dev.galacticraft.mod.api.pipe.FluidPipe;
 import dev.galacticraft.mod.api.pipe.PipeNetwork;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import it.unimi.dsi.fastutil.objects.Object2LongMap;
 import it.unimi.dsi.fastutil.objects.Object2LongOpenHashMap;
 import it.unimi.dsi.fastutil.objects.Object2ObjectOpenHashMap;
@@ -98,7 +98,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         }
         pipe.setNetwork(this);
         this.pipes.put(pos, null);
-        if (pipe instanceof PipeBlockEntity pipeBlockEntity) {
+        if (pipe instanceof GlassFluidPipeBlockEntity pipeBlockEntity) {
             pipeBlockEntity.setDisplayedFluid(this.displayedVariant);
         }
 
@@ -278,7 +278,7 @@ public class PipeNetworkImpl extends SnapshotParticipant<PipeNetworkImpl.PipeSna
         }
 
         for (BlockPos pos : this.pipes.keySet()) {
-            if (this.level.getBlockEntity(pos) instanceof PipeBlockEntity pipe) {
+            if (this.level.getBlockEntity(pos) instanceof GlassFluidPipeBlockEntity pipe) {
                 // Pipes that have moved to another network show what that network is transferring
                 PipeNetwork network = pipe.getNetwork();
                 pipe.setDisplayedFluid(network != this && network instanceof PipeNetworkImpl other ? other.displayedVariant : variant);

@@ -24,7 +24,7 @@ package dev.galacticraft.mod.client.model;
 
 import dev.galacticraft.mod.api.block.PipeShapedBlock;
 import dev.galacticraft.mod.api.block.entity.Connected;
-import dev.galacticraft.mod.content.block.special.fluidpipe.PipeBlockEntity;
+import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.renderer.v1.RendererAccess;
@@ -274,7 +274,7 @@ public class PipeBakedModel implements BakedModel {
                 }
             }
 
-            if (pipe instanceof PipeBlockEntity fluidPipe) {
+            if (pipe instanceof GlassFluidPipeBlockEntity fluidPipe) {
                 this.emitFluid(getter, blockPos, fluidPipe, emitter);
             }
         }
@@ -285,7 +285,7 @@ public class PipeBakedModel implements BakedModel {
      * It is part of the block model rather than drawn by a block entity renderer,
      * so it is sorted together with the glass and always ends up behind the front of it.
      */
-    private void emitFluid(BlockAndTintGetter getter, BlockPos blockPos, PipeBlockEntity pipe, QuadEmitter emitter) {
+    private void emitFluid(BlockAndTintGetter getter, BlockPos blockPos, GlassFluidPipeBlockEntity pipe, QuadEmitter emitter) {
         FluidVariant fluid = pipe.getDisplayedFluid();
         if (fluid.isBlank()) return;
 
