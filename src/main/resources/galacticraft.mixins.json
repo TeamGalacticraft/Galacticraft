@@ -34,7 +34,8 @@
     "PlayerMixin",
     "ServerLevelMixin",
     "ServerPlayerMixin",
-    "SpiderMixin"
+    "SpiderMixin",
+    "WaterAvoidingRandomStrollGoalMixin"
   ],
   "client": [
     "client.AbstractClientPlayerMixin",
