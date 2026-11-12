@@ -11,6 +11,7 @@
     "AbstractSkeletonEntityAccessor",
     "AnimalMixin",
     "BlockBehaviourMixin",
+    "BlockBehaviourNotBaseMixin",
     "BucketItemAccessor",
     "BucketItemMixin",
     "CakeBlockMixin",
