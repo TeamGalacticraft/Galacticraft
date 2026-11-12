@@ -22,7 +22,6 @@
 
 package dev.galacticraft.mod.content.block.decoration;
 
-import dev.galacticraft.mod.Constant;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.item.context.BlockPlaceContext;
@@ -44,7 +43,6 @@ public class VacuumGlassBlock extends Block {
     public VacuumGlassBlock(Properties settings) {
         super(settings);
         this.registerDefaultState(this.stateDefinition.any()
-                .setValue(BlockStateProperties.HORIZONTAL_AXIS, Direction.Axis.X)
                 .setValue(BlockStateProperties.NORTH, false)
                 .setValue(BlockStateProperties.EAST, false)
                 .setValue(BlockStateProperties.SOUTH, false)
@@ -56,48 +54,48 @@ public class VacuumGlassBlock extends Block {
     @Override
     protected void createBlockStateDefinition(StateDefinition.Builder<Block, BlockState> builder) {
         super.createBlockStateDefinition(builder);
-        builder.add(BlockStateProperties.HORIZONTAL_AXIS, BlockStateProperties.NORTH, BlockStateProperties.EAST, BlockStateProperties.SOUTH, BlockStateProperties.WEST, BlockStateProperties.UP, BlockStateProperties.DOWN);
+        builder.add(BlockStateProperties.NORTH, BlockStateProperties.EAST, BlockStateProperties.SOUTH, BlockStateProperties.WEST, BlockStateProperties.UP, BlockStateProperties.DOWN);
     }
 
     @Override
-    protected BlockState rotate(BlockState state, Rotation rotation) {
-        switch (rotation) {
-            case CLOCKWISE_180: {
-                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
-                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
-                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH))
-                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
-            }
-            case COUNTERCLOCKWISE_90: {
-                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
-                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST))
-                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH))
-                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST))
-                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
-            }
-            case CLOCKWISE_90: {
-                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
-                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST))
-                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH))
-                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST))
-                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
-            }
-        }
+    protected @NotNull BlockState rotate(BlockState state, Rotation rotation) {
+//        switch (rotation) {
+//            case CLOCKWISE_180: {
+//                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
+//                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
+//                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH))
+//                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+//            }
+//            case COUNTERCLOCKWISE_90: {
+//                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+//                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.EAST))
+//                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.SOUTH))
+//                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.WEST))
+//                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.NORTH));
+//            }
+//            case CLOCKWISE_90: {
+//                return state.setValue(BlockStateProperties.HORIZONTAL_AXIS, state.getValue(BlockStateProperties.HORIZONTAL_AXIS) == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X)
+//                        .setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.WEST))
+//                        .setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.NORTH))
+//                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.EAST))
+//                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.SOUTH));
+//            }
+//        }
         return state;
     }
 
     @Override
-    protected BlockState mirror(BlockState state, Mirror mirror) {
-        switch (mirror) {
-            case LEFT_RIGHT: {
-                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
-                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
-            }
-            case FRONT_BACK: {
-                return state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
-                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
-            }
-        }
+    protected @NotNull BlockState mirror(BlockState state, Mirror mirror) {
+//        switch (mirror) {
+//            case LEFT_RIGHT: {
+//                return state.setValue(BlockStateProperties.NORTH, state.getValue(BlockStateProperties.SOUTH))
+//                        .setValue(BlockStateProperties.SOUTH, state.getValue(BlockStateProperties.NORTH));
+//            }
+//            case FRONT_BACK: {
+//                return state.setValue(BlockStateProperties.EAST, state.getValue(BlockStateProperties.WEST))
+//                        .setValue(BlockStateProperties.WEST, state.getValue(BlockStateProperties.EAST));
+//            }
+//        }
         return super.mirror(state, mirror);
     }
 
@@ -107,36 +105,13 @@ public class VacuumGlassBlock extends Block {
         Direction direction = Direction.fromDelta(sourcePos.getX() - pos.getX(), sourcePos.getY() - pos.getY(), sourcePos.getZ() - pos.getZ());
         BlockState neighbor = level.getBlockState(sourcePos);
         assert direction != null;
-        boolean connect = neighbor.getBlock() == this;
-        if (connect && direction.getAxis().isVertical()) {
-            connect = (neighbor.getValue(BlockStateProperties.NORTH) == state.getValue(BlockStateProperties.NORTH)
-                    && neighbor.getValue(BlockStateProperties.EAST) == state.getValue(BlockStateProperties.EAST)
-                    && neighbor.getValue(BlockStateProperties.SOUTH) == state.getValue(BlockStateProperties.SOUTH)
-                    && neighbor.getValue(BlockStateProperties.WEST) == state.getValue(BlockStateProperties.WEST)) || (calculateAxis(state) != null && calculateAxis(state) == calculateAxis(neighbor));
-        }
-
+        boolean connect = neighbor.isSolidRender(level, sourcePos.relative(direction)) || neighbor.is(this);
         BlockState state1 = state.setValue(propertyFromDirection(direction), connect);
-        Direction.Axis axis = calculateAxis(state);
-        if (axis != null) state1 = state1.setValue(BlockStateProperties.HORIZONTAL_AXIS, axis);
-
         level.setBlockAndUpdate(pos, state1);
     }
 
-    private static @Nullable Direction.Axis calculateAxis(BlockState neighbor) {
-        if (neighbor.getValue(BlockStateProperties.NORTH) || neighbor.getValue(BlockStateProperties.SOUTH)) {
-            if (!(neighbor.getValue(BlockStateProperties.EAST) || neighbor.getValue(BlockStateProperties.WEST))) {
-                return Direction.Axis.Z;
-            }
-        } else if (neighbor.getValue(BlockStateProperties.EAST) || neighbor.getValue(BlockStateProperties.WEST)) {
-            return Direction.Axis.X;
-        } else {
-            return neighbor.getValue(BlockStateProperties.HORIZONTAL_AXIS);
-        }
-        return null;
-    }
-
     @Override
-    public VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
+    public @NotNull VoxelShape getShape(BlockState state, BlockGetter world, BlockPos pos, CollisionContext context) {
         return super.getShape(state, world, pos, context);
     }
 
@@ -145,13 +120,15 @@ public class VacuumGlassBlock extends Block {
     public BlockState getStateForPlacement(BlockPlaceContext ctx) {
         BlockPos.MutableBlockPos pos = new BlockPos.MutableBlockPos();
         Level level = ctx.getLevel();
-        for (Direction direction : Constant.Misc.HORIZONTALS) {
+        BlockState stateForPlacement = super.getStateForPlacement(ctx);
+        if (stateForPlacement == null) return this.defaultBlockState();
+        for (Direction direction : Direction.values()) {
             BlockState state = level.getBlockState(pos.setWithOffset(ctx.getClickedPos(), direction));
-            if (state.getBlock() == this) {
-                return super.getStateForPlacement(ctx).setValue(propertyFromDirection(direction), true);
+            if (state.isSolidRender(level, pos.setWithOffset(ctx.getClickedPos(), direction)) || state.is(this)) {
+                stateForPlacement = stateForPlacement.setValue(propertyFromDirection(direction), true);
             }
         }
-        return super.getStateForPlacement(ctx).setValue(BlockStateProperties.HORIZONTAL_AXIS, ctx.getHorizontalDirection().getAxis() == Direction.Axis.X ? Direction.Axis.Z : Direction.Axis.X);
+        return stateForPlacement;
     }
 
     private static BooleanProperty propertyFromDirection(@NotNull Direction direction) {
