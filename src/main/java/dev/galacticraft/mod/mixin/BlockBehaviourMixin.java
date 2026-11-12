@@ -32,7 +32,6 @@ import dev.galacticraft.mod.tag.GCFluidTags;
 import it.unimi.dsi.fastutil.longs.Long2ObjectMap;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.GlobalPos;
-import net.minecraft.tags.FluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.ItemInteractionResult;
@@ -109,5 +108,3 @@ abstract class BlockBehaviourNotBaseMixin {
         return vanillaResult || GCFluidTags.SWIMMABLE.stream().anyMatch(instance::is);
     }
 }
-
-
