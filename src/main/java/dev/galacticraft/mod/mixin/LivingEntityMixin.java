@@ -250,7 +250,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
         float f = 0.8F;
         float g = 0.02F;
 
-        if (GCFluidTags.WATER_BASED.contains(fluidType)) {
+        if (GCFluidTags.THIN.contains(fluidType)) {
             f = this.isSprinting() ? 0.9F : this.getWaterSlowDown();
             float h = (float) this.getAttributeValue(Attributes.WATER_MOVEMENT_EFFICIENCY);
             if (!this.onGround()) {
@@ -297,5 +297,45 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
 
         this.calculateEntityAnimation(this instanceof FlyingAnimal);
         ci.cancel();
+    }
+
+    @Unique
+    private TagKey<Fluid> gc$getInFluidType(LivingEntity entity) {
+        return ((EntityFluidAccessor)  entity).gc$getInFluidType();
+    }
+
+    @Unique
+    private boolean gc$getWasTouchingGCFluid(LivingEntity entity) {
+        return ((EntityFluidAccessor) entity).gc$getWasTouchingGCFluid();
+    }
+
+    @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
+    private double gc$wrapWaterHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            System.out.println(entity.getFluidHeight(fluidType));
+            return entity.getFluidHeight(fluidType);
+        }
+        return original.call(entity, tag);
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
+    private boolean gc$modifyIsInWater(boolean inWater) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return inWater || GCFluidTags.THIN.contains(gc$getInFluidType(entity));
+        }
+        return inWater;
+    }
+
+    @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
+    private boolean gc$modifyIsInLava(boolean inLava) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        TagKey<Fluid> fluidType = gc$getInFluidType(entity);
+        if (fluidType != null) {
+            return inLava || GCFluidTags.THICK.contains(gc$getInFluidType(entity));
+        }
+        return inLava;
     }
 }

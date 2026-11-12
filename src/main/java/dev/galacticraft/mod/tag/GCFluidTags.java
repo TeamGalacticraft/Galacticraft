@@ -60,7 +60,9 @@ public class GCFluidTags {
             SULFURIC_ACID,
             SULFURIC_ACID_COMMON
     );
-    public static final List<TagKey<Fluid>> WATER_BASED = List.of(
+    public static final List<TagKey<Fluid>> THIN = List.of(
+            FUEL,
+            FUEL_COMMON,
             SULFURIC_ACID,
             SULFURIC_ACID_COMMON
     );
