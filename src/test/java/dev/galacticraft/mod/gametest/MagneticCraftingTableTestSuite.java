@@ -24,7 +24,7 @@ package dev.galacticraft.mod.gametest;
 
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.MagneticCraftingTableBlockEntity;
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.gametest.framework.GameTest;
@@ -47,10 +47,10 @@ public class MagneticCraftingTableTestSuite implements GalacticraftGameTest {
         table.setItem(0, new ItemStack(Items.OAK_LOG, 3));
 
         ServerPlayer player = context.makeMockServerPlayerInLevel();
-        MagneticCraftingTableMenu menu = (MagneticCraftingTableMenu) table.createMenu(1, player.getInventory(), player);
+        MagneticCraftingMenu menu = (MagneticCraftingMenu) table.createMenu(1, player.getInventory(), player);
         context.assertTrue(menu != null, "Expected the magnetic crafting table to create a menu");
-        context.assertTrue(menu.getSlot(MagneticCraftingTableMenu.RESULT_SLOT).getItem().is(Items.OAK_PLANKS), "Expected the table to craft like a vanilla crafting table");
-        context.assertValueEqual(menu.getSlot(MagneticCraftingTableMenu.RESULT_SLOT).getItem().getCount(), 4, "The crafting result had the wrong count");
+        context.assertTrue(menu.getSlot(MagneticCraftingMenu.RESULT_SLOT).getItem().is(Items.OAK_PLANKS), "Expected the table to craft like a vanilla crafting table");
+        context.assertValueEqual(menu.getSlot(MagneticCraftingMenu.RESULT_SLOT).getItem().getCount(), 4, "The crafting result had the wrong count");
         menu.removed(player);
 
         context.assertTrue(table.getItem(0).is(Items.OAK_LOG), "Closing the menu removed the crafting ingredient");

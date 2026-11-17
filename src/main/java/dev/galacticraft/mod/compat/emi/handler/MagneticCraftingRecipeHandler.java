@@ -25,17 +25,17 @@ package dev.galacticraft.mod.compat.emi.handler;
 import dev.emi.emi.api.recipe.EmiRecipe;
 import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.recipe.handler.StandardRecipeHandler;
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import net.minecraft.world.inventory.Slot;
 
 import java.util.ArrayList;
 import java.util.List;
 
-import static dev.galacticraft.mod.screen.MagneticCraftingTableMenu.*;
+import static dev.galacticraft.mod.screen.MagneticCraftingMenu.*;
 
-public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<MagneticCraftingTableMenu> {
+public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<MagneticCraftingMenu> {
     @Override
-    public List<Slot> getInputSources(MagneticCraftingTableMenu menu) {
+    public List<Slot> getInputSources(MagneticCraftingMenu menu) {
         List<Slot> slots = this.getCraftingSlots(menu);
         for (int slot = INV_SLOT_START; slot < INV_SLOT_END; ++slot) {
             slots.add(menu.getSlot(slot));
@@ -44,7 +44,7 @@ public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<Magn
     }
 
     @Override
-    public List<Slot> getCraftingSlots(MagneticCraftingTableMenu menu) {
+    public List<Slot> getCraftingSlots(MagneticCraftingMenu menu) {
         List<Slot> slots = new ArrayList<>();
         for (int slot = CRAFT_SLOT_START; slot < CRAFT_SLOT_END; ++slot) {
             slots.add(menu.getSlot(slot));
@@ -53,7 +53,7 @@ public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<Magn
     }
 
     @Override
-    public Slot getOutputSlot(MagneticCraftingTableMenu menu) {
+    public Slot getOutputSlot(MagneticCraftingMenu menu) {
         return menu.getSlot(RESULT_SLOT);
     }
 

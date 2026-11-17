@@ -51,7 +51,7 @@ import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.ShapedCompressingRecipe;
 import dev.galacticraft.mod.recipe.ShapelessCompressingRecipe;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import dev.galacticraft.mod.screen.RocketWorkbenchMenu;
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
@@ -242,10 +242,10 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
                         FoodCannerBlockEntity.INPUT_SLOT + FoodCannerBlockEntity.INPUT_LENGTH
                 )
         ));
-        registry.register(SimpleTransferHandler.create(MagneticCraftingTableMenu.class, BuiltinPlugin.CRAFTING,
+        registry.register(SimpleTransferHandler.create(MagneticCraftingMenu.class, BuiltinPlugin.CRAFTING,
                 new SimpleTransferHandler.IntRange(
-                        MagneticCraftingTableMenu.CRAFT_SLOT_START,
-                        MagneticCraftingTableMenu.CRAFT_SLOT_END
+                        MagneticCraftingMenu.CRAFT_SLOT_START,
+                        MagneticCraftingMenu.CRAFT_SLOT_END
                 )
         ));
         registry.register(SimpleTransferHandler.create(RocketWorkbenchMenu.class, GalacticraftREIServerPlugin.ROCKET,

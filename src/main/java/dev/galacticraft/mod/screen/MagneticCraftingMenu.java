@@ -51,7 +51,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.Optional;
 
-public class MagneticCraftingTableMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> implements ContainerListener {
+public class MagneticCraftingMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> implements ContainerListener {
     public static final int RESULT_SLOT = 0;
     public static final int CRAFT_SLOT_START = 1;
     public static final int CRAFT_SLOT_END = 10;
@@ -66,15 +66,15 @@ public class MagneticCraftingTableMenu extends RecipeBookMenu<CraftingInput, Cra
     private final Player player;
     private boolean placingRecipe;
 
-    public MagneticCraftingTableMenu(int syncId, Inventory inventory) {
+    public MagneticCraftingMenu(int syncId, Inventory inventory) {
         this(syncId, inventory, null, ContainerLevelAccess.NULL);
     }
 
-    public MagneticCraftingTableMenu(int syncId, Inventory inventory, MagneticCraftingTableBlockEntity craftingTable) {
+    public MagneticCraftingMenu(int syncId, Inventory inventory, MagneticCraftingTableBlockEntity craftingTable) {
         this(syncId, inventory, craftingTable, ContainerLevelAccess.create(craftingTable.getLevel(), craftingTable.getBlockPos()));
     }
 
-    private MagneticCraftingTableMenu(int syncId, Inventory inventory, @Nullable CraftingContainer craftSlots, ContainerLevelAccess access) {
+    private MagneticCraftingMenu(int syncId, Inventory inventory, @Nullable CraftingContainer craftSlots, ContainerLevelAccess access) {
         super(GCMenuTypes.MAGNETIC_CRAFTING_TABLE, syncId);
         this.access = access;
         this.player = inventory.player;

@@ -69,7 +69,7 @@ public class GCMenuTypes {
     public static final MenuType<GCPetInventoryMenu> PET_INV_GC = new ExtendedScreenHandlerType<>(GCPetInventoryMenu::new, ByteBufCodecs.INT);
 
     public static final MenuType<AirlockControllerMenu> AIRLOCK_CONTROLLER_MENU = new MenuType<>(AirlockControllerMenu::new, FeatureFlags.VANILLA_SET);
-    public static final MenuType<MagneticCraftingTableMenu> MAGNETIC_CRAFTING_TABLE = new MenuType<>(MagneticCraftingTableMenu::new, FeatureFlags.VANILLA_SET);
+    public static final MenuType<MagneticCraftingMenu> MAGNETIC_CRAFTING_TABLE = new MenuType<>(MagneticCraftingMenu::new, FeatureFlags.VANILLA_SET);
     public static final MenuType<RocketWorkbenchMenu> ROCKET_WORKBENCH = new ExtendedScreenHandlerType<>(RocketWorkbenchMenu::new, RocketWorkbenchMenu.OpeningData.CODEC);
     public static final MenuType<RocketMenu> ROCKET = new ExtendedScreenHandlerType<>(RocketMenu::new, ByteBufCodecs.INT);
     public static final MenuType<ParachestMenu> PARACHEST = new ExtendedScreenHandlerType<>(ParachestMenu::new, ParachestMenu.OpeningData.STREAM_CODEC);

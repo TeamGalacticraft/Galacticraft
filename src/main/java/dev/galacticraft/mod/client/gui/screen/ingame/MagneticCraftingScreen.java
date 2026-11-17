@@ -22,7 +22,7 @@
 
 package dev.galacticraft.mod.client.gui.screen.ingame;
 
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.GuiGraphics;
@@ -37,13 +37,13 @@ import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
 
 @Environment(EnvType.CLIENT)
-public class MagneticCraftingTableScreen extends AbstractContainerScreen<MagneticCraftingTableMenu> implements RecipeUpdateListener {
+public class MagneticCraftingScreen extends AbstractContainerScreen<MagneticCraftingMenu> implements RecipeUpdateListener {
     private static final ResourceLocation CRAFTING_TABLE_LOCATION = ResourceLocation.withDefaultNamespace("textures/gui/container/crafting_table.png");
 
     private final RecipeBookComponent recipeBookComponent = new RecipeBookComponent();
     private boolean widthTooNarrow;
 
-    public MagneticCraftingTableScreen(MagneticCraftingTableMenu menu, Inventory inventory, Component title) {
+    public MagneticCraftingScreen(MagneticCraftingMenu menu, Inventory inventory, Component title) {
         super(menu, inventory, title);
     }
 

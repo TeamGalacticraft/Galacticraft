@@ -23,7 +23,7 @@
 package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import net.fabricmc.fabric.api.transfer.v1.item.InventoryStorage;
 import net.fabricmc.fabric.api.transfer.v1.item.ItemVariant;
 import net.fabricmc.fabric.api.transfer.v1.storage.Storage;
@@ -84,7 +84,7 @@ public class MagneticCraftingTableBlockEntity extends BaseContainerBlockEntity i
 
     @Override
     protected @NotNull AbstractContainerMenu createMenu(int syncId, Inventory inventory) {
-        return new MagneticCraftingTableMenu(syncId, inventory, this);
+        return new MagneticCraftingMenu(syncId, inventory, this);
     }
 
     @Override

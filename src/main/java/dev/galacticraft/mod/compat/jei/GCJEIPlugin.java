@@ -44,7 +44,7 @@ import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
-import dev.galacticraft.mod.screen.MagneticCraftingTableMenu;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
@@ -144,8 +144,8 @@ public class GCJEIPlugin implements IModPlugin {
                 ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 36);
         registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING,
                 FoodCannerBlockEntity.INPUT_SLOT, FoodCannerBlockEntity.INPUT_LENGTH, FoodCannerBlockEntity.OUTPUT_SLOT + 1, 36);
-        registration.addRecipeTransferHandler(MagneticCraftingTableMenu.class, GCMenuTypes.MAGNETIC_CRAFTING_TABLE, RecipeTypes.CRAFTING,
-                MagneticCraftingTableMenu.CRAFT_SLOT_START, MagneticCraftingTableBlockEntity.CONTAINER_SIZE, MagneticCraftingTableMenu.INV_SLOT_START, 36);
+        registration.addRecipeTransferHandler(MagneticCraftingMenu.class, GCMenuTypes.MAGNETIC_CRAFTING_TABLE, RecipeTypes.CRAFTING,
+                MagneticCraftingMenu.CRAFT_SLOT_START, MagneticCraftingTableBlockEntity.CONTAINER_SIZE, MagneticCraftingMenu.INV_SLOT_START, 36);
         registration.addRecipeTransferHandler(new RocketRecipeTransferHandler(registration.getTransferHelper()), GCJEIRecipeTypes.ROCKET);
     }
 
