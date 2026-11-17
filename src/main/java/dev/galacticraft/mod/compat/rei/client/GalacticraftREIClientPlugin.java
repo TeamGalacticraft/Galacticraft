@@ -243,7 +243,10 @@ public class GalacticraftREIClientPlugin implements REIClientPlugin {
                 )
         ));
         registry.register(SimpleTransferHandler.create(MagneticCraftingTableMenu.class, BuiltinPlugin.CRAFTING,
-                new SimpleTransferHandler.IntRange(1, 10)
+                new SimpleTransferHandler.IntRange(
+                        MagneticCraftingTableMenu.CRAFT_SLOT_START,
+                        MagneticCraftingTableMenu.CRAFT_SLOT_END
+                )
         ));
         registry.register(SimpleTransferHandler.create(RocketWorkbenchMenu.class, GalacticraftREIServerPlugin.ROCKET,
                 new SimpleTransferHandler.IntRange(0, 15)

@@ -53,12 +53,12 @@ import java.util.Optional;
 
 public class MagneticCraftingTableMenu extends RecipeBookMenu<CraftingInput, CraftingRecipe> implements ContainerListener {
     public static final int RESULT_SLOT = 0;
-    private static final int CRAFT_SLOT_START = 1;
-    private static final int CRAFT_SLOT_END = 10;
-    private static final int INV_SLOT_START = 10;
-    private static final int INV_SLOT_END = 37;
-    private static final int USE_ROW_SLOT_START = 37;
-    private static final int USE_ROW_SLOT_END = 46;
+    public static final int CRAFT_SLOT_START = 1;
+    public static final int CRAFT_SLOT_END = 10;
+    public static final int INV_SLOT_START = 10;
+    public static final int INV_SLOT_END = 37;
+    public static final int USE_ROW_SLOT_START = 37;
+    public static final int USE_ROW_SLOT_END = 46;
 
     private final CraftingContainer craftSlots;
     private final ResultContainer resultSlots = new ResultContainer();
@@ -128,8 +128,8 @@ public class MagneticCraftingTableMenu extends RecipeBookMenu<CraftingInput, Cra
 
         resultContainer.setItem(0, result);
         if (sendPacket) {
-            menu.setRemoteSlot(0, result);
-            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.incrementStateId(), 0, result));
+            menu.setRemoteSlot(RESULT_SLOT, result);
+            serverPlayer.connection.send(new ClientboundContainerSetSlotPacket(menu.containerId, menu.incrementStateId(), RESULT_SLOT, result));
         }
     }
 

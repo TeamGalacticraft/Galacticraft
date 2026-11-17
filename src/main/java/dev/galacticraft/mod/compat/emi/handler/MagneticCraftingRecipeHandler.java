@@ -31,11 +31,13 @@ import net.minecraft.world.inventory.Slot;
 import java.util.ArrayList;
 import java.util.List;
 
+import static dev.galacticraft.mod.screen.MagneticCraftingTableMenu.*;
+
 public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<MagneticCraftingTableMenu> {
     @Override
     public List<Slot> getInputSources(MagneticCraftingTableMenu menu) {
         List<Slot> slots = this.getCraftingSlots(menu);
-        for (int slot = 10; slot < 46; ++slot) {
+        for (int slot = INV_SLOT_START; slot < INV_SLOT_END; ++slot) {
             slots.add(menu.getSlot(slot));
         }
         return slots;
@@ -44,7 +46,7 @@ public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<Magn
     @Override
     public List<Slot> getCraftingSlots(MagneticCraftingTableMenu menu) {
         List<Slot> slots = new ArrayList<>();
-        for (int slot = 1; slot < 10; ++slot) {
+        for (int slot = CRAFT_SLOT_START; slot < CRAFT_SLOT_END; ++slot) {
             slots.add(menu.getSlot(slot));
         }
         return slots;
@@ -52,7 +54,7 @@ public class MagneticCraftingRecipeHandler implements StandardRecipeHandler<Magn
 
     @Override
     public Slot getOutputSlot(MagneticCraftingTableMenu menu) {
-        return menu.getSlot(MagneticCraftingTableMenu.RESULT_SLOT);
+        return menu.getSlot(RESULT_SLOT);
     }
 
     @Override
