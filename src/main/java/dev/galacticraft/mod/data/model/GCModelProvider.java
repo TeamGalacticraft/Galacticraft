@@ -596,35 +596,12 @@ public class GCModelProvider extends FabricModelProvider {
 
     private void createMagneticCraftingTable(BlockModelGenerators generator) {
         var block = GCBlocks.MAGNETIC_CRAFTING_TABLE;
-        var textureMapping = new TextureMapping()
-                .put(TextureSlot.BOTTOM, TextureMapping.getBlockTexture(block, "_base"))
-                .put(TextureSlot.TOP, TextureMapping.getBlockTexture(block, "_top"))
-                .put(TextureSlot.SIDE, TextureMapping.getBlockTexture(block, "_side"));
-        ResourceLocation model = ModelTemplates.CUBE_BOTTOM_TOP.create(block, textureMapping, generator.modelOutput);
+        ResourceLocation model = ModelTemplates.CUBE_BOTTOM_TOP.create(block, TextureMapping.cubeBottomTop(block), generator.modelOutput);
 
-        generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MagneticCraftingTableBlock.FACING)
-                .select(Direction.DOWN, Variant.variant()
-                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R180)
-                        .with(VariantProperties.MODEL, model))
-                .select(Direction.UP, Variant.variant()
-                        .with(VariantProperties.MODEL, model))
-                .select(Direction.NORTH, Variant.variant()
-                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
-                        .with(VariantProperties.MODEL, model))
-                .select(Direction.SOUTH, Variant.variant()
-                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
-                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180)
-                        .with(VariantProperties.MODEL, model))
-                .select(Direction.WEST, Variant.variant()
-                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
-                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R270)
-                        .with(VariantProperties.MODEL, model))
-                .select(Direction.EAST, Variant.variant()
-                        .with(VariantProperties.X_ROT, VariantProperties.Rotation.R90)
-                        .with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90)
-                        .with(VariantProperties.MODEL, model))
-        ));
-        generator.delegateItemModel(block, model);
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, model))
+                        .with(generator.createColumnWithFacing())
+        );
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
