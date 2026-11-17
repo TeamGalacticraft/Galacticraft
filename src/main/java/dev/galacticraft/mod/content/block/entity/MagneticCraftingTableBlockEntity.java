@@ -51,7 +51,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.stream.IntStream;
 
-@SuppressWarnings("UnstableApiUsage")
 public class MagneticCraftingTableBlockEntity extends BaseContainerBlockEntity implements CraftingContainer, WorldlyContainer, SidedStorageBlockEntity {
     public static final int CONTAINER_WIDTH = 3;
     public static final int CONTAINER_HEIGHT = 3;
