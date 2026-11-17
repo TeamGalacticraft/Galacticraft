@@ -23,12 +23,12 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.entity.MagneticCraftingTableBlockEntity;
 import dev.galacticraft.mod.util.TooltipUtil;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.network.chat.Component;
-import net.minecraft.stats.Stats;
 import net.minecraft.world.Containers;
 import net.minecraft.world.InteractionResult;
 import net.minecraft.world.entity.player.Player;
@@ -77,7 +77,7 @@ public class MagneticCraftingTableBlock extends BaseEntityBlock {
         BlockEntity blockEntity = level.getBlockEntity(pos);
         if (blockEntity instanceof MagneticCraftingTableBlockEntity craftingTable) {
             player.openMenu(craftingTable);
-            player.awardStat(Stats.INTERACT_WITH_CRAFTING_TABLE);
+            player.awardStat(GCStats.INTERACT_WITH_MAGNETIC_CRAFTING_TABLE);
         }
         return InteractionResult.CONSUME;
     }

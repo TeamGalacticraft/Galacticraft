@@ -32,6 +32,7 @@ import net.minecraft.stats.Stats;
 public class GCStats {
     public static final ResourceLocation CLEAN_PARACHUTE = register("clean_parachute", StatFormatter.DEFAULT);
     public static final ResourceLocation OPEN_PARACHEST = register("open_parachest", StatFormatter.DEFAULT);
+    public static final ResourceLocation INTERACT_WITH_MAGNETIC_CRAFTING_TABLE = register("interact_with_magnetic_crafting_table", StatFormatter.DEFAULT);
     public static final ResourceLocation INTERACT_WITH_ROCKET_WORKBENCH = register("interact_with_rocket_workbench", StatFormatter.DEFAULT);
     public static final ResourceLocation LAUNCH_ROCKET = register("launch_rocket", StatFormatter.DEFAULT);
     public static final ResourceLocation CRASH_LANDING = register("crash_landing", StatFormatter.DEFAULT);

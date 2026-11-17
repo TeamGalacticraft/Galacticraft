@@ -1330,6 +1330,7 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateStatsTranslations() {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_MAGNETIC_CRAFTING_TABLE, "Interactions with Magnetic Crafting Table");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
         this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
         this.stat(GCStats.CRASH_LANDING, "Crash Landings");
