@@ -137,11 +137,6 @@ public abstract class AbstractContainerScreenMixin<T extends AbstractContainerMe
         Lighting.setupFor3DItems();
         int i = 0;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
-            if (i == 0) {
-                graphics.renderItem(data.icon(), this.leftPos + 6, this.topPos - 20);
-                i++;
-                continue;
-            }
             if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
                 graphics.renderItem(data.icon(), (this.leftPos + 6) + (29 * i), this.topPos - 20);
                 i++;

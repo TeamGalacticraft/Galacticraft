@@ -44,6 +44,7 @@ public class DefaultShapelessCompressingDisplay implements DefaultCompressingDis
         this.processingTime = processingTime;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public DefaultShapelessCompressingDisplay(RecipeHolder<ShapelessCompressingRecipe> recipe) {
         this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());

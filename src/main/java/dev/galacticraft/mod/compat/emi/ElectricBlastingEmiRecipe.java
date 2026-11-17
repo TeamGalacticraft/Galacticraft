@@ -25,8 +25,9 @@ package dev.galacticraft.mod.compat.emi;
 import dev.emi.emi.api.recipe.BasicEmiRecipe;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
-import dev.emi.emi.api.widget.WidgetHolder;
 import dev.emi.emi.api.widget.TextWidget.Alignment;
+import dev.emi.emi.api.widget.WidgetHolder;
+import dev.galacticraft.mod.Galacticraft;
 import net.minecraft.client.gui.screens.inventory.tooltip.ClientTooltipComponent;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.crafting.BlastingRecipe;
@@ -54,6 +55,10 @@ public class ElectricBlastingEmiRecipe extends BasicEmiRecipe {
             this.inputs.add(EmiIngredient.of(ingredient));
         }
         this.outputs.add(EmiStack.of(recipe.getResultItem(null)));
+        float bonusChance = Galacticraft.CONFIG.electricArcFurnaceBonusChance();
+        if (bonusChance > 0.0F) {
+            this.outputs.add(EmiStack.of(recipe.getResultItem(null).copyWithCount(1)).setChance(bonusChance));
+        }
         this.time = (int) (recipe.getCookingTime() / 1.5F);
         this.experience = recipe.getExperience();
     }
@@ -63,18 +68,17 @@ public class ElectricBlastingEmiRecipe extends BasicEmiRecipe {
         // Add the background texture
         widgets.addTexture(SCREEN_TEXTURE, PROGRESS_BAR_X, PROGRESS_BAR_Y, PROGRESS_WIDTH, PROGRESS_HEIGHT, PROGRESS_BACKGROUND_U, PROGRESS_BACKGROUND_V);
 
-        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText()));
-        });
+        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false)
+                .tooltip((mx, my) -> List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText())));
 
         widgets.addText(Component.translatable(EMI_XP, this.experience), PROGRESS_BAR_X + PROGRESS_WIDTH / 2, 28, -1, true).horizontalAlign(Alignment.CENTER);
 
-        widgets.addSlot(this.inputs.get(0), INPUT_X - EMI_X - 1, INPUT_Y - EMI_Y - 1);
+        widgets.addSlot(this.inputs.getFirst(), INPUT_X - EMI_X - 1, INPUT_Y - EMI_Y - 1);
 
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), OUTPUT_X_1 - EMI_X - 5, OUTPUT_Y_1 - EMI_Y - 5).large(true).recipeContext(this);
-        widgets.addSlot(EMPTY, OUTPUT_X_2 - EMI_X - 5, OUTPUT_Y_2 - EMI_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_X_1 - EMI_X - 5, OUTPUT_Y_1 - EMI_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.size() > 1 ? this.outputs.get(1) : EMPTY, OUTPUT_X_2 - EMI_X - 5, OUTPUT_Y_2 - EMI_Y - 5).large(true).recipeContext(this);
     }
 }

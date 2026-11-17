@@ -27,7 +27,6 @@ import dev.galacticraft.api.rocket.RocketData;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.s2c.S2CPayload;
 import dev.galacticraft.mod.Constant;
-import dev.galacticraft.mod.client.gui.screen.ingame.CelestialSelectionScreen;
 import dev.galacticraft.mod.util.StreamCodecs;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.core.Holder;
@@ -39,13 +38,23 @@ import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-public record OpenCelestialScreenPayload(@Nullable RocketData data,
-                                         Holder<CelestialBody<?, ?>> celestialBody) implements S2CPayload {
+import java.util.List;
+
+public record OpenCelestialScreenPayload(
+        @Nullable RocketData data,
+        Holder<CelestialBody<?, ?>> celestialBody,
+        boolean canCreateStations,
+        List<ResourceLocation> disabledDestinations
+) implements S2CPayload {
     public static final StreamCodec<RegistryFriendlyByteBuf, OpenCelestialScreenPayload> STREAM_CODEC = StreamCodec.composite(
             StreamCodecs.ofNullable(RocketData.STREAM_CODEC),
-            p -> p.data,
+            OpenCelestialScreenPayload::data,
             ByteBufCodecs.holderRegistry(AddonRegistries.CELESTIAL_BODY),
-            p -> p.celestialBody,
+            OpenCelestialScreenPayload::celestialBody,
+            ByteBufCodecs.BOOL,
+            OpenCelestialScreenPayload::canCreateStations,
+            ResourceLocation.STREAM_CODEC.apply(ByteBufCodecs.list()),
+            OpenCelestialScreenPayload::disabledDestinations,
             OpenCelestialScreenPayload::new
     );
 
@@ -59,11 +68,6 @@ public record OpenCelestialScreenPayload(@Nullable RocketData data,
 
     @Override
     public Runnable handle(ClientPlayNetworking.@NotNull Context context) {
-        return new Runnable() {
-            @Override
-            public void run() {
-                context.client().setScreen(new CelestialSelectionScreen(false, OpenCelestialScreenPayload.this.data(), true, OpenCelestialScreenPayload.this.celestialBody.value()));
-            }
-        };
+        return () -> ClientPayloadHandlers.openCelestialScreen(this);
     }
 }

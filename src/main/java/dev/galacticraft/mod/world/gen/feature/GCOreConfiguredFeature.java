@@ -43,17 +43,17 @@ public class GCOreConfiguredFeature {
     public static final RuleTest BASE_STONE_MOON = new TagMatchTest(GCBlockTags.BASE_STONE_MOON);
     public static final RuleTest STONE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.STONE_ORE_REPLACEABLES);
     public static final RuleTest DEEPSLATE_ORE_REPLACEABLE = new TagMatchTest(BlockTags.DEEPSLATE_ORE_REPLACEABLES);
-    public static final RuleTest MOON_STONE_ORE_REPLACEABLE = new TagMatchTest(GCBlockTags.MOON_STONE_ORE_REPLACEABLES);
+    public static final RuleTest MOON_ROCK_ORE_REPLACEABLE = new TagMatchTest(GCBlockTags.MOON_ROCK_ORE_REPLACEABLES);
     public static final RuleTest LUNASLATE_ORE_REPLACEABLE = new TagMatchTest(GCBlockTags.LUNASLATE_ORE_REPLACEABLES);
 
     public static final List<OreConfiguration.TargetBlockState> TIN_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.TIN_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_TIN_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> ALUMINUM_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.ALUMINUM_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_ALUMINUM_ORE.defaultBlockState()));
     public static final List<OreConfiguration.TargetBlockState> SILICON_ORES = List.of(OreConfiguration.target(STONE_ORE_REPLACEABLE, GCBlocks.SILICON_ORE.defaultBlockState()), OreConfiguration.target(DEEPSLATE_ORE_REPLACEABLE, GCBlocks.DEEPSLATE_SILICON_ORE.defaultBlockState()));
 
-    public static final List<OreConfiguration.TargetBlockState> COPPER_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_COPPER_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_COPPER_ORE.defaultBlockState()));
-    public static final List<OreConfiguration.TargetBlockState> TIN_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_TIN_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_TIN_ORE.defaultBlockState()));
-    public static final List<OreConfiguration.TargetBlockState> CHEESE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.MOON_CHEESE_ORE.defaultBlockState()));
-    public static final List<OreConfiguration.TargetBlockState> LUNAR_SAPPHIRE_ORES_MOON = List.of(OreConfiguration.target(MOON_STONE_ORE_REPLACEABLE, GCBlocks.LUNAR_SAPPHIRE_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> COPPER_ORES_MOON = List.of(OreConfiguration.target(MOON_ROCK_ORE_REPLACEABLE, GCBlocks.MOON_COPPER_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_COPPER_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> TIN_ORES_MOON = List.of(OreConfiguration.target(MOON_ROCK_ORE_REPLACEABLE, GCBlocks.MOON_TIN_ORE.defaultBlockState()), OreConfiguration.target(LUNASLATE_ORE_REPLACEABLE, GCBlocks.LUNASLATE_TIN_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> CHEESE_ORES_MOON = List.of(OreConfiguration.target(MOON_ROCK_ORE_REPLACEABLE, GCBlocks.MOON_CHEESE_ORE.defaultBlockState()));
+    public static final List<OreConfiguration.TargetBlockState> LUNAR_SAPPHIRE_ORES_MOON = List.of(OreConfiguration.target(MOON_ROCK_ORE_REPLACEABLE, GCBlocks.LUNAR_SAPPHIRE_ORE.defaultBlockState()));
 
     // OVERWORLD
     public static final ResourceKey<ConfiguredFeature<?, ?>> ORE_SILICON_SMALL = key("ore_silicon_small");

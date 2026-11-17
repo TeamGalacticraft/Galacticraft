@@ -33,8 +33,10 @@ import dev.galacticraft.api.rocket.entity.Rocket;
 import dev.galacticraft.api.rocket.part.*;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.api.block.entity.FuelDock;
 import dev.galacticraft.mod.attachments.GCServerPlayer;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.content.GCRocketParts;
@@ -48,10 +50,12 @@ import dev.galacticraft.mod.events.RocketEvents;
 import dev.galacticraft.mod.network.s2c.OpenCelestialScreenPayload;
 import dev.galacticraft.mod.particle.EntityParticleOption;
 import dev.galacticraft.mod.particle.GCParticleTypes;
+import dev.galacticraft.mod.screen.RocketMenu;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import dev.galacticraft.mod.util.FluidUtil;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
+import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidVariant;
 import net.fabricmc.fabric.api.transfer.v1.fluid.base.SingleFluidStorage;
@@ -62,8 +66,8 @@ import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.NonNullList;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.core.particles.ParticleTypes;
+import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
 import net.minecraft.nbt.Tag;
@@ -81,9 +85,12 @@ import net.minecraft.world.InteractionResult;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.item.EitherHolder;
 import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Explosion;
 import net.minecraft.world.level.ExplosionDamageCalculator;
 import net.minecraft.world.level.Level;
@@ -92,17 +99,19 @@ import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
 import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.CRASH_LANDING;
 
 @SuppressWarnings("UnstableApiUsage")
-public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity {
+public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift, ControllableEntity, HasCustomInventoryScreen, ExtendedScreenHandlerFactory<Integer> {
     private static final EntityDataAccessor<LaunchStage> STAGE = SynchedEntityData.defineId(RocketEntity.class, GCEntityDataSerializers.LAUNCH_STAGE);
     private static final EntityDataAccessor<Integer> TIME_AS_STATE = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.INT);
     private static final EntityDataAccessor<Float> THRUST = SynchedEntityData.defineId(RocketEntity.class, EntityDataSerializers.FLOAT);
@@ -115,6 +124,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     private static final double CRASH_MIN_HORIZ_SQR = 0.0 * 0.0;
     private static final double CRASH_MIN_UP_SQR = 0.0 * 0.0;
     private static final double CRASH_GROUND_Y_SPEED = -0.0;
+    /**
+     * How far the exhaust of a launched rocket reaches, in blocks.
+     */
+    private static final double EXHAUST_LENGTH = 8.0D;
 
     private int crashArmTimer = 0;
     private boolean crashed = false;
@@ -618,6 +631,10 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         if (getLaunchStage() == LaunchStage.LAUNCHED) this.timeSinceLaunch++;
         else this.timeSinceLaunch = 0;
 
+        if (getLaunchStage() == LaunchStage.LAUNCHED || getLaunchStage() == LaunchStage.IGNITED) {
+            this.igniteEntitiesInExhaust();
+        }
+
         if (isOnFire()) {
             for (int i = 0; i < 4; i++) {
                 level().explode(this,
@@ -707,7 +724,16 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
                         gcPlayer.setRocketItem(rocket);
 
                         serverPlayer.galacticraft$openCelestialScreen(d);
-                        ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(this.getRocketData(), this.level().galacticraft$getCelestialBody()));
+                        try (Level level = this.level()) {
+                            ServerPlayNetworking.send(serverPlayer, new OpenCelestialScreenPayload(
+                                    this.getRocketData(),
+                                    level.galacticraft$getCelestialBody(),
+                                    Galacticraft.CONFIG.enableSpaceStationCreation(),
+                                    GCConfigUtil.disabledCelestialScreenDestinations(serverPlayer.getServer())
+                            ));
+                        } catch (IOException e) {
+                            throw new RuntimeException(e);
+                        }
 
                         remove(RemovalReason.UNLOADED_WITH_PLAYER);
                         break;
@@ -772,6 +798,33 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         }
 
         this.setDeltaMovement(new Vec3(velX, velY, velZ));
+    }
+
+    /**
+     * Sets living entities in the exhaust of the rocket on fire, except its passengers.
+     * The flame particles only exist on the client, so this follows them on the server:
+     * once launched, the exhaust runs from the nozzle until it hits a block, and while ignited it spreads around the nozzle.
+     */
+    public void igniteEntitiesInExhaust() {
+        double sinPitch = Mth.sin(this.getXRot() * Mth.DEG_TO_RAD);
+        Vec3 exhaust = new Vec3(
+                2 * sinPitch * Mth.sin(this.getYRot() * Mth.DEG_TO_RAD),
+                -Mth.cos(this.getXRot() * Mth.DEG_TO_RAD),
+                -2 * sinPitch * Mth.cos(this.getYRot() * Mth.DEG_TO_RAD)
+        );
+        Vec3 nozzle = this.position().add(exhaust.x, exhaust.y + 1.2D, exhaust.z);
+
+        AABB area;
+        if (this.getLaunchStage() == LaunchStage.LAUNCHED) {
+            Vec3 end = this.level().clip(new ClipContext(nozzle, nozzle.add(exhaust.normalize().scale(EXHAUST_LENGTH)), ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, this)).getLocation();
+            area = new AABB(nozzle, end).inflate(1.5D);
+        } else {
+            area = new AABB(nozzle, nozzle).inflate(2.0D, 1.0D, 2.0D);
+        }
+
+        for (LivingEntity entity : this.level().getEntitiesOfClass(LivingEntity.class, area, entity -> entity.isAlive() && !entity.isOnFire() && !this.hasPassenger(entity))) {
+            entity.igniteForSeconds(3);
+        }
     }
 
     protected void spawnParticles() {
@@ -857,6 +910,31 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
         tag.putBoolean("Crashed", this.crashed);
 
         if (this.linkedPad != null) tag.putLong("Linked", this.linkedPad.getDockPos().asLong());
+    }
+
+    @Override
+    public Integer getScreenOpeningData(ServerPlayer player) {
+        return player.getVehicle().getId();
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
+        return new RocketMenu(syncId, inventory, player, (RocketEntity) player.getVehicle());
+    }
+
+    @Override
+    public Component getDisplayName() {
+        return Component.empty();
+    }
+
+    @Override
+    public boolean shouldCloseCurrentScreen() {
+        return false;
+    }
+
+    @Override
+    public void openCustomInventoryScreen(Player player) {
+        player.openMenu(this);
     }
 
     public int getTimeBeforeLaunch() {

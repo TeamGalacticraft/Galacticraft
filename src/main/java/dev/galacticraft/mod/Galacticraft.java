@@ -23,8 +23,8 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.component.GCItemSubPredicates;
-import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;
@@ -39,6 +39,8 @@ import dev.galacticraft.mod.events.GCExtinguishable;
 import dev.galacticraft.mod.events.GCSulfuricAcidHandlers;
 import dev.galacticraft.mod.lookup.GCApiLookupProviders;
 import dev.galacticraft.mod.machine.GCMachineStatuses;
+import dev.galacticraft.mod.misc.cape.CapeRegistry;
+import dev.galacticraft.mod.misc.cape.CapesLoader;
 import dev.galacticraft.mod.network.GCPackets;
 import dev.galacticraft.mod.network.GCServerPacketReceivers;
 import dev.galacticraft.mod.particle.GCParticleTypes;
@@ -111,6 +113,8 @@ public class Galacticraft implements ModInitializer {
         GCTeleporterTypes.register();
         GCStats.register();
         GCCelestialHandlers.register();
+        CapeRegistry.bootstrap();
+        CapesLoader.loadAsync();
         GCEventHandlers.init();
         GCCauldronInteraction.init();
         GCExtinguishable.register();

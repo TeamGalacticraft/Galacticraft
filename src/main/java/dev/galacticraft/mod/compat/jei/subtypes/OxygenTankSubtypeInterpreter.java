@@ -36,7 +36,7 @@ public class OxygenTankSubtypeInterpreter implements ISubtypeInterpreter<ItemSta
     public String getSubtypeData(ItemStack itemStack, UidContext context) {
         if (context == UidContext.Recipe) return "";
         StorageView<FluidVariant> storage = OxygenTankItem.getStorage(itemStack);
-        return String.valueOf(storage.getAmount()) + "/" + String.valueOf(storage.getCapacity());
+        return storage.getAmount() + "/" + storage.getCapacity();
     }
 
     @Override

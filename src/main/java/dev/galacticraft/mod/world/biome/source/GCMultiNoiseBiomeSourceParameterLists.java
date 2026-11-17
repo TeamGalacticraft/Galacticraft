@@ -224,4 +224,3 @@ public class GCMultiNoiseBiomeSourceParameterLists {
         context.register(ASTEROID, new MultiNoiseBiomeSourceParameterList(ASTEROID_PRESET, lookup));
     }
 }
-

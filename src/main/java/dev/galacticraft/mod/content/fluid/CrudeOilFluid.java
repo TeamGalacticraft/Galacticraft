@@ -31,7 +31,7 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.LiquidBlock;
 import net.minecraft.world.level.material.Fluid;
 
-public abstract class CrudeOilFluid extends BasicFluid {
+public abstract class CrudeOilFluid extends GCFluid {
     protected CrudeOilFluid() {
         super(false, true, 2, 1, 30, 100);
     }

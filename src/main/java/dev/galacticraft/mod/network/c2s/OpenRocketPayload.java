@@ -25,18 +25,12 @@ package dev.galacticraft.mod.network.c2s;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
-import dev.galacticraft.mod.screen.RocketMenu;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
-import net.fabricmc.fabric.api.screenhandler.v1.ExtendedScreenHandlerFactory;
-import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.player.Inventory;
-import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.jetbrains.annotations.NotNull;
 
 public record OpenRocketPayload() implements C2SPayload {
@@ -47,27 +41,10 @@ public record OpenRocketPayload() implements C2SPayload {
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        context.player().openMenu(new ExtendedScreenHandlerFactory<>() {
-            @Override
-            public Integer getScreenOpeningData(ServerPlayer player) {
-                return player.getVehicle().getId();
-            }
-
-            @Override
-            public AbstractContainerMenu createMenu(int syncId, Inventory inventory, Player player) {
-                return new RocketMenu(syncId, inventory, player, (RocketEntity) player.getVehicle());
-            }
-
-            @Override
-            public @NotNull Component getDisplayName() {
-                return Component.empty();
-            }
-
-            @Override
-            public boolean shouldCloseCurrentScreen() {
-                return false;
-            }
-        });
+        ServerPlayer player = context.player();
+        if (player.getVehicle() instanceof RocketEntity rocket) {
+            player.openMenu(rocket);
+        }
     }
 
     @Override

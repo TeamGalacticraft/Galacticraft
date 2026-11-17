@@ -28,16 +28,33 @@ import dev.galacticraft.mod.misc.cape.ClientCapePrefs;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayConnectionEvents;
+import net.minecraft.Util;
 
 @Environment(EnvType.CLIENT)
 public final class ClientCapeLoginSync {
     public static void init() {
         ClientPlayConnectionEvents.JOIN.register((handler, sender, client) -> {
             ClientCapePrefs prefs = ClientCapePrefs.load();
-            CapeClientNet.sendSelectionIfOnline(
+
+            client.execute(() -> CapeClientNet.sendSelectionIfOnline(
                     prefs.mode,
                     prefs.mode == CapeMode.GC ? prefs.gcCapeId : null
-            );
+            ));
+
+            Util.backgroundExecutor().execute(() -> {
+                try {
+                    Thread.sleep(1500L);
+                } catch (InterruptedException ignored) {
+                }
+
+                client.execute(() -> {
+                    ClientCapePrefs retryPrefs = ClientCapePrefs.load();
+                    CapeClientNet.sendSelectionIfOnline(
+                            retryPrefs.mode,
+                            retryPrefs.mode == CapeMode.GC ? retryPrefs.gcCapeId : null
+                    );
+                });
+            });
         });
     }
 

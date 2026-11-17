@@ -23,6 +23,7 @@
 package dev.galacticraft.mod.content.block.special;
 
 import com.mojang.serialization.MapCodec;
+import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.block.entity.RocketWorkbenchBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -94,10 +95,13 @@ public class RocketWorkbench extends BaseEntityBlock {
 
     @Override
     protected @NotNull InteractionResult useWithoutItem(BlockState state, Level level, BlockPos pos, Player player, BlockHitResult hit) {
-        if (!level.isClientSide) {
+        if (level.isClientSide) {
+            return InteractionResult.SUCCESS;
+        } else {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof RocketWorkbenchBlockEntity workbench) {
                 player.openMenu(workbench);
+                player.awardStat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH);
             }
         }
         return InteractionResult.CONSUME;

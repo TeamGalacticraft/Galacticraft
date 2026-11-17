@@ -77,9 +77,8 @@ public class ElectricCompressingEmiRecipe extends BasicEmiRecipe {
             widgets.addTexture(EmiTexture.SHAPELESS, OUTPUT_X_1 - RECIPE_VIEWER_X - 22, 0);
         }
 
-        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false).tooltip((mx, my) -> {
-            return List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText()));
-        });
+        widgets.addAnimatedTexture(SCREEN_TEXTURE, PROGRESS_BAR_X - 1, PROGRESS_BAR_Y, PROGRESS_WIDTH + 2, PROGRESS_HEIGHT, PROGRESS_U - 1, PROGRESS_V, this.time * 50, true, false, false)
+                .tooltip((mx, my) -> List.of(ClientTooltipComponent.create(Component.translatable(EMI_TIME, this.time / 20.0F).getVisualOrderText())));
 
         for (int y = 0; y < 3; y++) {
             for (int x = 0; x < 3; x++) {
@@ -92,7 +91,7 @@ public class ElectricCompressingEmiRecipe extends BasicEmiRecipe {
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), OUTPUT_X_1 - RECIPE_VIEWER_X - 5, OUTPUT_Y_1 - RECIPE_VIEWER_Y - 5).large(true).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_X_1 - RECIPE_VIEWER_X - 5, OUTPUT_Y_1 - RECIPE_VIEWER_Y - 5).large(true).recipeContext(this);
         widgets.addSlot(EMPTY, OUTPUT_X_2 - RECIPE_VIEWER_X - 5, OUTPUT_Y_2 - RECIPE_VIEWER_Y - 5).large(true).recipeContext(this);
     }
 }

@@ -55,8 +55,7 @@ public class SealerManager {
 
     private final Level level;
     private final Map<BlockPos, OxygenSealerBlockEntity> sealers = new HashMap<>();
-    private final Set<BlockPos> sealedBlocks = new HashSet<>();
-    private int sealCheckTimer = SEAL_CHECK_TIME;
+    private Set<BlockPos> sealedBlocks = new HashSet<>();
 
     public SealerManager(Level level) {
         this.level = level;
@@ -81,10 +80,6 @@ public class SealerManager {
             Constant.LOGGER.info("World is not fully loaded, skipping sealing calculation");
             return;
         }
-
-        // Reset all sealed blocks from the previous update to not be breathable
-        for (BlockPos pos : sealedBlocks) level.setBreathable(pos, false);
-        sealedBlocks.clear();
 
         Set<SpaceToSeal> spacesToSeal = new HashSet<>();
         for (Map.Entry<BlockPos, OxygenSealerBlockEntity> entry : this.sealers.entrySet()) {
@@ -129,14 +124,24 @@ public class SealerManager {
             spacesToSeal.add(spaceToSeal);
         }
 
+        Set<BlockPos> newSealedBlocks = new HashSet<>();
+
         for (SpaceToSeal spaceToSeal : spacesToSeal) {
             for (OxygenSealerBlockEntity sealer : spaceToSeal.sealers) sealer.setSealed(spaceToSeal.willSealSucceed());
             if (!spaceToSeal.willSealSucceed()) continue;
             for (BlockPos pos : spaceToSeal.blocksToSeal) {
-                sealedBlocks.add(pos);
+                newSealedBlocks.add(pos);
+                sealedBlocks.remove(pos);
                 level.setBreathable(pos, true);
             }
         }
+
+        // Reset all sealed blocks from the previous update to not be breathable
+        for (BlockPos pos : sealedBlocks) {
+            level.setBreathable(pos, false);
+        }
+
+        sealedBlocks = newSealedBlocks;
     }
 
     public void addSealer(OxygenSealerBlockEntity sealer) {

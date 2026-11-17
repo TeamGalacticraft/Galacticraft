@@ -60,6 +60,6 @@ public class FabricationEmiRecipe extends BasicEmiRecipe {
         // Adds an output slot on the right
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
-        widgets.addSlot(this.outputs.get(0), OUTPUT_X - RECIPE_VIEWER_X - 1, OUTPUT_Y - RECIPE_VIEWER_Y - 1).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_X - RECIPE_VIEWER_X - 1, OUTPUT_Y - RECIPE_VIEWER_Y - 1).recipeContext(this);
     }
 }

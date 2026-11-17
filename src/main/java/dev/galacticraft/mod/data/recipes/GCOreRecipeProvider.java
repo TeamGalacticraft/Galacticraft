@@ -22,10 +22,10 @@
 
 package dev.galacticraft.mod.data.recipes;
 
+import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.api.data.recipe.GCCookingRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapedRecipeBuilder;
 import dev.galacticraft.mod.api.data.recipe.GCShapelessRecipeBuilder;
-import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;

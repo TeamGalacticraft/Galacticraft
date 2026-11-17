@@ -26,32 +26,68 @@ import dev.galacticraft.api.registry.AddonRegistries;
 import dev.galacticraft.api.universe.celestialbody.CelestialBody;
 import dev.galacticraft.impl.network.c2s.C2SPayload;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.config.GCConfigUtil;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.util.Translations;
 import io.netty.buffer.ByteBuf;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.core.Holder;
+import net.minecraft.core.Registry;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import org.jetbrains.annotations.NotNull;
 
+
 public record PlanetTeleportPayload(ResourceLocation id) implements C2SPayload {
-    public static final StreamCodec<ByteBuf, PlanetTeleportPayload> STREAM_CODEC = ResourceLocation.STREAM_CODEC.map(PlanetTeleportPayload::new, p -> p.id);
+    public static final StreamCodec<ByteBuf, PlanetTeleportPayload> STREAM_CODEC =
+            ResourceLocation.STREAM_CODEC.map(PlanetTeleportPayload::new, PlanetTeleportPayload::id);
+
     public static final ResourceLocation ID = Constant.id("planet_teleport");
     public static final Type<PlanetTeleportPayload> TYPE = new Type<>(ID);
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        if (context.player().galacticraft$isCelestialScreenActive()) {
-            CelestialBody<?, ?> body = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY).get(id);
-            Holder<CelestialBody<?, ?>> holder = context.player().level().galacticraft$getCelestialBody();
-            CelestialBody<?, ?> fromBody = holder != null ? holder.value() : null;
-            GCEventHandlers.onPlayerChangePlanets(context.server(), context.player(), body, fromBody);
-        } else {
+        if (!context.player().galacticraft$isCelestialScreenActive()) {
             context.player().connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
+            return;
         }
+
+        if (GCConfigUtil.disabledCelestialScreenDestinations(context.server()).contains(this.id)) {
+            Constant.LOGGER.warn(
+                    "Blocked celestial screen teleport to disabled destination {} from {}.",
+                    this.id,
+                    context.player().getScoreboardName()
+            );
+
+            context.player().galacticraft$closeCelestialScreen();
+            return;
+        }
+
+        Registry<CelestialBody<?, ?>> celestialBodies = context.server().registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY);
+
+        CelestialBody<?, ?> destination = celestialBodies.get(this.id);
+
+        if (destination == null) {
+            Constant.LOGGER.warn(
+                    "Blocked celestial screen teleport from {} because destination {} does not exist.",
+                    context.player().getScoreboardName(),
+                    this.id
+            );
+            context.player().connection.disconnect(Component.translatable(Translations.DimensionTp.INVALID_PACKET));
+            return;
+        }
+
+        Holder<CelestialBody<?, ?>> holder = context.player().level().galacticraft$getCelestialBody();
+        CelestialBody<?, ?> fromBody = holder == null ? null : holder.value();
+
+        GCEventHandlers.onPlayerChangePlanets(
+                context.server(),
+                context.player(),
+                destination,
+                fromBody
+        );
     }
 
     @Override

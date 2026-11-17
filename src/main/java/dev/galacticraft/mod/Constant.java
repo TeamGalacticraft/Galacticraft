@@ -340,6 +340,23 @@ public interface Constant {
         String GREEN_GLASS_FLUID_PIPE = "green_glass_fluid_pipe";
         String RED_GLASS_FLUID_PIPE = "red_glass_fluid_pipe";
         String BLACK_GLASS_FLUID_PIPE = "black_glass_fluid_pipe";
+        String SEALABLE_FLUID_PIPE = "sealable_fluid_pipe";
+        String WHITE_SEALABLE_FLUID_PIPE = "white_sealable_fluid_pipe";
+        String ORANGE_SEALABLE_FLUID_PIPE = "orange_sealable_fluid_pipe";
+        String MAGENTA_SEALABLE_FLUID_PIPE = "magenta_sealable_fluid_pipe";
+        String LIGHT_BLUE_SEALABLE_FLUID_PIPE = "light_blue_sealable_fluid_pipe";
+        String YELLOW_SEALABLE_FLUID_PIPE = "yellow_sealable_fluid_pipe";
+        String LIME_SEALABLE_FLUID_PIPE = "lime_sealable_fluid_pipe";
+        String PINK_SEALABLE_FLUID_PIPE = "pink_sealable_fluid_pipe";
+        String GRAY_SEALABLE_FLUID_PIPE = "gray_sealable_fluid_pipe";
+        String LIGHT_GRAY_SEALABLE_FLUID_PIPE = "light_gray_sealable_fluid_pipe";
+        String CYAN_SEALABLE_FLUID_PIPE = "cyan_sealable_fluid_pipe";
+        String PURPLE_SEALABLE_FLUID_PIPE = "purple_sealable_fluid_pipe";
+        String BLUE_SEALABLE_FLUID_PIPE = "blue_sealable_fluid_pipe";
+        String BROWN_SEALABLE_FLUID_PIPE = "brown_sealable_fluid_pipe";
+        String GREEN_SEALABLE_FLUID_PIPE = "green_sealable_fluid_pipe";
+        String RED_SEALABLE_FLUID_PIPE = "red_sealable_fluid_pipe";
+        String BLACK_SEALABLE_FLUID_PIPE = "black_sealable_fluid_pipe";
 
         // Pad Blocks
         String FUELING_PAD = "fueling_pad";
@@ -631,6 +648,7 @@ public interface Constant {
         ResourceLocation WARNING_SIGN = id("textures/gui/warning.png");
 
         ResourceLocation OXYGEN_COMPRESSOR_SCREEN = id("textures/gui/oxygen_compressor_screen.png");
+        ResourceLocation OXYGEN_DETECTOR_SCREEN = id("textures/gui/oxygen_detector_screen.png");
         ResourceLocation OXYGEN_STORAGE_MODULE_SCREEN = id("textures/gui/oxygen_storage_module_screen.png");
         ResourceLocation OXYGEN_SEALER_SCREEN = id("textures/gui/oxygen_sealer_screen.png");
         ResourceLocation FUEL_LOADER_SCREEN = id("textures/gui/fuel_loader_screen.png");
@@ -1009,7 +1027,7 @@ public interface Constant {
         int SIDE_BUTTON_GRADIENT_U = 0;
         int SIDE_BUTTON_GRADIENT_V = 234;
         int SIDE_BUTTON_GRADIENT_WIDTH = 86;
-        int SIDE_BUTTON_GRADIENTn_HEIGHT = 20;
+        int SIDE_BUTTON_GRADIENT_HEIGHT = 20;
 
         int TOP_RIGHT_ACTION_BUTTON_U = 134;
         int TOP_RIGHT_ACTION_BUTTON_V = 211;
@@ -1194,6 +1212,7 @@ public interface Constant {
         String ELECTRIC_FURNACE_MENU = "electric_furnace_menu";
         String ELECTRIC_ARC_FURNACE_MENU = "electric_arc_furnace_menu";
         String OXYGEN_COLLECTOR_MENU = "oxygen_collector_menu";
+        String OXYGEN_DETECTOR_MENU = "oxygen_detector_menu";
         String BUBBLE_DISTRIBUTOR_MENU = "bubble_distributor_menu";
         String OXYGEN_COMPRESSOR_MENU = "oxygen_compressor_menu";
         String FOOD_CANNER_MENU = "food_canner_menu";
@@ -1246,6 +1265,7 @@ public interface Constant {
     }
 
     interface Nbt {
+        String DISPLAYED_FLUID = "DisplayedFluid";
         String GC_API = "GCApi";
         String CHANGE_COUNT = "Modified";
         String OXYGEN = "Inversion";
@@ -1258,6 +1278,7 @@ public interface Constant {
         String NO_DROP = "NoDrop";
         String OWNER = "Owner";
         String PROGRESS = "Progress";
+        String RECIPES_USED = "RecipesUsed";
         String TRANSFERRING_CAN = "TransferringCan";
         String TRANSFERRING_FOOD = "TransferringFood";
         String STORAGE = "StorageStack";

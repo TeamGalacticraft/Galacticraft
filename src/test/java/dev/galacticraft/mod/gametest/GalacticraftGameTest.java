@@ -30,6 +30,7 @@ import org.jetbrains.annotations.Nullable;
 
 public interface GalacticraftGameTest extends FabricGameTest {
     String SINGLE_BLOCK = "galacticraft-test:single_block";
+    String EMPTY_ROOM = "galacticraft-test:empty_room";
 
     default void runNext(GameTestHelper context, Runnable runnable) {
         context.runAtTickTime(context.getTick() + 1, runnable);

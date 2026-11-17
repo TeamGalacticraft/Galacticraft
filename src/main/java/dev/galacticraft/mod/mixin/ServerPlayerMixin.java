@@ -30,6 +30,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.NbtOps;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -44,19 +45,32 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
 public abstract class ServerPlayerMixin extends LivingEntityMixin implements ServerPlayerAccessor {
+    @Unique
+    private @Nullable RocketData rocketData = null;
 
-    private @Unique
-    @Nullable RocketData rocketData = null;
-    private @Unique boolean celestialActive = false;
-    private @Unique boolean isRideTick = false;
+    @Unique
+    private boolean celestialActive = false;
+
+    @Unique
+    private boolean isRideTick = false;
+
+    /**
+     * Dimension found in the player's NBT when the player was loaded.
+     *
+     * <p>We keep this temporarily so the JOIN event can determine whether the
+     * world no longer exists without trying to teleport while NBT is still being
+     * deserialized.</p>
+     */
+    @Unique
+    private @Nullable ResourceLocation galacticraft$savedLoginDimension = null;
+
+    public ServerPlayerMixin(EntityType<?> entityType, Level level) {
+        super(entityType, level);
+    }
 
     @Override
     public boolean galacticraft$isCelestialScreenActive() {
         return this.celestialActive;
-    }
-
-    public ServerPlayerMixin(EntityType<?> entityType, Level level) {
-        super(entityType, level);
     }
 
     @Override
@@ -76,9 +90,20 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
         this.rocketData = data;
     }
 
+    @Override
+    public @Nullable ResourceLocation galacticraft$getSavedLoginDimension() {
+        return this.galacticraft$savedLoginDimension;
+    }
+
+    @Override
+    public void galacticraft$clearSavedLoginDimension() {
+        this.galacticraft$savedLoginDimension = null;
+    }
+
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
         nbt.putBoolean("CelestialActive", this.celestialActive);
+
         if (this.rocketData != null) {
             CompoundTag nbt1 = new CompoundTag();
             RocketData.CODEC.encode(this.rocketData, NbtOps.INSTANCE, nbt1);
@@ -89,8 +114,35 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
         this.celestialActive = nbt.getBoolean("CelestialActive");
+
         if (nbt.contains("CelestialState")) {
-            this.rocketData = RocketData.CODEC.decode(NbtOps.INSTANCE, nbt.getCompound("CelestialState")).getOrThrow().getFirst();
+            this.rocketData = RocketData.CODEC
+                    .decode(
+                            NbtOps.INSTANCE,
+                            nbt.getCompound("CelestialState")
+                    )
+                    .getOrThrow()
+                    .getFirst();
+        }
+
+        /*
+         * Vanilla's Entity data contains the dimension as a resource location.
+         *
+         * Do not teleport from inside the NBT loading process. Merely record
+         * the value and let the server JOIN event perform recovery once the
+         * connection/player is fully established.
+         */
+        if (nbt.contains("Dimension")) {
+            String dimension = nbt.getString("Dimension");
+
+            if (!dimension.isBlank()) {
+                try {
+                    this.galacticraft$savedLoginDimension =
+                            ResourceLocation.parse(dimension);
+                } catch (Exception ignored) {
+                    this.galacticraft$savedLoginDimension = null;
+                }
+            }
         }
     }
 
@@ -107,21 +159,36 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     private void canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
-        if (isRideTick && vehicle instanceof IgnoreShift ignoreShift && ignoreShift.shouldIgnoreShiftExit()) {
+
+        if (isRideTick
+                && vehicle instanceof IgnoreShift ignoreShift
+                && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();
         }
     }
 
-    @Inject(method = "bedBlocked", at = @At(value = "HEAD"), cancellable = true)
-    private void checkIfCryoBedBlocked(BlockPos sleepingPos, Direction direction, CallbackInfoReturnable<Boolean> cir) {
+    @Inject(method = "bedBlocked", at = @At("HEAD"), cancellable = true)
+    private void checkIfCryoBedBlocked(
+            BlockPos sleepingPos,
+            Direction direction,
+            CallbackInfoReturnable<Boolean> cir
+    ) {
         BlockPos basePos = sleepingPos.below();
-        if (this.level().getBlockState(basePos).getBlock() instanceof CryogenicChamberBlock) {
-            cir.setReturnValue(!this.gc$freeAt(basePos.relative(direction)) || !this.gc$freeAt(sleepingPos.relative(direction)));
+
+        if (this.level()
+                .getBlockState(basePos)
+                .getBlock() instanceof CryogenicChamberBlock) {
+            cir.setReturnValue(
+                    !this.gc$freeAt(basePos.relative(direction))
+                            || !this.gc$freeAt(sleepingPos.relative(direction))
+            );
         }
     }
 
     @Unique
     private boolean gc$freeAt(BlockPos blockPos) {
-        return !this.level().getBlockState(blockPos).isSuffocating(this.level(), blockPos);
+        return !this.level()
+                .getBlockState(blockPos)
+                .isSuffocating(this.level(), blockPos);
     }
 }

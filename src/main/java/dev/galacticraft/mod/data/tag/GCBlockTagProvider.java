@@ -44,9 +44,9 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Arrays;
+import java.util.EnumMap;
 import java.util.HashMap;
 import java.util.List;
-import java.util.EnumMap;
 import java.util.Map;
 import java.util.concurrent.CompletableFuture;
 
@@ -142,7 +142,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.DENSE_ICE)
                 .add(GCBlocks.LUNASLATE);
 
-        this.tag(GCBlockTags.MOON_STONE_ORE_REPLACEABLES)
+        this.tag(GCBlockTags.MOON_ROCK_ORE_REPLACEABLES)
                 .add(GCBlocks.MOON_ROCK);
         this.tag(GCBlockTags.LUNASLATE_ORE_REPLACEABLES)
                 .add(GCBlocks.LUNASLATE);
@@ -159,7 +159,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(GCBlockTags.HARD_VENUS_ROCK_ORE_REPLACEABLES)
                 .add(GCBlocks.HARD_VENUS_ROCK);
 
-        this.tag(GCBlockTags.ORE_BEARING_GROUND_MOON_STONE)
+        this.tag(GCBlockTags.ORE_BEARING_GROUND_MOON_ROCK)
                 .add(GCBlocks.MOON_ROCK);
         this.tag(GCBlockTags.ORE_BEARING_GROUND_LUNASLATE)
                 .add(GCBlocks.LUNASLATE);
@@ -173,9 +173,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.SOFT_VENUS_ROCK);
         this.tag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK)
                 .add(GCBlocks.HARD_VENUS_ROCK);
-        this.tag(GCBlockTags.ORE_BEARING_GROUND_VENUS_ROCK)
-                .addTag(GCBlockTags.ORE_BEARING_GROUND_SOFT_VENUS_ROCK)
-                .addTag(GCBlockTags.ORE_BEARING_GROUND_HARD_VENUS_ROCK);
 
         this.tag(ConventionalBlockTags.ORES_IN_GROUND_STONE)
                 .add(GCBlocks.SILICON_ORE)
@@ -185,7 +182,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.DEEPSLATE_SILICON_ORE)
                 .add(GCBlocks.DEEPSLATE_TIN_ORE)
                 .add(GCBlocks.DEEPSLATE_ALUMINUM_ORE);
-        this.tag(GCBlockTags.ORES_IN_GROUND_MOON_STONE)
+        this.tag(GCBlockTags.ORES_IN_GROUND_MOON_ROCK)
                 .add(GCBlocks.MOON_COPPER_ORE)
                 .add(GCBlocks.MOON_TIN_ORE)
                 .add(GCBlocks.MOON_CHEESE_ORE)
@@ -213,9 +210,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(GCBlocks.SOLAR_ORE);
         this.tag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK)
                 .add(GCBlocks.GALENA_ORE);
-        this.tag(GCBlockTags.ORES_IN_GROUND_VENUS_ROCK)
-                .addTag(GCBlockTags.ORES_IN_GROUND_SOFT_VENUS_ROCK)
-                .addTag(GCBlockTags.ORES_IN_GROUND_HARD_VENUS_ROCK);
 
         // Ores that drop more than one item on average without fortune
         this.tag(ConventionalBlockTags.ORE_RATES_DENSE)
@@ -412,6 +406,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 GCBlocks.OXYGEN_SEALER,
                 GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR,
                 GCBlocks.OXYGEN_DECOMPRESSOR,
+                GCBlocks.OXYGEN_DETECTOR,
                 GCBlocks.OXYGEN_COMPRESSOR,
                 GCBlocks.OXYGEN_STORAGE_MODULE,
                 GCBlocks.FOOD_CANNER,
@@ -419,11 +414,14 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         );
 
         this.tag(GCBlockTags.GLASS_FLUID_PIPES).add(GCBlocks.GLASS_FLUID_PIPE).addTag(GCBlockTags.STAINED_GLASS_FLUID_PIPES);
+        this.tag(GCBlockTags.SEALABLE_FLUID_PIPES).add(GCBlocks.SEALABLE_FLUID_PIPE).addTag(GCBlockTags.STAINED_SEALABLE_FLUID_PIPES);
         for (Map.Entry<DyeColor, TagKey<Block>> entry : DYED_BLOCK_TAGS.entrySet()) {
             PipeColor color = PipeColor.fromDye(entry.getKey());
-            Block pipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
-            this.tag(entry.getValue()).add(pipe);
-            this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(pipe);
+            Block glassPipe = GCBlocks.GLASS_FLUID_PIPES.get(color);
+            Block sealablePipe = GCBlocks.SEALABLE_FLUID_PIPES.get(color);
+            this.tag(entry.getValue()).add(glassPipe, sealablePipe);
+            this.tag(GCBlockTags.STAINED_GLASS_FLUID_PIPES).add(glassPipe);
+            this.tag(GCBlockTags.STAINED_SEALABLE_FLUID_PIPES).add(sealablePipe);
         }
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
@@ -575,6 +573,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                 .add(slabs)
                 .add(walls)
                 .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.GLASS_FLUID_PIPES::get).toArray(Block[]::new))
+                .add(Arrays.stream(PipeColor.byRainbowOrder()).map(GCBlocks.SEALABLE_FLUID_PIPES::get).toArray(Block[]::new))
                 .add(GCBlocks.FLAGS.colorMap().values().toArray(Block[]::new))
                 .add(
                         GCBlocks.MARS_IRON_ORE,

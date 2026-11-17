@@ -175,6 +175,7 @@ public class GCCreativeModeTabs {
                 output.accept(DESH_ORE);
 
                 output.accept(ASTEROID_IRON_ORE);
+                output.accept(ASTEROID_SILICON_ORE);
                 output.accept(ASTEROID_ALUMINUM_ORE);
                 output.accept(ILMENITE_ORE);
 
@@ -245,6 +246,9 @@ public class GCCreativeModeTabs {
                 for (PipeColor color : PipeColor.byRainbowOrder()) {
                     output.accept(GLASS_FLUID_PIPES.get(color));
                 }
+                for (PipeColor color : PipeColor.byRainbowOrder()) {
+                    output.accept(SEALABLE_FLUID_PIPES.get(color));
+                }
                 output.accept(ROCKET_LAUNCH_PAD);
                 output.accept(FUELING_PAD);
                 output.accept(MAGNETIC_CRAFTING_TABLE);
@@ -296,6 +300,7 @@ public class GCCreativeModeTabs {
                 output.accept(OXYGEN_BUBBLE_DISTRIBUTOR);
                 output.accept(OXYGEN_DECOMPRESSOR);
                 output.accept(OXYGEN_COMPRESSOR);
+                output.accept(OXYGEN_DETECTOR);
                 output.accept(OXYGEN_STORAGE_MODULE);
                 output.accept(FOOD_CANNER);
                 output.accept(AIR_LOCK_FRAME);

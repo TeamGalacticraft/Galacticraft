@@ -70,7 +70,7 @@ public abstract class BucketItemMixin extends Item {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
 
-        if (block instanceof FluidLoggable fluidLoggable) {
+        if (block instanceof FluidLoggable fluidLoggable && fluidLoggable.canPlaceLiquid(player, level, blockPos, blockState, this.content)) {
             fluidLoggable.placeLiquid(level, blockPos, blockState, ((FlowingFluid) this.content).getSource(false));
             this.playEmptySound(player, level, blockPos);
             info.setReturnValue(true);

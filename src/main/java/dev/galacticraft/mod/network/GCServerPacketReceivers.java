@@ -39,6 +39,7 @@ public class GCServerPacketReceivers {
         registerPacket(OpenGcInventoryPayload.TYPE);
         registerPacket(OpenPetInventoryPayload.TYPE);
         registerPacket(OpenRocketPayload.TYPE);
+        registerPacket(OxygenDetectorControlPayload.TYPE);
         registerPacket(PlanetTeleportPayload.TYPE);
         registerPacket(SatelliteCreationPayload.TYPE);
         registerPacket(SatelliteUpdatePayload.TYPE);

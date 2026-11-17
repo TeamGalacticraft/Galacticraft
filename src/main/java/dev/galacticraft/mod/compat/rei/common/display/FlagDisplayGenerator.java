@@ -93,6 +93,7 @@ public class FlagDisplayGenerator implements DynamicDisplayGenerator<DefaultCraf
         );
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public static Optional<List<DefaultCraftingDisplay<?>>> randomFlagRecipe() {
         Random random = new Random();
         List<Holder.Reference<BannerPattern>> availablePatterns = BasicDisplay.registryAccess().registry(Registries.BANNER_PATTERN)
