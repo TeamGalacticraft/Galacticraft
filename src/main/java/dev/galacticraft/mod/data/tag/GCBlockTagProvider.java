@@ -91,7 +91,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
     protected void addTags(HolderLookup.Provider provider) {
         this.tag(GCBlockTags.SEALABLE)
                 .add(GCBlocks.AIR_LOCK_SEAL)
-                .add(GCBlocks.MAGNETIC_CRAFTING_TABLE)
                 .add(GCBlocks.ROCKET_WORKBENCH)
                 .add(GCBlocks.CRYOGENIC_CHAMBER)
                 .add(GCBlocks.CRYOGENIC_CHAMBER_PART);
@@ -390,6 +389,9 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
                 .add(GCBlocks.MAGNETIC_CRAFTING_TABLE);
 
+        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+
         this.tag(GCBlockTags.MACHINES).add(
                 GCBlocks.CIRCUIT_FABRICATOR,
                 GCBlocks.COMPRESSOR,
@@ -425,9 +427,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         }
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
-
-        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
-                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         this.tag(BlockTags.CLIMBABLE)
                 .add(GCBlocks.TIN_LADDER)
