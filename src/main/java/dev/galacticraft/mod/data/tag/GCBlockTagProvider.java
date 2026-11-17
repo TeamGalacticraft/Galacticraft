@@ -386,6 +386,12 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         this.tag(ConventionalBlockTags.CLUSTERS)
                 .add(GCBlocks.OLIVINE_CLUSTER);
 
+        this.tag(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES)
+                .add(GCBlocks.MAGNETIC_CRAFTING_TABLE);
+
+        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
+                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
+
         this.tag(GCBlockTags.MACHINES).add(
                 GCBlocks.CIRCUIT_FABRICATOR,
                 GCBlocks.COMPRESSOR,
@@ -421,9 +427,6 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
         }
 
         this.addColorSet(GCBlocks.FLAGS, GCBlockTags.FLAGS);
-
-        this.tag(ConventionalBlockTags.VILLAGER_JOB_SITES)
-                .add(GCBlocks.LUNAR_CARTOGRAPHY_TABLE);
 
         this.tag(BlockTags.CLIMBABLE)
                 .add(GCBlocks.TIN_LADDER)
@@ -604,6 +607,7 @@ public class GCBlockTagProvider extends FabricTagProvider.BlockTagProvider {
                         GCBlocks.TIN_LADDER,
                         GCBlocks.FUELING_PAD,
                         GCBlocks.ROCKET_LAUNCH_PAD,
+                        GCBlocks.MAGNETIC_CRAFTING_TABLE,
                         GCBlocks.GLOWSTONE_LANTERN,
                         GCBlocks.UNLIT_LANTERN,
                         GCBlocks.UNLIT_SOUL_LANTERN,

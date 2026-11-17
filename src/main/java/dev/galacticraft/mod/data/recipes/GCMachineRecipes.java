@@ -51,6 +51,13 @@ public class GCMachineRecipes extends FabricRecipeProvider {
     @Override
     public void buildRecipes(RecipeOutput output) {
         // Machine Blocks
+        GCShapelessRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.MAGNETIC_CRAFTING_TABLE)
+                .requires(Items.CRAFTING_TABLE)
+                .requires(GCItems.COMPRESSED_IRON)
+                .unlockedBy(getHasName(GCItems.COMPRESSED_IRON), has(GCItems.COMPRESSED_IRON))
+                .emiDefaultRecipe(true)
+                .save(output);
+
         GCShapedRecipeBuilder.crafting(RecipeCategory.DECORATIONS, GCBlocks.ADVANCED_SOLAR_PANEL)
                 .define('S', GCItems.COMPRESSED_STEEL)
                 .define('F', GCItems.FULL_SOLAR_PANEL)

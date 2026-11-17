@@ -509,6 +509,8 @@ public class GCItemTagProvider extends FabricTagProvider.ItemTagProvider {
                 .add(GCBlocks.ASTEROID_ROCK_1.asItem())
                 .add(GCBlocks.ASTEROID_ROCK_2.asItem());
 
+        this.copy(ConventionalBlockTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES, ConventionalItemTags.PLAYER_WORKSTATIONS_CRAFTING_TABLES);
+
         this.copy(ConventionalBlockTags.VILLAGER_JOB_SITES, ConventionalItemTags.VILLAGER_JOB_SITES);
     }
 

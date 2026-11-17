@@ -186,6 +186,7 @@ public class GCModelProvider extends FabricModelProvider {
         }
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
+        this.createMagneticCraftingTable(generator);
         this.createRocketWorkbench(generator);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
@@ -590,6 +591,16 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createMagneticCraftingTable(BlockModelGenerators generator) {
+        var block = GCBlocks.MAGNETIC_CRAFTING_TABLE;
+        ResourceLocation model = ModelTemplates.CUBE_BOTTOM_TOP.create(block, TextureMapping.cubeBottomTop(block), generator.modelOutput);
+
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, model))
+                        .with(generator.createColumnWithFacing())
+        );
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
