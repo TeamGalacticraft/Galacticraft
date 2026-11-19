@@ -22,9 +22,7 @@
 
 package dev.galacticraft.mod.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.api.component.GCDataComponents;
-import dev.galacticraft.mod.accessor.EntityFluidAccessor;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
@@ -65,26 +63,5 @@ public abstract class ItemEntityMixin extends Entity {
                 this.playEntityOnFireExtinguishedSound();
             }
         }
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInWater()Z"))
-    private boolean gc$checkNonViscousFluid(boolean inWater) {
-        return ((EntityFluidAccessor) this).gc$isInNonViscousFluid(inWater);
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
-    private double gc$getNonViscousFluidHeight(double waterHeight) {
-        return ((EntityFluidAccessor) this).gc$getFluidHeight(waterHeight);
-
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInLava()Z"))
-    private boolean gc$checkViscousFluid(boolean inLava) {
-        return ((EntityFluidAccessor) this).gc$isInViscousFluid(inLava);
-    }
-
-    @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
-    private double gc$getViscousFluidHeight(double lavaHeight) {
-        return ((EntityFluidAccessor) this).gc$getFluidHeight(lavaHeight);
     }
 }

@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.mixin.fluid;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.galacticraft.mod.accessor.EntityAccessor;
