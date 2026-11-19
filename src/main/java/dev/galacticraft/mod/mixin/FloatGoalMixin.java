@@ -38,18 +38,18 @@ abstract class FloatGoalMixin {
     private Mob mob;
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;isInWater()Z"))
-    private boolean gc$checkThinFluid(boolean inWater) {
-        return ((EntityFluidAccessor) mob).gc$isInThinFluid(inWater);
+    private boolean gc$getNonViscousFluid(boolean inWater) {
+        return ((EntityFluidAccessor) mob).gc$isInNonViscousFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getFluidHeight(Lnet/minecraft/tags/TagKey;)D"))
-    private double gc$useCustomFluidHeight(double waterHeight) {
+    private double gc$getNonViscousFluidHeight(double waterHeight) {
         return ((EntityFluidAccessor) mob).gc$getFluidHeight(waterHeight);
     }
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;isInLava()Z"))
-    private boolean gc$checkThickFluid(boolean inLava) {
-        return ((EntityFluidAccessor) mob).gc$isInThickFluid(inLava);
+    private boolean gc$getViscousFluid(boolean inLava) {
+        return ((EntityFluidAccessor) mob).gc$isInViscousFluid(inLava);
     }
 
 }

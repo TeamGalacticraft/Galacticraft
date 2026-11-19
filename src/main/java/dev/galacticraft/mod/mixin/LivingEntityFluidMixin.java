@@ -45,7 +45,7 @@ public abstract class LivingEntityFluidMixin extends Entity {
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
     private boolean gc$modifyTravelIsInWater(boolean inWater) {
-        return ((EntityFluidAccessor) this).gc$isInThinFluid(inWater);
+        return ((EntityFluidAccessor) this).gc$isInNonViscousFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/core/Holder;)Z", ordinal = 1))
@@ -55,26 +55,26 @@ public abstract class LivingEntityFluidMixin extends Entity {
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
     private boolean gc$modifyTravelIsInLava(boolean inLava) {
-        return ((EntityFluidAccessor) this).gc$isInThickFluid(inLava);
+        return ((EntityFluidAccessor) this).gc$isInViscousFluid(inLava);
     }
 
     @WrapOperation(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
-    private double gc$wrapLavaHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+    private double gc$getViscousFluidHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
         return ((EntityFluidAccessor) this).gc$getFluidHeight(original.call(entity, tag));
     }
 
     @WrapOperation(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
-    private double gc$wrapWaterHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
+    private double gc$getNonViscousFluidHeight(LivingEntity entity, TagKey<Fluid> tag, Operation<Double> original) {
         return ((EntityFluidAccessor) this).gc$getFluidHeight(original.call(entity, tag));
     }
 
     @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInWater()Z"))
     private boolean gc$modifyAiStepIsInWater(boolean inWater) {
-        return ((EntityFluidAccessor) this).gc$isInThinFluid(inWater);
+        return ((EntityFluidAccessor) this).gc$isInNonViscousFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "aiStep", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isInLava()Z"))
     private boolean gc$modifyAIStepIsInLava(boolean inLava) {
-        return ((EntityFluidAccessor) this).gc$isInThickFluid(inLava);
+        return ((EntityFluidAccessor) this).gc$isInViscousFluid(inLava);
     }
 }

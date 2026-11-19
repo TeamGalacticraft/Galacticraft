@@ -68,23 +68,23 @@ public abstract class ItemEntityMixin extends Entity {
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInWater()Z"))
-    private boolean gc$checkThinFluid(boolean inWater) {
-        return ((EntityFluidAccessor) this).gc$isInThinFluid(inWater);
+    private boolean gc$checkNonViscousFluid(boolean inWater) {
+        return ((EntityFluidAccessor) this).gc$isInNonViscousFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
-    private double gc$useThinFluidHeight(double waterHeight) {
+    private double gc$getNonViscousFluidHeight(double waterHeight) {
         return ((EntityFluidAccessor) this).gc$getFluidHeight(waterHeight);
 
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInLava()Z"))
-    private boolean gc$checkThickFluid(boolean inLava) {
-        return ((EntityFluidAccessor) this).gc$isInThickFluid(inLava);
+    private boolean gc$checkViscousFluid(boolean inLava) {
+        return ((EntityFluidAccessor) this).gc$isInViscousFluid(inLava);
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
-    private double gc$useThickFluidHeight(double lavaHeight) {
+    private double gc$getViscousFluidHeight(double lavaHeight) {
         return ((EntityFluidAccessor) this).gc$getFluidHeight(lavaHeight);
     }
 }
