@@ -264,7 +264,7 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
         Entity entity = (Entity) Objects.requireNonNullElse(this.getControllingPassenger(), this);
         float f = entity == (Object) this ? 0.2F : 0.9F;
         Vec3 vec3 = entity.getDeltaMovement();
-        float g = Math.min(1.0F, (float)Math.sqrt(vec3.x * vec3.x * (double)0.2F + vec3.y * vec3.y + vec3.z * vec3.z * (double)0.2F) * f);
+        float g = Math.min(1.0F, (float)Math.sqrt(vec3.x * vec3.x * 0.2D + vec3.y * vec3.y + vec3.z * vec3.z * 0.2D) * f);
         if (g < 0.25F) {
             this.playSound(this.getSwimSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
         } else {
@@ -274,14 +274,14 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
         float h = (float)Mth.floor(this.getY());
 
         for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
-            double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            this.level().addParticle(bubble, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * (double)0.2F, vec3.z);
+            double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
+            double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
+            this.level().addParticle(bubble, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * 0.2D, vec3.z);
         }
         for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
-            double d = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            double e = (this.random.nextDouble() * (double)2.0F - (double)1.0F) * (double)this.dimensions.width();
-            this.level().addParticle(splash, this.getX() + d, (double)(h + 1.0F), this.getZ() + e, vec3.x, vec3.y, vec3.z);
+            double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
+            double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
+            this.level().addParticle(splash, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y, vec3.z);
         }
         this.gameEvent(GameEvent.SPLASH);
     }
@@ -290,7 +290,7 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
     @Unique
     private void doExplosion(boolean invulnerable) {
         if (this.wasOnFire) {
-            level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
+            level.explode(level.getEntity(id), position.x, position.y, position.z, 0F, Level.ExplosionInteraction.NONE);
             if (!invulnerable) {
                 this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
             }

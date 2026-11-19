@@ -39,10 +39,10 @@ public class GCBubbleParticle extends TextureSheetParticle {
         super(clientLevel, x, y, z, velocityX, velocityY, velocityZ);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= this.random.nextFloat() * 0.6F + 0.2F;
-        this.xd = velocityX * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.yd = velocityY * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.zd = velocityZ * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.lifetime = (int)((double)8.0F / (Math.random() * 0.8 + 0.2));
+        this.xd = velocityX * 0.2D + (Math.random() * 2.0D - 1.0D) * 0.02D;
+        this.yd = velocityY * 0.2D + (Math.random() * 2.0D - 1.0D) * 0.02D;
+        this.zd = velocityZ * 0.2D + (Math.random() * 2.0D - 1.0D) * 0.02D;
+        this.lifetime = (int)(8.0D / (Math.random() * 0.8 + 0.2));
     }
 
     public void tick() {
@@ -54,9 +54,9 @@ public class GCBubbleParticle extends TextureSheetParticle {
         } else {
             this.yd += 0.002;
             this.move(this.xd, this.yd, this.zd);
-            this.xd *= (double)0.85F;
-            this.yd *= (double)0.85F;
-            this.zd *= (double)0.85F;
+            this.xd *= 0.85D;
+            this.yd *= 0.85D;
+            this.zd *= 0.85D;
             if (GCFluidTags.SWIMMABLE.stream().noneMatch(this.level.getFluidState(BlockPos.containing(this.x, this.y, this.z))::is)) {
                 this.remove();
             }

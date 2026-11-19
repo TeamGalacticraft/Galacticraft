@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.accessor;
 
-import org.jetbrains.annotations.Nullable;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
 public interface EntityFluidAccessor {
     boolean gc$getWasTouchingGCFluid();
