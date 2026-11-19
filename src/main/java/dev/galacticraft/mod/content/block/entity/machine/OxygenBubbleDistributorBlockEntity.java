@@ -83,7 +83,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             ),
             MachineEnergyStorage.spec(
                     Galacticraft.CONFIG.machineEnergyStorageSize(),
-                    Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate() * 2,
+                    Galacticraft.CONFIG.oxygenBubbleDistributorEnergyConsumptionRate() * 2,
                     0
             ),
             MachineFluidStorage.spec(
@@ -127,7 +127,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
         profiler.push("transaction");
         MachineStatus status;
         try {
-            if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate())) { //todo: config
+            if (this.energyStorage().canExtract(Galacticraft.CONFIG.oxygenBubbleDistributorEnergyConsumptionRate())) {
                 profiler.push("bubble");
                 if (this.size > this.targetSize) {
                     this.setSize(Math.max(this.size - 0.1F, this.targetSize));
@@ -143,7 +143,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
 
                 if (slot.canExtract(oxygenRequired)) {
                     slot.extract(oxygenRequired);
-                    this.energyStorage().extract(Galacticraft.CONFIG.oxygenCollectorEnergyConsumptionRate());
+                    this.energyStorage().extract(Galacticraft.CONFIG.oxygenBubbleDistributorEnergyConsumptionRate());
                     if (this.size < this.targetSize) {
                         this.setSize(this.size + 0.05D);
                     }
