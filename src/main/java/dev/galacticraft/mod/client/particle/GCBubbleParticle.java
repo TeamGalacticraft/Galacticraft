@@ -36,12 +36,12 @@ import net.minecraft.world.level.material.Fluid;
 public class GCBubbleParticle extends TextureSheetParticle {
     private TagKey<Fluid> fluidTag;
     GCBubbleParticle(ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        super(clientLevel, d, e, f, g, h, i);
+        super(clientLevel, x, y, z, velocityX, velocityY, velocityZ);
         this.setSize(0.02F, 0.02F);
         this.quadSize *= this.random.nextFloat() * 0.6F + 0.2F;
-        this.xd = g * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.yd = h * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
-        this.zd = i * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
+        this.xd = velocityX * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
+        this.yd = velocityY * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
+        this.zd = velocityZ * (double)0.2F + (Math.random() * (double)2.0F - (double)1.0F) * (double)0.02F;
         this.lifetime = (int)((double)8.0F / (Math.random() * 0.8 + 0.2));
     }
 
