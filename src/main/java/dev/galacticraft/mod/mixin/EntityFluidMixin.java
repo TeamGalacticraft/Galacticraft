@@ -52,6 +52,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.gameevent.GameEvent;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -189,66 +190,63 @@ public abstract class EntityFluidMixin implements EntityAccessor, EntityFluidAcc
     private boolean gc$checkFluidState(boolean original) {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
-        boolean bl = false;
+        FluidState fluidState = this.gc$getInFluidState();
+        assert fluidState != null;
 
-        if (Objects.requireNonNull(this.gc$getInFluidState()).is(GCFluidTags.EXPLOSIVE)) {
+        if (fluidState.is(GCFluidTags.EXPLOSIVE)) {
             doExplosion(invulnerable);
         }
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
-            doFluidEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
-            gc$setInFluidType(GCFluidTags.OIL);
-            bl = true;
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
-            doFluidEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
-            gc$setInFluidType(GCFluidTags.FUEL);
-            bl = true;
-        } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
-            doFluidEffects(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
-            sulfuricAcidEffects(invulnerable);
-            gc$setInFluidType(GCFluidTags.SULFURIC_ACID);
-            bl = true;
+        if (fluidState.is(GCFluidTags.VISCOUS)) {
+            if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
+                doGCSplashEffect(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
+                gc$setInFluidType(GCFluidTags.OIL);
+            }
+        } else if (fluidState.is(GCFluidTags.NONVISCOUS)) {
+            if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
+                doGCSplashEffect(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
+                gc$setInFluidType(GCFluidTags.FUEL);
+            } if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.014)) {
+                doGCSplashEffect(1.0F, GCParticleTypes.ACID_BUBBLE, GCParticleTypes.ACID_SPLASH);
+                sulfuricAcidEffects(invulnerable);
+                gc$setInFluidType(GCFluidTags.SULFURIC_ACID);
+            }
         } else {
             gc$setWasTouchingGCFluid(false);
             gc$setInFluidType(null);
             this.timeInAcid = 0;
         }
-        return original || bl;
-    }
-
-    @Unique
-    private void doFluidEffects(float pitch, ParticleOptions bubble, ParticleOptions splash) {
-        if (!this.gc$getWasTouchingGCFluid() && !this.firstTick) {
-            this.doGCSplashEffect(pitch, bubble, splash);
-        }
-        this.resetFallDistance();
-        gc$setWasTouchingGCFluid(true);
+        return original || gc$getWasTouchingGCFluid();
     }
 
     @Unique
     protected void doGCSplashEffect(float pitch, ParticleOptions bubble, ParticleOptions splash) {
-        Entity entity = (Entity) Objects.requireNonNullElse(this.getControllingPassenger(), this);
-        float f = entity == (Object) this ? 0.2F : 0.9F;
-        Vec3 vec3 = entity.getDeltaMovement();
-        float g = Math.min(1.0F, (float)Math.sqrt(vec3.x * vec3.x * 0.2D + vec3.y * vec3.y + vec3.z * vec3.z * 0.2D) * f);
-        if (g < 0.25F) {
-            this.playSound(this.getSwimSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
-        } else {
-            this.playSound(this.getSwimHighSpeedSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
-        }
+        if (!this.gc$getWasTouchingGCFluid() && !this.firstTick) {
+            Entity entity = (Entity) Objects.requireNonNullElse(this.getControllingPassenger(), this);
+            float f = entity == (Object) this ? 0.2F : 0.9F;
+            Vec3 vec3 = entity.getDeltaMovement();
+            float g = Math.min(1.0F, (float) Math.sqrt(vec3.x * vec3.x * 0.2D + vec3.y * vec3.y + vec3.z * vec3.z * 0.2D) * f);
+            if (g < 0.25F) {
+                this.playSound(this.getSwimSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+            } else {
+                this.playSound(this.getSwimHighSpeedSplashSound(), g, pitch + (this.random.nextFloat() - this.random.nextFloat()) * 0.2F);
+            }
 
-        float h = (float) Mth.floor(this.getY());
+            float h = (float) Mth.floor(this.getY());
 
-        for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
-            double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
-            double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
-            this.level().addParticle(bubble, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * 0.2D, vec3.z);
+            for (int i = 0; (float) i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
+                double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width();
+                double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width();
+                this.level().addParticle(bubble, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y - this.random.nextDouble() * 0.2D, vec3.z);
+            }
+            for (int i = 0; (float) i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
+                double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width();
+                double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double) this.dimensions.width();
+                this.level().addParticle(splash, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y, vec3.z);
+            }
+            this.gameEvent(GameEvent.SPLASH);
         }
-        for(int i = 0; (float)i < 1.0F + this.dimensions.width() * 20.0F; ++i) {
-            double d = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
-            double e = (this.random.nextDouble() * 2.0D - 1.0D) * (double)this.dimensions.width();
-            this.level().addParticle(splash, this.getX() + d, h + 1.0D, this.getZ() + e, vec3.x, vec3.y, vec3.z);
-        }
-        this.gameEvent(GameEvent.SPLASH);
+        this.resetFallDistance();
+        gc$setWasTouchingGCFluid(true);
     }
 
     // If a flaming entity enters an explosive substance, this entity should explode
@@ -290,7 +288,7 @@ public abstract class EntityFluidMixin implements EntityAccessor, EntityFluidAcc
                 this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
             }
             if (playSound && this.timeInAcid % 5 == 0) {
-                this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+                this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.5F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
                 for (int i = 0; i < 4; i++) {
                     level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
                 }

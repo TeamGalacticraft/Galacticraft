@@ -104,7 +104,6 @@ abstract class BlockBehaviourNotBaseMixin {
     @WrapOperation(method = "isPathfindable(Lnet/minecraft/world/level/block/state/BlockState;Lnet/minecraft/world/level/pathfinder/PathComputationType;)Z", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z"))
     private boolean gc$includeGCFluidsInWaterPathfinding(FluidState instance, TagKey<Fluid> tag, Operation<Boolean> original) {
         boolean vanillaResult = original.call(instance, tag);
-
         return vanillaResult || instance.is(GCFluidTags.SWIMMABLE);
     }
 }
