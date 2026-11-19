@@ -38,7 +38,9 @@ public record BubbleAcidProvider(SpriteSet spriteProvider) implements ParticlePr
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         var particle = new GCBubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.ACID_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
-        particle.setColor(151f / 255f, 245f / 255f, 70f / 255f);
+        if (particle != null) {
+            particle.setColor(151f / 255f, 245f / 255f, 70f / 255f);
+        }
         return particle;
     }
 }

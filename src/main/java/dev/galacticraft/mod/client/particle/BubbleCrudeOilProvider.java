@@ -36,7 +36,9 @@ public record BubbleCrudeOilProvider(SpriteSet spriteProvider) implements Partic
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
         var particle = new GCBubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.OIL_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
-        particle.setColor(0.3F, 0.3F, 0.3F);
+        if (particle != null) {
+            particle.setColor(0.3F, 0.3F, 0.3F);
+        }
         return particle;
     }
 }
