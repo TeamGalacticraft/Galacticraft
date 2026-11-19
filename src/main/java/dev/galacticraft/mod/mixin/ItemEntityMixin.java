@@ -26,17 +26,13 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.api.component.GCDataComponents;
 import dev.galacticraft.mod.accessor.EntityFluidAccessor;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCFluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
@@ -73,52 +69,22 @@ public abstract class ItemEntityMixin extends Entity {
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInWater()Z"))
     private boolean gc$checkThinFluid(boolean inWater) {
-        return gc$getInThinFluid(inWater);
+        return ((EntityFluidAccessor) this).gc$isInThinFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 0))
     private double gc$useThinFluidHeight(double waterHeight) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return this.getFluidHeight(fluidType);
-        }
-        return waterHeight;
+        return ((EntityFluidAccessor) this).gc$getFluidHeight(waterHeight);
+
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;isInLava()Z"))
     private boolean gc$checkThickFluid(boolean inLava) {
-        return gc$getInThickFluid(inLava);
+        return ((EntityFluidAccessor) this).gc$isInThickFluid(inLava);
     }
 
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/item/ItemEntity;getFluidHeight(Lnet/minecraft/tags/TagKey;)D", ordinal = 1))
     private double gc$useThickFluidHeight(double lavaHeight) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return this.getFluidHeight(fluidType);
-        }
-        return lavaHeight;
-    }
-
-    @Unique
-    private TagKey<Fluid> gc$getInFluidType() {
-        return ((EntityFluidAccessor)  this).gc$getInFluidType();
-    }
-
-    @Unique
-    private boolean gc$getInThinFluid(boolean inWater) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return inWater || GCFluidTags.THIN.contains(gc$getInFluidType());
-        }
-        return inWater;
-    }
-
-    @Unique
-    private boolean gc$getInThickFluid(boolean inLava) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return inLava || GCFluidTags.THICK.contains(gc$getInFluidType());
-        }
-        return inLava;
+        return ((EntityFluidAccessor) this).gc$getFluidHeight(lavaHeight);
     }
 }

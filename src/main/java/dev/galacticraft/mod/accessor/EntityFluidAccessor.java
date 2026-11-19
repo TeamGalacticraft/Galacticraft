@@ -22,14 +22,11 @@
 
 package dev.galacticraft.mod.accessor;
 
-import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Unique;
 
 public interface EntityFluidAccessor {
     boolean gc$getWasTouchingGCFluid();
@@ -46,7 +43,6 @@ public interface EntityFluidAccessor {
     }
 
     default boolean gc$isInThickFluid(boolean inLava) {
-        LivingEntity entity = (LivingEntity) (Object) this;
         TagKey<Fluid> fluidType = gc$getInFluidType();
         return inLava || (fluidType != null && GCFluidTags.THICK.contains(fluidType));
     }

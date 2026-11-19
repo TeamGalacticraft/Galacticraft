@@ -24,15 +24,11 @@ package dev.galacticraft.mod.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.galacticraft.mod.accessor.EntityFluidAccessor;
-import dev.galacticraft.mod.tag.GCFluidTags;
-import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Mob;
 import net.minecraft.world.entity.ai.goal.FloatGoal;
-import net.minecraft.world.level.material.Fluid;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FloatGoal.class)

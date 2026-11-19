@@ -34,7 +34,6 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.special.TinLadderBlock;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
 import dev.galacticraft.mod.tag.GCDimensionTypeTags;
-import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.core.Holder;
