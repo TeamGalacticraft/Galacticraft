@@ -31,6 +31,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.level.material.Fluid;
+import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
 public class GCBubbleParticle extends TextureSheetParticle {
@@ -75,6 +76,8 @@ public class GCBubbleParticle extends TextureSheetParticle {
             this.sprite = spriteSet;
         }
 
+        @Override
+        @Nullable
         public Particle createParticle(SimpleParticleType simpleParticleType, ClientLevel clientLevel, double d, double e, double f, double g, double h, double i) {
             GCBubbleParticle bubbleParticle = new GCBubbleParticle(clientLevel, d, e, f, g, h, i);
             bubbleParticle.pickSprite(this.sprite);
