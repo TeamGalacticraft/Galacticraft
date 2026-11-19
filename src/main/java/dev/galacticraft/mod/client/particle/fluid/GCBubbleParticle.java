@@ -20,7 +20,7 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.particle;
+package dev.galacticraft.mod.client.particle.fluid;
 
 import dev.galacticraft.mod.tag.GCFluidTags;
 import net.fabricmc.api.EnvType;

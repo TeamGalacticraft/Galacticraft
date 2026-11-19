@@ -20,26 +20,28 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.particle;
+package dev.galacticraft.mod.client.particle.fluid;
 
+import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.particle.DripParticle;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.SplashParticle;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record SplashingFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+public record DrippingCrudeOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new SplashParticle.Provider(spriteProvider).createParticle(GCParticleTypes.FUEL_SPLASH, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
-        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
+        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.CRUDE_OIL, GCParticleTypes.FALLING_CRUDE_OIL);
+        particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
+        particle.pickSprite(this.spriteProvider);
         return particle;
     }
 }

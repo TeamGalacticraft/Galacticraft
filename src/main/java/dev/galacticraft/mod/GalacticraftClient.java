@@ -33,6 +33,7 @@ import dev.galacticraft.mod.client.model.GCRenderTypes;
 import dev.galacticraft.mod.client.model.types.UnbakedObjModel;
 import dev.galacticraft.mod.client.network.GCClientPacketReceiver;
 import dev.galacticraft.mod.client.particle.*;
+import dev.galacticraft.mod.client.particle.fluid.*;
 import dev.galacticraft.mod.client.render.block.entity.GCBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.dimension.GCDimensionEffects;
 import dev.galacticraft.mod.client.render.entity.*;
