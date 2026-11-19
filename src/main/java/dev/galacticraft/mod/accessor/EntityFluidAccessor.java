@@ -49,12 +49,12 @@ public interface EntityFluidAccessor {
 
     default boolean gc$isInNonViscousFluid(boolean inWater) {
         TagKey<Fluid> fluidType = gc$getInFluidType();
-        return inWater || (fluidType != null && Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.VISCOUS));
+        return inWater || (fluidType != null && Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.NONVISCOUS));
     }
 
     default boolean gc$isInViscousFluid(boolean inLava) {
         TagKey<Fluid> fluidType = gc$getInFluidType();
-        return inLava || (fluidType != null && (Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.SWIMMABLE)));
+        return inLava || (fluidType != null && (Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.VISCOUS)));
     }
 
     default double gc$getFluidHeight(double originalHeight) {

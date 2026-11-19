@@ -194,7 +194,7 @@ public abstract class EntityFluidMixin implements EntityAccessor, EntityFluidAcc
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
         boolean bl = false;
 
-        if (this.gc$getInFluidState().is(GCFluidTags.EXPLOSIVE)) {
+        if (Objects.requireNonNull(this.gc$getInFluidState()).is(GCFluidTags.EXPLOSIVE)) {
             doExplosion(invulnerable);
         }
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
