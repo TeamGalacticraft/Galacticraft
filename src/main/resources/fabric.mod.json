@@ -374,6 +374,7 @@
   },
   "suggests": {
     "modmenu": "*",
-    "waila": "*"
+    "waila": "*",
+    "omnishape": ">=1.3"
   }
 }
