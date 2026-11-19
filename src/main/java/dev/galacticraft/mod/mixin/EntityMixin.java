@@ -402,9 +402,17 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
         this.lastStep = -this.lastStep;
     }
 
-    @WrapOperation(method = "checkBelowWorld", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"))
-    @SuppressWarnings({"rawtypes", "unchecked"})
-    private void galacticraft$onBelowWorld(Entity entity, Operation<Void> original) {
+    @WrapOperation(
+            method = "checkBelowWorld",
+            at = @At(
+                    value = "INVOKE",
+                    target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"
+            )
+    )
+    private void galacticraft$onBelowWorld(
+            Entity entity,
+            Operation<Void> original
+    ) {
         if (!entity.getType().is(GCEntityTypeTags.CAN_REENTER_ATMOSPHERE)) {
             original.call(entity);
             return;
