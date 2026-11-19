@@ -46,12 +46,7 @@ abstract class WaterAvoidingRandomStrollGoalMixin {
 
     @ModifyExpressionValue(method = "getPosition", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/PathfinderMob;isInWaterOrBubble()Z"))
     private boolean gc$checkGCFluid(boolean inWaterOrBubble) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
+        TagKey<Fluid> fluidType = ((EntityFluidAccessor)  this.gc$mob).gc$getInFluidType();
         return inWaterOrBubble || fluidType != null;
-    }
-
-    @Unique
-    private TagKey<Fluid> gc$getInFluidType() {
-        return ((EntityFluidAccessor)  this.gc$mob).gc$getInFluidType();
     }
 }
