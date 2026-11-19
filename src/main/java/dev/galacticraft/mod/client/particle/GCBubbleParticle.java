@@ -58,8 +58,7 @@ public class GCBubbleParticle extends TextureSheetParticle {
             this.xd *= 0.85D;
             this.yd *= 0.85D;
             this.zd *= 0.85D;
-            if (GCFluidTags.SWIMMABLE.stream().noneMatch(this.level.getFluidState(BlockPos.containing(this.x, this.y, this.z))::is)) {
-                this.remove();
+            if (!this.level.getFluidState(BlockPos.containing(this.x, this.y, this.z)).is(GCFluidTags.SWIMMABLE)) {                this.remove();
             }
         }
     }

@@ -23,10 +23,14 @@
 package dev.galacticraft.mod.accessor;
 
 import dev.galacticraft.mod.tag.GCFluidTags;
+import net.minecraft.core.BlockPos;
 import net.minecraft.tags.TagKey;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.material.Fluid;
+import net.minecraft.world.level.material.FluidState;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.Objects;
 
 public interface EntityFluidAccessor {
     boolean gc$getWasTouchingGCFluid();
@@ -35,16 +39,22 @@ public interface EntityFluidAccessor {
     @Nullable
     TagKey<Fluid> gc$getInFluidType();
 
+    @Nullable
+    default FluidState gc$getInFluidState() {
+        Entity entity = (Entity) this;
+        return entity.level().getFluidState(BlockPos.containing(entity.getX(), entity.getY(), entity.getZ()));
+    }
+
     void gc$setInFluidType(@Nullable TagKey<Fluid> fluidType);
 
     default boolean gc$isInThinFluid(boolean inWater) {
         TagKey<Fluid> fluidType = gc$getInFluidType();
-        return inWater || (fluidType != null && GCFluidTags.THIN.contains(fluidType));
+        return inWater || (fluidType != null && Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.VISCOUS));
     }
 
     default boolean gc$isInThickFluid(boolean inLava) {
         TagKey<Fluid> fluidType = gc$getInFluidType();
-        return inLava || (fluidType != null && GCFluidTags.THICK.contains(fluidType));
+        return inLava || (fluidType != null && (Objects.requireNonNull(gc$getInFluidState()).is(GCFluidTags.SWIMMABLE)));
     }
 
     default double gc$getFluidHeight(double originalHeight) {

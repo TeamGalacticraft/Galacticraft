@@ -227,13 +227,14 @@ public abstract class EntityMixin implements EntityAccessor, EntityFluidAccessor
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
         boolean bl = false;
 
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
+        if (this.gc$getInFluidState().is(GCFluidTags.EXPLOSIVE)) {
             doExplosion(invulnerable);
+        }
+        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028)) {
             doFluidEffects(0.34F, GCParticleTypes.OIL_BUBBLE, GCParticleTypes.OIL_SPLASH);
             gc$setInFluidType(GCFluidTags.OIL);
             bl = true;
         } else if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.007)) {
-            doExplosion(invulnerable);
             doFluidEffects(0.54F, GCParticleTypes.FUEL_BUBBLE, GCParticleTypes.FUEL_SPLASH);
             gc$setInFluidType(GCFluidTags.FUEL);
             bl = true;
