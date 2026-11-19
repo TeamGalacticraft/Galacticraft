@@ -187,9 +187,8 @@ public abstract class EntityFluidMixin implements EntityAccessor, EntityFluidAcc
         return original || this.gc$getWasTouchingGCFluid();
     }
 
-    @Inject(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"), cancellable = true)
-    private void gc$checkFluidState(CallbackInfoReturnable<Boolean> ci) {
-        boolean vanillaReturn = ci.getReturnValue();
+    @ModifyReturnValue(method = "updateInWaterStateAndDoFluidPushing", at = @At("RETURN"))
+    private boolean gc$checkFluidState(boolean original) {
         Player player = level.getPlayerByUUID(uuid);
         boolean invulnerable = player != null && player.getAbilities().invulnerable;
         boolean bl = false;
@@ -215,7 +214,7 @@ public abstract class EntityFluidMixin implements EntityAccessor, EntityFluidAcc
             gc$setInFluidType(null);
             this.timeInAcid = 0;
         }
-        ci.setReturnValue(vanillaReturn || bl);
+        return original || bl;
     }
 
     @Unique
