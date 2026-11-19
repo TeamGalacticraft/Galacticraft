@@ -43,43 +43,17 @@ abstract class FloatGoalMixin {
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;isInWater()Z"))
     private boolean gc$checkThinFluid(boolean inWater) {
-        return gc$getInThinFluid(inWater);
+        return ((EntityFluidAccessor) mob).gc$isInThinFluid(inWater);
     }
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;getFluidHeight(Lnet/minecraft/tags/TagKey;)D"))
     private double gc$useCustomFluidHeight(double waterHeight) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return mob.getFluidHeight(fluidType);
-        }
-        return waterHeight;
+        return ((EntityFluidAccessor) mob).gc$getFluidHeight(waterHeight);
     }
 
     @ModifyExpressionValue(method = "canUse", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Mob;isInLava()Z"))
     private boolean gc$checkThickFluid(boolean inLava) {
-        return gc$getInThickFluid(inLava);
+        return ((EntityFluidAccessor) mob).gc$isInThickFluid(inLava);
     }
 
-    @Unique
-    private TagKey<Fluid> gc$getInFluidType() {
-        return ((EntityFluidAccessor)  mob).gc$getInFluidType();
-    }
-
-    @Unique
-    private boolean gc$getInThinFluid(boolean inWater) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return inWater || GCFluidTags.THIN.contains(gc$getInFluidType());
-        }
-        return inWater;
-    }
-
-    @Unique
-    private boolean gc$getInThickFluid(boolean inLava) {
-        TagKey<Fluid> fluidType = gc$getInFluidType();
-        if (fluidType != null) {
-            return inLava || GCFluidTags.THICK.contains(gc$getInFluidType());
-        }
-        return inLava;
-    }
 }

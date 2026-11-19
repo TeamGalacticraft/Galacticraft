@@ -22,9 +22,14 @@
 
 package dev.galacticraft.mod.accessor;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import dev.galacticraft.mod.tag.GCFluidTags;
 import net.minecraft.tags.TagKey;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.level.material.Fluid;
 import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Unique;
 
 public interface EntityFluidAccessor {
     boolean gc$getWasTouchingGCFluid();
@@ -32,5 +37,26 @@ public interface EntityFluidAccessor {
 
     @Nullable
     TagKey<Fluid> gc$getInFluidType();
+
     void gc$setInFluidType(@Nullable TagKey<Fluid> fluidType);
+
+    default boolean gc$isInThinFluid(boolean inWater) {
+        TagKey<Fluid> fluidType = gc$getInFluidType();
+        return inWater || (fluidType != null && GCFluidTags.THIN.contains(fluidType));
+    }
+
+    default boolean gc$isInThickFluid(boolean inLava) {
+        LivingEntity entity = (LivingEntity) (Object) this;
+        TagKey<Fluid> fluidType = gc$getInFluidType();
+        return inLava || (fluidType != null && GCFluidTags.THICK.contains(fluidType));
+    }
+
+    default double gc$getFluidHeight(double originalHeight) {
+        TagKey<Fluid> fluidType = gc$getInFluidType();
+        Entity entity = (Entity) this;
+        if (fluidType != null) {
+            return entity.getFluidHeight(fluidType);
+        }
+        return originalHeight;
+    }
 }
