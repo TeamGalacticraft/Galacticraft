@@ -31,37 +31,26 @@ import dev.galacticraft.api.universe.celestialbody.landable.teleporter.Celestial
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.accessor.EntityAccessor;
 import dev.galacticraft.mod.config.GCConfigUtil;
-import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
-import dev.galacticraft.mod.events.GCEventHandlers;
 import dev.galacticraft.mod.misc.footprint.Footprint;
 import dev.galacticraft.mod.tag.*;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
 import net.minecraft.core.Registry;
 import net.minecraft.core.SectionPos;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundEvent;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.tags.TagKey;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.damagesource.DamageSources;
-import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.entity.MoverType;
-import net.minecraft.world.entity.item.ItemEntity;
+import net.minecraft.world.entity.*;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.entity.projectile.Projectile;
-import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.material.Fluid;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.Nullable;
 import org.joml.Vector3d;
@@ -79,16 +68,9 @@ import java.util.UUID;
 public abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
-    private @Unique int timeInAcid = 0;
 
     @Shadow
     public abstract Vec3 getDeltaMovement();
-
-    @Shadow
-    private float yRot;
-
-    @Shadow
-    private float xRot;
 
     @Shadow
     private Level level;
@@ -100,15 +82,6 @@ public abstract class EntityMixin implements EntityAccessor {
 //            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
 //        }
 //    }
-
-    @Shadow
-    public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
-
-    @Shadow
-    public abstract boolean isOnFire();
-
-    @Shadow
-    private Vec3 position;
 
     @Shadow
     protected UUID uuid;
@@ -162,62 +135,6 @@ public abstract class EntityMixin implements EntityAccessor {
     @Shadow
     @Final
     protected abstract void discard();
-
-    @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
-    private void checkWaterStateGC(CallbackInfo ci) {
-        Player player = level.getPlayerByUUID(uuid);
-        boolean invulnerable = player != null && player.getAbilities().invulnerable;
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
-            if (this.isOnFire()) {
-                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
-                if (!invulnerable) {
-                    this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
-                }
-            }
-        }
-
-        if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
-            // The entity enters an acid fluid, this entity needs to take damage
-            if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
-                boolean damage = this.timeInAcid >= 30;
-                boolean playSound = true;
-                if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
-                    this.discard();
-                    return;
-                }
-
-                if ((Object) this instanceof ItemEntity itemEntity) {
-                    ItemStack itemStack = itemEntity.getItem();
-                    if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
-                        damage = false;
-                        playSound = false;
-                    } else if (damage) {
-                        damage = !GCEventHandlers.sulfuricAcidTransformItem(itemEntity, itemStack);
-                    }
-                } else {
-                    damage = true;
-                }
-
-                if (damage) {
-                    this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
-                }
-                if (playSound && this.timeInAcid % 5 == 0) {
-                    this.sulfuricAcidEffects();
-                }
-            }
-            ++this.timeInAcid;
-        } else {
-            this.timeInAcid = 0;
-        }
-    }
-
-    @Unique
-    private void sulfuricAcidEffects() {
-        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
-        for (int i = 0; i < 4; i++) {
-            level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
-        }
-    }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
@@ -294,7 +211,6 @@ public abstract class EntityMixin implements EntityAccessor {
                     target = "Lnet/minecraft/world/entity/Entity;onBelowWorld()V"
             )
     )
-    @SuppressWarnings({"rawtypes", "unchecked"})
     private void galacticraft$onBelowWorld(
             Entity entity,
             Operation<Void> original

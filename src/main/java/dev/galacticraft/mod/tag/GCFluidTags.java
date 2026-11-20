@@ -39,6 +39,10 @@ public class GCFluidTags {
     public static final TagKey<Fluid> OXYGEN = galacticraftTag("oxygen");
     public static final TagKey<Fluid> NON_BREATHABLE = galacticraftTag("non_breathable");
     public static final TagKey<Fluid> FLUID_CANISTER_EXCLUSIONS = galacticraftTag("fluid_canister_exclusions");
+    public static final TagKey<Fluid> SWIMMABLE = galacticraftTag("swimmable");
+    public static final TagKey<Fluid> VISCOUS = galacticraftTag("viscous");
+    public static final TagKey<Fluid> NONVISCOUS = galacticraftTag("nonviscous");
+    public static final TagKey<Fluid> EXPLOSIVE = galacticraftTag("explosive");
 
     public static TagKey<Fluid> commonTag(String path) {
         return TagKey.create(Registries.FLUID, ResourceLocation.fromNamespaceAndPath(Constant.COMMON_NAMESPACE, path));

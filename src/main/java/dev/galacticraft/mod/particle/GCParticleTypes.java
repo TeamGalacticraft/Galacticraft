@@ -34,10 +34,16 @@ public class GCParticleTypes {
 
     public static final SimpleParticleType DRIPPING_CRUDE_OIL = PARTICLES.register(Particle.DRIPPING_CRUDE_OIL, FabricParticleTypes.simple());
     public static final SimpleParticleType FALLING_CRUDE_OIL = PARTICLES.register(Particle.FALLING_CRUDE_OIL, FabricParticleTypes.simple());
+    public static final SimpleParticleType OIL_BUBBLE = PARTICLES.register(Particle.OIL_BUBBLE, FabricParticleTypes.simple());
+    public static final SimpleParticleType OIL_SPLASH = PARTICLES.register(Particle.OIL_SPLASH, FabricParticleTypes.simple());
     public static final SimpleParticleType DRIPPING_FUEL = PARTICLES.register(Particle.DRIPPING_FUEL, FabricParticleTypes.simple());
     public static final SimpleParticleType FALLING_FUEL = PARTICLES.register(Particle.FALLING_FUEL, FabricParticleTypes.simple());
+    public static final SimpleParticleType FUEL_BUBBLE = PARTICLES.register(Particle.FUEL_BUBBLE, FabricParticleTypes.simple());
+    public static final SimpleParticleType FUEL_SPLASH = PARTICLES.register(Particle.FUEL_SPLASH, FabricParticleTypes.simple());
     public static final SimpleParticleType DRIPPING_SULFURIC_ACID = PARTICLES.register(Particle.DRIPPING_SULFURIC_ACID, FabricParticleTypes.simple());
     public static final SimpleParticleType FALLING_SULFURIC_ACID = PARTICLES.register(Particle.FALLING_SULFURIC_ACID, FabricParticleTypes.simple());
+    public static final SimpleParticleType ACID_BUBBLE = PARTICLES.register(Particle.ACID_BUBBLE, FabricParticleTypes.simple());
+    public static final SimpleParticleType ACID_SPLASH = PARTICLES.register(Particle.ACID_SPLASH, FabricParticleTypes.simple());
 
     public static final SimpleParticleType CRYOGENIC_PARTICLE = PARTICLES.register(Particle.CRYOGENIC_PARTICLE, FabricParticleTypes.simple());
     public static final SimpleParticleType LANDER_FLAME_PARTICLE = PARTICLES.register(Particle.LANDER_FLAME, FabricParticleTypes.simple());
