@@ -21,7 +21,6 @@
     "FireworkRocketItemMixin",
     "FlowingFluidMixin",
     "ItemEntityMixin",
-    "ItemStackMixin",
     "LevelMixin",
     "LivingEntityAccessor",
     "LivingEntityMixin",
