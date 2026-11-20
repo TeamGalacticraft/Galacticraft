@@ -43,7 +43,7 @@ public class GCSounds {
     public static final SoundEvent METEOR_THROW = register("entity.meteor_chunk.throw");
     public static final SoundEvent ROCKET_IGNITE = register("entity.rocket.ignite");
     public static final SoundEvent SLIMELING_DEATH = register("entity.slimeling.death");
-    // Machine Sounds
+    // Machine
     public static final SoundEvent AIRLOCK_CLOSE = register("machine.airlock.close");
     public static final SoundEvent AIRLOCK_OPEN = register("machine.airlock.open");
     public static final SoundEvent CIRCUIT_SCRITCH = register("machine.circuit.scritch");
