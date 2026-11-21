@@ -58,7 +58,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(CreativeModeInventoryScreen.class)
-public abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implements GCCreativeGuiSlots {
+abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implements GCCreativeGuiSlots {
 
     @Unique private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 

@@ -44,7 +44,7 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin implements ServerResearchAccessor {
+abstract class ServerPlayerMixin implements ServerResearchAccessor {
     @Shadow
     public abstract boolean isCreative();
 

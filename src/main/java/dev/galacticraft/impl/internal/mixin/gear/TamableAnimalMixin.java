@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.Unique;
 import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 @Mixin(TamableAnimal.class)
-public abstract class TamableAnimalMixin extends Entity implements GearInventoryProvider, OwnableEntity {
+abstract class TamableAnimalMixin extends Entity implements GearInventoryProvider, OwnableEntity {
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT);

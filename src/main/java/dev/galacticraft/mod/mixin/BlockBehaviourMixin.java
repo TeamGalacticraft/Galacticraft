@@ -51,7 +51,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(BlockBehaviour.BlockStateBase.class)
-public abstract class BlockBehaviourMixin {
+abstract class BlockBehaviourMixin {
     @Shadow
     public abstract boolean is(TagKey<Block> tag);
 

@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AbstractHorse.class)
-public abstract class AbstractHorseMixin extends LivingEntity {
+abstract class AbstractHorseMixin extends LivingEntity {
 
     AbstractHorseMixin() {
         super(null, null);

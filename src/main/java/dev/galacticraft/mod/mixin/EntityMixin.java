@@ -76,7 +76,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAccessor {
+abstract class EntityMixin implements EntityAccessor {
     private @Unique double distanceSinceLastStep;
     private @Unique int lastStep = -1;
     private @Unique int timeInAcid = 0;

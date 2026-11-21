@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.OptionalLong;
 
 @Mixin(DimensionType.class)
-public class DimensionTypeMixin {
+abstract class DimensionTypeMixin {
     @Unique
     private boolean isMoon;
 

@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(GameRenderer.class)
-public abstract class GameRendererMixin implements GameRendererAccessor {
+abstract class GameRendererMixin implements GameRendererAccessor {
     @Unique
     private static final float DEPTH_FAR = 32.0F * 16.0F * 4.0F;
 

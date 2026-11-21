@@ -65,6 +65,7 @@ import java.util.Optional;
 
 @Mixin(LivingEntity.class)
 public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
 
     @Unique

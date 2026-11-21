@@ -45,7 +45,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(TitleScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class AlphaWarningTitleScreenMixin extends Screen {
+abstract class AlphaWarningTitleScreenMixin extends Screen {
 
     @Unique
     private static boolean warningHidden = false;

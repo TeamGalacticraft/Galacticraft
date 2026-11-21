@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 @Environment(EnvType.CLIENT)
-public abstract class MinecraftClientMixin {
+abstract class MinecraftClientMixin {
     @Shadow
     public abstract SoundManager getSoundManager();
 

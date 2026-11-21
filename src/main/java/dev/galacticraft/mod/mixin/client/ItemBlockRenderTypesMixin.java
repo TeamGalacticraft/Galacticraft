@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.At;
  * which would make the stained glass opaque. They are drawn like blocks in the translucent layer there.
  */
 @Mixin(ItemBlockRenderTypes.class)
-public abstract class ItemBlockRenderTypesMixin {
+abstract class ItemBlockRenderTypesMixin {
     @ModifyExpressionValue(method = "getRenderType(Lnet/minecraft/world/level/block/state/BlockState;Z)Lnet/minecraft/client/renderer/RenderType;", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/ItemBlockRenderTypes;getChunkRenderType(Lnet/minecraft/world/level/block/state/BlockState;)Lnet/minecraft/client/renderer/RenderType;"))
     private static RenderType galacticraft$drawGlassPipesTranslucent(RenderType renderType, BlockState state) {
         return renderType == RenderType.tripwire() && state.getBlock() instanceof GlassFluidPipeBlock ? RenderType.translucent() : renderType;

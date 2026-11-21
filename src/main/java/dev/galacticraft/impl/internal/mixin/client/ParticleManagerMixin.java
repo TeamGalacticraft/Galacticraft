@@ -37,7 +37,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ParticleEngine.class)
 @Environment(EnvType.CLIENT)
-public abstract class ParticleManagerMixin {
+abstract class ParticleManagerMixin {
     @Shadow
     protected ClientLevel level;
 

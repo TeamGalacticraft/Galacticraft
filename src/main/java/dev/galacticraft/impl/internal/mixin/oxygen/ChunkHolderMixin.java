@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.List;
 
 @Mixin(ChunkHolder.class)
-public abstract class ChunkHolderMixin {
+abstract class ChunkHolderMixin {
     @Shadow
     protected abstract void broadcast(List<ServerPlayer> list, Packet<?> packet);
 

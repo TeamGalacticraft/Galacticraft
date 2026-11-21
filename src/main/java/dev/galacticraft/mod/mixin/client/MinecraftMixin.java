@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
-public class MinecraftMixin {
+abstract class MinecraftMixin {
     @Inject(method = "<init>", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/social/PlayerSocialManager;<init>(Lnet/minecraft/client/Minecraft;Lcom/mojang/authlib/minecraft/UserApiService;)V"))
     private void initGcResources(GameConfig gameConfig, CallbackInfo ci) {
         GalacticraftClient.init();

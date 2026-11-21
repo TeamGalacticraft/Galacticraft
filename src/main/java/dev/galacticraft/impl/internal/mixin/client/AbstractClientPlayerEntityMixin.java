@@ -54,7 +54,7 @@ import java.util.Set;
 import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 @Mixin(AbstractClientPlayer.class)
-public abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor, GearInventoryProvider {
+abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor, GearInventoryProvider {
     @Shadow
     @Final
     public ClientLevel clientLevel;

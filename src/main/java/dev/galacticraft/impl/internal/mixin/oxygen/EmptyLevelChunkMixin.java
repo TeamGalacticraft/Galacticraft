@@ -28,7 +28,7 @@ import net.minecraft.world.level.chunk.EmptyLevelChunk;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(EmptyLevelChunk.class)
-public abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
+abstract class EmptyLevelChunkMixin implements ChunkOxygenSyncer, ChunkOxygenAccessor {
     @Override
     public boolean galacticraft$isInverted(int x, int y, int z) {
         return false;

@@ -55,7 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
-public abstract class LocalPlayerMixin extends AbstractClientPlayer {
+abstract class LocalPlayerMixin extends AbstractClientPlayer {
     @Shadow
     @Final
     protected Minecraft minecraft;

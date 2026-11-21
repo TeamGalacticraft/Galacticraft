@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FlowingFluid.class)
-public abstract class FlowingFluidMixin {
+abstract class FlowingFluidMixin {
     @WrapOperation(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;setBlock(Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;I)Z", ordinal = 1))
     private boolean onScheduledTickFill_gc(Level level, BlockPos blockPos, BlockState blockState, int flags, Operation<Boolean> original) {
         var blockState1 = level.getBlockState(blockPos);

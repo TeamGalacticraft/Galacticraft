@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.Optional;
 
 @Mixin(ChangeOverTimeBlock.class)
-public interface ChangeOverTimeBlockMixin {
+interface ChangeOverTimeBlockMixin {
     @WrapMethod(method = "getNextState")
     private Optional<BlockState> gc$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
         if (this instanceof WeatheringCopper) {

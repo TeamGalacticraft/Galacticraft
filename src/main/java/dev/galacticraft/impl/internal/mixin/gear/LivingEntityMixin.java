@@ -78,7 +78,7 @@ import java.util.Collection;
 import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.SUFFOCATION;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
+abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
 
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")

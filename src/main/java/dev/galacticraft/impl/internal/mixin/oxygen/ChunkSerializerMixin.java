@@ -42,7 +42,7 @@ import java.util.BitSet;
 import java.util.Objects;
 
 @Mixin(ChunkSerializer.class)
-public abstract class ChunkSerializerMixin {
+abstract class ChunkSerializerMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getStates()Lnet/minecraft/world/level/chunk/PalettedContainer;"))
     private static void galacticraft_serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, @Local(ordinal = 1) CompoundTag nbtCompound2, @Local LevelChunkSection section) {
         var accessor = (ChunkSectionOxygenAccessor) section;

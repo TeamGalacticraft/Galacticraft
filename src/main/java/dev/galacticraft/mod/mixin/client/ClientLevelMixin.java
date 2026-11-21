@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientLevelMixin implements GCLevelAccessor {
+abstract class ClientLevelMixin implements GCLevelAccessor {
     private final @Unique FootprintManager footprintManager = new FootprintManager();
 
     @Inject(method = "tickTime", at = @At("RETURN"))

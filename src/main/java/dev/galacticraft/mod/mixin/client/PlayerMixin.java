@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
 @Environment(EnvType.CLIENT)
-public abstract class PlayerMixin implements PetInventoryOpener {
+abstract class PlayerMixin implements PetInventoryOpener {
     @Override
     public void galacticraft$sendOpenPetInventory(int petId) {
         ClientPlayNetworking.send(new OpenPetInventoryPayload(petId));

@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.ModifyArgs;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 @Mixin(CapeLayer.class)
-public class CapeLayerMixin {
+abstract class CapeLayerMixin {
     @ModifyArgs(method = "render(Lcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;ILnet/minecraft/client/player/AbstractClientPlayer;FFFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;clamp(FFF)F", ordinal = 2))
     private void galacticraft$restrictCapeWithOxygenTanks(Args args, @Local(argsOnly = true) AbstractClientPlayer player) {
         Container inv = player.galacticraft$getOxygenTanks();

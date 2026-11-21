@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(LevelTimeAccess.class)
-public interface LevelTimeAccessMixin extends LevelTimeAccess {
+interface LevelTimeAccessMixin extends LevelTimeAccess {
     @Shadow
     long dayTime();
 

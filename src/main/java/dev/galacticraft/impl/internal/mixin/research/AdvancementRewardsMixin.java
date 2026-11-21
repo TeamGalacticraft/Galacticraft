@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 @Mixin(AdvancementRewards.class)
-public abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
+abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     @Unique
     @NotNull
     private ResourceLocation @Nullable [] rocketPartRecipes = null;

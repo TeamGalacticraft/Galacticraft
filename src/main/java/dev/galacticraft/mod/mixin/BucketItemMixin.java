@@ -54,7 +54,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BucketItem.class)
-public abstract class BucketItemMixin extends Item {
+abstract class BucketItemMixin extends Item {
     @Shadow
     @Final
     private Fluid content;

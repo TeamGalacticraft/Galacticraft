@@ -63,7 +63,7 @@ import java.util.concurrent.Executor;
 import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
+abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     @Shadow
     @Final
     @Mutable

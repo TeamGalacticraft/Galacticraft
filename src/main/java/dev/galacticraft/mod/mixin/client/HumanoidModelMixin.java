@@ -43,7 +43,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(HumanoidModel.class)
-public abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T> {
+abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T> {
     @Shadow
     @Final
     public ModelPart head;

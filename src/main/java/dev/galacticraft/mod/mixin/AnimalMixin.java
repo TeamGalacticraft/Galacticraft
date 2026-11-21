@@ -36,7 +36,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Animal.class)
-public abstract class AnimalMixin extends LivingEntity {
+abstract class AnimalMixin extends LivingEntity {
 
     AnimalMixin() {
         super(null, null);

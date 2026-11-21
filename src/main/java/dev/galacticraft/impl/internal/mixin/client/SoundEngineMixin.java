@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(SoundEngine.class)
 @Environment(EnvType.CLIENT)
-public abstract class SoundEngineMixin implements SoundSystemAccessor {
+abstract class SoundEngineMixin implements SoundSystemAccessor {
     @Shadow
     @Final
     private Listener listener;

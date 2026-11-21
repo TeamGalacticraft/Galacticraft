@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
-public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
+abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
     AbstractFurnaceBlockEntityMixin() {
         super(null, null, null);
     }

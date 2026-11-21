@@ -38,7 +38,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.BitSet;
 
 @Mixin(LevelChunkSection.class)
-public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
+abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
     private @Unique
     @Nullable BitSet bits = null;
 

@@ -55,7 +55,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin extends Player implements GearInventoryProvider {
+abstract class ServerPlayerMixin extends Player implements GearInventoryProvider {
     @Shadow
     public abstract ServerLevel serverLevel();
 

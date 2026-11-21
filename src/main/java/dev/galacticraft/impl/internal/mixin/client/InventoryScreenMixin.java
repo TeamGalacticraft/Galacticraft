@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(InventoryScreen.class)
-public class InventoryScreenMixin {
+abstract class InventoryScreenMixin {
     @ModifyExpressionValue(
         method = {"init", "containerTick"},
         at = @At(

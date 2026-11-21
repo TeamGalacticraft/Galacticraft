@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ScreenEffectRenderer.class)
-public class ScreenEffectRendererMixin {
+abstract class ScreenEffectRendererMixin {
     @Unique
     private static final ResourceLocation OIL_LOCATION = Constant.id("textures/misc/crude_oil_overlay.png");
     @Unique

@@ -49,7 +49,7 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Mixin(BlockModel.class)
-public abstract class BlockModelMixin implements BlockModelAccessor {
+abstract class BlockModelMixin implements BlockModelAccessor {
     @Shadow
     public abstract Material getMaterial(String spriteName);
 

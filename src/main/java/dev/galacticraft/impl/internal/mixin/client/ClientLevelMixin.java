@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientLevel.class)
-public abstract class ClientLevelMixin extends Level {
+abstract class ClientLevelMixin extends Level {
     @Shadow
     @Final
     private DimensionSpecialEffects effects;

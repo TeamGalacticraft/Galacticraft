@@ -58,7 +58,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin implements SatelliteAccessor {
+abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Unique
     private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
 

@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CakeBlock.class)
-public abstract class CakeBlockMixin extends Block {
+abstract class CakeBlockMixin extends Block {
     public CakeBlockMixin(Properties settings) {
         super(settings);
     }

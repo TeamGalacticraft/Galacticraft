@@ -39,7 +39,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Spider.class)
-public abstract class SpiderMixin extends LivingEntity {
+abstract class SpiderMixin extends LivingEntity {
 
     SpiderMixin() {
         super(null, null);

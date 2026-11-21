@@ -38,7 +38,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 
 @Mixin(ProtoChunk.class)
-public abstract class ProtoChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+abstract class ProtoChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
     private ProtoChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {
         super(pos, upgradeData, heightLimitView, biome, inhabitedTime, sectionArrayInitializer, blendingData);
     }

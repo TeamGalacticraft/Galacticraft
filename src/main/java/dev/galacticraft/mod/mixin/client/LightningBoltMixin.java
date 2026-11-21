@@ -35,7 +35,7 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LightningBolt.class)
 @Environment(EnvType.CLIENT)
-public abstract class LightningBoltMixin {
+abstract class LightningBoltMixin {
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z"))
     private boolean gc$cancelThunder(boolean original) {
         Player player = Minecraft.getInstance().player;

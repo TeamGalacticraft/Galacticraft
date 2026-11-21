@@ -41,7 +41,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.Collection;
 
 @Mixin(PlayerList.class)
-public abstract class PlayerListMixin {
+abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
     private void syncGalacticraftData(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         Container inventory = player.galacticraft$getGearInv();

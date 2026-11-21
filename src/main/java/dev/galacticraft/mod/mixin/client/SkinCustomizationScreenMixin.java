@@ -46,7 +46,7 @@ import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
 @Mixin(SkinCustomizationScreen.class)
-public abstract class SkinCustomizationScreenMixin extends Screen {
+abstract class SkinCustomizationScreenMixin extends Screen {
     protected SkinCustomizationScreenMixin(Component title) { super(title); }
 
     @Inject(

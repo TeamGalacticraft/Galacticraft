@@ -42,7 +42,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin {
+abstract class LivingEntityRendererMixin {
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {

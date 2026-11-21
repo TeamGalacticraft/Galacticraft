@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FireworkRocketItem.class)
-public abstract class FireworkRocketItemMixin extends Item {
+abstract class FireworkRocketItemMixin extends Item {
     FireworkRocketItemMixin() {
         super(null);
     }
