@@ -39,6 +39,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -52,6 +53,7 @@ public abstract class BlockModelMixin implements BlockModelAccessor {
     @Shadow
     public abstract Material getMaterial(String spriteName);
 
+    @Unique
     private UnbakedObjModel galacticraft$obj;
 
     @Override

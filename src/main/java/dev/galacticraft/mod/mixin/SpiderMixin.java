@@ -53,7 +53,7 @@ public abstract class SpiderMixin extends LivingEntity {
         return original;
     }
 
-    @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;getRandom()Lnet/minecraft/util/RandomSource;"), cancellable = true)
+    @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;getRandom()Lnet/minecraft/util/RandomSource;"))
     private void finalizeEvolvedSpiderJockeySpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if ((Spider) (Object) this instanceof EvolvedSpiderEntity spider) {
             EvolvedSkeletonEntity skeleton;

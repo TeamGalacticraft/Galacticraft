@@ -48,7 +48,7 @@ public abstract class AbstractContainerScreenMixin extends Screen {
     }
 
     @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderItem(Lnet/minecraft/world/item/ItemStack;III)V"))
-    private void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z, Operation<Void> original, @Local Slot slot) {
+    private void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z, Operation<Void> original, @Local(argsOnly = true) Slot slot) {
         if (slot instanceof MirroredSlot) {
             DrawableUtil.renderItemMirrored(graphics, itemStack, x, y, z);
         } else {
