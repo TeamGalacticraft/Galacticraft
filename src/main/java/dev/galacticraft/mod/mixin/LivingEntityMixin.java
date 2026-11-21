@@ -64,8 +64,11 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
 abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+    @Shadow
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Optional<BlockPos> lastClimbablePos;
+
     @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
 
     @Unique
@@ -203,7 +206,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockState blockState = this.level().getBlockState(blockPos.relative(direction));
             if (blockState.is(GCBlocks.TIN_LADDER) && blockState.getValue(TinLadderBlock.FACING) == direction) {
-                ((LivingEntityAccessor) this).setLastClimbablePos(Optional.of(blockPos));
+                this.lastClimbablePos = Optional.of(blockPos);
                 cir.setReturnValue(true);
                 return;
             }
