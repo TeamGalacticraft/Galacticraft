@@ -42,9 +42,14 @@
       "dev.galacticraft.mod.gametest.machine.OxygenSealerTestSuite",
       "dev.galacticraft.mod.gametest.machine.RefineryTestSuite",
       "dev.galacticraft.mod.gametest.ExtinguishableTestSuite",
+      "dev.galacticraft.mod.gametest.MagneticCraftingTableTestSuite",
       "dev.galacticraft.mod.gametest.PipeTestSuite",
-      "dev.galacticraft.mod.gametest.WireTestSuite"
+      "dev.galacticraft.mod.gametest.WireTestSuite",
+      "dev.galacticraft.mod.gametest.RocketTestSuite"
     ]
+  },
+  "custom": {
+    "galacticraft:fluidloggable": ["galacticraft-test:test_fluid", 5, "Not a fluid!"]
   },
   "mixins": [],
   "depends": {

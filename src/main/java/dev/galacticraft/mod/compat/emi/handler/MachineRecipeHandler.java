@@ -31,7 +31,7 @@ import net.minecraft.world.inventory.Slot;
 import java.util.ArrayList;
 import java.util.List;
 
-public class MachineRecipeHandler<T extends MachineMenu> implements StandardRecipeHandler<T> {
+public class MachineRecipeHandler<T extends MachineMenu<?>> implements StandardRecipeHandler<T> {
     private final EmiRecipeCategory category;
     private final int[] slotIds;
     private final int invStart;

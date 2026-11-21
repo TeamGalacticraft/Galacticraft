@@ -27,39 +27,41 @@ import dev.emi.emi.api.EmiRegistry;
 import dev.emi.emi.api.recipe.EmiCraftingRecipe;
 import dev.emi.emi.api.recipe.EmiRecipeCategory;
 import dev.emi.emi.api.recipe.EmiWorldInteractionRecipe;
+import dev.emi.emi.api.recipe.VanillaEmiRecipeCategories;
 import dev.emi.emi.api.render.EmiRenderable;
 import dev.emi.emi.api.render.EmiTexture;
 import dev.emi.emi.api.stack.EmiIngredient;
 import dev.emi.emi.api.stack.EmiStack;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.api.block.entity.PipeColor;
+import dev.galacticraft.mod.compat.PipeColorVariants;
 import dev.galacticraft.mod.compat.emi.handler.MachineRecipeHandler;
+import dev.galacticraft.mod.compat.emi.handler.MagneticCraftingRecipeHandler;
 import dev.galacticraft.mod.compat.emi.handler.RocketRecipeHandler;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.CannedFoodItem;
-import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.EmergencyKitItem;
+import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.content.item.ParachuteItem;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
 import dev.galacticraft.mod.recipe.FabricationRecipe;
-import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.recipe.GCRecipes;
+import dev.galacticraft.mod.recipe.RocketRecipe;
 import dev.galacticraft.mod.screen.GCMenuTypes;
 import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
 import net.fabricmc.fabric.api.transfer.v1.fluid.FluidConstants;
-import net.minecraft.core.Holder;
-import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.DyeColor;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.Items;
 import net.minecraft.world.item.crafting.*;
+import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.material.Fluids;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 import java.util.stream.IntStream;
 
@@ -73,6 +75,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     public static final EmiStack ELECTRIC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_FURNACE);
     public static final EmiStack ELECTRIC_ARC_FURNACE = EmiStack.of(GCBlocks.ELECTRIC_ARC_FURNACE);
     public static final EmiStack FOOD_CANNER = EmiStack.of(GCBlocks.FOOD_CANNER);
+    public static final EmiStack MAGNETIC_CRAFTING_TABLE = EmiStack.of(GCBlocks.MAGNETIC_CRAFTING_TABLE);
     public static final EmiStack ROCKET_WORKBENCH = EmiStack.of(GCBlocks.ROCKET_WORKBENCH);
 
     // Simplified Icons
@@ -109,7 +112,13 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
         registry.addWorkstation(ELECTRIC_SMELTING, ELECTRIC_FURNACE);
         registry.addWorkstation(ELECTRIC_BLASTING, ELECTRIC_ARC_FURNACE);
         registry.addWorkstation(CANNING, FOOD_CANNER);
+        registry.addWorkstation(VanillaEmiRecipeCategories.CRAFTING, MAGNETIC_CRAFTING_TABLE);
         registry.addWorkstation(ROCKET, ROCKET_WORKBENCH);
+
+        // EMI can't group stacks, so only show the clear variant of each colored pipe in the index
+        for (Block block : PipeColorVariants.colored()) {
+            registry.removeEmiStacks(EmiStack.of(block));
+        }
 
         registry.addRecipeHandler(GCMenuTypes.CIRCUIT_FABRICATOR,
                 new MachineRecipeHandler<>(
@@ -168,6 +177,7 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                         FoodCannerBlockEntity.OUTPUT_SLOT + 1
                 )
         );
+        registry.addRecipeHandler(GCMenuTypes.MAGNETIC_CRAFTING_TABLE, new MagneticCraftingRecipeHandler());
         registry.addRecipeHandler(GCMenuTypes.ROCKET_WORKBENCH, new RocketRecipeHandler(ROCKET));
 
         RecipeManager manager = registry.getRecipeManager();
@@ -228,26 +238,8 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
     }
 
     private static void addWorldInteraction(EmiRegistry registry) {
-        List<ItemStack> glassFluidPipes = new ArrayList<>();
-        for (Holder<Item> holder : BuiltInRegistries.ITEM.getTagOrEmpty(GCItemTags.GLASS_FLUID_PIPES)) {
-            glassFluidPipes.add(new ItemStack(holder));
-        }
-
-        ResourceLocation pipeInteraction = Constant.id("/world/glass_fluid_pipe/");
-
-        GCBlocks.GLASS_FLUID_PIPES.forEach((pipeColor, block) -> {
-                Ingredient dye = pipeColor.dye();
-                Item pipe = block.asItem();
-                registry.addRecipe(
-                        EmiWorldInteractionRecipe.builder()
-                                .id(pipeInteraction.withSuffix(pipeColor.getName()))
-                                .leftInput(EmiIngredient.of(Ingredient.of(glassFluidPipes.stream().filter(stack -> !stack.is(pipe)))))
-                                .rightInput(dye != null ? EmiIngredient.of(dye) : EmiStack.of(Items.WET_SPONGE), dye == null)
-                                .output(EmiStack.of(pipe))
-                                .supportsRecipeTree(false)
-                                .build()
-                );
-        });
+        addPipeDyeing(registry, "glass_fluid_pipe", GCBlocks.GLASS_FLUID_PIPES);
+        addPipeDyeing(registry, "sealable_fluid_pipe", GCBlocks.SEALABLE_FLUID_PIPES);
 
         registry.addRecipe(
                 EmiWorldInteractionRecipe.builder()
@@ -259,5 +251,25 @@ public class GalacticraftEmiPlugin implements EmiPlugin {
                         .supportsRecipeTree(false)
                         .build()
         );
+    }
+
+    /**
+     * Shows dyeing a pipe of any color with a dye, and washing it back to clear with a wet sponge.
+     */
+    private static void addPipeDyeing(EmiRegistry registry, String name, Map<PipeColor, Block> pipes) {
+        ResourceLocation pipeInteraction = Constant.id("/world/" + name + "/");
+        pipes.forEach((pipeColor, block) -> {
+            Ingredient dye = pipeColor.dye();
+            Item pipe = block.asItem();
+            registry.addRecipe(
+                    EmiWorldInteractionRecipe.builder()
+                            .id(pipeInteraction.withSuffix(pipeColor.getName()))
+                            .leftInput(EmiIngredient.of(Ingredient.of(pipes.values().stream().filter(other -> other != block).map(ItemStack::new))))
+                            .rightInput(dye != null ? EmiIngredient.of(dye) : EmiStack.of(Items.WET_SPONGE), dye == null)
+                            .output(EmiStack.of(pipe))
+                            .supportsRecipeTree(false)
+                            .build()
+            );
+        });
     }
 }

@@ -116,7 +116,7 @@ public class DefaultRocketCategory implements DisplayCategory<DefaultRocketDispl
         final Point outputPoint = new Point(startPoint.x + OUTPUT_X, startPoint.y + OUTPUT_Y);
         widgets.add(Widgets.createTexturedWidget(SCREEN_TEXTURE, outputPoint.x - OUTPUT_X_OFFSET, outputPoint.y - OUTPUT_Y_OFFSET, OUTPUT_U, OUTPUT_V, OUTPUT_WIDTH, OUTPUT_HEIGHT));
         widgets.add(Widgets.createSlotBase(new Rectangle(outputPoint.x - 4, outputPoint.y - 4, OUTPUT_INNER_WIDTH, OUTPUT_INNER_HEIGHT)));
-        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().get(0)));
+        widgets.add(Widgets.createSlot(outputPoint).disableBackground().markOutput().entries(recipeDisplay.getOutputEntries().getFirst()));
 
         widgets.add(new RocketPreviewWidget(startPoint, ROCKET_ENTITY));
         return widgets;

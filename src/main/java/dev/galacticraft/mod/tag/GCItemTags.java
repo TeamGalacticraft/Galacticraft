@@ -49,6 +49,8 @@ public class GCItemTags {
 
     public static final TagKey<Item> GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes");
     public static final TagKey<Item> STAINED_GLASS_FLUID_PIPES = galacticraftTag("glass_fluid_pipes/stained");
+    public static final TagKey<Item> SEALABLE_FLUID_PIPES = galacticraftTag("sealable_fluid_pipes");
+    public static final TagKey<Item> STAINED_SEALABLE_FLUID_PIPES = galacticraftTag("sealable_fluid_pipes/stained");
 
     public static final TagKey<Item> FLAGS = galacticraftTag("flags");
 

@@ -43,6 +43,7 @@ public class DefaultShapedCompressingDisplay implements DefaultCompressingDispla
         this.processingTime = processingTime;
     }
 
+    @SuppressWarnings("UnstableApiUsage")
     public DefaultShapedCompressingDisplay(RecipeHolder<ShapedCompressingRecipe> recipe) {
         this.input = recipe.value().getIngredients().stream().map(EntryIngredients::ofIngredient).toList();
         ItemStack stack = recipe.value().getResultItem(BasicDisplay.registryAccess());

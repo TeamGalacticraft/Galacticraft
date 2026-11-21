@@ -30,8 +30,10 @@ import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.block.entity.networked.GlassFluidPipeBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -44,7 +46,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable {
     public GlassFluidPipeBlock(Properties settings, PipeColor color) {
-        super(settings, color);
+        super(FluidLoggable.withFluidLight(settings), color);
 
         BlockState state = this.getStateDefinition().any();
         state = FluidLoggable.applyDefaultState(state);
@@ -77,6 +79,12 @@ public class GlassFluidPipeBlock extends FluidPipeBlock implements FluidLoggable
     @Override
     protected @NotNull FluidState getFluidState(BlockState state) {
         return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
     }
 
     @Override

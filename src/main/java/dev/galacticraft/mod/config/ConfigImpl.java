@@ -98,6 +98,10 @@ public class ConfigImpl implements Config {
     private boolean hideAlphaWarning = false;
     private boolean enableGcHouston = true;
     private boolean enableCreativeGearInv = true;
+    private boolean disableSpaceRaceScreenAnimation = false;
+    private boolean disableRocketShake = false;
+    private boolean disableInvalidOxygenFlashing = false;
+    private boolean disableCelestialMapAnimations = false;
     private boolean enableSpaceStationCreation = true;
 
     private List<String> disabledCelestialScreenDimensions = new ArrayList<>();
@@ -463,6 +467,41 @@ public class ConfigImpl implements Config {
     }
 
     @Override
+    public boolean disableSpaceRaceScreenAnimation() {
+        return this.disableSpaceRaceScreenAnimation;
+    }
+
+    public void setDisableSpaceRaceScreenAnimation(boolean disableSpaceRaceScreenAnimation) {
+        this.disableSpaceRaceScreenAnimation = disableSpaceRaceScreenAnimation;
+    }
+
+    @Override
+    public boolean disableRocketShake() {
+        return this.disableRocketShake;
+    }
+
+    public void setDisableRocketShake(boolean disableRocketShake) {
+        this.disableRocketShake = disableRocketShake;
+    }
+
+    @Override
+    public boolean disableInvalidOxygenFlashing() {
+        return this.disableInvalidOxygenFlashing;
+    }
+
+    public void setDisableInvalidOxygenFlashing(boolean disableInvalidOxygenFlashing) {
+        this.disableInvalidOxygenFlashing = disableInvalidOxygenFlashing;
+    }
+
+    @Override
+    public boolean disableCelestialMapAnimations() {
+        return this.disableCelestialMapAnimations;
+    }
+
+    public void setDisableCelestialMapAnimations(boolean disableCelestialMapAnimations) {
+        this.disableCelestialMapAnimations = disableCelestialMapAnimations;
+    }
+
     public boolean enableSpaceStationCreation() {
         return this.enableSpaceStationCreation;
     }
@@ -1069,6 +1108,50 @@ public class ConfigImpl implements Config {
                     .setDefaultValue(1)
                     .build()
             );
+
+            SubCategoryBuilder reducedMotions = ConfigEntryBuilder.create().startSubCategory(Component.translatable(Translations.Config.REDUCED_MOTIONS));
+
+            reducedMotions.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.DISABLE_SPACE_RACE_SCREEN_ANIMATION),
+                    config.disableSpaceRaceScreenAnimation())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_SPACE_RACE_SCREEN_ANIMATION))
+                    .setSaveConsumer(config::setDisableSpaceRaceScreenAnimation)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
+            reducedMotions.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.DISABLE_ROCKET_SHAKE),
+                    config.disableRocketShake())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_ROCKET_SHAKE))
+                    .setSaveConsumer(config::setDisableRocketShake)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
+            reducedMotions.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.DISABLE_INVALID_OXYGEN_FLASHING),
+                    config.disableInvalidOxygenFlashing())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_INVALID_OXYGEN_FLASHING))
+                    .setSaveConsumer(config::setDisableInvalidOxygenFlashing)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
+            reducedMotions.add(new BooleanToggleBuilder(
+                    Component.translatable(Translations.Config.RESET),
+                    label.apply(Translations.Config.DISABLE_CELESTIAL_MAP_ANIMATIONS),
+                    config.disableCelestialMapAnimations())
+                    .setTooltip(tooltipSingular.apply(Translations.Config.DISABLE_CELESTIAL_MAP_ANIMATIONS))
+                    .setSaveConsumer(config::setDisableCelestialMapAnimations)
+                    .setDefaultValue(false)
+                    .build()
+            );
+
+            b.getOrCreateCategory(Component.translatable(Translations.Config.ACCESSIBILITY)).addEntry(reducedMotions.build());
 
             return b.build();
         }

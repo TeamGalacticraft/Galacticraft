@@ -176,14 +176,17 @@ public class GCModelProvider extends FabricModelProvider {
 //        //todo: generate these
         generator.skipAutoItemBlock(GCBlocks.ALUMINUM_WIRE);
         generator.skipAutoItemBlock(GCBlocks.HEAVY_ALUMINUM_WIRE);
-        generator.skipAutoItemBlock(GCBlocks.MOON_CHEESE_WHEEL);
 //        generator.delegateItemModel(GCBlocks.ALUMINUM_WIRE, ModelLocationUtils.getModelLocation(GCBlocks.ALUMINUM_WIRE, "_inventory"));
 //        generator.delegateItemModel(GCBlocks.GLASS_FLUID_PIPE, ModelLocationUtils.getModelLocation(GCBlocks.GLASS_FLUID_PIPE, "_inventory"));
 
         generator.createTrivialCube(GCBlocks.SEALABLE_ALUMINUM_WIRE);
         generator.createTrivialCube(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE);
+        for (Block pipe : GCBlocks.SEALABLE_FLUID_PIPES.values()) {
+            generator.createTrivialCube(pipe);
+        }
         createLaunchPadBlock(GCBlocks.FUELING_PAD, generator);
         createLaunchPadBlock(GCBlocks.ROCKET_LAUNCH_PAD, generator);
+        this.createMagneticCraftingTable(generator);
         this.createRocketWorkbench(generator);
         generator.createNonTemplateModelBlock(GCBlocks.FALLEN_METEOR);
 
@@ -447,6 +450,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(false, true, Variant.variant().with(VariantProperties.MODEL, cooling))
                 .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
         ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createCompressor(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex, TextureProvider litTex) {
@@ -460,6 +464,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(false, true, Variant.variant().with(VariantProperties.MODEL, lit))
                 .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
         ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createFuelLoader(BlockModelGenerators generator, Block block) {
@@ -472,8 +477,9 @@ public class GCModelProvider extends FabricModelProvider {
             );
         }
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(FuelLoaderBlock.AMOUNT)
-                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
-                )));
+                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i]))
+        ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createFoodCanner(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider canTex, TextureProvider emptyTex) {
@@ -487,6 +493,7 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(false, true, Variant.variant().with(VariantProperties.MODEL, can))
                 .select(true, true, Variant.variant().with(VariantProperties.MODEL, active))
         ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createResourceStorageBlock(BlockModelGenerators generator, Block block) {
@@ -499,8 +506,9 @@ public class GCModelProvider extends FabricModelProvider {
             );
         }
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(ResourceStorageBlock.AMOUNT)
-                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i])
-                )));
+                .generate(i -> Variant.variant().with(VariantProperties.MODEL, ids[i]))
+        ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createActiveMachine(BlockModelGenerators generator, Block block, TextureProvider activeTex, TextureProvider inactiveTex) {
@@ -508,8 +516,9 @@ public class GCModelProvider extends FabricModelProvider {
         ResourceLocation active = MachineModelGenerator.generateMachineModel(generator, MachineModelGenerator.getMachineModelLocation(block, "_active"), activeTex);
 
         generator.blockStateOutput.accept(MultiVariantGenerator.multiVariant(block).with(PropertyDispatch.property(MachineBlock.ACTIVE)
-                .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive)
-                )));
+                .generate(i -> Variant.variant().with(VariantProperties.MODEL, i ? active : inactive))
+        ));
+        generator.skipAutoItemBlock(block);
     }
 
     private static void createWalkway(BlockModelGenerators generator, Block walkway, ResourceLocation pipeModel, ResourceLocation centerModel) {
@@ -582,6 +591,16 @@ public class GCModelProvider extends FabricModelProvider {
         var block = GCBlocks.AIR_LOCK_CONTROLLER;
         var textureMapping = TextureMapping.column(TextureMapping.getBlockTexture(block), TextureMapping.getBlockTexture(GCBlocks.AIR_LOCK_FRAME));
         generator.createTrivialBlock(block, textureMapping, ModelTemplates.CUBE_COLUMN);
+    }
+
+    private void createMagneticCraftingTable(BlockModelGenerators generator) {
+        var block = GCBlocks.MAGNETIC_CRAFTING_TABLE;
+        ResourceLocation model = ModelTemplates.CUBE_BOTTOM_TOP.create(block, TextureMapping.cubeBottomTop(block), generator.modelOutput);
+
+        generator.blockStateOutput.accept(
+                MultiVariantGenerator.multiVariant(block, Variant.variant().with(VariantProperties.MODEL, model))
+                        .with(generator.createColumnWithFacing())
+        );
     }
 
     private void createRocketWorkbench(BlockModelGenerators generator) {
@@ -905,7 +924,9 @@ public class GCModelProvider extends FabricModelProvider {
                 .select(3, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice3")))
                 .select(4, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice4")))
                 .select(5, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice5")))
-                .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice6")))));
+                .select(6, Variant.variant().with(VariantProperties.MODEL, ModelLocationUtils.getModelLocation(block, "_slice6")))
+        ));
+        generators.skipAutoItemBlock(block);
     }
 
     private void createCandleCheeseWheel(BlockModelGenerators generators, Block candle, Block cheese) {
@@ -1070,8 +1091,8 @@ public class GCModelProvider extends FabricModelProvider {
         generator.createSimpleFlatItemModel(vine, "_middle");
     }
 
-    private static java.util.List<Variant> rotatedVariants(ResourceLocation model) {
-        return java.util.List.of(
+    private static List<Variant> rotatedVariants(ResourceLocation model) {
+        return List.of(
                 Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true),
                 Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R90),
                 Variant.variant().with(VariantProperties.MODEL, model).with(VariantProperties.UV_LOCK, true).with(VariantProperties.Y_ROT, VariantProperties.Rotation.R180),

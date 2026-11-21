@@ -29,11 +29,13 @@ import dev.galacticraft.mod.client.gui.screen.ingame.CompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricArcFurnaceScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricCompressorScreen;
 import dev.galacticraft.mod.client.gui.screen.ingame.ElectricFurnaceScreen;
+import dev.galacticraft.mod.compat.PipeColorVariants;
 import dev.galacticraft.mod.compat.jei.category.*;
 import dev.galacticraft.mod.compat.jei.handlers.*;
 import dev.galacticraft.mod.compat.jei.replacers.*;
 import dev.galacticraft.mod.compat.jei.subtypes.*;
 import dev.galacticraft.mod.content.GCBlocks;
+import dev.galacticraft.mod.content.block.entity.MagneticCraftingTableBlockEntity;
 import dev.galacticraft.mod.content.block.entity.machine.*;
 import dev.galacticraft.mod.content.item.GCItems;
 import dev.galacticraft.mod.recipe.CompressingRecipe;
@@ -42,9 +44,11 @@ import dev.galacticraft.mod.recipe.GCRecipes;
 import dev.galacticraft.mod.screen.CompressorMenu;
 import dev.galacticraft.mod.screen.FoodCannerMenu;
 import dev.galacticraft.mod.screen.GCMenuTypes;
+import dev.galacticraft.mod.screen.MagneticCraftingMenu;
 import mezz.jei.api.IModPlugin;
 import mezz.jei.api.JeiPlugin;
 import mezz.jei.api.constants.RecipeTypes;
+import mezz.jei.api.constants.VanillaTypes;
 import mezz.jei.api.helpers.IGuiHelper;
 import mezz.jei.api.helpers.IJeiHelpers;
 import mezz.jei.api.registration.IAdvancedRegistration;
@@ -54,6 +58,7 @@ import mezz.jei.api.registration.IRecipeCategoryRegistration;
 import mezz.jei.api.registration.IRecipeRegistration;
 import mezz.jei.api.registration.IRecipeTransferRegistration;
 import mezz.jei.api.registration.ISubtypeRegistration;
+import mezz.jei.api.runtime.IJeiRuntime;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.item.ItemStack;
@@ -139,6 +144,8 @@ public class GCJEIPlugin implements IModPlugin {
                 ElectricArcFurnaceBlockEntity.INPUT_SLOT, 1, ElectricArcFurnaceBlockEntity.OUTPUT_SLOTS + ElectricArcFurnaceBlockEntity.OUTPUT_LENGTH, 36);
         registration.addRecipeTransferHandler(FoodCannerMenu.class, null, GCJEIRecipeTypes.CANNING,
                 FoodCannerBlockEntity.INPUT_SLOT, FoodCannerBlockEntity.INPUT_LENGTH, FoodCannerBlockEntity.OUTPUT_SLOT + 1, 36);
+        registration.addRecipeTransferHandler(MagneticCraftingMenu.class, GCMenuTypes.MAGNETIC_CRAFTING_TABLE, RecipeTypes.CRAFTING,
+                MagneticCraftingMenu.CRAFT_SLOT_START, MagneticCraftingTableBlockEntity.CONTAINER_SIZE, MagneticCraftingMenu.INV_SLOT_START, 36);
         registration.addRecipeTransferHandler(new RocketRecipeTransferHandler(registration.getTransferHelper()), GCJEIRecipeTypes.ROCKET);
     }
 
@@ -152,6 +159,7 @@ public class GCJEIPlugin implements IModPlugin {
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.ELECTRIC_FURNACE), GCJEIRecipeTypes.ELECTRIC_SMELTING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.COMPRESSOR), RecipeTypes.FUELING);
         registration.addRecipeCatalyst(new ItemStack(GCBlocks.FOOD_CANNER), GCJEIRecipeTypes.CANNING);
+        registration.addRecipeCatalyst(new ItemStack(GCBlocks.MAGNETIC_CRAFTING_TABLE), RecipeTypes.CRAFTING);
     }
 
     @Override
@@ -187,6 +195,13 @@ public class GCJEIPlugin implements IModPlugin {
         var craftingRecipes = manager.getAllRecipesFor(RecipeType.CRAFTING);
         var specialCraftingRecipes = replaceSpecialCraftingRecipes(craftingRecipes, jeiHelpers);
         registration.addRecipes(RecipeTypes.CRAFTING, specialCraftingRecipes);
+    }
+
+    @Override
+    public void onRuntimeAvailable(IJeiRuntime jeiRuntime) {
+        // JEI can't group ingredients, so only show the clear variant of each colored pipe in the ingredient list
+        jeiRuntime.getIngredientManager().removeIngredientsAtRuntime(VanillaTypes.ITEM_STACK,
+                PipeColorVariants.colored().stream().map(ItemStack::new).toList());
     }
 
     @Override

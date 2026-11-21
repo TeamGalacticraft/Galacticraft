@@ -37,6 +37,7 @@ import dev.galacticraft.api.universe.galaxy.Galaxy;
 import dev.galacticraft.api.universe.position.CelestialPosition;
 import dev.galacticraft.impl.universe.celestialbody.type.SatelliteType;
 import dev.galacticraft.impl.universe.position.config.SatelliteConfig;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.client.util.Graphics;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -166,13 +167,20 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
     protected float getZoomAdvanced() {
         float scale;
-        if (this.ticksTotalF < 30.0F) {
+        if (!Galacticraft.CONFIG.disableCelestialMapAnimations() && this.ticksTotalF < 30.0F) {
             scale = Mth.clamp(this.ticksTotalF / 30.0F, 0.0F, 1.0F);
             return Mth.lerp(Mth.sqrt(scale), -0.75F, 0.0F);
         }
 
         if (this.selectedBody == null || this.selectionState != EnumSelection.ZOOMED) {
             if (this.doneZooming) return this.zoom;
+
+            if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                this.zoom = this.preSelectZoom;
+                this.ticksSinceUnselectionF = -1.0F;
+                this.doneZooming = true;
+                return this.zoom;
+            }
 
             scale = Mth.lerp(Mth.clamp(this.ticksSinceUnselectionF / 100.0F, 0.0F, 1.0F), this.zoom, this.preSelectZoom);
             if (scale <= this.preSelectZoom + 0.05F) {
@@ -185,6 +193,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         }
 
         if (!this.doneZooming) {
+            if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                this.doneZooming = true;
+                return 12.0F + this.planetZoom;
+            }
+
             scale = Mth.lerp(Mth.clamp((this.ticksSinceSelectionF - 20.0F) / 40.0F, 0.0F, 1.0F), this.zoom, 12.0F);
             if (scale >= 11.95F) {
                 this.doneZooming = true;
@@ -198,6 +211,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     protected Vec2 getTranslationAdvanced(float delta) {
         if (this.selectedBody == null) {
             if (this.ticksSinceUnselectionF > 0.0F) {
+                if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                    this.ticksSinceUnselectionF = 0.0F;
+                    return this.preSelectPosition;
+                }
+
                 float f0 = Mth.clamp(this.ticksSinceUnselectionF / 100.0F, 0.0F, 1.0F);
                 if (f0 >= 0.999999F) {
                     this.ticksSinceUnselectionF = 0.0F;
@@ -223,6 +241,10 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         }
 
         Vector3f celestialBodyPosition = this.getCelestialBodyPosition(this.selectedBody, delta);
+
+        if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+            return new Vec2(celestialBodyPosition.x(), celestialBodyPosition.y());
+        }
 
         return this.lerpVec2(Mth.clamp((this.ticksSinceSelectionF - 18.0F) / 7.5F, 0.0F, 1.0F), this.position, new Vec2(celestialBodyPosition.x(), celestialBodyPosition.y()));
     }
@@ -456,7 +478,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
             float scale = 0.0F;
             int size = 0;
             int color = 0;
-            float colMod = this.getZoomAdvanced() < 4.9F ? (Mth.sin(this.ticksSinceSelectionF * 0.5F) * 0.5F + 0.5F) : 1.0F;
+            float colMod = Galacticraft.CONFIG.disableCelestialMapAnimations() || (this.getZoomAdvanced() >= 4.9F) ? 1.0F : (Mth.sin(this.ticksSinceSelectionF * 0.5F) * 0.5F + 0.5F);
             switch (this.selectionState) {
                 case SELECTED -> {
                     scale = 1.0F / 15.0F;
@@ -464,7 +486,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                     color = FastColor.ARGB32.color((int) (255.0F * colMod), 255, 255, 0);
                 }
                 case ZOOMED -> {
-                    scale = Math.max(0.6F, 15.0F / this.ticksSinceSelectionF) / (this.zoom + 1.0F - this.planetZoom);
+                    if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                        scale = 0.6F / (this.zoom + 1.0F + this.planetZoom);
+                    } else {
+                        scale = Math.max(0.6F, 15.0F / this.ticksSinceSelectionF) / (this.zoom + 1.0F - this.planetZoom);
+                    }
                     size = this.getWidthForCelestialBody(this.selectedBody) * 26;
                     color = FastColor.ARGB32.color((int) (255.0F * colMod), 102, 204, 255);
                 }
@@ -482,14 +508,18 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         }
         assert this.minecraft != null;
         assert this.minecraft.level != null;
-        long time = this.minecraft.level.getGameTime();
-        Vector3f bodyPos = new Vector3f((float) body.position().x(time, delta), (float) body.position().y(time, delta), 0.0F);
+
+        boolean disabled = Galacticraft.CONFIG.disableCelestialMapAnimations();
+        long time = disabled ? 0L : this.minecraft.level.getGameTime();
+        float partialTick = disabled ? 0.0F : delta;
+
+        Vector3f bodyPos = new Vector3f((float) body.position().x(time, partialTick), (float) body.position().y(time, partialTick), 0.0F);
 
         if (body.parent().isPresent()) {
-            bodyPos.add(this.getCelestialBodyPosition(body.parentValue(this.celestialBodies), delta));
+            bodyPos.add(this.getCelestialBodyPosition(body.parentValue(this.celestialBodies), partialTick));
         } else {
             CelestialPosition<?, ?> galaxyPos = body.galaxyValue(this.galaxies, this.celestialBodies).position();
-            bodyPos.add((float) galaxyPos.x(time, delta), (float) galaxyPos.y(time, delta), 0.0F);
+            bodyPos.add((float) galaxyPos.x(time, partialTick), (float) galaxyPos.y(time, partialTick), 0.0F);
         }
         return bodyPos;
     }
@@ -614,13 +644,20 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
 
         if (this.isGrandchildBody(body)) {
             boolean selected = body == this.selectedBody || (body.parentValue(this.celestialBodies) == this.selectedBody && this.selectionState != EnumSelection.SELECTED);
-            boolean ready = this.lastSelectedBody != null || this.ticksSinceSelectionF > 35.0F;
+
+            boolean ready = Galacticraft.CONFIG.disableCelestialMapAnimations() || this.lastSelectedBody != null || this.ticksSinceSelectionF > 35.0F;
+
             boolean isSibling = this.getSiblings(this.selectedBody).contains(body);
-            boolean isPossible = (!this.isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(Objects.requireNonNull(this.minecraft).player))/* || (this.possibleBodies != null && this.possibleBodies.contains(body))*/;
+            boolean isPossible = (!this.isSatellite(body) || ((Satellite) body.type()).ownershipData(body.config()).canAccess(Objects.requireNonNull(this.minecraft).player));
+
             if ((!selected && !isSibling) || !isPossible) {
                 alpha = 0.0F;
             } else if (this.isZoomed() && (!selected || !ready) && !isSibling) {
-                alpha = Mth.clamp((this.ticksSinceSelectionF - 30.0F) / 15.0F, 0.0F, 1.0F);
+                if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                    alpha = 1.0F;
+                } else {
+                    alpha = Mth.clamp((this.ticksSinceSelectionF - 30.0F) / 15.0F, 0.0F, 1.0F);
+                }
             }
         } else {
             boolean isSelected = this.selectedBody == body;
@@ -631,7 +668,11 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
                 if (this.lastSelectedBody != null || isChildSelected) {
                     alpha = 0.0F;
                 } else {
-                    alpha = 1.0F - Math.min(this.ticksSinceSelectionF / 25.0F, 1.0F);
+                    if (Galacticraft.CONFIG.disableCelestialMapAnimations()) {
+                        alpha = 0.0F;
+                    } else {
+                        alpha = 1.0F - Math.min(this.ticksSinceSelectionF / 25.0F, 1.0F);
+                    }
                 }
             }
         }

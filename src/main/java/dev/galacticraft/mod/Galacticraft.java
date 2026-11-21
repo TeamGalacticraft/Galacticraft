@@ -23,8 +23,8 @@
 package dev.galacticraft.mod;
 
 import dev.galacticraft.api.component.GCItemSubPredicates;
-import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.api.config.Config;
+import dev.galacticraft.mod.attachments.GCAttachments;
 import dev.galacticraft.mod.command.GCCommands;
 import dev.galacticraft.mod.config.ConfigImpl;
 import dev.galacticraft.mod.content.*;

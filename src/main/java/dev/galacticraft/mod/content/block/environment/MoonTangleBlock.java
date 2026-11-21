@@ -22,6 +22,7 @@
 
 package dev.galacticraft.mod.content.block.environment;
 
+import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.content.item.GCItems;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
@@ -49,11 +50,8 @@ import net.minecraft.world.phys.shapes.BooleanOp;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
-
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-
-import dev.galacticraft.mod.content.GCBlocks;
 
 public class MoonTangleBlock extends Block implements BonemealableBlock {
     public enum Part implements StringRepresentable {

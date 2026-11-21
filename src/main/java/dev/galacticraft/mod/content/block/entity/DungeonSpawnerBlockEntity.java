@@ -23,11 +23,11 @@
 package dev.galacticraft.mod.content.block.entity;
 
 import dev.galacticraft.mod.content.GCBlockEntityTypes;
+import dev.galacticraft.mod.content.entity.boss.AbstractBossEntity;
 import dev.galacticraft.mod.content.entity.evolved.EvolvedCreeperEntity;
 import dev.galacticraft.mod.content.entity.evolved.EvolvedSkeletonEntity;
 import dev.galacticraft.mod.content.entity.evolved.EvolvedSpiderEntity;
 import dev.galacticraft.mod.content.entity.evolved.EvolvedZombieEntity;
-import dev.galacticraft.mod.content.entity.boss.AbstractBossEntity;
 import net.minecraft.Util;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.HolderLookup;

@@ -28,7 +28,9 @@ import dev.galacticraft.mod.content.GCBlockEntityTypes;
 import dev.galacticraft.mod.content.block.entity.networked.WireBlockEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.item.context.BlockPlaceContext;
+import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockState;
@@ -39,7 +41,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AluminumWireBlock extends WireBlock implements FluidLoggable {
     public AluminumWireBlock(Properties settings) {
-        super(0.125f, settings);
+        super(0.125f, FluidLoggable.withFluidLight(settings));
 
         BlockState defaultState = this.getStateDefinition().any();
         defaultState = FluidLoggable.applyDefaultState(defaultState);
@@ -71,5 +73,11 @@ public class AluminumWireBlock extends WireBlock implements FluidLoggable {
     @Override
     protected @NotNull FluidState getFluidState(BlockState state) {
         return FluidLoggable.createFluidState(state);
+    }
+
+    @Override
+    protected void entityInside(BlockState state, Level level, BlockPos pos, Entity entity) {
+        super.entityInside(state, level, pos, entity);
+        FluidLoggable.entityInside(state, level, pos, entity);
     }
 }

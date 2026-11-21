@@ -27,6 +27,7 @@ import dev.galacticraft.api.gas.Gases;
 import dev.galacticraft.machinelib.api.util.StorageHelper;
 import dev.galacticraft.machinelib.client.api.util.GraphicsUtil;
 import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.entity.vehicle.LanderEntity;
 import dev.galacticraft.mod.util.Translations;
 import net.fabricmc.fabric.api.transfer.v1.context.ContainerItemContext;
@@ -96,7 +97,12 @@ public class OxygenOverlay {
                     if (mc.player.isAlive()) {
                         graphics.pose().translate(-offset, 0.0F, 0.0F);
 
-                        final int alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
+                        int alpha;
+                        if (Galacticraft.CONFIG.disableInvalidOxygenFlashing()) {
+                            alpha = 205;
+                        } else {
+                            alpha = (int) (200 * (Math.sin(tickCount) * 0.5F + 0.5F)) + 5;
+                        }
                         graphics.drawString(mc.font, INVALID_SETUP, width / 4 - mc.font.width(INVALID_SETUP) / 2, height / 8,
                                 FastColor.ARGB32.color(alpha, alpha, alpha, alpha), false);
                     }

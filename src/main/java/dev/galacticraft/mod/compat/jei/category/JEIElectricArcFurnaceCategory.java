@@ -22,6 +22,8 @@
 
 package dev.galacticraft.mod.compat.jei.category;
 
+import dev.galacticraft.mod.Constant;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.compat.jei.GCJEIRecipeTypes;
 import dev.galacticraft.mod.content.GCBlocks;
 import dev.galacticraft.mod.util.Translations.RecipeCategory;
@@ -91,14 +93,19 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
         builder.addOutputSlot(OUTPUT_X_1 - JEI_X, OUTPUT_Y_1 - JEI_Y)
                 .setOutputSlotBackground()
                 .addItemStack(recipe.getResultItem(null)); //fixme
-        builder.addOutputSlot(OUTPUT_X_2 - JEI_X, OUTPUT_Y_2 - JEI_Y)
+        float bonusChance = Galacticraft.CONFIG.electricArcFurnaceBonusChance();
+        var bonusSlot = builder.addOutputSlot(OUTPUT_X_2 - JEI_X, OUTPUT_Y_2 - JEI_Y)
                 .setOutputSlotBackground();
+        if (bonusChance > 0.0F) {
+            bonusSlot.addItemStack(recipe.getResultItem(null).copyWithCount(1))
+                    .addRichTooltipCallback((view, tooltip) -> tooltip.add(Component.translatable(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, Math.round(bonusChance * 100)).setStyle(Constant.Text.GOLD_STYLE)));
+        }
     }
 
     @Override
     @SuppressWarnings("removal") // Not enough of a difference to warrant swapping yet
     public void createRecipeExtras(IRecipeExtrasBuilder builder, BlastingRecipe recipe, IFocusGroup focuses) {
-        int cookingTime = recipe.getCookingTime();
+        int cookingTime = (int) (recipe.getCookingTime() / 1.5F);
         if (cookingTime > 0) {
             Component timeString = Component.translatable(RecipeCategory.JEI_TIME, cookingTime / 20);
             builder.addText(timeString, PROGRESS_WIDTH, 10)
@@ -111,15 +118,15 @@ public class JEIElectricArcFurnaceCategory implements IRecipeCategory<BlastingRe
                     .setPosition(PROGRESS_BAR_X, PROGRESS_BAR_Y);
         }
 
-        // float experience = recipe.getExperience();
-        // if (experience > 0.0F) {
-        //     Component xpString = Component.translatable(RecipeCategory.JEI_XP, experience);
-        //     builder.addText(xpString, PROGRESS_WIDTH + 14, 10)
-        //             .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
-        //             .setTextAlignment(HorizontalAlignment.CENTER)
-        //             .setTextAlignment(VerticalAlignment.TOP)
-        //             .setColor(0xFF808080);
-        // }
+        float experience = recipe.getExperience();
+        if (experience > 0.0F) {
+            Component xpString = Component.translatable(RecipeCategory.JEI_XP, experience);
+            builder.addText(xpString, PROGRESS_WIDTH + 14, 10)
+                    .setPosition(PROGRESS_BAR_X, 0, PROGRESS_WIDTH, this.getHeight(), HorizontalAlignment.CENTER, VerticalAlignment.TOP)
+                    .setTextAlignment(HorizontalAlignment.CENTER)
+                    .setTextAlignment(VerticalAlignment.TOP)
+                    .setColor(0xFF808080);
+        }
     }
 
     @Override

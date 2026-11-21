@@ -99,7 +99,7 @@ This can be found as the `Data Generation` configuration in your IDE, or run fro
 #### License Headers
 If you've added any new classes, be sure to check that they have the standard [license header][license header] applied.
 
-If any files are missing the header, you can add it by executing the following Gradle task, which also removes unused imports and replaces tabs with spaces:
+If any files are missing the header, you can add it by executing the following Gradle task, which also removes unused imports, reorders imports and replaces tabs with spaces:
 ```shell
 ./gradlew spotlessApply
 ```

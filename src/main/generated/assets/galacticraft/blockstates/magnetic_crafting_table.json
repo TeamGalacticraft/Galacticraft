@@ -1,0 +1,30 @@
+{
+  "variants": {
+    "facing=down": {
+      "model": "galacticraft:block/magnetic_crafting_table",
+      "x": 180
+    },
+    "facing=east": {
+      "model": "galacticraft:block/magnetic_crafting_table",
+      "x": 90,
+      "y": 90
+    },
+    "facing=north": {
+      "model": "galacticraft:block/magnetic_crafting_table",
+      "x": 90
+    },
+    "facing=south": {
+      "model": "galacticraft:block/magnetic_crafting_table",
+      "x": 90,
+      "y": 180
+    },
+    "facing=up": {
+      "model": "galacticraft:block/magnetic_crafting_table"
+    },
+    "facing=west": {
+      "model": "galacticraft:block/magnetic_crafting_table",
+      "x": 90,
+      "y": 270
+    }
+  }
+}

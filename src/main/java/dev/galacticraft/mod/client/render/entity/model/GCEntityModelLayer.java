@@ -25,8 +25,8 @@ package dev.galacticraft.mod.client.render.entity.model;
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.client.model.entity.*;
 import dev.galacticraft.mod.client.render.block.entity.FlagBlockEntityRenderer;
-import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
 import dev.galacticraft.mod.client.render.block.entity.RocketWorkbenchBlockEntityRenderer;
+import dev.galacticraft.mod.client.render.block.entity.SolarPanelBlockEntityRenderer;
 import net.fabricmc.fabric.api.client.rendering.v1.EntityModelLayerRegistry;
 import net.minecraft.client.model.geom.ModelLayerLocation;
 

@@ -32,8 +32,8 @@ import dev.galacticraft.mod.content.GCRocketParts;
 import dev.galacticraft.mod.content.GCStats;
 import dev.galacticraft.mod.content.entity.damage.GCDamageTypes;
 import dev.galacticraft.mod.content.item.GCItems;
-import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.tag.GCFluidTags;
+import dev.galacticraft.mod.tag.GCItemTags;
 import dev.galacticraft.mod.world.biome.GCBiomes;
 import net.fabricmc.fabric.api.datagen.v1.FabricDataOutput;
 import net.minecraft.core.HolderLookup;
@@ -96,6 +96,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.add(RecipeCategory.ELECTRIC_ARC_FURNACE, "Blasting (Electric)");
         this.add(RecipeCategory.CANNING, "Canning");
         this.add(RecipeCategory.ROCKET_WORKBENCH, "Rocket Crafting");
+        this.add(RecipeCategory.ELECTRIC_ARC_FURNACE_BONUS_CHANCE, "%s%% Chance");
     }
 
     protected void generateBlockTranslations() {
@@ -242,9 +243,14 @@ public class GCTranslationProvider extends TranslationProvider {
         this.block(GCBlocks.HEAVY_ALUMINUM_WIRE, "Heavy Aluminum Wire");
         this.block(GCBlocks.SEALABLE_ALUMINUM_WIRE, "Sealable Aluminum Wire");
         this.block(GCBlocks.HEAVY_SEALABLE_ALUMINUM_WIRE, "Heavy Sealable Aluminum Wire");
+        for (Map.Entry<PipeColor, Block> entry : GCBlocks.SEALABLE_FLUID_PIPES.entrySet()) {
+            PipeColor color = entry.getKey();
+            this.block(entry.getValue(), color == PipeColor.CLEAR ? "Sealable Fluid Pipe" : TranslationProvider.normalizeName(color.getName()) + " Sealable Fluid Pipe");
+        }
         this.block(GCBlocks.GLASS_FLUID_PIPE, "Glass Fluid Pipe");
         this.block(GCBlocks.FUELING_PAD, "Fueling Pad");
         this.block(GCBlocks.ROCKET_LAUNCH_PAD, "Rocket Launch Pad");
+        this.block(GCBlocks.MAGNETIC_CRAFTING_TABLE, "Magnetic Crafting Table");
         this.block(GCBlocks.ROCKET_WORKBENCH, "Rocket Workbench");
         this.block(GCBlocks.PARACHEST, "Parachest");
 
@@ -656,6 +662,8 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.tag(GCItemTags.GLASS_FLUID_PIPES, "Glass Fluid Pipes");
         this.tag(GCItemTags.STAINED_GLASS_FLUID_PIPES, "Stained Glass Fluid Pipes");
+        this.tag(GCItemTags.SEALABLE_FLUID_PIPES, "Sealable Fluid Pipes");
+        this.tag(GCItemTags.STAINED_SEALABLE_FLUID_PIPES, "Stained Sealable Fluid Pipes");
 
         this.tag(GCItemTags.FLAGS, "Flags");
 
@@ -1020,6 +1028,7 @@ public class GCTranslationProvider extends TranslationProvider {
         this.blockDesc(GCBlocks.FUEL_LOADER, "Loads fuel into a rocket placed on an adjacent launch pad.");
         this.blockDesc(GCBlocks.GLOWSTONE_LANTERN, "Provides light, even in areas without oxygen.");
         this.blockDesc(GCBlocks.GLOWSTONE_TORCH, "Provides light, even in areas without oxygen.");
+        this.blockDesc(GCBlocks.MAGNETIC_CRAFTING_TABLE, "Holds items in its crafting grid when closed. Hoppers can insert ingredients.");
         this.blockDesc(GCBlocks.MOON_CHEESE_WHEEL, "Can be placed and eaten like a cake. Made with all-natural Moon cheese.");
         this.blockDesc(GCBlocks.OXYGEN_BUBBLE_DISTRIBUTOR, "Creates a breathable bubble of oxygen in a small area.");
         this.blockDesc(GCBlocks.OXYGEN_DECOMPRESSOR, "Empties oxygen tanks.");
@@ -1124,6 +1133,13 @@ public class GCTranslationProvider extends TranslationProvider {
 
         this.add(Config.SERVER, "Server");
         this.add(Config.SERVER_SIDE_DIMENSION, "Server Side Dimension Config");
+
+        this.add(Config.ACCESSIBILITY, "Accessibility");
+        this.add(Config.REDUCED_MOTIONS, "Reduced Motions");
+        this.add(Config.DISABLE_SPACE_RACE_SCREEN_ANIMATION, "Disable Space Race Screen Animation");
+        this.add(Config.DISABLE_ROCKET_SHAKE, "Disable Rocket Shake");
+        this.add(Config.DISABLE_INVALID_OXYGEN_FLASHING, "Disable Invalid Oxygen Setup Flashing Text");
+        this.add(Config.DISABLE_CELESTIAL_MAP_ANIMATIONS, "Disable Celestial Map Animations");
 
         this.add(Keybindings.ROCKET_INVENTORY, "Open Rocket Inventory");
         this.add(Keybindings.OPEN_CELESTIAL_SCREEN, "Open Celestial Map");
@@ -1314,6 +1330,7 @@ public class GCTranslationProvider extends TranslationProvider {
     protected void generateStatsTranslations() {
         this.stat(GCStats.CLEAN_PARACHUTE, "Parachutes Cleaned");
         this.stat(GCStats.OPEN_PARACHEST, "Parachests Opened");
+        this.stat(GCStats.INTERACT_WITH_MAGNETIC_CRAFTING_TABLE, "Interactions with Magnetic Crafting Table");
         this.stat(GCStats.INTERACT_WITH_ROCKET_WORKBENCH, "Interactions with Rocket Workbench");
         this.stat(GCStats.LAUNCH_ROCKET, "Rockets Launched");
         this.stat(GCStats.CRASH_LANDING, "Crash Landings");

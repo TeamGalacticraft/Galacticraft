@@ -28,6 +28,7 @@
     "client.ClientLevelMixin",
     "client.ClientPlayNetworkHandlerMixin",
     "client.FogRendererMixin",
+    "client.InventoryScreenMixin",
     "client.LevelRendererMixin",
     "client.MinecraftClientMixin",
     "client.ParticleAccessor",

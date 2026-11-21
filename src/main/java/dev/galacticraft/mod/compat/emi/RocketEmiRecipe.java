@@ -91,7 +91,7 @@ public class RocketEmiRecipe extends BasicEmiRecipe {
         // Note that output slots need to call `recipeContext` to inform EMI about their recipe context
         // This includes being able to resolve recipe trees, favorite stacks with recipe context, and more
         widgets.addTexture(SCREEN_TEXTURE, OUTPUT_BORDER_X, OUTPUT_BORDER_Y, OUTPUT_WIDTH, OUTPUT_HEIGHT, OUTPUT_U, OUTPUT_V);
-        widgets.addSlot(this.outputs.get(0), OUTPUT_SLOT_X, OUTPUT_SLOT_Y).drawBack(false).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_SLOT_X, OUTPUT_SLOT_Y).drawBack(false).recipeContext(this);
 
         widgets.addTexture(SCREEN_TEXTURE, PREVIEW_BACKGROUND_X, PREVIEW_BACKGROUND_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT, PREVIEW_U, PREVIEW_V);
         widgets.add(new RocketPreviewEmiWidget(new Bounds(PREVIEW_ROCKET_X, PREVIEW_ROCKET_Y, PREVIEW_WIDTH, PREVIEW_HEIGHT), ROCKET_ENTITY));

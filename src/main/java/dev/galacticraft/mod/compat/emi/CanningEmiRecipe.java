@@ -64,13 +64,13 @@ public class CanningEmiRecipe extends BasicEmiRecipe {
             widgets.addSlot(i < n ? this.inputs.get(i + 1) : EMPTY, GRID_X + 18 * (i % 4) - RECIPE_VIEWER_X - 1, GRID_Y + 18 * (i / 4) - RECIPE_VIEWER_Y - 1);
         }
 
-        widgets.addSlot(this.inputs.get(0), INPUT_X - RECIPE_VIEWER_X - 1, INPUT_Y - RECIPE_VIEWER_Y - 1);
+        widgets.addSlot(this.inputs.getFirst(), INPUT_X - RECIPE_VIEWER_X - 1, INPUT_Y - RECIPE_VIEWER_Y - 1);
         widgets.add(progressWidget.getSlotWidget(
-                this.outputs.get(0),
+                this.outputs.getFirst(),
                 EmiStack.of(GCItems.CANNED_FOOD.getDefaultInstance()),
                 CURRENT_X - RECIPE_VIEWER_X - 1,
                 CURRENT_Y - RECIPE_VIEWER_Y - 1
         ));
-        widgets.addSlot(this.outputs.get(0), OUTPUT_X - RECIPE_VIEWER_X - 1, OUTPUT_Y - RECIPE_VIEWER_Y - 1).recipeContext(this);
+        widgets.addSlot(this.outputs.getFirst(), OUTPUT_X - RECIPE_VIEWER_X - 1, OUTPUT_Y - RECIPE_VIEWER_Y - 1).recipeContext(this);
     }
 }

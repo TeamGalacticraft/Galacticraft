@@ -26,6 +26,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.math.Axis;
+import dev.galacticraft.mod.Galacticraft;
 import dev.galacticraft.mod.content.entity.vehicle.RocketEntity;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.renderer.entity.LivingEntityRenderer;
@@ -79,7 +80,7 @@ public abstract class LivingEntityRendererMixin {
             if (Minecraft.getInstance().options.getCameraType().isFirstPerson()) {
                 amplitude *= 0.5D;
             }
-            if (amplitude > 0.0D) {
+            if (amplitude > 0.0D && !Galacticraft.CONFIG.disableRocketShake()) {
                 pose.translate((entity.level().random.nextDouble() - 0.5D) * amplitude, 0, (entity.level().random.nextDouble() - 0.5D) * amplitude);
             }
 

@@ -38,7 +38,7 @@ import java.util.Optional;
 /**
  * Sulfuric acid fluid
  */
-public abstract class SulfuricAcidFluid extends BasicFluid {
+public abstract class SulfuricAcidFluid extends GCFluid {
     /**
      * Sulfuric acid fluid
      */

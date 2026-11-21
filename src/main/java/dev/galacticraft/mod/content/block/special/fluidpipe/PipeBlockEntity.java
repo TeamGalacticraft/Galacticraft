@@ -48,7 +48,7 @@ import java.util.Iterator;
 
 public abstract class PipeBlockEntity extends BlockEntity implements FluidPipe, Storage<FluidVariant> {
     private @Nullable PipeNetwork network = null;
-    private final long maxTransferRate; // 1 bucket per second
+    private final long maxTransferRate;
     private final boolean[] connections = new boolean[6];
 
     public PipeBlockEntity(BlockEntityType<? extends PipeBlockEntity> type, BlockPos pos, BlockState state, long maxTransferRate) {

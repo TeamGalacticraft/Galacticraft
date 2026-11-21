@@ -62,7 +62,11 @@ public abstract class FluidPipeBlock extends PipeShapedBlock<PipeBlockEntity> im
     public final PipeColor color;
 
     public FluidPipeBlock(Properties settings, PipeColor color) {
-        super(0.125f, settings.pushReaction(PushReaction.BLOCK));
+        this(0.125f, settings, color);
+    }
+
+    protected FluidPipeBlock(float radius, Properties settings, PipeColor color) {
+        super(radius, settings.pushReaction(PushReaction.BLOCK));
         this.color = color;
     }
 

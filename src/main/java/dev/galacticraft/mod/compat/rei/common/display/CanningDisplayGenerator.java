@@ -62,6 +62,6 @@ public class CanningDisplayGenerator implements DynamicDisplayGenerator<DefaultC
     }
 
     private Optional<List<DefaultCanningDisplay>> defaultCanningDisplays() {
-        return Optional.of(CannedFoodItem.getDefaultCannedFoods().stream().map(stack -> new DefaultCanningDisplay(stack)).toList());
+        return Optional.of(CannedFoodItem.getDefaultCannedFoods().stream().map(DefaultCanningDisplay::new).toList());
     }
 }

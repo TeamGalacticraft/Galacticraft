@@ -41,8 +41,8 @@ import net.minecraft.client.renderer.RenderType;
 import net.minecraft.client.renderer.blockentity.BlockEntityRenderer;
 import net.minecraft.client.renderer.blockentity.BlockEntityRendererProvider;
 import net.minecraft.core.Direction;
-import net.minecraft.util.Mth;
 import net.minecraft.resources.ResourceLocation;
+import net.minecraft.util.Mth;
 
 @Environment(EnvType.CLIENT)
 public class RocketWorkbenchBlockEntityRenderer implements BlockEntityRenderer<RocketWorkbenchBlockEntity> {

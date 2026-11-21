@@ -26,6 +26,7 @@ import dev.galacticraft.mod.compat.waila.config.Options;
 import mcp.mobius.waila.api.ICommonRegistrar;
 import mcp.mobius.waila.api.IWailaCommonPlugin;
 
+@SuppressWarnings("unused")
 public class GalacticraftWailaCommonPlugin implements IWailaCommonPlugin {
     @Override
     public void register(ICommonRegistrar registrar) {

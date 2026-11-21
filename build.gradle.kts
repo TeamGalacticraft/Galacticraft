@@ -338,8 +338,9 @@ spotless {
     java {
         licenseHeader(processLicenseHeader(rootProject.file("LICENSE")))
         leadingTabsToSpaces()
-        removeUnusedImports()
         trimTrailingWhitespace()
+        removeUnusedImports()
+        importOrder("", "java", "\\#")
     }
 }
 
