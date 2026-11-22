@@ -187,7 +187,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
         if (CannedFoodItem.isCannedFoodItem(itemStack) && entity instanceof Player player) {
             List<ItemStack> items = CannedFoodItem.getItemsToBeConsumed(itemStack, player);
             if (!items.isEmpty()) {
-                double scale = n * Mth.invSqrt(items.stream().mapToInt(stack -> stack.getCount()).sum());
+                double scale = n * Mth.invSqrt(items.stream().mapToInt(ItemStack::getCount).sum());
                 for (ItemStack stack : items) {
                     original.call(entity, stack, (int) Math.ceil(scale * stack.getCount()));
                 }
