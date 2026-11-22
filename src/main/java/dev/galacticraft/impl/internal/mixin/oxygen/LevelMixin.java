@@ -38,7 +38,6 @@ import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
 import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
-import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -54,10 +53,6 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
 
     @Shadow
     public abstract @NotNull LevelChunk getChunk(int i, int j);
-
-    @Shadow
-    @Final
-    private ResourceKey<Level> dimension;
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {

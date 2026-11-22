@@ -58,10 +58,6 @@ abstract class GameRendererMixin implements GameRendererAccessor {
     private float zoomY;
 
     @Shadow
-    @Final
-    private Camera mainCamera;
-
-    @Shadow
     protected abstract double getFov(Camera camera, float f, boolean bl);
 
     @Shadow

@@ -52,6 +52,7 @@ import net.minecraft.world.level.dimension.LevelStem;
 import net.minecraft.world.level.storage.LevelStorageSource;
 import net.minecraft.world.level.storage.ServerLevelData;
 import net.minecraft.world.level.storage.WritableLevelData;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -70,10 +71,7 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     private List<CustomSpawner> customSpawners;
 
     @Shadow
-    public abstract ServerLevel getLevel();
-
-    @Shadow
-    public abstract MinecraftServer getServer();
+    public abstract @NotNull MinecraftServer getServer();
 
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
 

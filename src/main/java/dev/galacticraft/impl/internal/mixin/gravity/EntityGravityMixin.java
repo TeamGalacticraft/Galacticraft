@@ -34,9 +34,6 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(Entity.class)
 abstract class EntityGravityMixin {
     @Shadow
-    protected abstract double getDefaultGravity();
-
-    @Shadow
     private Level level;
 
     @ModifyExpressionValue(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))

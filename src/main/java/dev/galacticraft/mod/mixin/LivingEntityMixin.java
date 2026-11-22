@@ -69,8 +69,6 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
     private Optional<BlockPos> lastClimbablePos;
 
-    @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
-
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")
     private static final EntityDataAccessor<Boolean> IS_IN_CRYO_SLEEP_ID = SynchedEntityData.defineId(
