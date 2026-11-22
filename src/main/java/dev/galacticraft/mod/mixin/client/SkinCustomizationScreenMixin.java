@@ -56,10 +56,7 @@ abstract class SkinCustomizationScreenMixin extends Screen {
     private void gc$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
         CapesClientRole.ensureLoadedAsync();
         if (!CapesClientRole.isEligibleClient()) return;
-        if (list.isEmpty()) return;
-
-        AbstractWidget last = list.get(list.size() - 1);
-        if (!(last instanceof CycleButton<?> cb)) return;
+        if (list.isEmpty() || !(list.getLast() instanceof CycleButton<?> cb)) return;
 
         String label = cb.getMessage().getString().toLowerCase(Locale.ROOT);
         if (!label.contains("cape")) return;

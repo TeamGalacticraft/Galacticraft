@@ -81,7 +81,7 @@ abstract class GameRendererMixin implements GameRendererAccessor {
 
         PoseStack poseStack = new PoseStack();
         this.bobHurt(poseStack, camera.getPartialTickTime());
-        if (this.minecraft.options.bobView().get().booleanValue()) {
+        if (this.minecraft.options.bobView().get()) {
             this.bobView(poseStack, camera.getPartialTickTime());
         }
         matrix4f.mul(poseStack.last().pose());
