@@ -67,10 +67,10 @@ abstract class CameraMixin {
     @Unique
     private static float sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
-            default -> 0.0F;
             case EAST -> 90.0F;
             case SOUTH -> 180.0F;
             case WEST -> 270.0F;
+            default -> 0.0F;
         };
     }
 

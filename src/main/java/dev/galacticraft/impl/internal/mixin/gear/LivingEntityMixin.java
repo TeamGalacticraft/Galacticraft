@@ -357,14 +357,11 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
 
     @Override
     public String galacticraft$tankSize(int i) {
-        switch (i) {
-            case 0:
-                return this.entityData.get(DATA_TANK_1_SIZE_ID);
-            case 1:
-                return this.entityData.get(DATA_TANK_2_SIZE_ID);
-            default:
-                return "";
-        }
+        return switch (i) {
+            case 0 -> this.entityData.get(DATA_TANK_1_SIZE_ID);
+            case 1 -> this.entityData.get(DATA_TANK_2_SIZE_ID);
+            default -> "";
+        };
     }
 
     @Override
