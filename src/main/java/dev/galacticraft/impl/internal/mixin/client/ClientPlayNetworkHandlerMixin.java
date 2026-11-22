@@ -57,6 +57,7 @@ abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAccessor 
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         ResourceLocation id = satellite.config().getId();
         this.satellites.put(id, satellite);
@@ -69,6 +70,7 @@ abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAccessor 
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$removeSatellite(ResourceLocation id) {
         CelestialBody<SatelliteConfig, SatelliteType> removed = this.satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);

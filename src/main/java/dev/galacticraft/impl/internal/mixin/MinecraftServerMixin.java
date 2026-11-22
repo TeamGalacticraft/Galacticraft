@@ -75,6 +75,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         ResourceLocation id = satellite.config().getId();
         this.satellites.put(id, satellite);
@@ -83,6 +84,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$removeSatellite(ResourceLocation id) {
         this.satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
@@ -90,6 +92,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         ResourceLocation id = satellite.config().getId();
         this.satellites.replace(id, satellite);
