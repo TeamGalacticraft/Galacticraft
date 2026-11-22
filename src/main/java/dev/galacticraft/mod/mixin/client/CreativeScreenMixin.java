@@ -196,11 +196,9 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implem
         }
     }
 
-    @Nullable
     @Unique
-    private Slot gc$findSlot(double x, double y) {
-        for (int i = 0; i < gc$slots.size(); ++i) {
-            Slot slot = gc$slots.get(i);
+    private @Nullable Slot gc$findSlot(double x, double y) {
+        for (Slot slot : gc$slots) {
             if (isHovering(slot.x, slot.y, 16, 16, x, y) && slot.isActive()) {
                 return slot;
             }
@@ -249,8 +247,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implem
             return false;
         }
 
-        for (int i = 0; i < gc$slots.size(); i++) {
-            Slot targetSlot = gc$slots.get(i);
+        for (Slot targetSlot : gc$slots) {
             if (targetSlot.mayPlace(playerSlot.getItem()) && targetSlot.getItem().isEmpty()) {
                 ItemStack newItem = playerSlot.getItem().copy();
                 ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, targetSlot.getContainerSlot(), 1, newItem));
