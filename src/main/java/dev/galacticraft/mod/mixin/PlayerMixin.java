@@ -36,8 +36,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Player.class)
 abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor, PetInventoryOpener {
-
-    PlayerMixin() {
+    @SuppressWarnings("ConstantConditions")
+    private PlayerMixin() {
         super(null, null);
     }
 

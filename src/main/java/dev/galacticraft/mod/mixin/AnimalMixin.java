@@ -37,8 +37,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Animal.class)
 abstract class AnimalMixin extends LivingEntity {
-
-    AnimalMixin() {
+    @SuppressWarnings("ConstantConditions")
+    private AnimalMixin() {
         super(null, null);
     }
 

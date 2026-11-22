@@ -34,7 +34,8 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FireworkRocketItem.class)
 abstract class FireworkRocketItemMixin extends Item {
-    FireworkRocketItemMixin() {
+    @SuppressWarnings("ConstantConditions")
+    private FireworkRocketItemMixin() {
         super(null);
     }
 

@@ -33,21 +33,16 @@ import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.profiling.ProfilerFiller;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
@@ -55,10 +50,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
 abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
+    @SuppressWarnings("ConstantConditions")
+    private ServerLevelMixin() {
+        super(null, null, null, null, null, false, false, 0, 0);
+    }
+
     @Shadow
     @Final
     @Mutable
@@ -68,10 +67,6 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     public abstract @NotNull MinecraftServer getServer();
 
     private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
-
-    protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
-        super(levelData, dimension, registryAccess, dimensionTypeRegistration, profiler, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
-    }
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(CallbackInfo ci, @Local(argsOnly = true) ResourceKey<Level> worldKey) {

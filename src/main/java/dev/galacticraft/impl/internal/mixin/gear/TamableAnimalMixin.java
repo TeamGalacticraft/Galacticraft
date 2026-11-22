@@ -44,15 +44,15 @@ import static dev.galacticraft.mod.content.GCAccessorySlots.*;
 
 @Mixin(TamableAnimal.class)
 abstract class TamableAnimalMixin extends Entity implements GearInventoryProvider, OwnableEntity {
+    @SuppressWarnings("ConstantConditions")
+    private TamableAnimalMixin() {
+        super(null, null);
+    }
 
     private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, PET_THERMAL_SLOT);
     private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT);
-
-    TamableAnimalMixin() {
-        super(null, null);
-    }
 
     @Override
     public SimpleContainer galacticraft$getGearInv() {

@@ -31,7 +31,6 @@ import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
 import net.minecraft.client.renderer.GameRenderer;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.spongepowered.asm.mixin.Final;
@@ -45,6 +44,10 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(AbstractContainerScreen.class)
 abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> extends Screen {
+    private AbstractContainerScreenMixin() {
+        super(null);
+    }
+
     @Shadow
     protected int leftPos;
 
@@ -54,10 +57,6 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     @Shadow
     @Final
     protected T menu;
-
-    protected AbstractContainerScreenMixin(Component component) {
-        super(component);
-    }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
     private void onTabClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {

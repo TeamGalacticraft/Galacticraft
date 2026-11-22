@@ -40,6 +40,11 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(ClientLevel.class)
 abstract class ClientLevelMixin extends Level {
+    @SuppressWarnings("ConstantConditions")
+    private ClientLevelMixin() {
+        super(null, null, null, null, null, false, false, 0, 0);
+    }
+
     @Shadow
     @Final
     private DimensionSpecialEffects effects;
@@ -47,10 +52,6 @@ abstract class ClientLevelMixin extends Level {
     @Shadow
     @Final
     private Minecraft minecraft;
-
-    ClientLevelMixin() {
-        super(null, null, null, null, null, false, false, 0, 0);
-    }
 
     @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
     private Vec3 gc$getDimensionSkyColor(Vec3 original, Vec3 pos, float partialTick) {

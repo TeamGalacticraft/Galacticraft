@@ -55,16 +55,17 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BucketItem.class)
 abstract class BucketItemMixin extends Item {
+    @SuppressWarnings("ConstantConditions")
+    private BucketItemMixin() {
+        super(null);
+    }
+
     @Shadow
     @Final
     private Fluid content;
 
     @Shadow
     protected abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
-
-    BucketItemMixin() {
-        super(null);
-    }
 
     @Inject(method = "emptyContents", cancellable = true, at = @At("HEAD"))
     private void emptyFluidLoggable_gc(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> info) {

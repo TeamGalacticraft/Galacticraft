@@ -35,8 +35,8 @@ import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AbstractHorse.class)
 abstract class AbstractHorseMixin extends LivingEntity {
-
-    AbstractHorseMixin() {
+    @SuppressWarnings("ConstantConditions")
+    private AbstractHorseMixin() {
         super(null, null);
     }
 

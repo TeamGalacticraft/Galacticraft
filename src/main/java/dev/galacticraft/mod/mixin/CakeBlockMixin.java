@@ -42,8 +42,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CakeBlock.class)
 abstract class CakeBlockMixin extends Block {
-    public CakeBlockMixin(Properties settings) {
-        super(settings);
+    @SuppressWarnings("ConstantConditions")
+    private CakeBlockMixin() {
+        super(null);
     }
 
     @Inject(method = "eat", at = @At("HEAD"), cancellable = true)

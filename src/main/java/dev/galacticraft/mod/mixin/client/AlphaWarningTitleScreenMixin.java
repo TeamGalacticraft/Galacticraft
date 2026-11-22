@@ -46,6 +46,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Mixin(TitleScreen.class)
 @Environment(EnvType.CLIENT)
 abstract class AlphaWarningTitleScreenMixin extends Screen {
+    private AlphaWarningTitleScreenMixin() {
+        super(null);
+    }
 
     @Unique
     private static boolean warningHidden = false;
@@ -59,10 +62,6 @@ abstract class AlphaWarningTitleScreenMixin extends Screen {
     private static final Component ALPHA_WARNING_GC_CONTENT2 = Component.translatable(Translations.Ui.ALPHA_WARNING_2);
     @Unique
     private static final Component ALPHA_WARNING_GC_CONTENT3 = Component.translatable(Translations.Ui.ALPHA_WARNING_3);
-
-    protected AlphaWarningTitleScreenMixin(Component title) {
-        super(title);
-    }
 
     @Inject(method = "init()V", at = @At("TAIL"))
     protected void init(CallbackInfo ci) {

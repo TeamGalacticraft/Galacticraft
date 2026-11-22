@@ -40,8 +40,8 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Spider.class)
 abstract class SpiderMixin extends LivingEntity {
-
-    SpiderMixin() {
+    @SuppressWarnings("ConstantConditions")
+    private SpiderMixin() {
         super(null, null);
     }
 

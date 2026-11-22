@@ -23,7 +23,6 @@
 package dev.galacticraft.mod.mixin.client;
 
 import com.llamalad7.mixinextras.injector.ModifyReturnValue;
-import com.mojang.authlib.GameProfile;
 import dev.galacticraft.api.entity.ControllableEntity;
 import dev.galacticraft.api.entity.IgnoreShift;
 import dev.galacticraft.mod.content.entity.vehicle.AbstractLanderEntity;
@@ -36,7 +35,6 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.client.CameraType;
 import net.minecraft.client.Minecraft;
-import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.player.AbstractClientPlayer;
 import net.minecraft.client.player.Input;
 import net.minecraft.client.player.LocalPlayer;
@@ -54,15 +52,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 @Environment(EnvType.CLIENT)
 @Mixin(LocalPlayer.class)
 abstract class LocalPlayerMixin extends AbstractClientPlayer {
+    @SuppressWarnings("ConstantConditions")
+    private LocalPlayerMixin() {
+        super(null, null);
+    }
+
     @Shadow
     @Final
     protected Minecraft minecraft;
     @Shadow
     public Input input;
-
-    public LocalPlayerMixin(ClientLevel clientLevel, GameProfile gameProfile) {
-        super(clientLevel, gameProfile);
-    }
 
     @Inject(method = "aiStep", at = @At("RETURN"))
     private void gcRocketJumpCheck(CallbackInfo ci) {

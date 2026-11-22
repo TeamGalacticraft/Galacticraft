@@ -34,12 +34,11 @@ import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen;
+import net.minecraft.client.gui.screens.inventory.CreativeModeInventoryScreen.ItemPickerMenu;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleContainer;
-import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.ClickType;
 import net.minecraft.world.inventory.Slot;
@@ -58,7 +57,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(CreativeModeInventoryScreen.class)
-abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implements GCCreativeGuiSlots {
+abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPickerMenu> implements GCCreativeGuiSlots {
+    @SuppressWarnings("ConstantConditions")
+    private CreativeScreenMixin() {
+        super(null, null, null);
+    }
 
     @Unique private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 
@@ -83,10 +86,6 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen implem
     @Unique
     private boolean isCreativeGearInvAllowed() {
         return Galacticraft.CONFIG.enableCreativeGearInv();
-    }
-
-    private CreativeScreenMixin(AbstractContainerMenu abstractContainerMenu, Inventory inventory, Component component) {
-        super(null, null, null);
     }
 
     @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"), index = 0)
