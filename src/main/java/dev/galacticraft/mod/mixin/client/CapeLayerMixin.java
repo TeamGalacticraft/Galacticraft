@@ -46,9 +46,9 @@ abstract class CapeLayerMixin {
         boolean tank2 = inv.getItem(1).is(GCItemTags.OXYGEN_TANKS);
         if (tank1 && tank2) {
             args.set(0, 0.0F);
-        } else if (tank2 && !tank1) {
+        } else if (tank2) {
             args.set(1, 0.0F);
-        } else if (tank1 && !tank2) {
+        } else if (tank1) {
             args.set(2, 0.0F);
         }
     }

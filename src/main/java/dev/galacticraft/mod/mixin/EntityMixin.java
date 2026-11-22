@@ -190,9 +190,10 @@ abstract class EntityMixin implements EntityAccessor {
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
     private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
+        //noinspection ConstantConditions
+        if ((Object) this instanceof Player player && player.getAbilities().flying) {
             return;
-        } else if ((Object) this instanceof Player player && player.getAbilities().flying) {
+        } else if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
             return;
         } else if (this.getVehicle() != null) {
             return;

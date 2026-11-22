@@ -49,7 +49,8 @@ abstract class PlayerMixin implements PetInventoryOpener {
     private boolean gc$forceCapeWhenActive(boolean original, PlayerModelPart part) {
         if (part != PlayerModelPart.CAPE) return original;
 
-        if (!(((Object) this) instanceof AbstractClientPlayer clientPlayer)) return original;
+        //noinspection ConstantConditions
+        if (!((Object) this instanceof AbstractClientPlayer clientPlayer)) return original;
 
         CapesClientState.Entry entry = CapesClientState.forPlayer(clientPlayer);
         if (entry == null) return original;
