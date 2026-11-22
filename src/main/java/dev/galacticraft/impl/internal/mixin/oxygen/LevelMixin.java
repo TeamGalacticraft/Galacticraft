@@ -30,13 +30,10 @@ import dev.galacticraft.impl.internal.accessor.InternalLevelOxygenAccessor;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.core.SectionPos;
-import net.minecraft.resources.ResourceKey;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.storage.WritableLevelData;
 import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
@@ -44,8 +41,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-
-import java.util.function.Supplier;
 
 @Mixin(Level.class)
 abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAccessor, LevelAccessor {
@@ -55,9 +50,9 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
     public abstract @NotNull LevelChunk getChunk(int i, int j);
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void initializeOxygenValues(WritableLevelData writableLevelData, ResourceKey<Level> resourceKey, RegistryAccess registryAccess, Holder holder, Supplier supplier, boolean bl, boolean bl2, long l, int i, CallbackInfo ci) {
-        Holder<CelestialBody<?, ?>> holder1 = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
-        this.setDefaultBreathable(holder1 != null ? holder1.value().atmosphere().breathable() : this.breathable);
+    private void initializeOxygenValues(CallbackInfo ci) {
+        Holder<CelestialBody<?, ?>> holder = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
+        this.setDefaultBreathable(holder != null ? holder.value().atmosphere().breathable() : this.breathable);
     }
 
     @Override
