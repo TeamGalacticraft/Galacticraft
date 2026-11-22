@@ -54,7 +54,7 @@ abstract class ChunkSerializerMixin {
     }
 
     @Inject(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;checkConsistencyWithBlocks(Lnet/minecraft/core/SectionPos;Lnet/minecraft/world/level/chunk/LevelChunkSection;)V"))
-    private static void galacticraft_deserializeOxygen(ServerLevel world, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag compoundTag, @Local LevelChunkSection levelChunkSection) {
+    private static void galacticraft_deserializeOxygen(ServerLevel level, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag compoundTag, @Local LevelChunkSection levelChunkSection) {
         CompoundTag apiCompound = compoundTag.getCompound(Constant.Nbt.GC_API);
         if (apiCompound.contains(Constant.Nbt.OXYGEN, Tag.TAG_BYTE_ARRAY)) {
             ((ChunkSectionOxygenAccessor) levelChunkSection).galacticraft$setBits(BitSet.valueOf(apiCompound.getByteArray(Constant.Nbt.OXYGEN)));
