@@ -32,7 +32,7 @@ public interface GearInventoryProvider {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default SimpleContainer galacticraft_createGearInventory() {
+    default SimpleContainer galacticraft$createGearInventory() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 

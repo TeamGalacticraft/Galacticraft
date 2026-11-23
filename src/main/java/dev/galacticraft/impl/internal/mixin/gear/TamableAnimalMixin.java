@@ -49,7 +49,7 @@ abstract class TamableAnimalMixin extends Entity implements GearInventoryProvide
         super(null, null);
     }
 
-    private final @Unique SimpleContainer gearInv = this.galacticraft_createGearInventory();
+    private final @Unique SimpleContainer gearInv = this.galacticraft$createGearInventory();
     private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT);
     private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, PET_THERMAL_SLOT);
     private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT);

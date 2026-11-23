@@ -267,7 +267,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
     }
 
     @Override
-    public SimpleContainer galacticraft_createGearInventory() {
+    public SimpleContainer galacticraft$createGearInventory() {
         SimpleContainer inv = new GearInventory();
         inv.addListener(this::syncGearToClients);
         this.syncGearToClients(inv);
