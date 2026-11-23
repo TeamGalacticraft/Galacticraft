@@ -86,7 +86,7 @@ abstract class AbstractClientPlayerEntityMixin implements ClientResearchAccessor
                 }
             }
 
-            ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
+            ((SoundSystemAccessor) ((SoundManagerAccessor) Minecraft.getInstance().getSoundManager()).galacticraft$getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
         });
         return inv;
     }

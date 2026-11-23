@@ -53,6 +53,6 @@ abstract class MinecraftClientMixin {
             }
         }
 
-        ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
+        ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).galacticraft$getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
     }
 }

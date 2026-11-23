@@ -31,8 +31,8 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 @Mixin(AbstractSkeleton.class)
 public interface AbstractSkeletonEntityAccessor {
     @Accessor("meleeGoal")
-    MeleeAttackGoal getMeleeAttackGoal();
+    MeleeAttackGoal galacticraft$getMeleeAttackGoal();
 
     @Accessor("bowGoal")
-    RangedBowAttackGoal<?> getBowAttackGoal();
+    RangedBowAttackGoal<?> galacticraft$getBowAttackGoal();
 }

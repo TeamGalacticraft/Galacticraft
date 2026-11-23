@@ -51,8 +51,8 @@ public class EvolvedSkeletonEntity extends Skeleton {
 
     @Override
     public void reassessWeaponGoal() {
-        RangedBowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).getBowAttackGoal();
-        MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).getMeleeAttackGoal();
+        RangedBowAttackGoal<?> bowAttackGoal = ((AbstractSkeletonEntityAccessor) this).galacticraft$getBowAttackGoal();
+        MeleeAttackGoal meleeAttackGoal = ((AbstractSkeletonEntityAccessor) this).galacticraft$getMeleeAttackGoal();
         if (this.level() != null && !this.level().isClientSide && bowAttackGoal != null) {
             this.goalSelector.removeGoal(meleeAttackGoal);
             this.goalSelector.removeGoal(bowAttackGoal);

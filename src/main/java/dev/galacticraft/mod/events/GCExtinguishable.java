@@ -130,7 +130,7 @@ public class GCExtinguishable {
         if (context.state().getBlock() instanceof AbstractCandleBlock candle) {
             BlockPos pos = context.pos();
             if (context.level() instanceof ServerLevel level) {
-                ((AbstractCandleBlockInvoker) candle).callGetParticleOffsets(context.state()).forEach(vec3 ->
+                ((AbstractCandleBlockInvoker) candle).galacticraft$getParticleOffsets(context.state()).forEach(vec3 ->
                         level.sendParticles(ParticleTypes.SMOKE, (double) pos.getX() + vec3.x(), (double) pos.getY() + vec3.y(), (double) pos.getZ() + vec3.z(), 0, 0.0D, 0.1D, 0.0D, 0.0D)
                 );
             }

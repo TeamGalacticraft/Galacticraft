@@ -56,7 +56,7 @@ public class PetOxygenTanksRenderLayer<T extends TamableAnimal, M extends Entity
         float y = 0.0F;
         float z = 0.0F;
         if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            this.body = model.callGetBodyParts().iterator().next();
+            this.body = model.galacticraft$getBodyParts().iterator().next();
 
             if (context.getModel() instanceof WolfModel) {
                 y = -4.0F;

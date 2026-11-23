@@ -45,7 +45,7 @@ abstract class ParticleManagerMixin {
     private void galacticraft_overrideGravity(Particle particle, CallbackInfo ci) {
         Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
         if (holder != null) {
-            ((ParticleAccessor) particle).setGravityStrength(((ParticleAccessor) particle).getGravityStrength() * holder.value().gravity());
+            ((ParticleAccessor) particle).galacticraft$setGravityStrength(((ParticleAccessor) particle).galacticraft$getGravityStrength() * holder.value().gravity());
         }
     }
 }

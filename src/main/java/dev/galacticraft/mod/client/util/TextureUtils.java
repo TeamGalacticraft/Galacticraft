@@ -47,7 +47,7 @@ public class TextureUtils {
         for (int y = 0; y < contents.height(); y++) {
             for (int x = 0; x < contents.width(); x++) {
 
-                int rgb = ((SpriteContentAccessor) contents).getOriginalImage().getPixelRGBA(x, y);
+                int rgb = ((SpriteContentAccessor) contents).galacticraft$getOriginalImage().getPixelRGBA(x, y);
                 if (rgb != 0) {
                     int red = rgb & 0xFF;
                     int green = (rgb >> 8) & 0xFF;
