@@ -1,0 +1,90 @@
+<?xml version="1.0"?>
+<!DOCTYPE module PUBLIC "-//Puppy Crawl//DTD Check Configuration 1.3//EN" "http://www.puppycrawl.com/dtds/configuration_1_3.dtd">
+<module name="Checker">
+    <module name="TreeWalker">
+        <!-- Prevent non-private mixin methods -->
+        <module name="MatchXpath">
+            <property name="query" value="
+                //CLASS_DEF[./MODIFIERS/ANNOTATION/IDENT[@text='Mixin']]
+                    //METHOD_DEF[./MODIFIERS/ANNOTATION/
+                        IDENT[
+                            @text='Inject'
+                            or @text='ModifyArg'
+                            or @text='ModifyArgs'
+                            or @text='ModifyExpressionValue'
+                            or @text='ModifyReceiver'
+                            or @text='ModifyReturnValue'
+                            or @text='ModifyVariable'
+                            or @text='Redirect'
+                            or @text='WrapMethod'
+                            or @text='WrapOperation'
+                            or @text='WrapWithCondition'
+                        ]
+                        and
+                        not(.//LITERAL_PRIVATE)
+                    ]
+            "/>
+            <message key="matchxpath.match" value="Mixin methods must be private"/>
+        </module>
+
+        <!-- Prevent non-@Unique fields in Mixin classes -->
+        <module name="MatchXpath">
+            <property name="query" value="
+                //CLASS_DEF[./MODIFIERS/ANNOTATION/IDENT[@text='Mixin']]
+                    //OBJBLOCK/VARIABLE_DEF[
+                        not(
+                            ./MODIFIERS/ANNOTATION/IDENT[
+                                @text='Unique'
+                                or @text='Shadow'
+                            ]
+                        )
+                    ]
+            "/>
+            <message key="matchxpath.match" value="Mixin fields must be annotated with @Unique or @Shadow"/>
+        </module>
+
+        <!-- Prevent non-@Unique methods in Mixin classes -->
+        <!-- All Mixin and MixinExtras annotations must be listed here -->
+        <module name="MatchXpath">
+            <property name="query" value="
+                //CLASS_DEF[./MODIFIERS/ANNOTATION/IDENT[@text='Mixin']]
+                    //METHOD_DEF[
+                        not(
+                            ./MODIFIERS/ANNOTATION/IDENT[
+                                @text='Unique'
+                                or @text='Inject'
+                                or @text='ModifyArg'
+                                or @text='ModifyArgs'
+                                or @text='ModifyExpressionValue'
+                                or @text='ModifyReceiver'
+                                or @text='ModifyReturnValue'
+                                or @text='ModifyVariable'
+                                or @text='Override'
+                                or @text='Overwrite'
+                                or @text='Redirect'
+                                or @text='Shadow'
+                                or @text='WrapMethod'
+                                or @text='WrapOperation'
+                                or @text='WrapWithCondition'
+                            ]
+                        )
+                    ]
+            "/>
+            <message key="matchxpath.match" value="Mixin methods must be annotated with @Unique or one of the Mixin annotations"/>
+        </module>
+
+        <!-- Prevent @Inject local capture, @Local is preferred -->
+        <module name="MatchXpath">
+            <property name="query" value="
+                //METHOD_DEF[
+                    ./MODIFIERS/ANNOTATION[
+                        ./IDENT[@text='Inject']
+                        and
+                        ./ANNOTATION_MEMBER_VALUE_PAIR/IDENT[@text='locals']
+                    ]
+                ]
+            "/>
+            <message key="matchxpath.match" value="Inject local capture is not allowed, use @Local instead"/>
+        </module>
+    </module>
+</module>

@@ -57,6 +57,7 @@ val objVersion               = project.property("obj.version").toString()
 plugins {
     java
     `maven-publish`
+    checkstyle
     id("fabric-loom") version("1.13.6")
     id("com.diffplug.spotless") version("7.0.4")
     id("org.ajoberstar.grgit") version("5.3.2")
