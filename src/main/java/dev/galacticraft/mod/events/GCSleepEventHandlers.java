@@ -51,7 +51,7 @@ public class GCSleepEventHandlers {
 
     public static InteractionResult allowCryogenicSleep(LivingEntity entity, BlockPos sleepingPos, BlockState state, boolean vanillaResult) {
         if (state.getBlock() instanceof CryogenicChamberPart && !state.getValue(CryogenicChamberPart.TOP)) {
-            return entity.isInCryoSleep()
+            return entity.galacticraft$isInCryoSleep()
                     ? InteractionResult.SUCCESS
                     : InteractionResult.PASS;
         }
@@ -64,7 +64,7 @@ public class GCSleepEventHandlers {
     }
 
     public static Direction changeSleepPosition(LivingEntity entity, BlockPos sleepingPos, @Nullable Direction sleepingDirection) {
-        if (entity.isInCryoSleep()) {
+        if (entity.galacticraft$isInCryoSleep()) {
             BlockState state = entity.level().getBlockState(sleepingPos);
 
             if (state.getBlock() instanceof CryogenicChamberPart) return state.getValue(CryogenicChamberBlock.FACING);
@@ -84,15 +84,15 @@ public class GCSleepEventHandlers {
     }
 
     public static InteractionResult canCryoSleep(Player player, BlockPos sleepingPos, boolean vanillaResult) {
-        return player.isInCryoSleep() || vanillaResult
+        return player.galacticraft$isInCryoSleep() || vanillaResult
                 ? InteractionResult.SUCCESS
                 : InteractionResult.PASS;
     }
 
     public static void onWakeFromCryoSleep(LivingEntity entity, BlockPos sleepingPos) {
         Level level = entity.level();
-        if (!level.isClientSide() && entity.isInCryoSleep()) {
-            entity.endCryoSleep();
+        if (!level.isClientSide() && entity.galacticraft$isInCryoSleep()) {
+            entity.galacticraft$endCryoSleep();
             BlockPos basePos = sleepingPos.below();
             BlockState baseState = level.getBlockState(basePos);
             float angle = 0.0F;

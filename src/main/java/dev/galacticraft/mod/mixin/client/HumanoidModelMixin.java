@@ -129,7 +129,7 @@ abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T>
             }
         }
 
-        if (entity.isInCryoSleep()) {
+        if (entity.galacticraft$isInCryoSleep()) {
             this.head.setRotation(Mth.PI / 8, 0.0F, 0.0F);
             this.hat.copyFrom(this.head);
             this.body.resetPose();

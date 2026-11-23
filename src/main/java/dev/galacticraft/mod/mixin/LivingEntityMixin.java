@@ -85,27 +85,27 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     public int cryogenicChamberCooldown;
 
     @Override
-    public void beginCryoSleep() {
+    public void galacticraft$beginCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, true);
     }
 
     @Override
-    public void endCryoSleep() {
+    public void galacticraft$endCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Override
-    public boolean isInCryoSleep() {
+    public boolean galacticraft$isInCryoSleep() {
         return this.entityData.get(IS_IN_CRYO_SLEEP_ID);
     }
 
     @Override
-    public int getCryogenicChamberCooldown() {
+    public int galacticraft$getCryogenicChamberCooldown() {
         return this.cryogenicChamberCooldown;
     }
 
     @Override
-    public void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+    public void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
         this.cryogenicChamberCooldown = cryogenicChamberCooldown;
     }
 
@@ -121,8 +121,8 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
 
     @Inject(method = "tick", at = @At("HEAD"))
     private void gc$tickCryo(CallbackInfo ci) {
-        if (getCryogenicChamberCooldown() > 0) {
-            setCryogenicChamberCooldown(getCryogenicChamberCooldown() - 1);
+        if (galacticraft$getCryogenicChamberCooldown() > 0) {
+            galacticraft$setCryogenicChamberCooldown(galacticraft$getCryogenicChamberCooldown() - 1);
         }
     }
 
@@ -133,7 +133,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
 
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
     private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
-        if (isInCryoSleep()) {
+        if (galacticraft$isInCryoSleep()) {
             Vec3 pos = blockPos.below().getBottomCenter();
             this.setPos(pos.x, pos.y, pos.z);
             this.setDeltaMovement(Vec3.ZERO);
@@ -144,7 +144,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
 
     @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
     private void gc$preventMovement(CallbackInfo ci) {
-        if (isInCryoSleep())
+        if (galacticraft$isInCryoSleep())
             ci.cancel();
     }
 

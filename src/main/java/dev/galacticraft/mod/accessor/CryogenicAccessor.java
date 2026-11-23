@@ -24,23 +24,23 @@ package dev.galacticraft.mod.accessor;
 
 public interface CryogenicAccessor {
 
-    default void beginCryoSleep() {
+    default void galacticraft$beginCryoSleep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void endCryoSleep() {
+    default void galacticraft$endCryoSleep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default int getCryogenicChamberCooldown() {
+    default int galacticraft$getCryogenicChamberCooldown() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+    default void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isInCryoSleep() {
+    default boolean galacticraft$isInCryoSleep() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }

@@ -55,12 +55,12 @@ abstract class LivingEntityRendererMixin {
 
     @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
     private boolean gc$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
-        return !instance.isInCryoSleep() && original.call(instance, pose);
+        return !instance.galacticraft$isInCryoSleep() && original.call(instance, pose);
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
     private void galacticraft$renderCryoChamberPos(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
-        if (entity.isInCryoSleep()) {
+        if (entity.galacticraft$isInCryoSleep()) {
             Direction direction = entity.getBedOrientation();
             float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
             pose.translate(0, 0.82F, 0);

@@ -76,7 +76,7 @@ abstract class CameraMixin {
 
     @Inject(method = "setup", at = @At("TAIL"))
     private void gc$rotateCamera(BlockGetter blockGetter, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTicks, CallbackInfo ci) {
-        if (entity instanceof Player player && player.isInCryoSleep()) {
+        if (entity instanceof Player player && player.galacticraft$isInCryoSleep()) {
             var x = Mth.floor(entity.getX());
             var y = Mth.floor(entity.getY());
             var z = Mth.floor(entity.getZ());
