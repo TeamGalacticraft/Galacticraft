@@ -26,7 +26,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.inventory.MirroredSlot;
-import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
+import dev.galacticraft.mod.accessor.AbstractContainerScreenAccessor;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -66,8 +66,8 @@ abstract class AbstractContainerScreenMixin extends Screen {
             )
     )
     private void gc$beforeCarried(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if ((Object)this instanceof GCCreativeGuiSlots gc) {
-            gc.gc$renderGcSlots(graphics, mouseX, mouseY);
+        if ((Object) this instanceof AbstractContainerScreenAccessor accessor) {
+            accessor.galacticraft$renderSlots(graphics, mouseX, mouseY);
         }
     }
 }

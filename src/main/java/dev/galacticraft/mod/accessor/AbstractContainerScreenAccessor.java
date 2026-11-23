@@ -24,6 +24,6 @@ package dev.galacticraft.mod.accessor;
 
 import net.minecraft.client.gui.GuiGraphics;
 
-public interface GCCreativeGuiSlots {
-    void gc$renderGcSlots(GuiGraphics g, int mouseX, int mouseY);
+public interface AbstractContainerScreenAccessor {
+    void galacticraft$renderSlots(GuiGraphics graphics, int mouseX, int mouseY);
 }

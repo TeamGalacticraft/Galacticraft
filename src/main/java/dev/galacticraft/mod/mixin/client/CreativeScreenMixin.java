@@ -24,7 +24,7 @@ package dev.galacticraft.mod.mixin.client;
 
 import dev.galacticraft.mod.Constant;
 import dev.galacticraft.mod.Galacticraft;
-import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
+import dev.galacticraft.mod.accessor.AbstractContainerScreenAccessor;
 import dev.galacticraft.mod.client.gui.widget.RadioButton;
 import dev.galacticraft.mod.content.GCAccessorySlots;
 import dev.galacticraft.mod.network.c2s.CreativeGcTransferItemPayload;
@@ -57,7 +57,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Mixin(CreativeModeInventoryScreen.class)
-abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPickerMenu> implements GCCreativeGuiSlots {
+abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPickerMenu> implements AbstractContainerScreenAccessor {
     @SuppressWarnings("ConstantConditions")
     private CreativeScreenMixin() {
         super(null, null, null);
@@ -294,7 +294,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     }
 
     @Override
-    public void gc$renderGcSlots(GuiGraphics graphics, int mouseX, int mouseY) {
+    public void galacticraft$renderSlots(GuiGraphics graphics, int mouseX, int mouseY) {
         for (Slot slot : gc$slots) {
             renderSlot(graphics, slot);
             if (isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY) && slot.isActive()) {
