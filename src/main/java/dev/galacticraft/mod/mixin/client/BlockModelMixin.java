@@ -68,7 +68,7 @@ abstract class BlockModelMixin implements BlockModelAccessor {
     }
 
     @Mixin(BlockModel.Deserializer.class)
-    public static class DeserializerMixin {
+    static abstract class DeserializerMixin {
         // Loading custom block models via fabric api's model plugin is kinda ass so this is easier
         @Inject(method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/client/renderer/block/model/BlockModel;", at = @At("RETURN"))
         private void loadCustomObjModel(JsonElement element, Type type, JsonDeserializationContext jsonDeserializationContext, CallbackInfoReturnable<BlockModel> cir) {
