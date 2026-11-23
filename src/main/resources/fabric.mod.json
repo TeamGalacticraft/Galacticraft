@@ -100,15 +100,15 @@
       }
     },
     {
-      "name": "DuckyProgrammer",
-      "contact": {
-        "homepage": "https://github.com/DuckyProgrammer"
-      }
-    },
-    {
       "name": "vos6434",
       "contact": {
         "homepage": "https://github.com/vos6434"
+      }
+    },
+    {
+      "name": "DuckyProgrammer",
+      "contact": {
+        "homepage": "https://github.com/DuckyProgrammer"
       }
     },
     {
@@ -184,6 +184,12 @@
       }
     },
     {
+      "name": "sebasphereda",
+      "contact": {
+        "homepage": "https://github.com/sebasphereda"
+      }
+    },
+    {
       "name": "LeMayday",
       "contact": {
         "homepage": "https://github.com/LeMayday"
@@ -199,12 +205,6 @@
       "name": "davo899",
       "contact": {
         "homepage": "https://github.com/davo899"
-      }
-    },
-    {
-      "name": "sebasphereda",
-      "contact": {
-        "homepage": "https://github.com/sebasphereda"
       }
     },
     {
@@ -226,9 +226,9 @@
       }
     },
     {
-      "name": "Geolykt",
+      "name": "Kemmlow",
       "contact": {
-        "homepage": "https://github.com/Geolykt"
+        "homepage": "https://github.com/Kemmlow"
       }
     },
     {
@@ -244,9 +244,9 @@
       }
     },
     {
-      "name": "Domza64",
+      "name": "Geolykt",
       "contact": {
-        "homepage": "https://github.com/Domza64"
+        "homepage": "https://github.com/Geolykt"
       }
     },
     {
@@ -259,12 +259,6 @@
       "name": "CoderFroty",
       "contact": {
         "homepage": "https://github.com/CoderFroty"
-      }
-    },
-    {
-      "name": "GalacticraftDev",
-      "contact": {
-        "homepage": "https://github.com/GalacticraftDev"
       }
     },
     {
@@ -301,6 +295,18 @@
       "name": "IMS212",
       "contact": {
         "homepage": "https://github.com/IMS212"
+      }
+    },
+    {
+      "name": "Domza64",
+      "contact": {
+        "homepage": "https://github.com/Domza64"
+      }
+    },
+    {
+      "name": "GalacticraftDev",
+      "contact": {
+        "homepage": "https://github.com/GalacticraftDev"
       }
     }
   ],
