@@ -124,7 +124,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    protected void galacticraft$readOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
+    private void galacticraft$readOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
         this.entityData.set(DATA_HAS_MASK_ID, tag.getBoolean(Constant.Nbt.HAS_MASK));
         this.entityData.set(DATA_HAS_GEAR_ID, tag.getBoolean(Constant.Nbt.HAS_GEAR));
         this.entityData.set(DATA_TANK_1_SIZE_ID, tag.getString(Constant.Nbt.OXYGEN_TANK_1));
@@ -132,7 +132,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    protected void galacticraft$addOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
+    private void galacticraft$addOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
         tag.putBoolean(Constant.Nbt.HAS_MASK, this.galacticraft$hasMask());
         tag.putBoolean(Constant.Nbt.HAS_GEAR, this.galacticraft$hasGear());
         tag.putString(Constant.Nbt.OXYGEN_TANK_1, this.galacticraft$tankSize(0));

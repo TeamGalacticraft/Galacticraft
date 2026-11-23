@@ -47,7 +47,7 @@ abstract class ItemEntityMixin extends Entity {
     public abstract void setItem(ItemStack stack);
 
     @Inject(at = @At("RETURN"), method = "tick")
-    void coolMeteorChunk(CallbackInfo ci) {
+    private void coolMeteorChunk(CallbackInfo ci) {
         ItemStack stack = this.getItem();
         if (stack.is(GCItems.HOT_THROWABLE_METEOR_CHUNK)) {
             int ttc = stack.getComponents().getOrDefault(GCDataComponents.TICKS_UNTIL_COOL, 0);

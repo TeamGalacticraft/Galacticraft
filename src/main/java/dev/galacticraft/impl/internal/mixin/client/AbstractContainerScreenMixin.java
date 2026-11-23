@@ -87,7 +87,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", shift = At.Shift.AFTER))
-    public void drawBackground(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    private void drawBackground(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {
@@ -123,7 +123,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    public void render(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    private void render(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {

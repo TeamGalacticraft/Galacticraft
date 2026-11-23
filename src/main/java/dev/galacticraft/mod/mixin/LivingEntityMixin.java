@@ -161,7 +161,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     }
 
     @ModifyArg(method = "calculateFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;ceil(D)I"), index = 0)
-    protected double gc$adjustFallDamage(double original) {
+    private double gc$adjustFallDamage(double original) {
         Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
         return holder != null ? original * holder.value().gravity() : original;
     }

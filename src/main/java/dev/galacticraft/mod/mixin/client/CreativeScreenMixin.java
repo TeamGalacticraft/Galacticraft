@@ -79,7 +79,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     private boolean bGCInventory = false;
 
     @Unique
-    public boolean isGCInventoryEnabled() {
+    private boolean isGCInventoryEnabled() {
         return bGCInventory;
     }
 

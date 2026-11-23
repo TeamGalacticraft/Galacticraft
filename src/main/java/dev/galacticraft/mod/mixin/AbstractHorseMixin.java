@@ -44,7 +44,7 @@ abstract class AbstractHorseMixin extends LivingEntity {
     protected abstract boolean handleEating(Player player, ItemStack itemStack);
 
     @WrapMethod(method = "isFood")
-    public boolean galacticraft$isFood(ItemStack itemStack, Operation<Boolean> original) {
+    private boolean galacticraft$isFood(ItemStack itemStack, Operation<Boolean> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             return original.call(CannedFoodItem.getFirst(itemStack));
         }
@@ -52,7 +52,7 @@ abstract class AbstractHorseMixin extends LivingEntity {
     }
 
     @WrapMethod(method = "fedFood")
-    public InteractionResult galacticraft$fedFood(Player player, ItemStack itemStack, Operation<InteractionResult> original) {
+    private InteractionResult galacticraft$fedFood(Player player, ItemStack itemStack, Operation<InteractionResult> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             boolean success = this.handleEating(player, CannedFoodItem.getFirst(itemStack));
             if (success) {
