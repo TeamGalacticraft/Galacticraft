@@ -22,9 +22,9 @@
 
 package dev.galacticraft.mod.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.api.block.FluidLoggable;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -35,7 +35,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.LevelAccessor;
-import net.minecraft.world.level.block.BucketPickup;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.FlowingFluid;
 import net.minecraft.world.level.material.Fluid;
@@ -51,7 +50,6 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 import org.spongepowered.asm.mixin.injection.Slice;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 
 @Mixin(BucketItem.class)
 abstract class BucketItemMixin extends Item {
@@ -68,19 +66,19 @@ abstract class BucketItemMixin extends Item {
     protected abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
 
     @Inject(method = "emptyContents", cancellable = true, at = @At("HEAD"))
-    private void emptyFluidLoggable_gc(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> info) {
+    private void emptyFluidLoggable_gc(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> cir) {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
 
         if (block instanceof FluidLoggable fluidLoggable && fluidLoggable.canPlaceLiquid(player, level, blockPos, blockState, this.content)) {
             fluidLoggable.placeLiquid(level, blockPos, blockState, ((FlowingFluid) this.content).getSource(false));
             this.playEmptySound(player, level, blockPos);
-            info.setReturnValue(true);
+            cir.setReturnValue(true);
         }
     }
 
-    @Inject(method = "use", at = @At(value = "INVOKE", target = "net/minecraft/world/level/block/BucketPickup.getPickupSound()Ljava/util/Optional;"), locals = LocalCapture.CAPTURE_FAILSOFT)
-    private void getPickupSoundFluidLoggable_gc(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> info, ItemStack itemStack, BlockHitResult blockHitResult, BlockPos blockPos, Direction direction, BlockPos blockPos2, BlockState blockState, BucketPickup bucketPickup, ItemStack itemStack2) {
+    @Inject(method = "use", at = @At(value = "INVOKE", target = "net/minecraft/world/level/block/BucketPickup.getPickupSound()Ljava/util/Optional;"))
+    private void getPickupSoundFluidLoggable_gc(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, @Local BlockState blockState) {
         if (blockState.getBlock() instanceof FluidLoggable) {
             BuiltInRegistries.FLUID.get(blockState.getValue(FluidLoggable.FLUID)).getPickupSound().ifPresent(soundEvent -> player.playSound(soundEvent, 1.0F, 1.0F));
         }
