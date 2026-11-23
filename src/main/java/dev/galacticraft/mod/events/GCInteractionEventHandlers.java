@@ -177,7 +177,7 @@ public class GCInteractionEventHandlers {
 
     private static boolean cannotEatInNoAtmosphere(Player player, Level level) {
         Vec3 eyePos = player.getEyePosition();
-        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$getDefaultBreathable() && !level.galacticraft$isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_EAT_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             return true;
         }
@@ -186,7 +186,7 @@ public class GCInteractionEventHandlers {
 
     private static boolean cannotFeedInNoAtmosphere(Player player, Level level, LivingEntity entity) {
         Vec3 eyePos = entity.getEyePosition();
-        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.getDefaultBreathable() && !level.isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
+        if (Galacticraft.CONFIG.cannotEatInNoAtmosphere() && !level.galacticraft$getDefaultBreathable() && !level.galacticraft$isBreathable(new BlockPos((int) Math.floor(eyePos.x), (int) Math.floor(eyePos.y), (int) Math.floor(eyePos.z)))) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CANNOT_FEED_IN_NO_ATMOSPHERE).withStyle(Constant.Text.RED_STYLE), true);
             return true;
         }

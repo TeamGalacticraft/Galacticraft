@@ -53,7 +53,7 @@ public class OxygenOverlay {
                 return;
             }
 
-            boolean nonBreathable = !mc.level.getDefaultBreathable();
+            boolean nonBreathable = !mc.level.galacticraft$getDefaultBreathable();
             boolean hasMaskAndGear = mc.player.galacticraft$hasMaskAndGear();
             if (nonBreathable || hasMaskAndGear) {
                 boolean hasOxygen = false;
@@ -78,7 +78,7 @@ public class OxygenOverlay {
                     GraphicsUtil.drawCapacitor(graphics, x, y, capacity, amount, true);
                 }
 
-                if (nonBreathable && !((hasMaskAndGear && hasOxygen) || mc.level.isBreathable(mc.player.blockPosition().above()))) {
+                if (nonBreathable && !((hasMaskAndGear && hasOxygen) || mc.level.galacticraft$isBreathable(mc.player.blockPosition().above()))) {
                     final Window scaledresolution = mc.getWindow();
                     final int width = scaledresolution.getGuiScaledWidth();
                     final int height = scaledresolution.getGuiScaledHeight();

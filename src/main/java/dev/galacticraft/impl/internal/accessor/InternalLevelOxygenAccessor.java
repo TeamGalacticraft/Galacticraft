@@ -26,7 +26,7 @@ import org.jetbrains.annotations.ApiStatus;
 
 @ApiStatus.Internal
 public interface InternalLevelOxygenAccessor {
-    boolean getDefaultBreathable();
+    boolean galacticraft$getDefaultBreathable();
 
-    void setDefaultBreathable(boolean breathable);
+    void galacticraft$setDefaultBreathable(boolean breathable);
 }

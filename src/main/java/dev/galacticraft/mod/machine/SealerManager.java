@@ -74,7 +74,7 @@ public class SealerManager {
         if (level.isClientSide) return;
 
         // If the level is breathable oxygen sealers don't change anything
-        if (level.getDefaultBreathable()) return;
+        if (level.galacticraft$getDefaultBreathable()) return;
 
         if (level.getServer() != null && !level.getServer().isReady()) {
             Constant.LOGGER.info("World is not fully loaded, skipping sealing calculation");
@@ -132,13 +132,13 @@ public class SealerManager {
             for (BlockPos pos : spaceToSeal.blocksToSeal) {
                 newSealedBlocks.add(pos);
                 sealedBlocks.remove(pos);
-                level.setBreathable(pos, true);
+                level.galacticraft$setBreathable(pos, true);
             }
         }
 
         // Reset all sealed blocks from the previous update to not be breathable
         for (BlockPos pos : sealedBlocks) {
-            level.setBreathable(pos, false);
+            level.galacticraft$setBreathable(pos, false);
         }
 
         sealedBlocks = newSealedBlocks;

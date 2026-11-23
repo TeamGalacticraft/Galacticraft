@@ -32,35 +32,35 @@ public interface LevelOxygenAccessor {
      * @param pos the position to test
      * @return whether the supplied position in the chunk is breathable for entities
      */
-    default boolean isBreathable(BlockPos pos) {
-        return this.isBreathable(pos.getX(), pos.getY(), pos.getZ());
+    default boolean galacticraft$isBreathable(BlockPos pos) {
+        return this.galacticraft$isBreathable(pos.getX(), pos.getY(), pos.getZ());
     }
 
-    default boolean isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
+    default boolean galacticraft$isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean isBreathable(int x, int y, int z) {
+    default boolean galacticraft$isBreathable(int x, int y, int z) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void setBreathable(BlockPos pos, boolean value) {
-        this.setBreathable(pos.getX(), pos.getY(), pos.getZ(), value);
+    default void galacticraft$setBreathable(BlockPos pos, boolean value) {
+        this.galacticraft$setBreathable(pos.getX(), pos.getY(), pos.getZ(), value);
     }
 
-    default void setBreathable(int x, int y, int z, boolean value) {
+    default void galacticraft$setBreathable(int x, int y, int z, boolean value) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
+    default void galacticraft$setBreathableChunk(LevelChunk chunk, int x, int y, int z, boolean value) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default boolean getDefaultBreathable() {
+    default boolean galacticraft$getDefaultBreathable() {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 
-    default void setDefaultBreathable(boolean breathable) {
+    default void galacticraft$setDefaultBreathable(boolean breathable) {
         throw new RuntimeException("This should be overridden by mixin!");
     }
 }

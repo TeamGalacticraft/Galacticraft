@@ -98,7 +98,7 @@ public class GCApiCommands {
     private static int setOxygen(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "start_pos");
         boolean b = BoolArgumentType.getBool(context, "oxygen");
-        context.getSource().getLevel().setBreathable(pos, b);
+        context.getSource().getLevel().galacticraft$setBreathable(pos, b);
         context.getSource().sendSuccess(() -> Component.translatable(Translations.SetOxygen.SUCCESS_SINGLE), true);
         return 1;
     }
@@ -113,7 +113,7 @@ public class GCApiCommands {
         for (int x = box.minX(); x <= box.maxX(); x++) {
             for (int y = box.minX(); y <= box.maxX(); y++) {
                 for (int z = box.minX(); z <= box.maxX(); z++) {
-                    accessor.setBreathable(mutable.set(x, y, z), b);
+                    accessor.galacticraft$setBreathable(mutable.set(x, y, z), b);
                 }
             }
         }
@@ -124,7 +124,7 @@ public class GCApiCommands {
 
     private static int getOxygen(CommandContext<CommandSourceStack> context) throws CommandSyntaxException {
         BlockPos pos = BlockPosArgument.getLoadedBlockPos(context, "start_pos");
-        if (context.getSource().getLevel().isBreathable(pos)) {
+        if (context.getSource().getLevel().galacticraft$isBreathable(pos)) {
             context.getSource().sendSuccess(() -> Component.translatable(Translations.SetOxygen.OXYGEN_EXISTS), false);
         } else {
             context.getSource().sendSuccess(() -> Component.translatable(Translations.SetOxygen.NO_OXYGEN_EXISTS), false);
@@ -144,7 +144,7 @@ public class GCApiCommands {
         for (int x = box.minX(); x <= box.maxX(); x++) {
             for (int y = box.minX(); y <= box.maxX(); y++) {
                 for (int z = box.minX(); z <= box.maxX(); z++) {
-                    breathable = accessor.isBreathable(mutable.set(x, y, z));
+                    breathable = accessor.galacticraft$isBreathable(mutable.set(x, y, z));
                     hasSomeOxygen |= breathable;
                     allOxygen = allOxygen && breathable;
                 }

@@ -42,11 +42,11 @@ interface ChangeOverTimeBlockMixin {
         if (this instanceof WeatheringCopper) {
             boolean preventAgeing = true;
 
-            if (level.isBreathable(pos)) {
+            if (level.galacticraft$isBreathable(pos)) {
                 preventAgeing = false;
             } else {
                 for (Direction direction : Direction.values()) {
-                    if (level.isBreathable(pos.relative(direction))) {
+                    if (level.galacticraft$isBreathable(pos.relative(direction))) {
                         preventAgeing = false;
                         break;
                     }

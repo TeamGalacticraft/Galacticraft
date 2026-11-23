@@ -93,7 +93,7 @@ public class FlagBlockEntityRenderer implements BlockEntityRenderer<FlagBlockEnt
     public static boolean shouldSway(@Nullable Level level, BlockPos pos) {
         return level != null && level.galacticraft$getCelestialBody() != null &&
                 (level.galacticraft$getCelestialBody().value().atmosphere().pressure() >= 1f ||
-                level.isBreathable(pos.getX(), pos.getY(), pos.getZ()));
+                level.galacticraft$isBreathable(pos.getX(), pos.getY(), pos.getZ()));
     }
 
     public static void renderPatterns(
