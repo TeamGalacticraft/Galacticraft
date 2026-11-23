@@ -53,7 +53,7 @@ abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
 //            for (int i = 0; i < array.size(); i++) {
 //                ids[i] = ResourceLocation.parse(array.get(i).getAsString());
 //            }
-//            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
+//            ((AdvancementRewardsAccessor) rewards).galacticraft$setRocketPartRecipeRewards(ids);
 //        }
 //    }
 
@@ -84,7 +84,7 @@ abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     }
 
     @Override
-    public void setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
+    public void galacticraft$setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
         this.rocketPartRecipes = recipes;
     }
 }

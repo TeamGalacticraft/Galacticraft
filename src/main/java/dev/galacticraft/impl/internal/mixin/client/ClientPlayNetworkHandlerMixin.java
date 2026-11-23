@@ -86,12 +86,12 @@ abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAccessor 
     }
 
     @Override
-    public void addListener(SatelliteListener listener) {
+    public void galacticraft$addListener(SatelliteListener listener) {
         this.listeners.add(listener);
     }
 
     @Override
-    public void removeListener(SatelliteListener listener) {
+    public void galacticraft$removeListener(SatelliteListener listener) {
         this.listeners.remove(listener);
     }
 }

@@ -31,9 +31,9 @@ import net.fabricmc.api.Environment;
 
 @Environment(EnvType.CLIENT)
 public interface ClientSatelliteAccessor extends SatelliteAccessor {
-    void addListener(SatelliteListener listener);
+    void galacticraft$addListener(SatelliteListener listener);
 
-    void removeListener(SatelliteListener listener);
+    void galacticraft$removeListener(SatelliteListener listener);
 
     @FunctionalInterface
     interface SatelliteListener {
