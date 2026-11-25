@@ -51,9 +51,11 @@ abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
     private Holder<CelestialBody<?, ?>> galacticraft$celestialBody = null;
 
-    @Shadow public abstract RegistryAccess registryAccess();
+    @Shadow
+    public abstract RegistryAccess registryAccess();
 
-    @Shadow public abstract DimensionType dimensionType();
+    @Shadow
+    public abstract DimensionType dimensionType();
 
     @Inject(method = "<init>(Lnet/minecraft/world/level/storage/WritableLevelData;Lnet/minecraft/resources/ResourceKey;Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/core/Holder;Ljava/util/function/Supplier;ZZJI)V", at = @At("RETURN"))
     @SuppressWarnings({"rawtypes", "unchecked"})

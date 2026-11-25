@@ -66,12 +66,18 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     @Unique
     private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 
-    @Shadow private static CreativeModeTab selectedTab;
+    @Shadow
+    private static CreativeModeTab selectedTab;
 
-    @Shadow protected abstract void selectTab(CreativeModeTab group);
+    @Shadow
+    protected abstract void selectTab(CreativeModeTab group);
 
-    @Shadow @Nullable private Slot destroyItemSlot;
-    @Shadow @Final static SimpleContainer CONTAINER;
+    @Shadow
+    private @Nullable Slot destroyItemSlot;
+
+    @Shadow
+    @Final
+    static SimpleContainer CONTAINER;
 
     @Unique
     private final List<CreativeModeInventoryScreen.SlotWrapper> galacticraft$slots = new ArrayList<>();

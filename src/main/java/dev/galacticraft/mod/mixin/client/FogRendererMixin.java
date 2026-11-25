@@ -46,9 +46,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(FogRenderer.class)
 abstract class FogRendererMixin {
-    @Shadow private static float fogRed;
-    @Shadow private static float fogGreen;
-    @Shadow private static float fogBlue;
+    @Shadow
+    private static float fogRed;
+    @Shadow
+    private static float fogGreen;
+    @Shadow
+    private static float fogBlue;
 
     @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false, ordinal = 1))
     private static void gc$setupColor(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
