@@ -20,28 +20,25 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.particle;
+package dev.galacticraft.mod.client.particle.fluid;
 
-import dev.galacticraft.mod.content.GCFluids;
 import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.particle.DripParticle;
-import net.minecraft.client.particle.Particle;
-import net.minecraft.client.particle.ParticleProvider;
-import net.minecraft.client.particle.SpriteSet;
+import net.minecraft.client.particle.*;
 import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record DrippingFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+public record BubbleFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.FUEL, GCParticleTypes.FALLING_FUEL);
-        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
-        particle.pickSprite(this.spriteProvider);
+        var particle = new GCBubbleParticle.Provider(spriteProvider).createParticle(GCParticleTypes.FUEL_BUBBLE, clientLevel, x, y, z, velocityX, velocityY, velocityZ);
+        if (particle != null) {
+            particle.setColor(1.0f, 1.0f, 0.0f);
+        }
         return particle;
     }
 }

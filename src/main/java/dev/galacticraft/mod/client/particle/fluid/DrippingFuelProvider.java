@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.particle;
+package dev.galacticraft.mod.client.particle.fluid;
 
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -34,12 +35,12 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record FallingSulfuricAcidProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+public record DrippingFuelProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new DripParticle.FallingParticle(clientLevel, x, y, z, GCFluids.SULFURIC_ACID);
-        particle.setColor(151f / 255f, 245f / 255f, 70f / 255f);
+        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.FUEL, GCParticleTypes.FALLING_FUEL);
+        particle.setColor(146f / 255f, 140f / 255f, 74f / 255f);
         particle.pickSprite(this.spriteProvider);
         return particle;
     }

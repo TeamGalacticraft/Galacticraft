@@ -20,9 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.client.particle;
+package dev.galacticraft.mod.client.particle.fluid;
 
 import dev.galacticraft.mod.content.GCFluids;
+import dev.galacticraft.mod.particle.GCParticleTypes;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -34,11 +35,11 @@ import net.minecraft.core.particles.SimpleParticleType;
 import org.jetbrains.annotations.Nullable;
 
 @Environment(EnvType.CLIENT)
-public record FallingCrudeOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
+public record DrippingCrudeOilProvider(SpriteSet spriteProvider) implements ParticleProvider<SimpleParticleType> {
     @Override
     @Nullable
     public Particle createParticle(SimpleParticleType particleOptions, ClientLevel clientLevel, double x, double y, double z, double velocityX, double velocityY, double velocityZ) {
-        var particle = new DripParticle.FallingParticle(clientLevel, x, y, z, GCFluids.CRUDE_OIL);
+        var particle = new DripParticle.DripHangParticle(clientLevel, x, y, z, GCFluids.CRUDE_OIL, GCParticleTypes.FALLING_CRUDE_OIL);
         particle.setColor(42f / 255f, 42f / 255f, 42f / 255f);
         particle.pickSprite(this.spriteProvider);
         return particle;

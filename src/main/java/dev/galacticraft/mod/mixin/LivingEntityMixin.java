@@ -196,7 +196,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Inject(method = "onClimbable", at = @At("TAIL"), cancellable = true)
-    private void galacticraft$onClimbable(CallbackInfoReturnable<Boolean> cir) {
+    private void gc$onClimbable(CallbackInfoReturnable<Boolean> cir) {
         // Make the back side of tin ladders climbable
         BlockPos blockPos = this.blockPosition();
         for (Direction direction : Direction.Plane.HORIZONTAL) {
