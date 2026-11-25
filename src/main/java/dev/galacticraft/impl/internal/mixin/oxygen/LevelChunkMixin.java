@@ -56,7 +56,9 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
     @Shadow
     @Final
     Level level;
-    private @Unique short dirtySections = 0b0;
+
+    @Unique
+    private short galacticraft$dirtySections = 0b0;
 
     @Override
     public boolean galacticraft$isInverted(int x, int y, int z) {
@@ -69,7 +71,7 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
         if (inverted != accessor.galacticraft$isInverted(x, y & 15, z)) {
             if (!this.level.isClientSide) {
                 this.unsaved = true;
-                this.dirtySections |= (short) (0b1 << this.getSectionIndex(y));
+                this.galacticraft$dirtySections |= (short) (0b1 << this.getSectionIndex(y));
             }
             accessor.galacticraft$setInverted(x, y & 15, z, inverted);
         }
@@ -78,10 +80,10 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
     @Override
     public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
         assert !this.level.isClientSide;
-        if (this.dirtySections != 0b0) {
+        if (this.galacticraft$dirtySections != 0b0) {
             int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
+                if ((this.galacticraft$dirtySections & (0b1 << i)) != 0) {
                     count++;
                 }
             }
@@ -90,12 +92,12 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
 
             int idx = 0;
             for (byte i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
+                if ((this.galacticraft$dirtySections & (0b1 << i)) != 0) {
                     BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
                     data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
                 }
             }
-            this.dirtySections = 0;
+            this.galacticraft$dirtySections = 0;
             return data;
         }
         return null;

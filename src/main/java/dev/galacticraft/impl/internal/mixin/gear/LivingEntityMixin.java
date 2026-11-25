@@ -107,7 +107,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
     );
 
     @Unique
-    private int lastHurtBySuffocationTimestamp;
+    private int galacticraft$lastHurtBySuffocationTimestamp;
 
     @Shadow
     protected abstract int increaseAirSupply(int air);
@@ -149,11 +149,11 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(this.damageSources().source(SUFFOCATION), 2.0f);
-                } else if (this.tickCount - this.lastHurtBySuffocationTimestamp > 20) {
+                } else if (this.tickCount - this.galacticraft$lastHurtBySuffocationTimestamp > 20) {
                     // A small amount of depressurization damage
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(this.damageSources().source(SUFFOCATION), 1.0f);
                 }
             }
@@ -165,7 +165,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.galacticraft$oxygenConsumptionRate() == 0) return false;
         if ((entity.getVehicle() instanceof LanderEntity) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberBlock) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberPart)) {
-            this.lastHurtBySuffocationTimestamp = this.tickCount;
+            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
         }
         return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
@@ -187,14 +187,14 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
                 (attribute != null && attribute.getValue() >= 0.99D) ||
                 entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
         )) {
-            this.lastHurtBySuffocationTimestamp = this.tickCount;
+            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
             cir.setReturnValue(this.increaseAirSupply(air));
         } else if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(this.galacticraft$getOxygenTanks(), null);
             for (int i = 1; i < tankInv.getSlotCount(); i++) {
                 ItemStack stack = tankInv.getSlot(i).getResource().toStack();
                 if (stack.getItem() instanceof InfiniteOxygenTankItem) {
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     cir.setReturnValue(this.increaseAirSupply(air));
                     return;
                 }
@@ -205,7 +205,7 @@ abstract class LivingEntityMixin extends Entity implements GearInventoryProvider
                     try (Transaction transaction = Transaction.openOuter()) {
                         if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
                             transaction.commit();
-                            this.lastHurtBySuffocationTimestamp = this.tickCount;
+                            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
                             return;
                         }

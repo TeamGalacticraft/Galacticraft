@@ -40,31 +40,32 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(SoundEngine.class)
 @Environment(EnvType.CLIENT)
 abstract class SoundEngineMixin implements SoundSystemAccessor {
+    @Unique
+    private float galacticraft$multiplier = 1.0f;
+
     @Shadow
     @Final
     private Listener listener;
-    @Unique
-    private float multiplier = 1.0f;
 
     @Shadow
     public abstract void updateCategoryVolume(SoundSource soundCategory, float volume);
 
     @ModifyReturnValue(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"))
     private float galacticraft_adjustVolumeToAtmosphere(float original, float f, SoundSource soundSource) {
-        if (this.multiplier != 1.0f && soundSource != SoundSource.MASTER) {
-            return Mth.clamp(original * this.multiplier, 0.0f, 2.0f);
+        if (this.galacticraft$multiplier != 1.0f && soundSource != SoundSource.MASTER) {
+            return Mth.clamp(original * this.galacticraft$multiplier, 0.0f, 2.0f);
         }
         return original;
     }
 
     @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
     private boolean galacticraft_hideSubtitles(boolean original) {
-        return original || this.multiplier < 0.01f;
+        return original || this.galacticraft$multiplier < 0.01f;
     }
 
     @Override
     public void galacticraft$updateAtmosphericVolumeMultiplier(float multiplier) {
-        this.multiplier = multiplier;
+        this.galacticraft$multiplier = multiplier;
         this.updateCategoryVolume(null, this.listener.getGain());
     }
 }

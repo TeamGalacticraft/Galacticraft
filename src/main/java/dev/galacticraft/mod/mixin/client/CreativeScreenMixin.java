@@ -63,7 +63,8 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
         super(null, null, null);
     }
 
-    @Unique private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
+    @Unique
+    private static final ResourceLocation GC_GUIBG_TEX = Constant.id("textures/gui/creative_tab_inventory.png");
 
     @Shadow private static CreativeModeTab selectedTab;
 
@@ -71,16 +72,19 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Shadow @Nullable private Slot destroyItemSlot;
     @Shadow @Final static SimpleContainer CONTAINER;
-    @Unique private final List<CreativeModeInventoryScreen.SlotWrapper> gc$slots = new ArrayList<>();
-
-    @Unique private RadioButton creativeSwitchButton;
 
     @Unique
-    private boolean bGCInventory = false;
+    private final List<CreativeModeInventoryScreen.SlotWrapper> galacticraft$slots = new ArrayList<>();
+
+    @Unique
+    private RadioButton galacticraft$creativeSwitchButton;
+
+    @Unique
+    private boolean galacticraft$showGCInventory = false;
 
     @Unique
     private boolean galacticraft$isGCInventoryEnabled() {
-        return bGCInventory;
+        return galacticraft$showGCInventory;
     }
 
     @Unique
@@ -100,31 +104,31 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Inject(method = "init", at = @At("HEAD"))
     private void init(CallbackInfo ci) {
-        creativeSwitchButton = new RadioButton(0, 0);
+        galacticraft$creativeSwitchButton = new RadioButton(0, 0);
     }
 
     @Inject(method = "selectTab", at = @At(value = "HEAD"))
     private void gc$selectTab(CreativeModeTab group, CallbackInfo ci) {
         if (group.getType() == CreativeModeTab.Type.INVENTORY) {
             if (galacticraft$isCreativeGearInvAllowed()) {
-                creativeSwitchButton.setX(leftPos + 11);
-                creativeSwitchButton.setY(topPos + 18);
-                creativeSwitchButton.visible = true;
-                creativeSwitchButton.radioButtonOnClick = () -> {
-                    bGCInventory = creativeSwitchButton.getIsBottomButtonActive();
+                galacticraft$creativeSwitchButton.setX(leftPos + 11);
+                galacticraft$creativeSwitchButton.setY(topPos + 18);
+                galacticraft$creativeSwitchButton.visible = true;
+                galacticraft$creativeSwitchButton.radioButtonOnClick = () -> {
+                    galacticraft$showGCInventory = galacticraft$creativeSwitchButton.getIsBottomButtonActive();
                     galacticraft$regenerateSlots();
                 };
-                addRenderableWidget(creativeSwitchButton);
+                addRenderableWidget(galacticraft$creativeSwitchButton);
             } else {
-                creativeSwitchButton.visible = false;
-                creativeSwitchButton.radioButtonOnClick = null;
+                galacticraft$creativeSwitchButton.visible = false;
+                galacticraft$creativeSwitchButton.radioButtonOnClick = null;
             }
         } else {
-            removeWidget(creativeSwitchButton);
-            bGCInventory = false;
-            gc$slots.clear();
-            creativeSwitchButton.visible = false;
-            creativeSwitchButton.setIsBottomButtonActive(false);
+            removeWidget(galacticraft$creativeSwitchButton);
+            galacticraft$showGCInventory = false;
+            galacticraft$slots.clear();
+            galacticraft$creativeSwitchButton.visible = false;
+            galacticraft$creativeSwitchButton.setIsBottomButtonActive(false);
         }
     }
 
@@ -132,7 +136,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     private void resize(Minecraft client, int width, int height, CallbackInfo ci) {
         if (galacticraft$isGCInventoryEnabled()) {
             galacticraft$regenerateSlots();
-            creativeSwitchButton.setIsBottomButtonActive(true);
+            galacticraft$creativeSwitchButton.setIsBottomButtonActive(true);
         }
     }
 
@@ -185,7 +189,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Unique
     private void galacticraft$regenerateSlots() {
-        gc$slots.clear();
+        galacticraft$slots.clear();
         getMenu().slots.clear();
         if (galacticraft$isGCInventoryEnabled()) {
             galacticraft$generatePlayerInventorySlots();
@@ -197,7 +201,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Unique
     private @Nullable Slot galacticraft$findSlot(double x, double y) {
-        for (Slot slot : gc$slots) {
+        for (Slot slot : galacticraft$slots) {
             if (isHovering(slot.x, slot.y, 16, 16, x, y) && slot.isActive()) {
                 return slot;
             }
@@ -224,7 +228,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Unique
     private void galacticraft$generateGCSlot(int x, int y, int idx) {
-        gc$slots.add(new CreativeModeInventoryScreen.SlotWrapper(
+        galacticraft$slots.add(new CreativeModeInventoryScreen.SlotWrapper(
                 new AccessorySlot(
                         minecraft.player.galacticraft$getGearInv(),
                         minecraft.player,
@@ -246,7 +250,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
             return false;
         }
 
-        for (Slot targetSlot : gc$slots) {
+        for (Slot targetSlot : galacticraft$slots) {
             if (targetSlot.mayPlace(playerSlot.getItem()) && targetSlot.getItem().isEmpty()) {
                 ItemStack newItem = playerSlot.getItem().copy();
                 ClientPlayNetworking.send(new CreativeGcTransferItemPayload(1, targetSlot.getContainerSlot(), 1, newItem));
@@ -295,7 +299,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
 
     @Override
     public void galacticraft$renderSlots(GuiGraphics graphics, int mouseX, int mouseY) {
-        for (Slot slot : gc$slots) {
+        for (Slot slot : galacticraft$slots) {
             renderSlot(graphics, slot);
             if (isHovering(slot.x, slot.y, 16, 16, mouseX, mouseY) && slot.isActive()) {
                 hoveredSlot = slot;

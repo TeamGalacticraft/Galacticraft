@@ -42,7 +42,7 @@ import java.util.Arrays;
 abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     @Unique
     @NotNull
-    private ResourceLocation @Nullable [] rocketPartRecipes = null;
+    private ResourceLocation @Nullable [] galacticraft$rocketPartRecipes = null;
 
 //    @Inject(method = "deserialize", at = @At("RETURN")) TODO: Port (are we even using this?)
 //    private static void parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
@@ -59,17 +59,17 @@ abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
 
     @Inject(method = "grant", at = @At("RETURN"))
     private void galacticraft_applyRocketPartsToPlayer(ServerPlayer player, CallbackInfo ci) {
-        if (this.rocketPartRecipes != null) {
-            ((ServerResearchAccessor) player).galacticraft$unlockRocketPartRecipes(this.rocketPartRecipes);
+        if (this.galacticraft$rocketPartRecipes != null) {
+            ((ServerResearchAccessor) player).galacticraft$unlockRocketPartRecipes(this.galacticraft$rocketPartRecipes);
         }
     }
 
 //    @Inject(method = "serializeToJson", at = @At("RETURN"), cancellable = true)
 //    private void galacticraft_writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
-//        if (this.rocketPartRecipes != null) {
+//        if (this.galacticraft$rocketPartRecipes != null) {
 //            JsonObject object = cir.getReturnValue().getAsJsonObject();
 //            JsonArray array = new JsonArray();
-//            for (ResourceLocation id : this.rocketPartRecipes) {
+//            for (ResourceLocation id : this.galacticraft$rocketPartRecipes) {
 //                array.add(id.toString());
 //            }
 //            object.add("rocket_parts", array);
@@ -80,11 +80,11 @@ abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     @Inject(method = "toString", at = @At("RETURN"), cancellable = true)
     private void galacticraft_appendRocketPartsToString(CallbackInfoReturnable<String> cir) {
         String s = cir.getReturnValue();
-        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.rocketPartRecipes) + '}');
+        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.galacticraft$rocketPartRecipes) + '}');
     }
 
     @Override
     public void galacticraft$setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
-        this.rocketPartRecipes = recipes;
+        this.galacticraft$rocketPartRecipes = recipes;
     }
 }

@@ -66,7 +66,8 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     @Shadow
     public abstract @NotNull MinecraftServer getServer();
 
-    private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
+    @Unique
+    private final FootprintManager galacticraft$footprintManager = new ServerFootprintManager();
 
     @Inject(method = "<init>", at = @At("RETURN"))
     private void setSpawnersGC(CallbackInfo ci, @Local(argsOnly = true) ResourceKey<Level> worldKey) {
@@ -92,13 +93,13 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     private void tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         var profiler = getProfiler();
         profiler.push("footprints");
-        footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
+        this.galacticraft$footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
         profiler.pop();
     }
 
     @Override
     public FootprintManager galacticraft$getFootprintManager() {
-        return footprintManager;
+        return this.galacticraft$footprintManager;
     }
 
     @WrapMethod(method = "advanceWeatherCycle")

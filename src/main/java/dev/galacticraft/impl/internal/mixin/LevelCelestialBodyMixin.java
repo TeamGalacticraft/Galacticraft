@@ -49,7 +49,7 @@ import java.util.function.Supplier;
 @Mixin(value = Level.class, priority = 100) // apply before oxygen level mixin
 abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
     @Unique
-    private Holder<CelestialBody<?, ?>> celestialBody = null;
+    private Holder<CelestialBody<?, ?>> galacticraft$celestialBody = null;
 
     @Shadow public abstract RegistryAccess registryAccess();
 
@@ -66,14 +66,14 @@ abstract class LevelCelestialBodyMixin implements LevelBodyAccessor {
                       boolean bl2,
                       long l,
                       int i, CallbackInfo ci) {
-        this.celestialBody = registryAccess.registryOrThrow(AddonRegistries.CELESTIAL_BODY).holders().filter(
+        this.galacticraft$celestialBody = registryAccess.registryOrThrow(AddonRegistries.CELESTIAL_BODY).holders().filter(
                 b -> b.value().type() instanceof Landable landable && landable.world(b.value().config()).equals(levelKey)
         ).findFirst().orElse(null);
     }
 
     @Override
     public @Nullable Holder<CelestialBody<?, ?>> galacticraft$getCelestialBody() {
-        return this.celestialBody;
+        return this.galacticraft$celestialBody;
     }
 
     @Override

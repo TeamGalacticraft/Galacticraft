@@ -64,10 +64,10 @@ abstract class ServerPlayerMixin extends Player implements GearInventoryProvider
     @Shadow
     public abstract ServerLevel serverLevel();
 
-    private final @Unique SimpleContainer gearInv = this.galacticraft$createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT, OXYGEN_TANK_2_SLOT);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, THERMAL_ARMOR_SLOT_START, THERMAL_ARMOR_SLOT_START + 1, THERMAL_ARMOR_SLOT_START + 2, THERMAL_ARMOR_SLOT_START + 3);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT, ACCESSORY_SLOT_START, ACCESSORY_SLOT_START + 1, ACCESSORY_SLOT_START + 2, ACCESSORY_SLOT_START + 3);
+    private final @Unique SimpleContainer galacticraft$gearInv = this.galacticraft$createGearInventory();
+    private final @Unique Container galacticraft$tankInv = MappedInventory.create(this.galacticraft$gearInv, OXYGEN_TANK_1_SLOT, OXYGEN_TANK_2_SLOT);
+    private final @Unique Container galacticraft$thermalArmorInv = MappedInventory.create(this.galacticraft$gearInv, THERMAL_ARMOR_SLOT_START, THERMAL_ARMOR_SLOT_START + 1, THERMAL_ARMOR_SLOT_START + 2, THERMAL_ARMOR_SLOT_START + 3);
+    private final @Unique Container galacticraft$accessoryInv = MappedInventory.create(this.galacticraft$gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT, ACCESSORY_SLOT_START, ACCESSORY_SLOT_START + 1, ACCESSORY_SLOT_START + 2, ACCESSORY_SLOT_START + 3);
 
     @Inject(method = "tick", at = @At("TAIL"))
     private void galacticraft_parrotOxygenCheck(CallbackInfo ci) {
@@ -130,31 +130,31 @@ abstract class ServerPlayerMixin extends Player implements GearInventoryProvider
 
     @Override
     public SimpleContainer galacticraft$getGearInv() {
-        return this.gearInv;
+        return this.galacticraft$gearInv;
     }
 
     @Override
     public Container galacticraft$getOxygenTanks() {
-        return this.tankInv;
+        return this.galacticraft$tankInv;
     }
 
     @Override
     public Container galacticraft$getThermalArmor() {
-        return this.thermalArmorInv;
+        return this.galacticraft$thermalArmorInv;
     }
 
     @Override
     public Container galacticraft$getAccessories() {
-        return this.accessoryInv;
+        return this.galacticraft$accessoryInv;
     }
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.gearInv.createTag(this.serverLevel().registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$gearInv.createTag(this.serverLevel().registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
+        this.galacticraft$gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.serverLevel().registryAccess());
     }
 }

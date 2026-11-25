@@ -82,7 +82,7 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
     public abstract void setYHeadRot(float f);
 
     @Unique
-    public int cryogenicChamberCooldown;
+    public int galacticraft$cryogenicChamberCooldown;
 
     @Override
     public void galacticraft$beginCryoSleep() {
@@ -101,22 +101,22 @@ abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
 
     @Override
     public int galacticraft$getCryogenicChamberCooldown() {
-        return this.cryogenicChamberCooldown;
+        return this.galacticraft$cryogenicChamberCooldown;
     }
 
     @Override
     public void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
-        this.cryogenicChamberCooldown = cryogenicChamberCooldown;
+        this.galacticraft$cryogenicChamberCooldown = cryogenicChamberCooldown;
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
     private void gc$readCryoData(CompoundTag tag, CallbackInfo ci) {
-        this.cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
+        this.galacticraft$cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
     private void gc$addCryoData(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.cryogenicChamberCooldown);
+        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.galacticraft$cryogenicChamberCooldown);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))

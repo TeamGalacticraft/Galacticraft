@@ -77,9 +77,14 @@ import java.util.UUID;
 
 @Mixin(Entity.class)
 abstract class EntityMixin implements EntityAccessor {
-    private @Unique double distanceSinceLastStep;
-    private @Unique int lastStep = -1;
-    private @Unique int timeInAcid = 0;
+    @Unique
+    private double galacticraft$distanceSinceLastStep;
+
+    @Unique
+    private int galacticraft$lastStep = -1;
+
+    @Unique
+    private int galacticraft$timeInAcid = 0;
 
     @Shadow
     private Level level;
@@ -147,7 +152,7 @@ abstract class EntityMixin implements EntityAccessor {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
             // The entity enters an acid fluid, this entity needs to take damage
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
-                boolean damage = this.timeInAcid >= 30;
+                boolean damage = this.galacticraft$timeInAcid >= 30;
                 boolean playSound = true;
                 if (damage && (entity instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
                     this.discard();
@@ -169,13 +174,13 @@ abstract class EntityMixin implements EntityAccessor {
                 if (damage) {
                     this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
-                if (playSound && this.timeInAcid % 5 == 0) {
+                if (playSound && this.galacticraft$timeInAcid % 5 == 0) {
                     this.galacticraft$sulfuricAcidEffects();
                 }
             }
-            ++this.timeInAcid;
+            ++this.galacticraft$timeInAcid;
         } else {
-            this.timeInAcid = 0;
+            this.galacticraft$timeInAcid = 0;
         }
     }
 
@@ -238,22 +243,22 @@ abstract class EntityMixin implements EntityAccessor {
 
     @Override
     public double galacticraft$getDistanceSinceLastStep() {
-        return this.distanceSinceLastStep;
+        return this.galacticraft$distanceSinceLastStep;
     }
 
     @Override
     public void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        this.distanceSinceLastStep = distanceSinceLastStep;
+        this.galacticraft$distanceSinceLastStep = distanceSinceLastStep;
     }
 
     @Override
     public int galacticraft$getLastStep() {
-        return this.lastStep;
+        return this.galacticraft$lastStep;
     }
 
     @Override
     public void galacticraft$swapLastStep() {
-        this.lastStep = -this.lastStep;
+        this.galacticraft$lastStep = -this.galacticraft$lastStep;
     }
 
     @WrapOperation(

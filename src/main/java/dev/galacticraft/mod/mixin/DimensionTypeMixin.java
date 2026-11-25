@@ -36,16 +36,16 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(DimensionType.class)
 abstract class DimensionTypeMixin {
     @Unique
-    private boolean isMoon;
+    private boolean galacticraft$isMoon;
 
     @Inject(method = "<init>", at = @At("TAIL"))
     private void gc$initDimType(CallbackInfo ci, @Local(argsOnly = true) ResourceLocation effectsLocation) {
-        isMoon = effectsLocation.equals(GCDimensions.MOON.location());
+        this.galacticraft$isMoon = effectsLocation.equals(GCDimensions.MOON.location());
     }
 
     @ModifyVariable(method = "timeOfDay", at = @At("HEAD"), index = 1, argsOnly = true)
     private long changeTime(long value) {
-        if (isMoon) {
+        if (this.galacticraft$isMoon) {
             return value / 16;
         }
 

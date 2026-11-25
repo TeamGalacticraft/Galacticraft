@@ -60,7 +60,7 @@ import java.util.Map;
 @Mixin(MinecraftServer.class)
 abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Unique
-    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
+    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$satellites = new HashMap<>();
 
     @Shadow
     @Final
@@ -71,14 +71,14 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
 
     @Override
     public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
-        return ImmutableMap.copyOf(this.satellites);
+        return ImmutableMap.copyOf(this.galacticraft$satellites);
     }
 
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         ResourceLocation id = satellite.config().getId();
-        this.satellites.put(id, satellite);
+        this.galacticraft$satellites.put(id, satellite);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Added satellite with id {}", id);
     }
@@ -86,7 +86,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Override
     @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$removeSatellite(ResourceLocation id) {
-        this.satellites.remove(id);
+        this.galacticraft$satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         Constant.LOGGER.info("Removed satellite with id {}", id);
     }
@@ -95,7 +95,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         ResourceLocation id = satellite.config().getId();
-        this.satellites.replace(id, satellite);
+        this.galacticraft$satellites.replace(id, satellite);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Updated satellite with id {}", id);
@@ -106,7 +106,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);
         ListTag nbt = new ListTag();
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
-        for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
+        for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.galacticraft$satellites.entrySet()) {
             CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), ops, new CompoundTag()).getOrThrow();
             compound.putString("id", entry.getKey().toString());
             nbt.add(compound);

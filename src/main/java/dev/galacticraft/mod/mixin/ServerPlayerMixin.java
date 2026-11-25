@@ -50,13 +50,13 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
     }
 
     @Unique
-    private @Nullable RocketData rocketData = null;
+    private @Nullable RocketData galacticraft$rocketData = null;
 
     @Unique
-    private boolean celestialActive = false;
+    private boolean galacticraft$celestialActive = false;
 
     @Unique
-    private boolean isRideTick = false;
+    private boolean galacticraft$isRideTick = false;
 
     /**
      * Dimension found in the player's NBT when the player was loaded.
@@ -70,24 +70,24 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
 
     @Override
     public boolean galacticraft$isCelestialScreenActive() {
-        return this.celestialActive;
+        return this.galacticraft$celestialActive;
     }
 
     @Override
     public void galacticraft$closeCelestialScreen() {
-        this.celestialActive = false;
-        this.rocketData = null;
+        this.galacticraft$celestialActive = false;
+        this.galacticraft$rocketData = null;
     }
 
     @Override
     public @Nullable RocketData galacticraft$getCelestialScreenState() {
-        return this.rocketData;
+        return this.galacticraft$rocketData;
     }
 
     @Override
     public void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        this.celestialActive = true;
-        this.rocketData = data;
+        this.galacticraft$celestialActive = true;
+        this.galacticraft$rocketData = data;
     }
 
     @Override
@@ -102,21 +102,21 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
     private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
-        nbt.putBoolean("CelestialActive", this.celestialActive);
+        nbt.putBoolean("CelestialActive", this.galacticraft$celestialActive);
 
-        if (this.rocketData != null) {
+        if (this.galacticraft$rocketData != null) {
             CompoundTag nbt1 = new CompoundTag();
-            RocketData.CODEC.encode(this.rocketData, NbtOps.INSTANCE, nbt1);
+            RocketData.CODEC.encode(this.galacticraft$rocketData, NbtOps.INSTANCE, nbt1);
             nbt.put("CelestialState", nbt1);
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
     private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
-        this.celestialActive = nbt.getBoolean("CelestialActive");
+        this.galacticraft$celestialActive = nbt.getBoolean("CelestialActive");
 
         if (nbt.contains("CelestialState")) {
-            this.rocketData = RocketData.CODEC
+            this.galacticraft$rocketData = RocketData.CODEC
                     .decode(
                             NbtOps.INSTANCE,
                             nbt.getCompound("CelestialState")
@@ -148,19 +148,19 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
 
     @Inject(method = "rideTick", at = @At("HEAD"))
     private void rideTickStart(CallbackInfo ci) {
-        this.isRideTick = true;
+        this.galacticraft$isRideTick = true;
     }
 
     @Inject(method = "rideTick", at = @At("TAIL"))
     private void rideTickEnd(CallbackInfo ci) {
-        this.isRideTick = false;
+        this.galacticraft$isRideTick = false;
     }
 
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
     private void canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
 
-        if (isRideTick
+        if (this.galacticraft$isRideTick
                 && vehicle instanceof IgnoreShift ignoreShift
                 && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();

@@ -49,29 +49,29 @@ abstract class TamableAnimalMixin extends Entity implements GearInventoryProvide
         super(null, null);
     }
 
-    private final @Unique SimpleContainer gearInv = this.galacticraft$createGearInventory();
-    private final @Unique Container tankInv = MappedInventory.create(this.gearInv, OXYGEN_TANK_1_SLOT);
-    private final @Unique Container thermalArmorInv = MappedInventory.create(this.gearInv, PET_THERMAL_SLOT);
-    private final @Unique Container accessoryInv = MappedInventory.create(this.gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT);
+    private final @Unique SimpleContainer galacticraft$gearInv = this.galacticraft$createGearInventory();
+    private final @Unique Container galacticraft$tankInv = MappedInventory.create(this.galacticraft$gearInv, OXYGEN_TANK_1_SLOT);
+    private final @Unique Container galacticraft$thermalArmorInv = MappedInventory.create(this.galacticraft$gearInv, PET_THERMAL_SLOT);
+    private final @Unique Container galacticraft$accessoryInv = MappedInventory.create(this.galacticraft$gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT);
 
     @Override
     public SimpleContainer galacticraft$getGearInv() {
-        return this.gearInv;
+        return this.galacticraft$gearInv;
     }
 
     @Override
     public Container galacticraft$getOxygenTanks() {
-        return this.tankInv;
+        return this.galacticraft$tankInv;
     }
 
     @Override
     public Container galacticraft$getThermalArmor() {
-        return this.thermalArmorInv;
+        return this.galacticraft$thermalArmorInv;
     }
 
     @Override
     public Container galacticraft$getAccessories() {
-        return this.accessoryInv;
+        return this.galacticraft$accessoryInv;
     }
 
     @Override
@@ -92,11 +92,11 @@ abstract class TamableAnimalMixin extends Entity implements GearInventoryProvide
 
     @Override
     public void galacticraft$writeGearToNbt(CompoundTag tag) {
-        tag.put(Constant.Nbt.GEAR_INV, this.gearInv.createTag(this.registryAccess()));
+        tag.put(Constant.Nbt.GEAR_INV, this.galacticraft$gearInv.createTag(this.registryAccess()));
     }
 
     @Override
     public void galacticraft$readGearFromNbt(CompoundTag tag) {
-        this.gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
+        this.galacticraft$gearInv.fromTag(tag.getList(Constant.Nbt.GEAR_INV, Tag.TAG_COMPOUND), this.registryAccess());
     }
 }
