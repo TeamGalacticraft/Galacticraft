@@ -54,7 +54,7 @@ abstract class ClientLevelMixin extends Level {
     private Minecraft minecraft;
 
     @ModifyReturnValue(method = "getSkyColor", at = @At("RETURN"))
-    private Vec3 gc$getDimensionSkyColor(Vec3 original, Vec3 pos, float partialTick) {
+    private Vec3 galacticraft$getDimensionSkyColor(Vec3 original, Vec3 pos, float partialTick) {
         if (effects instanceof GalacticDimensionEffects gcEffects) {
             return gcEffects.getSkyColor((ClientLevel) (Object) this, partialTick);
         } else if (pos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && this.dimension() == Level.OVERWORLD) {
@@ -66,7 +66,7 @@ abstract class ClientLevelMixin extends Level {
     }
 
     @ModifyReturnValue(method = "getSkyFlashTime", at = @At("RETURN"))
-    private int gc$hideLightningFlash(int original) {
+    private int galacticraft$hideLightningFlash(int original) {
         Player player = this.minecraft.player;
         if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_LIMIT) {
             return 0;

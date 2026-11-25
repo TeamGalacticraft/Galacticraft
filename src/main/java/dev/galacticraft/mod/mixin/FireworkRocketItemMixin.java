@@ -40,7 +40,7 @@ abstract class FireworkRocketItemMixin extends Item {
     }
 
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
-    private boolean gc$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
+    private boolean galacticraft$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
         return original && !level.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM);
     }
 }

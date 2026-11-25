@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ModelProvider.class)
 abstract class ModelProviderMixin {
     @ModifyExpressionValue(method = "run", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean fixGcModelGen(boolean original) {
+    private boolean galacticraft$fixModelGen(boolean original) {
         return original || (Object) this instanceof GCModelProvider;
     }
 }

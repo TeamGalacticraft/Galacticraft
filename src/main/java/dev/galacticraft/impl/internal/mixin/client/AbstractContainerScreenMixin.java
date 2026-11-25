@@ -59,7 +59,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     protected T menu;
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void onTabClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
+    private void galacticraft$onTabClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> ci) {
         boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {
@@ -87,7 +87,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "render", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/Screen;render(Lnet/minecraft/client/gui/GuiGraphics;IIF)V", shift = At.Shift.AFTER))
-    private void drawBackground(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    private void galacticraft$drawBackground(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {
@@ -123,7 +123,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Inject(method = "render", at = @At("TAIL"))
-    private void render(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
+    private void galacticraft$render(GuiGraphics graphics, int mouseX, int mouseY, float v, CallbackInfo callbackInfo) {
         boolean tabsVisible = false;
         for (InventoryTabRegistryImpl.TabData data : InventoryTabRegistryImpl.INSTANCE.TABS) {
             if (this.menu.getClass().equals(data.clazz())) {

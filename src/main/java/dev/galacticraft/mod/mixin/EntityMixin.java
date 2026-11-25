@@ -137,7 +137,7 @@ abstract class EntityMixin implements EntityAccessor {
     public abstract void discard();
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
-    private void checkWaterStateGC(CallbackInfo ci) {
+    private void galacticraft$checkWaterState(CallbackInfo ci) {
         Entity entity = (Entity) (Object) this;
         boolean invulnerable = entity instanceof Player player && player.getAbilities().invulnerable;
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
@@ -194,7 +194,7 @@ abstract class EntityMixin implements EntityAccessor {
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
-    private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
+    private void galacticraft$tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
         //noinspection ConstantConditions
         if ((Object) this instanceof Player player && player.getAbilities().flying) {
             return;

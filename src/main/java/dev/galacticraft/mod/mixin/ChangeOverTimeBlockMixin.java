@@ -38,7 +38,7 @@ import java.util.Optional;
 @Mixin(ChangeOverTimeBlock.class)
 interface ChangeOverTimeBlockMixin {
     @WrapMethod(method = "getNextState")
-    private Optional<BlockState> gc$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
+    private Optional<BlockState> galacticraft$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
         if (this instanceof WeatheringCopper) {
             boolean preventAgeing = true;
 

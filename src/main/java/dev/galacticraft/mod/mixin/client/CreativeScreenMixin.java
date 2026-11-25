@@ -99,22 +99,22 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     }
 
     @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;blit(Lnet/minecraft/resources/ResourceLocation;IIIIII)V"), index = 0)
-    private ResourceLocation gc$changeBackground(ResourceLocation original) {
+    private ResourceLocation galacticraft$changeBackground(ResourceLocation original) {
         return galacticraft$isGCInventoryEnabled() ? GC_GUIBG_TEX : original;
     }
 
     @ModifyArg(method = "renderBg", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/screens/inventory/InventoryScreen;renderEntityInInventoryFollowsMouse(Lnet/minecraft/client/gui/GuiGraphics;IIIIIFFFLnet/minecraft/world/entity/LivingEntity;)V"), index = 1)
-    private int gc$shiftEntityLeft(int original) {
+    private int galacticraft$shiftEntityLeft(int original) {
         return galacticraft$isGCInventoryEnabled() ? leftPos + 55 : original;
     }
 
     @Inject(method = "init", at = @At("HEAD"))
-    private void init(CallbackInfo ci) {
+    private void galacticraft$init(CallbackInfo ci) {
         galacticraft$creativeSwitchButton = new RadioButton(0, 0);
     }
 
     @Inject(method = "selectTab", at = @At(value = "HEAD"))
-    private void gc$selectTab(CreativeModeTab group, CallbackInfo ci) {
+    private void galacticraft$selectTab(CreativeModeTab group, CallbackInfo ci) {
         if (group.getType() == CreativeModeTab.Type.INVENTORY) {
             if (galacticraft$isCreativeGearInvAllowed()) {
                 galacticraft$creativeSwitchButton.setX(leftPos + 11);
@@ -139,7 +139,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     }
 
     @Inject(method = "resize", at = @At(value = "TAIL"))
-    private void resize(Minecraft client, int width, int height, CallbackInfo ci) {
+    private void galacticraft$resize(Minecraft client, int width, int height, CallbackInfo ci) {
         if (galacticraft$isGCInventoryEnabled()) {
             galacticraft$regenerateSlots();
             galacticraft$creativeSwitchButton.setIsBottomButtonActive(true);
@@ -147,7 +147,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     }
 
     @Inject(method = "mouseClicked", at = @At("HEAD"), cancellable = true)
-    private void onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$onMouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (galacticraft$isGCInventoryEnabled() && selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             Slot slot = galacticraft$findSlot(mouseX, mouseY);
             if (slot != null) {
@@ -174,7 +174,7 @@ abstract class CreativeScreenMixin extends EffectRenderingInventoryScreen<ItemPi
     }
 
     @Inject(method = "slotClicked", at = @At("HEAD"), cancellable = true)
-    private void onSlotClicked(Slot slot, int slotId, int button, ClickType clickType, CallbackInfo ci) {
+    private void galacticraft$onSlotClicked(Slot slot, int slotId, int button, ClickType clickType, CallbackInfo ci) {
         if (galacticraft$isGCInventoryEnabled() && selectedTab.getType() == CreativeModeTab.Type.INVENTORY) {
             if (clickType == ClickType.QUICK_MOVE) {
                 if (galacticraft$tryQuickStackToGCInv(slot)) {

@@ -38,7 +38,7 @@ abstract class InventoryScreenMixin {
             target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasInfiniteItems()Z"
         )
     )
-    private boolean hasInfiniteItemsMixin(boolean result) {
+    private boolean galacticraft$hasInfiniteItems(boolean result) {
         return result && !(Minecraft.getInstance().player.getVehicle() instanceof RocketEntity);
     }
 }

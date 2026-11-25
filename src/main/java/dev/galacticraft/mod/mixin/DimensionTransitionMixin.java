@@ -46,7 +46,7 @@ abstract class DimensionTransitionMixin {
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void findRespawnAndUseCryoChamber(
+    private static void galacticraft$findRespawnAndUseCryoChamber(
             ServerLevel overworld,
             Entity entity,
             DimensionTransition.PostDimensionTransition postDimensionTransition,

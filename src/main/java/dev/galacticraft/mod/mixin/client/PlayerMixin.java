@@ -46,7 +46,7 @@ abstract class PlayerMixin implements PetInventoryOpener {
     }
 
     @ModifyReturnValue(method = "isModelPartShown", at = @At("RETURN"))
-    private boolean gc$forceCapeWhenActive(boolean original, PlayerModelPart part) {
+    private boolean galacticraft$forceCapeWhenActive(boolean original, PlayerModelPart part) {
         if (part != PlayerModelPart.CAPE) return original;
 
         //noinspection ConstantConditions

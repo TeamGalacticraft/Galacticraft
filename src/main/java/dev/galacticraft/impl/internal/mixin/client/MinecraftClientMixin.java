@@ -44,7 +44,7 @@ abstract class MinecraftClientMixin {
     public abstract SoundManager getSoundManager();
 
     @Inject(method = "setLevel", at = @At("RETURN"))
-    private void updateSoundMultiplier(ClientLevel level, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
+    private void galacticraft$updateSoundMultiplier(ClientLevel level, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
         float volume = 1.0F;
         if (level != null) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();

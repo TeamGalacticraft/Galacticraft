@@ -39,12 +39,12 @@ abstract class DimensionTypeMixin {
     private boolean galacticraft$isMoon;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gc$initDimType(CallbackInfo ci, @Local(argsOnly = true) ResourceLocation effectsLocation) {
+    private void galacticraft$initDimType(CallbackInfo ci, @Local(argsOnly = true) ResourceLocation effectsLocation) {
         this.galacticraft$isMoon = effectsLocation.equals(GCDimensions.MOON.location());
     }
 
     @ModifyVariable(method = "timeOfDay", at = @At("HEAD"), index = 1, argsOnly = true)
-    private long changeTime(long value) {
+    private long galacticraft$changeTime(long value) {
         if (this.galacticraft$isMoon) {
             return value / 16;
         }

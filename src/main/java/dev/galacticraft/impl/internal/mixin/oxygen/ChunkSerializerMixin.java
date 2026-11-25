@@ -44,7 +44,7 @@ import java.util.Objects;
 @Mixin(ChunkSerializer.class)
 abstract class ChunkSerializerMixin {
     @Inject(method = "write", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/chunk/LevelChunkSection;getStates()Lnet/minecraft/world/level/chunk/PalettedContainer;"))
-    private static void galacticraft_serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, @Local(ordinal = 1) CompoundTag nbtCompound2, @Local LevelChunkSection section) {
+    private static void galacticraft$serializeOxygen(ServerLevel world, ChunkAccess chunk, CallbackInfoReturnable<CompoundTag> cir, @Local(ordinal = 1) CompoundTag nbtCompound2, @Local LevelChunkSection section) {
         var accessor = (ChunkSectionOxygenAccessor) section;
         if (!accessor.galacticraft$isEmpty()) {
             CompoundTag nbt = new CompoundTag();
@@ -54,7 +54,7 @@ abstract class ChunkSerializerMixin {
     }
 
     @Inject(method = "read", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/ai/village/poi/PoiManager;checkConsistencyWithBlocks(Lnet/minecraft/core/SectionPos;Lnet/minecraft/world/level/chunk/LevelChunkSection;)V"))
-    private static void galacticraft_deserializeOxygen(ServerLevel level, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag compoundTag, @Local LevelChunkSection levelChunkSection) {
+    private static void galacticraft$deserializeOxygen(ServerLevel level, PoiManager poiStorage, RegionStorageInfo key, ChunkPos chunkPos, CompoundTag nbt, CallbackInfoReturnable<ProtoChunk> cir, @Local(ordinal = 1) CompoundTag compoundTag, @Local LevelChunkSection levelChunkSection) {
         CompoundTag apiCompound = compoundTag.getCompound(Constant.Nbt.GC_API);
         if (apiCompound.contains(Constant.Nbt.OXYGEN, Tag.TAG_BYTE_ARRAY)) {
             ((ChunkSectionOxygenAccessor) levelChunkSection).galacticraft$setBits(BitSet.valueOf(apiCompound.getByteArray(Constant.Nbt.OXYGEN)));

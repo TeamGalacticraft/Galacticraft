@@ -49,7 +49,7 @@ abstract class ScreenEffectRendererMixin {
     private static final ResourceLocation ACID_LOCATION = Constant.id("textures/misc/sulfuric_acid_overlay.png");
 
     @Inject(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    private static void gc$fluidOverlays(Minecraft minecraft, PoseStack poseStack, CallbackInfo ci) {
+    private static void galacticraft$fluidOverlays(Minecraft minecraft, PoseStack poseStack, CallbackInfo ci) {
         if (minecraft.player.isEyeInFluid(GCFluidTags.OIL)) {
             galacticraft$renderFluidOverlay(minecraft, poseStack, OIL_LOCATION);
         } else if (minecraft.player.isEyeInFluid(GCFluidTags.FUEL)) {

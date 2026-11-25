@@ -70,7 +70,7 @@ abstract class ServerPlayerMixin extends Player implements GearInventoryProvider
     private final @Unique Container galacticraft$accessoryInv = MappedInventory.create(this.galacticraft$gearInv, OXYGEN_MASK_SLOT, OXYGEN_GEAR_SLOT, ACCESSORY_SLOT_START, ACCESSORY_SLOT_START + 1, ACCESSORY_SLOT_START + 2, ACCESSORY_SLOT_START + 3);
 
     @Inject(method = "tick", at = @At("TAIL"))
-    private void galacticraft_parrotOxygenCheck(CallbackInfo ci) {
+    private void galacticraft$parrotOxygenCheck(CallbackInfo ci) {
         CompoundTag leftParrot = this.getShoulderEntityLeft();
         CompoundTag rightParrot = this.getShoulderEntityRight();
         if ((!leftParrot.isEmpty() || !rightParrot.isEmpty())

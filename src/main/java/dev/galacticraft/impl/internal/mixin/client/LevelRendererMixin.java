@@ -42,7 +42,7 @@ abstract class LevelRendererMixin {
     public int ticks;
 
     @Inject(method = "tickRain", at = @At("HEAD"), cancellable = true)
-    private void tickPlanetRain(Camera camera, CallbackInfo ci) {
+    private void galacticraft$tickPlanetRain(Camera camera, CallbackInfo ci) {
         if (level.effects() instanceof GalacticDimensionEffects gcEffects) {
             if (gcEffects.tickRain(level, camera, ticks))
                 ci.cancel();

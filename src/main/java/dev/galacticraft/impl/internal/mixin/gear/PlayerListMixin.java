@@ -43,7 +43,7 @@ import java.util.Collection;
 @Mixin(PlayerList.class)
 abstract class PlayerListMixin {
     @Inject(method = "placeNewPlayer", at = @At("RETURN"))
-    private void syncGalacticraftData(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
+    private void galacticraft$syncGalacticraftData(Connection connection, ServerPlayer player, CommonListenerCookie cookie, CallbackInfo ci) {
         Container inventory = player.galacticraft$getGearInv();
         ItemStack[] stacks = new ItemStack[inventory.getContainerSize()];
         for (int i = 0; i < inventory.getContainerSize(); i++) {

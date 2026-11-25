@@ -40,7 +40,7 @@ abstract class PauseMenuScreenMixin extends Screen {
     }
 
     @Inject(method = "init", at = @At("RETURN"))
-    private void init(CallbackInfo info) {
+    private void galacticraft$init(CallbackInfo info) {
         int screenWidth = this.width;
         int screenHeight = this.height;
         int buttonWidth = 100;

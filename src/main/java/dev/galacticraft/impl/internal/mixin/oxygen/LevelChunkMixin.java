@@ -111,7 +111,7 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
     }
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
-    private void resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
+    private void galacticraft$resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
         // TODO: Better system for checking whether the oxygen should be reset
         if (blockState.isSolidRender(this.level, pos)) {
             this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
@@ -119,7 +119,7 @@ abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccesso
     }
 
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
-    private void extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
+    private void galacticraft$extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
         if (level.galacticraft$isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
             original.call(newState, level, pos, oldState, bl);
         }

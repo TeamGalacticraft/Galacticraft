@@ -54,7 +54,7 @@ abstract class FogRendererMixin {
     private static float fogBlue;
 
     @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;clearColor(FFFF)V", remap = false, ordinal = 1))
-    private static void gc$setupColor(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
+    private static void galacticraft$setupColor(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && clientLevel.dimension() == Level.OVERWORLD) {
             Vec3 vec3 = OverworldRenderer.getFogColor(clientLevel, partialTicks, camera.getPosition());
@@ -65,7 +65,7 @@ abstract class FogRendererMixin {
     }
 
     @ModifyExpressionValue(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/Camera;getLookVector()Lorg/joml/Vector3f;"))
-    private static Vector3f gc$getSunriseColor(Vector3f original, @Local(argsOnly = true) ClientLevel clientLevel) {
+    private static Vector3f galacticraft$getSunriseColor(Vector3f original, @Local(argsOnly = true) ClientLevel clientLevel) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && clientLevel.dimension() == Level.OVERWORLD) {
             return original.zero();
@@ -74,7 +74,7 @@ abstract class FogRendererMixin {
     }
 
     @Inject(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/renderer/FogRenderer;getPriorityFogFunction(Lnet/minecraft/world/entity/Entity;F)Lnet/minecraft/client/renderer/FogRenderer$MobEffectFogFunction;"))
-    private static void gc$setupFluidFog(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
+    private static void galacticraft$setupFluidFog(Camera camera, float partialTicks, ClientLevel clientLevel, int renderDistanceChunks, float bossColorModifier, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player.isEyeInFluid(GCFluidTags.OIL)) {
             fogRed = 0.0F;
@@ -92,7 +92,7 @@ abstract class FogRendererMixin {
     }
 
     @ModifyArg(method = "setupFog", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogStart(F)V", remap = false), index = 0)
-    private static float gc$setShaderFogStart(float start, @Local FogType fogType) {
+    private static float galacticraft$setShaderFogStart(float start, @Local FogType fogType) {
         Player player = Minecraft.getInstance().player;
         if (fogType != FogType.NONE) {
             if (player.isEyeInFluid(GCFluidTags.OIL)) {
@@ -116,7 +116,7 @@ abstract class FogRendererMixin {
     }
 
     @ModifyArg(method = "setupFog", at = @At(value = "INVOKE", target = "Lcom/mojang/blaze3d/systems/RenderSystem;setShaderFogEnd(F)V", remap = false), index = 0)
-    private static float gc$setShaderFogEnd(float end, @Local FogType fogType) {
+    private static float galacticraft$setShaderFogEnd(float end, @Local FogType fogType) {
         if (fogType != FogType.NONE) {
             Player player = Minecraft.getInstance().player;
             if (player.isEyeInFluid(GCFluidTags.OIL)) {

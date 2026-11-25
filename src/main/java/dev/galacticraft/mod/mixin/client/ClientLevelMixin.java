@@ -41,7 +41,7 @@ abstract class ClientLevelMixin implements GCLevelAccessor {
     private final FootprintManager galacticraft$footprintManager = new FootprintManager();
 
     @Inject(method = "tickTime", at = @At("RETURN"))
-    private void update(CallbackInfo ci) {
+    private void galacticraft$update(CallbackInfo ci) {
         ((Level) (Object) this).updateSkyBrightness();
     }
 

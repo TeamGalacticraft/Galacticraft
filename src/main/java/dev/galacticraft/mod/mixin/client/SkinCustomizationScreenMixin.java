@@ -55,7 +55,7 @@ abstract class SkinCustomizationScreenMixin extends Screen {
             method = "addOptions",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", shift = At.Shift.AFTER)
     )
-    private void gc$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
+    private void galacticraft$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
         CapesClientRole.ensureLoadedAsync();
         if (!CapesClientRole.isEligibleClient()) return;
         if (list.isEmpty() || !(list.getLast() instanceof CycleButton<?> cb)) return;

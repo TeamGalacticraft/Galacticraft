@@ -51,7 +51,7 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
     public abstract @NotNull LevelChunk getChunk(int i, int j);
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void initializeOxygenValues(CallbackInfo ci) {
+    private void galacticraft$initializeOxygenValues(CallbackInfo ci) {
         Holder<CelestialBody<?, ?>> holder = ((LevelBodyAccessor) this).galacticraft$getCelestialBody();
         this.galacticraft$setDefaultBreathable(holder != null ? holder.value().atmosphere().breathable() : this.galacticraft$breathable);
     }

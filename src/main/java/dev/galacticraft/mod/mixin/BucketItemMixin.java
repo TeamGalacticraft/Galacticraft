@@ -66,7 +66,7 @@ abstract class BucketItemMixin extends Item {
     protected abstract void playEmptySound(@Nullable Player player, LevelAccessor levelAccessor, BlockPos blockPos);
 
     @Inject(method = "emptyContents", cancellable = true, at = @At("HEAD"))
-    private void emptyFluidLoggable_gc(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$emptyFluidLoggable(@Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult, CallbackInfoReturnable<Boolean> cir) {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
 
@@ -78,7 +78,7 @@ abstract class BucketItemMixin extends Item {
     }
 
     @Inject(method = "use", at = @At(value = "INVOKE", target = "net/minecraft/world/level/block/BucketPickup.getPickupSound()Ljava/util/Optional;"))
-    private void getPickupSoundFluidLoggable_gc(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, @Local BlockState blockState) {
+    private void galacticraft$getPickupSoundFluidLoggable(Level level, Player player, InteractionHand interactionHand, CallbackInfoReturnable<InteractionResultHolder<ItemStack>> cir, @Local BlockState blockState) {
         if (blockState.getBlock() instanceof FluidLoggable) {
             BuiltInRegistries.FLUID.get(blockState.getValue(FluidLoggable.FLUID)).getPickupSound().ifPresent(soundEvent -> player.playSound(soundEvent, 1.0F, 1.0F));
         }
@@ -88,7 +88,7 @@ abstract class BucketItemMixin extends Item {
             slice = @Slice(
                     from = @At(value = "INVOKE", target = "net/minecraft/world/level/block/state/BlockState.canBeReplaced(Lnet/minecraft/world/level/material/Fluid;)Z")),
             index = 9, ordinal = 1)
-    private boolean checkIfFluidLoggable_gc(boolean defaultValue, @Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult) {
+    private boolean galacticraft$checkIfFluidLoggable(boolean defaultValue, @Nullable Player player, Level level, BlockPos blockPos, @Nullable BlockHitResult blockHitResult) {
         var blockState = level.getBlockState(blockPos);
         var block = blockState.getBlock();
         return defaultValue || block instanceof FluidLoggable && ((FluidLoggable) block).canPlaceLiquid(player, level, blockPos, blockState, this.content);
@@ -98,7 +98,7 @@ abstract class BucketItemMixin extends Item {
             slice = @Slice(
                     from = @At(value = "FIELD", target = "net/minecraft/world/level/material/Fluids.WATER:Lnet/minecraft/world/level/material/FlowingFluid;", opcode = Opcodes.GETSTATIC)),
             index = 10, ordinal = 2)
-    private BlockPos checkIfFluidLoggableOnUse_gc(BlockPos defaultValue, Level level, Player player, InteractionHand interactionHand) {
+    private BlockPos galacticraft$checkIfFluidLoggableOnUse(BlockPos defaultValue, Level level, Player player, InteractionHand interactionHand) {
         var blockHitResult = getPlayerPOVHitResult(level, player, this.content == Fluids.EMPTY ? ClipContext.Fluid.SOURCE_ONLY : ClipContext.Fluid.NONE);
         var blockPos = blockHitResult.getBlockPos();
         var blockState = level.getBlockState(blockPos);

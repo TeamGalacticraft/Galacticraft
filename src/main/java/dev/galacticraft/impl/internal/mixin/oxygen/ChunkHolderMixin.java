@@ -50,7 +50,7 @@ abstract class ChunkHolderMixin {
     private ChunkHolder.PlayerProvider playerProvider;
 
     @Inject(method = "broadcastChanges", at = @At("HEAD"))
-    private void galacticraft_flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
+    private void galacticraft$flushOxygenPackets(LevelChunk chunk, CallbackInfo ci) {
         OxygenUpdatePayload.OxygenData[] data = ((ChunkOxygenSyncer) chunk).galacticraft$syncOxygenPacketsToClient();
         if (data != null) {
             ChunkPos pos = ((GenerationChunkHolder) (Object) this).getPos();

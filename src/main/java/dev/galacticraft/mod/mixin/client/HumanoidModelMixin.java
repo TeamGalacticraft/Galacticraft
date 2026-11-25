@@ -73,14 +73,14 @@ abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T>
     public ModelPart hat;
 
     @Inject(at = @At("HEAD"), method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V")
-    private void standInRocketGC(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+    private void galacticraft$standInRocket(T livingEntity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         if (this.riding && livingEntity.getVehicle() instanceof RocketEntity) {
             this.riding = false;
         }
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getMainArm()Lnet/minecraft/world/entity/HumanoidArm;"))
-    private void gc$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+    private void galacticraft$modifyPlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         Holder<CelestialBody<?, ?>> holder = entity.level().galacticraft$getCelestialBody();
         if (holder != null && holder.value().gravity() < 0.8) {
             float angularSwingArm = Mth.cos(f * 0.1162F) * 2.0F * g;
@@ -94,7 +94,7 @@ abstract class HumanoidModelMixin<T extends LivingEntity> extends EntityModel<T>
     }
 
     @Inject(method = "setupAnim(Lnet/minecraft/world/entity/LivingEntity;FFFFF)V", at = @At("TAIL"))
-    private void gc$overridePlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
+    private void galacticraft$overridePlayerAnim(LivingEntity entity, float f, float g, float h, float i, float j, CallbackInfo ci) {
         boolean mainHand = entity.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem;
         boolean offHand = entity.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem;
         if (mainHand || offHand) {

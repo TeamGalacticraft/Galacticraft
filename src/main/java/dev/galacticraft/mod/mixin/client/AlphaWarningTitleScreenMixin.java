@@ -64,14 +64,14 @@ abstract class AlphaWarningTitleScreenMixin extends Screen {
     private static final Component ALPHA_WARNING_GC_CONTENT3 = Component.translatable(Translations.Ui.ALPHA_WARNING_3);
 
     @Inject(method = "init()V", at = @At("TAIL"))
-    private void init(CallbackInfo ci) {
+    private void galacticraft$init(CallbackInfo ci) {
         if (Galacticraft.CONFIG.isAlphaWarningHidden()) {
             warningHidden = true;
         }
     }
 
     @Inject(method = "render", at = @At("HEAD"), cancellable = true)
-    private void render(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+    private void galacticraft$render(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
         if (!warningHidden) {
             RenderSystem.setShader(GameRenderer::getPositionTexShader);
             RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, 1.0F);
@@ -85,7 +85,7 @@ abstract class AlphaWarningTitleScreenMixin extends Screen {
     }
 
     @Inject(method = "mouseClicked(DDI)Z", at = @At("HEAD"), cancellable = true)
-    private void mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$mouseClicked(double mouseX, double mouseY, int button, CallbackInfoReturnable<Boolean> cir) {
         if (!warningHidden) {
             warningHidden = true;
             cir.setReturnValue(false);

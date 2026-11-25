@@ -47,7 +47,7 @@ abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
     }
 
     @Inject(method = "serverTick", at = @At("HEAD"))
-    private static void gc$extinguishFurnace(Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be, CallbackInfo ci) {
+    private static void galacticraft$extinguishFurnace(Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be, CallbackInfo ci) {
         if (be.litTime > 0 && galacticraft$shouldExtinguish(level, blockPos, blockState)) {
             be.litTime = 0;
             blockState = blockState.setValue(AbstractFurnaceBlock.LIT, false);
@@ -59,7 +59,7 @@ abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
     }
 
     @ModifyExpressionValue(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;canBurn(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/world/item/crafting/RecipeHolder;Lnet/minecraft/core/NonNullList;I)Z"))
-    private static boolean gc$canBurn(boolean original, Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be) {
+    private static boolean galacticraft$canBurn(boolean original, Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be) {
         if (galacticraft$shouldExtinguish(level, blockPos, blockState)) {
             return false;
         }

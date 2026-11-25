@@ -58,7 +58,7 @@ abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Inject(method = "getSerializedSize", at = @At("RETURN"), cancellable = true)
-    private void increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
+    private void galacticraft$increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
         if (this.galacticraft$bits == null) {
             cir.setReturnValue(cir.getReturnValueI() + VarInt.getByteSize(0));
         } else {
@@ -68,17 +68,17 @@ abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
     }
 
     @Inject(method = "hasOnlyAir()Z", at = @At("RETURN"), cancellable = true)
-    private void verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValueZ() && this.galacticraft$isEmpty());
     }
 
     @Inject(method = "write", at = @At("RETURN"))
-    private void writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+    private void galacticraft$writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
         this.galacticraft$writeOxygenPacket(buf);
     }
 
     @Inject(method = "read", at = @At("RETURN"))
-    private void galacticraft_fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+    private void galacticraft$fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
         this.galacticraft$readOxygenPacket(buf);
     }
 

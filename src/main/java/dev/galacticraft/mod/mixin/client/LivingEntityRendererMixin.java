@@ -54,7 +54,7 @@ abstract class LivingEntityRendererMixin {
     }
 
     @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
-    private boolean gc$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
+    private boolean galacticraft$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
         return !instance.galacticraft$isInCryoSleep() && original.call(instance, pose);
     }
 
@@ -70,7 +70,7 @@ abstract class LivingEntityRendererMixin {
     }
 
     @Inject(method = "setupRotations", at = @At("HEAD"))
-    private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
+    private void galacticraft$rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
             double amplitude = switch(rocket.getLaunchStage()) {
                 case IGNITED -> 0.1D;

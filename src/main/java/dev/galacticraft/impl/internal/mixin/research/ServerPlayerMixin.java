@@ -74,7 +74,7 @@ abstract class ServerPlayerMixin implements ServerResearchAccessor {
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void galacticraft_readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
         this.galacticraft$unlockedRecipes.clear();
         ListTag list = nbt.getList("gcResearch", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
@@ -83,7 +83,7 @@ abstract class ServerPlayerMixin implements ServerResearchAccessor {
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void galacticraft_writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
         ListTag list = new ListTag();
         for (ResourceLocation id : this.galacticraft$unlockedRecipes) {
             list.add(StringTag.valueOf(id.toString()));

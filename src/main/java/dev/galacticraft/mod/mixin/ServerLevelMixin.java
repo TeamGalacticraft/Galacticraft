@@ -70,14 +70,14 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     private final FootprintManager galacticraft$footprintManager = new ServerFootprintManager();
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void setSpawnersGC(CallbackInfo ci, @Local(argsOnly = true) ResourceKey<Level> worldKey) {
+    private void galacticraft$setSpawners(CallbackInfo ci, @Local(argsOnly = true) ResourceKey<Level> worldKey) {
         if (worldKey.equals(GCDimensions.MOON)) {
             this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
-    private void onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+    private void galacticraft$onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
         // Skip if both old and new states are solid blocks
         if (oldState.isSolid() && newState.isSolid()) {
             return;
@@ -90,7 +90,7 @@ abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))
-    private void tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+    private void galacticraft$tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         var profiler = getProfiler();
         profiler.push("footprints");
         this.galacticraft$footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());

@@ -102,7 +102,7 @@ abstract class MinecraftServerMixin implements SatelliteAccessor {
     }
 
     @Inject(method = "saveEverything", at = @At("RETURN"))
-    private void galacticraft_saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);
         ListTag nbt = new ListTag();
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());

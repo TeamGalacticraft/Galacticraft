@@ -36,14 +36,14 @@ import org.spongepowered.asm.mixin.injection.At;
 @Mixin(ClientPacketListener.class)
 abstract class ClientPacketListenerMixin {
     @WrapWithCondition(method = "handleSetEntityPassengersPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/Gui;setOverlayMessage(Lnet/minecraft/network/chat/Component;Z)V"))
-    private boolean shouldShowOverlay(Gui instance, Component message, boolean tinted, @Local(index = 2) Entity vehicle) {
+    private boolean galacticraft$shouldShowOverlay(Gui instance, Component message, boolean tinted, @Local(index = 2) Entity vehicle) {
         if (vehicle instanceof IgnoreShift ignoreShift)
             return !ignoreShift.shouldIgnoreShiftExit();
         return true;
     }
 
     @WrapWithCondition(method = "handleSetEntityPassengersPacket", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/GameNarrator;sayNow(Lnet/minecraft/network/chat/Component;)V"))
-    private boolean shouldSayNow(GameNarrator instance, Component message, @Local(index = 2) Entity vehicle) {
+    private boolean galacticraft$shouldSayNow(GameNarrator instance, Component message, @Local(index = 2) Entity vehicle) {
         if (vehicle instanceof IgnoreShift ignoreShift)
             return !ignoreShift.shouldIgnoreShiftExit();
         return true;

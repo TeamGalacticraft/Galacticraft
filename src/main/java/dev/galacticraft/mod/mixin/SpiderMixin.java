@@ -46,7 +46,7 @@ abstract class SpiderMixin extends LivingEntity {
     }
 
     @ModifyExpressionValue(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"))
-    private int preventDefaultSkeletonJockeySpawn(int original) {
+    private int galacticraft$preventDefaultSkeletonJockeySpawn(int original) {
         if ((Spider) (Object) this instanceof EvolvedSpiderEntity) {
             return -1;
         }
@@ -54,7 +54,7 @@ abstract class SpiderMixin extends LivingEntity {
     }
 
     @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;getRandom()Lnet/minecraft/util/RandomSource;"))
-    private void finalizeEvolvedSpiderJockeySpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
+    private void galacticraft$finalizeEvolvedSpiderJockeySpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if ((Spider) (Object) this instanceof EvolvedSpiderEntity spider) {
             EvolvedSkeletonEntity skeleton;
             if (serverLevelAccessor.getRandom().nextInt(100) == 0 && (skeleton = GCEntityTypes.EVOLVED_SKELETON.create(this.level())) != null) {

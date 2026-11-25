@@ -51,7 +51,7 @@ abstract class SoundEngineMixin implements SoundSystemAccessor {
     public abstract void updateCategoryVolume(SoundSource soundCategory, float volume);
 
     @ModifyReturnValue(method = "calculateVolume(FLnet/minecraft/sounds/SoundSource;)F", at = @At("RETURN"))
-    private float galacticraft_adjustVolumeToAtmosphere(float original, float f, SoundSource soundSource) {
+    private float galacticraft$adjustVolumeToAtmosphere(float original, float f, SoundSource soundSource) {
         if (this.galacticraft$multiplier != 1.0f && soundSource != SoundSource.MASTER) {
             return Mth.clamp(original * this.galacticraft$multiplier, 0.0f, 2.0f);
         }
@@ -59,7 +59,7 @@ abstract class SoundEngineMixin implements SoundSystemAccessor {
     }
 
     @ModifyExpressionValue(method = "play", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z"))
-    private boolean galacticraft_hideSubtitles(boolean original) {
+    private boolean galacticraft$hideSubtitles(boolean original) {
         return original || this.galacticraft$multiplier < 0.01f;
     }
 

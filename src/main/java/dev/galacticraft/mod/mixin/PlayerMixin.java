@@ -45,7 +45,7 @@ abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor, Pe
     public abstract boolean isCreative();
 
     @Inject(method = "stopSleepInBed", at = @At(value = "HEAD"))
-    private void gc$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci) {
+    private void galacticraft$shouldSetCryoCooldown(boolean bl, boolean bl2, CallbackInfo ci) {
         if (!this.level().isClientSide() && !this.isCreative() && this.galacticraft$isInCryoSleep()) {
             this.heal(5.0F);
             this.galacticraft$setCryogenicChamberCooldown(6000);
@@ -53,7 +53,7 @@ abstract class PlayerMixin extends LivingEntity implements CryogenicAccessor, Pe
     }
 
     @Inject(method = "removeEntitiesOnShoulder", at = @At(value = "HEAD"), cancellable = true)
-    private void gc$removeEntitiesOnShoulder(CallbackInfo ci) {
+    private void galacticraft$removeEntitiesOnShoulder(CallbackInfo ci) {
         if (this.getVehicle() instanceof AdvancedVehicle || this.getY() >= Constant.REENTRY_HEIGHT) {
             ci.cancel();
         }

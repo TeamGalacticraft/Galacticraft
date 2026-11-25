@@ -101,7 +101,7 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
         nbt.putBoolean("CelestialActive", this.galacticraft$celestialActive);
 
         if (this.galacticraft$rocketData != null) {
@@ -112,7 +112,7 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$readCelestialData(CompoundTag nbt, CallbackInfo ci) {
         this.galacticraft$celestialActive = nbt.getBoolean("CelestialActive");
 
         if (nbt.contains("CelestialState")) {
@@ -147,17 +147,17 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
     }
 
     @Inject(method = "rideTick", at = @At("HEAD"))
-    private void rideTickStart(CallbackInfo ci) {
+    private void galacticraft$rideTickStart(CallbackInfo ci) {
         this.galacticraft$isRideTick = true;
     }
 
     @Inject(method = "rideTick", at = @At("TAIL"))
-    private void rideTickEnd(CallbackInfo ci) {
+    private void galacticraft$rideTickEnd(CallbackInfo ci) {
         this.galacticraft$isRideTick = false;
     }
 
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
-    private void canStopRiding(CallbackInfo ci) {
+    private void galacticraft$canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
 
         if (this.galacticraft$isRideTick
@@ -168,7 +168,7 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
     }
 
     @Inject(method = "bedBlocked", at = @At("HEAD"), cancellable = true)
-    private void checkIfCryoBedBlocked(
+    private void galacticraft$checkIfCryoBedBlocked(
             BlockPos sleepingPos,
             Direction direction,
             CallbackInfoReturnable<Boolean> cir

@@ -75,7 +75,7 @@ abstract class CameraMixin {
     }
 
     @Inject(method = "setup", at = @At("TAIL"))
-    private void gc$rotateCamera(BlockGetter blockGetter, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTicks, CallbackInfo ci) {
+    private void galacticraft$rotateCamera(BlockGetter blockGetter, Entity entity, boolean detached, boolean thirdPersonReverse, float partialTicks, CallbackInfo ci) {
         if (entity instanceof Player player && player.galacticraft$isInCryoSleep()) {
             var x = Mth.floor(entity.getX());
             var y = Mth.floor(entity.getY());
@@ -111,7 +111,7 @@ abstract class CameraMixin {
     }
 
     @ModifyExpressionValue(method = "getFluidInCamera", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/material/FluidState;is(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
-    private boolean gc$getFluidInCamera(boolean original, @Local FluidState fluidState) {
+    private boolean galacticraft$getFluidInCamera(boolean original, @Local FluidState fluidState) {
         return original || fluidState.is(GCFluidTags.OIL) || fluidState.is(GCFluidTags.FUEL) || fluidState.is(GCFluidTags.SULFURIC_ACID);
     }
 }

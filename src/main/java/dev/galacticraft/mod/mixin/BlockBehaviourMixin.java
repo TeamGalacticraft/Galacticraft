@@ -56,7 +56,7 @@ abstract class BlockBehaviourMixin {
     public abstract boolean is(TagKey<Block> tag);
 
     @Inject(method = "onRemove", at = @At("TAIL"))
-    private void handleFootprints(Level level, BlockPos pos, BlockState newState, boolean movedByPiston, CallbackInfo ci) {
+    private void galacticraft$handleFootprints(Level level, BlockPos pos, BlockState newState, boolean movedByPiston, CallbackInfo ci) {
         if (is(GCBlockTags.FOOTPRINTS)) {
             FootprintManager footprintManager = level.galacticraft$getFootprintManager();
             Long2ObjectMap<List<Footprint>> footprintChunkMap = footprintManager.getFootprints();
@@ -85,7 +85,7 @@ abstract class BlockBehaviourMixin {
     }
 
     @Inject(method = "useItemOn", at = @At("HEAD"), cancellable = true)
-    private void handleWrenching(ItemStack itemStack, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<ItemInteractionResult> cir) {
+    private void galacticraft$handleWrenching(ItemStack itemStack, Level level, Player player, InteractionHand interactionHand, BlockHitResult blockHitResult, CallbackInfoReturnable<ItemInteractionResult> cir) {
         if (itemStack.getItem() instanceof StandardWrenchItem) {
             // Prevent the default behaviour such as opening a GUI when right-clicking
             // on a block with a wrench to allow the wrench to rotate the block instead

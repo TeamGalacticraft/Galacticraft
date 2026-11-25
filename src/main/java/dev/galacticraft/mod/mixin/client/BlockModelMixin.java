@@ -62,7 +62,7 @@ abstract class BlockModelMixin implements BlockModelAccessor {
     }
 
     @Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Z)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("HEAD"), cancellable = true)
-    private void customBake(ModelBaker baker, BlockModel parent, Function<Material, TextureAtlasSprite> textureGetter, ModelState settings, boolean isGui3d, CallbackInfoReturnable<BakedModel> cir) {
+    private void galacticraft$customBake(ModelBaker baker, BlockModel parent, Function<Material, TextureAtlasSprite> textureGetter, ModelState settings, boolean isGui3d, CallbackInfoReturnable<BakedModel> cir) {
         if (galacticraft$obj != null)
             cir.setReturnValue(galacticraft$obj.bakeVanillaModel(Minecraft.getInstance().getResourceManager(), textureGetter, textureGetter.apply(getMaterial("particle"))));
     }
@@ -71,7 +71,7 @@ abstract class BlockModelMixin implements BlockModelAccessor {
     static abstract class DeserializerMixin {
         // Loading custom block models via fabric api's model plugin is kinda ass so this is easier
         @Inject(method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/client/renderer/block/model/BlockModel;", at = @At("RETURN"))
-        private void loadCustomObjModel(JsonElement element, Type type, JsonDeserializationContext jsonDeserializationContext, CallbackInfoReturnable<BlockModel> cir) {
+        private void galacticraft$loadCustomObjModel(JsonElement element, Type type, JsonDeserializationContext jsonDeserializationContext, CallbackInfoReturnable<BlockModel> cir) {
             JsonObject json = element.getAsJsonObject();
             if (json.has("galacticraft:obj")) {
                 ResourceLocation objPath = ResourceLocation.parse(GsonHelper.getAsString(json, "obj"));

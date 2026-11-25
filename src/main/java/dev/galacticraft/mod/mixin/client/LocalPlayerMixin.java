@@ -64,7 +64,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
     public Input input;
 
     @Inject(method = "aiStep", at = @At("RETURN"))
-    private void gcRocketJumpCheck(CallbackInfo ci) {
+    private void galacticraft$rocketJumpCheck(CallbackInfo ci) {
         if (this.isPassenger() && this.getVehicle() instanceof ControllableEntity controllable) {
             boolean invertControls = this.minecraft.options.getCameraType().isFirstPerson();
             controllable.inputTick(input.leftImpulse, input.forwardImpulse, input.up, input.down, input.left, input.right, input.jumping, input.shiftKeyDown, invertControls);
@@ -73,7 +73,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     @ModifyReturnValue(method = "isCrouching", at = @At("RETURN"))
-    private boolean gc$isCrouching(boolean original) {
+    private boolean galacticraft$isCrouching(boolean original) {
         if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
             return false;
         }
@@ -81,7 +81,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     @ModifyReturnValue(method = "isShiftKeyDown", at = @At("RETURN"))
-    private boolean gc$isShiftKeyDown(boolean original) {
+    private boolean galacticraft$isShiftKeyDown(boolean original) {
         if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
             return false;
         }
@@ -94,7 +94,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     @Inject(method = "startRiding", at = @At("TAIL"))
-    private void gc$enterAdvancedVehicle(Entity vehicle, boolean bl, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$enterAdvancedVehicle(Entity vehicle, boolean bl, CallbackInfoReturnable<Boolean> cir) {
         if (vehicle instanceof RocketEntity) {
             this.minecraft.options.setCameraType(CameraType.THIRD_PERSON_FRONT);
         } else if (vehicle instanceof AbstractLanderEntity) {
@@ -103,7 +103,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
     }
 
     @Inject(method = "removeVehicle", at = @At("HEAD"))
-    private void gc$exitAdvancedVehicle(CallbackInfo ci) {
+    private void galacticraft$exitAdvancedVehicle(CallbackInfo ci) {
         Entity vehicle = this.getVehicle();
         if (vehicle instanceof AdvancedVehicle) {
             this.minecraft.options.setCameraType(CameraType.FIRST_PERSON);

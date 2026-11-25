@@ -40,7 +40,7 @@ interface LevelTimeAccessMixin extends LevelTimeAccess {
     long dayTime();
 
     @Inject(method = "getTimeOfDay", at = @At("HEAD"), cancellable = true)
-    private void getGalacticTimeOfDay(float partialTicks, CallbackInfoReturnable<Float> cir) {
+    private void galacticraft$getGalacticTimeOfDay(float partialTicks, CallbackInfoReturnable<Float> cir) {
         // Might be worth it to make our own dimension type system?
         if (this instanceof Level level) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
