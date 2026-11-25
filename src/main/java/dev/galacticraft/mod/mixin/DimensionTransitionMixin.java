@@ -86,7 +86,7 @@ abstract class DimensionTransitionMixin {
 
         float yaw = serverPlayer.getRespawnAngle();
 
-        if (gc$canRespawn(serverLevel, blockPos)) {
+        if (galacticraft$canRespawn(serverLevel, blockPos)) {
             cir.setReturnValue(
                     new DimensionTransition(
                             serverLevel,
@@ -101,7 +101,7 @@ abstract class DimensionTransitionMixin {
     }
 
     @Unique
-    private static boolean gc$canRespawn(
+    private static boolean galacticraft$canRespawn(
             Level level,
             BlockPos blockPos
     ) {
@@ -110,14 +110,14 @@ abstract class DimensionTransitionMixin {
         if (baseState.getBlock() instanceof CryogenicChamberBlock) {
             Direction direction = baseState.getValue(CryogenicChamberBlock.FACING);
 
-            return gc$freeAt(level, blockPos.relative(direction)) && gc$freeAt(level, blockPos.above().relative(direction));
+            return galacticraft$freeAt(level, blockPos.relative(direction)) && galacticraft$freeAt(level, blockPos.above().relative(direction));
         }
 
         return false;
     }
 
     @Unique
-    private static boolean gc$freeAt(
+    private static boolean galacticraft$freeAt(
             Level level,
             BlockPos blockPos
     ) {

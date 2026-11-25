@@ -77,7 +77,7 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
             return false;
         }
-        return this.isHoldingRocket() || original;
+        return this.galacticraft$isHoldingRocket() || original;
     }
 
     @ModifyReturnValue(method = "isShiftKeyDown", at = @At("RETURN"))
@@ -85,11 +85,11 @@ abstract class LocalPlayerMixin extends AbstractClientPlayer {
         if (this.isPassenger() && this.getVehicle() instanceof IgnoreShift) {
             return false;
         }
-        return this.isHoldingRocket() || original;
+        return this.galacticraft$isHoldingRocket() || original;
     }
 
     @Unique
-    private boolean isHoldingRocket() {
+    private boolean galacticraft$isHoldingRocket() {
         return this.getVehicle() == null && (this.getItemInHand(InteractionHand.MAIN_HAND).getItem() instanceof RocketItem || this.getItemInHand(InteractionHand.OFF_HAND).getItem() instanceof RocketItem);
     }
 

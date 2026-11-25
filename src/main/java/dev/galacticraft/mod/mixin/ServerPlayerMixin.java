@@ -179,14 +179,14 @@ abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAcc
                 .getBlockState(basePos)
                 .getBlock() instanceof CryogenicChamberBlock) {
             cir.setReturnValue(
-                    !this.gc$freeAt(basePos.relative(direction))
-                            || !this.gc$freeAt(sleepingPos.relative(direction))
+                    !this.galacticraft$freeAt(basePos.relative(direction))
+                            || !this.galacticraft$freeAt(sleepingPos.relative(direction))
             );
         }
     }
 
     @Unique
-    private boolean gc$freeAt(BlockPos blockPos) {
+    private boolean galacticraft$freeAt(BlockPos blockPos) {
         return !this.level()
                 .getBlockState(blockPos)
                 .isSuffocating(this.level(), blockPos);

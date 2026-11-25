@@ -44,7 +44,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(LivingEntityRenderer.class)
 abstract class LivingEntityRendererMixin {
     @Unique
-    private static float sleepDirectionToRotationCryo(Direction direction) {
+    private static float galacticraft$sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
             case EAST -> 270.0F;
             case SOUTH -> 180.0F;
@@ -62,7 +62,7 @@ abstract class LivingEntityRendererMixin {
     private void galacticraft$renderCryoChamberPos(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.galacticraft$isInCryoSleep()) {
             Direction direction = entity.getBedOrientation();
-            float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
+            float j = direction != null ? galacticraft$sleepDirectionToRotationCryo(direction) : bodyYaw;
             pose.translate(0, 0.82F, 0);
             pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();

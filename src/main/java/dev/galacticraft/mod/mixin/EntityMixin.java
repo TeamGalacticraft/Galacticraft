@@ -170,7 +170,7 @@ abstract class EntityMixin implements EntityAccessor {
                     this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
                 if (playSound && this.timeInAcid % 5 == 0) {
-                    this.sulfuricAcidEffects();
+                    this.galacticraft$sulfuricAcidEffects();
                 }
             }
             ++this.timeInAcid;
@@ -180,7 +180,7 @@ abstract class EntityMixin implements EntityAccessor {
     }
 
     @Unique
-    private void sulfuricAcidEffects() {
+    private void galacticraft$sulfuricAcidEffects() {
         this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
         for (int i = 0; i < 4; i++) {
             this.level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + this.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + this.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);

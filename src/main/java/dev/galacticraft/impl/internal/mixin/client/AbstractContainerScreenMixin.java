@@ -76,8 +76,8 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
                 continue;
             }
             if (data.visiblePredicate().test(Minecraft.getInstance().player)) {
-                if (isCoordinateBetween((int) Math.floor(mouseX), this.leftPos + (30 * i), this.leftPos + (29 * (i + 1)))
-                        && isCoordinateBetween((int) Math.floor(mouseY), this.topPos - 26, this.topPos)) {
+                if (galacticraft$isCoordinateBetween((int) Math.floor(mouseX), this.leftPos + (30 * i), this.leftPos + (29 * (i + 1)))
+                        && galacticraft$isCoordinateBetween((int) Math.floor(mouseY), this.topPos - 26, this.topPos)) {
                     data.onClick().run();
                     ci.setReturnValue(true);
                 }
@@ -145,7 +145,7 @@ abstract class AbstractContainerScreenMixin<T extends AbstractContainerMenu> ext
     }
 
     @Unique
-    private static boolean isCoordinateBetween(int coordinate, int min, int max) {
+    private static boolean galacticraft$isCoordinateBetween(int coordinate, int min, int max) {
         int newMin = Math.min(min, max);
         int newMax = Math.max(min, max);
         return coordinate >= newMin && coordinate <= newMax;

@@ -65,7 +65,7 @@ abstract class CameraMixin {
     public abstract float getYRot();
 
     @Unique
-    private static float sleepDirectionToRotationCryo(Direction direction) {
+    private static float galacticraft$sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
             case EAST -> 90.0F;
             case SOUTH -> 180.0F;
@@ -87,7 +87,7 @@ abstract class CameraMixin {
             }
             if (blockEntity instanceof CryogenicChamberBlockEntity) {
                 var sleepTimer = player.getSleepTimer();
-                var yRot = (sleepTimer - 50) + sleepDirectionToRotationCryo(blockEntity.getBlockState().getValue(CryogenicChamberBlock.FACING));
+                var yRot = (sleepTimer - 50) + galacticraft$sleepDirectionToRotationCryo(blockEntity.getBlockState().getValue(CryogenicChamberBlock.FACING));
 
                 if (sleepTimer < 100) {
                     yRot += partialTicks;

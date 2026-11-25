@@ -67,7 +67,7 @@ abstract class LevelRendererMixin {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_HEIGHT) {
             // Have clouds slowly fade out
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), Constant.CLOUD_HEIGHT, Constant.CLOUD_LIMIT, 1, 0F));
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, galacticraft$normalize((float) player.getY(), Constant.CLOUD_HEIGHT, Constant.CLOUD_LIMIT, 1, 0F));
             if (player.getVehicle().getY() > Constant.CLOUD_LIMIT)
                 ci.cancel();
         }
@@ -81,7 +81,7 @@ abstract class LevelRendererMixin {
     }
 
     @Unique
-    private float normalize(float x, float inMin, float inMax, float outMin, float outMax) {
+    private float galacticraft$normalize(float x, float inMin, float inMax, float outMin, float outMax) {
         float outRange = outMax - outMin;
         float inRange = inMax - inMin;
         return (x - inMin) * outRange / inRange + outMin;

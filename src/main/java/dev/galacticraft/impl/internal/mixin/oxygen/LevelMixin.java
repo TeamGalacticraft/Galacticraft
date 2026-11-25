@@ -57,7 +57,7 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
 
     @Override
     public boolean galacticraft$isBreathable(int x, int y, int z) {
-        if (this.validPosition(x, y, z)) {
+        if (this.galacticraft$validPosition(x, y, z)) {
             return this.galacticraft$isBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15);
         }
         return this.breathable/* && y < this.getMaxBuildHeight() * 2*/;
@@ -66,7 +66,7 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
     @Override
     public boolean galacticraft$isBreathableChunk(LevelChunk chunk, int x, int y, int z) {
         assert x >= 0 && x < 16 && z >= 0 && z < 16;
-        if (this.withinBuildHeight(y)) {
+        if (this.galacticraft$withinBuildHeight(y)) {
             return this.breathable ^ ((ChunkOxygenAccessor) chunk).galacticraft$isInverted(x, y, z);
         }
         return this.breathable/* && y < this.getMaxBuildHeight() * 2*/;
@@ -74,7 +74,7 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
 
     @Override
     public void galacticraft$setBreathable(int x, int y, int z, boolean value) {
-        if (withinWorldSize(x, z) && y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight()) {
+        if (galacticraft$withinWorldSize(x, z) && y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight()) {
             this.galacticraft$setBreathableChunk(this.getChunk(SectionPos.blockToSectionCoord(x), SectionPos.blockToSectionCoord(z)), x & 15, y, z & 15, value);
         }
     }
@@ -101,17 +101,17 @@ abstract class LevelMixin implements LevelOxygenAccessor, InternalLevelOxygenAcc
     }
 
     @Unique
-    private boolean withinBuildHeight(int y) {
+    private boolean galacticraft$withinBuildHeight(int y) {
         return y >= this.getMinBuildHeight() && y < this.getMaxBuildHeight();
     }
 
     @Unique
-    private static boolean withinWorldSize(int x, int z) {
+    private static boolean galacticraft$withinWorldSize(int x, int z) {
         return x >= -Level.MAX_LEVEL_SIZE && z >= -Level.MAX_LEVEL_SIZE && x < Level.MAX_LEVEL_SIZE && z < Level.MAX_LEVEL_SIZE;
     }
 
     @Unique
-    private boolean validPosition(int x, int y, int z) {
-        return this.withinBuildHeight(y) && withinWorldSize(x, z);
+    private boolean galacticraft$validPosition(int x, int y, int z) {
+        return this.galacticraft$withinBuildHeight(y) && galacticraft$withinWorldSize(x, z);
     }
 }
