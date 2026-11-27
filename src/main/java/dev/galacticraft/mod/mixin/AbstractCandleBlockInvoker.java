@@ -31,5 +31,5 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Mixin(AbstractCandleBlock.class)
 public interface AbstractCandleBlockInvoker {
     @Invoker("getParticleOffsets")
-    Iterable<Vec3> callGetParticleOffsets(BlockState state);
+    Iterable<Vec3> galacticraft$getParticleOffsets(BlockState state);
 }

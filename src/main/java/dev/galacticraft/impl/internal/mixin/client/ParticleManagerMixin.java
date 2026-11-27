@@ -37,15 +37,15 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ParticleEngine.class)
 @Environment(EnvType.CLIENT)
-public abstract class ParticleManagerMixin {
+abstract class ParticleManagerMixin {
     @Shadow
     protected ClientLevel level;
 
     @Inject(method = "add(Lnet/minecraft/client/particle/Particle;)V", at = @At("RETURN"))
-    protected void galacticraft_overrideGravity(Particle particle, CallbackInfo ci) {
+    private void galacticraft$overrideGravity(Particle particle, CallbackInfo ci) {
         Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
         if (holder != null) {
-            ((ParticleAccessor) particle).setGravityStrength(((ParticleAccessor) particle).getGravityStrength() * holder.value().gravity());
+            ((ParticleAccessor) particle).galacticraft$setGravityStrength(((ParticleAccessor) particle).galacticraft$getGravityStrength() * holder.value().gravity());
         }
     }
 }

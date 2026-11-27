@@ -34,7 +34,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(BannerRenderer.class)
-public abstract class BannerRendererMixin {
+abstract class BannerRendererMixin {
     @WrapOperation(method = "render(Lnet/minecraft/world/level/block/entity/BannerBlockEntity;FLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;II)V", at = @At(value = "FIELD", target = "Lnet/minecraft/client/model/geom/ModelPart;xRot:F", opcode = Opcodes.PUTFIELD))
     private void galacticraft$disableSwayingWithNoAtmosphere(ModelPart instance, float value, Operation<Void> original, @Local(argsOnly = true) BannerBlockEntity banner) {
         if (FlagBlockEntityRenderer.shouldSway(banner.getLevel(), banner.getBlockPos())) {

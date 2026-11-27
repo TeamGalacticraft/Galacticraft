@@ -27,10 +27,10 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(Particle.class)
-public interface ParticleAccessor {
+interface ParticleAccessor {
     @Accessor("gravity")
-    float getGravityStrength();
+    float galacticraft$getGravityStrength();
 
     @Accessor("gravity")
-    void setGravityStrength(float gravityStrength);
+    void galacticraft$setGravityStrength(float gravityStrength);
 }

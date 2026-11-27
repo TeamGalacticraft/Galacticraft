@@ -34,9 +34,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(AbstractHorse.class)
-public abstract class AbstractHorseMixin extends LivingEntity {
-
-    AbstractHorseMixin() {
+abstract class AbstractHorseMixin extends LivingEntity {
+    @SuppressWarnings("ConstantConditions")
+    private AbstractHorseMixin() {
         super(null, null);
     }
 
@@ -44,7 +44,7 @@ public abstract class AbstractHorseMixin extends LivingEntity {
     protected abstract boolean handleEating(Player player, ItemStack itemStack);
 
     @WrapMethod(method = "isFood")
-    public boolean galacticraft$isFood(ItemStack itemStack, Operation<Boolean> original) {
+    private boolean galacticraft$isFood(ItemStack itemStack, Operation<Boolean> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             return original.call(CannedFoodItem.getFirst(itemStack));
         }
@@ -52,7 +52,7 @@ public abstract class AbstractHorseMixin extends LivingEntity {
     }
 
     @WrapMethod(method = "fedFood")
-    public InteractionResult galacticraft$fedFood(Player player, ItemStack itemStack, Operation<InteractionResult> original) {
+    private InteractionResult galacticraft$fedFood(Player player, ItemStack itemStack, Operation<InteractionResult> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             boolean success = this.handleEating(player, CannedFoodItem.getFirst(itemStack));
             if (success) {

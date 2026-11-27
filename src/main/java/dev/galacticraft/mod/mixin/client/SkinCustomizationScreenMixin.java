@@ -46,20 +46,19 @@ import java.util.Locale;
 
 @Environment(EnvType.CLIENT)
 @Mixin(SkinCustomizationScreen.class)
-public abstract class SkinCustomizationScreenMixin extends Screen {
-    protected SkinCustomizationScreenMixin(Component title) { super(title); }
+abstract class SkinCustomizationScreenMixin extends Screen {
+    private SkinCustomizationScreenMixin() {
+        super(null);
+    }
 
     @Inject(
             method = "addOptions",
             at = @At(value = "INVOKE", target = "Ljava/util/List;add(Ljava/lang/Object;)Z", shift = At.Shift.AFTER)
     )
-    private void gc$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
+    private void galacticraft$swapCapeToggle(CallbackInfo ci, @Local List<AbstractWidget> list) {
         CapesClientRole.ensureLoadedAsync();
         if (!CapesClientRole.isEligibleClient()) return;
-        if (list.isEmpty()) return;
-
-        AbstractWidget last = list.get(list.size() - 1);
-        if (!(last instanceof CycleButton<?> cb)) return;
+        if (list.isEmpty() || !(list.getLast() instanceof CycleButton<?> cb)) return;
 
         String label = cb.getMessage().getString().toLowerCase(Locale.ROOT);
         if (!label.contains("cape")) return;

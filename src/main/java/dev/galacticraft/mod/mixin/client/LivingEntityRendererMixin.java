@@ -42,27 +42,27 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LivingEntityRenderer.class)
-public abstract class LivingEntityRendererMixin {
+abstract class LivingEntityRendererMixin {
     @Unique
-    private static float sleepDirectionToRotationCryo(Direction direction) {
+    private static float galacticraft$sleepDirectionToRotationCryo(Direction direction) {
         return switch (direction) {
-            default -> 0.0F;
             case EAST -> 270.0F;
             case SOUTH -> 180.0F;
             case WEST -> 90.0F;
+            default -> 0.0F;
         };
     }
 
     @WrapOperation(method = "render(Lnet/minecraft/world/entity/LivingEntity;FFLcom/mojang/blaze3d/vertex/PoseStack;Lnet/minecraft/client/renderer/MultiBufferSource;I)V", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasPose(Lnet/minecraft/world/entity/Pose;)Z"))
-    private boolean gc$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
-        return instance.isInCryoSleep() ? false : original.call(instance, pose);
+    private boolean galacticraft$hasSleepPose(LivingEntity instance, Pose pose, Operation<Boolean> original) {
+        return !instance.galacticraft$isInCryoSleep() && original.call(instance, pose);
     }
 
     @Inject(method = "setupRotations", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getBedOrientation()Lnet/minecraft/core/Direction;"), cancellable = true)
     private void galacticraft$renderCryoChamberPos(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
-        if (entity.isInCryoSleep()) {
+        if (entity.galacticraft$isInCryoSleep()) {
             Direction direction = entity.getBedOrientation();
-            float j = direction != null ? sleepDirectionToRotationCryo(direction) : bodyYaw;
+            float j = direction != null ? galacticraft$sleepDirectionToRotationCryo(direction) : bodyYaw;
             pose.translate(0, 0.82F, 0);
             pose.mulPose(Axis.YP.rotationDegrees(j));
             ci.cancel();
@@ -70,7 +70,7 @@ public abstract class LivingEntityRendererMixin {
     }
 
     @Inject(method = "setupRotations", at = @At("HEAD"))
-    private void rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
+    private void galacticraft$rotateToMatchRocket(LivingEntity entity, PoseStack pose, float animationProgress, float bodyYaw, float tickDelta, float scale, CallbackInfo ci) {
         if (entity.isPassenger() && entity.getVehicle() instanceof RocketEntity rocket) {
             double amplitude = switch(rocket.getLaunchStage()) {
                 case IGNITED -> 0.1D;

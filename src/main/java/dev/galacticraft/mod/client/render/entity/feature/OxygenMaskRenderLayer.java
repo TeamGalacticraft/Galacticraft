@@ -64,8 +64,8 @@ public class OxygenMaskRenderLayer<T extends LivingEntity, M extends EntityModel
             this.head = model.head;
             this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            this.head = model.callGetHeadParts().iterator().next();
-            this.body = model.callGetBodyParts().iterator().next();
+            this.head = model.galacticraft$getHeadParts().iterator().next();
+            this.body = model.galacticraft$getBodyParts().iterator().next();
         } else {
             this.head = null;
             this.mask = null;

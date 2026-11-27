@@ -34,9 +34,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(AbstractClientPlayer.class)
 @Environment(EnvType.CLIENT)
-public abstract class AbstractClientPlayerMixin {
+abstract class AbstractClientPlayerMixin {
     @ModifyReturnValue(method = "getSkin", at = @At("RETURN"))
-    private PlayerSkin gc$injectCape(PlayerSkin original) {
+    private PlayerSkin galacticraft$injectCape(PlayerSkin original) {
         CapesClientState.Entry entry = CapesClientState.forPlayer((AbstractClientPlayer)(Object)this);
         if (entry == null) return original;
 

@@ -76,48 +76,31 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import java.util.UUID;
 
 @Mixin(Entity.class)
-public abstract class EntityMixin implements EntityAccessor {
-    private @Unique double distanceSinceLastStep;
-    private @Unique int lastStep = -1;
-    private @Unique int timeInAcid = 0;
+abstract class EntityMixin implements EntityAccessor {
+    @Unique
+    private double galacticraft$distanceSinceLastStep;
 
-    @Shadow
-    public abstract Vec3 getDeltaMovement();
+    @Unique
+    private int galacticraft$lastStep = -1;
 
-    @Shadow
-    private float yRot;
-
-    @Shadow
-    private float xRot;
+    @Unique
+    private int galacticraft$timeInAcid = 0;
 
     @Shadow
     private Level level;
 
-//    @Inject(method = "findDimensionEntryPoint", at = @At("HEAD"), cancellable = true)
-//    private void getTeleportTargetGC(ServerLevel destination, CallbackInfoReturnable<PortalInfo> cir) {
-//        if (destination.dimension().equals(GCDimensions.MOON) || this.level.dimension().equals(GCDimensions.MOON)) { //TODO lander/parachute stuff
-//            BlockPos pos = destination.getHeightmapPos(Heightmap.Types.MOTION_BLOCKING_NO_LEAVES, destination.getSharedSpawnPos());
-//            cir.setReturnValue(new PortalInfo(new Vec3((double) pos.getX() + 0.5D, pos.getY(), (double) pos.getZ() + 0.5D), this.getDeltaMovement(), this.yRot, this.xRot));
-//        }
-//    }
+    @Shadow
+    private Vec3 position;
+
+    @Shadow
+    @Final
+    protected RandomSource random;
 
     @Shadow
     public abstract boolean updateFluidHeightAndDoFluidPushing(TagKey<Fluid> tag, double d);
 
     @Shadow
     public abstract boolean isOnFire();
-
-    @Shadow
-    private Vec3 position;
-
-    @Shadow
-    protected UUID uuid;
-
-    @Shadow
-    public abstract boolean isAlwaysTicking();
-
-    @Shadow
-    private int id;
 
     @Shadow
     public abstract DamageSources damageSources();
@@ -138,9 +121,6 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract double getZ();
 
     @Shadow
-    public abstract Level level();
-
-    @Shadow
     public abstract @Nullable Entity getVehicle();
 
     @Shadow
@@ -150,26 +130,19 @@ public abstract class EntityMixin implements EntityAccessor {
     public abstract UUID getUUID();
 
     @Shadow
-    @Final
-    protected RandomSource random;
-
-    @Shadow
-    public abstract Vec3 position();
-
-    @Shadow
     public abstract EntityType<?> getType();
 
     @Shadow
     @Final
-    protected abstract void discard();
+    public abstract void discard();
 
     @Inject(method = "updateInWaterStateAndDoWaterCurrentPushing", at = @At("TAIL"))
-    private void checkWaterStateGC(CallbackInfo ci) {
-        Player player = level.getPlayerByUUID(uuid);
-        boolean invulnerable = player != null && player.getAbilities().invulnerable;
+    private void galacticraft$checkWaterState(CallbackInfo ci) {
+        Entity entity = (Entity) (Object) this;
+        boolean invulnerable = entity instanceof Player player && player.getAbilities().invulnerable;
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.OIL, 0.0028d) || this.updateFluidHeightAndDoFluidPushing(GCFluidTags.FUEL, 0.0028d)) {
             if (this.isOnFire()) {
-                level.explode(level.getEntity(id), position.x, position.y, position.z, 0f, Level.ExplosionInteraction.NONE);
+                this.level.explode(entity, this.position.x, this.position.y, this.position.z, 0f, Level.ExplosionInteraction.NONE);
                 if (!invulnerable) {
                     this.hurt(this.damageSources().source(GCDamageTypes.OIL_BOOM), 20.0F);
                 }
@@ -179,14 +152,14 @@ public abstract class EntityMixin implements EntityAccessor {
         if (this.updateFluidHeightAndDoFluidPushing(GCFluidTags.SULFURIC_ACID, 0.0028d)) {
             // The entity enters an acid fluid, this entity needs to take damage
             if (!invulnerable && !this.getType().is(GCEntityTypeTags.IMMUNE_TO_ACID)) {
-                boolean damage = this.timeInAcid >= 30;
+                boolean damage = this.galacticraft$timeInAcid >= 30;
                 boolean playSound = true;
-                if (damage && ((Object) this instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
+                if (damage && (entity instanceof Projectile || this.getType().is(GCEntityTypeTags.SENSITIVE_TO_ACID))) {
                     this.discard();
                     return;
                 }
 
-                if ((Object) this instanceof ItemEntity itemEntity) {
+                if (entity instanceof ItemEntity itemEntity) {
                     ItemStack itemStack = itemEntity.getItem();
                     if (itemStack.is(GCItemTags.ACID_RESISTANT)) {
                         damage = false;
@@ -201,30 +174,31 @@ public abstract class EntityMixin implements EntityAccessor {
                 if (damage) {
                     this.hurt(this.damageSources().source(GCDamageTypes.SULFURIC_ACID), 2.0F);
                 }
-                if (playSound && this.timeInAcid % 5 == 0) {
-                    this.sulfuricAcidEffects();
+                if (playSound && this.galacticraft$timeInAcid % 5 == 0) {
+                    this.galacticraft$sulfuricAcidEffects();
                 }
             }
-            ++this.timeInAcid;
+            ++this.galacticraft$timeInAcid;
         } else {
-            this.timeInAcid = 0;
+            this.galacticraft$timeInAcid = 0;
         }
     }
 
     @Unique
-    private void sulfuricAcidEffects() {
-        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (level.getRandom().nextFloat() - level.getRandom().nextFloat()) * 0.4F);
+    private void galacticraft$sulfuricAcidEffects() {
+        this.playSound(SoundEvents.LAVA_EXTINGUISH, 0.7F, 1.6F + (this.random.nextFloat() - this.random.nextFloat()) * 0.4F);
         for (int i = 0; i < 4; i++) {
-            level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + level.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + level.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
+            this.level.addParticle(ParticleTypes.WHITE_SMOKE, true, this.getX() + this.random.nextDouble() - 0.5, Mth.ceil(this.getY()), this.getZ() + this.random.nextDouble() - 0.5, 0.0D, 0.0D, 0.0D);
         }
     }
 
     // GC 4 ticks footprints on the client and server, however we will just do it on the server
     @Inject(method = "move", at = @At("HEAD"))
-    private void tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
-        if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
+    private void galacticraft$tickFootprints(MoverType type, Vec3 motion, CallbackInfo ci) {
+        //noinspection ConstantConditions
+        if ((Object) this instanceof Player player && player.getAbilities().flying) {
             return;
-        } else if ((Object) this instanceof Player player && player.getAbilities().flying) {
+        } else if (!this.getType().is(GCEntityTypeTags.HAS_FOOTPRINTS)) {
             return;
         } else if (this.getVehicle() != null) {
             return;
@@ -246,7 +220,7 @@ public abstract class EntityMixin implements EntityAccessor {
                         Math.floor(this.getY()),
                         this.getZ() + this.galacticraft$getLastStep() * Mth.sin(rotation) * 0.25D
                 );
-                pos = Footprint.getFootprintPosition(this.level, rotation - Mth.PI, pos, this.position());
+                pos = Footprint.getFootprintPosition(this.level, rotation - Mth.PI, pos, this.position);
 
                 BlockPos blockPos = new BlockPos(Mth.floor(pos.x), Mth.floor(pos.y - 0.05D), Mth.floor(pos.z));
                 BlockState state = this.level.getBlockState(blockPos);
@@ -269,22 +243,22 @@ public abstract class EntityMixin implements EntityAccessor {
 
     @Override
     public double galacticraft$getDistanceSinceLastStep() {
-        return this.distanceSinceLastStep;
+        return this.galacticraft$distanceSinceLastStep;
     }
 
     @Override
     public void galacticraft$setDistanceSinceLastStep(double distanceSinceLastStep) {
-        this.distanceSinceLastStep = distanceSinceLastStep;
+        this.galacticraft$distanceSinceLastStep = distanceSinceLastStep;
     }
 
     @Override
     public int galacticraft$getLastStep() {
-        return this.lastStep;
+        return this.galacticraft$lastStep;
     }
 
     @Override
     public void galacticraft$swapLastStep() {
-        this.lastStep = -this.lastStep;
+        this.galacticraft$lastStep = -this.galacticraft$lastStep;
     }
 
     @WrapOperation(

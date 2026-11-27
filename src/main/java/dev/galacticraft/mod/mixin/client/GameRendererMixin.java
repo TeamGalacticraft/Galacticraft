@@ -37,13 +37,13 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
 
 @Mixin(GameRenderer.class)
-public abstract class GameRendererMixin implements GameRendererAccessor {
+abstract class GameRendererMixin implements GameRendererAccessor {
     @Unique
     private static final float DEPTH_FAR = 32.0F * 16.0F * 4.0F;
 
     @Shadow
     @Final
-    private Minecraft minecraft;
+    Minecraft minecraft;
 
     @Shadow
     private int confusionAnimationTick;
@@ -58,17 +58,13 @@ public abstract class GameRendererMixin implements GameRendererAccessor {
     private float zoomY;
 
     @Shadow
-    @Final
-    private Camera mainCamera;
+    protected abstract double getFov(Camera camera, float f, boolean bl);
 
     @Shadow
-    public abstract double getFov(Camera camera, float f, boolean bl);
+    protected abstract void bobHurt(PoseStack poseStack, float f);
 
     @Shadow
-    public abstract void bobHurt(PoseStack poseStack, float f);
-
-    @Shadow
-    public abstract void bobView(PoseStack poseStack, float f);
+    protected abstract void bobView(PoseStack poseStack, float f);
 
     @Shadow
     public abstract void resetProjectionMatrix(Matrix4f matrix4f);
@@ -85,7 +81,7 @@ public abstract class GameRendererMixin implements GameRendererAccessor {
 
         PoseStack poseStack = new PoseStack();
         this.bobHurt(poseStack, camera.getPartialTickTime());
-        if (this.minecraft.options.bobView().get().booleanValue()) {
+        if (this.minecraft.options.bobView().get()) {
             this.bobView(poseStack, camera.getPartialTickTime());
         }
         matrix4f.mul(poseStack.last().pose());

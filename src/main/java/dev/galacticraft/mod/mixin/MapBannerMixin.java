@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Mixin(MapBanner.class)
-public abstract class MapBannerMixin {
+abstract class MapBannerMixin {
     @ModifyVariable(method = "fromWorld", at = @At("HEAD"), argsOnly = true)
     private static BlockPos galacticraft$findFlagBase(BlockPos pos, @Local(argsOnly = true) BlockGetter level) {
         BlockState state = level.getBlockState(pos);

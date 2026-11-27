@@ -39,17 +39,18 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Player.class)
 @Environment(EnvType.CLIENT)
-public abstract class PlayerMixin implements PetInventoryOpener {
+abstract class PlayerMixin implements PetInventoryOpener {
     @Override
     public void galacticraft$sendOpenPetInventory(int petId) {
         ClientPlayNetworking.send(new OpenPetInventoryPayload(petId));
     }
 
     @ModifyReturnValue(method = "isModelPartShown", at = @At("RETURN"))
-    private boolean gc$forceCapeWhenActive(boolean original, PlayerModelPart part) {
+    private boolean galacticraft$forceCapeWhenActive(boolean original, PlayerModelPart part) {
         if (part != PlayerModelPart.CAPE) return original;
 
-        if (!(((Object) this) instanceof AbstractClientPlayer clientPlayer)) return original;
+        //noinspection ConstantConditions
+        if (!((Object) this instanceof AbstractClientPlayer clientPlayer)) return original;
 
         CapesClientState.Entry entry = CapesClientState.forPlayer(clientPlayer);
         if (entry == null) return original;

@@ -26,7 +26,7 @@ import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.api.inventory.MirroredSlot;
-import dev.galacticraft.mod.accessor.GCCreativeGuiSlots;
+import dev.galacticraft.mod.accessor.AbstractContainerScreenAccessor;
 import dev.galacticraft.mod.util.DrawableUtil;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
@@ -42,13 +42,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractContainerScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class AbstractContainerScreenMixin extends Screen {
+abstract class AbstractContainerScreenMixin extends Screen {
     private AbstractContainerScreenMixin() {
         super(null);
     }
 
     @WrapOperation(method = "renderSlot", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/gui/GuiGraphics;renderItem(Lnet/minecraft/world/item/ItemStack;III)V"))
-    private void renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z, Operation<Void> original, @Local Slot slot) {
+    private void galacticraft$renderItemMirrored(GuiGraphics graphics, ItemStack itemStack, int x, int y, int z, Operation<Void> original, @Local(argsOnly = true) Slot slot) {
         if (slot instanceof MirroredSlot) {
             DrawableUtil.renderItemMirrored(graphics, itemStack, x, y, z);
         } else {
@@ -65,9 +65,9 @@ public abstract class AbstractContainerScreenMixin extends Screen {
                     ordinal = 0
             )
     )
-    private void gc$beforeCarried(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
-        if ((Object)this instanceof GCCreativeGuiSlots gc) {
-            gc.gc$renderGcSlots(graphics, mouseX, mouseY);
+    private void galacticraft$beforeCarried(GuiGraphics graphics, int mouseX, int mouseY, float delta, CallbackInfo ci) {
+        if ((Object) this instanceof AbstractContainerScreenAccessor accessor) {
+            accessor.galacticraft$renderSlots(graphics, mouseX, mouseY);
         }
     }
 }

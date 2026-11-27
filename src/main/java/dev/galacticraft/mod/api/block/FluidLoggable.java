@@ -252,6 +252,10 @@ public interface FluidLoggable extends BucketPickup, LiquidBlockContainer {
         return Optional.empty();
     }
 
+    default @NotNull Optional<SoundEvent> getPickupSound(BlockState blockState) {
+        return BuiltInRegistries.FLUID.get(blockState.getValue(FLUID)).getPickupSound();
+    }
+
     static FluidState createFluidState(BlockState blockState) {
         if (!hasFluid(blockState)) {
             return EMPTY_STATE;

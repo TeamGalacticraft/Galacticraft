@@ -35,9 +35,9 @@ import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(LightningBolt.class)
 @Environment(EnvType.CLIENT)
-public abstract class LightningBoltMixin {
+abstract class LightningBoltMixin {
     @ModifyExpressionValue(method = "tick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/Level;isClientSide()Z"))
-    private boolean gc$cancelThunder(boolean original) {
+    private boolean galacticraft$cancelThunder(boolean original) {
         Player player = Minecraft.getInstance().player;
         if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_LIMIT) {
             return false;

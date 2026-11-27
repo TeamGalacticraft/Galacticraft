@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 
 @Mixin(ImposterProtoChunk.class)
-public abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
+abstract class ImposterProtoChunkMixin implements ChunkOxygenAccessor {
     @Shadow
     @Final
     private boolean allowWrites;

@@ -39,12 +39,12 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Minecraft.class)
 @Environment(EnvType.CLIENT)
-public abstract class MinecraftClientMixin {
+abstract class MinecraftClientMixin {
     @Shadow
     public abstract SoundManager getSoundManager();
 
     @Inject(method = "setLevel", at = @At("RETURN"))
-    private void updateSoundMultiplier(ClientLevel level, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
+    private void galacticraft$updateSoundMultiplier(ClientLevel level, ReceivingLevelScreen.Reason reason, CallbackInfo ci) {
         float volume = 1.0F;
         if (level != null) {
             Holder<CelestialBody<?, ?>> holder = level.galacticraft$getCelestialBody();
@@ -53,6 +53,6 @@ public abstract class MinecraftClientMixin {
             }
         }
 
-        ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
+        ((SoundSystemAccessor) ((SoundManagerAccessor) this.getSoundManager()).galacticraft$getSoundSystem()).galacticraft$updateAtmosphericVolumeMultiplier(volume);
     }
 }

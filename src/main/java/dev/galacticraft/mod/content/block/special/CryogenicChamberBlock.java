@@ -195,8 +195,8 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
 
         if (baseState.getValue(OCCUPIED).booleanValue()) {
             player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_OCCUPIED), true);
-        } else if (player.isCreative() || player.getCryogenicChamberCooldown() == 0) {
-            player.beginCryoSleep();
+        } else if (player.isCreative() || player.galacticraft$getCryogenicChamberCooldown() == 0) {
+            player.galacticraft$beginCryoSleep();
             level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, true));
 
             player.startSleepInBed(basePos.above()).ifLeft(problem -> {
@@ -212,12 +212,12 @@ public class CryogenicChamberBlock extends BaseEntityBlock implements MultiBlock
                             player.displayClientMessage(problem.getMessage(), true);
                 }
 
-                player.endCryoSleep();
+                player.galacticraft$endCryoSleep();
                 level.setBlockAndUpdate(basePos, baseState.setValue(OCCUPIED, false));
                 player.setYRot(baseState.getValue(CryogenicChamberBlock.FACING).toYRot());
             });
         } else {
-            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int) (player.getCryogenicChamberCooldown() / TICKS.tickrate())), false);
+            player.displayClientMessage(Component.translatable(Translations.Chat.CHAMBER_HOT, (int) (player.galacticraft$getCryogenicChamberCooldown() / TICKS.tickrate())), false);
         }
 
         return InteractionResult.SUCCESS;

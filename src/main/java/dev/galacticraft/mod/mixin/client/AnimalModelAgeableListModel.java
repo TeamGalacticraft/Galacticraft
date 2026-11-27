@@ -33,8 +33,8 @@ import org.spongepowered.asm.mixin.gen.Invoker;
 @Environment(EnvType.CLIENT)
 public interface AnimalModelAgeableListModel {
     @Invoker("headParts")
-    Iterable<ModelPart> callGetHeadParts();
+    Iterable<ModelPart> galacticraft$getHeadParts();
 
     @Invoker("bodyParts")
-    Iterable<ModelPart> callGetBodyParts();
+    Iterable<ModelPart> galacticraft$getBodyParts();
 }

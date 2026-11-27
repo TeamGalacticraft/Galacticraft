@@ -30,7 +30,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(InventoryScreen.class)
-public class InventoryScreenMixin {
+abstract class InventoryScreenMixin {
     @ModifyExpressionValue(
         method = {"init", "containerTick"},
         at = @At(
@@ -38,7 +38,7 @@ public class InventoryScreenMixin {
             target = "Lnet/minecraft/client/multiplayer/MultiPlayerGameMode;hasInfiniteItems()Z"
         )
     )
-    private boolean hasInfiniteItemsMixin(boolean result) {
+    private boolean galacticraft$hasInfiniteItems(boolean result) {
         return result && !(Minecraft.getInstance().player.getVehicle() instanceof RocketEntity);
     }
 }

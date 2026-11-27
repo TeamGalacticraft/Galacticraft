@@ -109,7 +109,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
         this.bodiesToRender.sort((o1, o2) -> Float.compare(o1.position().lineScale(), o2.position().lineScale()));
 
         ClientSatelliteAccessor accessor = (ClientSatelliteAccessor) Objects.requireNonNull(Minecraft.getInstance().getConnection());
-        accessor.addListener(this);
+        accessor.galacticraft$addListener(this);
     }
 
     @Override
@@ -124,7 +124,7 @@ public class CelestialScreen extends Screen implements ClientSatelliteAccessor.S
     public void onClose() {
         super.onClose();
         assert this.minecraft != null;
-        ((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).removeListener(this);
+        ((ClientSatelliteAccessor) Objects.requireNonNull(this.minecraft.getConnection())).galacticraft$removeListener(this);
     }
 
     protected boolean isStar(@Nullable CelestialBody<?, ?> body) {

@@ -36,17 +36,17 @@ import org.spongepowered.asm.mixin.Mixin;
 import java.util.Optional;
 
 @Mixin(ChangeOverTimeBlock.class)
-public interface ChangeOverTimeBlockMixin {
+interface ChangeOverTimeBlockMixin {
     @WrapMethod(method = "getNextState")
-    private Optional<BlockState> gc$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
+    private Optional<BlockState> galacticraft$getNextState(BlockState state, ServerLevel level, BlockPos pos, RandomSource randomSource, Operation<Optional<BlockState>> original) {
         if (this instanceof WeatheringCopper) {
             boolean preventAgeing = true;
 
-            if (level.isBreathable(pos)) {
+            if (level.galacticraft$isBreathable(pos)) {
                 preventAgeing = false;
             } else {
                 for (Direction direction : Direction.values()) {
-                    if (level.isBreathable(pos.relative(direction))) {
+                    if (level.galacticraft$isBreathable(pos.relative(direction))) {
                         preventAgeing = false;
                         break;
                     }

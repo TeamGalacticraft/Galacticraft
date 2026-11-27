@@ -44,17 +44,17 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(LevelRenderer.class)
-public class LevelRendererMixin {
+abstract class LevelRendererMixin {
     @Unique
     private OverworldRenderer worldRenderer;
 
     @Inject(method = "<init>", at = @At("TAIL"))
-    private void gc$setupRenderer(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
+    private void galacticraft$setupRenderer(Minecraft minecraft, EntityRenderDispatcher entityRenderDispatcher, BlockEntityRenderDispatcher blockEntityRenderDispatcher, RenderBuffers renderBuffers, CallbackInfo ci) {
         this.worldRenderer = new OverworldRenderer();
     }
 
     @Inject(method = "renderSky", at = @At("HEAD"), cancellable = true)
-    public void gc$renderSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
+    private void galacticraft$renderSky(Matrix4f matrix4f, Matrix4f projectionMatrix, float tickDelta, Camera camera, boolean thickFog, Runnable fogCallback, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && player.level().dimension() == Level.OVERWORLD) {
             this.worldRenderer.renderOverworldSky(player, matrix4f, projectionMatrix, tickDelta, camera, thickFog, fogCallback);
@@ -63,26 +63,25 @@ public class LevelRendererMixin {
     }
 
     @Inject(method = "renderClouds", at = @At("HEAD"), cancellable = true)
-    public void gc$preventCloudRendering(PoseStack matrices, Matrix4f matrix4f, Matrix4f matrix4f2, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
+    private void galacticraft$preventCloudRendering(PoseStack matrices, Matrix4f matrix4f, Matrix4f matrix4f2, float tickDelta, double cameraX, double cameraY, double cameraZ, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_HEIGHT) {
             // Have clouds slowly fade out
-            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, normalize((float) player.getY(), Constant.CLOUD_HEIGHT, Constant.CLOUD_LIMIT, 1, 0F));
+            RenderSystem.setShaderColor(1.0F, 1.0F, 1.0F, galacticraft$normalize((float) player.getY(), Constant.CLOUD_HEIGHT, Constant.CLOUD_LIMIT, 1, 0F));
             if (player.getVehicle().getY() > Constant.CLOUD_LIMIT)
                 ci.cancel();
         }
     }
 
     @Inject(method = "renderSnowAndRain", at = @At("HEAD"), cancellable = true)
-    public void gc$cancelRainAndSnow(LightTexture lightTexture, float f, double d, double e, double g, CallbackInfo ci) {
+    private void galacticraft$cancelRainAndSnow(LightTexture lightTexture, float f, double d, double e, double g, CallbackInfo ci) {
         Player player = Minecraft.getInstance().player;
         if (player != null && player.getVehicle() instanceof RocketEntity && player.getVehicle().getY() > Constant.CLOUD_HEIGHT)
             ci.cancel();
     }
 
-
     @Unique
-    private float normalize(float x, float inMin, float inMax, float outMin, float outMax) {
+    private float galacticraft$normalize(float x, float inMin, float inMax, float outMin, float outMax) {
         float outRange = outMax - outMin;
         float inRange = inMax - inMin;
         return (x - inMin) * outRange / inRange + outMin;

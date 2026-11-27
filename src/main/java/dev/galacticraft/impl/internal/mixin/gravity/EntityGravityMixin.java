@@ -32,15 +32,12 @@ import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(Entity.class)
-public abstract class EntityGravityMixin {
-    @Shadow
-    protected abstract double getDefaultGravity();
-
+abstract class EntityGravityMixin {
     @Shadow
     private Level level;
 
     @ModifyExpressionValue(method = "getGravity", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/Entity;getDefaultGravity()D"))
-    private double replaceGravity(double original) {
+    private double galacticraft$replaceGravity(double original) {
         Holder<CelestialBody<?, ?>> holder = this.level.galacticraft$getCelestialBody();
         return (holder != null ? holder.value().gravity() : 1.0d) * original;
     }

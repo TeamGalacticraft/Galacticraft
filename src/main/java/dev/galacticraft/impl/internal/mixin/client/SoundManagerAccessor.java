@@ -31,7 +31,7 @@ import org.spongepowered.asm.mixin.gen.Accessor;
 
 @Mixin(SoundManager.class)
 @Environment(EnvType.CLIENT)
-public interface SoundManagerAccessor {
+interface SoundManagerAccessor {
     @Accessor("soundEngine")
-    SoundEngine getSoundSystem();
+    SoundEngine galacticraft$getSoundSystem();
 }

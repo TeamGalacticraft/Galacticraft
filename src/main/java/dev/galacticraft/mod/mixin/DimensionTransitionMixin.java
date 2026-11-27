@@ -40,13 +40,13 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(DimensionTransition.class)
-public abstract class DimensionTransitionMixin {
+abstract class DimensionTransitionMixin {
     @Inject(
-            method = "missingRespawnBlock",
+            method = "missingRespawnBlock(Lnet/minecraft/server/level/ServerLevel;Lnet/minecraft/world/entity/Entity;Lnet/minecraft/world/level/portal/DimensionTransition$PostDimensionTransition;)Lnet/minecraft/world/level/portal/DimensionTransition;",
             at = @At("HEAD"),
             cancellable = true
     )
-    private static void findRespawnAndUseCryoChamber(
+    private static void galacticraft$findRespawnAndUseCryoChamber(
             ServerLevel overworld,
             Entity entity,
             DimensionTransition.PostDimensionTransition postDimensionTransition,
@@ -86,7 +86,7 @@ public abstract class DimensionTransitionMixin {
 
         float yaw = serverPlayer.getRespawnAngle();
 
-        if (gc$canRespawn(serverLevel, blockPos)) {
+        if (galacticraft$canRespawn(serverLevel, blockPos)) {
             cir.setReturnValue(
                     new DimensionTransition(
                             serverLevel,
@@ -101,7 +101,7 @@ public abstract class DimensionTransitionMixin {
     }
 
     @Unique
-    private static boolean gc$canRespawn(
+    private static boolean galacticraft$canRespawn(
             Level level,
             BlockPos blockPos
     ) {
@@ -110,14 +110,14 @@ public abstract class DimensionTransitionMixin {
         if (baseState.getBlock() instanceof CryogenicChamberBlock) {
             Direction direction = baseState.getValue(CryogenicChamberBlock.FACING);
 
-            return gc$freeAt(level, blockPos.relative(direction)) && gc$freeAt(level, blockPos.above().relative(direction));
+            return galacticraft$freeAt(level, blockPos.relative(direction)) && galacticraft$freeAt(level, blockPos.above().relative(direction));
         }
 
         return false;
     }
 
     @Unique
-    private static boolean gc$freeAt(
+    private static boolean galacticraft$freeAt(
             Level level,
             BlockPos blockPos
     ) {

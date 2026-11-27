@@ -25,6 +25,7 @@ package dev.galacticraft.mod.mixin;
 import com.google.common.collect.ImmutableList;
 import com.llamalad7.mixinextras.injector.wrapmethod.WrapMethod;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.galacticraft.mod.accessor.GCLevelAccessor;
 import dev.galacticraft.mod.misc.footprint.FootprintManager;
 import dev.galacticraft.mod.misc.footprint.ServerFootprintManager;
@@ -32,64 +33,51 @@ import dev.galacticraft.mod.tag.GCDimensionTypeTags;
 import dev.galacticraft.mod.world.dimension.GCDimensions;
 import dev.galacticraft.mod.world.gen.spawner.EvolvedPillagerSpawner;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Holder;
-import net.minecraft.core.RegistryAccess;
 import net.minecraft.network.protocol.game.ClientboundGameEventPacket;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.MinecraftServer;
 import net.minecraft.server.level.ServerLevel;
-import net.minecraft.server.level.progress.ChunkProgressListener;
 import net.minecraft.server.players.PlayerList;
 import net.minecraft.tags.BlockTags;
-import net.minecraft.util.profiling.ProfilerFiller;
-import net.minecraft.world.RandomSequences;
 import net.minecraft.world.level.CustomSpawner;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.dimension.DimensionType;
-import net.minecraft.world.level.dimension.LevelStem;
-import net.minecraft.world.level.storage.LevelStorageSource;
-import net.minecraft.world.level.storage.ServerLevelData;
-import net.minecraft.world.level.storage.WritableLevelData;
-import org.jetbrains.annotations.Nullable;
+import org.jetbrains.annotations.NotNull;
 import org.spongepowered.asm.mixin.*;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 import java.util.List;
-import java.util.concurrent.Executor;
-import java.util.function.Supplier;
 
 @Mixin(ServerLevel.class)
-public abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
+abstract class ServerLevelMixin extends Level implements GCLevelAccessor {
+    @SuppressWarnings("ConstantConditions")
+    private ServerLevelMixin() {
+        super(null, null, null, null, null, false, false, 0, 0);
+    }
+
     @Shadow
     @Final
     @Mutable
     private List<CustomSpawner> customSpawners;
 
     @Shadow
-    public abstract ServerLevel getLevel();
+    public abstract @NotNull MinecraftServer getServer();
 
-    @Shadow
-    public abstract MinecraftServer getServer();
-
-    private final @Unique FootprintManager footprintManager = new ServerFootprintManager();
-
-    protected ServerLevelMixin(WritableLevelData levelData, ResourceKey<Level> dimension, RegistryAccess registryAccess, Holder<DimensionType> dimensionTypeRegistration, Supplier<ProfilerFiller> profiler, boolean isClientSide, boolean isDebug, long biomeZoomSeed, int maxChainedNeighborUpdates) {
-        super(levelData, dimension, registryAccess, dimensionTypeRegistration, profiler, isClientSide, isDebug, biomeZoomSeed, maxChainedNeighborUpdates);
-    }
+    @Unique
+    private final FootprintManager galacticraft$footprintManager = new ServerFootprintManager();
 
     @Inject(method = "<init>", at = @At("RETURN"))
-    private void setSpawnersGC(MinecraftServer server, Executor workerExecutor, LevelStorageSource.LevelStorageAccess session, ServerLevelData properties, ResourceKey<Level> worldKey, LevelStem dimensionOptions, ChunkProgressListener worldGenerationProgressListener, boolean debugWorld, long seed, List spawners, boolean shouldTickTime, @Nullable RandomSequences randomSequences, CallbackInfo ci) {
+    private void galacticraft$setSpawners(CallbackInfo ci, @Local(argsOnly = true) ResourceKey<Level> worldKey) {
         if (worldKey.equals(GCDimensions.MOON)) {
             this.customSpawners = ImmutableList.<CustomSpawner>builder().add(new EvolvedPillagerSpawner()).build();
         }
     }
 
     @Inject(method = "sendBlockUpdated", at = @At(value = "INVOKE", target = "Ljava/util/Set;iterator()Ljava/util/Iterator;", remap = false))
-    private void onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
+    private void galacticraft$onBlockChanges(BlockPos pos, BlockState oldState, BlockState newState, int flags, CallbackInfo ci) {
         // Skip if both old and new states are solid blocks
         if (oldState.isSolid() && newState.isSolid()) {
             return;
@@ -102,16 +90,16 @@ public abstract class ServerLevelMixin extends Level implements GCLevelAccessor 
     }
 
     @Inject(method = "tickChunk", at = @At("HEAD"))
-    private void tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
+    private void galacticraft$tickFootprints(LevelChunk chunk, int randomTickSpeed, CallbackInfo ci) {
         var profiler = getProfiler();
         profiler.push("footprints");
-        footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
+        this.galacticraft$footprintManager.tick((ServerLevel) (Object) this, chunk.getPos().toLong());
         profiler.pop();
     }
 
     @Override
     public FootprintManager galacticraft$getFootprintManager() {
-        return footprintManager;
+        return this.galacticraft$footprintManager;
     }
 
     @WrapMethod(method = "advanceWeatherCycle")

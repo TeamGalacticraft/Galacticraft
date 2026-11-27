@@ -480,7 +480,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
     }
 
     private void doDefaultCrashExplosion() {
-        boolean createFire = this.level().getDefaultBreathable();
+        boolean createFire = this.level().galacticraft$getDefaultBreathable();
 
         for (int i = 0; i < 4; i++) {
             this.level().explode(
@@ -517,7 +517,7 @@ public class RocketEntity extends AdvancedVehicle implements Rocket, IgnoreShift
 
         Block payload = BuiltInRegistries.BLOCK.get(explosiveRocketData.get().explosiveBlock());
         if (!(payload instanceof TntBlock tntBlock)) {
-            boolean createFire = this.level().getDefaultBreathable();
+            boolean createFire = this.level().galacticraft$getDefaultBreathable();
             this.level().explode(
                     this,
                     this.damageSources().source(CRASH_LANDING),

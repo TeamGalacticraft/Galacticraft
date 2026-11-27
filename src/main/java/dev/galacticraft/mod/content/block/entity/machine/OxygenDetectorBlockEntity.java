@@ -63,7 +63,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        this.oxygenWorld = level.getDefaultBreathable();
+        this.oxygenWorld = level.galacticraft$getDefaultBreathable();
     }
 
     public boolean canAccess(Player player) {
@@ -102,7 +102,7 @@ public class OxygenDetectorBlockEntity extends MachineBlockEntity {
         BlockPos pos = this.worldPosition.relative(direction);
         boolean isFree = !this.level.getBlockState(pos).isSolidRender(this.level, pos);
 
-        return isFree && (oxygenWorld || this.level.isBreathable(pos));
+        return isFree && (oxygenWorld || this.level.galacticraft$isBreathable(pos));
     }
 
     private boolean isOxygenPresent() {

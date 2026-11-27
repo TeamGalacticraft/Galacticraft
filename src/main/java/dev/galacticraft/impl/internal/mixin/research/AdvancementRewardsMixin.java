@@ -39,13 +39,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.Arrays;
 
 @Mixin(AdvancementRewards.class)
-public abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
+abstract class AdvancementRewardsMixin implements AdvancementRewardsAccessor {
     @Unique
     @NotNull
-    private ResourceLocation @Nullable [] rocketPartRecipes = null;
+    private ResourceLocation @Nullable [] galacticraft$rocketPartRecipes = null;
 
 //    @Inject(method = "deserialize", at = @At("RETURN")) TODO: Port (are we even using this?)
-//    private static void parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
+//    private static void galacticraft$parseRocketPartReward(JsonObject json, CallbackInfoReturnable<AdvancementRewards> cir) {
 //        if (json.has("rocket_parts")) {
 //            AdvancementRewards rewards = cir.getReturnValue();
 //            JsonArray array = json.get("rocket_parts").getAsJsonArray();
@@ -53,23 +53,23 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
 //            for (int i = 0; i < array.size(); i++) {
 //                ids[i] = ResourceLocation.parse(array.get(i).getAsString());
 //            }
-//            ((AdvancementRewardsAccessor) rewards).setRocketPartRecipeRewards(ids);
+//            ((AdvancementRewardsAccessor) rewards).galacticraft$setRocketPartRecipeRewards(ids);
 //        }
 //    }
 
     @Inject(method = "grant", at = @At("RETURN"))
-    private void galacticraft_applyRocketPartsToPlayer(ServerPlayer player, CallbackInfo ci) {
-        if (this.rocketPartRecipes != null) {
-            ((ServerResearchAccessor) player).galacticraft$unlockRocketPartRecipes(this.rocketPartRecipes);
+    private void galacticraft$applyRocketPartsToPlayer(ServerPlayer player, CallbackInfo ci) {
+        if (this.galacticraft$rocketPartRecipes != null) {
+            ((ServerResearchAccessor) player).galacticraft$unlockRocketPartRecipes(this.galacticraft$rocketPartRecipes);
         }
     }
 
 //    @Inject(method = "serializeToJson", at = @At("RETURN"), cancellable = true)
-//    private void galacticraft_writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
-//        if (this.rocketPartRecipes != null) {
+//    private void galacticraft$writeRocketPartRewardsToJson(CallbackInfoReturnable<JsonElement> cir) {
+//        if (this.galacticraft$rocketPartRecipes != null) {
 //            JsonObject object = cir.getReturnValue().getAsJsonObject();
 //            JsonArray array = new JsonArray();
-//            for (ResourceLocation id : this.rocketPartRecipes) {
+//            for (ResourceLocation id : this.galacticraft$rocketPartRecipes) {
 //                array.add(id.toString());
 //            }
 //            object.add("rocket_parts", array);
@@ -78,13 +78,13 @@ public abstract class AdvancementRewardsMixin implements AdvancementRewardsAcces
 //    }
 
     @Inject(method = "toString", at = @At("RETURN"), cancellable = true)
-    private void galacticraft_appendRocketPartsToString(CallbackInfoReturnable<String> cir) {
+    private void galacticraft$appendRocketPartsToString(CallbackInfoReturnable<String> cir) {
         String s = cir.getReturnValue();
-        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.rocketPartRecipes) + '}');
+        cir.setReturnValue(s.substring(0, s.length() - 1) + ", parts=" + Arrays.toString(this.galacticraft$rocketPartRecipes) + '}');
     }
 
     @Override
-    public void setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
-        this.rocketPartRecipes = recipes;
+    public void galacticraft$setRocketPartRecipeRewards(@NotNull ResourceLocation @Nullable [] recipes) {
+        this.galacticraft$rocketPartRecipes = recipes;
     }
 }

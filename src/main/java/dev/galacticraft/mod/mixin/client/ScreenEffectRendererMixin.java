@@ -40,7 +40,7 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ScreenEffectRenderer.class)
-public class ScreenEffectRendererMixin {
+abstract class ScreenEffectRendererMixin {
     @Unique
     private static final ResourceLocation OIL_LOCATION = Constant.id("textures/misc/crude_oil_overlay.png");
     @Unique
@@ -48,19 +48,19 @@ public class ScreenEffectRendererMixin {
     @Unique
     private static final ResourceLocation ACID_LOCATION = Constant.id("textures/misc/sulfuric_acid_overlay.png");
 
-    @Inject(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"), cancellable = true)
-    private static void gc$fluidOverlays(Minecraft minecraft, PoseStack poseStack, CallbackInfo ci) {
+    @Inject(method = "renderScreenEffect", at = @At(value = "INVOKE", target = "Lnet/minecraft/client/player/LocalPlayer;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
+    private static void galacticraft$fluidOverlays(Minecraft minecraft, PoseStack poseStack, CallbackInfo ci) {
         if (minecraft.player.isEyeInFluid(GCFluidTags.OIL)) {
-            gc$renderFluidOverlay(minecraft, poseStack, OIL_LOCATION);
+            galacticraft$renderFluidOverlay(minecraft, poseStack, OIL_LOCATION);
         } else if (minecraft.player.isEyeInFluid(GCFluidTags.FUEL)) {
-            gc$renderFluidOverlay(minecraft, poseStack, FUEL_LOCATION);
+            galacticraft$renderFluidOverlay(minecraft, poseStack, FUEL_LOCATION);
         } else if (minecraft.player.isEyeInFluid(GCFluidTags.SULFURIC_ACID)) {
-            gc$renderFluidOverlay(minecraft, poseStack, ACID_LOCATION);
+            galacticraft$renderFluidOverlay(minecraft, poseStack, ACID_LOCATION);
         }
     }
 
     @Unique
-    private static void gc$renderFluidOverlay(Minecraft minecraft, PoseStack poseStack, ResourceLocation texture) {
+    private static void galacticraft$renderFluidOverlay(Minecraft minecraft, PoseStack poseStack, ResourceLocation texture) {
         RenderSystem.setShader(GameRenderer::getPositionTexShader);
         RenderSystem.setShaderTexture(0, texture);
         BlockPos blockPos = BlockPos.containing(minecraft.player.getX(), minecraft.player.getEyeY(), minecraft.player.getZ());

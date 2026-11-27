@@ -39,7 +39,7 @@ import java.util.Map;
 import java.util.Set;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerDimensionMixin {
+abstract class MinecraftServerDimensionMixin {
     /**
      * Minecraft creates every non-overworld ServerLevel by iterating the
      * LevelStem registry in MinecraftServer#createLevels.

@@ -33,13 +33,14 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FireworkRocketItem.class)
-public abstract class FireworkRocketItemMixin extends Item {
-    FireworkRocketItemMixin() {
+abstract class FireworkRocketItemMixin extends Item {
+    @SuppressWarnings("ConstantConditions")
+    private FireworkRocketItemMixin() {
         super(null);
     }
 
     @ModifyExpressionValue(method = "use", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/player/Player;isFallFlying()Z"))
-    private boolean gc$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
-        return level.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM) ? false : original;
+    private boolean galacticraft$useFireworkInVacuum(boolean original, Level level, Player player, InteractionHand interactionHand) {
+        return original && !level.galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM);
     }
 }

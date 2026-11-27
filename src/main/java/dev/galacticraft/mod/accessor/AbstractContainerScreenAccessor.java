@@ -20,17 +20,10 @@
  * SOFTWARE.
  */
 
-package dev.galacticraft.mod.mixin;
+package dev.galacticraft.mod.accessor;
 
-import net.minecraft.core.BlockPos;
-import net.minecraft.world.entity.LivingEntity;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.gen.Accessor;
+import net.minecraft.client.gui.GuiGraphics;
 
-import java.util.Optional;
-
-@Mixin(LivingEntity.class)
-public interface LivingEntityAccessor {
-    @Accessor("lastClimbablePos")
-    void setLastClimbablePos(Optional<BlockPos> pos);
+public interface AbstractContainerScreenAccessor {
+    void galacticraft$renderSlots(GuiGraphics graphics, int mouseX, int mouseY);
 }

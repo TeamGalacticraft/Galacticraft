@@ -40,14 +40,15 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(AbstractFurnaceBlockEntity.class)
-public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
+abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
+    @SuppressWarnings("ConstantConditions")
     AbstractFurnaceBlockEntityMixin() {
         super(null, null, null);
     }
 
     @Inject(method = "serverTick", at = @At("HEAD"))
-    private static void gc$extinguishFurnace(Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be, CallbackInfo ci) {
-        if (be.litTime > 0 && gc$shouldExtinguish(level, blockPos, blockState)) {
+    private static void galacticraft$extinguishFurnace(Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be, CallbackInfo ci) {
+        if (be.litTime > 0 && galacticraft$shouldExtinguish(level, blockPos, blockState)) {
             be.litTime = 0;
             blockState = blockState.setValue(AbstractFurnaceBlock.LIT, false);
             level.setBlock(blockPos, blockState, Block.UPDATE_ALL);
@@ -58,16 +59,16 @@ public abstract class AbstractFurnaceBlockEntityMixin extends BlockEntity {
     }
 
     @ModifyExpressionValue(method = "serverTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/entity/AbstractFurnaceBlockEntity;canBurn(Lnet/minecraft/core/RegistryAccess;Lnet/minecraft/world/item/crafting/RecipeHolder;Lnet/minecraft/core/NonNullList;I)Z"))
-    private static boolean gc$canBurn(boolean original, Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be) {
-        if (gc$shouldExtinguish(level, blockPos, blockState)) {
+    private static boolean galacticraft$canBurn(boolean original, Level level, BlockPos blockPos, BlockState blockState, AbstractFurnaceBlockEntity be) {
+        if (galacticraft$shouldExtinguish(level, blockPos, blockState)) {
             return false;
         }
         return original;
     }
 
     @Unique
-    private static boolean gc$shouldExtinguish(Level level, BlockPos blockPos, BlockState blockState) {
-        return !level.isBreathable(blockPos.relative(blockState.getValue(AbstractFurnaceBlock.FACING)))
-                && !level.isBreathable(blockPos);
+    private static boolean galacticraft$shouldExtinguish(Level level, BlockPos blockPos, BlockState blockState) {
+        return !level.galacticraft$isBreathable(blockPos.relative(blockState.getValue(AbstractFurnaceBlock.FACING)))
+                && !level.galacticraft$isBreathable(blockPos);
     }
 }

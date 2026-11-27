@@ -39,6 +39,7 @@ import net.minecraft.util.GsonHelper;
 import net.minecraft.world.inventory.InventoryMenu;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
@@ -48,10 +49,11 @@ import java.util.Optional;
 import java.util.function.Function;
 
 @Mixin(BlockModel.class)
-public abstract class BlockModelMixin implements BlockModelAccessor {
+abstract class BlockModelMixin implements BlockModelAccessor {
     @Shadow
     public abstract Material getMaterial(String spriteName);
 
+    @Unique
     private UnbakedObjModel galacticraft$obj;
 
     @Override
@@ -60,16 +62,16 @@ public abstract class BlockModelMixin implements BlockModelAccessor {
     }
 
     @Inject(method = "bake(Lnet/minecraft/client/resources/model/ModelBaker;Lnet/minecraft/client/renderer/block/model/BlockModel;Ljava/util/function/Function;Lnet/minecraft/client/resources/model/ModelState;Z)Lnet/minecraft/client/resources/model/BakedModel;", at = @At("HEAD"), cancellable = true)
-    private void customBake(ModelBaker baker, BlockModel parent, Function<Material, TextureAtlasSprite> textureGetter, ModelState settings, boolean isGui3d, CallbackInfoReturnable<BakedModel> cir) {
+    private void galacticraft$customBake(ModelBaker baker, BlockModel parent, Function<Material, TextureAtlasSprite> textureGetter, ModelState settings, boolean isGui3d, CallbackInfoReturnable<BakedModel> cir) {
         if (galacticraft$obj != null)
             cir.setReturnValue(galacticraft$obj.bakeVanillaModel(Minecraft.getInstance().getResourceManager(), textureGetter, textureGetter.apply(getMaterial("particle"))));
     }
 
     @Mixin(BlockModel.Deserializer.class)
-    public static class DeserializerMixin {
+    static abstract class DeserializerMixin {
         // Loading custom block models via fabric api's model plugin is kinda ass so this is easier
         @Inject(method = "deserialize(Lcom/google/gson/JsonElement;Ljava/lang/reflect/Type;Lcom/google/gson/JsonDeserializationContext;)Lnet/minecraft/client/renderer/block/model/BlockModel;", at = @At("RETURN"))
-        private void loadCustomObjModel(JsonElement element, Type type, JsonDeserializationContext jsonDeserializationContext, CallbackInfoReturnable<BlockModel> cir) {
+        private void galacticraft$loadCustomObjModel(JsonElement element, Type type, JsonDeserializationContext jsonDeserializationContext, CallbackInfoReturnable<BlockModel> cir) {
             JsonObject json = element.getAsJsonObject();
             if (json.has("galacticraft:obj")) {
                 ResourceLocation objPath = ResourceLocation.parse(GsonHelper.getAsString(json, "obj"));

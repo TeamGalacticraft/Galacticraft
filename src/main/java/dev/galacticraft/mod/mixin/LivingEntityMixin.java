@@ -42,13 +42,11 @@ import net.minecraft.network.syncher.EntityDataSerializers;
 import net.minecraft.network.syncher.SynchedEntityData;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.Vec3;
 import org.spongepowered.asm.mixin.Mixin;
@@ -64,8 +62,15 @@ import java.util.List;
 import java.util.Optional;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
-    @Shadow public abstract double getAttributeValue(Holder<Attribute> holder);
+abstract class LivingEntityMixin extends Entity implements CryogenicAccessor {
+    @SuppressWarnings("ConstantConditions")
+    private LivingEntityMixin() {
+        super(null, null);
+    }
+
+    @Shadow
+    @SuppressWarnings("OptionalUsedAsFieldOrParameterType")
+    private Optional<BlockPos> lastClimbablePos;
 
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")
@@ -77,62 +82,58 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     public abstract void setYHeadRot(float f);
 
     @Unique
-    public int cryogenicChamberCooldown;
-
-    public LivingEntityMixin(EntityType<?> entityType, Level level) {
-        super(entityType, level);
-    }
+    public int galacticraft$cryogenicChamberCooldown;
 
     @Override
-    public void beginCryoSleep() {
+    public void galacticraft$beginCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, true);
     }
 
     @Override
-    public void endCryoSleep() {
+    public void galacticraft$endCryoSleep() {
         this.entityData.set(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Override
-    public boolean isInCryoSleep() {
+    public boolean galacticraft$isInCryoSleep() {
         return this.entityData.get(IS_IN_CRYO_SLEEP_ID);
     }
 
     @Override
-    public int getCryogenicChamberCooldown() {
-        return this.cryogenicChamberCooldown;
+    public int galacticraft$getCryogenicChamberCooldown() {
+        return this.galacticraft$cryogenicChamberCooldown;
     }
 
     @Override
-    public void setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
-        this.cryogenicChamberCooldown = cryogenicChamberCooldown;
+    public void galacticraft$setCryogenicChamberCooldown(int cryogenicChamberCooldown) {
+        this.galacticraft$cryogenicChamberCooldown = cryogenicChamberCooldown;
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
-    private void gc$readCryoData(CompoundTag tag, CallbackInfo ci) {
-        this.cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
+    private void galacticraft$readCryoData(CompoundTag tag, CallbackInfo ci) {
+        this.galacticraft$cryogenicChamberCooldown = tag.getInt(Constant.Nbt.CRYOGENIC_COOLDOWN);
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
-    private void gc$addCryoData(CompoundTag tag, CallbackInfo ci) {
-        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.cryogenicChamberCooldown);
+    private void galacticraft$addCryoData(CompoundTag tag, CallbackInfo ci) {
+        tag.putInt(Constant.Nbt.CRYOGENIC_COOLDOWN, this.galacticraft$cryogenicChamberCooldown);
     }
 
     @Inject(method = "tick", at = @At("HEAD"))
-    private void gc$tickCryo(CallbackInfo ci) {
-        if (getCryogenicChamberCooldown() > 0) {
-            setCryogenicChamberCooldown(getCryogenicChamberCooldown() - 1);
+    private void galacticraft$tickCryo(CallbackInfo ci) {
+        if (galacticraft$getCryogenicChamberCooldown() > 0) {
+            galacticraft$setCryogenicChamberCooldown(galacticraft$getCryogenicChamberCooldown() - 1);
         }
     }
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void gc$sleepData(SynchedEntityData.Builder compositeStateBuilder, CallbackInfo ci) {
+    private void galacticraft$sleepData(SynchedEntityData.Builder compositeStateBuilder, CallbackInfo ci) {
         compositeStateBuilder.define(IS_IN_CRYO_SLEEP_ID, false);
     }
 
     @Inject(method = "setPosToBed", at = @At("HEAD"), cancellable = true)
-    private void gc$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
-        if (isInCryoSleep()) {
+    private void galacticraft$setCryoSleepPos(BlockPos blockPos, CallbackInfo ci) {
+        if (galacticraft$isInCryoSleep()) {
             Vec3 pos = blockPos.below().getBottomCenter();
             this.setPos(pos.x, pos.y, pos.z);
             this.setDeltaMovement(Vec3.ZERO);
@@ -142,13 +143,13 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @Inject(method = "aiStep", at = @At("HEAD"), cancellable = true)
-    private void gc$preventMovement(CallbackInfo ci) {
-        if (isInCryoSleep())
+    private void galacticraft$preventMovement(CallbackInfo ci) {
+        if (galacticraft$isInCryoSleep())
             ci.cancel();
     }
 
     @ModifyReturnValue(method = "getAttributeValue", at = @At(value = "RETURN"))
-    private double gc$adjustSafeFallDistance(double original, Holder<Attribute> attribute) {
+    private double galacticraft$adjustSafeFallDistance(double original, Holder<Attribute> attribute) {
         if (attribute == Attributes.SAFE_FALL_DISTANCE) {
             Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
             if (holder != null) {
@@ -160,18 +161,18 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @ModifyArg(method = "calculateFallDamage", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/Mth;ceil(D)I"), index = 0)
-    protected double gc$adjustFallDamage(double original) {
+    private double galacticraft$adjustFallDamage(double original) {
         Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
         return holder != null ? original * holder.value().gravity() : original;
     }
 
     @ModifyExpressionValue(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isFallFlying()Z"))
-    private boolean gc$canStartFallFlying(boolean original) {
-        return this.level().galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM) ? false : original;
+    private boolean galacticraft$canStartFallFlying(boolean original) {
+        return original && !this.level().galacticraft$hasDimensionTypeTag(GCDimensionTypeTags.VACUUM);
     }
 
     @ModifyArg(method = "travel", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;setDeltaMovement(Lnet/minecraft/world/phys/Vec3;)V", ordinal = 6), index = 0)
-    private Vec3 gc$adjustAtmosphericDrag(Vec3 original) {
+    private Vec3 galacticraft$adjustAtmosphericDrag(Vec3 original) {
         Holder<CelestialBody<?, ?>> holder = this.level().galacticraft$getCelestialBody();
         if (holder != null) {
             float drag = holder.value().atmosphere().pressure() / 2000.0F;
@@ -181,11 +182,11 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
     }
 
     @WrapOperation(method = "triggerItemUseEffects", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;spawnItemParticles(Lnet/minecraft/world/item/ItemStack;I)V"))
-    private void gc$cannedFoodParticles(LivingEntity entity, ItemStack itemStack, int n, Operation<Void> original) {
+    private void galacticraft$cannedFoodParticles(LivingEntity entity, ItemStack itemStack, int n, Operation<Void> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack) && entity instanceof Player player) {
             List<ItemStack> items = CannedFoodItem.getItemsToBeConsumed(itemStack, player);
             if (!items.isEmpty()) {
-                double scale = n * Mth.invSqrt(items.stream().mapToInt(stack -> stack.getCount()).sum());
+                double scale = n * Mth.invSqrt(items.stream().mapToInt(ItemStack::getCount).sum());
                 for (ItemStack stack : items) {
                     original.call(entity, stack, (int) Math.ceil(scale * stack.getCount()));
                 }
@@ -202,7 +203,7 @@ public abstract class LivingEntityMixin extends Entity implements CryogenicAcces
         for (Direction direction : Direction.Plane.HORIZONTAL) {
             BlockState blockState = this.level().getBlockState(blockPos.relative(direction));
             if (blockState.is(GCBlocks.TIN_LADDER) && blockState.getValue(TinLadderBlock.FACING) == direction) {
-                ((LivingEntityAccessor) this).setLastClimbablePos(Optional.of(blockPos));
+                this.lastClimbablePos = Optional.of(blockPos);
                 cir.setReturnValue(true);
                 return;
             }

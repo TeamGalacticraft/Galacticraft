@@ -72,7 +72,7 @@ public class OxygenTanksRenderLayer<T extends LivingEntity, M extends EntityMode
         } else if (context.getModel() instanceof HumanoidModel<?> model) {
             this.body = model.body;
         } else if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            this.body = model.callGetBodyParts().iterator().next();
+            this.body = model.galacticraft$getBodyParts().iterator().next();
             this.xRot = Mth.HALF_PI;
         } else {
             this.body = null;

@@ -39,22 +39,22 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Spider.class)
-public abstract class SpiderMixin extends LivingEntity {
-
-    SpiderMixin() {
+abstract class SpiderMixin extends LivingEntity {
+    @SuppressWarnings("ConstantConditions")
+    private SpiderMixin() {
         super(null, null);
     }
 
     @ModifyExpressionValue(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/RandomSource;nextInt(I)I"))
-    private int preventDefaultSkeletonJockeySpawn(int original) {
+    private int galacticraft$preventDefaultSkeletonJockeySpawn(int original) {
         if ((Spider) (Object) this instanceof EvolvedSpiderEntity) {
             return -1;
         }
         return original;
     }
 
-    @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;getRandom()Lnet/minecraft/util/RandomSource;"), cancellable = true)
-    private void finalizeEvolvedSpiderJockeySpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
+    @Inject(method = "finalizeSpawn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/ServerLevelAccessor;getRandom()Lnet/minecraft/util/RandomSource;"))
+    private void galacticraft$finalizeEvolvedSpiderJockeySpawn(ServerLevelAccessor serverLevelAccessor, DifficultyInstance difficultyInstance, MobSpawnType mobSpawnType, @Nullable SpawnGroupData spawnGroupData, CallbackInfoReturnable<SpawnGroupData> cir) {
         if ((Spider) (Object) this instanceof EvolvedSpiderEntity spider) {
             EvolvedSkeletonEntity skeleton;
             if (serverLevelAccessor.getRandom().nextInt(100) == 0 && (skeleton = GCEntityTypes.EVOLVED_SKELETON.create(this.level())) != null) {

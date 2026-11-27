@@ -33,11 +33,11 @@ import net.minecraft.server.level.ServerLevel;
 public final class BatchFunctions implements GalacticraftGameTest {
     @BeforeBatch(batch = "nonBreathable")
     public static void beforeNonBreathableBatch(ServerLevel level) {
-        level.setDefaultBreathable(false);
+        level.galacticraft$setDefaultBreathable(false);
     }
 
     @AfterBatch(batch = "nonBreathable")
     public static void afterNonBreathableBatch(ServerLevel level) {
-        level.setDefaultBreathable(true);
+        level.galacticraft$setDefaultBreathable(true);
     }
 }

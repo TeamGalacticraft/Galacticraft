@@ -36,16 +36,17 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(ClientLevel.class)
 @Environment(EnvType.CLIENT)
-public abstract class ClientLevelMixin implements GCLevelAccessor {
-    private final @Unique FootprintManager footprintManager = new FootprintManager();
+abstract class ClientLevelMixin implements GCLevelAccessor {
+    @Unique
+    private final FootprintManager galacticraft$footprintManager = new FootprintManager();
 
     @Inject(method = "tickTime", at = @At("RETURN"))
-    private void update(CallbackInfo ci) {
+    private void galacticraft$update(CallbackInfo ci) {
         ((Level) (Object) this).updateSkyBrightness();
     }
 
     @Override
     public FootprintManager galacticraft$getFootprintManager() {
-        return footprintManager;
+        return this.galacticraft$footprintManager;
     }
 }

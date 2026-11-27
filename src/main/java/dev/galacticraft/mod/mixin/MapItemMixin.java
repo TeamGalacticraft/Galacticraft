@@ -33,7 +33,7 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(MapItem.class)
-public abstract class MapItemMixin {
+abstract class MapItemMixin {
     @WrapOperation(method = "useOn", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;is(Lnet/minecraft/tags/TagKey;)Z"))
     private boolean galacticraft$useMapOnFlag(BlockState instance, TagKey<Block> tagKey, Operation<Boolean> original) {
         return original.call(instance, tagKey) || instance.is(GCBlockTags.FLAGS);

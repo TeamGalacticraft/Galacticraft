@@ -61,8 +61,8 @@ public class PetOxygenMaskRenderLayer<T extends TamableAnimal, M extends EntityM
         PartDefinition partDefinition = meshDefinition.getRoot();
         ModelPart realHead = null;
         if (context.getModel() instanceof AnimalModelAgeableListModel model) {
-            this.head = model.callGetHeadParts().iterator().next();
-            this.body = model.callGetBodyParts().iterator().next();
+            this.head = model.galacticraft$getHeadParts().iterator().next();
+            this.body = model.galacticraft$getBodyParts().iterator().next();
 
             if (context.getModel() instanceof WolfModel) {
                 realHead = this.head.getChild("real_head");

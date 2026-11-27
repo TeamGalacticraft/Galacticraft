@@ -58,9 +58,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 @Mixin(MinecraftServer.class)
-public abstract class MinecraftServerMixin implements SatelliteAccessor {
+abstract class MinecraftServerMixin implements SatelliteAccessor {
     @Unique
-    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
+    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$satellites = new HashMap<>();
 
     @Shadow
     @Final
@@ -71,39 +71,42 @@ public abstract class MinecraftServerMixin implements SatelliteAccessor {
 
     @Override
     public @Unmodifiable Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
-        return ImmutableMap.copyOf(this.satellites);
+        return ImmutableMap.copyOf(this.galacticraft$satellites);
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         ResourceLocation id = satellite.config().getId();
-        this.satellites.put(id, satellite);
+        this.galacticraft$satellites.put(id, satellite);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Added satellite with id {}", id);
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$removeSatellite(ResourceLocation id) {
-        this.satellites.remove(id);
+        this.galacticraft$satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         Constant.LOGGER.info("Removed satellite with id {}", id);
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$updateSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite) {
         ResourceLocation id = satellite.config().getId();
-        this.satellites.replace(id, satellite);
+        this.galacticraft$satellites.replace(id, satellite);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
         RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         Constant.LOGGER.info("Updated satellite with id {}", id);
     }
 
     @Inject(method = "saveEverything", at = @At("RETURN"))
-    private void galacticraft_saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$saveSatellites(boolean suppressLogs, boolean bl, boolean bl2, CallbackInfoReturnable<Boolean> cir) {
         Path path = this.storageSource.getLevelPath(LevelResource.ROOT);
         ListTag nbt = new ListTag();
         RegistryOps<Tag> ops = RegistryOps.create(NbtOps.INSTANCE, this.registryAccess());
-        for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.satellites.entrySet()) {
+        for (Map.Entry<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> entry : this.galacticraft$satellites.entrySet()) {
             CompoundTag compound = (CompoundTag) SatelliteConfig.CODEC.encode(entry.getValue().config(), ops, new CompoundTag()).getOrThrow();
             compound.putString("id", entry.getKey().toString());
             nbt.add(compound);

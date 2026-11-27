@@ -56,7 +56,6 @@ import net.minecraft.tags.ItemTags;
 import net.minecraft.world.Container;
 import net.minecraft.world.SimpleContainer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.player.Player;
@@ -64,7 +63,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.enchantment.EnchantmentEffectComponents;
 import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.GameRules;
-import net.minecraft.world.level.Level;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
 import org.spongepowered.asm.mixin.Unique;
@@ -78,7 +76,11 @@ import java.util.Collection;
 import static dev.galacticraft.mod.content.entity.damage.GCDamageTypes.SUFFOCATION;
 
 @Mixin(LivingEntity.class)
-public abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
+abstract class LivingEntityMixin extends Entity implements GearInventoryProvider {
+    @SuppressWarnings("ConstantConditions")
+    private LivingEntityMixin() {
+        super(null, null);
+    }
 
     @Unique
     @SuppressWarnings("WrongEntityDataParameterClass")
@@ -104,11 +106,8 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
             LivingEntity.class, EntityDataSerializers.STRING
     );
 
-    public LivingEntityMixin(EntityType<?> type, Level world) {
-        super(type, world);
-    }
-
-    private int lastHurtBySuffocationTimestamp;
+    @Unique
+    private int galacticraft$lastHurtBySuffocationTimestamp;
 
     @Shadow
     protected abstract int increaseAirSupply(int air);
@@ -117,23 +116,23 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     protected abstract int decreaseAirSupply(int air);
 
     @Inject(method = "defineSynchedData", at = @At("TAIL"))
-    private void gc$defineOxygenSetupData(SynchedEntityData.Builder builder, CallbackInfo ci) {
+    private void galacticraft$defineOxygenSetupData(SynchedEntityData.Builder builder, CallbackInfo ci) {
         builder.define(DATA_HAS_MASK_ID, false);
         builder.define(DATA_HAS_GEAR_ID, false);
         builder.define(DATA_TANK_1_SIZE_ID, "");
         builder.define(DATA_TANK_2_SIZE_ID, "");
     }
 
-    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"), cancellable = true)
-    protected void galacticraft$readOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "readAdditionalSaveData", at = @At("TAIL"))
+    private void galacticraft$readOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
         this.entityData.set(DATA_HAS_MASK_ID, tag.getBoolean(Constant.Nbt.HAS_MASK));
         this.entityData.set(DATA_HAS_GEAR_ID, tag.getBoolean(Constant.Nbt.HAS_GEAR));
         this.entityData.set(DATA_TANK_1_SIZE_ID, tag.getString(Constant.Nbt.OXYGEN_TANK_1));
         this.entityData.set(DATA_TANK_2_SIZE_ID, tag.getString(Constant.Nbt.OXYGEN_TANK_2));
     }
 
-    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"), cancellable = true)
-    protected void galacticraft$addOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
+    @Inject(method = "addAdditionalSaveData", at = @At("TAIL"))
+    private void galacticraft$addOxygenSetupData(CompoundTag tag, CallbackInfo ci) {
         tag.putBoolean(Constant.Nbt.HAS_MASK, this.galacticraft$hasMask());
         tag.putBoolean(Constant.Nbt.HAS_GEAR, this.galacticraft$hasGear());
         tag.putString(Constant.Nbt.OXYGEN_TANK_1, this.galacticraft$tankSize(0));
@@ -141,20 +140,20 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z"))
-    private void galacticraft_oxygenCheck(CallbackInfo ci) {
+    private void galacticraft$oxygenCheck(CallbackInfo ci) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         if (entity.galacticraft$oxygenConsumptionRate() == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
-        if (!entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D)) {
+        if (!entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose())))) && !(attribute != null && attribute.getValue() >= 0.99D)) {
             if (!entity.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && !(entity instanceof Player player && player.getAbilities().invulnerable)) {
                 entity.setAirSupply(this.decreaseAirSupply(entity.getAirSupply()));
                 if (entity.getAirSupply() == -20) {
                     entity.setAirSupply(0);
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(this.damageSources().source(SUFFOCATION), 2.0f);
-                } else if (this.tickCount - this.lastHurtBySuffocationTimestamp > 20) {
+                } else if (this.tickCount - this.galacticraft$lastHurtBySuffocationTimestamp > 20) {
                     // A small amount of depressurization damage
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     entity.hurt(this.damageSources().source(SUFFOCATION), 1.0f);
                 }
             }
@@ -162,40 +161,40 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;isEyeInFluid(Lnet/minecraft/tags/TagKey;)Z", ordinal = 0))
-    private boolean galacticraft_testForBreathability(boolean original) {
+    private boolean galacticraft$testForBreathability(boolean original) {
         LivingEntity entity = (LivingEntity) (Object) this;
         if (entity.galacticraft$oxygenConsumptionRate() == 0) return false;
         if ((entity.getVehicle() instanceof LanderEntity) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberBlock) || (entity.getInBlockState().getBlock() instanceof CryogenicChamberPart)) {
-            this.lastHurtBySuffocationTimestamp = this.tickCount;
+            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
             return false;
         }
-        return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
+        return original || this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) || !entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(this.getEyeHeight(entity.getPose()))));
     }
 
     @ModifyExpressionValue(method = "baseTick", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;canBreatheUnderwater()Z"))
-    private boolean galacticraft_drowningDamage(boolean original) {
+    private boolean galacticraft$drowningDamage(boolean original) {
         // Return whether the player should take drowning damage
         return original || !this.isEyeInFluid(GCFluidTags.NON_BREATHABLE);
     }
 
     @Inject(method = "decreaseAirSupply", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;getAttribute(Lnet/minecraft/core/Holder;)Lnet/minecraft/world/entity/ai/attributes/AttributeInstance;"), cancellable = true)
-    private void galacticraft_modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
+    private void galacticraft$modifyAirLevel(int air, CallbackInfoReturnable<Integer> cir) {
         LivingEntity entity = ((LivingEntity) (Object) this);
         long rate = entity.galacticraft$oxygenConsumptionRate();
         if (rate == 0) return;
         AttributeInstance attribute = entity.getAttribute(GcApiEntityAttributes.CAN_BREATHE_IN_SPACE);
         if (!this.isEyeInFluid(GCFluidTags.NON_BREATHABLE) && (
                 (attribute != null && attribute.getValue() >= 0.99D) ||
-                entity.level().isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
+                entity.level().galacticraft$isBreathable(entity.blockPosition().relative(Direction.UP, (int) Math.floor(entity.getEyeHeight(entity.getPose()))))
         )) {
-            this.lastHurtBySuffocationTimestamp = this.tickCount;
+            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
             cir.setReturnValue(this.increaseAirSupply(air));
         } else if (this.galacticraft$hasMaskAndGear()) {
             InventoryStorage tankInv = InventoryStorage.of(this.galacticraft$getOxygenTanks(), null);
             for (int i = 1; i < tankInv.getSlotCount(); i++) {
                 ItemStack stack = tankInv.getSlot(i).getResource().toStack();
                 if (stack.getItem() instanceof InfiniteOxygenTankItem) {
-                    this.lastHurtBySuffocationTimestamp = this.tickCount;
+                    this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                     cir.setReturnValue(this.increaseAirSupply(air));
                     return;
                 }
@@ -206,7 +205,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
                     try (Transaction transaction = Transaction.openOuter()) {
                         if (storage.extract(FluidVariant.of(Gases.OXYGEN), rate, transaction) > 0) {
                             transaction.commit();
-                            this.lastHurtBySuffocationTimestamp = this.tickCount;
+                            this.galacticraft$lastHurtBySuffocationTimestamp = this.tickCount;
                             cir.setReturnValue(this.increaseAirSupply(air));
                             return;
                         }
@@ -217,7 +216,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "tick", at = @At(value = "RETURN"))
-    private void tickAccessories(CallbackInfo ci) {
+    private void galacticraft$tickAccessories(CallbackInfo ci) {
         LivingEntity thisEntity = ((LivingEntity) (Object) this);
         for (int i = 0; i < this.galacticraft$getAccessories().getContainerSize(); i++) {
             ItemStack stack = this.galacticraft$getAccessories().getItem(i);
@@ -228,7 +227,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "dropEquipment", at = @At(value = "RETURN"))
-    private void galacticraft_dropGearInventory(CallbackInfo ci) {
+    private void galacticraft$dropGearInventory(CallbackInfo ci) {
         if (!this.level().getGameRules().getBoolean(GameRules.RULE_KEEPINVENTORY)) {
             Container gearInv = this.galacticraft$getGearInv();
             for (int i = 0; i < gearInv.getContainerSize(); ++i) {
@@ -247,7 +246,7 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "canFreeze", at = @At(value = "HEAD"), cancellable = true)
-    private void galacticraft_canFreezeThermalPadding(CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$canFreezeThermalPadding(CallbackInfoReturnable<Boolean> cir) {
         Container inv = this.galacticraft$getThermalArmor();
         for (int slot = 0; slot < inv.getContainerSize(); slot++) {
             if (inv.getItem(slot).is(ItemTags.FREEZE_IMMUNE_WEARABLES)) {
@@ -268,15 +267,15 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Override
-    public SimpleContainer galacticraft_createGearInventory() {
+    public SimpleContainer galacticraft$createGearInventory() {
         SimpleContainer inv = new GearInventory();
-        inv.addListener((inventory) -> this.syncGearToClients(inventory));
-        this.syncGearToClients(inv);
+        inv.addListener(this::galacticraft$syncGearToClients);
+        this.galacticraft$syncGearToClients(inv);
         return inv;
     }
 
     @Unique
-    private void syncGearToClients(Container inventory) {
+    private void galacticraft$syncGearToClients(Container inventory) {
         if (this.level().isClientSide) {
             return;
         }
@@ -356,14 +355,11 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
 
     @Override
     public String galacticraft$tankSize(int i) {
-        switch (i) {
-            case 0:
-                return this.entityData.get(DATA_TANK_1_SIZE_ID);
-            case 1:
-                return this.entityData.get(DATA_TANK_2_SIZE_ID);
-            default:
-                return "";
-        }
+        return switch (i) {
+            case 0 -> this.entityData.get(DATA_TANK_1_SIZE_ID);
+            case 1 -> this.entityData.get(DATA_TANK_2_SIZE_ID);
+            default -> "";
+        };
     }
 
     @Override
@@ -372,12 +368,12 @@ public abstract class LivingEntityMixin extends Entity implements GearInventoryP
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("HEAD"))
-    private void galacticraft_writeGearInventory(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$writeGearInventory(CompoundTag nbt, CallbackInfo ci) {
         this.galacticraft$writeGearToNbt(nbt);
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("HEAD"))
-    private void galacticraft_readGearInventory(CompoundTag tag, CallbackInfo ci) {
+    private void galacticraft$readGearInventory(CompoundTag tag, CallbackInfo ci) {
         this.galacticraft$readGearFromNbt(tag);
     }
 

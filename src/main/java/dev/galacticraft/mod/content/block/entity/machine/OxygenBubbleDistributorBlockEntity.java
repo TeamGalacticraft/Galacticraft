@@ -109,7 +109,7 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
     @Override
     public void setLevel(Level level) {
         super.setLevel(level);
-        this.oxygenWorld = level.getDefaultBreathable();
+        this.oxygenWorld = level.galacticraft$getDefaultBreathable();
     }
 
     @Override
@@ -224,9 +224,9 @@ public class OxygenBubbleDistributorBlockEntity extends MachineBlockEntity {
             for (int y = this.getBlockPos().getY() - radius; y <= this.getBlockPos().getY() + radius; y++) {
                 for (int z = this.getBlockPos().getZ() - radius; z <= this.getBlockPos().getZ() + radius; z++) {
                     if (this.getDistanceFromDistributor(x, y, z) <= bubbleR2) {
-                        this.level.setBreathable(pos.set(x, y, z), oxygenated);
+                        this.level.galacticraft$setBreathable(pos.set(x, y, z), oxygenated);
                     } else {
-                        this.level.setBreathable(pos.set(x, y, z), this.oxygenWorld);
+                        this.level.galacticraft$setBreathable(pos.set(x, y, z), this.oxygenWorld);
                     }
                 }
             }

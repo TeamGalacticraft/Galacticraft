@@ -33,8 +33,7 @@ import net.minecraft.nbt.NbtOps;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.EntityType;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.LivingEntity;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Unique;
@@ -44,15 +43,20 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin extends LivingEntityMixin implements ServerPlayerAccessor {
-    @Unique
-    private @Nullable RocketData rocketData = null;
+abstract class ServerPlayerMixin extends LivingEntity implements ServerPlayerAccessor {
+    @SuppressWarnings("ConstantConditions")
+    private ServerPlayerMixin() {
+        super(null, null);
+    }
 
     @Unique
-    private boolean celestialActive = false;
+    private @Nullable RocketData galacticraft$rocketData = null;
 
     @Unique
-    private boolean isRideTick = false;
+    private boolean galacticraft$celestialActive = false;
+
+    @Unique
+    private boolean galacticraft$isRideTick = false;
 
     /**
      * Dimension found in the player's NBT when the player was loaded.
@@ -64,30 +68,26 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     @Unique
     private @Nullable ResourceLocation galacticraft$savedLoginDimension = null;
 
-    public ServerPlayerMixin(EntityType<?> entityType, Level level) {
-        super(entityType, level);
-    }
-
     @Override
     public boolean galacticraft$isCelestialScreenActive() {
-        return this.celestialActive;
+        return this.galacticraft$celestialActive;
     }
 
     @Override
     public void galacticraft$closeCelestialScreen() {
-        this.celestialActive = false;
-        this.rocketData = null;
+        this.galacticraft$celestialActive = false;
+        this.galacticraft$rocketData = null;
     }
 
     @Override
     public @Nullable RocketData galacticraft$getCelestialScreenState() {
-        return this.rocketData;
+        return this.galacticraft$rocketData;
     }
 
     @Override
     public void galacticraft$openCelestialScreen(@Nullable RocketData data) {
-        this.celestialActive = true;
-        this.rocketData = data;
+        this.galacticraft$celestialActive = true;
+        this.galacticraft$rocketData = data;
     }
 
     @Override
@@ -101,22 +101,22 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
-        nbt.putBoolean("CelestialActive", this.celestialActive);
+    private void galacticraft$writeCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        nbt.putBoolean("CelestialActive", this.galacticraft$celestialActive);
 
-        if (this.rocketData != null) {
+        if (this.galacticraft$rocketData != null) {
             CompoundTag nbt1 = new CompoundTag();
-            RocketData.CODEC.encode(this.rocketData, NbtOps.INSTANCE, nbt1);
+            RocketData.CODEC.encode(this.galacticraft$rocketData, NbtOps.INSTANCE, nbt1);
             nbt.put("CelestialState", nbt1);
         }
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void readCelestialData(CompoundTag nbt, CallbackInfo ci) {
-        this.celestialActive = nbt.getBoolean("CelestialActive");
+    private void galacticraft$readCelestialData(CompoundTag nbt, CallbackInfo ci) {
+        this.galacticraft$celestialActive = nbt.getBoolean("CelestialActive");
 
         if (nbt.contains("CelestialState")) {
-            this.rocketData = RocketData.CODEC
+            this.galacticraft$rocketData = RocketData.CODEC
                     .decode(
                             NbtOps.INSTANCE,
                             nbt.getCompound("CelestialState")
@@ -147,20 +147,20 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     }
 
     @Inject(method = "rideTick", at = @At("HEAD"))
-    private void rideTickStart(CallbackInfo ci) {
-        this.isRideTick = true;
+    private void galacticraft$rideTickStart(CallbackInfo ci) {
+        this.galacticraft$isRideTick = true;
     }
 
     @Inject(method = "rideTick", at = @At("TAIL"))
-    private void rideTickEnd(CallbackInfo ci) {
-        this.isRideTick = false;
+    private void galacticraft$rideTickEnd(CallbackInfo ci) {
+        this.galacticraft$isRideTick = false;
     }
 
     @Inject(method = "stopRiding", at = @At("HEAD"), cancellable = true)
-    private void canStopRiding(CallbackInfo ci) {
+    private void galacticraft$canStopRiding(CallbackInfo ci) {
         Entity vehicle = getVehicle();
 
-        if (isRideTick
+        if (this.galacticraft$isRideTick
                 && vehicle instanceof IgnoreShift ignoreShift
                 && ignoreShift.shouldIgnoreShiftExit()) {
             ci.cancel();
@@ -168,7 +168,7 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
     }
 
     @Inject(method = "bedBlocked", at = @At("HEAD"), cancellable = true)
-    private void checkIfCryoBedBlocked(
+    private void galacticraft$checkIfCryoBedBlocked(
             BlockPos sleepingPos,
             Direction direction,
             CallbackInfoReturnable<Boolean> cir
@@ -179,14 +179,14 @@ public abstract class ServerPlayerMixin extends LivingEntityMixin implements Ser
                 .getBlockState(basePos)
                 .getBlock() instanceof CryogenicChamberBlock) {
             cir.setReturnValue(
-                    !this.gc$freeAt(basePos.relative(direction))
-                            || !this.gc$freeAt(sleepingPos.relative(direction))
+                    !this.galacticraft$freeAt(basePos.relative(direction))
+                            || !this.galacticraft$freeAt(sleepingPos.relative(direction))
             );
         }
     }
 
     @Unique
-    private boolean gc$freeAt(BlockPos blockPos) {
+    private boolean galacticraft$freeAt(BlockPos blockPos) {
         return !this.level()
                 .getBlockState(blockPos)
                 .isSuffocating(this.level(), blockPos);

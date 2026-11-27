@@ -37,9 +37,9 @@ import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 
 @Mixin(FogRenderer.class)
-public class FogRendererMixin {
+abstract class FogRendererMixin {
     @WrapOperation(method = "setupColor", at = @At(value = "INVOKE", target = "Lnet/minecraft/util/CubicSampler;gaussianSampleVec3(Lnet/minecraft/world/phys/Vec3;Lnet/minecraft/util/CubicSampler$Vec3Fetcher;)Lnet/minecraft/world/phys/Vec3;"))
-    private static Vec3 setDimensionColor(Vec3 cameraPos, CubicSampler.Vec3Fetcher fetcher, Operation<Vec3> original, Camera activeRenderInfo, float partialTicks, ClientLevel level) {
+    private static Vec3 galacticraft$setDimensionColor(Vec3 cameraPos, CubicSampler.Vec3Fetcher fetcher, Operation<Vec3> original, Camera activeRenderInfo, float partialTicks, ClientLevel level) {
         if (level.effects() instanceof GalacticDimensionEffects gcEffects) {
             return gcEffects.getFogColor(level, partialTicks, cameraPos, fetcher);
         } else if (4.0F * cameraPos.y() > Constant.OVERWORLD_SKYPROVIDER_STARTHEIGHT && level.dimension() == Level.OVERWORLD) {

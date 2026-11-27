@@ -30,17 +30,10 @@ import dev.galacticraft.impl.internal.accessor.ChunkSectionOxygenAccessor;
 import dev.galacticraft.impl.network.s2c.OxygenUpdatePayload;
 import dev.galacticraft.mod.events.GCEventHandlers;
 import net.minecraft.core.BlockPos;
-import net.minecraft.core.Registry;
-import net.minecraft.world.level.ChunkPos;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.level.LevelHeightAccessor;
-import net.minecraft.world.level.biome.Biome;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.chunk.ChunkAccess;
 import net.minecraft.world.level.chunk.LevelChunk;
-import net.minecraft.world.level.chunk.LevelChunkSection;
-import net.minecraft.world.level.chunk.UpgradeData;
-import net.minecraft.world.level.levelgen.blending.BlendingData;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
@@ -54,15 +47,18 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.BitSet;
 
 @Mixin(LevelChunk.class)
-public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygenAccessor, ChunkOxygenSyncer {
+    @SuppressWarnings("ConstantConditions")
+    private LevelChunkMixin() {
+        super(null, null, null, null, 0, null, null);
+    }
+
     @Shadow
     @Final
     Level level;
-    private @Unique short dirtySections = 0b0;
 
-    private LevelChunkMixin(ChunkPos pos, UpgradeData upgradeData, LevelHeightAccessor heightLimitView, Registry<Biome> biome, long inhabitedTime, @Nullable LevelChunkSection[] sectionArrayInitializer, @Nullable BlendingData blendingData) {
-        super(pos, upgradeData, heightLimitView, biome, inhabitedTime, sectionArrayInitializer, blendingData);
-    }
+    @Unique
+    private short galacticraft$dirtySections = 0b0;
 
     @Override
     public boolean galacticraft$isInverted(int x, int y, int z) {
@@ -75,7 +71,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
         if (inverted != accessor.galacticraft$isInverted(x, y & 15, z)) {
             if (!this.level.isClientSide) {
                 this.unsaved = true;
-                this.dirtySections |= (short) (0b1 << this.getSectionIndex(y));
+                this.galacticraft$dirtySections |= (short) (0b1 << this.getSectionIndex(y));
             }
             accessor.galacticraft$setInverted(x, y & 15, z, inverted);
         }
@@ -84,10 +80,10 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
     @Override
     public @Nullable OxygenUpdatePayload.OxygenData[] galacticraft$syncOxygenPacketsToClient() {
         assert !this.level.isClientSide;
-        if (this.dirtySections != 0b0) {
+        if (this.galacticraft$dirtySections != 0b0) {
             int count = 0;
             for (int i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
+                if ((this.galacticraft$dirtySections & (0b1 << i)) != 0) {
                     count++;
                 }
             }
@@ -96,12 +92,12 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
 
             int idx = 0;
             for (byte i = 0; i < this.sections.length; i++) {
-                if ((this.dirtySections & (0b1 << i)) != 0) {
+                if ((this.galacticraft$dirtySections & (0b1 << i)) != 0) {
                     BitSet data1 = ((ChunkSectionOxygenAccessor) this.sections[i]).galacticraft$getBits();
                     data[idx++] = new OxygenUpdatePayload.OxygenData(i, data1 == null ? new BitSet(0) : data1);
                 }
             }
-            this.dirtySections = 0;
+            this.galacticraft$dirtySections = 0;
             return data;
         }
         return null;
@@ -115,7 +111,7 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
     }
 
     @Inject(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;getBlock()Lnet/minecraft/world/level/block/Block;", ordinal = 0))
-    private void resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
+    private void galacticraft$resetAirOnBlockChange(BlockPos pos, BlockState blockState, boolean bl, CallbackInfoReturnable<BlockState> cir) {
         // TODO: Better system for checking whether the oxygen should be reset
         if (blockState.isSolidRender(this.level, pos)) {
             this.galacticraft$setInverted(pos.getX() & 15, pos.getY(), pos.getZ() & 15, false);
@@ -123,8 +119,8 @@ public abstract class LevelChunkMixin extends ChunkAccess implements ChunkOxygen
     }
 
     @WrapOperation(method = "setBlockState", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/level/block/state/BlockState;onPlace(Lnet/minecraft/world/level/Level;Lnet/minecraft/core/BlockPos;Lnet/minecraft/world/level/block/state/BlockState;Z)V", ordinal = 0))
-    private void extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
-        if (level.isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
+    private void galacticraft$extinguishFire(BlockState newState, Level level, BlockPos pos, BlockState oldState, boolean bl, Operation<Void> original) {
+        if (level.galacticraft$isBreathable(pos) || !GCEventHandlers.extinguishBlock(level, pos, newState)) {
             original.call(newState, level, pos, oldState, bl);
         }
     }

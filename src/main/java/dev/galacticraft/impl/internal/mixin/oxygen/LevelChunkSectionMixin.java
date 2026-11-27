@@ -38,69 +38,69 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 import java.util.BitSet;
 
 @Mixin(LevelChunkSection.class)
-public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
-    private @Unique
-    @Nullable BitSet bits = null;
+abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccessor {
+    @Unique
+    private @Nullable BitSet galacticraft$bits = null;
 
     @Override
     public boolean galacticraft$isInverted(int pos) {
-        return this.bits != null && this.bits.get(pos);
+        return this.galacticraft$bits != null && this.galacticraft$bits.get(pos);
     }
 
     @Override
     public void galacticraft$setInverted(int pos, boolean value) {
         if (value) {
-            if (this.bits == null) this.bits = new BitSet(pos);
-            this.bits.set(pos);
-        } else if (this.bits != null) {
-            this.bits.clear(pos);
+            if (this.galacticraft$bits == null) this.galacticraft$bits = new BitSet(pos);
+            this.galacticraft$bits.set(pos);
+        } else if (this.galacticraft$bits != null) {
+            this.galacticraft$bits.clear(pos);
         }
     }
 
     @Inject(method = "getSerializedSize", at = @At("RETURN"), cancellable = true)
-    private void increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
-        if (this.bits == null) {
+    private void galacticraft$increaseChunkPacketSize(CallbackInfoReturnable<Integer> cir) {
+        if (this.galacticraft$bits == null) {
             cir.setReturnValue(cir.getReturnValueI() + VarInt.getByteSize(0));
         } else {
-            byte[] byteArray = this.bits.toByteArray();
+            byte[] byteArray = this.galacticraft$bits.toByteArray();
             cir.setReturnValue(cir.getReturnValueI() + (VarInt.getByteSize(byteArray.length) + byteArray.length));
         }
     }
 
     @Inject(method = "hasOnlyAir()Z", at = @At("RETURN"), cancellable = true)
-    private void verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
+    private void galacticraft$verifyOxygenEmpty(CallbackInfoReturnable<Boolean> cir) {
         cir.setReturnValue(cir.getReturnValueZ() && this.galacticraft$isEmpty());
     }
 
     @Inject(method = "write", at = @At("RETURN"))
-    private void writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+    private void galacticraft$writeOxygenDataToPacket(FriendlyByteBuf buf, CallbackInfo ci) {
         this.galacticraft$writeOxygenPacket(buf);
     }
 
     @Inject(method = "read", at = @At("RETURN"))
-    private void galacticraft_fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
+    private void galacticraft$fromPacket(FriendlyByteBuf buf, CallbackInfo ci) {
         this.galacticraft$readOxygenPacket(buf);
     }
 
     @Override
     public boolean galacticraft$isEmpty() {
-        return this.bits == null || this.bits.isEmpty();
+        return this.galacticraft$bits == null || this.galacticraft$bits.isEmpty();
     }
 
     @Override
     public BitSet galacticraft$getBits() {
-        return this.bits;
+        return this.galacticraft$bits;
     }
 
     @Override
     public void galacticraft$setBits(@Nullable BitSet set) {
-        this.bits = set;
+        this.galacticraft$bits = set;
     }
 
     @Override
     public void galacticraft$writeOxygenPacket(@NotNull FriendlyByteBuf buf) {
-        if (this.bits != null) {
-            byte[] bytes = this.bits.toByteArray();
+        if (this.galacticraft$bits != null) {
+            byte[] bytes = this.galacticraft$bits.toByteArray();
             buf.writeByteArray(bytes);
         } else {
             buf.writeVarInt(0);
@@ -111,9 +111,9 @@ public abstract class LevelChunkSectionMixin implements ChunkSectionOxygenAccess
     public void galacticraft$readOxygenPacket(@NotNull FriendlyByteBuf buf) {
         byte[] bytes = buf.readByteArray();
         if (bytes.length != 0) {
-            this.bits = BitSet.valueOf(bytes);
+            this.galacticraft$bits = BitSet.valueOf(bytes);
         } else {
-            this.bits = null;
+            this.galacticraft$bits = null;
         }
     }
 }

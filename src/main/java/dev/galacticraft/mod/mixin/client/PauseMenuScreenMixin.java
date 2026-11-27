@@ -27,7 +27,6 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.screens.PauseScreen;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.network.chat.Component;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
@@ -35,13 +34,13 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(PauseScreen.class)
 @Environment(EnvType.CLIENT)
-public abstract class PauseMenuScreenMixin extends Screen {
-    protected PauseMenuScreenMixin(Component text) {
-        super(text);
+abstract class PauseMenuScreenMixin extends Screen {
+    private PauseMenuScreenMixin() {
+        super(null);
     }
 
     @Inject(method = "init", at = @At("RETURN"))
-    private void init(CallbackInfo info) {
+    private void galacticraft$init(CallbackInfo info) {
         int screenWidth = this.width;
         int screenHeight = this.height;
         int buttonWidth = 100;

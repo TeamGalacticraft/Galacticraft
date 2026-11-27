@@ -44,21 +44,22 @@ import java.util.List;
 import java.util.Set;
 
 @Mixin(ServerPlayer.class)
-public abstract class ServerPlayerMixin implements ServerResearchAccessor {
+abstract class ServerPlayerMixin implements ServerResearchAccessor {
     @Shadow
     public abstract boolean isCreative();
 
-    private final @Unique Set<ResourceLocation> unlockedRecipes = new HashSet<>();
+    @Unique
+    private final Set<ResourceLocation> galacticraft$unlockedRecipes = new HashSet<>();
 
     @Override
     public boolean galacticraft$isUnlocked(ResourceLocation id) {
         if (this.isCreative()) return true;
-        return this.unlockedRecipes.contains(id);
+        return this.galacticraft$unlockedRecipes.contains(id);
     }
 
     @Override
     public void galacticraft$unlockRocketPartRecipes(ResourceLocation... ids) {
-        Collections.addAll(this.unlockedRecipes, ids);
+        Collections.addAll(this.galacticraft$unlockedRecipes, ids);
 
         ServerPlayNetworking.send((ServerPlayer) (Object) this, new ResearchUpdatePayload(true, List.of(ids)));
     }
@@ -66,25 +67,25 @@ public abstract class ServerPlayerMixin implements ServerResearchAccessor {
     @Override
     public void galacticraft$unlearnRocketPartRecipes(ResourceLocation... ids) {
         for (ResourceLocation id : ids) {
-            this.unlockedRecipes.remove(id);
+            this.galacticraft$unlockedRecipes.remove(id);
         }
 
         ServerPlayNetworking.send((ServerPlayer) (Object) this, new ResearchUpdatePayload(false, List.of(ids)));
     }
 
     @Inject(method = "readAdditionalSaveData", at = @At("RETURN"))
-    private void galacticraft_readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
-        this.unlockedRecipes.clear();
+    private void galacticraft$readCustomDataFromNbt(CompoundTag nbt, CallbackInfo ci) {
+        this.galacticraft$unlockedRecipes.clear();
         ListTag list = nbt.getList("gcResearch", Tag.TAG_STRING);
         for (int i = 0; i < list.size(); i++) {
-            this.unlockedRecipes.add(ResourceLocation.parse(list.getString(i)));
+            this.galacticraft$unlockedRecipes.add(ResourceLocation.parse(list.getString(i)));
         }
     }
 
     @Inject(method = "addAdditionalSaveData", at = @At("RETURN"))
-    private void galacticraft_writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
+    private void galacticraft$writeCustomDataToNbt(CompoundTag nbt, CallbackInfo ci) {
         ListTag list = new ListTag();
-        for (ResourceLocation id : this.unlockedRecipes) {
+        for (ResourceLocation id : this.galacticraft$unlockedRecipes) {
             list.add(StringTag.valueOf(id.toString()));
         }
         nbt.put("gcResearch", list);

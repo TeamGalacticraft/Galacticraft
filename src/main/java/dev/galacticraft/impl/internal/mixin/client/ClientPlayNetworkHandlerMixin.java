@@ -44,35 +44,40 @@ import java.util.Map;
 
 @Environment(EnvType.CLIENT)
 @Mixin(ClientPacketListener.class)
-public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAccessor {
-    private final @Unique Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> satellites = new HashMap<>();
-    private final @Unique List<SatelliteListener> listeners = new ArrayList<>();
+abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAccessor {
+    @Unique
+    private final Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$satellites = new HashMap<>();
+
+    @Unique
+    private final List<SatelliteListener> galacticraft$listeners = new ArrayList<>();
 
     @Shadow
     public abstract RegistryAccess.Frozen registryAccess();
 
     @Override
     public Map<ResourceLocation, CelestialBody<SatelliteConfig, SatelliteType>> galacticraft$getSatellites() {
-        return this.satellites;
+        return this.galacticraft$satellites;
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$addSatellite(CelestialBody<SatelliteConfig, SatelliteType> satellite, boolean newlyCreated) {
         ResourceLocation id = satellite.config().getId();
-        this.satellites.put(id, satellite);
+        this.galacticraft$satellites.put(id, satellite);
         if (newlyCreated) {
             RegistryUtil.registerUnfreeze(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id, satellite);
         }
-        for (SatelliteListener listener : this.listeners) {
+        for (SatelliteListener listener : this.galacticraft$listeners) {
             listener.onSatelliteUpdated(satellite, true);
         }
     }
 
     @Override
+    @SuppressWarnings("UnstableApiUsage")
     public void galacticraft$removeSatellite(ResourceLocation id) {
-        CelestialBody<SatelliteConfig, SatelliteType> removed = this.satellites.remove(id);
+        CelestialBody<SatelliteConfig, SatelliteType> removed = this.galacticraft$satellites.remove(id);
         RegistryUtil.unregister(this.registryAccess().registryOrThrow(AddonRegistries.CELESTIAL_BODY), id);
-        for (SatelliteListener listener : this.listeners) {
+        for (SatelliteListener listener : this.galacticraft$listeners) {
             listener.onSatelliteUpdated(removed, false);
         }
     }
@@ -84,12 +89,12 @@ public abstract class ClientPlayNetworkHandlerMixin implements ClientSatelliteAc
     }
 
     @Override
-    public void addListener(SatelliteListener listener) {
-        this.listeners.add(listener);
+    public void galacticraft$addListener(SatelliteListener listener) {
+        this.galacticraft$listeners.add(listener);
     }
 
     @Override
-    public void removeListener(SatelliteListener listener) {
-        this.listeners.remove(listener);
+    public void galacticraft$removeListener(SatelliteListener listener) {
+        this.galacticraft$listeners.remove(listener);
     }
 }

@@ -36,14 +36,14 @@ import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 
 @Mixin(Animal.class)
-public abstract class AnimalMixin extends LivingEntity {
-
-    AnimalMixin() {
+abstract class AnimalMixin extends LivingEntity {
+    @SuppressWarnings("ConstantConditions")
+    private AnimalMixin() {
         super(null, null);
     }
 
     @WrapOperation(method = "mobInteract", at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/animal/Animal;isFood(Lnet/minecraft/world/item/ItemStack;)Z"))
-    public boolean galacticraft$isFood(Animal animal, ItemStack itemStack, Operation<Boolean> original) {
+    private boolean galacticraft$isFood(Animal animal, ItemStack itemStack, Operation<Boolean> original) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             return original.call(animal, CannedFoodItem.getFirst(itemStack));
         }
@@ -51,7 +51,7 @@ public abstract class AnimalMixin extends LivingEntity {
     }
 
     @Inject(method = "usePlayerItem", at = @At("HEAD"), cancellable = true)
-    protected void galacticraft$usePlayerItem(Player player, InteractionHand interactionHand, ItemStack itemStack, CallbackInfo ci) {
+    private void galacticraft$usePlayerItem(Player player, InteractionHand interactionHand, ItemStack itemStack, CallbackInfo ci) {
         if (CannedFoodItem.isCannedFoodItem(itemStack)) {
             if (!player.isCreative()) {
                 CannedFoodItem.removeOne(itemStack);
