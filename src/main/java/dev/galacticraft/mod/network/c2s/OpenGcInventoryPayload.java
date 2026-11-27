@@ -32,6 +32,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.SimpleMenuProvider;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public record OpenGcInventoryPayload() implements C2SPayload {
@@ -42,7 +43,17 @@ public record OpenGcInventoryPayload() implements C2SPayload {
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        context.player().openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
+        var player = context.player();
+        var menu = player.containerMenu;
+        ItemStack carried = menu.getCarried();
+
+        // Return the cursor stack before opening the new menu.
+        if (!carried.isEmpty()) {
+            menu.setCarried(ItemStack.EMPTY);
+            player.getInventory().placeItemBackInInventory(carried);
+        }
+
+        player.openMenu(new SimpleMenuProvider(GCPlayerInventoryMenu::new, Component.empty()) {
             @Override
             public boolean shouldCloseCurrentScreen() {
                 return false;

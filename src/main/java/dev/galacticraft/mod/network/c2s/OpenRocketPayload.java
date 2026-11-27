@@ -31,6 +31,7 @@ import net.minecraft.network.codec.StreamCodec;
 import net.minecraft.network.protocol.common.custom.CustomPacketPayload;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.item.ItemStack;
 import org.jetbrains.annotations.NotNull;
 
 public record OpenRocketPayload() implements C2SPayload {
@@ -41,10 +42,19 @@ public record OpenRocketPayload() implements C2SPayload {
 
     @Override
     public void handle(ServerPlayNetworking.@NotNull Context context) {
-        ServerPlayer player = context.player();
-        if (player.getVehicle() instanceof RocketEntity rocket) {
-            player.openMenu(rocket);
+        var player = context.player();
+        var menu = player.containerMenu;
+        ItemStack carried = menu.getCarried();
+
+        if (!(player.getVehicle() instanceof RocketEntity rocket)) return;
+
+        // Return the cursor stack before opening the new menu.
+        if (!carried.isEmpty()) {
+            menu.setCarried(ItemStack.EMPTY);
+            player.getInventory().placeItemBackInInventory(carried);
         }
+
+        player.openMenu(rocket);
     }
 
     @Override

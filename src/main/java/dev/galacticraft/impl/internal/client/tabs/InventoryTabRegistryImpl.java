@@ -25,6 +25,8 @@ package dev.galacticraft.impl.internal.client.tabs;
 import dev.galacticraft.api.client.tabs.InventoryTabRegistry;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.network.protocol.game.ServerboundContainerClosePacket;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import net.minecraft.world.inventory.InventoryMenu;
@@ -41,8 +43,17 @@ public class InventoryTabRegistryImpl implements InventoryTabRegistry {
 
     static {
         INSTANCE.register(Items.CRAFTING_TABLE.getDefaultInstance(), () -> {
-            assert Minecraft.getInstance().player != null;
-            Minecraft.getInstance().setScreen(new InventoryScreen(Minecraft.getInstance().player));
+            Minecraft mc = Minecraft.getInstance();
+            LocalPlayer player = mc.player;
+
+            if (player == null) return;
+
+            // Send a close packet for the current GC menu, then switch the client back to its inventory menu.
+            if (player.containerMenu != player.inventoryMenu) {
+                player.connection.send(new ServerboundContainerClosePacket(player.containerMenu.containerId));
+                player.containerMenu = player.inventoryMenu;
+            }
+            mc.setScreen(new InventoryScreen(player));
         }, player -> true, InventoryMenu.class);
     }
 
